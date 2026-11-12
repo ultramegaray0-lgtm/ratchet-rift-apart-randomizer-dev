@@ -29,8 +29,8 @@ RANDO_SETTINGS = {
                               --   full_campaign | campaign_chaos (played in the game's own order until verified)
 
   -- 8.0 hub (hub presets; leave a line out to use the default)
-  -- hub_start_coordinates = 2,        -- Coordinates open at the start (2 to 4, all different planets)
-  -- hub_unlocks = 1,                  -- Coordinates each finished destination opens (1 to 3)
+  -- hub_start_coordinates = 4,        -- Coordinates open at the start (2 to 4, all different planets)
+  -- hub_unlocks = 3,                  -- Coordinates each finished destination opens (1 to 3)
   -- hub_finale = "all",               -- all | half: finished destinations before the finale opens
   -- hub_revisits = true,              -- second visits (Zurkie's 2, Sargasso 2, Savali 2) are destinations
 
@@ -40,22 +40,22 @@ RANDO_SETTINGS = {
                                        -- finds the mod installed; true = always (ONLY with the mod); false = never
   -- gadgets = true,                   -- Box Breaker, Omniglove, Glitch
   -- armor = true,                     -- armor pieces are rewards; armor pods give random items
-  -- levels = false,                   -- true: each planet's travel needs its Coordinates (the campaign preset)
-  -- mission_order = "vanilla",        -- experimental: planet_shuffle | mission_shuffle | full | chaos
+  -- levels = true,                   -- true: each planet's travel needs its Coordinates (the campaign preset)
+  -- mission_order = "planet_shuffle",        -- experimental: planet_shuffle | mission_shuffle | full | chaos
   -- shop = "shuffle",                 -- shuffle: her 15 slots sell the seed's weapons | vanilla: her own
   -- bolts = true,                     -- Bolts rewards
   -- raritanium = true,                -- Raritanium rewards
 
   -- currency (per reward; later planets give more with currency_scaling)
-  -- bolts_min = 1000, bolts_max = 10000,         -- 100 to 100000
-  -- raritanium_min = 20, raritanium_max = 150,   -- 1 to 5000
+  -- bolts_min = 1000, bolts_max = 10000,         -- 1000 to 100000
+  -- raritanium_min = 150, raritanium_max = 300,   -- 150 to 5000
   -- bolts_budget = 150000,            -- the most all Bolts rewards give together (0 = no limit)
   -- raritanium_budget = 2000,         -- the most all Raritanium rewards give together (0 = no limit)
   -- bolts_percent = 60,               -- with both on: % of currency rewards that are Bolts
   -- currency_scaling = true,
 
   -- shop prices
-  -- shop_prices = "weapon",           -- vanilla | weapon (a slot costs what its weapon costs normally) | percent | random
+  -- shop_prices = "random",           -- vanilla | weapon (a slot costs what its weapon costs normally) | percent | random
   -- shop_price_percent = 100,         -- percent: this % of each slot's price; random: the lowest %
   -- shop_price_max_percent = 150,     -- random: the highest %
 
@@ -68,7 +68,7 @@ RANDO_SETTINGS = {
   -- start_gadgets = 1,                -- 0 to 2 random gadgets
   -- start_items = "",                 -- items you always start with, e.g. "weapon:enforcer,glitch"
   -- start_bolts = 0,                  -- 0 to 100000
-  -- start_raritanium = 0,             -- 0 to 5000
+  -- start_raritanium = 1000,             -- 1000 to 5000
   -- start_coordinates = "first_two",  -- start_only | first_two | random_extra (levels / Coordinates only)
 
   -- logic

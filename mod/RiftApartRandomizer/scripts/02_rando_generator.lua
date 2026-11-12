@@ -117,7 +117,7 @@ G.DEFAULTS = {
                                   -- "auto" in 04_rando_settings.lua = on when the companion finds the mod)
   gadgets = true,                 -- Box Breaker, Omniglove, Glitch (Hoverboots, Map-O-Matic: always at the start)
   armor = true,                   -- armor pieces are rewards and armor sources are locations
-  planet_locks = false,           -- Coordinates exist as items (7.0: levels = true sets this and travel_lock)
+  planet_locks = true,           -- Coordinates exist as items (7.0: levels = true sets this and travel_lock)
   travel_lock = false,            -- 7.0 levels: flying to a planet without its Coordinates sends you back;
                                   -- false with planet_locks: its mission rewards wait instead (6.0)
   shop = "shuffle",               -- shuffle: the vendor's 15 slots sell the seed's weapons | vanilla: her own
@@ -128,7 +128,7 @@ G.DEFAULTS = {
   bolts = true,                   -- Bolts rewards
   raritanium = true,              -- Raritanium rewards
   bolts_min = 1000, bolts_max = 10000,         -- Bolts per reward (grows with the story when currency_scaling)
-  raritanium_min = 20, raritanium_max = 150,   -- Raritanium per reward
+  raritanium_min = 120, raritanium_max = 1000,   -- Raritanium per reward
   bolts_budget = 150000,          -- most Bolts all rewards give together (0 = no limit); the 15 shop
                                   -- weapons cost 255,250 Bolts in the normal game
   raritanium_budget = 2000,       -- most Raritanium all rewards give together (0 = no limit)
@@ -150,13 +150,13 @@ G.DEFAULTS = {
                                   -- so you can always buy as many weapons as without the randomizer)
   accessibility = "full",         -- full: every location in logic | beatable: progression items only
   -- mission order (3.0, experimental: needs verified mission control, docs/CAMPAIGN.md; 7.0 name mission_order)
-  campaign_mode = "vanilla",      -- vanilla | planet_shuffle | mission_shuffle | full | chaos
+  campaign_mode = "planet_shuffle",      -- vanilla | planet_shuffle | mission_shuffle | full | chaos
   random_start = false,           -- start on a random visit instead of the parade (full / chaos)
   exclude = "",                   -- comma-separated item keys never randomized, e.g. "weapon:ryno_8"
   -- 8.0: Zurkie's Battleplex hub (experimental; docs/HUB.md)
   hub = false,                    -- a new game starts at Zurkie's; destinations open with Coordinates
-  hub_start_coordinates = 2,      -- Coordinates open at the start (different planets)
-  hub_unlocks = 1,                -- Coordinates each finished destination gives
+  hub_start_coordinates = 3,      -- Coordinates open at the start (different planets)
+  hub_unlocks = 3,                -- Coordinates each finished destination gives
   hub_finale = "all",             -- all | half: finished destinations before the finale opens
   hub_revisits = true,            -- second visits (Zurkie's 2, Sargasso 2, Savali 2) are destinations too
 }
@@ -348,7 +348,9 @@ function G.normalize(user, preset)
   if s.hub then
     for k, off in pairs({ planet_locks = false, travel_lock = false, campaign_mode = "vanilla", random_start = false }) do
       if s[k] ~= off then
-        warn[#warn + 1] = k .. " = " .. tostring(s[k]) .. " does not apply to a hub seed (hub = true) - " .. tostring(off) .. " used"
+        -- only worth a note when you set it yourself (your defaults planet_locks = true and
+        -- campaign_mode = "planet_shuffle" are for the non-hub presets)
+        if (user or {})[k] ~= nil or p[k] ~= nil then warn[#warn + 1] = k .. " = " .. tostring(s[k]) .. " does not apply to a hub seed (hub = true) - " .. tostring(off) .. " used" end
         s[k] = off
       end
     end
@@ -1122,7 +1124,14 @@ function G.generate(seed_text, user, preset, yield)
           eff.armor = true
           warnings[#warnings + 1] = "armor turned on: without armor pieces these settings have " .. err:match(": (.*)$")
           break
-        elseif not eff.planet_locks then
+        elseif eff.start_gadgets > 0 or eff.start_weapons > 0 then
+          -- 8.5.2: fewer items at the start leaves more for the Gold Bolts (a hub seed cannot use
+          -- Coordinates as items, so this comes before them)
+          local k = eff.start_gadgets > 0 and "start_gadgets" or "start_weapons"
+          eff[k] = eff[k] - 1
+          warnings[#warnings + 1] = k .. " lowered to " .. eff[k] .. ": these settings have " .. err:match(": (.*)$")
+          break
+        elseif not eff.planet_locks and not eff.hub then
           -- Coordinates are items too: with them the pool covers every Gold Bolt
           eff.planet_locks = true
           warnings[#warnings + 1] = "planet_locks turned on: without Coordinates these settings have " .. err:match(": (.*)$")

@@ -123,6 +123,7 @@ function C.location_segment(lid, planet)
   return nil
 end
 
+-- (the default mode is campaign_mode in 02_rando_generator.lua's G.DEFAULTS: planet_shuffle)
 C.MODES = {
   vanilla = "the game's own order; rewards randomized (2.0 behaviour)",
   planet_shuffle = "planets in a random order; each planet's visits keep their order",
