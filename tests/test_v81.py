@@ -50,7 +50,7 @@ def forward_local_uses(path):
 
 class StaticTests(unittest.TestCase):
     # R.status_text has a function-local `total` of its own (checked by hand)
-    ALLOWED = {"10_rando_runtime.lua:594 total"}
+    ALLOWED = {"10_rando_runtime.lua:607 total"}   # 8.2: was line 594
 
     def test_no_top_level_local_is_used_before_its_definition(self):
         bad = []

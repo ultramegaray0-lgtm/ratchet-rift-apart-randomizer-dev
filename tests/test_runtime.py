@@ -47,7 +47,8 @@ class LoadingTests(unittest.TestCase):
         self.assertEqual(names, {"01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua",
                                  "04_rando_settings.lua", "05_rando_bindings.lua", "06_rando_capabilities.lua",
                                  "09_rando_real.lua", "10_rando_runtime.lua", "11_rando_campaign.lua",
-                                 "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua", "15_rando_hub.lua"})
+                                 "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua", "15_rando_hub.lua",
+                                 "16_rando_testtravel.lua"})
         g = Game(settings_file=True)
         self.assertEqual(g.load_errors, [])
         self.assertIsNone(g.g.RANDO_TEST_MODE)

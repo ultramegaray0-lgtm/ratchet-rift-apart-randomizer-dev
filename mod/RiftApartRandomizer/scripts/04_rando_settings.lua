@@ -1,4 +1,4 @@
--- Rift Apart Randomizer 8.0: your seed and settings.
+-- Rift Apart Randomizer 8.2: your seed and settings.
 -- Change, save, then restart the game (or press Pause to reload the scripts before you play).
 -- A different seed or different randomization options make a NEW seed with its own progress;
 -- start it with NEW GAME. Keys/logging can change any time.
@@ -99,6 +99,11 @@ RANDO_SETTINGS = {
   hub_auto_return = true,            -- a finished destination takes you back to Zurkie's
   hub_return_delay = 12,             -- seconds before that (F5 cancels)
   hub_hero_swap = true,              -- Rivet's destinations swap the hero to Rivet (Ratchet again at Zurkie's)
+  -- 8.2 TEST TRAVEL (docs\TEST_TRAVEL.md): go to any planet, whatever Coordinates you hold.
+  -- Set it to false for a real run (it is written into the history as [TEST TRAVEL]).
+  test_travel = true,                -- true: the keys below work, and nothing sends you back from a planet
+  key_test_travel = "F7",            -- F7 next planet, Ctrl+F7 warp there
+  key_test_point = "F8",             -- F8 next landing point on that planet, Ctrl+F8 fly there with the ship
   discovery = true,                  -- log the game events the randomizer listens to
   log_notifications = true,
 }

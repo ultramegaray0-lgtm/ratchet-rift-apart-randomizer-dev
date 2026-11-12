@@ -53,16 +53,40 @@ local function state()
   return s.travel
 end
 
+-- 8.2: lookups built once. Round 18's catalog ran past rivet_hook's 8 ms frame budget in T.place,
+-- T.catalog_add and T.ranked (14_rando_travel.lua:115/140/141/197) and never finished: every
+-- checkpoint name was compared with every planet's every code, and every sort comparison scored
+-- both names again. Now a code is one table lookup per name token, an area is looked up once, and
+-- a name is scored once.
+local CODES, CODE_LENS = nil, nil         -- code -> { pid, order }, code lengths longest first
+local function code_index()
+  if CODES then return CODES, CODE_LENS end
+  CODES, CODE_LENS = {}, {}
+  local lens = {}
+  for order, p in ipairs(DB.planets) do
+    for _, code in ipairs((p.checkpoints and p.checkpoints.codes) or {}) do
+      if not CODES[code] then CODES[code] = { p.id, order } end
+      lens[#code] = true
+    end
+  end
+  for l in pairs(lens) do CODE_LENS[#CODE_LENS + 1] = l end
+  table.sort(CODE_LENS, function(a, b) return a > b end)
+  return CODES, CODE_LENS
+end
+
 -- which planet a checkpoint name belongs to: a name token starting with one of the planet's codes
--- (CHK_ZURK_00_DEFAULT -> scarstu, CHK_TRANSITION_TO_ZURKIES -> scarstu); the longest code wins
+-- (CHK_ZURK_00_DEFAULT -> scarstu, CHK_TRANSITION_TO_ZURKIES -> scarstu); the longest code wins,
+-- and between codes of the same length the planet earlier in the story (as 8.1 decided)
 function T.planet_of_checkpoint(name)
   if type(name) ~= "string" then return nil end
-  local up = name:upper()
-  local best, blen = nil, 0
-  for _, p in ipairs(DB.planets) do
-    for _, code in ipairs((p.checkpoints and p.checkpoints.codes) or {}) do
-      for tok in up:gmatch("[^_]+") do
-        if tok:sub(1, #code) == code and #code > blen then best, blen = p.id, #code end
+  local codes, lens = code_index()
+  local best, blen, border = nil, 0, math.huge
+  for tok in name:upper():gmatch("[^_]+") do
+    for _, l in ipairs(lens) do
+      if l < blen then break end
+      if #tok >= l then
+        local hit = codes[tok:sub(1, l)]
+        if hit and (l > blen or hit[2] < border) then best, blen, border = hit[1], l, hit[2]; break end
       end
     end
   end
@@ -84,28 +108,41 @@ T.SCORE = {
 }
 T.AVOID = { "TRANSITION_TO", "CINE", "BOSS", "FINALE", "DEBUG", "TEST", "ARENA", "CHALLENGE", "_END",
             "DEATH", "RETURN", "ESCAPE", "PSHIFT", "REVISIT", "POSTMISSION", "WARPBACK", "TELEPORTER" }
-T.CATALOG_SLICE = 128
+T.CATALOG_SLICE = 128        -- most entries placed in one frame
+T.SLICE_SECONDS = 0.0015     -- 8.2: and at most this long (the whole randomizer shares rivet_hook's 8 ms)
 T.catalog = nil              -- { planets = { [pid] = { [name] = area } }, filters = {...}, next = i, done = bool }
+T.scores = {}                -- name -> score (8.2: each name is scored once)
+
+local function clock() return (os and os.clock and os.clock()) or 0 end
 
 function T.score_checkpoint(name)
+  local cached = T.scores[name]
+  if cached then return cached end
   local up = tostring(name):upper()
   local score = 0
   for _, s in ipairs(T.SCORE) do if up:find(s[1], 1, true) then score = math.max(score, s[2]) end end
   for _, a in ipairs(T.AVOID) do if up:find(a, 1, true) then score = score - 60 end end
+  if type(name) == "string" then T.scores[name] = score end
   return score
 end
 
 -- which planet an area name belongs to (nil for interplanetary_space and unknown areas)
+local AREAS = {}             -- area -> pid or false (a level has a handful of areas)
 function T.planet_of_area(area)
   if type(area) ~= "string" or area == "" then return nil end
+  local known = AREAS[area]
+  if known ~= nil then return known or nil end
   local low = area:lower()
-  if low:find("interplanetary", 1, true) then return nil end
-  for _, p in ipairs(DB.planets) do
-    for _, frag in ipairs((p.checkpoints and p.checkpoints.areas) or {}) do
-      if low:find(frag, 1, true) then return p.id end
+  local found = false
+  if not low:find("interplanetary", 1, true) then
+    for _, p in ipairs(DB.planets) do
+      for _, frag in ipairs((p.checkpoints and p.checkpoints.areas) or {}) do
+        if not found and low:find(frag, 1, true) then found = p.id end
+      end
     end
   end
-  return nil
+  AREAS[area] = found
+  return found or nil
 end
 
 -- the planet a listed checkpoint is on: its area first, its name second
@@ -131,21 +168,27 @@ function T.catalog_filters()
   return out
 end
 
--- add one rivet.checkpoints() answer to the catalog (entries first..last); returns how many it placed
-function T.catalog_add(list, first, last)
+-- add one rivet.checkpoints() answer to the catalog (entries first..last). With `budget` (seconds)
+-- it stops early once that much time has gone. Returns how many it placed and the next entry.
+function T.catalog_add(list, first, last, budget)
   local cat = T.catalog
   local n = 0
   list = list or {}
-  for i = first or 1, math.min(last or #list, #list) do
+  local t0 = budget and clock()
+  local stop = math.min(last or #list, #list)
+  local i = first or 1
+  while i <= stop do
     local name, area = entry_of(list[i])
     local pid = T.place(name, area)
     if pid then
       cat.planets[pid] = cat.planets[pid] or {}
-      if cat.planets[pid][name] == nil then n = n + 1 end
+      if cat.planets[pid][name] == nil then n = n + 1; T.score_checkpoint(name) end
       cat.planets[pid][name] = area or ""
     end
+    i = i + 1
+    if budget and clock() - t0 >= budget then break end
   end
-  return n
+  return n, i
 end
 
 function T.catalog_reset()
@@ -170,17 +213,17 @@ function T.catalog_step()
     log("checkpoint catalog:", table.concat(parts, ", "))
     return true
   end
-  if cat.pending then                        -- a long answer is placed T.CATALOG_SLICE entries a frame
+  if cat.pending then                        -- an answer is placed a slice a frame (8.2: also by time)
     local pd = cat.pending
-    T.catalog_add(pd.list, pd.at, pd.at + T.CATALOG_SLICE - 1)
-    pd.at = pd.at + T.CATALOG_SLICE
+    local _, nxt = T.catalog_add(pd.list, pd.at, pd.at + T.CATALOG_SLICE - 1, T.SLICE_SECONDS)
+    pd.at = nxt
     if pd.at > #pd.list then cat.pending = nil end
     return false
   end
   cat.next = cat.next + 1
   local ok, list = pcall(rivet.checkpoints, f)
   if ok and type(list) == "table" then
-    if #list > T.CATALOG_SLICE then cat.pending = { list = list, at = 1 } else T.catalog_add(list) end
+    if #list > 0 then cat.pending = { list = list, at = 1 } end   -- placed from the next frame on
   else
     cat.errors = cat.errors + 1
     if cat.errors <= 3 then log("checkpoints", f, "not listed:", tostring(list)) end
@@ -188,31 +231,52 @@ function T.catalog_step()
   return false
 end
 
--- every checkpoint of a planet the catalog holds, best first
-function T.ranked(pid)
+-- the catalog's order: higher score, then the shorter name, then by name
+local function better(a, b)
+  local sa, sb = T.score_checkpoint(a), T.score_checkpoint(b)
+  if sa ~= sb then return sa > sb end
+  if #a ~= #b then return #a < #b end
+  return a < b
+end
+T.better = better
+
+-- every checkpoint of a planet the catalog holds, best first (limit: only the best `limit`)
+function T.ranked(pid, limit)
   local cat = T.catalog
   local names = {}
   for name in pairs((cat and cat.planets[pid]) or {}) do names[#names + 1] = name end
-  table.sort(names, function(a, b)
-    local sa, sb = T.score_checkpoint(a), T.score_checkpoint(b)
-    if sa ~= sb then return sa > sb end
-    if #a ~= #b then return #a < #b end
-    return a < b
-  end)
+  if limit and #names > limit * 4 then
+    -- a long list: keep the best `limit` without sorting all of it
+    local top = {}
+    for _, n in ipairs(names) do
+      if #top < limit then top[#top + 1] = n; table.sort(top, better)
+      elseif better(n, top[#top]) then top[#top] = n; table.sort(top, better) end
+    end
+    return top
+  end
+  table.sort(names, better)
+  if limit then for i = #names, limit + 1, -1 do names[i] = nil end end
   return names
 end
 function T.best_in_catalog(pid)
-  return T.ranked(pid)[1]
+  local cat = T.catalog
+  local best = nil
+  for name in pairs((cat and cat.planets[pid]) or {}) do
+    if best == nil or better(name, best) then best = name end
+  end
+  return best
 end
 
 -- the whole catalog of one planet, for rivet.log (what the next round should name)
 function T.describe_planet(pid, limit)
-  local names = T.ranked(pid)
+  local total = 0
+  for _ in pairs((T.catalog and T.catalog.planets[pid]) or {}) do total = total + 1 end
+  local names = T.ranked(pid, limit or 24)
   local out = {}
-  for i = 1, math.min(#names, limit or 24) do
+  for i = 1, #names do
     out[#out + 1] = string.format("%s(%d)", names[i], T.score_checkpoint(names[i]))
   end
-  return string.format("%d: %s", #names, table.concat(out, " "))
+  return string.format("%d: %s", total, table.concat(out, " "))
 end
 
 -- a checkpoint on planet pid to warp to: where you last landed there, then the ones seen in your
@@ -265,6 +329,13 @@ function T.on_arrival(pid, from)
   if s.access[pid] then
     if p.dest then tr.landed[pid] = p.dest end
     log("arrived on", pid, "(open) at", tostring(p.dest))
+    return false
+  end
+  -- 8.2 test travel (16_rando_testtravel.lua): nothing is sent back while it is on
+  local TT = RANDO_TEST_TRAVEL
+  if TT and TT.on and TT.on() then
+    if p.dest then T.remember(pid, p.dest) end
+    TT.stayed(pid, "planet menu")
     return false
   end
   local back_to = p.from or from
@@ -323,13 +394,14 @@ end
 function T.catalog_wanted()
   if T.catalog and T.catalog.done then return false end
   if type(rivet.checkpoints) ~= "function" then return false end
-  return T.active() or (SEED() and SEED().hub ~= nil)
+  local TT = RANDO_TEST_TRAVEL
+  return T.active() or (SEED() and SEED().hub ~= nil) or (TT ~= nil and TT.on ~= nil and TT.on())
 end
 
 function T.tick(frame, ready)
   T.frame = frame
   -- the catalog: one filter every 4 frames, every frame while a hub trip waits for it
-  local every = (RANDO_HUB and RANDO_HUB.wait_catalog) and 1 or 4
+  local every = ((RANDO_HUB and RANDO_HUB.wait_catalog) or (RANDO_TEST_TRAVEL and RANDO_TEST_TRAVEL.want_catalog)) and 1 or 4
   if ready and frame % every == 0 and T.catalog_wanted() and frame >= (T.catalog_from or 600) then T.catalog_step() end
   local w = T.warp
   if not (w and ready) or frame < w.at_frame then return end

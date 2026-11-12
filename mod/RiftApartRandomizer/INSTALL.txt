@@ -1,8 +1,14 @@
-Ratchet & Clank: Rift Apart - Randomizer 8.1 (EXPERIMENTAL: Zurkie's Battleplex hub)
+Ratchet & Clank: Rift Apart - Randomizer 8.2 (EXPERIMENTAL: Zurkie's Battleplex hub)
 =======================================================================
 For the PC (Steam) game, RiftApart.exe 3.0630.1.0, with rivet_hook 2.0.x. One mod: everything is
 in this folder. ARSENAL_RESTORED is optional: its weapons join the randomizer automatically when it
 is installed (docs\ARSENAL_RESTORED.md). Nothing here changes the game's own files.
+
+8.2 = 8.1 + TEST TRAVEL (docs\TEST_TRAVEL.md) and the round 18 fix for the checkpoint catalog
+(docs\CHANGES_8.2.md). Test travel is ON in this kit's 04_rando_settings.lua:
+  F7 next planet, F8 next landing point, Ctrl+F7 warp there, Ctrl+F8 fly there with the ship.
+  Nothing sends you back while it is on, and it opens no Coordinates. Set test_travel = false
+  for a real run. Same seed, same fingerprint, same progress as 8.1. 8.2 HAS NOT RUN IN YOUR GAME YET.
 
 8.1 = 8.0 + the fixes for your round 17 log (docs\CHANGES_8.1.md): Torren IV / Cordelion trips
 (checkpoint catalog), the shop's frame-budget errors, the planet-change error, the level bits after
@@ -41,10 +47,12 @@ BEFORE YOU START
 INSTALL
   1. In <game>\scripts, delete EVERY old randomizer .lua file (00_ to 15_ from older kits,
      including any 00_rando_seed.lua and 07_rando_testmode.lua).
-  2. Copy the 13 files from this kit's scripts folder into <game>\scripts:
+  2. Copy the 14 files from this kit's scripts folder into <game>\scripts:
        01_rando_data  02_rando_generator  03_rando_campaign  04_rando_settings
        05_rando_bindings  06_rando_capabilities  09_rando_real  10_rando_runtime  11_rando_campaign
-       12_rando_shop  13_rando_armor  14_rando_travel  15_rando_hub (new)
+       12_rando_shop  13_rando_armor  14_rando_travel  15_rando_hub  16_rando_testtravel (new in 8.2)
+     Updating from 8.1: copy all 14 (10, 14, 15 and 04 changed; 16 is new). If you edited your
+     04_rando_settings.lua, keep yours and add the three test_travel lines from this kit's copy.
   3. Copy rivet.toml and rando_give.dll next to RiftApart.exe, replacing the old ones.
      rando_give.dll is v6 (unchanged from 8.0). rivet.toml is new in 8.1 (ARSENAL_RESTORED paths):
      if you already added your own [assets] paths, keep them in the new file.
@@ -77,7 +85,7 @@ FILES
   companion\     saving, random seeds, spoiler logs, the ARSENAL_RESTORED check (PowerShell, comes
                  with Windows); companion\research\ holds read-only research tools
   extras\        test mode and developer tools (not needed to play)
-  docs\          CHANGES_8.1.md (what 8.1 fixes), HUB.md (start here), COMPLETION_REPORT.md (what 8.0 does and its status),
+  docs\          TEST_TRAVEL.md and CHANGES_8.2.md (new in 8.2), CHANGES_8.1.md (what 8.1 fixes), HUB.md (start here), COMPLETION_REPORT.md (what 8.0 does and its status),
                  RESEARCH_8.0.md (technical research report), KNOWN_ISSUES.md, TESTING.md (testing
                  report and the first-session checklist), BATCH_8.0.txt, TEST_RESULTS.txt,
                  CONFIGURATION.md, NEW_GAME.md, MIGRATION.md, LEVELS.md, WEAPONS.md, SHOP.md,

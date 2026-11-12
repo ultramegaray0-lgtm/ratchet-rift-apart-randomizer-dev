@@ -667,3 +667,26 @@ MIS_NEFCITY_01 and MIS_ZURK_01_VISIT_01. Fixes:
   `RANDO-SHOP vendor ... search done after N frames`.
 - Check `landing on X remembered` and that no "ran past the 8 ms frame budget" lines remain.
 - PowerShell changes are untested here (no pwsh).
+
+## 8.2 (2026-11-12): test travel, round 18 catalog fix
+Round 18 log (8.1, v2.618 install, seed kit-bolt-kit-198 with ARSENAL_RESTORED, fingerprint
+4d170014c0c6): a save with the whole story complete. The hub started (Ctrl+F6), the level bits and
+travel flag were set, the ARSENAL_RESTORED .stage loaded through rivet_hook.
+- 16_rando_testtravel.lua (new): test_travel = true (runtime option, seed unchanged). F7 planet,
+  F8 landing point, Ctrl+F7 warp, Ctrl+F8 fly. Test trips are claimed in process_planet before the
+  hub; the hub's menu send-back, keeper and startup guard and 14's level-lock send-back are skipped
+  while it is on. Trips go into the history as [TEST TRAVEL].
+- 14_rando_travel.lua: the catalog ran past the frame budget 11 times (lines 115/140/141/197) and
+  never logged "checkpoint catalog:". Code lookup table per token, area and score caches, time-
+  sliced placement (1.5 ms), linear best pick, top-N ranking. Same planet as 8.1 for every logged name.
+- 15_rando_hub.lua: H.check_levels(pid) split out of on_arrival (test trips call it too).
+- Not changed: shop (AR replaces ven_weapon_vendor.config: 0 vendor weapons at +0x48), armor
+  budget errors (13:117, 13:256), Pixelizer delivery without an answer.
+- Tests: 262 ran, 0 failed, 17 skipped (9 pwsh, 8 need the 5.0/6.0 git history, which the 8.1 dev
+  zip did not include). New: tests/test_v82.py (15).
+
+## Handoff (8.2)
+- Next log: `RANDO-TEST` lines for each trip (selected / warp / arrived), the `RANDO-TRAVEL
+  checkpoint catalog:` line (it should appear now), and no 14_rando_travel frame-budget lines.
+- For each planet: which landing point worked by warp and by fly. Put the good ones in
+  01_rando_data.lua `checkpoints.known` (through tools/build_data.py), which changes no fingerprint.

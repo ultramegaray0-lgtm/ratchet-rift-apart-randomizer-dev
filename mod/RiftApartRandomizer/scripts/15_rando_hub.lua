@@ -48,7 +48,7 @@ RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "8.1.0"
+H.VERSION = "8.2.0"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -697,24 +697,34 @@ local function first_dest_on(pid)
   return nil
 end
 
+local function test_travel_on()
+  local TT = RANDO_TEST_TRAVEL
+  return TT ~= nil and TT.on ~= nil and TT.on()
+end
+
+-- the level mask on this planet (research), put back when a load cleared it
+function H.check_levels(pid)
+  local h = H.state()
+  if not (h and D() and D().native_ok and D().native_ok("level_read")) then return end
+  call("level_read", nil, function(r)
+    if r.code == 11 then
+      log(string.format("levels on %s: unlocked 0x%X, other 0x%X, current %s", pid, r.after or 0, r.ret or 0, tostring(r.index)))
+      h.level_seen[pid] = r.index
+      -- 8.1: a save load resets the mask (round 17: 0x7FE before a reload, 0x0 after it), and the
+      -- planet menu lists only unlocked planets: put the bits back on every planet once the hub
+      -- runs (8.2: or test travel is on)
+      local want = 0x7FE
+      if (h.started or test_travel_on()) and cfg("hub_levels", "all") == "all" and ((r.after or 0) & want) ~= want then
+        H.after(H.SETTLE, function() H.relevel(pid) end, "level bits after a load")
+      end
+    end
+  end)
+end
+
 function H.on_arrival(pid, from)
   local p, h = H.plan(), H.state()
   if not (p and h) or not H.enabled() then return false end
-  -- research: the level mask on every planet
-  if D() and D().native_ok and D().native_ok("level_read") then
-    call("level_read", nil, function(r)
-      if r.code == 11 then
-        log(string.format("levels on %s: unlocked 0x%X, other 0x%X, current %s", pid, r.after or 0, r.ret or 0, tostring(r.index)))
-        h.level_seen[pid] = r.index
-        -- 8.1: a save load resets the mask (round 17: 0x7FE before a reload, 0x0 after it), and the
-        -- planet menu lists only unlocked planets: put the bits back on every planet once the hub runs
-        local want = 0x7FE
-        if h.started and cfg("hub_levels", "all") == "all" and ((r.after or 0) & want) ~= want then
-          H.after(H.SETTLE, function() H.relevel(pid) end, "level bits after a load")
-        end
-      end
-    end)
-  end
+  H.check_levels(pid)
   local exp = H.expect
   H.expect = nil
   if not h.started then
@@ -753,6 +763,11 @@ function H.on_arrival(pid, from)
         h.phase, h.current = "away", nil
         say(pname(pid) .. ": nothing left to play here for the hub - explore, F5 twice to go back", { type = "corner", duration = 6 })
       end
+    elseif test_travel_on() then
+      -- 8.2: test travel lets every planet stay; its landing is learned like an open planet's
+      if RANDO_TRAVEL and RANDO_TRAVEL.remember then RANDO_TRAVEL.remember(pid, m.dest) end
+      h.phase, h.current = "away", nil
+      RANDO_TEST_TRAVEL.stayed(pid, "planet menu")
     else
       log("no Coordinates for", pid, "- back to Zurkie's")
       say(string.format("Randomizer: no Coordinates for %s yet - back to Zurkie's", pname(pid)), { type = "center", duration = 6 })
@@ -762,9 +777,11 @@ function H.on_arrival(pid, from)
     return true
   end
   -- the parade on a load, or the game's own travel right after the hub started
-  local guard = H.session.started_frame and (H.frame - H.session.started_frame) < H.STARTUP_GUARD
+  -- (8.2: neither the keeper nor the startup guard moves you while test travel is on)
+  local testing = test_travel_on()
+  local guard = not testing and H.session.started_frame and (H.frame - H.session.started_frame) < H.STARTUP_GUARD
   local cur = h.current and dest_by_id(h.current)
-  if pid == p.finale_planet and not (cur and cur.planet == pid) and not h.open[pid] and H.session.keeper < H.KEEPER_MAX then
+  if not testing and pid == p.finale_planet and not (cur and cur.planet == pid) and not h.open[pid] and H.session.keeper < H.KEEPER_MAX then
     H.session.keeper = H.session.keeper + 1
     log("Corson V without the finale open (a load into the parade?) - back to Zurkie's")
     say("Randomizer: back to Zurkie's - the parade is behind you", { type = "center", duration = 6 })
@@ -968,7 +985,8 @@ function H.on_restore(live)
   local p = H.plan()
   if s.current_planet == p.planet then
     H.after(H.SETTLE, function() H.apply_world() end, "restored at the hub")
-  elseif s.current_planet == p.finale_planet and not (h.open and h.open[p.finale_planet]) and H.session.keeper < H.KEEPER_MAX then
+  elseif s.current_planet == p.finale_planet and not (h.open and h.open[p.finale_planet]) and H.session.keeper < H.KEEPER_MAX
+         and not test_travel_on() then
     H.session.keeper = H.session.keeper + 1
     log("restored on Corson V without the finale open - back to Zurkie's")
     H.after(H.SETTLE, function() H.go_home("keeper (restore)") end, "keeper")

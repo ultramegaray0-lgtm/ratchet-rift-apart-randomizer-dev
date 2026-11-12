@@ -1,5 +1,6 @@
-# Rift Apart Randomizer 8.1 (development project)
+# Rift Apart Randomizer 8.2 (development project)
 
+8.2 = 8.1 + test travel and the round 18 catalog fix: `mod/RiftApartRandomizer/docs/CHANGES_8.2.md`.
 8.1 = 8.0 + the round 17 fixes: `mod/RiftApartRandomizer/docs/CHANGES_8.1.md`.
 
 | Path | What it holds |

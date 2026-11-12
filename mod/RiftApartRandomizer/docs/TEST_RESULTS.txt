@@ -1,6 +1,6 @@
-Rift Apart Randomizer 8.1 - test run 2026-11-12 05:29 UTC
+Rift Apart Randomizer 8.2 - test run 2026-11-12 05:58 UTC
 Python 3.13.18 on Linux
-ran 247, failures 0, errors 0, skipped 9
+ran 262, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -144,17 +144,17 @@ test_three_copies_agree (tests.test_registry.RegistryTests.test_three_copies_agr
 data/weapon_registry.json, data/game_db.json and the shipped 01_rando_data.lua ... ok
 test_weapon_files_not_display_names (tests.test_registry.RegistryTests.test_weapon_files_not_display_names) ... ok
 test_6_never_does_what_5_could (tests.test_regression_v5.RegressionV5Tests.test_6_never_does_what_5_could)
-5.0 put no vendor weapon anywhere but the shop; 6.0 may, but then not in the shop too ... ok
+5.0 put no vendor weapon anywhere but the shop; 6.0 may, but then not in the shop too ... skipped 'the 5.0 commit is not in this repository (git history needed)'
 test_same_helper_dll (tests.test_regression_v5.RegressionV5Tests.test_same_helper_dll)
-8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... ok
-test_same_reward_locations_and_rules (tests.test_regression_v5.RegressionV5Tests.test_same_reward_locations_and_rules) ... ok
-test_versions (tests.test_regression_v5.RegressionV5Tests.test_versions) ... ok
+8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... skipped 'the 5.0 commit is not in this repository (git history needed)'
+test_same_reward_locations_and_rules (tests.test_regression_v5.RegressionV5Tests.test_same_reward_locations_and_rules) ... skipped 'the 5.0 commit is not in this repository (git history needed)'
+test_versions (tests.test_regression_v5.RegressionV5Tests.test_versions) ... skipped 'the 5.0 commit is not in this repository (git history needed)'
 test_6_settings_still_work (tests.test_regression_v6.RegressionV6Tests.test_6_settings_still_work)
-a 6.0 settings file keeps working: filler settings are converted, nothing is refused ... ok
+a 6.0 settings file keeps working: filler settings are converted, nothing is refused ... skipped 'the 6.0 commit is not in this repository'
 test_same_helper_dll (tests.test_regression_v6.RegressionV6Tests.test_same_helper_dll)
-8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... ok
-test_same_locations_and_rules (tests.test_regression_v6.RegressionV6Tests.test_same_locations_and_rules) ... ok
-test_versions (tests.test_regression_v6.RegressionV6Tests.test_versions) ... ok
+8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... skipped 'the 6.0 commit is not in this repository'
+test_same_locations_and_rules (tests.test_regression_v6.RegressionV6Tests.test_same_locations_and_rules) ... skipped 'the 6.0 commit is not in this repository'
+test_versions (tests.test_regression_v6.RegressionV6Tests.test_versions) ... skipped 'the 6.0 commit is not in this repository'
 test_armor_rewards_go_through_the_armor_code (tests.test_runtime.ArmorTests.test_armor_rewards_go_through_the_armor_code) ... ok
 test_intercepted_source_pays_its_location_once (tests.test_runtime.ArmorTests.test_intercepted_source_pays_its_location_once) ... ok
 test_interception_can_be_switched_off (tests.test_runtime.ArmorTests.test_interception_can_be_switched_off) ... ok
@@ -267,8 +267,23 @@ test_no_top_level_local_is_used_before_its_definition (tests.test_v81.StaticTest
 test_planet_data_has_area_fragments_for_every_planet (tests.test_v81.StaticTests.test_planet_data_has_area_fragments_for_every_planet) ... ok
 test_registry_has_no_name_your_game_lacks (tests.test_v81.StaticTests.test_registry_has_no_name_your_game_lacks) ... ok
 test_rivet_toml_loads_arsenal_restored (tests.test_v81.StaticTests.test_rivet_toml_loads_arsenal_restored) ... ok
+test_a_slice_stops_at_its_time_budget (tests.test_v82.CatalogTests.test_a_slice_stops_at_its_time_budget) ... ok
+test_catalog_completes_in_slices_with_many_checkpoints (tests.test_v82.CatalogTests.test_catalog_completes_in_slices_with_many_checkpoints) ... ok
+test_same_planet_as_8_1_for_every_logged_name (tests.test_v82.CatalogTests.test_same_planet_as_8_1_for_every_logged_name) ... ok
+test_every_planet_can_be_reached (tests.test_v82.TestTravelTests.test_every_planet_can_be_reached) ... ok
+test_f8_cycles_landing_points (tests.test_v82.TestTravelTests.test_f8_cycles_landing_points) ... ok
+test_fly_needs_a_ship_and_says_so (tests.test_v82.TestTravelTests.test_fly_needs_a_ship_and_says_so) ... ok
+test_locked_levels_seed_does_not_send_back (tests.test_v82.TestTravelTests.test_locked_levels_seed_does_not_send_back) ... ok
+test_off_by_default_and_8_1_behaviour_kept (tests.test_v82.TestTravelTests.test_off_by_default_and_8_1_behaviour_kept) ... ok
+test_planet_menu_without_coordinates_stays (tests.test_v82.TestTravelTests.test_planet_menu_without_coordinates_stays) ... ok
+test_script_loads_and_is_on (tests.test_v82.TestTravelTests.test_script_loads_and_is_on) ... ok
+test_seed_is_unchanged_by_test_travel (tests.test_v82.TestTravelTests.test_seed_is_unchanged_by_test_travel) ... ok
+test_settings_file_turns_it_on (tests.test_v82.TestTravelTests.test_settings_file_turns_it_on) ... ok
+test_warp_to_a_planet_without_coordinates_stays_there (tests.test_v82.TestTravelTests.test_warp_to_a_planet_without_coordinates_stays_there) ... ok
+test_works_before_the_hub_has_started (tests.test_v82.TestTravelTests.test_works_before_the_hub_has_started) ... ok
+test_zurkies_is_still_the_hubs_arrival (tests.test_v82.TestTravelTests.test_zurkies_is_still_the_hubs_arrival) ... ok
 
 ----------------------------------------------------------------------
-Ran 247 tests in 103.966s
+Ran 262 tests in 124.188s
 
-OK (skipped=9)
+OK (skipped=17)

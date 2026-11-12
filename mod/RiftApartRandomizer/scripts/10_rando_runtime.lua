@@ -41,7 +41,7 @@
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "8.1.0"
+R.KIT_VERSION = "8.2.0"
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -82,6 +82,10 @@ R.config = {
   hub_hero_swap = true,              -- Rivet's destinations swap the hero to Rivet (and back at Zurkie's)
   key_hub = "F6",                    -- F6 next destination, Ctrl+F6 go
   key_hub_return = "F5",             -- F5 twice back to Zurkie's, Ctrl+F5 twice finish a destination by hand
+  -- 8.2 test travel (16_rando_testtravel.lua): go to any planet, whatever Coordinates you hold
+  test_travel = false,               -- true: F7 / F8 / Ctrl+F7 / Ctrl+F8 work and nothing sends you back
+  key_test_travel = "F7",            -- F7 next planet, Ctrl+F7 warp there
+  key_test_point = "F8",             -- F8 next landing point on that planet, Ctrl+F8 fly there with the ship
 }
 R.CHOICES = { hub_trigger = { wrench = true, control = true, cinematic = true }, hub_intro = { force = true, leave = true },
               hub_levels = { all = true, off = true } }
@@ -89,7 +93,8 @@ R.CHOICES = { hub_trigger = { wrench = true, control = true, cinematic = true },
 local RETIRED_RUNTIME = { key_shop_next = "is not used since 4.0", key_shop_buy = "is not used since 4.0",
                           lock_vendor_weapons = "is not used since 5.0 (the vendor sells its own weapons, shuffled; ammo works)" }
 local SETTINGS = RANDO_SETTINGS or {}
-local KEY_SETTINGS = { key_status = true, key_campaign = true, key_hub = true, key_hub_return = true }
+local KEY_SETTINGS = { key_status = true, key_campaign = true, key_hub = true, key_hub_return = true,
+                       key_test_travel = true, key_test_point = true }
 local GEN_OPTIONS = {}
 for k, v in pairs(SETTINGS) do
   if R.config[k] ~= nil then
@@ -558,6 +563,12 @@ function R.process_planet(name, old)
   local banked = 0
   for lid in pairs(S.banked) do if DB.locations[lid].planet == pid then banked = banked + 1 end end
   log("RANDO-PLANET", name, pid, S.access[pid] and "rewards unlocked" or "rewards locked")
+  -- 8.2 test travel: a test trip's landing is only reported (no hub action, nothing sends you back)
+  if RANDO_TEST_TRAVEL and RANDO_TEST_TRAVEL.on_arrival then
+    local okt, claimed = pcall(RANDO_TEST_TRAVEL.on_arrival, pid, from)
+    if not okt then log("RANDO-ERROR test travel arrival", tostring(claimed)) end
+    if okt and claimed then return pid end
+  end
   -- 8.0 hub seeds: Zurkie's, destinations, the menu and the parade on a load (15_rando_hub.lua)
   if SEED.hub and RANDO_HUB and RANDO_HUB.on_arrival then
     local okh, handled = pcall(RANDO_HUB.on_arrival, pid, from)
@@ -590,6 +601,8 @@ function R.status_text()
   if armor then real = real and (real .. " | " .. armor) or armor end
   local shop = RANDO_SHOP and RANDO_SHOP.status_text and RANDO_SHOP.status_text()
   if shop then real = real and (real .. " | " .. shop) or shop end
+  local test = RANDO_TEST_TRAVEL and RANDO_TEST_TRAVEL.status_text and RANDO_TEST_TRAVEL.status_text()
+  if test then real = real and (real .. " | " .. test) or test end
   return string.format("%sGold Bolts %d/%d | rewards %d/%d%s%s | planets %d%s%s%s",
                        S.test_used and "[TEST] " or "", R.bolts_collected(), #(SEED.gold_bolts or {}), done_loc, total,
                        banked > 0 and string.format(" (+%d waiting for Coordinates)", banked) or "", coords, S.planets_done,
