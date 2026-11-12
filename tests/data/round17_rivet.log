@@ -1,0 +1,1246 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[rivet] game version mismatch, invalidating pointers
+[loader] mod path mods/default does not exist! skipping.
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF60C15A8C0, QueueEvent at 00007FF606F56A60
+[time] time scale system at 00007FF60B3A02E0
+[camera] fov scale at 00007FF60B1DEEC8
+[camera] camera system at 00007FF60B1DEDE0
+[hud] ShowMessage at 00007FF60651D160
+[vanity] EquipBundle at 00007FF60677A8E0
+[hero_look] HandleTransformationEvent at 00007FF606428D40, OnTransformationPostActivate at 00007FF6066363F0
+[configs] config asset manager at 00007FF60B1EBFE0
+[script] signal queue at 00007FF60C64FB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF606643900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] loading dxgi and d3d12...
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	Randomizer 8.0.0 loaded (data 5.0.0, generator 8.0.0)
+[script] [rando]	RANDO-STATUS events subscribed 20/20
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] [rando]	RANDO-SHOP	loaded (15 vendor weapons)
+[script] [rando]	RANDO-ARMOR	loaded (27 armor pieces, interception needs rando_give.dll v5)
+[script] [rando]	RANDO-TRAVEL	loaded
+[script] [rando]	RANDO-HUB	loaded (8.0.0)
+[script] loaded 13 of 13 scripts, 3 frame and 4 key callbacks
+[script] [rando]	RANDO-SEED ARSENAL_RESTORED is not installed: its weapons stay out (the companion checked the game's toc)
+[script] [rando]	RANDO-SEED generating seed	kit-bolt-kit-198	(random seed from the companion)
+[script] [rando]	RANDO-SETTINGS	bolts rewards scaled down to the bolts_budget of 150000 (they would have given 168500)
+[script] [rando]	RANDO-SEED ready	kit-bolt-kit-198	b25846f17df5	preset hub	attempt 1
+[script] [rando]	RANDO-SEED share code	RA8|kit-bolt-kit-198|hub|
+[script] [rando]	received Hoverboots
+[script] [rando]	received Map-O-Matic
+[script] [rando]	received Buzz Blades
+[script] [rando]	received Lightning Rod
+[script] [rando]	received Glitch
+[script] [rando]	seed started: kit-bolt-kit-198 (b25846f17df5), run 1
+[script] [rando]	notify failed:	the player hud is not loaded
+[script] [rando]	RANDO-REAL	sync:	5	item(s) waiting for the game
+[script] [rando]	RANDO-SAVE no saved progress for this seed, starting fresh
+[DDL] indexed 8211 types for struct walking
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=813750 TotalBolts=813750
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=132.0 TotalRaritanium=132.0
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=C5C10901039C61456C5C33617AC66A8C
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=1DA0727CC8678316C9F3CE8AD78E6C6C
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-ARMOR	helper: armor give verified, armor sources on
+[script] [rando]	RANDO-NOTIFY	Randomizer 8.0 - seed kit-bolt-kit-198 (b25846f17df5)
+[script] [rando]	RANDO-HUB	levels on nefarious_city: unlocked 0x0, other 0x0, current 2
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 2	target hero	
+[script] [rando]	RANDO-NOTIFY	Randomizer start: Hoverboots, Map-O-Matic, Buzz Blades, Lightning Rod, Glitch
+[script] [rando]	RANDO-ARMOR	intercepting 27 armor source(s)
+[script] [rando]	RANDO-SHOP	helper: config manager at 00007FF60B1EBFE0 (exe +0x52EBFE0, rivet_hook's signature matched 1x)
+[script] [rando]	RANDO-CAMPAIGN mission helper:	ready (rando_give.dll v4, mission code matches this exe)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129937 ItemHandle=2130314
+[script] [rando]	RANDO-GADGET	grindboots
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129997 ItemHandle=2130315
+[script] [rando]	RANDO-GADGET	glide
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129937 ItemHandle=2130316
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129997 ItemHandle=2130317
+[script] [rando]	RANDO-GADGET	grapple
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129937 ItemHandle=2130321
+[script] [rando]	RANDO-GADGET	rift_tether
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-ARMOR	baseline: 6 armor piece(s) owned before this seed - they do not count
+[script] [rando]	RANDO-REAL	direct delivery: target hero works - kept for next time
+[script] [rando]	RANDO-REAL	no confirmation yet for	glitch	(direct) - will retry
+[script] [rando]	RANDO-CAMPAIGN mission system 2: MIS_INTRO is active (done)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:113: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:113: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 6	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-REAL	direct delivery: no answer for	glitch	with target hero (it worked before) - trying again shortly
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	hoverboots	configs/equipment/gdgt_hoverboots_item.config	842E8D8EFE349E00	via rando_give.dll	request 8	target hero	
+[script] [rando]	RANDO-REAL	confirmed	hoverboots	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Hoverboots
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2129937 ItemHandle=2156555
+[script] [rando]	RANDO-GADGET	hoverboots
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	map_o_matic	configs/equipment/gdgt_mapomatic_item.config	9AB06529F129A923	via rando_give.dll	request 10	target hero	
+[script] [rando]	RANDO-REAL	confirmed	map_o_matic	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Map-O-Matic
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2129997 ItemHandle=2156756
+[script] [rando]	RANDO-GADGET	map_o_matic
+[script] [rando]	RANDO-REAL	sent	weapon:buzz_blades	configs/equipment/wpn_buzzblades_item.config	8B01A641F040FBDA	via rando_give.dll	request 11	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1001	is	weapon:buzz_blades
+[script] [rando]	RANDO-REAL	confirmed	weapon:buzz_blades	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Buzz Blades
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:177: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	weapon:lightning_rod	configs/equipment/wpn_lightningrod_item.config	BD3106CBF2BE0272	via rando_give.dll	request 13	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1002	is	weapon:lightning_rod
+[script] [rando]	RANDO-REAL	confirmed	weapon:lightning_rod	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Lightning Rod
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2193264 ItemHandle=2193411
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2193264 ItemHandle=2193412
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2193264 ItemHandle=2193418
+[script] [rando]	RANDO-REAL	already in the game:	weapon:ryno_8	(equipped)
+[script] [rando]	RANDO-REAL	weapon type	1003	is	weapon:ryno_8
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-REAL	weapon type	1004	is	weapon:ryno_8
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-REAL	weapon type	1005	is	weapon:ryno_8
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-REAL	weapon type	1006	is	weapon:ryno_8
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-REAL	weapon type	1007	is	weapon:ryno_8
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-REAL	weapon type	1008	is	weapon:ryno_8
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2193204 ItemHandle=2193555
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2193204 ItemHandle=2193556
+[script] [rando]	RANDO-GADGET	omniglove
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2193204 ItemHandle=2193557
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2193204 ItemHandle=2193558
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2193204 ItemHandle=2193559
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=2193204 ItemHandle=2193560
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x0, other 0x0, current 4
+[script] [rando]	RANDO-REAL	already in the game:	weapon:burst_pistol	(equipped)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 18	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Galactic Ranger helmet	source:galactic_ranger_head
+[script] [rando]	location source:galactic_ranger_head (armor source of the Galactic Ranger helmet (found by polling))
+[script] [rando]	received 4500 bolts (source:galactic_ranger_head)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Galactic Ranger helmet): 4500 Bolts
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Q-Force helmet	source:qforce_armor_head
+[script] [rando]	location source:qforce_armor_head (armor source of the Q-Force helmet (found by polling))
+[script] [rando]	received 4250 bolts (source:qforce_armor_head)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Q-Force helmet): 4250 Bolts
+[script] [rando]	RANDO-ARMOR	intercepting 25 armor source(s)
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	glitch	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Glitch: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=13432 TotalBolts=67076
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	currency sent:	4500	currency:bolts	(source:galactic_ranger_head)
+[script] [rando]	RANDO-NOTIFY	+4500 Bolts
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:113: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	currency sent:	4250	currency:bolts	(source:qforce_armor_head)
+[script] [rando]	RANDO-NOTIFY	+4250 Bolts
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=8750 TotalBolts=75826
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Zurkon
+[script] [rando]	RANDO-REAL	already in the game:	weapon:volcanic_eruptor	(equipped)
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=4068.7492675781 MissionName=MIS_RYNO_PLANS MissionSegmentId=857631949EB0EEFAEA9138FA6D99EF0F
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=452.41818237305 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=7C8407BC5A8BD0498B8DA1F1DCC92EBE
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=452.41818237305 MissionName=MIS_ZURK_01_VISIT_01 MissionSegmentId=719031F7E4FB441E91B47929CB334AB8
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=CA5DE3437B992EFBEF79E5202D2E98ED
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=07F9EC3DD9CB13B206D4D064A640C9EC
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-HUB	levels on nefarious_city: unlocked 0x0, other 0x0, current 2
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4217533 ItemHandle=4217886
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4217598 ItemHandle=4217887
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4217533 ItemHandle=4217888
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4217598 ItemHandle=4217889
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4217533 ItemHandle=4217893
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 29	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	glitch	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Glitch: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:113: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=1
+[script] [rando]	RANDO-REAL	new game: delivery state cleared
+[script] [rando]	RANDO-HUB	new game: waiting for the parade's	wrench	to go to Zurkie's
+[script] [rando]	NEW GAME: run 2 of seed kit-bolt-kit-198 (the prologue started); run 1 had 2 location(s)
+[script] [rando]	received Hoverboots
+[script] [rando]	received Map-O-Matic
+[script] [rando]	received Buzz Blades
+[script] [rando]	received Lightning Rod
+[script] [rando]	received Glitch
+[script] [rando]	seed started: kit-bolt-kit-198 (b25846f17df5), run 2
+[script] [rando]	RANDO-NOTIFY	Randomizer start: Hoverboots, Map-O-Matic, Buzz Blades, Lightning Rod, Glitch
+[script] [rando]	RANDO-NOTIFY	Randomizer: new game - seed kit-bolt-kit-198 starts over (run 2)
+[script] [rando]	RANDO-REAL	PlanetChangedEvent	scripts\09_rando_real.lua:672: attempt to call a nil value (global 'u32_at')
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Malinon OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards locked
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-ARMOR	intercepting 27 armor source(s)
+[script] [rando]	RANDO-HUB	levels on corson_v: unlocked 0x0, other 0x0, current 1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=805795996 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=934271974 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 40	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-ARMOR	baseline: 6 armor piece(s) owned before this seed - they do not count
+[script] [rando]	RANDO-REAL	direct delivery: no answer for	glitch	with target hero (it worked before) - trying again shortly
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=1
+[script] [rando]	RANDO-REAL	already in the game:	weapon:buzz_blades	(reported by the game (type 1001))
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	hoverboots	configs/equipment/gdgt_hoverboots_item.config	842E8D8EFE349E00	via rando_give.dll	request 43	target hero	
+[script] [rando]	RANDO-REAL	confirmed	hoverboots	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Hoverboots
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4217533 ItemHandle=4292621
+[script] [rando]	RANDO-GADGET	hoverboots
+[script] [rando]	RANDO-REAL	sent	map_o_matic	configs/equipment/gdgt_mapomatic_item.config	9AB06529F129A923	via rando_give.dll	request 44	target hero	
+[script] [rando]	RANDO-REAL	confirmed	map_o_matic	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Map-O-Matic
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=4217598 ItemHandle=4292628
+[script] [rando]	RANDO-GADGET	map_o_matic
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=1
+[script] [rando]	RANDO-HUB	going to Zurkie's:	parade wrench
+[script] [rando]	RANDO-NOTIFY	Randomizer: to Zurkie's Battleplex - the randomized campaign starts there
+[travel] warp to CHK_ZURK_00_DEFAULT (region 37)
+[script] [rando]	RANDO-HUB	warp to Zurkie's at	CHK_ZURK_00_DEFAULT	(hub start)	nil
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3095202961 Loaded=true
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon OldPlanetName=Malinon
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	HUB: the campaign starts at Zurkie's (CHK_ZURK_00_DEFAULT)
+[script] [rando]	Coordinates: nefarious_city (hub)
+[script] [rando]	Coordinates: torren_iv (hub)
+[script] [rando]	RANDO-HUB	Coordinates opened:	nefarious_city, torren_iv
+[script] [rando]	location planet:corson_v (the prologue (the hub starts at Zurkie's))
+[script] [rando]	received 30 raritanium (planet:corson_v)
+[script] [rando]	RANDO-NOTIFY	Randomizer: 30 Raritanium
+[script] [rando]	RANDO-NOTIFY	Zurkie's Battleplex: Coordinates for Nefarious City and Torren IV (Molonoth Fields) - F6 to choose, Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x0, other 0x0, current 1
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4217533 ItemHandle=4300580
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2229284024 Loaded=true
+[script] [rando]	RANDO-HUB	research: rando_give.dll v6 paths 0x7 (1 mission records, 2 level mask, 4 travel)
+[script] [rando]	RANDO-HUB	research: checkpoints LANDING (19): CHK_ZURK_LANDING_ENTRANCE@Zurkons CHK_ZURK_LANDING_SHIP@Zurkons CHK_SARG_GELFACTORY_LANDINGPAD@Sargasso (open world) CHK_SARG_02_MININGPLATFORM_LANDINGPAD@Sargasso (open world) CHK_SARG_02_MININGPLATFORM_LANDINGPAD_POSTCINE@Sargasso (open world) CHK_BLIZAR_A_LANDINGPAD@Blizar_Intact (open world) CHK_BLIZAR_A_LANDINGPAD_POSTINTRO@Blizar_Intact (open world) CHK_BLIZAR_A_LANDINGPAD_CRYSTAL@Blizar_Intact (open world) CHK_BLIZAR_WARP_INTACT_LANDINGPAD@Blizar_Intact (open world) CHK_BLIZAR_B_LANDINGPAD_DESTROYED@Blizar_Destroyed (open world) CHK_BLIZAR_B_LANDINGPAD_DESTROYED_POSTINTRO@Blizar_Destroyed (open world) CHK_BLIZAR_B_LANDINGPAD_DESTROYED_TELEPORTER@Blizar_Destroyed (open world) CHK_BLIZAR_B_LANDINGPAD_DESTROYED_WARPBACK@Blizar_Destroyed (open world) CHK_BLIZAR_WARP_DESTROYED_LANDINGPAD@Blizar_Destroyed (open world) CHK_ZORDOOM_POSTMISSION_LANDINGPAD@Zordoom (open world) CHK_ZORDOOM_POSTMISSION_LANDINGPAD_TELEPORTER@Zordoom (open world) CHK_ZORDOOM_LAN
+[script] [rando]	RANDO-HUB	research: checkpoints ZURK (62): CHK_ZURK_00_DEFAULT@Zurkons CHK_ZURK_01_LAND_RATCHET_VISIT_1@Zurkons CHK_ZURK_02_PUB_PRE_MEET_ZURKON_CINE@Zurkons CHK_ZURK_03_PUB_ZURKON_CINE@Zurkons CHK_ZURK_03_PUB_POST_MEET_ZURKON_CINE@Zurkons CHK_ZURK_04_LAND_RIVET_VISIT_1@Zurkons CHK_ZURK_05_ARENA_INTRO_CINE@Zurkons CHK_ZURK_06_ARENA_CHALLENGE_A1@Zurkons CHK_ZURK_07_ARENA_BREWS_CINE@Zurkons CHK_ZURK_08_ARENA_CHALLENGE_A2@Zurkons CHK_ZURK_08B_ARENA_CHALLENGE_A2_SKIP_INTRO@Zurkons CHK_ZURK_09_ARENA_WIN_TRESP_CINE@Zurkons CHK_ZURK_10_PUB_POST_WIN_TRESP_CINE@Zurkons CHK_ZURK_11_PUB_FIX_JUKEBOX_01@Zurkons CHK_ZURK_11a_PUB_HAX_PUZZLE_01@Zurkons CHK_ZURK_11B_PUB_POST_FIX_JUKEBOX@Zurkons CHK_ZURK_12_HERO_MEET_CINE@Zurkons CHK_ZURK_13_POST_HERO_MEET_CINE@Zurkons CHK_ZURK_14_POST_TIMMY_QUEST_INTRO@Zurkons CHK_ZURK_15_DONGLE_CINE@Zurkons CHK_ZURK_16_RETURN_TO_SHIP@Zurkons CHK_ZURK_ARENA_CHALLENGE_A3@Zurkons CHK_ZURK_ARENA_CHALLENGE_A4@Zurkons CHK_ZURK_ARENA_CHALLENGE_A5@Zurkons CHK_ZURK_ARENA_CHALLENGE_A6@Zurkons 
+[script] [rando]	RANDO-HUB	research: checkpoints MEGA (31): CHK_PSHIFT_MEGASLIDE_J27@Megalopolis (open world) CHK_MEGA_L27_PSHIFT_SLIDE@Megalopolis (open world) CHK_MEGA_01_RIVET_START@Megalopolis (open world) CHK_MEGA_01_RIVET_POSTCINE@Megalopolis (open world) CHK_MEGA_FINALE_FLYER_START@Megalopolis (open world) CHK_MEGA_FINALE_START@Megalopolis (open world) CHK_MEGA_FINALE_CHASE_RETURN@Megalopolis (open world) CHK_MEGA_FINALE_PARK_INTRO@Megalopolis (open world) CHK_MEGA_FINALE_CHASE_START@Megalopolis (open world) CHK_MEGA_FINALE_PARK_END@Megalopolis (open world) CHK_MEGA_FINALE_SKYWAYS@Megalopolis (open world) CHK_MEGA_FINALE_MECH_INTRO@Megalopolis (open world) CHK_MEGA_FINALE_MECH_BATTLE_1@Megalopolis (open world) CHK_MEGA_FINALE_MECH_BATTLE_INTERIOR@Megalopolis (open world) CHK_MEGA_FINALE_MECH_BATTLE_ROOFTOP@Megalopolis (open world) CHK_MEGA_FINALE_RIVET_CONTACT@Megalopolis (open world) CHK_MEGA_FINALE_DEBRIS_FIELD@Megalopolis (open world) CHK_MEGA_FINALE_CHASE_STARTPOINT@Megalopolis (open world) CHK_MEGA_FINALE
+[script] [rando]	RANDO-HUB	research: checkpoints TRANSITION_TO (9): CHK_TRANSITION_TO_MOL@interplanetary_space CHK_TRANSITION_TO_SARG@interplanetary_space CHK_TRANSITION_TO_KEDARO@interplanetary_space CHK_TRANSITION_TO_ARDOLIS@interplanetary_space CHK_TRANSITION_TO_BLIZAR@interplanetary_space CHK_TRANSITION_TO_NEFARIOUS_CITY@interplanetary_space CHK_TRANSITION_TO_SAVALI@interplanetary_space CHK_TRANSITION_TO_ZORDOOM@interplanetary_space CHK_TRANSITION_TO_ZURKIES@interplanetary_space
+[script] [rando]	RANDO-HUB	research: Mission configs (0): 
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x0 -> 0x1)
+[script] [rando]	RANDO-HUB	levels at the hub: unlocked 0x0, other 0x0, current 4
+[script] [rando]	RANDO-HUB	research: mission	MIS_INTRO	done (active -> active)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_NEFCITY_01	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_SARG_01_FIRST_VISIT	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_SARG_01_CLANKPUZZLE	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_ZURK_01_VISIT_01	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_SAV_01	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_BLIZAR_01	not a mission in your game (4294967295 -> 4294967295)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_MOL_01_FIRST_VISIT	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_CORD_01_FIRST_VISIT	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_CORD_BOSS	not a mission in your game (4294967295 -> 4294967295)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_ZURK_02	not a mission in your game (4294967295 -> 4294967295)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_ZURK_02B_VISIT_02B	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_ARD_01_FIRST_VISIT	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1736146898 Loaded=true
+[script] [rando]	RANDO-HUB	research: mission	MIS_SARG_02_REVISIT	not a mission in your game (4294967295 -> 4294967295)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_SARG_02_REVISIT_SHIPS	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_SVALI_02_SECOND_VISIT	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_ZORD_01	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_MEGA_01_RIVET	not a mission in your game (4294967295 -> 4294967295)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_MEGA_FINALE	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_ZURK_ARENA_BRONZE_CUP	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_ZURK_ARENA_SILVER_CUP	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: mission	MIS_ZURK_ARENA_GOLD_CUP	done (inactive -> inactive)	system	2
+[script] [rando]	RANDO-HUB	research: MIS_INTRO record	done (active -> active)	at 1B6ABF234B0
+[script] [rando]	RANDO-HUB	MIS_INTRO set to Complete Finished:	done (active -> complete)	record at 1B6ABF234B0
+[script] [rando]	RANDO-HUB	level 1 unlocked: done (0x0 -> 0x2), mask 0x2
+[script] [rando]	RANDO-HUB	level 2 unlocked: done (0x2 -> 0x6), mask 0x6
+[script] [rando]	RANDO-HUB	level 3 unlocked: done (0x6 -> 0xE), mask 0xE
+[script] [rando]	RANDO-HUB	level 4 unlocked: done (0xE -> 0x1E), mask 0x1E
+[script] [rando]	RANDO-HUB	level 5 unlocked: done (0x1E -> 0x3E), mask 0x3E
+[script] [rando]	RANDO-HUB	level 6 unlocked: done (0x3E -> 0x7E), mask 0x7E
+[script] [rando]	RANDO-HUB	level 7 unlocked: done (0x7E -> 0xFE), mask 0xFE
+[script] [rando]	RANDO-HUB	level 8 unlocked: done (0xFE -> 0x1FE), mask 0x1FE
+[script] [rando]	RANDO-HUB	level 9 unlocked: done (0x1FE -> 0x3FE), mask 0x3FE
+[script] [rando]	RANDO-HUB	level 10 unlocked: done (0x3FE -> 0x7FE), mask 0x7FE
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	weapon:lightning_rod	configs/equipment/wpn_lightningrod_item.config	BD3106CBF2BE0272	via rando_give.dll	request 86	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:lightning_rod
+[script] [rando]	RANDO-REAL	no confirmation yet for	weapon:lightning_rod	(direct) - will retry
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	weapon:lightning_rod	configs/equipment/wpn_lightningrod_item.config	BD3106CBF2BE0272	via rando_give.dll	request 88	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:lightning_rod
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1412395841 Loaded=true
+[script] [rando]	RANDO-REAL	direct delivery: no answer for	weapon:lightning_rod	with target hero (it worked before) - trying again shortly
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 90	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	glitch	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Glitch: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-REAL	direct delivery: 2 different items got no answer - checking the target again
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	currency sent:	30	currency:raritanium	(planet:corson_v)
+[script] [rando]	RANDO-NOTIFY	+30 Raritanium
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	weapon:lightning_rod	configs/equipment/wpn_lightningrod_item.config	BD3106CBF2BE0272	via rando_give.dll	request 96	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:lightning_rod
+[script] [rando]	RANDO-REAL	direct delivery: no reaction from the game for	weapon:lightning_rod	with target group 1
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	weapon:lightning_rod	configs/equipment/wpn_lightningrod_item.config	BD3106CBF2BE0272	via rando_give.dll	request 98	target group 0	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:lightning_rod
+[script] [rando]	RANDO-REAL	direct delivery: no reaction from the game for	weapon:lightning_rod	with target group 0
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	weapon:lightning_rod	configs/equipment/wpn_lightningrod_item.config	BD3106CBF2BE0272	via rando_give.dll	request 101	target group 3	
+[script] [rando]	RANDO-REAL	direct delivery: target group 3 is empty	weapon:lightning_rod
+[script] [rando]	RANDO-REAL	direct delivery paused:	the game did not react to any target	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	2 randomizer rewards waiting - the game is not answering right now; trying again on the next planet
+[script] [rando]	RANDO-SHOP	waiting for rando_give.dll v5 (needed to find the vendor in memory)
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=1.0 TotalRaritanium=1.0
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=4.0 TotalRaritanium=4.0
+[script] [rando]	RANDO-DISCOVER	VendorPurchaseEvent	ShowRemapTutorial=false WeaponName=BurstPistol
+[script] [rando]	RANDO-REAL	already in the game:	weapon:burst_pistol	(bought)
+[script] [rando]	RANDO-DISCOVER	PurchaseWeaponEvent	WeaponConfig=12916239727364833280 WeaponName=WEAPON_BURSTPISTOL
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=18 TotalBolts=222
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=517514259 Loaded=true
+[script] [rando]	RANDO-NOTIFY	Destination 1/3 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Randomizer: you are at Zurkie's
+[script] [rando]	RANDO-NOTIFY	Destination 2/3 - at Zurkie's: Zurkie's Gastropub, defeat Francois (ratchet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 3/3 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 1/3 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 2/3 - at Zurkie's: Zurkie's Gastropub, defeat Francois (ratchet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 3/3 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 1/3 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 2/3 - at Zurkie's: Zurkie's Gastropub, defeat Francois (ratchet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 3/3 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 1/3 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[travel] taking off for CHK_NEFCITY_SHIP through CHK_TRANSITION_TO_NEFARIOUS_CITY
+[script] [rando]	RANDO-HUB	travel:	fly	to	CHK_NEFCITY_SHIP	(registry) for	nefarious_city	nefcity_1	Ctrl+F6	taking off for CHK_NEFCITY_SHIP through CHK_TRANSITION_TO_NEFARIOUS_CITY
+[script] [rando]	RANDO-NOTIFY	Randomizer: off to Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4217533 ItemHandle=4291079
+[script] [rando]	RANDO-GADGET	grindboots
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4217533 ItemHandle=4291080
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4217533 ItemHandle=4291081
+[script] [rando]	RANDO-GADGET	rift_tether
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4217533 ItemHandle=4291082
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4217533 ItemHandle=4291083
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4217598 ItemHandle=4301895
+[script] [rando]	RANDO-GADGET	glide
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4217598 ItemHandle=4301896
+[script] [rando]	RANDO-GADGET	grapple
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=4217598 ItemHandle=4301901
+[travel] taking off for CHK_NEFCITY_SHIP through CHK_TRANSITION_TO_NEFARIOUS_CITY
+[script] [rando]	RANDO-HUB	travel:	fly	to	CHK_NEFCITY_SHIP	(registry) for	nefarious_city	nefcity_1	Ctrl+F6	taking off for CHK_NEFCITY_SHIP through CHK_TRANSITION_TO_NEFARIOUS_CITY
+[script] [rando]	RANDO-NOTIFY	Randomizer: off to Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet)
+[script] [rando]	RANDO-REAL	direct delivery: trying again on this planet
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity OldPlanetName=Zurkon
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-HUB	arrived for	nefcity_1	(fly)
+[script] [rando]	RANDO-NOTIFY	Nefarious City: Market, Club Nefarious, follow the Phantom, the statue
+[script] [rando]	RANDO-HUB	levels on nefarious_city: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=59593087 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	hero:	ratchet	->	rivet	applied
+[script] [rando]	RANDO-REAL	weapon type	1010	is	weapon:lightning_rod
+[script] [rando]	RANDO-REAL	already in the game:	weapon:lightning_rod	(the game answered late (type 1010))
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Lightning Rod
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1010
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 104	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-REAL	direct delivery: no reaction from the game for	glitch	with target hero
+[script] [rando]	RANDO-HUB	destination	nefcity_1	mission	MIS_NEFCITY_01	is	inactive
+[script] [rando]	RANDO-HUB	force available	MIS_NEFCITY_01	done (inactive -> available)
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_NEFCITY_01 MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_NEFCITY_01 MissionSegmentId=D6D4B3A31CEA9B75B680F637E9D4CF10
+[script] [rando]	RANDO-HUB	start	MIS_NEFCITY_01	done (available -> active)
+[script] [rando]	RANDO-HUB	destination	nefcity_1:	story	MIS_NEFCITY_01 started
+[script] [rando]	RANDO-NOTIFY	Nefarious City: Market, Club Nefarious, follow the Phantom, the statue - the story is running (started)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 109	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_GO_TO_NEFCITY ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1011
+[script] [rando]	RANDO-REAL	direct delivery: target group 1 works - kept for next time
+[script] [rando]	RANDO-REAL	no confirmation yet for	glitch	(direct) - will retry
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=263079407 Loaded=true
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 111	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	glitch	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Glitch: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=6390608 ItemHandle=6390757
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=6390608 ItemHandle=6390758
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=6390608 ItemHandle=6390763
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=6390548 ItemHandle=6390844
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=6390548 ItemHandle=6390845
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=6390548 ItemHandle=6390846
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=6390548 ItemHandle=6390847
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=6390548 ItemHandle=6390848
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-HUB	back on	nefarious_city	for	nefcity_1	- asking the game where its story is
+[script] [rando]	RANDO-HUB	levels on nefarious_city: unlocked 0x7FE, other 0x0, current 2
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	destination	nefcity_1	mission	MIS_NEFCITY_01	is	active
+[script] [rando]	RANDO-HUB	destination	nefcity_1:	story	MIS_NEFCITY_01 already active
+[script] [rando]	RANDO-NOTIFY	Nefarious City: Market, Club Nefarious, follow the Phantom, the statue - the story is running (already active)
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 122	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	glitch	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Glitch: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=3.0 TotalRaritanium=7.0
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=43 TotalBolts=294
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainGoldBoltEvent	BoltName=Nefarious City 3 TotalBolts=1
+[script] [rando]	RANDO-BOLT	Nefarious City 3	->	goldbolt:01	(requirements met)
+[script] [rando]	location goldbolt:01 (Gold Bolt Nefarious City 3)
+[script] [rando]	received Lombax Praetorian boots
+[script] [rando]	RANDO-NOTIFY	Gold Bolt 1/25: Lombax Praetorian boots - adding it to your armor
+[script] [rando]	RANDO-REAL	sent	armor:lombax_armor_legs	configs/hero/vanity/vanitybundles/lombax_armor/hero_vanity_bundle_legs_lombax_armor.config	9E4EAAF5C6CC8F98	via rando_give.dll (armor)	request 128
+[script] [rando]	RANDO-REAL	confirmed	armor:lombax_armor_legs	(armor) after	1	frames
+[script] [rando]	RANDO-NOTIFY	Added to your armor: Lombax Praetorian boots
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=2 TotalBolts=296
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=8453168 ItemHandle=8453612
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=8453168 ItemHandle=8453613
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=8453168 ItemHandle=8453618
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=8453108 ItemHandle=8453700
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=8453108 ItemHandle=8453701
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=8453108 ItemHandle=8453702
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=8453108 ItemHandle=8453703
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=8453108 ItemHandle=8453704
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-HUB	back on	nefarious_city	for	nefcity_1	- asking the game where its story is
+[script] [rando]	RANDO-HUB	levels on nefarious_city: unlocked 0x7FE, other 0x0, current 2
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	destination	nefcity_1	mission	MIS_NEFCITY_01	is	active
+[script] [rando]	RANDO-HUB	destination	nefcity_1:	story	MIS_NEFCITY_01 already active
+[script] [rando]	RANDO-NOTIFY	Nefarious City: Market, Club Nefarious, follow the Phantom, the statue - the story is running (already active)
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 137	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	glitch	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Glitch: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=209 TotalBolts=505
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 2/3 - at Zurkie's: Zurkie's Gastropub, defeat Francois (ratchet) - Ctrl+F6 to go
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 3/3 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	travel to	torren_iv	impossible:	no checkpoint known
+[script] [rando]	RANDO-NOTIFY	Randomizer: no checkpoint known for Torren IV (Molonoth Fields) yet (see rivet.log)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 1/3 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 2/3 - at Zurkie's: Zurkie's Gastropub, defeat Francois (ratchet) - Ctrl+F6 to go
+[travel] warp to CHK_ZURK_00_DEFAULT (region 37)
+[script] [rando]	RANDO-HUB	warp to Zurkie's at	CHK_ZURK_00_DEFAULT	(for scarstu_1)	nil
+[script] [rando]	RANDO-REAL	PlanetChangedEvent	scripts\09_rando_real.lua:672: attempt to call a nil value (global 'u32_at')
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Zurkie's: 3 destination(s) open - F6 to choose, Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	arrived for	scarstu_1	(at the hub)
+[script] [rando]	RANDO-NOTIFY	Scarstu Debris Field (Zurkie's): Zurkie's Gastropub, defeat Francois
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-HUB	hero:	rivet	->	ratchet	applied
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x1 -> 0x1)
+[script] [rando]	RANDO-HUB	levels at the hub: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 153	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-REAL	no confirmation yet for	glitch	(direct) - will retry
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	destination	scarstu_1	mission	MIS_ZURK_01_VISIT_01	is	inactive
+[script] [rando]	RANDO-HUB	force available	MIS_ZURK_01_VISIT_01	done (inactive -> available)
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_01_VISIT_01 MissionSegmentId=8530D7B1FAF875AE739A906ECDE25E49
+[script] [rando]	RANDO-HUB	start	MIS_ZURK_01_VISIT_01	done (available -> active)
+[script] [rando]	RANDO-HUB	destination	scarstu_1:	story	MIS_ZURK_01_VISIT_01 started
+[script] [rando]	RANDO-NOTIFY	Scarstu Debris Field (Zurkie's): Zurkie's Gastropub, defeat Francois - the story is running (started)
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_01_GO_TO_ZURKONS ObjectiveState=1
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	sent	glitch	configs/equipment/gdgt_glitchprojector_item.config	BDF624AF87896CE9	via rando_give.dll	request 159	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	glitch
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_01_GO_TO_ZURKONS ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_01_LAND_RATCHET_VISIT_1 ObjectiveState=1
+[script] [rando]	RANDO-REAL	not confirmed after	3	direct tries:	glitch
+[script] [rando]	RANDO-NOTIFY	Glitch: the game reported nothing new - you probably have it already
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	PlanetChangedEvent	scripts\09_rando_real.lua:672: attempt to call a nil value (global 'u32_at')
+[script] [rando]	RANDO-REAL	LevelLoadedEvent	scripts\09_rando_real.lua:672: attempt to call a nil value (global 'u32_at')
+[script] [rando]	RANDO-REAL	PlanetChangedEvent	scripts\09_rando_real.lua:672: attempt to call a nil value (global 'u32_at')
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=12598753 ItemHandle=10577719
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=12598753 ItemHandle=10577728
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=12598753 ItemHandle=10579168
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=12595003 ItemHandle=10579672
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=12595003 ItemHandle=10579673
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=12595003 ItemHandle=10579674
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=12595003 ItemHandle=10579675
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=12595003 ItemHandle=10579676
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Zurkie's: 3 destination(s) open - F6 to choose, Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x0 -> 0x1)
+[script] [rando]	RANDO-HUB	levels at the hub: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=10510608 ItemHandle=10510757
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=10510608 ItemHandle=10510758
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=10510608 ItemHandle=10510763
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=10510546 ItemHandle=10510846
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Zurkie's: 3 destination(s) open - F6 to choose, Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x1 -> 0x1)
+[script] [rando]	RANDO-HUB	levels at the hub: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=2.0 TotalRaritanium=9.0
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=0 TotalBolts=539
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=42 TotalBolts=581
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Zurkie's: 3 destination(s) open - F6 to choose, Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x0 -> 0x1)
+[script] [rando]	RANDO-HUB	levels at the hub: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Q-Force helmet	source:qforce_armor_head
+[script] [rando]	location source:qforce_armor_head (armor source of the Q-Force helmet (found by polling))
+[script] [rando]	received 4250 bolts (source:qforce_armor_head)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Q-Force helmet): 4250 Bolts
+[script] [rando]	RANDO-ARMOR	intercepting 26 armor source(s)
+[script] [rando]	RANDO-REAL	currency sent:	4250	currency:bolts	(source:qforce_armor_head)
+[script] [rando]	RANDO-NOTIFY	+4250 Bolts
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=4292 TotalBolts=4873
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_01_LAND_RATCHET_VISIT_1 ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_02_PUB_PRE_MEET_ZURKON_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3055453428 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_02_PUB_PRE_MEET_ZURKON_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_03_PUB_ZURKON_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1842349009 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_03_PUB_ZURKON_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_03_PUB_POST_MEET_ZURKON_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1959620912 Loaded=true
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=F8174CA3AD38099007C477768DC2E9CB
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP ObjectiveName=OBJ_ZURK_ARENA_COMPLETE_BRONZE_CUP ObjectiveState=1
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2627579503 Loaded=true
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionSegmentId=EFA7636715B6B7576F1780D797F95A3D
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 ObjectiveName=OBJ_ZURK_06_ARENA_CHALLENGE_A1 ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_03_PUB_POST_MEET_ZURKON_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_05_ARENA_INTRO_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2196958338 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_05_ARENA_INTRO_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_06_ARENA_CHALLENGE_A1 ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2552552650 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=42 TotalBolts=4915
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=189 TotalBolts=5104
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=112 TotalBolts=5216
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=169 TotalBolts=5385
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	already in the game:	weapon:pixelizer	(equipped)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=196 TotalBolts=5581
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=2 TotalBolts=5583
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=57 TotalBolts=5640
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=36 TotalBolts=5676
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=93 TotalBolts=5769
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=165 TotalBolts=5934
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=19 TotalBolts=5953
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=37 TotalBolts=5990
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=53 TotalBolts=6043
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=459 TotalBolts=6502
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Robot Pirate boots	source:pirate_legs
+[script] [rando]	location source:pirate_legs (armor source of the Robot Pirate boots (found by polling))
+[script] [rando]	received 5500 bolts (source:pirate_legs)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Robot Pirate boots): 5500 Bolts
+[script] [rando]	RANDO-ARMOR	intercepting 25 armor source(s)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	currency sent:	5500	currency:bolts	(source:pirate_legs)
+[script] [rando]	RANDO-NOTIFY	+5500 Bolts
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=5500 TotalBolts=12002
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 ObjectiveName=OBJ_ZURK_06_ARENA_CHALLENGE_A1 ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionState=4 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=238.18687438965 MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionSegmentId=EFA7636715B6B7576F1780D797F95A3D
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_06_ARENA_CHALLENGE_A1 ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_08_ARENA_CHALLENGE_A2 ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2735673697 Loaded=true
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionSegmentId=183774CE9952B581102664490D579481
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=416663063 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 ObjectiveName=OBJ_ZURK_08_ARENA_CHALLENGE_A2 ObjectiveState=1
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=23 TotalBolts=12025
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_08_ARENA_CHALLENGE_A2 ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_08B_ARENA_CHALLENGE_A2_SKIP_INTRO ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 ObjectiveName=OBJ_ZURK_08_ARENA_CHALLENGE_A2 ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 ObjectiveName=OBJ_ZURK_08B_ARENA_CHALLENGE_A2_SKIP_INTRO ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1012
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1013
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=194182092 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=189 TotalBolts=12214
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=3.0 TotalRaritanium=12.0
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=0 TotalBolts=12917
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 ObjectiveName=OBJ_ZURK_08B_ARENA_CHALLENGE_A2_SKIP_INTRO ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionState=4 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=83.981597900391 MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionSegmentId=183774CE9952B581102664490D579481
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_08B_ARENA_CHALLENGE_A2_SKIP_INTRO ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_09_ARENA_WIN_TRESP_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=400895697 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_09_ARENA_WIN_TRESP_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_10_PUB_POST_WIN_TRESP_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_10_PUB_POST_WIN_TRESP_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_12_HERO_MEET_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1258408867 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_12_HERO_MEET_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_13_POST_HERO_MEET_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A5 MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A3 MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=680747740 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1015
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1016
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1017
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1018
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 3/3 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 1/3 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 2/3 - at Zurkie's: Zurkie's Gastropub, defeat Francois (ratchet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 3/3 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=3 TotalBolts=12920
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1020
+[script] [rando]	RANDO-DISCOVER	VendorPurchaseEvent	ShowRemapTutorial=false WeaponName=Tunneler
+[script] [rando]	RANDO-REAL	already in the game:	weapon:drillhound	(bought)
+[script] [rando]	RANDO-DISCOVER	PurchaseWeaponEvent	WeaponConfig=13473570788164249600 WeaponName=WEAPON_TUNNELER
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1021
+[script] [rando]	RANDO-DISCOVER	VendorPurchaseEvent	ShowRemapTutorial=false WeaponName=ProtoGrenade
+[script] [rando]	RANDO-REAL	already in the game:	weapon:shatterbomb	(bought)
+[script] [rando]	RANDO-DISCOVER	PurchaseWeaponEvent	WeaponConfig=12423060875416948736 WeaponName=WEAPON_PROTOGRENADE
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1022
+[script] [rando]	RANDO-DISCOVER	VendorPurchaseEvent	ShowRemapTutorial=false WeaponName=ProtoShotgun
+[script] [rando]	RANDO-REAL	already in the game:	weapon:enforcer	(bought)
+[script] [rando]	RANDO-DISCOVER	PurchaseWeaponEvent	WeaponConfig=11206664811389249536 WeaponName=WEAPON_PROTOSHOTGUN
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=197 TotalBolts=13117
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainGoldBoltEvent	BoltName=Zurkon's 1 TotalBolts=2
+[script] [rando]	RANDO-BOLT	Zurkon's 1	->	goldbolt:07	(current planet scarstu, requirements met)
+[script] [rando]	location goldbolt:07 (Gold Bolt Zurkon's 1)
+[script] [rando]	received Reaver boots
+[script] [rando]	RANDO-NOTIFY	Gold Bolt 2/25: Reaver boots - adding it to your armor
+[script] [rando]	RANDO-REAL	sent	armor:reaver_armor_legs	configs/hero/vanity/vanitybundles/reaver_armor/hero_vanity_bundle_legs_reaver_armor.config	B2ED1EC94AC4F1C8	via rando_give.dll (armor)	request 463
+[script] [rando]	RANDO-REAL	already in the game:	armor:reaver_armor_legs	(the game's armor code said no: owned)
+[script] [rando]	RANDO-NOTIFY	Reaver boots: you have this armor piece already
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=109 TotalBolts=13226
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 ObjectiveName=OBJ_ZURK_13_POST_HERO_MEET_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 MissionState=4 PreviousState=2
+[script] [rando]	HUB: scarstu_1 finished (story: MIS_ZURK_01_VISIT_01) - 1/13
+[script] [rando]	location planet:scarstu (destination scarstu_1 finished)
+[script] [rando]	received 5250 bolts (planet:scarstu)
+[script] [rando]	RANDO-NOTIFY	Randomizer: 5250 Bolts
+[script] [rando]	location side:zurkies_bronze (destination scarstu_1 finished)
+[script] [rando]	received 70 raritanium (side:zurkies_bronze)
+[script] [rando]	RANDO-NOTIFY	Randomizer: 70 Raritanium
+[script] [rando]	location side:zurkies_silver (destination scarstu_1 finished)
+[script] [rando]	received 2000 bolts (side:zurkies_silver)
+[script] [rando]	RANDO-NOTIFY	Randomizer: 2000 Bolts
+[script] [rando]	Coordinates: cordelion (hub)
+[script] [rando]	RANDO-HUB	Coordinates opened:	cordelion
+[script] [rando]	RANDO-NOTIFY	Destination complete (1/13) - new Coordinates: Cordelion
+[script] [rando]	location side:zurkies_gold (paid with the planet)
+[script] [rando]	received 4000 bolts (side:zurkies_gold)
+[script] [rando]	RANDO-NOTIFY	Randomizer: 4000 Bolts
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=570.61706542969 MissionName=MIS_ZURK_01_VISIT_01 MissionSegmentId=8530D7B1FAF875AE739A906ECDE25E49
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SARG_GEMQUEST MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_SARG_GEMQUEST MissionSegmentId=C3670E51A732BEABE44AF145CF58692C
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_BLIZAR MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_BLIZAR MissionSegmentId=BA0E12F258D60990E225C664B69D33AD
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_BLIZAR_OPTIONAL_SURVEYOR MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SAV_01 MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_SAV_01 MissionSegmentId=799B43437F1A8B874EAEC26AB0CF4375
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_SAV_01_ENCOUNTERS MissionSegmentId=F3F378995B37F0364D887D4CF0041179
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SAV_QUEST MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_FORCEFIELD ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_TRI_BOLT ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_TRAIN ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_TRI_BEAST ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_CRASH ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_TRI_WALL ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_TRI_RINGS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_CAVE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_SKIFF_CANYON ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_TOADS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_OUTPOST ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_SHIP ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENCOUNTERS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_SKIFF_BADLAND ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_SKIFF_GRASSLAND ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_SAV_01_ENCOUNTERS ObjectiveName=OBJ_SAV_01_ENC_TRAP ObjectiveState=1
+[script] [rando]	RANDO-REAL	currency sent:	5250	currency:bolts	(planet:scarstu)
+[script] [rando]	RANDO-NOTIFY	+5250 Bolts
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=5250 TotalBolts=18476
+[script] [rando]	RANDO-REAL	currency sent:	70	currency:raritanium	(side:zurkies_bronze)
+[script] [rando]	RANDO-NOTIFY	+70 Raritanium
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	currency sent:	2000	currency:bolts	(side:zurkies_silver)
+[script] [rando]	RANDO-NOTIFY	+2000 Bolts
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=2000 TotalBolts=20476
+[script] [rando]	RANDO-REAL	currency sent:	4000	currency:bolts	(side:zurkies_gold)
+[script] [rando]	RANDO-NOTIFY	+4000 Bolts
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=4000 TotalBolts=24476
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	PlanetMenuAcceptEvent	DestinationCheckpointName=CHK_BLIZAR_B_LANDINGPAD_DESTROYED InterplanetaryCheckpointName=CHK_TRANSITION_TO_BLIZAR
+[script] [rando]	RANDO-TRAVEL	planet menu:	CHK_BLIZAR_B_LANDINGPAD_DESTROYED	->	blizar_prime	from	scarstu
+[script] [rando]	RANDO-HUB	planet menu:	CHK_BLIZAR_B_LANDINGPAD_DESTROYED	->	blizar_prime
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-REAL	PlanetChangedEvent	scripts\09_rando_real.lua:672: attempt to call a nil value (global 'u32_at')
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Blizar OldPlanetName=Zurkon
+[script] [rando]	RANDO-PLANET	Blizar	blizar_prime	rewards locked
+[script] [rando]	RANDO-HUB	no Coordinates for	blizar_prime	- back to Zurkie's
+[script] [rando]	RANDO-NOTIFY	Randomizer: no Coordinates for Blizar Prime yet - back to Zurkie's
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1023
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	levels on blizar_prime: unlocked 0x7FE, other 0x0, current 6
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2116196157 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[travel] warp to CHK_ZURK_00_DEFAULT (region 37)
+[script] [rando]	RANDO-HUB	warp to Zurkie's at	CHK_ZURK_00_DEFAULT	(no Coordinates for blizar_prime)	nil
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon OldPlanetName=Blizar
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Zurkie's: 4 destination(s) open - F6 to choose, Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x7FE, other 0x0, current 6
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x1 -> 0x1)
+[script] [rando]	RANDO-HUB	levels at the hub: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	PlanetMenuAcceptEvent	DestinationCheckpointName=CHK_SAV_01_LANDING InterplanetaryCheckpointName=CHK_TRANSITION_TO_SAVALI
+[script] [rando]	RANDO-TRAVEL	planet menu:	CHK_SAV_01_LANDING	->	savali	from	scarstu
+[script] [rando]	RANDO-HUB	planet menu:	CHK_SAV_01_LANDING	->	savali
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Savali OldPlanetName=Zurkon
+[script] [rando]	RANDO-PLANET	Savali	savali	rewards locked
+[script] [rando]	RANDO-HUB	no Coordinates for	savali	- back to Zurkie's
+[script] [rando]	RANDO-NOTIFY	Randomizer: no Coordinates for Savali yet - back to Zurkie's
+[script] [rando]	RANDO-HUB	levels on savali: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1024
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1778007627 Loaded=true
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[travel] warp to CHK_ZURK_00_DEFAULT (region 37)
+[script] [rando]	RANDO-HUB	warp to Zurkie's at	CHK_ZURK_00_DEFAULT	(no Coordinates for savali)	nil
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon OldPlanetName=Savali
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Zurkie's: 4 destination(s) open - F6 to choose, Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x7FE, other 0x0, current 5
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x1 -> 0x1)
+[script] [rando]	RANDO-HUB	levels at the hub: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Randomizer: you are at Zurkie's
+[script] [rando]	RANDO-NOTIFY	Destination 4/4 - at Zurkie's: Meet Ratchet in the Gastropub (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=508.66442871094 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=F8174CA3AD38099007C477768DC2E9CB
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Zurkie's: 4 destination(s) open - F6 to choose, Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	levels on scarstu: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=869918C36B752C5A6B58D5DB9963BBE5
+[script] [rando]	RANDO-NOTIFY	Destination 1/4 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 2/4 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 3/4 - Cordelion: Kedaro Station, the Rubion Forge, a new Dimensionator (ratchet) - Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x0 -> 0x1)
+[script] [rando]	RANDO-HUB	levels at the hub: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	travel to	cordelion	impossible:	no checkpoint known
+[script] [rando]	RANDO-NOTIFY	Randomizer: no checkpoint known for Cordelion yet (see rivet.log)
+[script] [rando]	RANDO-NOTIFY	Destination 4/4 - at Zurkie's: Meet Ratchet in the Gastropub (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 1/4 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 2/4 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 3/4 - Cordelion: Kedaro Station, the Rubion Forge, a new Dimensionator (ratchet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 4/4 - at Zurkie's: Meet Ratchet in the Gastropub (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	arrived for	scarstu_2	(at the hub)
+[script] [rando]	RANDO-NOTIFY	Scarstu Debris Field (Zurkie's): Meet Ratchet in the Gastropub
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 1/4 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 2/4 - Torren IV (Molonoth Fields): Find the Fixer, the Hurlshot, escape (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-HUB	travel to	torren_iv	impossible:	no checkpoint known
+[script] [rando]	RANDO-NOTIFY	Randomizer: no checkpoint known for Torren IV (Molonoth Fields) yet (see rivet.log)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	hero:	ratchet	->	rivet	applied
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	destination	scarstu_2	mission	MIS_ZURK_02B_VISIT_02B	is	inactive
+[script] [rando]	RANDO-HUB	force available	MIS_ZURK_02B_VISIT_02B	done (inactive -> available)
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_02B_VISIT_02B MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_02B_VISIT_02B MissionSegmentId=A3630FD5016BB2DAFDC64DC74336E333
+[script] [rando]	RANDO-HUB	start	MIS_ZURK_02B_VISIT_02B	done (available -> active)
+[script] [rando]	RANDO-HUB	destination	scarstu_2:	story	MIS_ZURK_02B_VISIT_02B started
+[script] [rando]	RANDO-NOTIFY	Scarstu Debris Field (Zurkie's): Meet Ratchet in the Gastropub - the story is running (started)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Randomizer: you are at Zurkie's
+[script] [rando]	RANDO-NOTIFY	Destination 3/4 - Cordelion: Kedaro Station, the Rubion Forge, a new Dimensionator (ratchet) - Ctrl+F6 to go
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-NOTIFY	Destination 4/4 - at Zurkie's: Meet Ratchet in the Gastropub (rivet) - Ctrl+F6 to go
+[script] [rando]	RANDO-NOTIFY	Destination 1/4 - Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet) - Ctrl+F6 to go
+[travel] taking off for CHK_NEFCITY_SHIP through CHK_TRANSITION_TO_NEFARIOUS_CITY
+[script] [rando]	RANDO-HUB	travel:	fly	to	CHK_NEFCITY_SHIP	(registry) for	nefarious_city	nefcity_1	Ctrl+F6	taking off for CHK_NEFCITY_SHIP through CHK_TRANSITION_TO_NEFARIOUS_CITY
+[script] [rando]	RANDO-NOTIFY	Randomizer: off to Nefarious City: Market, Club Nefarious, follow the Phantom, the statue (rivet)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-HUB	arrived for	nefcity_1	(fly)
+[script] [rando]	RANDO-NOTIFY	Nefarious City: Market, Club Nefarious, follow the Phantom, the statue
+[script] [rando]	RANDO-HUB	levels on nefarious_city: unlocked 0x7FE, other 0x0, current 4
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	destination	nefcity_1	mission	MIS_NEFCITY_01	is	active
+[script] [rando]	RANDO-HUB	destination	nefcity_1:	story	MIS_NEFCITY_01 already active
+[script] [rando]	RANDO-NOTIFY	Nefarious City: Market, Club Nefarious, follow the Phantom, the statue - the story is running (already active)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:88: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=133.01802062988 MissionName=MIS_BLIZAR MissionSegmentId=BA0E12F258D60990E225C664B69D33AD
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=924.29125976562 MissionName=MIS_INTRO MissionSegmentId=07F9EC3DD9CB13B206D4D064A640C9EC
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=783.29040527344 MissionName=MIS_NEFCITY_01 MissionSegmentId=D6D4B3A31CEA9B75B680F637E9D4CF10
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=924.29125976562 MissionName=MIS_RYNO_PLANS MissionSegmentId=CA5DE3437B992EFBEF79E5202D2E98ED
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=133.01802062988 MissionName=MIS_SARG_GEMQUEST MissionSegmentId=C3670E51A732BEABE44AF145CF58692C
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=133.01802062988 MissionName=MIS_SAV_01 MissionSegmentId=799B43437F1A8B874EAEC26AB0CF4375
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=133.01802062988 MissionName=MIS_SAV_01_ENCOUNTERS MissionSegmentId=F3F378995B37F0364D887D4CF0041179
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=37.797836303711 MissionName=MIS_ZURK_02B_VISIT_02B MissionSegmentId=A3630FD5016BB2DAFDC64DC74336E333
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=54.320304870605 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=869918C36B752C5A6B58D5DB9963BBE5
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=BD1215D5DFC32BF7D36AB05941AD29DF
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=A5B1E45600811E7AAFA5E1831B8BD89D
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-HUB	back on	nefarious_city	for	nefcity_1	- asking the game where its story is
+[script] [rando]	RANDO-HUB	levels on nefarious_city: unlocked 0x0, other 0x0, current 2
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:110: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	destination	nefcity_1	mission	MIS_NEFCITY_01	is	inactive
+[script] [rando]	RANDO-HUB	force available	MIS_NEFCITY_01	done (inactive -> available)
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_NEFCITY_01 MissionSegmentId=0BA05E6224F95A092AEF49CBB8BC967D
+[script] [rando]	RANDO-HUB	start	MIS_NEFCITY_01	done (available -> active)
+[script] [rando]	RANDO-HUB	destination	nefcity_1:	story	MIS_NEFCITY_01 started
+[script] [rando]	RANDO-NOTIFY	Nefarious City: Market, Club Nefarious, follow the Phantom, the statue - the story is running (started)
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing ui/loaded/exported/hud/mm_6.json
+[loader] closing ui/loaded/exported/hud/mm_5.json
+[loader] closing ui/loaded/exported/hud/mm_3.json
+[loader] closing ui/loaded/exported/hud/mm_0.json
+[loader] closing ui/loaded/exported/hud/mm_2.json
+[loader] closing ui/loaded/exported/hud/mm_1.json
+[loader] closing ui/loaded/exported/hud/mm_7.json
+[loader] closing ui/loaded/exported/hud/mm_4.json
+[rivet] fini complete

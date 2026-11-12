@@ -1,0 +1,274 @@
+Rift Apart Randomizer 8.1 - test run 2026-11-12 05:29 UTC
+Python 3.13.18 on Linux
+ran 247, failures 0, errors 0, skipped 9
+
+test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
+test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
+test_campaign_in_spoiler_and_seed (tests.test_campaign.CampaignSeedTests.test_campaign_in_spoiler_and_seed) ... ok
+test_gadgets_off_campaign_still_finishable (tests.test_campaign.CampaignSeedTests.test_gadgets_off_campaign_still_finishable) ... ok
+test_hoverboots_come_before_the_visits_needing_them (tests.test_campaign.CampaignSeedTests.test_hoverboots_come_before_the_visits_needing_them) ... ok
+test_same_seed_same_campaign (tests.test_campaign.CampaignSeedTests.test_same_seed_same_campaign) ... ok
+test_a_visit_the_game_has_not_opened_is_not_forced (tests.test_campaign.DirectorTests.test_a_visit_the_game_has_not_opened_is_not_forced) ... ok
+test_blocked_until_coordinates (tests.test_campaign.DirectorTests.test_blocked_until_coordinates) ... ok
+test_campaign_without_verified_control_falls_back_honestly (tests.test_campaign.DirectorTests.test_campaign_without_verified_control_falls_back_honestly) ... ok
+test_director_starts_an_open_visit_travels_and_advances (tests.test_campaign.DirectorTests.test_director_starts_an_open_visit_travels_and_advances) ... ok
+test_item_delivery_and_mission_calls_share_the_mailbox (tests.test_campaign.DirectorTests.test_item_delivery_and_mission_calls_share_the_mailbox) ... ok
+test_lab_intro_experiment_verifies_new_game_init (tests.test_campaign.DirectorTests.test_lab_intro_experiment_verifies_new_game_init) ... ok
+test_lab_intro_not_active_is_not_touched (tests.test_campaign.DirectorTests.test_lab_intro_not_active_is_not_touched) ... ok
+test_lab_on_a_locked_visit_tries_start_then_replay (tests.test_campaign.DirectorTests.test_lab_on_a_locked_visit_tries_start_then_replay) ... ok
+test_lab_read_only_asks (tests.test_campaign.DirectorTests.test_lab_read_only_asks) ... ok
+test_lab_starts_an_open_visit_and_builds_capabilities (tests.test_campaign.DirectorTests.test_lab_starts_an_open_visit_and_builds_capabilities) ... ok
+test_old_helper_or_other_exe_means_no_mission_calls (tests.test_campaign.DirectorTests.test_old_helper_or_other_exe_means_no_mission_calls) ... ok
+test_random_start_skips_the_intro_with_new_game_init (tests.test_campaign.DirectorTests.test_random_start_skips_the_intro_with_new_game_init) ... ok
+test_random_start_waits_until_the_intro_is_active (tests.test_campaign.DirectorTests.test_random_start_waits_until_the_intro_is_active) ... ok
+test_random_start_without_new_game_init_stays_vanilla (tests.test_campaign.DirectorTests.test_random_start_without_new_game_init_stays_vanilla) ... ok
+test_research_export (tests.test_campaign.DirectorTests.test_research_export) ... ok
+test_the_game_is_asked_for_states (tests.test_campaign.DirectorTests.test_the_game_is_asked_for_states) ... ok
+test_vanilla_seed_director_stays_out (tests.test_campaign.DirectorTests.test_vanilla_seed_director_stays_out) ... ok
+test_fallback_checker_catches_a_coordinates_cycle (tests.test_campaign.FallbackCheckTests.test_fallback_checker_catches_a_coordinates_cycle) ... ok
+test_research_zip_becomes_registry_override (tests.test_campaign.RegistryBuilderTests.test_research_zip_becomes_registry_override) ... ok
+test_every_mode_gives_valid_orders (tests.test_campaign.SequenceTests.test_every_mode_gives_valid_orders) ... ok
+test_modes_really_reorder (tests.test_campaign.SequenceTests.test_modes_really_reorder) ... ok
+test_planet_shuffle_keeps_revisits_after_first_visits (tests.test_campaign.SequenceTests.test_planet_shuffle_keeps_revisits_after_first_visits) ... ok
+test_story_abilities_come_before_their_use (tests.test_campaign.SequenceTests.test_story_abilities_come_before_their_use) ... ok
+test_research_zip (tests.test_companion.CampaignResearchTests.test_research_zip) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_damaged_save_falls_back_to_bak (tests.test_companion.CompanionTests.test_damaged_save_falls_back_to_bak) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_damaged_save_is_not_loaded (tests.test_companion.CompanionTests.test_damaged_save_is_not_loaded) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_fresh_start_save_and_restore_after_restart (tests.test_companion.CompanionTests.test_fresh_start_save_and_restore_after_restart) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_new_game_keeps_the_previous_run_file (tests.test_companion.CompanionTests.test_new_game_keeps_the_previous_run_file) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_old_scripts_are_reported (tests.test_companion.CompanionTests.test_old_scripts_are_reported) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_random_seed_is_remembered (tests.test_companion.CompanionTests.test_random_seed_is_remembered) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_waits_for_the_game (tests.test_companion.CompanionTests.test_waits_for_the_game) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_dump_and_analyze (tests.test_companion.ResearchToolTests.test_dump_and_analyze) ... skipped 'PowerShell 7 (pwsh) is not installed'
+test_presets (tests.test_generator.BatchTests.test_presets) ... ok
+test_random_setting_combinations (tests.test_generator.BatchTests.test_random_setting_combinations) ... ok
+test_gadget_type_ids_were_reported_by_the_game (tests.test_generator.DatabaseTests.test_gadget_type_ids_were_reported_by_the_game) ... ok
+test_item_ids_come_from_the_dag (tests.test_generator.DatabaseTests.test_item_ids_come_from_the_dag) ... ok
+test_pool_sizes (tests.test_generator.DatabaseTests.test_pool_sizes) ... ok
+test_verified_flags_match_the_logs (tests.test_generator.DatabaseTests.test_verified_flags_match_the_logs) ... ok
+test_weapon_names_come_from_the_games_types (tests.test_generator.DatabaseTests.test_weapon_names_come_from_the_games_types) ... ok
+test_always_start_items_cannot_be_excluded_or_placed (tests.test_generator.GeneratorTests.test_always_start_items_cannot_be_excluded_or_placed) ... ok
+test_armor_items_and_armor_sources (tests.test_generator.GeneratorTests.test_armor_items_and_armor_sources) ... ok
+test_bad_settings_fall_back_to_defaults (tests.test_generator.GeneratorTests.test_bad_settings_fall_back_to_defaults) ... ok
+test_currency_settings (tests.test_generator.GeneratorTests.test_currency_settings)
+7.0: Bolts / Raritanium on and off, ranges, scaling, budgets ... ok
+test_different_seeds_differ (tests.test_generator.GeneratorTests.test_different_seeds_differ) ... ok
+test_every_item_has_one_classification (tests.test_generator.GeneratorTests.test_every_item_has_one_classification) ... ok
+test_no_gadget_behind_itself_and_no_ability_gated_progression (tests.test_generator.GeneratorTests.test_no_gadget_behind_itself_and_no_ability_gated_progression) ... ok
+test_old_filler_settings_are_converted (tests.test_generator.GeneratorTests.test_old_filler_settings_are_converted) ... ok
+test_one_item_per_gold_bolt_and_fixed_start (tests.test_generator.GeneratorTests.test_one_item_per_gold_bolt_and_fixed_start) ... ok
+test_presets_7 (tests.test_generator.GeneratorTests.test_presets_7)
+the five 7.0 presets: each valid, each different, aliases accepted ... ok
+test_reproducible_across_lua_states (tests.test_generator.GeneratorTests.test_reproducible_across_lua_states) ... ok
+test_settings_change_the_fingerprint (tests.test_generator.GeneratorTests.test_settings_change_the_fingerprint) ... ok
+test_share_code_round_trip (tests.test_generator.GeneratorTests.test_share_code_round_trip) ... ok
+test_shop_prices (tests.test_generator.GeneratorTests.test_shop_prices)
+7.0: vanilla (no prices), weapon (the weapon's own price), percent, random ... ok
+test_spoiler_lists_every_placement (tests.test_generator.GeneratorTests.test_spoiler_lists_every_placement) ... ok
+test_start_items (tests.test_generator.GeneratorTests.test_start_items) ... ok
+test_starting_inventory_is_random (tests.test_generator.GeneratorTests.test_starting_inventory_is_random) ... ok
+test_too_few_items_is_refused_or_repaired (tests.test_generator.GeneratorTests.test_too_few_items_is_refused_or_repaired) ... ok
+test_weapon_pool_split_over_shop_start_and_rewards (tests.test_generator.GeneratorTests.test_weapon_pool_split_over_shop_start_and_rewards)
+6.0: 17 pool weapons, 15 vendor slots: every weapon exactly one route, over many seeds ... ok
+test_coordinates_on_their_own_planet_soft_lock (tests.test_generator.VerifierMutationTests.test_coordinates_on_their_own_planet_soft_lock) ... ok
+test_currency_out_of_range_and_over_budget (tests.test_generator.VerifierMutationTests.test_currency_out_of_range_and_over_budget) ... ok
+test_duplicate_item (tests.test_generator.VerifierMutationTests.test_duplicate_item) ... ok
+test_missing_progression_item (tests.test_generator.VerifierMutationTests.test_missing_progression_item) ... ok
+test_story_planet_not_open (tests.test_generator.VerifierMutationTests.test_story_planet_not_open) ... ok
+test_wrong_price (tests.test_generator.VerifierMutationTests.test_wrong_price) ... ok
+test_campaign_with_missing_missions (tests.test_hub.HubCampaignTests.test_campaign_with_missing_missions) ... ok
+test_campaigns_to_the_finale (tests.test_hub.HubCampaignTests.test_campaigns_to_the_finale) ... ok
+test_audit_catches_a_broken_plan (tests.test_hub.HubGeneratorTests.test_audit_catches_a_broken_plan) ... ok
+test_deterministic (tests.test_hub.HubGeneratorTests.test_deterministic) ... ok
+test_hub_chaos_preset (tests.test_hub.HubGeneratorTests.test_hub_chaos_preset) ... ok
+test_level_locks_do_not_apply_to_a_hub_seed (tests.test_hub.HubGeneratorTests.test_level_locks_do_not_apply_to_a_hub_seed) ... ok
+test_many_seeds_two_start_coordinates (tests.test_hub.HubGeneratorTests.test_many_seeds_two_start_coordinates) ... ok
+test_non_hub_seed_has_no_plan_and_ignores_hub_keys (tests.test_hub.HubGeneratorTests.test_non_hub_seed_has_no_plan_and_ignores_hub_keys) ... ok
+test_settings_variants (tests.test_hub.HubGeneratorTests.test_settings_variants) ... ok
+test_share_code (tests.test_hub.HubGeneratorTests.test_share_code) ... ok
+test_spoiler_has_the_hub (tests.test_hub.HubGeneratorTests.test_spoiler_has_the_hub) ... ok
+test_summary_lists_the_hub (tests.test_hub.HubLogSummaryTests.test_summary_lists_the_hub) ... ok
+test_round13_save_loads_never_start_it (tests.test_hub.HubRealLogTests.test_round13_save_loads_never_start_it) ... ok
+test_round14_and_15_new_games_start_the_hub_at_the_wrench (tests.test_hub.HubRealLogTests.test_round14_and_15_new_games_start_the_hub_at_the_wrench) ... ok
+test_round16_new_game_starts_it (tests.test_hub.HubRealLogTests.test_round16_new_game_starts_it) ... ok
+test_a_save_load_does_not_start_the_hub (tests.test_hub.HubRuntimeTests.test_a_save_load_does_not_start_the_hub) ... ok
+test_available_mission_started_without_forcing (tests.test_hub.HubRuntimeTests.test_available_mission_started_without_forcing) ... ok
+test_destination_story_forced_then_finished (tests.test_hub.HubRuntimeTests.test_destination_story_forced_then_finished) ... ok
+test_explore_and_finish_by_hand (tests.test_hub.HubRuntimeTests.test_explore_and_finish_by_hand) ... ok
+test_hub_runtime_off (tests.test_hub.HubRuntimeTests.test_hub_runtime_off) ... ok
+test_in_game_seed_equals_the_offline_one (tests.test_hub.HubRuntimeTests.test_in_game_seed_equals_the_offline_one)
+the game generates the seed in small slices (the hub check yields too): same seed ... ok
+test_menu_to_a_locked_planet_goes_back_to_the_hub (tests.test_hub.HubRuntimeTests.test_menu_to_a_locked_planet_goes_back_to_the_hub) ... ok
+test_new_game_goes_to_zurkies_with_two_coordinates (tests.test_hub.HubRuntimeTests.test_new_game_goes_to_zurkies_with_two_coordinates) ... ok
+test_no_force_no_v6_replay_then_explore (tests.test_hub.HubRuntimeTests.test_no_force_no_v6_replay_then_explore) ... ok
+test_parade_on_a_load_goes_back_to_the_hub (tests.test_hub.HubRuntimeTests.test_parade_on_a_load_goes_back_to_the_hub) ... ok
+test_replay_that_works (tests.test_hub.HubRuntimeTests.test_replay_that_works) ... ok
+test_restore_that_comes_after_the_load (tests.test_hub.HubRuntimeTests.test_restore_that_comes_after_the_load)
+the companion often answers after the game has loaded the save: the restored hub then ... ok
+test_saved_progress_survives (tests.test_hub.HubRuntimeTests.test_saved_progress_survives) ... ok
+test_startup_guard_undoes_the_games_own_travel (tests.test_hub.HubRuntimeTests.test_startup_guard_undoes_the_games_own_travel) ... ok
+test_status_and_keys (tests.test_hub.HubRuntimeTests.test_status_and_keys) ... ok
+test_triggers (tests.test_hub.HubRuntimeTests.test_triggers) ... ok
+test_warp_to_zurkies_fails_everywhere (tests.test_hub.HubRuntimeTests.test_warp_to_zurkies_fails_everywhere) ... ok
+test_fixed_setting_does_not_wait (tests.test_levels.ArsenalAutoTests.test_fixed_setting_does_not_wait) ... ok
+test_no_companion_means_not_installed (tests.test_levels.ArsenalAutoTests.test_no_companion_means_not_installed) ... ok
+test_random_seed_and_auto (tests.test_levels.ArsenalAutoTests.test_random_seed_and_auto) ... ok
+test_seed_waits_for_the_companions_check (tests.test_levels.ArsenalAutoTests.test_seed_waits_for_the_companions_check) ... ok
+test_amounts_differ_per_location (tests.test_levels.CurrencyStartTests.test_amounts_differ_per_location) ... ok
+test_start_currency (tests.test_levels.CurrencyStartTests.test_start_currency) ... ok
+test_checkpoint_search_by_planet_code (tests.test_levels.LevelTests.test_checkpoint_search_by_planet_code) ... ok
+test_coordinates_arriving_before_the_warp_keep_you_there (tests.test_levels.LevelTests.test_coordinates_arriving_before_the_warp_keep_you_there) ... ok
+test_ctrl_f9_twice_opens_the_planet_by_hand (tests.test_levels.LevelTests.test_ctrl_f9_twice_opens_the_planet_by_hand) ... ok
+test_levels_off_seed_never_warps (tests.test_levels.LevelTests.test_levels_off_seed_never_warps) ... ok
+test_levels_runtime_off_banks_instead (tests.test_levels.LevelTests.test_levels_runtime_off_banks_instead) ... ok
+test_menu_travel_to_a_locked_planet_sends_you_back (tests.test_levels.LevelTests.test_menu_travel_to_a_locked_planet_sends_you_back) ... ok
+test_menu_travel_to_an_open_planet_is_remembered (tests.test_levels.LevelTests.test_menu_travel_to_an_open_planet_is_remembered) ... ok
+test_no_checkpoint_or_a_failed_warp_banks_the_rewards (tests.test_levels.LevelTests.test_no_checkpoint_or_a_failed_warp_banks_the_rewards) ... ok
+test_start_opens_the_storys_own_planets (tests.test_levels.LevelTests.test_start_opens_the_storys_own_planets) ... ok
+test_the_games_own_planet_changes_are_never_blocked (tests.test_levels.LevelTests.test_the_games_own_planet_changes_are_never_blocked) ... ok
+test_travel_state_survives_a_restart (tests.test_levels.LevelTests.test_travel_state_survives_a_restart) ... ok
+test_prices_are_found_and_written (tests.test_levels.PriceTests.test_prices_are_found_and_written) ... ok
+test_prices_left_alone_when_the_field_is_not_found (tests.test_levels.PriceTests.test_prices_left_alone_when_the_field_is_not_found) ... ok
+test_vanilla_prices_setting_writes_nothing (tests.test_levels.PriceTests.test_vanilla_prices_setting_writes_nothing) ... ok
+test_campaign_and_everything_presets_to_the_finale (tests.test_levels.SimulatedCampaignTests.test_campaign_and_everything_presets_to_the_finale) ... ok
+test_expected_bytes_come_from_the_dump (tests.test_native.MissionBytesFromYourGameTests.test_expected_bytes_come_from_the_dump) ... ok
+test_core (tests.test_native.NativeCoreTests.test_core) ... ok
+test_shipped_dll_is_built_from_the_shipped_source (tests.test_native.ShippedDllTests.test_shipped_dll_is_built_from_the_shipped_source) ... ok
+test_docs_list_every_weapon (tests.test_registry.RegistryTests.test_docs_list_every_weapon) ... ok
+test_evidence_matches_the_logs (tests.test_registry.RegistryTests.test_evidence_matches_the_logs)
+every 'confirmed round N' in the registry is in that round's rivet.log, with that config ... ok
+test_ids_are_the_games (tests.test_registry.RegistryTests.test_ids_are_the_games) ... ok
+test_no_duplicates (tests.test_registry.RegistryTests.test_no_duplicates) ... ok
+test_routes (tests.test_registry.RegistryTests.test_routes) ... ok
+test_three_copies_agree (tests.test_registry.RegistryTests.test_three_copies_agree)
+data/weapon_registry.json, data/game_db.json and the shipped 01_rando_data.lua ... ok
+test_weapon_files_not_display_names (tests.test_registry.RegistryTests.test_weapon_files_not_display_names) ... ok
+test_6_never_does_what_5_could (tests.test_regression_v5.RegressionV5Tests.test_6_never_does_what_5_could)
+5.0 put no vendor weapon anywhere but the shop; 6.0 may, but then not in the shop too ... ok
+test_same_helper_dll (tests.test_regression_v5.RegressionV5Tests.test_same_helper_dll)
+8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... ok
+test_same_reward_locations_and_rules (tests.test_regression_v5.RegressionV5Tests.test_same_reward_locations_and_rules) ... ok
+test_versions (tests.test_regression_v5.RegressionV5Tests.test_versions) ... ok
+test_6_settings_still_work (tests.test_regression_v6.RegressionV6Tests.test_6_settings_still_work)
+a 6.0 settings file keeps working: filler settings are converted, nothing is refused ... ok
+test_same_helper_dll (tests.test_regression_v6.RegressionV6Tests.test_same_helper_dll)
+8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... ok
+test_same_locations_and_rules (tests.test_regression_v6.RegressionV6Tests.test_same_locations_and_rules) ... ok
+test_versions (tests.test_regression_v6.RegressionV6Tests.test_versions) ... ok
+test_armor_rewards_go_through_the_armor_code (tests.test_runtime.ArmorTests.test_armor_rewards_go_through_the_armor_code) ... ok
+test_intercepted_source_pays_its_location_once (tests.test_runtime.ArmorTests.test_intercepted_source_pays_its_location_once) ... ok
+test_interception_can_be_switched_off (tests.test_runtime.ArmorTests.test_interception_can_be_switched_off) ... ok
+test_old_helper_falls_back_to_polling (tests.test_runtime.ArmorTests.test_old_helper_falls_back_to_polling) ... ok
+test_pieces_owned_before_the_seed_never_count (tests.test_runtime.ArmorTests.test_pieces_owned_before_the_seed_never_count) ... ok
+test_vanity_errors_during_loading (tests.test_runtime.ArmorTests.test_vanity_errors_during_loading) ... ok
+test_without_the_hook_polling_still_pays_sources (tests.test_runtime.ArmorTests.test_without_the_hook_polling_still_pays_sources) ... ok
+test_many_seeds_and_presets (tests.test_runtime.CampaignPlaythroughTests.test_many_seeds_and_presets) ... ok
+test_new_game_to_finale (tests.test_runtime.CampaignPlaythroughTests.test_new_game_to_finale) ... ok
+test_progress_before_the_restore_is_kept (tests.test_runtime.CompanionTests.test_progress_before_the_restore_is_kept) ... ok
+test_without_the_companion_the_start_still_arrives (tests.test_runtime.CompanionTests.test_without_the_companion_the_start_still_arrives) ... ok
+test_currency_waits_through_a_load_and_survives_a_restart (tests.test_runtime.CurrencyTests.test_currency_waits_through_a_load_and_survives_a_restart) ... ok
+test_filler_locations_give_bolts_and_raritanium (tests.test_runtime.CurrencyTests.test_filler_locations_give_bolts_and_raritanium) ... ok
+test_already_owned_weapon (tests.test_runtime.DeliveryTests.test_already_owned_weapon) ... ok
+test_calibration_keeps_the_target_that_works (tests.test_runtime.DeliveryTests.test_calibration_keeps_the_target_that_works) ... ok
+test_direct_delivery_confirms (tests.test_runtime.DeliveryTests.test_direct_delivery_confirms) ... ok
+test_every_target_silent_switches_off_until_next_planet (tests.test_runtime.DeliveryTests.test_every_target_silent_switches_off_until_next_planet) ... ok
+test_first_load_burst_is_not_misread (tests.test_runtime.DeliveryTests.test_first_load_burst_is_not_misread) ... ok
+test_gadget_delivery (tests.test_runtime.DeliveryTests.test_gadget_delivery) ... ok
+test_hook_not_running (tests.test_runtime.DeliveryTests.test_hook_not_running) ... ok
+test_late_answer_at_the_next_load_is_recognised (tests.test_runtime.DeliveryTests.test_late_answer_at_the_next_load_is_recognised)
+the game took the message but reported the weapon only at the next planet load ... ok
+test_no_dll_on_nefarious_city_without_node_says_so_honestly (tests.test_runtime.DeliveryTests.test_no_dll_on_nefarious_city_without_node_says_so_honestly) ... ok
+test_old_dll_version_is_reported (tests.test_runtime.DeliveryTests.test_old_dll_version_is_reported) ... ok
+test_owned_gadget_is_not_sent (tests.test_runtime.DeliveryTests.test_owned_gadget_is_not_sent) ... ok
+test_pause_right_after_sending (tests.test_runtime.DeliveryTests.test_pause_right_after_sending) ... ok
+test_paused_game_waits (tests.test_runtime.DeliveryTests.test_paused_game_waits) ... ok
+test_request_not_taken_before_a_load_is_withdrawn (tests.test_runtime.DeliveryTests.test_request_not_taken_before_a_load_is_withdrawn) ... ok
+test_rivet_without_time_scale_still_delivers (tests.test_runtime.DeliveryTests.test_rivet_without_time_scale_still_delivers) ... ok
+test_round13_one_silent_item_does_not_switch_delivery_off (tests.test_runtime.DeliveryTests.test_round13_one_silent_item_does_not_switch_delivery_off)
+round 13: four items arrived through the hero target, then the game did not answer for ... ok
+test_route1_node_on_nefarious_city (tests.test_runtime.DeliveryTests.test_route1_node_on_nefarious_city) ... ok
+test_silent_item_is_not_spammed (tests.test_runtime.DeliveryTests.test_silent_item_is_not_spammed) ... ok
+test_travel_during_a_delivery_is_not_misread (tests.test_runtime.DeliveryTests.test_travel_during_a_delivery_is_not_misread) ... ok
+test_weapon_types_are_learned_and_kept (tests.test_runtime.DeliveryTests.test_weapon_types_are_learned_and_kept) ... ok
+test_wrong_exe_never_sends_and_says_where_rewards_go (tests.test_runtime.DeliveryTests.test_wrong_exe_never_sends_and_says_where_rewards_go) ... ok
+test_events_during_generation_are_replayed (tests.test_runtime.GenerationTests.test_events_during_generation_are_replayed) ... ok
+test_generation_is_sliced_across_frames (tests.test_runtime.GenerationTests.test_generation_is_sliced_across_frames) ... ok
+test_generator_error_restarts (tests.test_runtime.GenerationTests.test_generator_error_restarts) ... ok
+test_impossible_settings_explain_themselves (tests.test_runtime.GenerationTests.test_impossible_settings_explain_themselves) ... ok
+test_in_game_seed_equals_offline_seed (tests.test_runtime.GenerationTests.test_in_game_seed_equals_offline_seed) ... ok
+test_pre_generated_seed_file (tests.test_runtime.GenerationTests.test_pre_generated_seed_file) ... ok
+test_random_seed_through_the_companion (tests.test_runtime.GenerationTests.test_random_seed_through_the_companion) ... ok
+test_random_seed_without_companion_says_so (tests.test_runtime.GenerationTests.test_random_seed_without_companion_says_so) ... ok
+test_engine_and_handler_errors_are_contained (tests.test_runtime.LoadingTests.test_engine_and_handler_errors_are_contained) ... ok
+test_events_unavailable_at_load_are_retried (tests.test_runtime.LoadingTests.test_events_unavailable_at_load_are_retried) ... ok
+test_every_script_loads_without_errors (tests.test_runtime.LoadingTests.test_every_script_loads_without_errors) ... ok
+test_hud_not_loaded_messages_are_queued (tests.test_runtime.LoadingTests.test_hud_not_loaded_messages_are_queued) ... ok
+test_missing_generator_is_reported (tests.test_runtime.LoadingTests.test_missing_generator_is_reported) ... ok
+test_play_folder (tests.test_runtime.LoadingTests.test_play_folder) ... ok
+test_settings_typos_are_caught (tests.test_runtime.LoadingTests.test_settings_typos_are_caught) ... ok
+test_loading_a_save_does_not_reset (tests.test_runtime.NewGameTests.test_loading_a_save_does_not_reset) ... ok
+test_new_game_before_the_companion_answers (tests.test_runtime.NewGameTests.test_new_game_before_the_companion_answers) ... ok
+test_new_game_reset_can_be_switched_off (tests.test_runtime.NewGameTests.test_new_game_reset_can_be_switched_off) ... ok
+test_new_game_starts_the_seed_over_and_regives_the_start (tests.test_runtime.NewGameTests.test_new_game_starts_the_seed_over_and_regives_the_start) ... ok
+test_new_game_twice_in_one_session (tests.test_runtime.NewGameTests.test_new_game_twice_in_one_session) ... ok
+test_restart_and_reload_keep_the_same_state (tests.test_runtime.NewGameTests.test_restart_and_reload_keep_the_same_state) ... ok
+test_frame_cost (tests.test_runtime.PerformanceTests.test_frame_cost) ... ok
+test_banking_until_coordinates (tests.test_runtime.ProgressTests.test_banking_until_coordinates) ... ok
+test_bound_side_waits_for_its_mission (tests.test_runtime.ProgressTests.test_bound_side_waits_for_its_mission) ... ok
+test_gold_bolt_names_the_data_does_not_know (tests.test_runtime.ProgressTests.test_gold_bolt_names_the_data_does_not_know)
+only "Sargasso 2" has been seen in game: any other name must still pay one item ... ok
+test_gold_bolts (tests.test_runtime.ProgressTests.test_gold_bolts) ... ok
+test_not_progress_missions (tests.test_runtime.ProgressTests.test_not_progress_missions) ... ok
+test_one_gold_bolt_one_item (tests.test_runtime.ProgressTests.test_one_gold_bolt_one_item)
+Gold Bolt 1 gives exactly its one item, at once; so does every other one ... ok
+test_second_mission_fallback_when_the_story_moves_on (tests.test_runtime.ProgressTests.test_second_mission_fallback_when_the_story_moves_on) ... ok
+test_side_rewards_with_their_planet (tests.test_runtime.ProgressTests.test_side_rewards_with_their_planet) ... ok
+test_start_inventory (tests.test_runtime.ProgressTests.test_start_inventory) ... ok
+test_story_missions (tests.test_runtime.ProgressTests.test_story_missions) ... ok
+test_whole_seed_every_reward_once (tests.test_runtime.ProgressTests.test_whole_seed_every_reward_once)
+collect every location in the game's story order; every placed item arrives exactly once ... ok
+test_round13_only_loads_saves (tests.test_runtime.RealLogReplayTests.test_round13_only_loads_saves) ... ok
+test_round14_and_15_new_games_are_seen_once (tests.test_runtime.RealLogReplayTests.test_round14_and_15_new_games_are_seen_once) ... ok
+test_round16_three_planets (tests.test_runtime.RealLogReplayTests.test_round16_three_planets)
+round 16 (kit 4.0, the user's three planets): New Game once, 4 Gold Bolts, four story ... ok
+test_nothing_is_sent_before_the_restore (tests.test_runtime.SaveTests.test_nothing_is_sent_before_the_restore) ... ok
+test_other_seed_is_refused (tests.test_runtime.SaveTests.test_other_seed_is_refused) ... ok
+test_reload_mid_delivery_resends (tests.test_runtime.SaveTests.test_reload_mid_delivery_resends) ... ok
+test_round_trip (tests.test_runtime.SaveTests.test_round_trip) ... ok
+test_start_items_are_not_given_twice (tests.test_runtime.SaveTests.test_start_items_are_not_given_twice) ... ok
+test_a_level_reload_applies_it_again (tests.test_runtime.ShopTests.test_a_level_reload_applies_it_again) ... ok
+test_a_missing_slot_gives_its_weapon_directly (tests.test_runtime.ShopTests.test_a_missing_slot_gives_its_weapon_directly) ... ok
+test_a_vendor_that_cannot_be_changed_gives_pixelizer_and_bouncer (tests.test_runtime.ShopTests.test_a_vendor_that_cannot_be_changed_gives_pixelizer_and_bouncer) ... ok
+test_no_config_api_is_harmless (tests.test_runtime.ShopTests.test_no_config_api_is_harmless) ... ok
+test_old_helper_gives_the_extra_weapons_later (tests.test_runtime.ShopTests.test_old_helper_gives_the_extra_weapons_later) ... ok
+test_retired_vendor_lock_setting (tests.test_runtime.ShopTests.test_retired_vendor_lock_setting) ... ok
+test_shop_runtime_off_gives_the_extra_weapons (tests.test_runtime.ShopTests.test_shop_runtime_off_gives_the_extra_weapons) ... ok
+test_slots_sell_the_seeds_weapons_and_purchases_work (tests.test_runtime.ShopTests.test_slots_sell_the_seeds_weapons_and_purchases_work) ... ok
+test_unknown_layout_gives_the_shops_extra_weapons (tests.test_runtime.ShopTests.test_unknown_layout_gives_the_shops_extra_weapons) ... ok
+test_vanilla_shop_setting (tests.test_runtime.ShopTests.test_vanilla_shop_setting) ... ok
+test_keys (tests.test_runtime.TestModeTests.test_keys) ... ok
+test_batch_command (tests.test_tools.CliTests.test_batch_command) ... ok
+test_generate_twice_in_separate_processes (tests.test_tools.CliTests.test_generate_twice_in_separate_processes) ... ok
+test_round13_log (tests.test_tools.SummarizeLogTests.test_round13_log) ... ok
+test_simulated_session (tests.test_tools.SummarizeLogTests.test_simulated_session) ... ok
+test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
+test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
+test_a_trip_waits_for_the_catalog (tests.test_v81.CatalogTests.test_a_trip_waits_for_the_catalog) ... ok
+test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
+test_every_planet_gets_a_checkpoint_and_never_a_tunnel (tests.test_v81.CatalogTests.test_every_planet_gets_a_checkpoint_and_never_a_tunnel) ... ok
+test_scores_prefer_landings_and_avoid_bosses_and_cinematics (tests.test_v81.CatalogTests.test_scores_prefer_landings_and_avoid_bosses_and_cinematics) ... ok
+test_torren_and_cordelion_trips_land (tests.test_v81.CatalogTests.test_torren_and_cordelion_trips_land) ... ok
+test_level_bits_come_back_after_a_load_reset_them (tests.test_v81.LevelBitsTests.test_level_bits_come_back_after_a_load_reset_them) ... ok
+test_round17_best_checkpoints (tests.test_v81.Round17LogTests.test_round17_best_checkpoints) ... ok
+test_round17_checkpoints_are_placed_on_their_planets (tests.test_v81.Round17LogTests.test_round17_checkpoints_are_placed_on_their_planets) ... ok
+test_a_failing_vendor_stops_after_max_tries (tests.test_v81.ShopSliceTests.test_a_failing_vendor_stops_after_max_tries) ... ok
+test_the_vendor_search_spans_frames_with_few_reads_each (tests.test_v81.ShopSliceTests.test_the_vendor_search_spans_frames_with_few_reads_each) ... ok
+test_no_top_level_local_is_used_before_its_definition (tests.test_v81.StaticTests.test_no_top_level_local_is_used_before_its_definition) ... ok
+test_planet_data_has_area_fragments_for_every_planet (tests.test_v81.StaticTests.test_planet_data_has_area_fragments_for_every_planet) ... ok
+test_registry_has_no_name_your_game_lacks (tests.test_v81.StaticTests.test_registry_has_no_name_your_game_lacks) ... ok
+test_rivet_toml_loads_arsenal_restored (tests.test_v81.StaticTests.test_rivet_toml_loads_arsenal_restored) ... ok
+
+----------------------------------------------------------------------
+Ran 247 tests in 103.966s
+
+OK (skipped=9)

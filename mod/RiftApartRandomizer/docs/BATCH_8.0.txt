@@ -1,0 +1,10 @@
+Rift Apart Randomizer 8.0 - release batch (python tools/big_batch.py --scale 1.0), 2026-11-12
+Every seed: generator audit + independent item verifier; level-locked / reordered seeds also the
+campaign and game-order replays; hub seeds also the independent hub verifier (every order).
+
+8.0 hub: 9000/9000 valid, bad 0 (134s)
+7.0 presets: 19000/19000 valid, bad 0 (172s)
++ legacy presets and variants: 25000/25000 valid, bad 0 (192s)
++ random settings: 33000/33000 valid, 0 honestly refused, bad 0 (289s)
++ experimental mission orders: 43000/43000 valid, 0 honestly refused, bad 0 (328s)
+TOTAL 43000 VALID 43000 REFUSED (honest) 0 BAD 0

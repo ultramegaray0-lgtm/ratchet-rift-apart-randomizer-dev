@@ -1,0 +1,470 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[rivet] game version mismatch, invalidating pointers
+[loader] mod path mods/default does not exist! skipping.
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF7EBFEA8C0, QueueEvent at 00007FF7E6DE6A60
+[time] time scale system at 00007FF7EB2302E0
+[camera] fov scale at 00007FF7EB06EEC8
+[camera] camera system at 00007FF7EB06EDE0
+[hud] ShowMessage at 00007FF7E63AD160
+[vanity] EquipBundle at 00007FF7E660A8E0
+[hero_look] HandleTransformationEvent at 00007FF7E62B8D40, OnTransformationPostActivate at 00007FF7E64C63F0
+[configs] config asset manager at 00007FF7EB07BFE0
+[script] signal queue at 00007FF7EC4DFB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF7E64D3900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] loading dxgi and d3d12...
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-PROBE	v7 loaded:	39	test items; NUMPAD3 survey, NUMPAD4 select, NUMPAD5 fire, NUMPAD7 item, NUMPAD6 give item, NUMPAD9 census, NUMPAD8 give via borrowed node
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	RANDO-STATUS TEST MODE on: F10 finish planet, F11 Gold Bolt, Ctrl+F10 twice resets
+[script] [rando]	loaded seed	lombax-ryno-2026	d6c9b213073c
+[script] [rando]	RANDO-STATUS events subscribed 20/20
+[script] loaded 8 of 8 scripts, 3 frame and 12 key callbacks
+[script] [rando]	RANDO-REAL	sync:	1	item(s) waiting for the game
+[script] [rando]	RANDO-SAVE restored:	[TEST] Gold Bolts 0 | planets unlocked 4 | done 3 | weapons 6 | in inventory 3, waiting 1, not added 2
+[script] [rando]	notify failed:	the player hud is not loaded
+[DDL] indexed 8211 types for struct walking
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=1A55828C06E7491A745CB2421A7D3586
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=BA295D81F7AB38F16523F0D2C67C7BA6
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	unlocked	(story/menu)
+[script] [rando]	RANDO-NOTIFY	Randomizer seed lombax-ryno-2026 (d6c9b213073c)
+[script] [rando]	RANDO-REAL	sent	weapon:predator_launcher	configs/equipment/wpn_predator_launcher_item.config	8034EF9F017CD311	via rando_give.dll	request 1	target hero	
+[script] [rando]	RANDO-NOTIFY	Randomizer progress restored: [TEST] Gold Bolts 0 | planets unlocked 4 | done 3 | weapons 6 | in inventory 3, waiting 1, not added 2
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:predator_launcher
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129237 ItemHandle=2129614
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129297 ItemHandle=2129615
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129237 ItemHandle=2129616
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129297 ItemHandle=2129617
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129237 ItemHandle=2129621
+[script] [rando]	RANDO-REAL	direct delivery: target hero works - kept for next time
+[script] [rando]	RANDO-REAL	confirmed	weapon:predator_launcher	via	native	after	10	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Predator Launcher (restored)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2191359 ItemHandle=2191506
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2191359 ItemHandle=2191507
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2191359 ItemHandle=2191514
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1010
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1011
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2191299 ItemHandle=2191687
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2191299 ItemHandle=2191688
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2191299 ItemHandle=2191689
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2191299 ItemHandle=2191690
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2191299 ItemHandle=2191691
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=2191299 ItemHandle=2191692
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	unlocked	(story/menu)
+[script] [rando]	RANDO-PROBE	HUD:	census of this planet's script nodes...
+[script] [rando]	RANDO-REAL	donor search:	0	nodes,	0	classes,	0	to check	(census)
+[script] [rando]	RANDO-REAL	donor search: no safe node on this planet
+[script] [rando]	RANDO-PROBE	HUD:	no safe donor node here
+[script] [rando]	RANDO-PROBE	HUD:	test item 1/39: wpn_blaster = Combuster (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 2/39: wpn_bouncer = Bouncer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 3/39: wpn_burstpistol = Burst Pistol - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 4/39: wpn_buzzblades = Buzz Blades - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 5/39: wpn_carpetbomber = Bombardier - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 6/39: wpn_fusion_grenade = Fusion Grenade (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 7/39: wpn_glove_of_doom = Glove of Doom - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 8/39: wpn_icicleblast = Cold Snap - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 9/39: wpn_kamehameha = Negatron Collider - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 10/39: wpn_lightningrod = Lightning Rod - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 11/39: wpn_magnamissile = Magnamissile (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 12/39: wpn_magshield = Void Repulser - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	nothing to fire - NUMPAD3 surveys this planet
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=2183033 actor=1087579 uid=9bf9836a2760dd2e addr=1D0B560C480 item=B405E27E44753A20 (configs/equipment/gdgt_magbootlaunch_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->DebugMessageAction] raw58=80 12 ee ad d0 01 00 00 20 3a 75 44 7e e2 05 b4 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=2189611 actor=1090812 uid=bac36f55f35a1baa addr=1D0B5808500 item=B405E27E44753A20 (configs/equipment/gdgt_magbootlaunch_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->DebugMessageAction] raw58=40 30 1c ae d0 01 00 00 20 3a 75 44 7e e2 05 b4 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=2160835 actor=1076016 uid=8d63f94100b32927 addr=1D0B57779C0 Value=true out[0x3EF2E15E->CompareStringAction] raw58=40 81 dd ad d0 01 00 00 10 e4 28 ec f7 7f 00 00 d0 e5 8a b0 d0 01 00 00 40 0a 67 ec f7 7f 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=2182630 actor=1087273 uid=97e6c82128e023d4 addr=1D0B5693660 Value=false out[] raw58=00 a7 32 ae d0 01 00 00 50 99 38 ea f7 7f 00 00 00 00 00 00 00 00 00 00 80 b2 6a 55 d0 01 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=2189563 actor=1090764 uid=8dfb572e85b49395 addr=1D0B55EC3A0 Value=false out[0x3EF2E15E->ActorControlAction] raw58=40 2a 1c ae d0 01 00 00 a0 ba cb e8 f7 7f 00 00 00 00 00 00 00 00 00 00 c0 98 74 55 d0 01 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=2189564 actor=1090765 uid=b43d4a43e2211b09 addr=1D0B55EC400 Value=false out[] raw58=20 4d 17 ae d0 01 00 00 a0 ba cb e8 f7 7f 00 00 00 00 00 00 00 00 00 00 80 99 74 55 d0 01 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=2189565 actor=1090766 uid=ba76b54e72fdc4fd addr=1D0B55EC460 Value=true out[0x3EF2E15E->PassThruAction] raw58=80 2a 1c ae d0 01 00 00 a0 ba cb e8 f7 7f 00 00 00 00 00 00 00 00 00 00 40 9a 74 55 d0 01 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=2189566 actor=1090767 uid=f718a842f17ee2a7 addr=1D0B55EC4C0 Value=true out[0x3EF2E15E->CompareStringAction] raw58=c0 2a 1c ae d0 01 00 00 a0 82 39 ea f7 7f 00 00 00 00 00 00 00 00 00 00 c0 9e 74 55 d0 01 00 00 
+[script] [rando]	RANDO-PROBE	node CheckPlanetaryTravelAction comp=2189657 actor=1090859 uid=e10e029682b7cba0 addr=1D0B55ED900  out[0x3D771653->ActorControlAction,0xAE41ABF0->GetClankPackActorAction,0xAE41ABF0->SignalRelayAction] raw58=e0 76 5e ae d0 01 00 00 b8 d0 ce e8 f7 7f 00 00 00 00 00 00 00 00 00 00 80 e1 74 55 d0 01 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddToInventoryAction=2 CheckInventoryAction=21 CheckPlanetaryTravelAction=1 EnoughBoltsToBuyWeaponAction=6 EnoughRareToUpgradeWeaponAction=4 GetWeaponLevelAction=20 OnEquippedWeaponAction=1 OnRynoPlanPickupAction=1 SetPlanetaryTravelAction=6 UnequipWeaponAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	2
+[script] [rando]	RANDO-PROBE	HUD:	2 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-NOTIFY	Need 6 Gold Bolts, you have 0
+[script] [rando]	RANDO-NOTIFY	Need 6 Gold Bolts, you have 0
+[script] [rando]	RANDO-NOTIFY	Shop 2/2: Coordinates: Savali for 3 Gold Bolts (you have 0) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 1/2: Mr. Zurkon (restored) for 6 Gold Bolts (you have 0) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 2/2: Coordinates: Savali for 3 Gold Bolts (you have 0) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 1/2: Mr. Zurkon (restored) for 6 Gold Bolts (you have 0) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 2/2: Coordinates: Savali for 3 Gold Bolts (you have 0) - F8 buys
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4224721 ItemHandle=4225053
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4224721 ItemHandle=4225054
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4224721 ItemHandle=4225061
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4224661 ItemHandle=4225234
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4224661 ItemHandle=4225235
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4224661 ItemHandle=4225236
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4224661 ItemHandle=4225237
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4224661 ItemHandle=4225238
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4224661 ItemHandle=4225239
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	unlocked	(story/menu)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4201100 ItemHandle=4201247
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4201100 ItemHandle=4201248
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4201100 ItemHandle=4201255
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4201040 ItemHandle=4201428
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4201040 ItemHandle=4201429
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4201040 ItemHandle=4201430
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4201040 ItemHandle=4201431
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4201040 ItemHandle=4201432
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4201040 ItemHandle=4201433
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	unlocked	(story/menu)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4265172 ItemHandle=4265319
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4265172 ItemHandle=4265320
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4265172 ItemHandle=4265327
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4265112 ItemHandle=4265500
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4265112 ItemHandle=4265501
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4265112 ItemHandle=4265502
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4265112 ItemHandle=4265503
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4265112 ItemHandle=4265504
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4265112 ItemHandle=4265505
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	unlocked	(story/menu)
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1412395841 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1736146898 Loaded=true
+[script] [rando]	RANDO-PROBE	HUD:	test item 13/39: wpn_mr_zurkon = Mr. Zurkon (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 14/39: wpn_mrfunguy = Mr. Fungi - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 15/39: wpn_nailgun = Blackhole Storm - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 16/39: wpn_pixelizer = Pixelizer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 17/39: wpn_predator_launcher = Predator Launcher (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 18/39: wpn_protogrenade = Shatterbomb - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 19/39: wpn_protoshotgun = Enforcer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 20/39: wpn_revolver = Executor - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 21/39: wpn_ricochet = Ricochet - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 22/39: wpn_ryno = RYNO 8 - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 23/39: wpn_schrodinger = Schrodinger (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 24/39: wpn_sheepinator = Sheepinator (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 25/39: wpn_thumper = Thumper (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 26/39: wpn_topiaryblaster = Topiary Sprinkler - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 27/39: wpn_tunneler = Drillhound - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 28/39: wpn_volcaniceruptor = Volcanic Eruptor (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 29/39: wpn_warmonger = Warmonger - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 30/39: wpn_warprifle = Headhunter - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 31/39: gdgt_boxbreaker = Box Breaker - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 32/39: gdgt_glitchprojector = Glitch - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 33/39: gdgt_grindboots = Grind Boots - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 34/39: gdgt_helipack = Helipack (glide) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 35/39: gdgt_hoverboots = Hoverboots - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 36/39: gdgt_mapomatic = Map-O-Matic - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 37/39: gdgt_portalzip = Rift Tether - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 38/39: gdgt_swingshot = Swingshot (grapple) - NUMPAD6 gives it
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 0 | planets unlocked 4 | done 3 | weapons 6 | in inventory 4, not added 2
+[script] [rando]	RANDO-NOTIFY	Need 3 Gold Bolts, you have 0
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 0 | planets unlocked 4 | done 3 | weapons 6 | in inventory 4, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 0 | planets unlocked 4 | done 3 | weapons 6 | in inventory 4, not added 2
+[script] [rando]	[TEST] finished scarstu
+[script] [rando]	received 3 Gold Bolts
+[script] [rando]	RANDO-NOTIFY	Randomizer: +3 Gold Bolts (spend in the F7 shop)
+[script] [rando]	received Coordinates: Blizar Prime
+[script] [rando]	RANDO-NOTIFY	Randomizer: Coordinates: Blizar Prime unlocked
+[script] [rando]	[TEST] finished blizar_prime
+[script] [rando]	received 2 Gold Bolts
+[script] [rando]	RANDO-NOTIFY	Randomizer: +2 Gold Bolts (spend in the F7 shop)
+[script] [rando]	received Headhunter
+[script] [rando]	RANDO-NOTIFY	Randomizer unlock: Headhunter - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:headhunter	configs/equipment/wpn_warprifle_item.config	87AB40964DA66DDA	via rando_give.dll	request 2	target hero	
+[script] [rando]	RANDO-REAL	confirmed	weapon:headhunter	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Headhunter
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1012
+[script] [rando]	[TEST] Gold Bolt goldbolt:07 (requirements met)
+[script] [rando]	received Topiary Sprinkler
+[script] [rando]	RANDO-NOTIFY	Randomizer unlock: Topiary Sprinkler (already in your inventory)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	[TEST] Gold Bolt goldbolt:08 (first remaining)
+[script] [rando]	received Warmonger
+[script] [rando]	RANDO-NOTIFY	Randomizer unlock: Warmonger - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:warmonger	configs/equipment/wpn_warmonger_item.config	B29993DA27515A36	via rando_give.dll	request 3	target hero	
+[script] [rando]	RANDO-REAL	confirmed	weapon:warmonger	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Warmonger
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1013
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 5 | planets unlocked 5 | done 5 | weapons 9 | in inventory 6, not added 2
+[script] [rando]	bought Coordinates: Savali for 3
+[script] [rando]	received Coordinates: Savali
+[script] [rando]	RANDO-NOTIFY	Randomizer: Coordinates: Savali unlocked
+[script] [rando]	RANDO-NOTIFY	Shop 1/3: Mr. Zurkon (restored) for 6 Gold Bolts (you have 2) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Need 6 Gold Bolts, you have 2
+[script] [rando]	RANDO-NOTIFY	Shop 2/3: Schrodinger (restored) for 4 Gold Bolts (you have 2) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 3/3: Executor for 2 Gold Bolts (you have 2) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 1/3: Mr. Zurkon (restored) for 6 Gold Bolts (you have 2) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 2/3: Schrodinger (restored) for 4 Gold Bolts (you have 2) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 3/3: Executor for 2 Gold Bolts (you have 2) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 1/3: Mr. Zurkon (restored) for 6 Gold Bolts (you have 2) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Need 6 Gold Bolts, you have 2
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 2 | planets unlocked 6 | done 5 | weapons 9 | in inventory 6, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 2 | planets unlocked 6 | done 5 | weapons 9 | in inventory 6, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 2 | planets unlocked 6 | done 5 | weapons 9 | in inventory 6, not added 2
+[script] [rando]	[TEST] finished savali
+[script] [rando]	received 3 Gold Bolts
+[script] [rando]	RANDO-NOTIFY	Randomizer: +3 Gold Bolts (spend in the F7 shop)
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	[TEST] Gold Bolt goldbolt:09 (first remaining)
+[script] [rando]	received Magnamissile (restored)
+[script] [rando]	RANDO-NOTIFY	Randomizer unlock: Magnamissile (restored) (already in your inventory)
+[script] [rando]	[TEST] Gold Bolt on scarstu: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	[TEST] Gold Bolt on scarstu: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	[TEST] Gold Bolt on scarstu: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	Shop 2/3: Schrodinger (restored) for 4 Gold Bolts (you have 9) - F8 buys
+[script] [rando]	bought Schrodinger (restored) for 4
+[script] [rando]	received Schrodinger (restored)
+[script] [rando]	RANDO-NOTIFY	Randomizer unlock: Schrodinger (restored) - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:schrodinger	configs/equipment/wpn_schrodinger_item.config	8204EB5B857474BC	via rando_give.dll	request 4	target hero	
+[script] [rando]	RANDO-REAL	confirmed	weapon:schrodinger	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Schrodinger (restored)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1014
+[script] [rando]	RANDO-NOTIFY	Shop 1/2: Mr. Zurkon (restored) for 6 Gold Bolts (you have 5) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 2/2: Executor for 2 Gold Bolts (you have 5) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 1/2: Mr. Zurkon (restored) for 6 Gold Bolts (you have 5) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Shop 2/2: Executor for 2 Gold Bolts (you have 5) - F8 buys
+[script] [rando]	bought Executor for 2
+[script] [rando]	received Executor
+[script] [rando]	RANDO-NOTIFY	Randomizer unlock: Executor - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:executor	configs/equipment/wpn_revolver_item.config	BA124FFA5A2B85CE	via rando_give.dll	request 5	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:executor
+[script] [rando]	RANDO-NOTIFY	Shop 1/1: Mr. Zurkon (restored) for 6 Gold Bolts (you have 3) - F8 buys
+[script] [rando]	RANDO-NOTIFY	Need 6 Gold Bolts, you have 3
+[script] [rando]	RANDO-REAL	direct delivery: no reaction from the game for	weapon:executor	with target hero
+[script] [rando]	RANDO-REAL	sent	weapon:executor	configs/equipment/wpn_revolver_item.config	BA124FFA5A2B85CE	via rando_give.dll	request 6	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:executor
+[script] [rando]	RANDO-REAL	direct delivery: no reaction from the game for	weapon:executor	with target group 1
+[script] [rando]	RANDO-REAL	sent	weapon:executor	configs/equipment/wpn_revolver_item.config	BA124FFA5A2B85CE	via rando_give.dll	request 7	target group 0	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:executor
+[script] [rando]	RANDO-REAL	direct delivery: no reaction from the game for	weapon:executor	with target group 0
+[script] [rando]	RANDO-REAL	sent	weapon:executor	configs/equipment/wpn_revolver_item.config	BA124FFA5A2B85CE	via rando_give.dll	request 8	target group 3	
+[script] [rando]	RANDO-REAL	direct delivery: target group 3 is empty	weapon:executor
+[script] [rando]	RANDO-REAL	direct delivery off:	the game does not react to it	- rewards arrive on Nefarious City instead
+[script] [rando]	RANDO-NOTIFY	Randomizer: direct delivery is not working (the game does not react to it) - rewards arrive on Nefarious City
+[script] [rando]	RANDO-NOTIFY	1 randomizer reward waiting - it arrives on Nefarious City
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=6330091 ItemHandle=6330245
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=6330091 ItemHandle=6330246
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6330091 ItemHandle=6330253
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=6330025 ItemHandle=6330467
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=6330025 ItemHandle=6330468
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=6330025 ItemHandle=6330469
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=6330025 ItemHandle=6330470
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=6330025 ItemHandle=6330471
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=6330025 ItemHandle=6330472
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	unlocked	(story/menu)
+[script] [rando]	RANDO-NOTIFY	1 randomizer reward waiting - it arrives on Nefarious City
+[script] [rando]	RANDO-DISCOVER	PlanetMenuAcceptEvent	DestinationCheckpointName=CHK_NEFCITY_SHIP InterplanetaryCheckpointName=CHK_TRANSITION_TO_NEFARIOUS_CITY
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity OldPlanetName=Zurkon
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	unlocked	(player travel)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1015
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=59593087 Loaded=true
+[script] [rando]	RANDO-NOTIFY	1 randomizer reward waiting - it arrives on Nefarious City
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=263079407 Loaded=true
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 3 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 3 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	[TEST] Gold Bolt goldbolt:01 (requirements met)
+[script] [rando]	received 2 Gold Bolts
+[script] [rando]	RANDO-NOTIFY	Randomizer: +2 Gold Bolts (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 5 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 5 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 5 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 5 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 5 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 5 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 5 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	[TEST] Gold Bolt goldbolt:02 (requirements met)
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 6 | planets unlocked 6 | done 6 | weapons 12 | in inventory 7, waiting 1, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	[TEST] Gold Bolt goldbolt:03 (requirements met)
+[script] [rando]	received Coordinates: Scarstu Debris Field (Zurkie's)
+[script] [rando]	RANDO-NOTIFY	Randomizer: Coordinates: Scarstu Debris Field (Zurkie's) unlocked
+[script] [rando]	bought Mr. Zurkon (restored) for 6
+[script] [rando]	received Mr. Zurkon (restored)
+[script] [rando]	RANDO-NOTIFY	Randomizer unlock: Mr. Zurkon (restored) - adding it to your inventory
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 0 | planets unlocked 6 | done 6 | weapons 13 | in inventory 7, waiting 2, not added 2
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 1 | planets unlocked 6 | done 6 | weapons 13 | in inventory 7, waiting 2, not added 2
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 2 | planets unlocked 6 | done 6 | weapons 13 | in inventory 7, waiting 2, not added 2
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 10 | planets unlocked 6 | done 6 | weapons 13 | in inventory 7, waiting 2, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 10 | planets unlocked 6 | done 6 | weapons 13 | in inventory 7, waiting 2, not added 2
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 10 | planets unlocked 6 | done 6 | weapons 13 | in inventory 7, waiting 2, not added 2
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 12 | planets unlocked 6 | done 6 | weapons 13 | in inventory 7, waiting 2, not added 2
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 12 | planets unlocked 6 | done 6 | weapons 13 | in inventory 7, waiting 2, not added 2
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	RANDO-NOTIFY	Gold Bolt Shop: nothing for sale yet
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[script] [rando]	[TEST] Gold Bolt on nefarious_city: none left, paying 1
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (spend in the F7 shop)
+[script] [rando]	RANDO-NOTIFY	[TEST] no unlocked planet left to finish
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing ui/loaded/exported/hud/mm_6.json
+[loader] closing ui/loaded/exported/hud/mm_5.json
+[loader] closing ui/loaded/exported/hud/mm_3.json
+[loader] closing ui/loaded/exported/hud/mm_0.json
+[loader] closing ui/loaded/exported/hud/mm_2.json
+[loader] closing ui/loaded/exported/hud/mm_1.json
+[loader] closing ui/loaded/exported/hud/mm_7.json
+[loader] closing ui/loaded/exported/hud/mm_4.json
+[rivet] fini complete

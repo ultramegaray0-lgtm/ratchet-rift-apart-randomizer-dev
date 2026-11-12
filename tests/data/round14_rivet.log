@@ -1,0 +1,412 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[rivet] game version mismatch, invalidating pointers
+[loader] mod path mods/default does not exist! skipping.
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF6C7A3A8C0, QueueEvent at 00007FF6C2836A60
+[time] time scale system at 00007FF6C6C802E0
+[camera] fov scale at 00007FF6C6ABEEC8
+[camera] camera system at 00007FF6C6ABEDE0
+[hud] ShowMessage at 00007FF6C1DFD160
+[vanity] EquipBundle at 00007FF6C205A8E0
+[hero_look] HandleTransformationEvent at 00007FF6C1D08D40, OnTransformationPostActivate at 00007FF6C1F163F0
+[configs] config asset manager at 00007FF6C6ACBFE0
+[script] signal queue at 00007FF6C7F2FB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF6C1F23900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] loading dxgi and d3d12...
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-PROBE	v7 loaded:	52	test items; NUMPAD3 survey, NUMPAD4 select, NUMPAD5 fire, NUMPAD7 item, NUMPAD6 give item, NUMPAD9 census, NUMPAD8 give via borrowed node
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	RANDO-STATUS TEST MODE on: F10 story mission, F11 Gold Bolt, Ctrl+F10 twice resets
+[script] [rando]	Randomizer 3.0.0 loaded (data 2.0.0, generator 3.0.0)
+[script] [rando]	RANDO-STATUS events subscribed 18/18
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] loaded 14 of 14 scripts, 4 frame and 15 key callbacks
+[script] [rando]	RANDO-SEED generating seed	kit-bolt-kit-198	(random seed from the companion)
+[script] [rando]	RANDO-SEED ready	kit-bolt-kit-198	a09bf08d1ae1	preset standard	attempt 1
+[script] [rando]	RANDO-SEED share code	RA2|kit-bolt-kit-198|standard|
+[script] [rando]	received Volcanic Eruptor (restored)
+[script] [rando]	received Predator Launcher (restored)
+[script] [rando]	seed started: kit-bolt-kit-198 (a09bf08d1ae1)
+[script] [rando]	notify failed:	the player hud is not loaded
+[script] [rando]	RANDO-REAL	sync:	2	item(s) waiting for the game
+[script] [rando]	RANDO-SAVE no saved progress for this seed, starting fresh
+[DDL] indexed 8211 types for struct walking
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=B08B4BECD823FB699A45985EF887F978
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=E9273F71177CAAE6557B6787C2166888
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Randomizer 3.0 - seed kit-bolt-kit-198 (a09bf08d1ae1)
+[script] [rando]	RANDO-REAL	sent	weapon:predator_launcher	configs/equipment/wpn_predator_launcher_item.config	8034EF9F017CD311	via rando_give.dll	request 1	target hero	
+[script] [rando]	RANDO-NOTIFY	Randomizer start: Coordinates: Corson V (Megalopolis), Coordinates: Nefarious City, Volcanic Eruptor (restored), Predator Launcher (restored)
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:predator_launcher
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129237 ItemHandle=2129614
+[script] [rando]	RANDO-GADGET	grindboots
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129297 ItemHandle=2129615
+[script] [rando]	RANDO-GADGET	glide
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129237 ItemHandle=2129616
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129297 ItemHandle=2129617
+[script] [rando]	RANDO-GADGET	grapple
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129237 ItemHandle=2129621
+[script] [rando]	RANDO-GADGET	rift_tether
+[script] [rando]	RANDO-REAL	weapon type	1001	is	weapon:predator_launcher
+[script] [rando]	RANDO-REAL	direct delivery: target hero works - kept for next time
+[script] [rando]	RANDO-REAL	confirmed	weapon:predator_launcher	via	native	after	4	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Predator Launcher (restored)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-REAL	sent	weapon:volcanic_eruptor	configs/equipment/wpn_volcaniceruptor_item.config	8D6ED40E943F3883	via rando_give.dll	request 2	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:volcanic_eruptor
+[script] [rando]	RANDO-REAL	no confirmation yet for	weapon:volcanic_eruptor	(direct) - will retry
+[script] [rando]	RANDO-REAL	sent	weapon:volcanic_eruptor	configs/equipment/wpn_volcaniceruptor_item.config	8D6ED40E943F3883	via rando_give.dll	request 3	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:volcanic_eruptor
+[script] [rando]	RANDO-ARMOR baseline: 30 armor piece(s) owned before this seed - they do not count
+[script] [rando]	RANDO-REAL	direct delivery: no answer for	weapon:volcanic_eruptor	with target hero (it worked before) - trying again shortly
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2189617 ItemHandle=2189764
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2189617 ItemHandle=2189765
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2189617 ItemHandle=2189772
+[script] [rando]	RANDO-GADGET	box_breaker
+[script] [rando]	RANDO-REAL	already in the game:	weapon:bouncer	(equipped)
+[script] [rando]	RANDO-REAL	weapon type	1002	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-REAL	weapon type	1003	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-REAL	weapon type	1004	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-REAL	weapon type	1005	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-REAL	weapon type	1006	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-REAL	weapon type	1007	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-REAL	weapon type	1008	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-REAL	weapon type	1009	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-REAL	weapon type	1010	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1010
+[script] [rando]	RANDO-REAL	weapon type	1011	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1011
+[script] [rando]	RANDO-REAL	weapon type	1012	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1012
+[script] [rando]	RANDO-REAL	weapon type	1013	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1013
+[script] [rando]	RANDO-REAL	weapon type	1014	is	weapon:bouncer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1014
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2189557 ItemHandle=2189983
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2189557 ItemHandle=2189984
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2189557 ItemHandle=2189985
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2189557 ItemHandle=2189986
+[script] [rando]	RANDO-GADGET	omniglove
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2189557 ItemHandle=2189987
+[script] [rando]	RANDO-GADGET	hoverboots
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=2189557 ItemHandle=2189988
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-REAL	already in the game:	weapon:burst_pistol	(equipped)
+[script] [rando]	found armor: Galactic Ranger armor (head)
+[script] [rando]	found armor: Q-Force armor (head)
+[script] [rando]	location armor_find:01 (armor pieces found: 2)
+[script] [rando]	received 1 Gold Bolt
+[script] [rando]	RANDO-NOTIFY	Randomizer: +1 Gold Bolt (F7 shop)
+[script] [rando]	location armor_find:02 (armor pieces found: 2)
+[script] [rando]	received 2 Gold Bolts
+[script] [rando]	RANDO-NOTIFY	Randomizer: +2 Gold Bolts (F7 shop)
+[script] [rando]	RANDO-REAL	sent	weapon:volcanic_eruptor	configs/equipment/wpn_volcaniceruptor_item.config	8D6ED40E943F3883	via rando_give.dll	request 4	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1015	is	weapon:volcanic_eruptor
+[script] [rando]	RANDO-REAL	confirmed	weapon:volcanic_eruptor	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Volcanic Eruptor (restored)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1015
+[bridge] script.nodes StartMissionAction 200 took 187ms on the engine thread
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4245919 ItemHandle=4246075
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4245919 ItemHandle=4246076
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4245919 ItemHandle=4246083
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4245857 ItemHandle=4246308
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4245857 ItemHandle=4246309
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4245857 ItemHandle=4246310
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4245857 ItemHandle=4246311
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4245857 ItemHandle=4246312
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4245857 ItemHandle=4246313
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4318084 ItemHandle=4318238
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4318084 ItemHandle=4318239
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4318084 ItemHandle=4318246
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4318017 ItemHandle=4318539
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4318017 ItemHandle=4318540
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4318017 ItemHandle=4318564
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4318017 ItemHandle=4318565
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4318017 ItemHandle=4318566
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4318017 ItemHandle=4318567
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	[LAB] mission control experiment: no CompleteMissionAction node with a known field is loaded here
+[script] [rando]	RANDO-DISCOVER	PlanetMenuAcceptEvent	DestinationCheckpointName=CHK_ZURK_00_DEFAULT InterplanetaryCheckpointName=CHK_TRANSITION_TO_ZURKIES
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Scarstu Debris Field (Zurkie's): rewards here are banked until you find its Coordinates
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1016
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=781823093 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2229284024 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1736146898 Loaded=true
+[script] [rando]	RANDO-NOTIFY	[LAB] 0 mission-action nodes loaded, 0 with a known mission field (rivet.log RANDO-LAB)
+[script] [rando]	RANDO-NOTIFY	[LAB] mission control experiment: no CompleteMissionAction node with a known field is loaded here
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=4222.5766601562 MissionName=MIS_RYNO_PLANS MissionSegmentId=1E927F7C7A2454DDD1CC16A9B047E387
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=842.80139160156 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=9ABF778F9D1AEE0BC676C55EA6994924
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=842.80139160156 MissionName=MIS_ZURK_01_VISIT_01 MissionSegmentId=385F096AD6A493CD516488B97DC586EB
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=DA0681794308EBBF5EFFDEA9C9F14239
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=12893FE4BDCC56DA107370901522D306
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=8402411 ItemHandle=8458296
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=8402472 ItemHandle=8458297
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=8402411 ItemHandle=8458413
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=8402472 ItemHandle=8458427
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=8402411 ItemHandle=8458440
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Malinon OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=934271974 Loaded=true
+[script] [rando]	RANDO-NOTIFY	[LAB] mission control experiment: no CompleteMissionAction node with a known field is loaded here
+[script] [rando]	RANDO-NOTIFY	[LAB] mission control experiment: no CompleteMissionAction node with a known field is loaded here
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Malinon
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Malinon
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=10504060 ItemHandle=10504207
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=10504060 ItemHandle=10504208
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=10504000 ItemHandle=10504237
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=10504000 ItemHandle=10504238
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=10504000 ItemHandle=10504239
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	[LAB] mission control experiment: no CompleteMissionAction node with a known field is loaded here
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3095202961 Loaded=true
+[script] [rando]	RANDO-PROBE	HUD:	test item 1/52: wpn_blaster = Combuster (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444296 actor=3164817 uid=a620861b7b547e5c addr=25BAE3F2A00 _Players={1 actor(s)} out[] raw58=90 ac 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444297 actor=3164818 uid=b73292c28d2b6a9a addr=25BAE3F2AC0 _Players={1 actor(s)} out[] raw58=50 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 60 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444298 actor=3164819 uid=d6535bfb11e2d9d2 addr=25BAE3F2B80 _Players={1 actor(s)} out[] raw58=70 bd 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 bd 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444299 actor=3164820 uid=f96b0a14f028856d addr=25BAE3F2C40 _Players={1 actor(s)} out[] raw58=b0 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 80 bc 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddToInventoryAction=1 CheckInventoryAction=3 EquipWeaponAction=4 GetActiveWeaponAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	1
+[script] [rando]	RANDO-PROBE	HUD:	1 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	test item 2/52: wpn_blunderbuster = Blunderbuster - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 3/52: wpn_bouncer = Bouncer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444296 actor=3164817 uid=a620861b7b547e5c addr=25BAE3F2A00 _Players={1 actor(s)} out[] raw58=90 ac 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444297 actor=3164818 uid=b73292c28d2b6a9a addr=25BAE3F2AC0 _Players={1 actor(s)} out[] raw58=50 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 60 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444298 actor=3164819 uid=d6535bfb11e2d9d2 addr=25BAE3F2B80 _Players={1 actor(s)} out[] raw58=70 bd 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 bd 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444299 actor=3164820 uid=f96b0a14f028856d addr=25BAE3F2C40 _Players={1 actor(s)} out[] raw58=b0 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 80 bc 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=1 CheckInventoryAction=3 EquipWeaponAction=4 GetActiveWeaponAction=1 GetCurrencyAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	2
+[script] [rando]	RANDO-PROBE	HUD:	2 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	test item 4/52: wpn_burstpistol = Burst Pistol - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444296 actor=3164817 uid=a620861b7b547e5c addr=25BAE3F2A00 _Players={1 actor(s)} out[] raw58=90 ac 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444297 actor=3164818 uid=b73292c28d2b6a9a addr=25BAE3F2AC0 _Players={1 actor(s)} out[] raw58=50 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 60 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444298 actor=3164819 uid=d6535bfb11e2d9d2 addr=25BAE3F2B80 _Players={1 actor(s)} out[] raw58=70 bd 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 bd 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444299 actor=3164820 uid=f96b0a14f028856d addr=25BAE3F2C40 _Players={1 actor(s)} out[] raw58=b0 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 80 bc 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=1 CheckInventoryAction=3 EquipWeaponAction=4 GetActiveWeaponAction=1 GetCurrencyAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	2
+[script] [rando]	RANDO-PROBE	HUD:	2 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444296 actor=3164817 uid=a620861b7b547e5c addr=25BAE3F2A00 _Players={1 actor(s)} out[] raw58=90 ac 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444297 actor=3164818 uid=b73292c28d2b6a9a addr=25BAE3F2AC0 _Players={1 actor(s)} out[] raw58=50 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 60 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444298 actor=3164819 uid=d6535bfb11e2d9d2 addr=25BAE3F2B80 _Players={1 actor(s)} out[] raw58=70 bd 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 bd 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444299 actor=3164820 uid=f96b0a14f028856d addr=25BAE3F2C40 _Players={1 actor(s)} out[] raw58=b0 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 80 bc 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=1 CheckInventoryAction=3 EquipWeaponAction=4 GetActiveWeaponAction=1 GetCurrencyAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	2
+[script] [rando]	RANDO-PROBE	HUD:	2 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	test item 5/52: wpn_buzzblades = Buzz Blades - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 6/52: wpn_carpetbomber = Bombardier - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	HUD:	test item 7/52: wpn_detcord = Detcord - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	HUD:	test item 8/52: wpn_fossilizer = Fossilizer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	HUD:	test item 9/52: wpn_fusion_grenade = Fusion Grenade (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	HUD:	test item 10/52: wpn_glove_of_doom = Glove of Doom - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=1 CheckInventoryAction=3 GetCurrencyAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	2
+[script] [rando]	RANDO-PROBE	HUD:	2 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	HUD:	test item 11/52: wpn_groovitron = Groovitron - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444296 actor=3164817 uid=a620861b7b547e5c addr=25BAE3F2A00 _Players={1 actor(s)} out[] raw58=90 ac 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444297 actor=3164818 uid=b73292c28d2b6a9a addr=25BAE3F2AC0 _Players={1 actor(s)} out[] raw58=50 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 60 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444298 actor=3164819 uid=d6535bfb11e2d9d2 addr=25BAE3F2B80 _Players={1 actor(s)} out[] raw58=70 bd 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 bd 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=1 CheckInventoryAction=3 GetCurrencyAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	2
+[script] [rando]	RANDO-PROBE	HUD:	2 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444296 actor=3164817 uid=a620861b7b547e5c addr=25BAE3F2A00 _Players={1 actor(s)} out[] raw58=90 ac 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444297 actor=3164818 uid=b73292c28d2b6a9a addr=25BAE3F2AC0 _Players={1 actor(s)} out[] raw58=50 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 60 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444298 actor=3164819 uid=d6535bfb11e2d9d2 addr=25BAE3F2B80 _Players={1 actor(s)} out[] raw58=70 bd 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 bd 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444299 actor=3164820 uid=f96b0a14f028856d addr=25BAE3F2C40 _Players={1 actor(s)} out[] raw58=b0 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 80 bc 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 EquipWeaponAction=4 GetActiveWeaponAction=1 GetCurrencyAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	1
+[script] [rando]	RANDO-PROBE	HUD:	1 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	HUD:	test item 12/52: wpn_icicleblast = Cold Snap - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8447154 actor=3165558 uid=c74aa480511ead92 addr=25BAE74EA00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=50 b6 61 a7 5b 02 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 3e 99 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=8447122 actor=3165404 uid=a3d4176375573a50 addr=25BAE9A5060 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 af 1c a7 5b 02 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 80 a5 15 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=8447334 actor=3165564 uid=c17721e3d075a406 addr=25BAE9A5360 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=e0 b9 09 a7 5b 02 00 00 18 48 67 c4 f6 7f 00 00 30 b5 61 a7 5b 02 00 00 c0 1c 16 4e 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444296 actor=3164817 uid=a620861b7b547e5c addr=25BAE3F2A00 _Players={1 actor(s)} out[] raw58=90 ac 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444297 actor=3164818 uid=b73292c28d2b6a9a addr=25BAE3F2AC0 _Players={1 actor(s)} out[] raw58=50 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 60 bb 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444298 actor=3164819 uid=d6535bfb11e2d9d2 addr=25BAE3F2B80 _Players={1 actor(s)} out[] raw58=70 bd 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 bd 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8444299 actor=3164820 uid=f96b0a14f028856d addr=25BAE3F2C40 _Players={1 actor(s)} out[] raw58=b0 bc 61 a7 5b 02 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 80 bc 61 a7 5b 02 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=1 CheckInventoryAction=3 EquipWeaponAction=4 GetActiveWeaponAction=1 GetCurrencyAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	2
+[script] [rando]	RANDO-PROBE	HUD:	2 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	[TEST] story mission 1 on corson_v
+[script] [rando]	location planet:corson_v (story mission TEST_corson_v_1)
+[script] [rando]	received 3 Gold Bolts
+[script] [rando]	RANDO-NOTIFY	Randomizer: +3 Gold Bolts (F7 shop)
+[script] [rando]	received 3 Gold Bolts
+[script] [rando]	RANDO-NOTIFY	Randomizer: +3 Gold Bolts (F7 shop)
+[script] [rando]	[TEST] story mission 2 on corson_v
+[script] [rando]	location story2:corson_v (story mission TEST_corson_v_2)
+[script] [rando]	received Coordinates: Savali
+[script] [rando]	RANDO-NOTIFY	Randomizer: Coordinates: Savali - rewards on Savali are yours now
+[script] [rando]	[TEST] story mission 3 on corson_v
+[script] [rando]	[TEST] story mission 4 on corson_v
+[script] [rando]	[TEST] story mission 5 on corson_v
+[script] [rando]	[TEST] story mission 6 on corson_v
+[script] [rando]	[TEST] story mission 7 on corson_v
+[script] [rando]	[TEST] story mission 8 on corson_v
+[script] [rando]	[TEST] story mission 9 on corson_v
+[script] [rando]	[TEST] story mission 10 on corson_v
+[script] [rando]	[TEST] story mission 11 on corson_v
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2893844490 Loaded=true
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=81.686149597168 MissionName=MIS_INTRO MissionSegmentId=12893FE4BDCC56DA107370901522D306
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=81.686149597168 MissionName=MIS_RYNO_PLANS MissionSegmentId=DA0681794308EBBF5EFFDEA9C9F14239
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=4764BE8641C6391C955F76C984A95CCC
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=E8676967E2B6B3FC08780ECEBA8A75E0
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=10491316 ItemHandle=10496063
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=10491378 ItemHandle=10496064
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=10491316 ItemHandle=10496065
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=10491378 ItemHandle=10496066
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=10491316 ItemHandle=10496070
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=12616331 ItemHandle=10519362
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=12616331 ItemHandle=12616515
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=12616331 ItemHandle=10519370
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=10519119 ItemHandle=10519945
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=10519119 ItemHandle=10519946
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=10519119 ItemHandle=10519947
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=10519119 ItemHandle=10519948
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=10519119 ItemHandle=10519949
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=10519119 ItemHandle=10519950
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Scarstu Debris Field (Zurkie's): rewards here are banked until you find its Coordinates
+[script] [rando]	[TEST] story mission 1 on scarstu
+[script] [rando]	location planet:scarstu (story mission TEST_scarstu_1)
+[script] [rando]	RANDO-NOTIFY	Banked: 1 Gold Bolt - find the Coordinates for Scarstu Debris Field (Zurkie's) to receive it
+[script] [rando]	location side:zurkies_bronze (paid with the planet)
+[script] [rando]	RANDO-NOTIFY	Banked: 2 Gold Bolts - find the Coordinates for Scarstu Debris Field (Zurkie's) to receive it
+[script] [rando]	location side:zurkies_gold (paid with the planet)
+[script] [rando]	RANDO-NOTIFY	Banked: 2 Gold Bolts - find the Coordinates for Scarstu Debris Field (Zurkie's) to receive it
+[script] [rando]	location side:zurkies_silver (paid with the planet)
+[script] [rando]	RANDO-NOTIFY	Banked: 2 Gold Bolts - find the Coordinates for Scarstu Debris Field (Zurkie's) to receive it
+[script] [rando]	location story2:nefarious_city (the story moved on to scarstu)
+[script] [rando]	received Coordinates: Cordelion
+[script] [rando]	RANDO-NOTIFY	Randomizer: Coordinates: Cordelion - rewards on Cordelion are yours now
+[script] [rando]	location story2:sargasso (the story moved on to scarstu)
+[script] [rando]	RANDO-NOTIFY	Banked: 4 Gold Bolts - find the Coordinates for Sargasso to receive it
+[script] [rando]	[TEST] story mission 2 on scarstu
+[script] [rando]	location story2:scarstu (story mission TEST_scarstu_2)
+[script] [rando]	RANDO-NOTIFY	Banked: 2 Gold Bolts - find the Coordinates for Scarstu Debris Field (Zurkie's) to receive it
+[script] [rando]	[TEST] story mission 3 on scarstu
+[script] [rando]	[TEST] story mission 4 on scarstu
+[script] [rando]	[TEST] story mission 5 on scarstu
+[script] [rando]	[TEST] story mission 6 on scarstu
+[script] [rando]	[TEST] story mission 7 on scarstu
+[script] [rando]	[TEST] story mission 8 on scarstu
+[script] [rando]	[TEST] story mission 9 on scarstu
+[script] [rando]	[TEST] story mission 10 on scarstu
+[script] [rando]	[TEST] story mission 11 on scarstu
+[script] [rando]	[TEST] story mission 12 on scarstu
+[script] [rando]	[TEST] story mission 13 on scarstu
+[script] [rando]	[TEST] story mission 14 on scarstu
+[script] [rando]	[TEST] story mission 15 on scarstu
+[script] [rando]	[TEST] story mission 16 on scarstu
+[script] [rando]	[TEST] story mission 17 on scarstu
+[script] [rando]	[TEST] story mission 18 on scarstu
+[script] [rando]	[TEST] story mission 19 on scarstu
+[script] [rando]	[TEST] story mission 20 on scarstu
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 9 | Coordinates 4/10 | rewards 5/80 (+6 banked) | planets 2 | in inventory 4
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 9 | Coordinates 4/10 | rewards 5/80 (+6 banked) | planets 2 | in inventory 4
+[script] [rando]	RANDO-NOTIFY	Shop 1/4: Blackhole Storm - 4 Gold Bolts [luxury] (you have 9). F8 buys
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing ui/loaded/exported/hud/mm_6.json
+[loader] closing ui/loaded/exported/hud/mm_5.json
+[loader] closing ui/loaded/exported/hud/mm_3.json
+[loader] closing ui/loaded/exported/hud/mm_0.json
+[loader] closing ui/loaded/exported/hud/mm_2.json
+[loader] closing ui/loaded/exported/hud/mm_1.json
+[loader] closing ui/loaded/exported/hud/mm_7.json
+[loader] closing ui/loaded/exported/hud/mm_4.json
+[rivet] fini complete

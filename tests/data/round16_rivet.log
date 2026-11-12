@@ -1,0 +1,430 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[rivet] game version mismatch, invalidating pointers
+[loader] mod path mods/default does not exist! skipping.
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF6C7A3A8C0, QueueEvent at 00007FF6C2836A60
+[time] time scale system at 00007FF6C6C802E0
+[camera] fov scale at 00007FF6C6ABEEC8
+[camera] camera system at 00007FF6C6ABEDE0
+[hud] ShowMessage at 00007FF6C1DFD160
+[vanity] EquipBundle at 00007FF6C205A8E0
+[hero_look] HandleTransformationEvent at 00007FF6C1D08D40, OnTransformationPostActivate at 00007FF6C1F163F0
+[configs] config asset manager at 00007FF6C6ACBFE0
+[script] signal queue at 00007FF6C7F2FB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF6C1F23900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] loading dxgi and d3d12...
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	Randomizer 4.0.0 loaded (data 2.0.0, generator 4.0.0)
+[script] [rando]	RANDO-STATUS events subscribed 18/18
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] loaded 9 of 9 scripts, 3 frame and 2 key callbacks
+[script] [rando]	RANDO-SEED seed = "random" needs the companion to remember the seed - start the companion
+[script] [rando]	notify failed:	the player hud is not loaded
+[script] [rando]	RANDO-REAL	no saved state restored - going ahead
+[DDL] indexed 8211 types for struct walking
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=857631949EB0EEFAEA9138FA6D99EF0F
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=32F1AE36FAF8E485F5430C2CEC23C3B3
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129237 ItemHandle=2129614
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129297 ItemHandle=2129615
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129237 ItemHandle=2129616
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129297 ItemHandle=2129617
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129237 ItemHandle=2129621
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-CAMPAIGN mission helper:	ready (rando_give.dll v4, mission code matches this exe)
+[script] [rando]	RANDO-CAMPAIGN mission system 2: MIS_INTRO is state 2 (done)
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Malinon OldPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=805795996 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=934271974 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3095202961 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2893844490 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_END ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_END ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_SHOOT_BLARG_SHIPS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-SEED generating seed	kit-bolt-kit-198	(random seed from the companion)
+[script] [rando]	RANDO-SEED ready	kit-bolt-kit-198	c207a4c8437e	preset standard	attempt 1
+[script] [rando]	RANDO-SEED share code	RA4|kit-bolt-kit-198|standard|
+[script] [rando]	RANDO-SEED replaying 31 event(s) that came in while generating
+[script] [rando]	RANDO-GADGET	grindboots
+[script] [rando]	RANDO-GADGET	glide
+[script] [rando]	RANDO-GADGET	grapple
+[script] [rando]	RANDO-GADGET	rift_tether
+[script] [rando]	RANDO-NEWGAME new game seen before the companion's restore - the restored run will start over
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards locked
+[script] [rando]	RANDO-NOTIFY	Randomizer 4.0 - seed kit-bolt-kit-198 (c207a4c8437e)
+[script] [rando]	RANDO-NOTIFY	Randomizer: start the companion (seed = random)
+[script] [rando]	RANDO-VENDOR locked weapon purchases at	ae5ce1e22662e244	VendorConfig	(hold time was 1.0)
+[script] [rando]	RANDO-NOTIFY	Randomizer: the vendor's weapons come from Gold Bolts and missions in this seed
+[script] [rando]	received Hoverboots
+[script] [rando]	received Map-O-Matic
+[script] [rando]	received Volcanic Eruptor (restored)
+[script] [rando]	received Predator Launcher (restored)
+[script] [rando]	received Omniglove (wall panels)
+[script] [rando]	seed started: kit-bolt-kit-198 (c207a4c8437e), run 1
+[script] [rando]	RANDO-NOTIFY	Randomizer start: Hoverboots, Map-O-Matic, Volcanic Eruptor (restored), Predator Launcher (restored), Omniglove (wall panels)
+[script] [rando]	RANDO-REAL	sync:	5	item(s) waiting for the game
+[script] [rando]	RANDO-SAVE no saved progress for this seed, starting fresh
+[script] [rando]	RANDO-REAL	sent	hoverboots	configs/equipment/gdgt_hoverboots_item.config	842E8D8EFE349E00	via rando_give.dll	request 2	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: target hero works - kept for next time
+[script] [rando]	RANDO-REAL	confirmed	hoverboots	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Hoverboots
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2129237 ItemHandle=2211871
+[script] [rando]	RANDO-GADGET	hoverboots
+[script] [rando]	RANDO-REAL	sent	map_o_matic	configs/equipment/gdgt_mapomatic_item.config	9AB06529F129A923	via rando_give.dll	request 3	target hero	
+[script] [rando]	RANDO-REAL	confirmed	map_o_matic	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Map-O-Matic
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2129297 ItemHandle=2211876
+[script] [rando]	RANDO-GADGET	map_o_matic
+[script] [rando]	RANDO-REAL	sent	omniglove	configs/equipment/gdgt_versaglove_item.config	98F2996246EB8469	via rando_give.dll	request 4	target hero	
+[script] [rando]	RANDO-REAL	confirmed	omniglove	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Omniglove (wall panels)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2129237 ItemHandle=2211899
+[script] [rando]	RANDO-GADGET	omniglove
+[script] [rando]	RANDO-REAL	sent	weapon:predator_launcher	configs/equipment/wpn_predator_launcher_item.config	8034EF9F017CD311	via rando_give.dll	request 5	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:predator_launcher
+[script] [rando]	RANDO-REAL	already in the game:	weapon:burst_pistol	(equipped)
+[script] [rando]	RANDO-ARMOR baseline: 30 armor piece(s) owned before this seed - they do not count
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_SHOOT_BLARG_SHIPS ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_CUTSCENE_THUG_INTRO_START ObjectiveState=1
+[script] [rando]	RANDO-REAL	weapon type	1005	is	weapon:predator_launcher
+[script] [rando]	RANDO-REAL	confirmed	weapon:predator_launcher	via	native	after	122	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Predator Launcher (restored)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-REAL	sent	weapon:volcanic_eruptor	configs/equipment/wpn_volcaniceruptor_item.config	8D6ED40E943F3883	via rando_give.dll	request 6	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1006	is	weapon:volcanic_eruptor
+[script] [rando]	RANDO-REAL	confirmed	weapon:volcanic_eruptor	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Volcanic Eruptor (restored)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-REAL	already in the game:	weapon:pixelizer	(equipped)
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_CUTSCENE_THUG_INTRO_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_CUTSCENE_THUG_INTRO_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_CUTSCENE_THUG_INTRO_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_END ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129237 ItemHandle=2219587
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_END ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_KALEBO_END ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_KALEBO_END ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_BALLOONS_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_BALLOONS_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PIRATE_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PIRATE_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PIRATE_GALLEON_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PIRATE_GALLEON_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PIRATE_END ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PIRATE_END ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_CLOCK_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_CLOCK_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_CLOCK_DROPSHIP_COMBAT ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_CLOCK_DROPSHIP_COMBAT ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_CLOCK_END ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_CLOCK_END ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_FLOAT_DRAG_A ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_FLOAT_DRAG_A ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_FLOAT_DRAG_A_BREAK ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_FLOAT_DRAG_A_BREAK ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_FLOAT_DRAG_A_POSTCINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_FLOAT_DRAG_A_POSTCINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_FLOAT_DRAG_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_FLOAT_DRAG_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_ZURKON ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2954609570 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_ZURKON ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_COURTYARD ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=879359267 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_COURTYARD ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_COURTYARD_MELEE_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=359442900 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_COURTYARD_MELEE_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_DIM_TRAV_TRAINING ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2558923025 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_DIM_TRAV_TRAINING ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_DIM_TRAV_DONE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2569517610 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_DIM_TRAV_DONE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_ANOMALIES_STATION ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1728490555 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=840795784 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3809105967 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=690289488 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3216974327 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2711318017 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=724417012 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2429461874 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3610611410 Loaded=true
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Torren OldPlanetName=Malinon
+[script] [rando]	RANDO-PLANET	Torren	torren_iv	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3404854046 Loaded=true
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Malinon OldPlanetName=Torren
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3515982110 Loaded=true
+[script] [rando]	RANDO-PLANET	Torren	torren_iv	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2473666332 Loaded=true
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Torren
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1343868918 Loaded=true
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Ardolis
+[script] [rando]	RANDO-PLANET	Ardolis	ardolis	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3126765517 Loaded=true
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=4 PreviousState=2
+[script] [rando]	location planet:corson_v (story mission MIS_INTRO)
+[script] [rando]	received Enforcer
+[script] [rando]	RANDO-NOTIFY	Randomizer: Enforcer - adding it to your inventory
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=1118.8197021484 MissionName=MIS_INTRO MissionSegmentId=32F1AE36FAF8E485F5430C2CEC23C3B3
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_NEFCITY_01 MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_NEFCITY_01 MissionSegmentId=09F493BEE8C60E6C3976C53756AC20A5
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity OldPlanetName=Ardolis
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-REAL	sent	weapon:enforcer	configs/equipment/wpn_protoshotgun_item.config	9B8612453FB9E793	via rando_give.dll	request 7	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1007	is	weapon:enforcer
+[script] [rando]	RANDO-REAL	confirmed	weapon:enforcer	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Enforcer
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3046787773 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2052464476 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=696621431 Loaded=true
+[script] [rando]	RANDO-DISCOVER	GainGoldBoltEvent	BoltName=Nefarious City 3 TotalBolts=1
+[script] [rando]	RANDO-BOLT	Nefarious City 3	->	goldbolt:01	(requirements met)
+[script] [rando]	location goldbolt:01 (Gold Bolt Nefarious City 3)
+[script] [rando]	received RYNO 8
+[script] [rando]	RANDO-NOTIFY	Gold Bolt 1/25: RYNO 8 - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:ryno_8	configs/equipment/wpn_ryno_item.config	B1740E5EC0A2BF83	via rando_give.dll	request 8	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1008	is	weapon:ryno_8
+[script] [rando]	RANDO-REAL	confirmed	weapon:ryno_8	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: RYNO 8
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1176643395 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1176643395 Loaded=false
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=16798922 ItemHandle=10568215
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=16798922 ItemHandle=12670942
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=16798922 ItemHandle=10554281
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-REAL	weapon type	1003	is	weapon:burst_pistol
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-REAL	weapon type	1004	is	weapon:burst_pistol
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=14733985 ItemHandle=10553234
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=14733985 ItemHandle=16800232
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=14733985 ItemHandle=16800233
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=14733985 ItemHandle=10552081
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=14733985 ItemHandle=14773614
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3909050619 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3557787708 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1575941065 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1672738341 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2328386110 Loaded=true
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=14790090 ItemHandle=14784854
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=14790090 ItemHandle=14784855
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=14790090 ItemHandle=14784886
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=14788358 ItemHandle=12688430
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=14788358 ItemHandle=12688431
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=14788358 ItemHandle=12688432
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=14788358 ItemHandle=12688523
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=14788358 ItemHandle=12688524
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-DISCOVER	GainGoldBoltEvent	BoltName=Nefarious City 2 TotalBolts=2
+[script] [rando]	RANDO-BOLT	Nefarious City 2	->	goldbolt:02	(requirements met)
+[script] [rando]	location goldbolt:02 (Gold Bolt Nefarious City 2)
+[script] [rando]	received Blackhole Storm
+[script] [rando]	RANDO-NOTIFY	Gold Bolt 2/25: Blackhole Storm - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 9	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[script] [rando]	RANDO-REAL	no confirmation yet for	weapon:blackhole_storm	(direct) - will retry
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 10	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[script] [rando]	RANDO-REAL	not confirmed after	2	direct tries:	weapon:blackhole_storm
+[script] [rando]	RANDO-NOTIFY	Blackhole Storm: the game reported nothing new - you probably have it already
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=18924157 ItemHandle=16827654
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=18924157 ItemHandle=16827658
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=18924157 ItemHandle=16827691
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=16826923 ItemHandle=16828070
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=16826923 ItemHandle=16828071
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=16826923 ItemHandle=16828082
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=16826923 ItemHandle=16828083
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=16826923 ItemHandle=16828105
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=538230786 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1830426183 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=643836122 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1523646017 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2162614406 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2764228336 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2225321484 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3103698112 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1675524253 Loaded=true
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=16853136 ItemHandle=21052433
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=16853136 ItemHandle=21052456
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=16853136 ItemHandle=23177811
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=21095140 ItemHandle=21052418
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=21095140 ItemHandle=21052420
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=21095140 ItemHandle=21052422
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=21095140 ItemHandle=21052463
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=21095140 ItemHandle=21052466
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=18947465 ItemHandle=16850554
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=18947465 ItemHandle=16850555
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=18947465 ItemHandle=16850561
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=21044441 ItemHandle=14753743
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=21044441 ItemHandle=14753744
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=21044441 ItemHandle=14753745
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=21044441 ItemHandle=14753746
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=21044441 ItemHandle=14753747
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Savali OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Savali	savali	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2922336782 Loaded=true
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity OldPlanetName=Savali
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2848876037 Loaded=true
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=16862460 ItemHandle=16862614
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=16862460 ItemHandle=16862615
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=16862460 ItemHandle=16862639
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=21056693 ItemHandle=16862807
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=21056693 ItemHandle=16862808
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=21056693 ItemHandle=16862809
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=21056693 ItemHandle=16862810
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=21056693 ItemHandle=16862811
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=489921208 Loaded=true
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3873819926 Loaded=true
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_NEFCITY_01 MissionState=4 PreviousState=2
+[script] [rando]	location planet:nefarious_city (story mission MIS_NEFCITY_01)
+[script] [rando]	RANDO-NOTIFY	Randomizer: no item at Nefarious City: first story mission
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=1347.3010253906 MissionName=MIS_NEFCITY_01 MissionSegmentId=09F493BEE8C60E6C3976C53756AC20A5
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_NEFCITY_POST_MISSION MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SARG_01_FIRST_VISIT MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_SARG_01_FIRST_VISIT MissionSegmentId=853EDD6C9F61F0599E33C0FCF35748F3
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=59593087 Loaded=true
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Sargasso OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Sargasso	sargasso	rewards locked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3358770726 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2498464355 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3018096480 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2677253370 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2999919277 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3905691151 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3287594159 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=4249688603 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=399527903 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3831762672 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=313255321 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=37647276 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3001523161 Loaded=true
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SARG_01_CLANKPUZZLE MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_SARG_01_CLANKPUZZLE MissionSegmentId=8D716FF59E4F48217050555C2A5EB7C3
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Sargasso
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Sargasso
+[script] [rando]	RANDO-PLANET	Sargasso	sargasso	rewards locked
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SARG_01_CLANKPUZZLE MissionState=4 PreviousState=2
+[script] [rando]	location planet:sargasso (story mission MIS_SARG_01_CLANKPUZZLE)
+[script] [rando]	RANDO-NOTIFY	Randomizer: no item at Sargasso: first story mission
+[script] [rando]	location side:sargasso_trudi (paid with the planet)
+[script] [rando]	RANDO-NOTIFY	Randomizer: no item at Sargasso: Trudi activity
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=72.54077911377 MissionName=MIS_SARG_01_CLANKPUZZLE MissionSegmentId=8D716FF59E4F48217050555C2A5EB7C3
+[script] [rando]	RANDO-DISCOVER	GainGoldBoltEvent	BoltName=Sargasso 2 TotalBolts=3
+[script] [rando]	RANDO-BOLT	Sargasso 2	->	goldbolt:04	(requirements met)
+[script] [rando]	location goldbolt:04 (Gold Bolt Sargasso 2)
+[script] [rando]	received Buzz Blades
+[script] [rando]	RANDO-NOTIFY	Gold Bolt 3/25: Buzz Blades - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:buzz_blades	configs/equipment/wpn_buzzblades_item.config	8B01A641F040FBDA	via rando_give.dll	request 11	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1009	is	weapon:buzz_blades
+[script] [rando]	RANDO-REAL	confirmed	weapon:buzz_blades	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Buzz Blades
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SARG_01_FIRST_VISIT MissionState=4 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=1150.2109375 MissionName=MIS_SARG_01_FIRST_VISIT MissionSegmentId=853EDD6C9F61F0599E33C0FCF35748F3
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_SARG_01_POST_MISSION MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=7C8407BC5A8BD0498B8DA1F1DCC92EBE
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_01_VISIT_01 MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_01_VISIT_01 MissionSegmentId=719031F7E4FB441E91B47929CB334AB8
+[script] [rando]	RANDO-NOTIFY	Gold Bolts 3/25 | rewards 7/41 | planets 3 | in inventory 10, probably owned 1
+[script] [rando]	RANDO-NOTIFY	Gold Bolts 3/25 | rewards 7/41 | planets 3 | in inventory 10, probably owned 1
+[script] [rando]	RANDO-NOTIFY	Gold Bolts 3/25 | rewards 7/41 | planets 3 | in inventory 10, probably owned 1
+[script] [rando]	RANDO-NOTIFY	Gold Bolts 3/25 | rewards 7/41 | planets 3 | in inventory 10, probably owned 1
+[script] [rando]	RANDO-DISCOVER	PlanetMenuAcceptEvent	DestinationCheckpointName=CHK_ZURK_00_DEFAULT InterplanetaryCheckpointName=CHK_TRANSITION_TO_ZURKIES
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon OldPlanetName=Sargasso
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=21056693 ItemHandle=37810020
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=41952044 ItemHandle=33675916
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=41952044 ItemHandle=33675927
+[script] [rando]	RANDO-REAL	weapon type	1002	is	weapon:ryno_8
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-DISCOVER	GainGoldBoltEvent	BoltName=Zurkon's 1 TotalBolts=4
+[script] [rando]	RANDO-BOLT	Zurkon's 1	->	goldbolt:07	(current planet scarstu, requirements met)
+[script] [rando]	location goldbolt:07 (Gold Bolt Zurkon's 1)
+[script] [rando]	received Drillhound
+[script] [rando]	RANDO-NOTIFY	Gold Bolt 4/25: Drillhound - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:drillhound	configs/equipment/wpn_tunneler_item.config	BAFBBD3EEC9C28C0	via rando_give.dll	request 12	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:drillhound
+[script] [rando]	RANDO-REAL	no confirmation yet for	weapon:drillhound	(direct) - will retry
+[script] [rando]	RANDO-REAL	sent	weapon:drillhound	configs/equipment/wpn_tunneler_item.config	BAFBBD3EEC9C28C0	via rando_give.dll	request 13	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:drillhound
+[script] [rando]	RANDO-REAL	direct delivery: no answer for	weapon:drillhound	with target hero (it worked before) - trying again shortly
+[script] [rando]	RANDO-REAL	already in the game:	weapon:drillhound	(equipped)
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=4013.2880859375 MissionName=MIS_RYNO_PLANS MissionSegmentId=857631949EB0EEFAEA9138FA6D99EF0F
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=396.95727539062 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=7C8407BC5A8BD0498B8DA1F1DCC92EBE
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=396.95727539062 MissionName=MIS_ZURK_01_VISIT_01 MissionSegmentId=719031F7E4FB441E91B47929CB334AB8
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=E26D65F021B0757391A92ED35F0B1229
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=9C7B2521194A65EDBDD41A647D627B7A
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing ui/loaded/exported/hud/mm_6.json
+[loader] closing ui/loaded/exported/hud/mm_5.json
+[loader] closing ui/loaded/exported/hud/mm_3.json
+[loader] closing ui/loaded/exported/hud/mm_0.json
+[loader] closing ui/loaded/exported/hud/mm_2.json
+[loader] closing ui/loaded/exported/hud/mm_1.json
+[loader] closing ui/loaded/exported/hud/mm_7.json
+[loader] closing ui/loaded/exported/hud/mm_4.json
+[rivet] fini complete

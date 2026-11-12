@@ -1,0 +1,986 @@
+{
+ "bolt_prefixes": {
+  "ardolis": "ardolis",
+  "blizar": "blizar_prime",
+  "blizar prime": "blizar_prime",
+  "cordelion": "cordelion",
+  "corson v": "nefarious_city",
+  "malinon": "corson_v",
+  "megalopolis": "corson_v",
+  "molonoth": "torren_iv",
+  "nefarious city": "nefarious_city",
+  "nefcity": "nefarious_city",
+  "sargasso": "sargasso",
+  "savali": "savali",
+  "scarstu": "scarstu",
+  "scarstu debris field": "scarstu",
+  "torren": "torren_iv",
+  "torren iv": "torren_iv",
+  "viceron": "viceron",
+  "zordoom": "viceron",
+  "zurkie's": "scarstu",
+  "zurkies": "scarstu"
+ },
+ "completion_gold": {
+  "ardolis": 3,
+  "blizar_prime": 2,
+  "cordelion": 3,
+  "corson_v": 2,
+  "nefarious_city": 3,
+  "sargasso": 2,
+  "savali": 3,
+  "scarstu": 3,
+  "torren_iv": 2,
+  "viceron": 1
+ },
+ "engine_version": "0.1.0",
+ "fingerprint": "d6c9b213073c",
+ "gadget_type_ids": {
+  "1700739470": "rift_tether",
+  "1705612936": "grapple",
+  "2681061161": "hoverboots",
+  "2861803654": "box_breaker",
+  "2983765807": "omniglove",
+  "3505658055": "glide",
+  "3984731671": "magboots",
+  "4160652280": "glitch",
+  "565053540": "grindboots",
+  "597851141": "map_o_matic"
+ },
+ "gold_bolts_by_planet": {
+  "ardolis": [
+   {
+    "id": "goldbolt:21",
+    "requires": [
+     "main:ardolis"
+    ]
+   },
+   {
+    "id": "goldbolt:22",
+    "requires": [
+     "main:ardolis",
+     "hoverboots",
+     "speetle"
+    ]
+   }
+  ],
+  "blizar_prime": [
+   {
+    "id": "goldbolt:13",
+    "requires": [
+     "main:blizar_prime"
+    ]
+   },
+   {
+    "id": "goldbolt:14",
+    "requires": [
+     "done:planet:blizar_prime"
+    ]
+   },
+   {
+    "id": "goldbolt:15",
+    "requires": [
+     "done:side:blizar_chef"
+    ]
+   }
+  ],
+  "cordelion": [
+   {
+    "id": "goldbolt:18",
+    "requires": [
+     "main:cordelion",
+     "hoverboots"
+    ]
+   },
+   {
+    "id": "goldbolt:19",
+    "requires": [
+     "main:cordelion"
+    ]
+   },
+   {
+    "id": "goldbolt:20",
+    "requires": [
+     "main:cordelion"
+    ]
+   }
+  ],
+  "corson_v": {},
+  "nefarious_city": [
+   {
+    "id": "goldbolt:01",
+    "requires": [
+     "main:nefarious_city"
+    ]
+   },
+   {
+    "id": "goldbolt:02",
+    "requires": [
+     "main:nefarious_city"
+    ]
+   },
+   {
+    "id": "goldbolt:03",
+    "requires": [
+     "done:planet:nefarious_city",
+     "omniglove"
+    ]
+   }
+  ],
+  "sargasso": [
+   {
+    "id": "goldbolt:04",
+    "requires": [
+     "main:sargasso"
+    ]
+   },
+   {
+    "id": "goldbolt:05",
+    "requires": [
+     "main:sargasso"
+    ]
+   },
+   {
+    "id": "goldbolt:06",
+    "requires": [
+     "done:side:sargasso_trudi",
+     "dragon_mount"
+    ]
+   }
+  ],
+  "savali": [
+   {
+    "id": "goldbolt:10",
+    "requires": [
+     "main:savali"
+    ]
+   },
+   {
+    "id": "goldbolt:11",
+    "requires": [
+     "main:savali"
+    ]
+   },
+   {
+    "id": "goldbolt:12",
+    "requires": [
+     "done:planet:savali",
+     "done:planet:ardolis"
+    ]
+   }
+  ],
+  "scarstu": [
+   {
+    "id": "goldbolt:07",
+    "requires": [
+     "main:scarstu"
+    ]
+   },
+   {
+    "id": "goldbolt:08",
+    "requires": [
+     "done:side:zurkies_bronze"
+    ]
+   },
+   {
+    "id": "goldbolt:09",
+    "requires": [
+     "done:side:zurkies_silver"
+    ]
+   }
+  ],
+  "torren_iv": [
+   {
+    "id": "goldbolt:16",
+    "requires": [
+     "main:torren_iv",
+     "hoverboots"
+    ]
+   },
+   {
+    "id": "goldbolt:17",
+    "requires": [
+     "main:torren_iv"
+    ]
+   }
+  ],
+  "viceron": [
+   {
+    "id": "goldbolt:23",
+    "requires": [
+     "main:viceron",
+     "phantom_dash"
+    ]
+   },
+   {
+    "id": "goldbolt:24",
+    "requires": [
+     "done:planet:viceron"
+    ]
+   },
+   {
+    "id": "goldbolt:25",
+    "requires": [
+     "main:viceron"
+    ]
+   }
+  ]
+ },
+ "item_names": {
+  "access:ardolis": "Coordinates: Ardolis",
+  "access:blizar_prime": "Coordinates: Blizar Prime",
+  "access:cordelion": "Coordinates: Cordelion",
+  "access:corson_v": "Coordinates: Corson V (Megalopolis)",
+  "access:nefarious_city": "Coordinates: Nefarious City",
+  "access:sargasso": "Coordinates: Sargasso",
+  "access:savali": "Coordinates: Savali",
+  "access:scarstu": "Coordinates: Scarstu Debris Field (Zurkie's)",
+  "access:torren_iv": "Coordinates: Torren IV (Molonoth Fields)",
+  "access:viceron": "Coordinates: Viceron (Zordoom Prison)",
+  "box_breaker": "Box Breaker",
+  "dragon_mount": "Dragon mount (Trudi)",
+  "glide": "Helipack (glide)",
+  "glitch": "Glitch",
+  "gold:1": "1 Gold Bolt",
+  "gold:2": "2 Gold Bolts",
+  "gold:3": "3 Gold Bolts",
+  "grapple": "Swingshot (grapple)",
+  "grindboots": "Grind Boots",
+  "hoverboots": "Hoverboots",
+  "hurlshot": "Hurlshot",
+  "magboots": "MagBoots (magnetic / 'gravity' boots)",
+  "map_o_matic": "Map-O-Matic",
+  "omniglove": "Omniglove (wall panels)",
+  "phantom_dash": "Phantom Dash",
+  "rift_tether": "Rift Tether",
+  "speetle": "Speetle mount",
+  "wallrun": "Wallrun",
+  "weapon:blackhole_storm": "Blackhole Storm",
+  "weapon:bombardier": "Bombardier",
+  "weapon:bouncer": "Bouncer",
+  "weapon:burst_pistol": "Burst Pistol",
+  "weapon:buzz_blades": "Buzz Blades",
+  "weapon:cold_snap": "Cold Snap",
+  "weapon:combuster": "Combuster (restored)",
+  "weapon:drillhound": "Drillhound",
+  "weapon:enforcer": "Enforcer",
+  "weapon:executor": "Executor",
+  "weapon:fusion_grenade": "Fusion Grenade (restored)",
+  "weapon:glove_of_doom": "Glove of Doom",
+  "weapon:headhunter": "Headhunter",
+  "weapon:lightning_rod": "Lightning Rod",
+  "weapon:magnamissile": "Magnamissile (restored)",
+  "weapon:mr_fungi": "Mr. Fungi",
+  "weapon:mr_zurkon": "Mr. Zurkon (restored)",
+  "weapon:negatron_collider": "Negatron Collider",
+  "weapon:pixelizer": "Pixelizer",
+  "weapon:predator_launcher": "Predator Launcher (restored)",
+  "weapon:ricochet": "Ricochet",
+  "weapon:ryno_8": "RYNO 8",
+  "weapon:schrodinger": "Schrodinger (restored)",
+  "weapon:shatterbomb": "Shatterbomb",
+  "weapon:sheepinator": "Sheepinator (restored)",
+  "weapon:thumper": "Thumper (restored)",
+  "weapon:topiary_sprinkler": "Topiary Sprinkler",
+  "weapon:void_repulser": "Void Repulser",
+  "weapon:volcanic_eruptor": "Volcanic Eruptor (restored)",
+  "weapon:warmonger": "Warmonger"
+ },
+ "locations": {
+  "goal:finale": {
+   "kind": "goal"
+  },
+  "goldbolt:01": {
+   "item": "gold:2",
+   "kind": "goldbolt",
+   "name": "2 Gold Bolts",
+   "planet": "nefarious_city"
+  },
+  "goldbolt:02": {
+   "item": "gold:1",
+   "kind": "goldbolt",
+   "name": "1 Gold Bolt",
+   "planet": "nefarious_city"
+  },
+  "goldbolt:03": {
+   "item": "access:scarstu",
+   "kind": "goldbolt",
+   "name": "Coordinates: Scarstu Debris Field (Zurkie's)",
+   "planet": "nefarious_city"
+  },
+  "goldbolt:04": {
+   "item": "weapon:volcanic_eruptor",
+   "kind": "goldbolt",
+   "name": "Volcanic Eruptor (restored)",
+   "planet": "sargasso"
+  },
+  "goldbolt:05": {
+   "item": "gold:1",
+   "kind": "goldbolt",
+   "name": "1 Gold Bolt",
+   "planet": "sargasso"
+  },
+  "goldbolt:06": {
+   "item": "weapon:ricochet",
+   "kind": "goldbolt",
+   "name": "Ricochet",
+   "planet": "sargasso"
+  },
+  "goldbolt:07": {
+   "item": "weapon:topiary_sprinkler",
+   "kind": "goldbolt",
+   "name": "Topiary Sprinkler",
+   "planet": "scarstu"
+  },
+  "goldbolt:08": {
+   "item": "weapon:warmonger",
+   "kind": "goldbolt",
+   "name": "Warmonger",
+   "planet": "scarstu"
+  },
+  "goldbolt:09": {
+   "item": "weapon:magnamissile",
+   "kind": "goldbolt",
+   "name": "Magnamissile (restored)",
+   "planet": "scarstu"
+  },
+  "goldbolt:10": {
+   "item": "weapon:combuster",
+   "kind": "goldbolt",
+   "name": "Combuster (restored)",
+   "planet": "savali"
+  },
+  "goldbolt:11": {
+   "item": "access:ardolis",
+   "kind": "goldbolt",
+   "name": "Coordinates: Ardolis",
+   "planet": "savali"
+  },
+  "goldbolt:12": {
+   "item": "weapon:burst_pistol",
+   "kind": "goldbolt",
+   "name": "Burst Pistol",
+   "planet": "savali"
+  },
+  "goldbolt:13": {
+   "item": "access:cordelion",
+   "kind": "goldbolt",
+   "name": "Coordinates: Cordelion",
+   "planet": "blizar_prime"
+  },
+  "goldbolt:14": {
+   "item": "weapon:blackhole_storm",
+   "kind": "goldbolt",
+   "name": "Blackhole Storm",
+   "planet": "blizar_prime"
+  },
+  "goldbolt:15": {
+   "item": "access:torren_iv",
+   "kind": "goldbolt",
+   "name": "Coordinates: Torren IV (Molonoth Fields)",
+   "planet": "blizar_prime"
+  },
+  "goldbolt:16": {
+   "item": "weapon:cold_snap",
+   "kind": "goldbolt",
+   "name": "Cold Snap",
+   "planet": "torren_iv"
+  },
+  "goldbolt:17": {
+   "item": "gold:1",
+   "kind": "goldbolt",
+   "name": "1 Gold Bolt",
+   "planet": "torren_iv"
+  },
+  "goldbolt:18": {
+   "item": "weapon:drillhound",
+   "kind": "goldbolt",
+   "name": "Drillhound",
+   "planet": "cordelion"
+  },
+  "goldbolt:19": {
+   "item": "weapon:thumper",
+   "kind": "goldbolt",
+   "name": "Thumper (restored)",
+   "planet": "cordelion"
+  },
+  "goldbolt:20": {
+   "item": "access:sargasso",
+   "kind": "goldbolt",
+   "name": "Coordinates: Sargasso",
+   "planet": "cordelion"
+  },
+  "goldbolt:21": {
+   "item": "weapon:lightning_rod",
+   "kind": "goldbolt",
+   "name": "Lightning Rod",
+   "planet": "ardolis"
+  },
+  "goldbolt:22": {
+   "item": "weapon:pixelizer",
+   "kind": "goldbolt",
+   "name": "Pixelizer",
+   "planet": "ardolis"
+  },
+  "goldbolt:23": {
+   "item": "gold:1",
+   "kind": "goldbolt",
+   "name": "1 Gold Bolt",
+   "planet": "viceron"
+  },
+  "goldbolt:24": {
+   "item": "gold:3",
+   "kind": "goldbolt",
+   "name": "3 Gold Bolts",
+   "planet": "viceron"
+  },
+  "goldbolt:25": {
+   "item": "weapon:buzz_blades",
+   "kind": "goldbolt",
+   "name": "Buzz Blades",
+   "planet": "viceron"
+  },
+  "planet:ardolis": {
+   "item": "gold:1",
+   "kind": "planet",
+   "name": "1 Gold Bolt",
+   "planet": "ardolis"
+  },
+  "planet:blizar_prime": {
+   "item": "weapon:headhunter",
+   "kind": "planet",
+   "name": "Headhunter",
+   "planet": "blizar_prime"
+  },
+  "planet:cordelion": {
+   "item": "weapon:void_repulser",
+   "kind": "planet",
+   "name": "Void Repulser",
+   "planet": "cordelion"
+  },
+  "planet:corson_v": {
+   "item": "access:nefarious_city",
+   "kind": "planet",
+   "name": "Coordinates: Nefarious City",
+   "planet": "corson_v"
+  },
+  "planet:nefarious_city": {
+   "item": "gold:1",
+   "kind": "planet",
+   "name": "1 Gold Bolt",
+   "planet": "nefarious_city"
+  },
+  "planet:sargasso": {
+   "item": "gold:2",
+   "kind": "planet",
+   "name": "2 Gold Bolts",
+   "planet": "sargasso"
+  },
+  "planet:savali": {
+   "item": "gold:1",
+   "kind": "planet",
+   "name": "1 Gold Bolt",
+   "planet": "savali"
+  },
+  "planet:scarstu": {
+   "item": "access:blizar_prime",
+   "kind": "planet",
+   "name": "Coordinates: Blizar Prime",
+   "planet": "scarstu"
+  },
+  "planet:torren_iv": {
+   "item": "gold:1",
+   "kind": "planet",
+   "name": "1 Gold Bolt",
+   "planet": "torren_iv"
+  },
+  "planet:viceron": {
+   "item": "weapon:bouncer",
+   "kind": "planet",
+   "name": "Bouncer",
+   "planet": "viceron"
+  },
+  "shop:01": {
+   "item": "weapon:sheepinator",
+   "kind": "shop",
+   "name": "Sheepinator (restored)"
+  },
+  "shop:02": {
+   "item": "weapon:mr_zurkon",
+   "kind": "shop",
+   "name": "Mr. Zurkon (restored)"
+  },
+  "shop:03": {
+   "item": "weapon:bombardier",
+   "kind": "shop",
+   "name": "Bombardier"
+  },
+  "shop:04": {
+   "item": "weapon:negatron_collider",
+   "kind": "shop",
+   "name": "Negatron Collider"
+  },
+  "shop:05": {
+   "item": "weapon:predator_launcher",
+   "kind": "shop",
+   "name": "Predator Launcher (restored)"
+  },
+  "shop:06": {
+   "item": "access:savali",
+   "kind": "shop",
+   "name": "Coordinates: Savali"
+  },
+  "shop:07": {
+   "item": "weapon:schrodinger",
+   "kind": "shop",
+   "name": "Schrodinger (restored)"
+  },
+  "shop:08": {
+   "item": "weapon:executor",
+   "kind": "shop",
+   "name": "Executor"
+  },
+  "side:ardolis_mapomatic": {
+   "item": "weapon:enforcer",
+   "kind": "side",
+   "name": "Enforcer",
+   "planet": "ardolis"
+  },
+  "side:blizar_chef": {
+   "item": "gold:3",
+   "kind": "side",
+   "name": "3 Gold Bolts",
+   "planet": "blizar_prime"
+  },
+  "side:sargasso_trudi": {
+   "item": "weapon:fusion_grenade",
+   "kind": "side",
+   "name": "Fusion Grenade (restored)",
+   "planet": "sargasso"
+  },
+  "side:zurkies_bronze": {
+   "item": "access:viceron",
+   "kind": "side",
+   "name": "Coordinates: Viceron (Zordoom Prison)",
+   "planet": "scarstu"
+  },
+  "side:zurkies_gold": {
+   "item": "weapon:ryno_8",
+   "kind": "side",
+   "name": "RYNO 8",
+   "planet": "scarstu"
+  },
+  "side:zurkies_silver": {
+   "item": "weapon:mr_fungi",
+   "kind": "side",
+   "name": "Mr. Fungi",
+   "planet": "scarstu"
+  }
+ },
+ "mission_locations": {
+  "MIS_INTRO": "planet:corson_v"
+ },
+ "planet_codes": {
+  "ardolis": [
+   "mis_ard",
+   "ardolis"
+  ],
+  "blizar_prime": [
+   "mis_blizar",
+   "blizar_intact",
+   "blizar_destroyed"
+  ],
+  "cordelion": [
+   "mis_cord_01_first_visit",
+   "mis_cord_boss"
+  ],
+  "corson_v": [
+   "mis_intro",
+   "mis_mega_01_rivet",
+   "megalopolis",
+   "malinon"
+  ],
+  "nefarious_city": [
+   "mis_nefcity_01",
+   "nefarious_city",
+   "nefariouscity"
+  ],
+  "sargasso": [
+   "mis_sarg_01_first_visit",
+   "sargasso"
+  ],
+  "savali": [
+   "mis_sav_01",
+   "mis_svli_01",
+   "savali"
+  ],
+  "scarstu": [
+   "mis_zurk_01_visit_01",
+   "zurkons"
+  ],
+  "torren_iv": [
+   "mis_mol_01_first_visit",
+   "molonoth"
+  ],
+  "viceron": [
+   "mis_zord_01",
+   "zordoom"
+  ]
+ },
+ "planet_event_names": {
+  "Ardolis": "ardolis",
+  "Malinon": "corson_v",
+  "NefCity": "nefarious_city",
+  "Sargasso": "sargasso",
+  "Torren": "torren_iv"
+ },
+ "planet_names": {
+  "ardolis": "Ardolis",
+  "blizar_prime": "Blizar Prime",
+  "cordelion": "Cordelion",
+  "corson_v": "Corson V (Megalopolis)",
+  "nefarious_city": "Nefarious City",
+  "sargasso": "Sargasso",
+  "savali": "Savali",
+  "scarstu": "Scarstu Debris Field (Zurkie's)",
+  "torren_iv": "Torren IV (Molonoth Fields)",
+  "viceron": "Viceron (Zordoom Prison)"
+ },
+ "planet_order": [
+  "corson_v",
+  "nefarious_city",
+  "sargasso",
+  "scarstu",
+  "savali",
+  "blizar_prime",
+  "torren_iv",
+  "cordelion",
+  "ardolis",
+  "viceron"
+ ],
+ "real_items": {
+  "box_breaker": {
+   "config": "configs/equipment/gdgt_boxbreaker_item.config",
+   "id": "9F87252AB8F3CF6C",
+   "kind": "gadget",
+   "type_id": 2861803654
+  },
+  "glide": {
+   "config": "configs/equipment/gdgt_helipack_item.config",
+   "id": "87E5325BFD92E3C2",
+   "kind": "gadget",
+   "type_id": 3505658055
+  },
+  "glitch": {
+   "config": "configs/equipment/gdgt_glitchprojector_item.config",
+   "id": "BDF624AF87896CE9",
+   "kind": "gadget",
+   "type_id": 4160652280
+  },
+  "grapple": {
+   "config": "configs/equipment/gdgt_swingshot_item.config",
+   "id": "BB2D719850EE70AB",
+   "kind": "gadget",
+   "type_id": 1705612936
+  },
+  "grindboots": {
+   "config": "configs/equipment/gdgt_grindboots_item.config",
+   "id": "A37A7A2CBD0DF9B4",
+   "kind": "gadget",
+   "type_id": 565053540
+  },
+  "hoverboots": {
+   "config": "configs/equipment/gdgt_hoverboots_item.config",
+   "id": "842E8D8EFE349E00",
+   "kind": "gadget",
+   "type_id": 2681061161
+  },
+  "map_o_matic": {
+   "config": "configs/equipment/gdgt_mapomatic_item.config",
+   "id": "9AB06529F129A923",
+   "kind": "gadget",
+   "type_id": 597851141
+  },
+  "omniglove": {
+   "config": "configs/equipment/gdgt_versaglove_item.config",
+   "id": "98F2996246EB8469",
+   "kind": "gadget",
+   "type_id": 2983765807
+  },
+  "rift_tether": {
+   "config": "configs/equipment/gdgt_portalzip_item.config",
+   "id": "942D86888FE97CF0",
+   "kind": "gadget",
+   "type_id": 1700739470
+  },
+  "weapon:blackhole_storm": {
+   "confidence": "low",
+   "config": "configs/equipment/wpn_nailgun_item.config",
+   "id": "B3359983F464020A",
+   "kind": "weapon"
+  },
+  "weapon:bombardier": {
+   "confidence": "medium",
+   "config": "configs/equipment/wpn_carpetbomber_item.config",
+   "id": "9270599F5245473B",
+   "kind": "weapon"
+  },
+  "weapon:bouncer": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_bouncer_item.config",
+   "id": "81FA2B260E7D7FCD",
+   "kind": "weapon"
+  },
+  "weapon:burst_pistol": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_burstpistol_item.config",
+   "id": "B33FB3994F5E7EC3",
+   "kind": "weapon"
+  },
+  "weapon:buzz_blades": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_buzzblades_item.config",
+   "id": "8B01A641F040FBDA",
+   "kind": "weapon"
+  },
+  "weapon:cold_snap": {
+   "confidence": "medium",
+   "config": "configs/equipment/wpn_icicleblast_item.config",
+   "id": "9250094F260E9ECB",
+   "kind": "weapon"
+  },
+  "weapon:combuster": {
+   "confidence": "medium",
+   "config": "configs/equipment/wpn_blaster_item.config",
+   "id": "A348B82E699E1784",
+   "kind": "weapon"
+  },
+  "weapon:drillhound": {
+   "confidence": "medium",
+   "config": "configs/equipment/wpn_tunneler_item.config",
+   "id": "BAFBBD3EEC9C28C0",
+   "kind": "weapon"
+  },
+  "weapon:enforcer": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_protoshotgun_item.config",
+   "id": "9B8612453FB9E793",
+   "kind": "weapon"
+  },
+  "weapon:executor": {
+   "confidence": "low",
+   "config": "configs/equipment/wpn_revolver_item.config",
+   "id": "BA124FFA5A2B85CE",
+   "kind": "weapon"
+  },
+  "weapon:fusion_grenade": {
+   "confidence": "medium",
+   "config": "configs/equipment/wpn_fusion_grenade_item.config",
+   "id": "A74236AF892D1B3E",
+   "kind": "weapon"
+  },
+  "weapon:glove_of_doom": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_glove_of_doom_item.config",
+   "id": "A6CE79F243EE4A69",
+   "kind": "weapon"
+  },
+  "weapon:headhunter": {
+   "confidence": "low",
+   "config": "configs/equipment/wpn_warprifle_item.config",
+   "id": "87AB40964DA66DDA",
+   "kind": "weapon"
+  },
+  "weapon:lightning_rod": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_lightningrod_item.config",
+   "id": "BD3106CBF2BE0272",
+   "kind": "weapon"
+  },
+  "weapon:magnamissile": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_magnamissile_item.config",
+   "id": "B6EFBB1E32CE5336",
+   "kind": "weapon"
+  },
+  "weapon:mr_fungi": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_mrfunguy_item.config",
+   "id": "8D632A5622511F00",
+   "kind": "weapon"
+  },
+  "weapon:mr_zurkon": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_mr_zurkon_item.config",
+   "id": "B9CBAD67F39CCC3F",
+   "kind": "weapon"
+  },
+  "weapon:negatron_collider": {
+   "confidence": "medium",
+   "config": "configs/equipment/wpn_kamehameha_item.config",
+   "id": "BEFC4010377C182D",
+   "kind": "weapon"
+  },
+  "weapon:pixelizer": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_pixelizer_item.config",
+   "id": "8B712ADD01660024",
+   "kind": "weapon"
+  },
+  "weapon:predator_launcher": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_predator_launcher_item.config",
+   "id": "8034EF9F017CD311",
+   "kind": "weapon"
+  },
+  "weapon:ricochet": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_ricochet_item.config",
+   "id": "B511407E34E7C680",
+   "kind": "weapon"
+  },
+  "weapon:ryno_8": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_ryno_item.config",
+   "id": "B1740E5EC0A2BF83",
+   "kind": "weapon"
+  },
+  "weapon:schrodinger": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_schrodinger_item.config",
+   "id": "8204EB5B857474BC",
+   "kind": "weapon"
+  },
+  "weapon:shatterbomb": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_protogrenade_item.config",
+   "id": "AC67940BC647D31D",
+   "kind": "weapon"
+  },
+  "weapon:sheepinator": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_sheepinator_item.config",
+   "id": "BA3B8C1F25CAC5F0",
+   "kind": "weapon"
+  },
+  "weapon:thumper": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_thumper_item.config",
+   "id": "BF3863DD1EBFF180",
+   "kind": "weapon"
+  },
+  "weapon:topiary_sprinkler": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_topiaryblaster_item.config",
+   "id": "9B796AD62C177AF8",
+   "kind": "weapon"
+  },
+  "weapon:void_repulser": {
+   "confidence": "medium",
+   "config": "configs/equipment/wpn_magshield_item.config",
+   "id": "BABDC6D333078653",
+   "kind": "weapon"
+  },
+  "weapon:volcanic_eruptor": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_volcaniceruptor_item.config",
+   "id": "8D6ED40E943F3883",
+   "kind": "weapon"
+  },
+  "weapon:warmonger": {
+   "confidence": "high",
+   "config": "configs/equipment/wpn_warmonger_item.config",
+   "id": "B29993DA27515A36",
+   "kind": "weapon"
+  }
+ },
+ "real_nodes": {
+  "layout_ids": [
+   "98F2996246EB8469",
+   "BDF624AF87896CE9"
+  ],
+  "preferred_nodes": [
+   "98763a0c6fd24259",
+   "b075049b0add2df3"
+  ]
+ },
+ "seed": "lombax-ryno-2026",
+ "shop": [
+  {
+   "cost": 2,
+   "item": "weapon:sheepinator",
+   "name": "Sheepinator (restored)",
+   "slot": "shop:01",
+   "unlock_after": 0
+  },
+  {
+   "cost": 6,
+   "item": "weapon:mr_zurkon",
+   "name": "Mr. Zurkon (restored)",
+   "slot": "shop:02",
+   "unlock_after": 0
+  },
+  {
+   "cost": 2,
+   "item": "weapon:bombardier",
+   "name": "Bombardier",
+   "slot": "shop:03",
+   "unlock_after": 1
+  },
+  {
+   "cost": 2,
+   "item": "weapon:negatron_collider",
+   "name": "Negatron Collider",
+   "slot": "shop:04",
+   "unlock_after": 1
+  },
+  {
+   "cost": 4,
+   "item": "weapon:predator_launcher",
+   "name": "Predator Launcher (restored)",
+   "slot": "shop:05",
+   "unlock_after": 3
+  },
+  {
+   "cost": 3,
+   "item": "access:savali",
+   "name": "Coordinates: Savali",
+   "slot": "shop:06",
+   "unlock_after": 3
+  },
+  {
+   "cost": 4,
+   "item": "weapon:schrodinger",
+   "name": "Schrodinger (restored)",
+   "slot": "shop:07",
+   "unlock_after": 5
+  },
+  {
+   "cost": 2,
+   "item": "weapon:executor",
+   "name": "Executor",
+   "slot": "shop:08",
+   "unlock_after": 5
+  }
+ ],
+ "start": {
+  "planet": "corson_v",
+  "weapon_configs": [
+   "wpn_glove_of_doom",
+   "wpn_protogrenade"
+  ],
+  "weapons": [
+   "glove_of_doom",
+   "shatterbomb"
+  ]
+ },
+ "start_gold": 0,
+ "starting_gadgets": [
+  "grapple",
+  "glide",
+  "wallrun",
+  "grindboots",
+  "magboots",
+  "rift_tether"
+ ]
+}

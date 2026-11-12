@@ -1,0 +1,654 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[rivet] game version mismatch, invalidating pointers
+[loader] mod path mods/default does not exist! skipping.
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF6C7A3A8C0, QueueEvent at 00007FF6C2836A60
+[time] time scale system at 00007FF6C6C802E0
+[camera] fov scale at 00007FF6C6ABEEC8
+[camera] camera system at 00007FF6C6ABEDE0
+[hud] ShowMessage at 00007FF6C1DFD160
+[vanity] EquipBundle at 00007FF6C205A8E0
+[hero_look] HandleTransformationEvent at 00007FF6C1D08D40, OnTransformationPostActivate at 00007FF6C1F163F0
+[configs] config asset manager at 00007FF6C6ACBFE0
+[script] signal queue at 00007FF6C7F2FB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF6C1F23900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] loading dxgi and d3d12...
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-PROBE	v7 loaded:	52	test items; NUMPAD3 survey, NUMPAD4 select, NUMPAD5 fire, NUMPAD7 item, NUMPAD6 give item, NUMPAD9 census, NUMPAD8 give via borrowed node
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	RANDO-STATUS TEST MODE on: F10 story mission, F11 Gold Bolt, Ctrl+F10 twice resets
+[script] [rando]	Randomizer 3.1.0 loaded (data 2.0.0, generator 3.0.0)
+[script] [rando]	RANDO-STATUS events subscribed 18/18
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] loaded 14 of 14 scripts, 4 frame and 15 key callbacks
+[script] [rando]	RANDO-SEED generating seed	kit-bolt-kit-198	(random seed from the companion)
+[script] [rando]	RANDO-SEED ready	kit-bolt-kit-198	a09bf08d1ae1	preset standard	attempt 1
+[script] [rando]	RANDO-SEED share code	RA2|kit-bolt-kit-198|standard|
+[script] [rando]	RANDO-SAVE restored:	[TEST] Gold Bolts 9 | Coordinates 4/10 | rewards 5/80 (+6 banked) | planets 2 | in inventory 4
+[script] [rando]	notify failed:	the player hud is not loaded
+[DDL] indexed 8211 types for struct walking
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=D88A21A263790DF40A778DD200960F69
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=1AA5EDA248AC61DC9D08D204564C58E1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Randomizer 3.0 - seed kit-bolt-kit-198 (a09bf08d1ae1)
+[script] [rando]	RANDO-NOTIFY	Randomizer progress restored: [TEST] Gold Bolts 9 | Coordinates 4/10 | rewards 5/80 (+6 banked) | planets 2 | in inventory 4
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129237 ItemHandle=2129614
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129297 ItemHandle=2129615
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129237 ItemHandle=2129616
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129297 ItemHandle=2129617
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129237 ItemHandle=2129621
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-CAMPAIGN mission table not read:	no mission manager yet
+[script] [rando]	RANDO-CAMPAIGN mission helper:	ready (rando_give.dll v3, mission code matches this exe)
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2191300 ItemHandle=2191447
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2191300 ItemHandle=2191448
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2191300 ItemHandle=2191455
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1010
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1011
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1012
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1013
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1014
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1015
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2191240 ItemHandle=2191676
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2191240 ItemHandle=2191677
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2191240 ItemHandle=2191678
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2191240 ItemHandle=2191679
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2191240 ItemHandle=2191680
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=2191240 ItemHandle=2191681
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Scarstu Debris Field (Zurkie's): rewards here are banked until you find its Coordinates (5 waiting)
+[script] [rando]	RANDO-LAB table not readable:	no mission manager yet
+[script] [rando]	RANDO-NOTIFY	[LAB] mission table not readable: no mission manager yet
+[script] [rando]	RANDO-LAB table not readable:	no mission manager yet
+[script] [rando]	RANDO-NOTIFY	[LAB] mission table not readable: no mission manager yet
+[bridge] script.nodes StartMissionAction 200 took 125ms on the engine thread
+[script] [rando]	RANDO-NOTIFY	[LAB] mission experiment: false
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=4271.5717773438 MissionName=MIS_RYNO_PLANS MissionSegmentId=1E927F7C7A2454DDD1CC16A9B047E387
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=891.796875 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=9ABF778F9D1AEE0BC676C55EA6994924
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=891.796875 MissionName=MIS_ZURK_01_VISIT_01 MissionSegmentId=385F096AD6A493CD516488B97DC586EB
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=7E686022F07D80632C61FF389FE1A5D5
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=76C129E92FB181D424F6E520033F332C
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4213612 ItemHandle=4213908
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4213678 ItemHandle=4213909
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4213612 ItemHandle=4213910
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4213678 ItemHandle=4213911
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4213612 ItemHandle=4213915
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=35.683574676514 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=721B4A2094BA7D6E9D8F35AA823709DB
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_SILVER_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=35.683574676514 MissionName=MIS_ZURK_ARENA_SILVER_CUP MissionSegmentId=5955E2F3DE8B7CD21B7EE6CC1CF40D9F
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=35.683574676514 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=9F6D98E2FABB27535A7867E3B2FAB3E9
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4267358 ItemHandle=4267509
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4267358 ItemHandle=4267510
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3067984382 InventoryHandle=4267358 ItemHandle=4267514
+[script] [rando]	RANDO-REAL	already in the game:	weapon:lightning_rod	(equipped)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4267298 ItemHandle=4267594
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4267298 ItemHandle=4267595
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4267298 ItemHandle=4267596
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4267298 ItemHandle=4267597
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4267298 ItemHandle=4267598
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4267298 ItemHandle=4267599
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards locked
+[script] [rando]	RANDO-NOTIFY	Scarstu Debris Field (Zurkie's): rewards here are banked until you find its Coordinates (5 waiting)
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_SILVER_CUP MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_SILVER_CUP MissionSegmentId=1517DE3201A840A6A9811651302CCAA3
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=8B41DB822223173E4F7D04A09FB43D41
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=B4A371A8F84BAB8657F571FB904C3449
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_SILVER_CUP ObjectiveName=OBJ_ZURK_ARENA_COMPLETE_SILVER_CUP ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP ObjectiveName=OBJ_ZURK_ARENA_COMPLETE_GOLD_CUP ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP ObjectiveName=OBJ_ZURK_ARENA_COMPLETE_BRONZE_CUP ObjectiveState=1
+[script] [rando]	RANDO-NOTIFY	[LAB] mission experiment: false
+[script] [rando]	found armor: Pirate armor (legs)
+[script] [rando]	location armor_find:03 (armor pieces found: 3)
+[script] [rando]	received 3 Gold Bolts
+[script] [rando]	RANDO-NOTIFY	Randomizer: +3 Gold Bolts (F7 shop)
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=2763.5922851562 MissionName=MIS_ARD_POST_MISSION MissionSegmentId=7B060D2EC94099E176674771AA9001F1
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=4536.4995117188 MissionName=MIS_CORD_01_POST_MISSION MissionSegmentId=610137CD2D7A39CEDBB7D725099F0368
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=5821.6538085938 MissionName=MIS_MOL_01_POST_MISSION MissionSegmentId=07AC4A23DCF07001C09BC92A82D10481
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=10944.279296875 MissionName=MIS_RYNO_PLANS MissionSegmentId=CFFB41FCA91973549A5A362A4230BBD3
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=8807.259765625 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=AB44589F0323BC6D100908A7555C107F
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=8402.8447265625 MissionName=MIS_SARG_GEMQUEST MissionSegmentId=6F60402AFA1D13CC4FB25E3CD9608ADA
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=8384.453125 MissionName=MIS_SAV_01_ENCOUNTERS MissionSegmentId=25D72BAE25FB1AF2F580FEF8BDE7D1DB
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=7366.0874023438 MissionName=MIS_SAV_01_POST_MISSION MissionSegmentId=39C15B837BAB7AEF139202A27D44D000
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=25.122510910034 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=B4A371A8F84BAB8657F571FB904C3449
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=25.122510910034 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=8B41DB822223173E4F7D04A09FB43D41
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=25.122510910034 MissionName=MIS_ZURK_ARENA_SILVER_CUP MissionSegmentId=1517DE3201A840A6A9811651302CCAA3
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=20BC47351E677DADF2562E9A8E743099
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=72041148C4D9F1F88AAFEF471A735552
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=6315444 ItemHandle=6324190
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=6315506 ItemHandle=6342579
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=6315444 ItemHandle=6342666
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=6315506 ItemHandle=6342763
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=6315444 ItemHandle=6343022
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Malinon OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=805795996 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=934271974 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=1
+[script] [rando]	RANDO-NOTIFY	[LAB] mission experiment: false
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3095202961 Loaded=true
+[script] [rando]	[TEST] story mission 12 on corson_v
+[script] [rando]	[TEST] story mission 13 on corson_v
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 12 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 5
+[script] [rando]	RANDO-NOTIFY	Shop 1/4: Blackhole Storm - 4 Gold Bolts [luxury] (you have 12). F8 buys
+[script] [rando]	RANDO-NOTIFY	Buy Blackhole Storm for 4 Gold Bolts? Press F8 again to confirm
+[script] [rando]	bought Blackhole Storm for 4
+[script] [rando]	received Blackhole Storm
+[script] [rando]	RANDO-NOTIFY	Randomizer: Blackhole Storm - adding it to your inventory
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 1	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[script] [rando]	RANDO-NOTIFY	Shop 1/3: Negatron Collider - 2 Gold Bolts (you have 8). F8 buys
+[script] [rando]	RANDO-NOTIFY	Buy Negatron Collider for 2 Gold Bolts? Press F8 again to confirm
+[script] [rando]	RANDO-NOTIFY	Shop 2/3: Map-O-Matic - 3 Gold Bolts (you have 8). F8 buys
+[script] [rando]	RANDO-NOTIFY	Buy Map-O-Matic for 3 Gold Bolts? Press F8 again to confirm
+[script] [rando]	RANDO-NOTIFY	Shop 3/3: Void Repulser - 2 Gold Bolts (you have 8). F8 buys
+[script] [rando]	RANDO-NOTIFY	Buy Void Repulser for 2 Gold Bolts? Press F8 again to confirm
+[script] [rando]	RANDO-REAL	direct delivery: no answer for	weapon:blackhole_storm	with target hero (it worked before) - trying again shortly
+[script] [rando]	RANDO-NOTIFY	Shop 1/3: Negatron Collider - 2 Gold Bolts (you have 8). F8 buys
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 8 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 5, waiting 1 (Blackhole Storm)
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2893844490 Loaded=true
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 2	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	weapon:blackhole_storm	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Blackhole Storm: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Malinon
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Malinon
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=8428339 ItemHandle=8428517
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=8428339 ItemHandle=8428518
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=8428272 ItemHandle=8428567
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=8428272 ItemHandle=8428568
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=8428272 ItemHandle=8428569
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards unlocked
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 3	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	weapon:blackhole_storm	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Blackhole Storm: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_END ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_END ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_SHOOT_BLARG_SHIPS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_SHOOT_BLARG_SHIPS ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_CUTSCENE_THUG_INTRO_START ObjectiveState=1
+[script] [rando]	RANDO-REAL	already in the game:	weapon:pixelizer	(equipped)
+[script] [rando]	[TEST] story mission 14 on corson_v
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 8 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 1 (Blackhole Storm)
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_CUTSCENE_THUG_INTRO_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_CUTSCENE_THUG_INTRO_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 8 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 1 (Blackhole Storm)
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 8 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 1 (Blackhole Storm)
+[script] [rando]	RANDO-NOTIFY	Buy Negatron Collider for 2 Gold Bolts? Press F8 again to confirm
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 8 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 1 (Blackhole Storm)
+[script] [rando]	[TEST] story mission 15 on corson_v
+[script] [rando]	bought Negatron Collider for 2
+[script] [rando]	received Negatron Collider
+[script] [rando]	RANDO-NOTIFY	Randomizer: Negatron Collider - adding it to your inventory
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 6 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 2 (Blackhole Storm, Negatron Collider)
+[script] [rando]	RANDO-REAL	sent	weapon:negatron_collider	configs/equipment/wpn_kamehameha_item.config	BEFC4010377C182D	via rando_give.dll	request 4	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:negatron_collider
+[script] [rando]	RANDO-NOTIFY	Shop 1/2: Map-O-Matic - 3 Gold Bolts (you have 6). F8 buys
+[script] [rando]	[TEST] story mission 16 on corson_v
+[script] [rando]	[TEST] story mission 17 on corson_v
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 6 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 2 (Blackhole Storm, Negatron Collider)
+[script] [rando]	RANDO-REAL	no confirmation yet for	weapon:negatron_collider	(direct) - will retry
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 6 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 2 (Blackhole Storm, Negatron Collider)
+[script] [rando]	RANDO-REAL	sent	weapon:negatron_collider	configs/equipment/wpn_kamehameha_item.config	BEFC4010377C182D	via rando_give.dll	request 5	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:negatron_collider
+[script] [rando]	[TEST] story mission 18 on corson_v
+[script] [rando]	RANDO-NOTIFY	Buy Map-O-Matic for 3 Gold Bolts? Press F8 again to confirm
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 6 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 2 (Blackhole Storm, Negatron Collider)
+[script] [rando]	RANDO-NOTIFY	[TEST] Gold Bolts 6 | Coordinates 4/10 | rewards 6/80 (+6 banked) | planets 2 | in inventory 6, waiting 2 (Blackhole Storm, Negatron Collider)
+[script] [rando]	bought Map-O-Matic for 3
+[script] [rando]	received Map-O-Matic
+[script] [rando]	RANDO-NOTIFY	Randomizer: Map-O-Matic - adding it to your inventory
+[script] [rando]	[TEST] story mission 19 on corson_v
+[script] [rando]	RANDO-REAL	not confirmed after	2	direct tries:	weapon:negatron_collider
+[script] [rando]	RANDO-NOTIFY	Negatron Collider: the game reported nothing new - you probably have it already
+[script] [rando]	RANDO-REAL	sent	map_o_matic	configs/equipment/gdgt_mapomatic_item.config	9AB06529F129A923	via rando_give.dll	request 6	target hero	
+[script] [rando]	RANDO-REAL	confirmed	map_o_matic	via	native	after	0	frames
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Map-O-Matic
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=8428339 ItemHandle=6373371
+[script] [rando]	RANDO-GADGET	map_o_matic
+[script] [rando]	RANDO-REAL	already in the game:	weapon:negatron_collider	(equipped)
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_CUTSCENE_THUG_INTRO_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_HALL_OF_HEROES_END ObjectiveState=1
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407632 actor=3163124 uid=80138ba266e1c3d0 addr=1BEF82FD380 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[Out->AddToInventoryAction] raw58=c0 a9 8f f0 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407637 actor=3163133 uid=b4aa47cd5749d5e8 addr=1BEF82FD400 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[Out->ActorDeleteAction] raw58=00 aa 8f f0 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 ff ff 01 01 00 fd d0 c5 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407638 actor=3163134 uid=bad7cef6257f2583 addr=1BEF82FD480 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->AddToInventoryAction] raw58=40 aa 8f f0 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 be 01 00 00 22 4c e9 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407639 actor=3163141 uid=d1c39ceeed1b4587 addr=1BEF82FD500 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->PassThruAction] raw58=80 aa 8f f0 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407640 actor=3163146 uid=d852fb44d07e139e addr=1BEF82FD580 item=9C8719D79F2275E2 (configs/equipment/equip_loadout_ratchet_wrenchonly.config) count=1 _Players={1 actor(s)} out[] raw58=a0 77 f8 f0 be 01 00 00 e2 75 22 9f d7 19 87 9c 01 00 00 00 00 00 00 00 00 f4 a2 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6365774 actor=3168051 uid=c74aa480511ead92 addr=1BEF8180A00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=30 12 bd f0 be 01 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6374128 actor=2161358 uid=84c76b7e31e30ab6 addr=1BEF80E7580 item=B33FB3994F5E7EC3 (configs/equipment/wpn_burstpistol_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->DelayAction,0x6EEABC8A->EquipWeaponAction] raw58=60 a1 ad f0 be 01 00 00 c3 7e 5e 4f 99 b3 3f b3 01 00 00 00 00 00 00 00 f0 f4 a2 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6355702 actor=2164323 uid=dd1b9288c2c1af7e addr=1BEF7EB9700 item=9D2B016270140D8D (configs/equipment/gdgt_magnetboots_item.config) count=1 _Players={1 actor(s)} out[] raw58=80 c5 bc f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 b5 51 fe b6 97 2e 9e 33 a2 89 2e b5 
+[script] [rando]	RANDO-PROBE	node RemoveFromInventoryAction comp=6355724 actor=2164345 uid=d24af3070c743c4f addr=1BEF7EB9C00 _Players={1 actor(s)} out[] raw58=f0 c4 bc f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 00 00 00 00 00 d1 03 98 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=6365750 actor=3167890 uid=a3d4176375573a50 addr=1BEF7FFB0C0 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=00 d4 d5 f0 be 01 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 00 f1 ce 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=6365781 actor=3168057 uid=c17721e3d075a406 addr=1BEF7FFB3C0 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=60 04 ed f0 be 01 00 00 18 48 67 c4 f6 7f 00 00 d0 11 bd f0 be 01 00 00 80 6a cf 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8418917 actor=3160101 uid=aaefc6858baf9159 addr=1BEF823A400 _Players={1 actor(s)} out[] raw58=20 e2 b8 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 e1 b8 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365490 actor=3160472 uid=a620861b7b547e5c addr=1BEF82E6940 _Players={1 actor(s)} out[] raw58=a0 2e b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 2e b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365491 actor=3160497 uid=b73292c28d2b6a9a addr=1BEF82E6A00 _Players={1 actor(s)} out[] raw58=40 2e b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 2b b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365492 actor=3160498 uid=d6535bfb11e2d9d2 addr=1BEF82E6AC0 _Players={1 actor(s)} out[] raw58=e0 2d b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 2b b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365493 actor=3160500 uid=f96b0a14f028856d addr=1BEF82E6B80 _Players={1 actor(s)} out[] raw58=e0 2a b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 50 2a b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8423357 actor=3161476 uid=cd0dd584769b2448 addr=1BEF82A2640 _Players={1 actor(s)} out[] raw58=c0 15 ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 90 15 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8423358 actor=3161477 uid=dec2993311901281 addr=1BEF82A2700 _Players={1 actor(s)} out[] raw58=60 15 ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 30 15 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8407938 actor=3162267 uid=83c1339309cde0d9 addr=1BEF8341A80 _Players={1 actor(s)} out[] raw58=40 ab ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 c0 ac ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8407939 actor=3162268 uid=abfb648aa7540ad5 addr=1BEF8341B40 _Players={1 actor(s)} out[] raw58=80 aa ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 b0 aa ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8433994 actor=3162269 uid=e00f421d9af97556 addr=1BEF8341C00 _Players={1 actor(s)} out[] raw58=70 ab ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 d0 ab ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8434085 actor=3162270 uid=fc2cb7f3eaedbd39 addr=1BEF8341CC0 _Players={1 actor(s)} out[] raw58=30 ac ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 e0 b6 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8424568 actor=3169716 uid=91241d6f0ff49a41 addr=1BEF804B240 _Players={1 actor(s)} out[] raw58=10 4e f2 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 4e f2 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=8416126 actor=3158758 uid=8d63f94100b32927 addr=1BEF8271D80 Value=true out[0x3EF2E15E->CompareStringAction] raw58=00 76 c9 f0 be 01 00 00 10 e4 cd c7 f6 7f 00 00 00 8b bc f3 be 01 00 00 40 0a 0c c8 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=8 CheckInventoryAction=3 EnoughBoltsToBuyWeaponAction=6 EnoughRareToUpgradeWeaponAction=4 EquipWeaponAction=17 GetActiveWeaponAction=2 GetCurrencyAction=1 GetWeaponAction=2 OnEquippedWeaponAction=1 OnRynoPlanPickupAction=1 RemoveFromInventoryAction=1 SetPlanetaryTravelAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	9
+[script] [rando]	RANDO-PROBE	HUD:	9 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	test item 1/52: wpn_blaster = Combuster (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 2/52: wpn_blunderbuster = Blunderbuster - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 3/52: wpn_bouncer = Bouncer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 4/52: wpn_burstpistol = Burst Pistol - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 5/52: wpn_buzzblades = Buzz Blades - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 6/52: wpn_carpetbomber = Bombardier - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 7/52: wpn_detcord = Detcord - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 8/52: wpn_fossilizer = Fossilizer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 9/52: wpn_fusion_grenade = Fusion Grenade (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 10/52: wpn_glove_of_doom = Glove of Doom - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 11/52: wpn_groovitron = Groovitron - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 12/52: wpn_icicleblast = Cold Snap - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 13/52: wpn_kamehameha = Negatron Collider - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 14/52: wpn_lightningrod = Lightning Rod - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 15/52: wpn_magnamissile = Magnamissile (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 16/52: wpn_magshield = Void Repulser - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 17/52: wpn_mr_zurkon = Mr. Zurkon (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 18/52: wpn_mrfunguy = Mr. Fungi - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 19/52: wpn_nailgun = Blackhole Storm - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 20/52: wpn_pitofdeath = Pit of Death - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 21/52: wpn_pixelizer = Pixelizer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 22/52: wpn_plasma_striker = Plasma Striker - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 23/52: wpn_predator_launcher = Predator Launcher (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 24/52: wpn_protogrenade = Shatterbomb - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 25/52: wpn_protoshotgun = Enforcer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 26/52: wpn_pyrocitor = Pyrocitor - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 27/52: wpn_revolver = Executor - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 28/52: wpn_ricochet = Ricochet - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 29/52: wpn_ryno = RYNO 8 - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 30/52: wpn_schrodinger = Schrodinger (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 31/52: wpn_seismicshock = Seismic Shock - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 32/52: wpn_sheepinator = Sheepinator (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 33/52: wpn_stickyblaster = Sticky Blaster - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 34/52: wpn_thumper = Thumper (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 35/52: wpn_topiaryblaster = Topiary Sprinkler - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 36/52: wpn_tunneler = Drillhound - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 37/52: wpn_volcaniceruptor = Volcanic Eruptor (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 38/52: wpn_warmonger = Warmonger - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 39/52: wpn_warprifle = Headhunter - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 40/52: wpn_zurkon = Zurkon (unused vanilla config) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 41/52: gdgt_boxbreaker = Box Breaker - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 42/52: gdgt_glitchprojector = Glitch - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 43/52: gdgt_grindboots = Grind Boots - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 44/52: gdgt_helipack = Helipack (glide) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 45/52: gdgt_hoverboots = Hoverboots - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 46/52: gdgt_mapomatic = Map-O-Matic - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 47/52: gdgt_portalzip = Rift Tether - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 48/52: gdgt_swingshot = Swingshot (grapple) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 49/52: gdgt_versaglove = Omniglove (wall panels) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	NUMPAD7	failed:	scripts\08_rando_probe.lua:229: attempt to concatenate a nil value (local 'label')
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	NUMPAD7	failed:	scripts\08_rando_probe.lua:229: attempt to concatenate a nil value (local 'label')
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 52/52: pup_raritanium = Raritanium - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 1/52: wpn_blaster = Combuster (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 2/52: wpn_blunderbuster = Blunderbuster - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 3/52: wpn_bouncer = Bouncer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 4/52: wpn_burstpistol = Burst Pistol - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 5/52: wpn_buzzblades = Buzz Blades - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 6/52: wpn_carpetbomber = Bombardier - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 7/52: wpn_detcord = Detcord - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 8/52: wpn_fossilizer = Fossilizer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 9/52: wpn_fusion_grenade = Fusion Grenade (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	1/9 AddToInventoryAction item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)}
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407632 actor=3163124 uid=80138ba266e1c3d0 addr=1BEF82FD380 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[Out->AddToInventoryAction] raw58=c0 a9 8f f0 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407637 actor=3163133 uid=b4aa47cd5749d5e8 addr=1BEF82FD400 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[Out->ActorDeleteAction] raw58=00 aa 8f f0 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 ff ff 01 01 00 fd d0 c5 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407638 actor=3163134 uid=bad7cef6257f2583 addr=1BEF82FD480 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->AddToInventoryAction] raw58=40 aa 8f f0 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 be 01 00 00 22 4c e9 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407639 actor=3163141 uid=d1c39ceeed1b4587 addr=1BEF82FD500 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->PassThruAction] raw58=80 aa 8f f0 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407640 actor=3163146 uid=d852fb44d07e139e addr=1BEF82FD580 item=9C8719D79F2275E2 (configs/equipment/equip_loadout_ratchet_wrenchonly.config) count=1 _Players={1 actor(s)} out[] raw58=a0 77 f8 f0 be 01 00 00 e2 75 22 9f d7 19 87 9c 01 00 00 00 00 00 00 00 00 f4 a2 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6365774 actor=3168051 uid=c74aa480511ead92 addr=1BEF8180A00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=30 12 bd f0 be 01 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6374128 actor=2161358 uid=84c76b7e31e30ab6 addr=1BEF80E7580 item=B33FB3994F5E7EC3 (configs/equipment/wpn_burstpistol_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->DelayAction,0x6EEABC8A->EquipWeaponAction] raw58=60 a1 ad f0 be 01 00 00 c3 7e 5e 4f 99 b3 3f b3 01 00 00 00 00 00 00 00 f0 f4 a2 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6355702 actor=2164323 uid=dd1b9288c2c1af7e addr=1BEF7EB9700 item=9D2B016270140D8D (configs/equipment/gdgt_magnetboots_item.config) count=1 _Players={1 actor(s)} out[] raw58=80 c5 bc f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 b5 51 fe b6 97 2e 9e 33 a2 89 2e b5 
+[script] [rando]	RANDO-PROBE	node RemoveFromInventoryAction comp=6355724 actor=2164345 uid=d24af3070c743c4f addr=1BEF7EB9C00 _Players={1 actor(s)} out[] raw58=f0 c4 bc f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 00 00 00 00 00 d1 03 98 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=6365750 actor=3167890 uid=a3d4176375573a50 addr=1BEF7FFB0C0 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=00 d4 d5 f0 be 01 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 00 f1 ce 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=6365781 actor=3168057 uid=c17721e3d075a406 addr=1BEF7FFB3C0 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=60 04 ed f0 be 01 00 00 18 48 67 c4 f6 7f 00 00 d0 11 bd f0 be 01 00 00 80 6a cf 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8418917 actor=3160101 uid=aaefc6858baf9159 addr=1BEF823A400 _Players={1 actor(s)} out[] raw58=20 e2 b8 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 e1 b8 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365490 actor=3160472 uid=a620861b7b547e5c addr=1BEF82E6940 _Players={1 actor(s)} out[] raw58=a0 2e b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 2e b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365491 actor=3160497 uid=b73292c28d2b6a9a addr=1BEF82E6A00 _Players={1 actor(s)} out[] raw58=40 2e b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 2b b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365492 actor=3160498 uid=d6535bfb11e2d9d2 addr=1BEF82E6AC0 _Players={1 actor(s)} out[] raw58=e0 2d b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 2b b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365493 actor=3160500 uid=f96b0a14f028856d addr=1BEF82E6B80 _Players={1 actor(s)} out[] raw58=e0 2a b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 50 2a b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8423357 actor=3161476 uid=cd0dd584769b2448 addr=1BEF82A2640 _Players={1 actor(s)} out[] raw58=c0 15 ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 90 15 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8423358 actor=3161477 uid=dec2993311901281 addr=1BEF82A2700 _Players={1 actor(s)} out[] raw58=60 15 ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 30 15 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8407938 actor=3162267 uid=83c1339309cde0d9 addr=1BEF8341A80 _Players={1 actor(s)} out[] raw58=40 ab ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 c0 ac ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8407939 actor=3162268 uid=abfb648aa7540ad5 addr=1BEF8341B40 _Players={1 actor(s)} out[] raw58=80 aa ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 b0 aa ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8433994 actor=3162269 uid=e00f421d9af97556 addr=1BEF8341C00 _Players={1 actor(s)} out[] raw58=70 ab ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 d0 ab ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	HUD:	test item 10/52: wpn_glove_of_doom = Glove of Doom - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8434085 actor=3162270 uid=fc2cb7f3eaedbd39 addr=1BEF8341CC0 _Players={1 actor(s)} out[] raw58=30 ac ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 e0 b6 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8424568 actor=3169716 uid=91241d6f0ff49a41 addr=1BEF804B240 _Players={1 actor(s)} out[] raw58=10 4e f2 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 4e f2 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=8416126 actor=3158758 uid=8d63f94100b32927 addr=1BEF8271D80 Value=true out[0x3EF2E15E->CompareStringAction] raw58=00 76 c9 f0 be 01 00 00 10 e4 cd c7 f6 7f 00 00 00 8b bc f3 be 01 00 00 40 0a 0c c8 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=8 CheckInventoryAction=3 EnoughBoltsToBuyWeaponAction=6 EnoughRareToUpgradeWeaponAction=4 EquipWeaponAction=17 GetActiveWeaponAction=2 GetCurrencyAction=1 GetWeaponAction=2 OnEquippedWeaponAction=1 OnRynoPlanPickupAction=1 RemoveFromInventoryAction=1 SetPlanetaryTravelAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	9
+[script] [rando]	RANDO-PROBE	HUD:	9 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 11/52: wpn_groovitron = Groovitron - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 12/52: wpn_icicleblast = Cold Snap - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 13/52: wpn_kamehameha = Negatron Collider - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	test item 14/52: wpn_lightningrod = Lightning Rod - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	1/9 AddToInventoryAction item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)}
+[script] [rando]	RANDO-PROBE	HUD:	test item 15/52: wpn_magnamissile = Magnamissile (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	grant: node now holds	36 53 ce 32 1e bb ef b6 01 00 00 00 	(wanted 36 53 CE 32 1E BB EF B6 01 00 00 00)
+[script] [rando]	RANDO-PROBE	fire	AddToInventoryAction	comp=8407632	plug=In	giving configs/equipment/wpn_magnamissile_item.config	queued
+[script] [rando]	RANDO-PROBE	HUD:	fired AddToInventoryAction - did anything change?
+[script] [rando]	RANDO-PROBE	grant	configs/equipment/wpn_magnamissile_item.config	x1	via node comp=8407632	fired
+[script] [rando]	RANDO-PROBE	after fire:	WeaponAddedEvent	EventLocatorHash=0 Frame=22301 Orientation=table: 000001C2B2394E00 RequireActivated=1 SenderHandle=3164417 SourceAnimDriverHandle=0 SourceAnimDriverNameHash=0 TrackedNameHash=0 WeaponType=1005
+[script] [rando]	RANDO-PROBE	after fire:	InventoryChangedEvent	Actor=3164417 Component=8428340 EventLocatorHash=0 Frame=22301 Orientation=table: 000001C2B2395AC0 RequireActivated=1 SenderHandle=3164417 SourceAnimDriverHandle=0 SourceAnimDriverNameHash=0 TrackedNameHash=0
+[script] [rando]	RANDO-PROBE	HUD:	2/9 AddToInventoryAction item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)}
+[script] [rando]	RANDO-PROBE	grant: node now holds	36 53 ce 32 1e bb ef b6 01 00 00 00 	(wanted 36 53 CE 32 1E BB EF B6 01 00 00 00)
+[script] [rando]	RANDO-PROBE	fire	AddToInventoryAction	comp=8407637	plug=In	giving configs/equipment/wpn_magnamissile_item.config	queued
+[script] [rando]	RANDO-PROBE	HUD:	fired AddToInventoryAction - did anything change?
+[script] [rando]	RANDO-PROBE	grant	configs/equipment/wpn_magnamissile_item.config	x1	via node comp=8407637	fired
+[script] [rando]	RANDO-PROBE	HUD:	3/9 AddToInventoryAction item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)}
+[script] [rando]	RANDO-PROBE	HUD:	test item 16/52: wpn_magshield = Void Repulser - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	grant: node restored	ok
+[script] [rando]	RANDO-PROBE	grant: node restored	ok
+[script] [rando]	RANDO-REAL	already in the game:	weapon:magnamissile	(equipped)
+[script] [rando]	RANDO-PROBE	fire	AddToInventoryAction	comp=8407638	plug=In	item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)}	queued
+[script] [rando]	RANDO-PROBE	HUD:	fired AddToInventoryAction - did anything change?
+[script] [rando]	RANDO-PROBE	grant: node now holds	53 86 07 33 d3 c6 bd ba 01 00 00 00 	(wanted 53 86 07 33 D3 C6 BD BA 01 00 00 00)
+[script] [rando]	RANDO-PROBE	fire	AddToInventoryAction	comp=8407638	plug=In	giving configs/equipment/wpn_magshield_item.config	queued
+[script] [rando]	RANDO-PROBE	HUD:	fired AddToInventoryAction - did anything change?
+[script] [rando]	RANDO-PROBE	grant	configs/equipment/wpn_magshield_item.config	x1	via node comp=8407638	fired
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	after fire:	WeaponAddedEvent	EventLocatorHash=0 Frame=25120 Orientation=table: 000001C29624C8F0 RequireActivated=1 SenderHandle=3164417 SourceAnimDriverHandle=0 SourceAnimDriverNameHash=0 TrackedNameHash=0 WeaponType=1008
+[script] [rando]	RANDO-PROBE	after fire:	InventoryChangedEvent	Actor=3164417 Component=8428340 EventLocatorHash=0 Frame=25120 Orientation=table: 000001C29624CDF0 RequireActivated=1 SenderHandle=3164417 SourceAnimDriverHandle=0 SourceAnimDriverNameHash=0 TrackedNameHash=0
+[script] [rando]	RANDO-PROBE	after fire:	InventoryChangedEvent	Actor=3164417 Component=8428341 EventLocatorHash=0 Frame=25120 Orientation=table: 000001C2B1919150 RequireActivated=1 SenderHandle=3164417 SourceAnimDriverHandle=0 SourceAnimDriverNameHash=0 TrackedNameHash=0
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407632 actor=3163124 uid=80138ba266e1c3d0 addr=1BEF82FD380 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[Out->AddToInventoryAction] raw58=c0 a9 8f f0 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407637 actor=3163133 uid=b4aa47cd5749d5e8 addr=1BEF82FD400 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[Out->ActorDeleteAction] raw58=00 aa 8f f0 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 ff ff 01 01 00 fd d0 c5 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407638 actor=3163134 uid=bad7cef6257f2583 addr=1BEF82FD480 item=BABDC6D333078653 (configs/equipment/wpn_magshield_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->AddToInventoryAction] raw58=40 aa 8f f0 be 01 00 00 53 86 07 33 d3 c6 bd ba 01 00 00 00 be 01 00 00 22 4c e9 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407639 actor=3163141 uid=d1c39ceeed1b4587 addr=1BEF82FD500 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->PassThruAction] raw58=80 aa 8f f0 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407640 actor=3163146 uid=d852fb44d07e139e addr=1BEF82FD580 item=9C8719D79F2275E2 (configs/equipment/equip_loadout_ratchet_wrenchonly.config) count=1 _Players={1 actor(s)} out[] raw58=a0 77 f8 f0 be 01 00 00 e2 75 22 9f d7 19 87 9c 01 00 00 00 00 00 00 00 00 f4 a2 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6365774 actor=3168051 uid=c74aa480511ead92 addr=1BEF8180A00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=30 12 bd f0 be 01 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6374128 actor=2161358 uid=84c76b7e31e30ab6 addr=1BEF80E7580 item=B33FB3994F5E7EC3 (configs/equipment/wpn_burstpistol_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->DelayAction,0x6EEABC8A->EquipWeaponAction] raw58=60 a1 ad f0 be 01 00 00 c3 7e 5e 4f 99 b3 3f b3 01 00 00 00 00 00 00 00 f0 f4 a2 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6355702 actor=2164323 uid=dd1b9288c2c1af7e addr=1BEF7EB9700 item=9D2B016270140D8D (configs/equipment/gdgt_magnetboots_item.config) count=1 _Players={1 actor(s)} out[] raw58=80 c5 bc f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 b5 51 fe b6 97 2e 9e 33 a2 89 2e b5 
+[script] [rando]	RANDO-PROBE	node RemoveFromInventoryAction comp=6355724 actor=2164345 uid=d24af3070c743c4f addr=1BEF7EB9C00 _Players={1 actor(s)} out[] raw58=f0 c4 bc f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 00 00 00 00 00 d1 03 98 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=6365750 actor=3167890 uid=a3d4176375573a50 addr=1BEF7FFB0C0 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=00 d4 d5 f0 be 01 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 00 f1 ce 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=6365781 actor=3168057 uid=c17721e3d075a406 addr=1BEF7FFB3C0 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=60 04 ed f0 be 01 00 00 18 48 67 c4 f6 7f 00 00 d0 11 bd f0 be 01 00 00 80 6a cf 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8418917 actor=3160101 uid=aaefc6858baf9159 addr=1BEF823A400 _Players={1 actor(s)} out[] raw58=20 e2 b8 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 e1 b8 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365490 actor=3160472 uid=a620861b7b547e5c addr=1BEF82E6940 _Players={1 actor(s)} out[] raw58=a0 2e b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 2e b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365491 actor=3160497 uid=b73292c28d2b6a9a addr=1BEF82E6A00 _Players={1 actor(s)} out[] raw58=40 2e b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 2b b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365492 actor=3160498 uid=d6535bfb11e2d9d2 addr=1BEF82E6AC0 _Players={1 actor(s)} out[] raw58=e0 2d b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 2b b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365493 actor=3160500 uid=f96b0a14f028856d addr=1BEF82E6B80 _Players={1 actor(s)} out[] raw58=e0 2a b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 50 2a b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8423357 actor=3161476 uid=cd0dd584769b2448 addr=1BEF82A2640 _Players={1 actor(s)} out[] raw58=c0 15 ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 90 15 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8423358 actor=3161477 uid=dec2993311901281 addr=1BEF82A2700 _Players={1 actor(s)} out[] raw58=60 15 ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 30 15 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8407938 actor=3162267 uid=83c1339309cde0d9 addr=1BEF8341A80 _Players={1 actor(s)} out[] raw58=40 ab ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 c0 ac ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8407939 actor=3162268 uid=abfb648aa7540ad5 addr=1BEF8341B40 _Players={1 actor(s)} out[] raw58=80 aa ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 b0 aa ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8433994 actor=3162269 uid=e00f421d9af97556 addr=1BEF8341C00 _Players={1 actor(s)} out[] raw58=70 ab ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 d0 ab ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8434085 actor=3162270 uid=fc2cb7f3eaedbd39 addr=1BEF8341CC0 _Players={1 actor(s)} out[] raw58=30 ac ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 e0 b6 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8424568 actor=3169716 uid=91241d6f0ff49a41 addr=1BEF804B240 _Players={1 actor(s)} out[] raw58=10 4e f2 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 4e f2 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=8416126 actor=3158758 uid=8d63f94100b32927 addr=1BEF8271D80 Value=true out[0x3EF2E15E->CompareStringAction] raw58=00 76 c9 f0 be 01 00 00 10 e4 cd c7 f6 7f 00 00 00 8b bc f3 be 01 00 00 40 0a 0c c8 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=8 CheckInventoryAction=3 EnoughBoltsToBuyWeaponAction=6 EnoughRareToUpgradeWeaponAction=4 EquipWeaponAction=17 GetActiveWeaponAction=2 GetCurrencyAction=1 GetWeaponAction=2 OnEquippedWeaponAction=1 OnRynoPlanPickupAction=1 RemoveFromInventoryAction=1 SetPlanetaryTravelAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	9
+[script] [rando]	RANDO-PROBE	HUD:	9 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	grant: node restored	ok
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407632 actor=3163124 uid=80138ba266e1c3d0 addr=1BEF82FD380 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[Out->AddToInventoryAction] raw58=c0 a9 8f f0 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407637 actor=3163133 uid=b4aa47cd5749d5e8 addr=1BEF82FD400 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[Out->ActorDeleteAction] raw58=00 aa 8f f0 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 ff ff 01 01 00 fd d0 c5 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407638 actor=3163134 uid=bad7cef6257f2583 addr=1BEF82FD480 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->AddToInventoryAction] raw58=40 aa 8f f0 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 be 01 00 00 22 4c e9 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407639 actor=3163141 uid=d1c39ceeed1b4587 addr=1BEF82FD500 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->PassThruAction] raw58=80 aa 8f f0 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8407640 actor=3163146 uid=d852fb44d07e139e addr=1BEF82FD580 item=9C8719D79F2275E2 (configs/equipment/equip_loadout_ratchet_wrenchonly.config) count=1 _Players={1 actor(s)} out[] raw58=a0 77 f8 f0 be 01 00 00 e2 75 22 9f d7 19 87 9c 01 00 00 00 00 00 00 00 00 f4 a2 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6365774 actor=3168051 uid=c74aa480511ead92 addr=1BEF8180A00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=30 12 bd f0 be 01 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6374128 actor=2161358 uid=84c76b7e31e30ab6 addr=1BEF80E7580 item=B33FB3994F5E7EC3 (configs/equipment/wpn_burstpistol_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->DelayAction,0x6EEABC8A->EquipWeaponAction] raw58=60 a1 ad f0 be 01 00 00 c3 7e 5e 4f 99 b3 3f b3 01 00 00 00 00 00 00 00 f0 f4 a2 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6355702 actor=2164323 uid=dd1b9288c2c1af7e addr=1BEF7EB9700 item=9D2B016270140D8D (configs/equipment/gdgt_magnetboots_item.config) count=1 _Players={1 actor(s)} out[] raw58=80 c5 bc f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 b5 51 fe b6 97 2e 9e 33 a2 89 2e b5 
+[script] [rando]	RANDO-PROBE	node RemoveFromInventoryAction comp=6355724 actor=2164345 uid=d24af3070c743c4f addr=1BEF7EB9C00 _Players={1 actor(s)} out[] raw58=f0 c4 bc f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 00 00 00 00 00 d1 03 98 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=6365750 actor=3167890 uid=a3d4176375573a50 addr=1BEF7FFB0C0 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=00 d4 d5 f0 be 01 00 00 28 ee 7a c4 f6 7f 00 00 00 00 00 00 00 00 00 00 00 f1 ce 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=6365781 actor=3168057 uid=c17721e3d075a406 addr=1BEF7FFB3C0 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=60 04 ed f0 be 01 00 00 18 48 67 c4 f6 7f 00 00 d0 11 bd f0 be 01 00 00 80 6a cf 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8418917 actor=3160101 uid=aaefc6858baf9159 addr=1BEF823A400 _Players={1 actor(s)} out[] raw58=20 e2 b8 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 e1 b8 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365490 actor=3160472 uid=a620861b7b547e5c addr=1BEF82E6940 _Players={1 actor(s)} out[] raw58=a0 2e b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 2e b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365491 actor=3160497 uid=b73292c28d2b6a9a addr=1BEF82E6A00 _Players={1 actor(s)} out[] raw58=40 2e b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 2b b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365492 actor=3160498 uid=d6535bfb11e2d9d2 addr=1BEF82E6AC0 _Players={1 actor(s)} out[] raw58=e0 2d b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 2b b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6365493 actor=3160500 uid=f96b0a14f028856d addr=1BEF82E6B80 _Players={1 actor(s)} out[] raw58=e0 2a b6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 50 2a b6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8423357 actor=3161476 uid=cd0dd584769b2448 addr=1BEF82A2640 _Players={1 actor(s)} out[] raw58=c0 15 ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 90 15 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8423358 actor=3161477 uid=dec2993311901281 addr=1BEF82A2700 _Players={1 actor(s)} out[] raw58=60 15 ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 30 15 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8407938 actor=3162267 uid=83c1339309cde0d9 addr=1BEF8341A80 _Players={1 actor(s)} out[] raw58=40 ab ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 c0 ac ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8407939 actor=3162268 uid=abfb648aa7540ad5 addr=1BEF8341B40 _Players={1 actor(s)} out[] raw58=80 aa ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 b0 aa ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8433994 actor=3162269 uid=e00f421d9af97556 addr=1BEF8341C00 _Players={1 actor(s)} out[] raw58=70 ab ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 d0 ab ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8434085 actor=3162270 uid=fc2cb7f3eaedbd39 addr=1BEF8341CC0 _Players={1 actor(s)} out[] raw58=30 ac ca f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 e0 b6 ca f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8424568 actor=3169716 uid=91241d6f0ff49a41 addr=1BEF804B240 _Players={1 actor(s)} out[] raw58=10 4e f2 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 4e f2 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=8 CheckInventoryAction=3 EnoughBoltsToBuyWeaponAction=6 EnoughRareToUpgradeWeaponAction=4 EquipWeaponAction=17 GetActiveWeaponAction=2 GetCurrencyAction=1 GetWeaponAction=2 OnEquippedWeaponAction=1 RemoveFromInventoryAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	9
+[script] [rando]	RANDO-PROBE	HUD:	9 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=8417941 ItemHandle=8418206
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=8417941 ItemHandle=8418207
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=8417941 ItemHandle=8418213
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=8417881 ItemHandle=8418341
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=8417881 ItemHandle=8418342
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=8417881 ItemHandle=8418348
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards unlocked
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 7	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	weapon:blackhole_storm	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Blackhole Storm: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-PROBE	HUD:	surveying script nodes on this planet...
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6380653 actor=3173732 uid=c74aa480511ead92 addr=1BEF7FD8A00 item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1 out[] raw58=d0 d4 f1 f0 be 01 00 00 17 27 3b ed 84 e8 e5 84 01 00 00 00 00 00 00 00 40 00 c2 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6388351 actor=3177748 uid=84c76b7e31e30ab6 addr=1BEF7F5F500 item=B33FB3994F5E7EC3 (configs/equipment/wpn_burstpistol_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->DelayAction,0x6EEABC8A->EquipWeaponAction] raw58=20 ea a9 f0 be 01 00 00 c3 7e 5e 4f 99 b3 3f b3 01 00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=6393188 actor=3181121 uid=dd1b9288c2c1af7e addr=1BEF827B680 item=9D2B016270140D8D (configs/equipment/gdgt_magnetboots_item.config) count=1 _Players={1 actor(s)} out[] raw58=80 f0 8c f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff 
+[script] [rando]	RANDO-PROBE	node RemoveFromInventoryAction comp=6393210 actor=3181143 uid=d24af3070c743c4f addr=1BEF827BB80 _Players={1 actor(s)} out[] raw58=b0 f0 8c f0 be 01 00 00 8d 0d 14 70 62 01 2b 9d 01 00 00 00 02 00 00 00 00 00 80 bf 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8463219 actor=3202015 uid=80138ba266e1c3d0 addr=1BEF8044280 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[Out->AddToInventoryAction] raw58=40 1f 10 f1 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 be 01 00 00 e0 66 f3 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8463220 actor=3202016 uid=b4aa47cd5749d5e8 addr=1BEF8044300 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[Out->ActorDeleteAction] raw58=80 1f 10 f1 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 be 01 00 00 50 10 70 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8469641 actor=3202017 uid=bad7cef6257f2583 addr=1BEF8044380 item=A178983A0CCBEC09 (configs/equipment/wpn_wrench_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->AddToInventoryAction] raw58=c0 1f 10 f1 be 01 00 00 09 ec cb 0c 3a 98 78 a1 01 00 00 00 d7 e0 f6 a2 00 00 00 00 00 00 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8463271 actor=3202018 uid=d1c39ceeed1b4587 addr=1BEF8044400 item=AC8C2336AAA959CB (configs/equipment/wpn_hammer_item.config) count=1 _Players={1 actor(s)} out[0x6EEABC8A->PassThruAction] raw58=00 20 10 f1 be 01 00 00 cb 59 a9 aa 36 23 8c ac 01 00 00 00 be 01 00 00 e0 66 f3 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddToInventoryAction comp=8463223 actor=3202019 uid=d852fb44d07e139e addr=1BEF8044480 item=9C8719D79F2275E2 (configs/equipment/equip_loadout_ratchet_wrenchonly.config) count=1 _Players={1 actor(s)} out[] raw58=c0 89 c2 f0 be 01 00 00 e2 75 22 9f d7 19 87 9c 01 00 00 00 be 01 00 00 50 10 70 c7 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	node AddCurrencyAction comp=6380629 actor=3173708 uid=a3d4176375573a50 addr=1BEF82CE820 _Players={1 actor(s)} 0x8140e241e7aaac8b::credit=0.0 0x8140e241e7aaac8b::balancePlusCredit=0.0 out[] raw58=c0 92 c3 f0 be 01 00 00 c8 e2 72 c4 f6 7f 00 00 00 00 00 00 00 00 00 00 00 ca da 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node GetCurrencyAction comp=6380660 actor=3173738 uid=c17721e3d075a406 addr=1BEF82CE400 _Players={1 actor(s)} 0x8140e241e7aaac8b::balance=0.0 out[Out->CompareNumberAction] raw58=c0 5e de f0 be 01 00 00 98 2e a9 c4 f6 7f 00 00 00 00 00 00 00 00 00 00 40 09 e0 97 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6380369 actor=3173015 uid=a620861b7b547e5c addr=1BEF81A7600 _Players={1 actor(s)} out[] raw58=20 65 a4 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 c0 61 a4 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6380370 actor=3173016 uid=b73292c28d2b6a9a addr=1BEF81A61C0 _Players={1 actor(s)} out[] raw58=20 62 a4 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 f0 61 a4 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6380371 actor=3173017 uid=d6535bfb11e2d9d2 addr=1BEF81A7480 _Players={1 actor(s)} out[] raw58=50 62 a4 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 10 63 a4 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6380372 actor=3173018 uid=f96b0a14f028856d addr=1BEF81A6940 _Players={1 actor(s)} out[] raw58=e0 62 a4 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 80 62 a4 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6388360 actor=3177757 uid=a9e676a8ada64026 addr=1BEF7F58F40 _Players={1 actor(s)} out[] raw58=60 0c 6d f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 50 22 6d f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6388361 actor=3177758 uid=b8d9d02acbe2b2e1 addr=1BEF7F59000 _Players={1 actor(s)} out[] raw58=f0 21 6d f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 b0 22 6d f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=6388362 actor=3177759 uid=e16a079d412f9929 addr=1BEF7F590C0 _Players={1 actor(s)} out[] raw58=f0 0c 6d f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 80 0d 6d f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8400203 actor=3182977 uid=aaefc6858baf9159 addr=1BEF8078400 _Players={1 actor(s)} out[] raw58=70 14 c6 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 d0 14 c6 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8406175 actor=3184292 uid=cd0dd584769b2448 addr=1BEF8262640 _Players={1 actor(s)} out[] raw58=a0 eb b8 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 60 e9 b8 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8406176 actor=3184293 uid=dec2993311901281 addr=1BEF8262700 _Players={1 actor(s)} out[] raw58=f0 e9 b8 f0 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 00 ec b8 f0 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8410582 actor=3185307 uid=91241d6f0ff49a41 addr=1BEF8149240 _Players={1 actor(s)} out[] raw58=40 57 38 f1 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 e0 50 38 f1 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node EquipWeaponAction comp=8410583 actor=3185308 uid=af8bf5ac0c70e636 addr=1BEF8149300 _Players={1 actor(s)} out[] raw58=20 59 38 f1 be 01 00 00 58 28 a8 c4 f6 7f 00 00 44 00 00 00 00 00 00 00 40 5a 38 f1 be 01 00 00 
+[script] [rando]	RANDO-PROBE	node SetPlanetaryTravelAction comp=8472107 actor=3181749 uid=8d63f94100b32927 addr=1BEF82A3CC0 Value=true out[0x3EF2E15E->CompareStringAction] raw58=00 eb c9 f0 be 01 00 00 10 e4 cd c7 f6 7f 00 00 d0 f1 ee f3 be 01 00 00 40 0a 0c c8 f6 7f 00 00 
+[script] [rando]	RANDO-PROBE	survey done:	AddCurrencyAction=1 AddToInventoryAction=8 CheckInventoryAction=3 EnoughBoltsToBuyWeaponAction=6 EnoughRareToUpgradeWeaponAction=4 EquipWeaponAction=17 GetActiveWeaponAction=2 GetCurrencyAction=1 GetWeaponAction=2 OnEquippedWeaponAction=1 OnRynoPlanPickupAction=1 RemoveFromInventoryAction=1 SetPlanetaryTravelAction=1
+[script] [rando]	RANDO-PROBE	survey fireable:	9
+[script] [rando]	RANDO-PROBE	HUD:	9 node(s) can be fired here - NUMPAD4 to pick one
+[script] [rando]	RANDO-PROBE	HUD:	test item 17/52: wpn_mr_zurkon = Mr. Zurkon (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 18/52: wpn_mrfunguy = Mr. Fungi - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 19/52: wpn_nailgun = Blackhole Storm - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 20/52: wpn_pitofdeath = Pit of Death - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 21/52: wpn_pixelizer = Pixelizer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 22/52: wpn_plasma_striker = Plasma Striker - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 23/52: wpn_predator_launcher = Predator Launcher (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 24/52: wpn_protogrenade = Shatterbomb - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 25/52: wpn_protoshotgun = Enforcer - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 26/52: wpn_pyrocitor = Pyrocitor - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 27/52: wpn_revolver = Executor - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 28/52: wpn_ricochet = Ricochet - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 29/52: wpn_ryno = RYNO 8 - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 30/52: wpn_schrodinger = Schrodinger (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 31/52: wpn_seismicshock = Seismic Shock - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 32/52: wpn_sheepinator = Sheepinator (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 33/52: wpn_stickyblaster = Sticky Blaster - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 34/52: wpn_thumper = Thumper (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 35/52: wpn_topiaryblaster = Topiary Sprinkler - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 36/52: wpn_tunneler = Drillhound - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 37/52: wpn_volcaniceruptor = Volcanic Eruptor (restored) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 38/52: wpn_warmonger = Warmonger - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 39/52: wpn_warprifle = Headhunter - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 40/52: wpn_zurkon = Zurkon (unused vanilla config) - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 41/52: gdgt_boxbreaker = Box Breaker - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 42/52: gdgt_glitchprojector = Glitch - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	test item 43/52: gdgt_grindboots = Grind Boots - NUMPAD6 gives it
+[script] [rando]	RANDO-PROBE	HUD:	select an AddToInventoryAction node with NUMPAD4
+[script] [rando]	RANDO-PROBE	HUD:	1/9 AddToInventoryAction item=84E5E884ED3B2717 (configs/equipment/equip_loadout_demo.config) count=1
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=10508691 ItemHandle=10509715
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=10508691 ItemHandle=10509716
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=10508691 ItemHandle=10509723
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=10508156 ItemHandle=10510004
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=10508156 ItemHandle=10510005
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=10508156 ItemHandle=10510006
+[script] [rando]	RANDO-PLANET	Malinon	corson_v	rewards unlocked
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 8	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	weapon:blackhole_storm	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Blackhole Storm: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=261.62341308594 MissionName=MIS_INTRO MissionSegmentId=72041148C4D9F1F88AAFEF471A735552
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=261.62341308594 MissionName=MIS_RYNO_PLANS MissionSegmentId=20BC47351E677DADF2562E9A8E743099
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=2B19FCD07CF42E9F89CEE297A03150AF
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=87441F659874675E4594442E24938B22
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 9	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=8462038 ItemHandle=8462358
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=8462102 ItemHandle=8462359
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=8462038 ItemHandle=8462361
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=8462102 ItemHandle=8462362
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=8462038 ItemHandle=8462372
+[script] [rando]	RANDO-REAL	no confirmation yet for	weapon:blackhole_storm	(direct) - will retry
+[script] [rando]	RANDO-REAL	sent	weapon:blackhole_storm	configs/equipment/wpn_nailgun_item.config	B3359983F464020A	via rando_give.dll	request 10	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:blackhole_storm
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing ui/loaded/exported/hud/mm_6.json
+[loader] closing ui/loaded/exported/hud/mm_5.json
+[loader] closing ui/loaded/exported/hud/mm_3.json
+[loader] closing ui/loaded/exported/hud/mm_0.json
+[loader] closing ui/loaded/exported/hud/mm_2.json
+[loader] closing ui/loaded/exported/hud/mm_1.json
+[loader] closing ui/loaded/exported/hud/mm_7.json
+[loader] closing ui/loaded/exported/hud/mm_4.json
+[rivet] fini complete
