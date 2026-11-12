@@ -54,7 +54,7 @@ def render(kinds, evidence, travel, reads, source, intro=False):
         out.append(f"--   evidence: {e}")
     for t in travel:
         out.append(f"--   evidence: travel reached {t}")
-    out.append('RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["06_rando_capabilities"] = "8.4.0"   -- the kit check (10_rando_runtime.lua)')
+    out.append('RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["06_rando_capabilities"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)')
     out.append("RANDO_CAPABILITIES = {")
     out.append(f'  source = "{source}",')
     out.append(f"  mission_read = {{ verified = {'true' if reads else 'false'} }},")

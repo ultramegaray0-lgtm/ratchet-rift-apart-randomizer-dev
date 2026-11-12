@@ -647,7 +647,7 @@ class HubLogSummaryTests(unittest.TestCase):
         import summarize_log
         g = to_hub(hub_game("hub-sum"))
         s = summarize_log.summarize([l.replace("[rando]", "[script] [rando]") for l in g.logs()])
-        self.assertEqual(s["kit"], "8.4.0")
+        self.assertEqual(s["kit"], "8.5.0")
         self.assertTrue(any(x.startswith("the campaign starts at Zurkie's") for x in s["hub_done"]), s["hub_done"])
         self.assertTrue(any("research: rando_give.dll v6" in x for x in s["hub_research"]))
         self.assertTrue(any("Coordinates opened" in x for x in s["hub"]))

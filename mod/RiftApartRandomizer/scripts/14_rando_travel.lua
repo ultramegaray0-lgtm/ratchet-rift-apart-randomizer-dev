@@ -20,7 +20,7 @@
 --   * levels_runtime = false in 04_rando_settings.lua turns the warp off (rewards wait instead).
 -- Nothing here changes the game's files, missions or saves; a warp moves the save's checkpoint to
 -- the planet you came from, which is where you were anyway.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "8.4.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TRAVEL = RANDO_TRAVEL or {}
 local T = RANDO_TRAVEL

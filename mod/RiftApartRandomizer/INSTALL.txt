@@ -1,20 +1,21 @@
-Ratchet & Clank: Rift Apart - Randomizer 8.4 (release candidate)
+Ratchet & Clank: Rift Apart - Randomizer 8.5 (release candidate)
 ===============================================================
 For the PC (Steam) game with rivet_hook 2.0.x. Everything is in this folder. ARSENAL_RESTORED is
 optional: its weapons join the randomizer automatically when it is installed
 (docs\ARSENAL_RESTORED.md). Nothing here changes the game's own files.
 
-8.4 is a STABILIZATION release of 8.3: no new features, the same seeds, fixes for round 20.
-  - Every destination is played as its own hero, checked with the game. In round 20 a stale saved
-    hero made Torren IV and Viceron run as Ratchet, and their stories never started. Four heroes
-    in the registry were also wrong.
-  - Hub trips start the story first, then travel. A story stuck at "go to <planet>" is reloaded
-    once (out to Zurkie's and straight back).
-  - Weapon types are no longer mislearned from a load. Ms. Zurkon's slots are read the way the
-    game stores them. The game itself now detects ARSENAL_RESTORED.
-  - A kit check reports a scripts folder that mixes kits. Test travel is OFF in this kit.
-  See docs\CHANGELOG.md. 8.4 HAS NOT RUN IN YOUR GAME YET: docs\VERIFICATION_REPORT.md says
-  exactly what has been verified, and how.
+8.5 is a STABILIZATION release of 8.4: no new features, the identical seeds, the same
+rando_give.dll. It fixes what goes wrong when a step fails or comes late:
+  - A request rando_give.dll never answered is taken back, so it can't run later on its own (a
+    story start, an item or Bolts twice). Mission calls now wait through loading screens.
+  - When the companion connects late, nothing from before its restore is lost (Bolts paid,
+    confirmed items, armor, shop gifts).
+  - A New Game no longer carries the old run's hub and delivery records.
+  - Ms. Zurkon's extra weapons are given directly whenever the shop can't be changed.
+8.4's fixes for round 20 (each destination's hero checked with the game, the story started
+before the trip, a stuck story reloaded once, the shop's slot list, ARSENAL_RESTORED detection)
+are all still here. See docs\CHANGELOG.md. 8.5 AND 8.4 HAVE NOT RUN IN YOUR GAME YET:
+docs\VERIFICATION_REPORT.md says exactly what has been verified, and how.
 
 Play on a SPARE save slot and back up your saves first: the randomizer writes mission states,
 level bits and planetary travel into the game's memory, and moves the hero with warps.
@@ -28,7 +29,7 @@ BEFORE YOU START
          the folder that holds info.json in <game>\mods named ARSENAL_RESTORED, and its .lua files
          in <game>\scripts.
 
-INSTALL (also when updating from 8.3)
+INSTALL (also when updating from 8.4 or 8.3)
   1. In <game>\scripts, delete EVERY old randomizer .lua file (all *_rando_*.lua from older kits,
      including any 00_rando_seed.lua, 07_rando_testmode.lua and 08_rando_probe.lua). Leave the
      ARSENAL_RESTORED .lua files alone.
@@ -36,18 +37,20 @@ INSTALL (also when updating from 8.3)
        01_rando_data  02_rando_generator  03_rando_campaign  04_rando_settings
        05_rando_bindings  06_rando_capabilities  09_rando_real  10_rando_runtime  11_rando_campaign
        12_rando_shop  13_rando_armor  14_rando_travel  15_rando_hub  16_rando_testtravel
-     Use this kit's 04_rando_settings.lua and put your seed / preset back in. An older settings
-     file still works, but new options then use their defaults (rivet.log says so).
+     Use this kit's 04_rando_settings.lua and put your seed / preset back in. An 8.4 settings
+     file has the same options and works as it is (rivet.log notes that it is from 8.4). An older
+     one works too, but options it does not list use their defaults.
   3. Copy rivet.toml and rando_give.dll next to RiftApart.exe, replacing the old ones.
-     rando_give.dll is v6, the same binary as 8.0-8.3. If you added your own [assets] paths to
+     rando_give.dll is v6, the same binary as 8.0-8.4. If you added your own [assets] paths to
      rivet.toml, keep them.
   4. Copy the companion folder to <game>\rando_companion, replacing the old one.
   5. Check the install: start the game and look in rivet.log (next to RiftApart.exe) for
-       RANDO-KIT all 14 scripts are 8.4.0
+       RANDO-KIT all 14 scripts are 8.5.0
      If it says a file is missing or from another kit, repeat steps 1-2.
 
 YOUR SEED AND PROGRESS
-  8.4 makes the same seeds as 8.3 (same fingerprint), so 8.3 progress carries over. For a full
+  8.5 makes the identical seeds of 8.4, and the same seeds as 8.3 (same fingerprint), so 8.4 and
+  8.3 progress carries over. For a full
   playthrough, start a NEW GAME (the randomizer starts its progress over with it; the previous
   run's file is kept).
 
@@ -77,7 +80,7 @@ FILES
   extras\        test mode and developer tools (not needed to play; do not copy for a real run)
   docs\          HUB.md (start here), CHANGELOG.md, VERIFICATION_REPORT.md, KNOWN_ISSUES.md,
                  TESTING.md (with the playthrough checklist), CONFIGURATION.md, TEST_TRAVEL.md,
-                 BATCH_8.4.txt, TEST_RESULTS.txt, WEAPONS.md, SHOP.md, ARMOR.md, ARSENAL_RESTORED.md,
+                 BATCH_8.5.txt, TEST_RESULTS.txt, WEAPONS.md, SHOP.md, ARMOR.md, ARSENAL_RESTORED.md,
                  LEVELS.md, NEW_GAME.md, MIGRATION.md, RECOVERY.md, COMPATIBILITY.md,
                  FEATURES_AND_LIMITATIONS.md, VERIFIED_IN_GAME.md, DESIGN.md, CAMPAIGN.md,
                  RESEARCH.md, RESEARCH_8.0.md, DEVELOPMENT_LOG.md, examples\ (spoiler logs)

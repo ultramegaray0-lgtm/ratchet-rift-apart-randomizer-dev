@@ -53,7 +53,7 @@
 --   * Abilities the story gives (Speetle, Trudi, ...) cannot be granted: locations needing
 --     them, and locations whose trigger is not proven (armor finds, collectibles), only ever
 --     hold non-progression rewards.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "8.4.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_GEN = {}
 local G = RANDO_GEN
 G.VERSION = "8.0.0"

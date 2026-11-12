@@ -1,6 +1,6 @@
-Rift Apart Randomizer 8.4 - test run 2026-11-12 13:51 UTC
+Rift Apart Randomizer 8.5 - test run 2026-11-12 16:22 UTC
 Python 3.13.18 on Linux
-ran 318, failures 0, errors 0, skipped 17
+ran 340, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -156,6 +156,8 @@ test_same_helper_dll (tests.test_regression_v6.RegressionV6Tests.test_same_helpe
 test_same_locations_and_rules (tests.test_regression_v6.RegressionV6Tests.test_same_locations_and_rules) ... skipped 'the 6.0 commit is not in this repository'
 test_versions (tests.test_regression_v6.RegressionV6Tests.test_versions) ... skipped 'the 6.0 commit is not in this repository'
 test_same_seeds_in_every_preset (tests.test_regression_v83.RegressionV83Tests.test_same_seeds_in_every_preset) ... ok
+test_identical_seeds_in_every_preset (tests.test_regression_v84.RegressionV84Tests.test_identical_seeds_in_every_preset) ... ok
+test_only_version_tags_changed_in_the_generation_scripts (tests.test_regression_v84.RegressionV84Tests.test_only_version_tags_changed_in_the_generation_scripts) ... ok
 test_armor_rewards_go_through_the_armor_code (tests.test_runtime.ArmorTests.test_armor_rewards_go_through_the_armor_code) ... ok
 test_intercepted_source_pays_its_location_once (tests.test_runtime.ArmorTests.test_intercepted_source_pays_its_location_once) ... ok
 test_interception_can_be_switched_off (tests.test_runtime.ArmorTests.test_interception_can_be_switched_off) ... ok
@@ -343,8 +345,28 @@ round 20: Cordelion's replay (1002-1012) right after the Burst Pistol was equipp
 test_a_purchase_is_never_a_late_answer (tests.test_v84.WeaponTypeTests.test_a_purchase_is_never_a_late_answer) ... ok
 test_a_purchase_teaches_its_type_in_either_order (tests.test_v84.WeaponTypeTests.test_a_purchase_teaches_its_type_in_either_order) ... ok
 test_the_wrong_lessons_of_a_save_are_dropped (tests.test_v84.WeaponTypeTests.test_the_wrong_lessons_of_a_save_are_dropped) ... ok
+test_a_currency_payment_in_flight_at_a_new_game_is_withdrawn (tests.test_v85.DeliveryTakeBackTests.test_a_currency_payment_in_flight_at_a_new_game_is_withdrawn) ... ok
+test_an_item_the_helper_did_not_take_is_not_given_late (tests.test_v85.DeliveryTakeBackTests.test_an_item_the_helper_did_not_take_is_not_given_late) ... ok
+test_take_back_keeps_an_answer_that_came_in (tests.test_v85.DeliveryTakeBackTests.test_take_back_keeps_an_answer_that_came_in) ... ok
+test_take_back_withdraws_an_unanswered_request (tests.test_v85.DeliveryTakeBackTests.test_take_back_withdraws_an_unanswered_request) ... ok
+test_history_is_capped_in_memory (tests.test_v85.HistoryTests.test_history_is_capped_in_memory) ... ok
+test_a_load_that_never_ends_still_times_out (tests.test_v85.MissionCallTests.test_a_load_that_never_ends_still_times_out) ... ok
+test_a_loading_screen_is_waited_through (tests.test_v85.MissionCallTests.test_a_loading_screen_is_waited_through) ... ok
+test_a_request_the_helper_did_not_take_is_taken_back (tests.test_v85.MissionCallTests.test_a_request_the_helper_did_not_take_is_taken_back) ... ok
+test_delivery_session_state_is_cleared (tests.test_v85.NewGameTests.test_delivery_session_state_is_cleared) ... ok
+test_hub_session_record_is_cleared (tests.test_v85.NewGameTests.test_hub_session_record_is_cleared) ... ok
+test_a_confirmed_delivery_is_not_put_back_to_queued (tests.test_v85.RestoreMergeTests.test_a_confirmed_delivery_is_not_put_back_to_queued) ... ok
+test_a_currency_payment_made_before_the_restore_is_kept (tests.test_v85.RestoreMergeTests.test_a_currency_payment_made_before_the_restore_is_kept) ... ok
+test_a_payment_the_save_already_has_is_not_doubled (tests.test_v85.RestoreMergeTests.test_a_payment_the_save_already_has_is_not_doubled) ... ok
+test_restored_baseline_wins (tests.test_v85.RestoreMergeTests.test_restored_baseline_wins) ... ok
+test_session_records_survive_the_restore (tests.test_v85.RestoreMergeTests.test_session_records_survive_the_restore) ... ok
+test_a_helper_that_stopped_gives_the_extra_weapons (tests.test_v85.ShopRouteTests.test_a_helper_that_stopped_gives_the_extra_weapons) ... ok
+test_a_vendor_never_found_in_memory_gives_the_extra_weapons (tests.test_v85.ShopRouteTests.test_a_vendor_never_found_in_memory_gives_the_extra_weapons) ... ok
+test_a_working_shop_gives_nothing_directly (tests.test_v85.ShopRouteTests.test_a_working_shop_gives_nothing_directly) ... ok
+test_no_helper_at_all_gives_the_extra_weapons (tests.test_v85.ShopRouteTests.test_no_helper_at_all_gives_the_extra_weapons) ... ok
+test_a_menu_landing_on_an_open_planet_is_saved (tests.test_v85.TravelTests.test_a_menu_landing_on_an_open_planet_is_saved) ... ok
 
 ----------------------------------------------------------------------
-Ran 318 tests in 143.638s
+Ran 340 tests in 146.084s
 
 OK (skipped=17)

@@ -1,9 +1,9 @@
-# Zurkie's Battleplex hub (Randomizer 8.4)
+# Zurkie's Battleplex hub (Randomizer 8.5)
 
 The hub preset (`preset = "hub"`, the default) turns the campaign into a hub: Zurkie's Battleplex is
 home, and each planet visit of the story is a **destination** you open with Coordinates.
 
-8.4 has not run in your game yet. The hub's travel, state writes, deliveries and hero swaps have
+8.4 and 8.5 have not run in your game yet. The hub's travel, state writes, deliveries and hero swaps have
 all worked in rounds 17-20. Play on a spare save slot and keep backups.
 
 ## What happens

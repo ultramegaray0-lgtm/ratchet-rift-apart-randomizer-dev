@@ -1,4 +1,4 @@
-# Configuration (8.4)
+# Configuration (8.5)
 
 ## scripts\04_rando_settings.lua
 

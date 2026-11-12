@@ -4,7 +4,7 @@ Test travel takes you to any planet, whatever Coordinates you hold. It is there 
 travel itself: which landing points work, what the warp and the ship's flight do on each planet,
 and what the planet menu shows.
 
-It is **off** in the 8.4 kit's `04_rando_settings.lua` (a real playthrough); set it to true to use it:
+It is **off** in the 8.5 kit's `04_rando_settings.lua` (a real playthrough); set it to true to use it:
 
 ```lua
 test_travel = true,          -- false for a real run

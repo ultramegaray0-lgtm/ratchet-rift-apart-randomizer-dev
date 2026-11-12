@@ -1,10 +1,13 @@
-# Known issues (Randomizer 8.4)
+# Known issues (Randomizer 8.5)
 
-8.4 has passed every automated test, but it has **not run in your game yet**. Everything below
-comes from your logs of rounds 13-20, from the code, or from the simulator. Each item says which.
-Use this page to tell a known issue from a new one.
+8.5 has passed every automated test, but neither 8.5 nor 8.4 has **run in your game yet** (there
+is no round 21 log). Everything below comes from your logs of rounds 13-20, from the code, or from
+the simulator. Each item says which. Use this page to tell a known issue from a new one.
 
-## 1. Expected in your first 8.4 playthrough (unknown until then)
+## 1. Expected in your first 8.5 playthrough (unknown until then)
+
+Everything in this section came with 8.4 and is still unproven. 8.5 adds no new behaviour to
+watch for; its fixes are for failure cases (section 4).
 
 1. **Whether the hero fix starts every story.** The rule "a story's first step needs the visit's
    own hero" fits all seven clean cases in rounds 17 and 20 (CHANGELOG.md). It is an inference, not
@@ -52,6 +55,15 @@ Use this page to tell a known issue from a new one.
 - **Armor you already owned** before a seed started can pay its source location when the randomizer
   sees it (round 18, a finished save). On a New Game this cannot happen.
 - **Progress made while the companion is closed is not saved.**
+- **The last ~2 seconds before the game closes.** The companion saves every 2 s. If the game closes
+  (or crashes) right after a reward, the save can be one step behind: a Bolts/Raritanium payment
+  sent in that moment can come again on the next start, and a location collected in that moment
+  can be forgotten (its reward came, but the randomizer counts the location as not found). Close the game from its menu
+  and give the companion a moment; its window shows "saved (version ...)" after each change.
+- **Loading an older game save does not undo randomizer progress.** Items the randomizer gave after
+  that game save are gone from the game's inventory, but the randomizer still counts them as given
+  and does not send them again. A load only replays part of what you own, so the randomizer can't
+  safely tell a lost item from an owned one. Play forward from your latest save in a seed.
 
 ## 3. Still open from earlier rounds
 
@@ -63,9 +75,20 @@ Use this page to tell a known issue from a new one.
   message. Everything that uses rivet_hook still worked. rando_give.dll checks the game's bytes
   itself (0x7 = all paths matched).
 - **The PowerShell companion** is checked by hand only. PowerShell 7 could not run on the build
-  machine, so its 9 tests were skipped.
+  machine, so its 9 tests were skipped (8.5 changes one branch of it: a refused save is kept aside).
 
-## 4. Fixed in 8.4 (see CHANGELOG.md)
+## 4. Fixed in 8.5 (see CHANGELOG.md; found in the code, none reported from a game yet)
+
+- A mission call that timed out could still run later; a loading screen counted as a timeout.
+- An item or currency request with no answer, or in flight at a New Game, could run later.
+- The companion's late restore dropped this session's currency, could re-send a confirmed item, and
+  lost armor sources, shop gifts and the hub's objective record.
+- A New Game kept the hub's record of the old run (no automatic reload of a destination reloaded there).
+- Shop-only weapons had no route without a working rando_give.dll, or when the vendor was never found.
+- A planet-menu landing (levels seeds) was saved late and not filtered.
+- A save the game refused was overwritten by the companion.
+
+## 5. Fixed in 8.4 (see CHANGELOG.md)
 
 - Stories that did not start, and Viceron as Ratchet: the save's hero was trusted, and 4
   registry heroes were wrong.

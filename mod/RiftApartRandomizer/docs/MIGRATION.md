@@ -1,3 +1,18 @@
+# Moving from 8.4 to 8.5
+
+**No new seed needed.** 8.5 gives identical seeds to 8.4 (and the same as 8.3), so progress carries
+over.
+
+1. Delete every old randomizer `.lua` file from `<game>\scripts`, then copy the **14** new ones
+   (each carries the kit version 8.5.0, checked at start as `RANDO-KIT`).
+2. `rando_give.dll` is unchanged (v6, the same bytes). Replace the `companion` folder (a refused
+   save is now kept aside). `rivet.toml` is unchanged.
+3. Your 8.4 `04_rando_settings.lua` can stay: 8.5 has no new options. rivet.log notes that it is
+   from 8.4; that is all.
+4. Nothing in a saved 8.4 state needs converting.
+
+What changed for you: see CHANGELOG.md (8.5).
+
 # Moving from 8.3 to 8.4
 
 **No new seed needed.** 8.4 gives the same seeds as 8.3 (same fingerprint), so progress carries

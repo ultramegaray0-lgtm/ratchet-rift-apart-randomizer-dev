@@ -360,8 +360,8 @@ class Round20LogTests(unittest.TestCase):
 
 class VersionTests(unittest.TestCase):
     def test_versions(self):
-        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "8.4.0"'), ("15_rando_hub.lua", 'H.VERSION = "8.4.0"'),
-                           ("16_rando_testtravel.lua", 'TT.VERSION = "8.4.0"')):
+        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "8.5.0"'), ("15_rando_hub.lua", 'H.VERSION = "8.5.0"'),
+                           ("16_rando_testtravel.lua", 'TT.VERSION = "8.5.0"')):
             with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
                 self.assertIn(want, f.read(), name)
 
@@ -374,7 +374,7 @@ class KitCheckTests(unittest.TestCase):
     def test_a_complete_kit_says_so(self):
         g = Game(settings_file=True)
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 8.4.0"))
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 8.5.0"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
     def test_a_missing_or_older_script_is_reported(self):

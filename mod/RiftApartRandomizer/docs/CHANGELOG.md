@@ -1,6 +1,58 @@
 # Changelog
 
-Newest first. 8.4 is a stabilization release: no new features, the same seeds as 8.3.
+Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
+
+## 8.5 (2026-11-12): robustness pass on 8.4
+
+No round 21 log yet, so nothing here comes from a new game report: every fix comes from reading the
+8.4 code, and each has a test in `tests/test_v85.py` that fails on 8.4 and passes on 8.5. Seeds are
+identical to 8.4 (`tests/test_regression_v84.py`), saves carry over, rando_give.dll is unchanged
+(same bytes as 8.3/8.4). Everything 8.4 still needs to prove in your game (KNOWN_ISSUES.md 1) is
+unchanged.
+
+### rando_give.dll requests that were given up on
+- **A mission call that timed out stayed in the helper's mailbox.** If the helper then ran it
+  (e.g. after a hitch), a story start or state write happened that the hub had already counted
+  as failed and handled another way. 8.5 takes the request back first (the same as items and
+  currency already did on a load). If the helper answered at that moment, its answer is used.
+- **A loading screen counted as a timeout for mission calls** (5 s). Now a call waits while the
+  game is loading and the helper's pump is not running, up to 60 s (item deliveries already waited).
+- **An item request that got no answer was left in the mailbox too.** A helper that recovered
+  later could deliver it on top of the retry. Now it is taken back, and the retry is the only give.
+- **A New Game** takes back an item or currency payment of the old run that is still in flight, so
+  it never lands in the new run.
+
+### The companion's late restore (round 20: it connected a minute after the game)
+8.4 merged only some of this session's progress into the restored save.
+- Bolts/Raritanium paid in this session but not yet given are now kept (they were dropped).
+- An item the game confirmed in this session is no longer reset to "queued" by the older save. That
+  reset could make it be sent again.
+- Armor sources and finds, the shop's one-time gifts, gadgets, the hub's objective record and the
+  armor baseline are kept as well.
+
+### New Game
+- The hub's record of the old run (destinations already reloaded, stories started, the "back to
+  Zurkie's" timer) is cleared. Before, a destination reloaded in the old run could not be reloaded
+  automatically in the new one.
+- The delivery's weapon-type session state (seen types, a purchase in flight) is cleared.
+- Delayed hub actions (next mission, back to Ratchet, the hero record) look at the state when they
+  run, not the state from when they were scheduled. A restore in between could make them use the
+  replaced state.
+
+### Ms. Zurkon's shop
+- **Shop-only weapons had no route** when rando_give.dll was missing entirely, stopped working
+  during the session, or never found the vendor in memory. The script's own description promised a
+  direct gift in those cases. 8.4 only gave them for an older helper. Now all of these give the
+  seed's non-vendor shop weapons once, as before.
+
+### Smaller fixes
+- A planet-menu landing on an open planet (levels seeds) is now saved right away and filtered like
+  every other landing (never a `TRANSITION_TO` point).
+- The history in memory is capped at 400-500 entries. The save already kept the last 60, and
+  rivet.log keeps everything.
+- **Companion:** a save file the game refuses (another seed's content under this seed's name) is
+  copied to `rando_<fingerprint>.lua.refused-<time>` before a fresh start. Before, the next saves
+  replaced it and its `.bak`, so the progress in it was lost.
 
 ## 8.4 (2026-11-12): stabilization after round 20
 

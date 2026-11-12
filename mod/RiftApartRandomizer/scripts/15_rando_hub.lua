@@ -64,12 +64,12 @@
 --     (or, for Zurkie's own visits, another planet) and straight back (story_reload_stuck). Round
 --     20's Viceron finished that step on its reload. The 8.3 restart of an active mission is gone
 --     from the automatic path: in round 20 it changed the state but never moved the story.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "8.4.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "8.4.0"
+H.VERSION = "8.5.0"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end

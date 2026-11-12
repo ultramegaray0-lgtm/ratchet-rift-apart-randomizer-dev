@@ -780,3 +780,32 @@ companion answered after the 60 s wait).
   - "ARSENAL_RESTORED is installed (the game has ...)".
 - If a story with the right hero still stalls at GO_TO, compare its objective name and the
   landing checkpoint: the hero rule may need a planet exception.
+
+## 8.5 (2026-11-12): robustness pass on 8.4 (no new features)
+- Task: continuous stabilization of 8.4 across 17 areas, no features, seeds/saves/DLL compatible.
+  No round 21 log existed, so the audit read the code for failure, lateness and repetition.
+- Found and fixed (tests/test_v85.py, 17 of 20 fail on 8.4):
+  - mailbox: a timed-out mission call, an unanswered item, and old-run requests at a New Game stayed
+    in rando_give.dll's mailbox and could run later. `G.take_back(req)` sets REQ back to DONE and
+    keeps an answer that raced in. Mission calls wait through loads (pump not running, scene not
+    ready) up to `D.NATIVE_LOAD_WAIT` = 3600 frames.
+  - late companion restore: `R.merge_live` (currency of this session kept, delivery status by rank,
+    armor/shop/hub records, armor baseline when the save has none).
+  - New Game: hub session record and delivery weapon-type session state cleared; deferred hub
+    closures read `H.state()` when they run.
+  - shop: `H.helper_missing` (no DLL, dead DLL, < v5) and a vendor never found both compensate.
+  - travel: menu landings go through `T.remember`; history capped at `R.HISTORY_KEEP`.
+  - companion: a refused save is copied to `.refused-<time>` first.
+- Considered and not changed: the armor ring replay (worst case gives the game's own piece); the
+  finale name match; collectible counts across a restore (collectibles are retired since 6.0 - a
+  fix was written, then removed as dead code); the ~2 s companion save window and game-save reloads
+  (documented in KNOWN_ISSUES.md 2: no safe automatic answer).
+- Sim: `SIM.mailbox.hold` (helper alive, takes no request), SIMULATED.
+- Not possible here: PowerShell 7 (download not allowed to run), so the companion tests stay skipped.
+
+## Handoff (8.5)
+- Same round 21 checklist as 8.4 (TESTING.md section 2). New log lines only on failure paths:
+  "taken back", "aux request withdrawn", "kept n currency payment(s) from before the restore",
+  "given directly (rando_give.dll ...)".
+- Next real information can only come from a playthrough log.
+

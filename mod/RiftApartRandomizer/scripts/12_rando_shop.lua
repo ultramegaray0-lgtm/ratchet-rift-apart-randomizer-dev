@@ -40,7 +40,7 @@
 -- 32-bit integer or a 32-bit float. Only an offset where at least 3 slots hold their own price,
 -- and no slot holds a different one there, is taken; then each slot's price is written there in
 -- the same encoding and read back. Otherwise prices stay the game's own (RANDO-SHOP says so).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "8.4.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SHOP = RANDO_SHOP or {}
 local H = RANDO_SHOP
