@@ -1,6 +1,12 @@
 -- Randomizer 3.0 campaign layer: the mission registry, campaign sequence generation for every
 -- mode, and the campaign constraints the progression solver (02_rando_generator.lua) uses.
 --
+-- 9.0: THE STORY STARTS AS IN THE GAME. A new game plays the prologue (the parade on Corson V),
+-- then Nefarious City, then Sargasso: the visits the game itself takes you to (arrival =
+-- "story", C.STORY_START). Every campaign order of every mode begins with them, in that order;
+-- only the visits after them are reordered. The Zurkie's hub of 8.0-8.5 (and random_start, a
+-- campaign that began somewhere else) is gone.
+--
 -- 7.0: the same registry drives the LEVEL-LOCKED campaign (levels = true). The story keeps the
 -- game's own mission order (your game cannot open a mission out of order, docs/CAMPAIGN.md), but
 -- each planet's travel is locked behind its Coordinates, which are items of the seed. A visit
@@ -18,10 +24,10 @@
 --   guide  public walkthrough (gamepressure mission list, vulkk gear guide); NOT verified in the
 --          game files. The research kit (companion/research/Research-Campaign.bat) replaces these
 --          with the real names; tools/build_campaign_registry.py merges them.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_CAMPAIGN = {}
 local C = RANDO_CAMPAIGN
-C.VERSION = "7.0.0"
+C.VERSION = "9.0.0"
 
 -- story abilities: no item config exists, so only the story itself hands them out
 C.STORY_ABILITIES = { phantom_dash = true, hurlshot = true, speetle = true, dragon_mount = true, wallrun = true }
@@ -98,6 +104,17 @@ end
 C.BY_ID = {}
 for i, seg in ipairs(C.SEGMENTS) do seg.index = i; seg.requires = seg.requires or {}; seg.grants = seg.grants or {}; seg.after = seg.after or {}; C.BY_ID[seg.id] = seg end
 
+-- 9.0: the start every campaign has, in this order: the prologue, then the visits the story itself
+-- travels to next (the parade's rifts end on Nefarious City; finishing MIS_NEFCITY_01 takes you to
+-- Sargasso, round 16 lines 338-344). Built from the registry: the leading run of arrival = "story".
+C.STORY_START = {}
+for _, seg in ipairs(C.SEGMENTS) do
+  if seg.arrival ~= "story" then break end
+  C.STORY_START[#C.STORY_START + 1] = seg.id
+end
+C.IN_STORY_START = {}
+for i, id in ipairs(C.STORY_START) do C.IN_STORY_START[id] = i end
+
 -- where each 2.0 location sits in the campaign (the visit whose content holds it)
 C.LOCATION_SEGMENT = {
   ["planet:corson_v"] = "corson_intro", ["story2:corson_v"] = "finale",
@@ -124,20 +141,22 @@ function C.location_segment(lid, planet)
 end
 
 -- (the default mode is campaign_mode in 02_rando_generator.lua's G.DEFAULTS: planet_shuffle)
+-- 9.0: every mode starts with the prologue, Nefarious City and Sargasso (C.STORY_START)
 C.MODES = {
   vanilla = "the game's own order; rewards randomized (2.0 behaviour)",
-  planet_shuffle = "planets in a random order; each planet's visits keep their order",
-  mission_shuffle = "every visit (including revisits) placed anywhere the dependencies allow",
-  full = "mission shuffle with a random starting visit",
-  chaos = "full, plus random story-ability order checks only (no soft ordering), more starting variety",
+  planet_shuffle = "after the story's start, planets in a random order; each planet's visits keep their order",
+  mission_shuffle = "after the story's start, every visit (including revisits) placed anywhere the dependencies allow",
+  full = "mission shuffle (9.0: the same start as every mode)",
+  chaos = "mission shuffle with story-ability order checks only (9.0: the same start as every mode)",
 }
--- what the runtime must be able to do in the game for a mode (see 11_rando_campaign.lua)
+-- what the runtime must be able to do in the game for a mode (see 11_rando_campaign.lua). 9.0: no
+-- mode skips the prologue any more, so none needs new_game_init
 C.NEEDS = {
   vanilla = {},
   planet_shuffle = { "mission_control", "travel" },
   mission_shuffle = { "mission_control", "travel" },
-  full = { "mission_control", "travel", "new_game_init" },
-  chaos = { "mission_control", "travel", "new_game_init" },
+  full = { "mission_control", "travel" },
+  chaos = { "mission_control", "travel" },
 }
 
 -- ---------------------------------------------------------------------------------------------
@@ -146,10 +165,12 @@ C.NEEDS = {
 local function contains(t, v) for _, x in ipairs(t) do if x == v then return true end end return false end
 
 -- hard rules every mode keeps:
+--   * 9.0: the order begins with the story's start (prologue, Nefarious City, Sargasso)
 --   * a revisit comes after the first visit of its planet (its scripts continue that story)
---   * the finale is last; with a fixed start, the intro is first
+--   * the finale is last
 --   * a visit needing a story ability comes after the visit that grants it
-function C.hard_ok(order, start_fixed)
+-- (the second argument of 3.0-8.5, start_fixed, is ignored: the start is always fixed)
+function C.hard_ok(order)
   local pos = {}
   for i, id in ipairs(order) do pos[id] = i end
   for _, seg in ipairs(C.SEGMENTS) do
@@ -168,21 +189,19 @@ function C.hard_ok(order, start_fixed)
     end
   end
   if order[#order] ~= "finale" then return false, "finale not last" end
-  if start_fixed and order[1] ~= "corson_intro" then return false, "intro not first" end
+  for i, id in ipairs(C.STORY_START) do
+    if order[i] ~= id then return false, "the story's start is not " .. table.concat(C.STORY_START, " > ") end
+  end
+  if #order ~= #C.SEGMENTS then return false, "visits twice or missing" end
   return true
 end
 
--- a visit that can begin a campaign: no gadget or ability needs beyond the starting kit, not a
--- revisit, not the finale
-function C.can_start(seg)
-  return seg.kind ~= "finale" and seg.visit == 1 and #seg.requires == 0
-end
-
--- builds a valid order by random topological insertion. rng: RANDO_GEN.rng
-function C.sequence(mode, rng, random_start)
+-- builds a valid order by random topological insertion. rng: RANDO_GEN.rng. 9.0: the order always
+-- begins with C.STORY_START; the third argument of 3.0-8.5 (random_start) is ignored.
+function C.sequence(mode, rng)
   local ids = {}
   for _, seg in ipairs(C.SEGMENTS) do ids[#ids + 1] = seg.id end
-  if mode == "vanilla" then return ids, "corson_intro" end
+  if mode == "vanilla" then return ids, ids[1] end
   for _ = 1, 500 do
     local order
     if mode == "planet_shuffle" then
@@ -190,12 +209,13 @@ function C.sequence(mode, rng, random_start)
       -- shuffled first visits (inserted right after a random later point)
       local firsts, rest = {}, {}
       for _, seg in ipairs(C.SEGMENTS) do
-        if seg.kind ~= "intro" and seg.kind ~= "finale" then
+        if seg.kind ~= "finale" and not C.IN_STORY_START[seg.id] then
           if seg.visit == 1 then firsts[#firsts + 1] = seg.id else rest[#rest + 1] = seg.id end
         end
       end
       rng.shuffle(firsts)
-      order = { "corson_intro" }
+      order = {}
+      for _, id in ipairs(C.STORY_START) do order[#order + 1] = id end
       for _, id in ipairs(firsts) do order[#order + 1] = id end
       for _, id in ipairs(rest) do
         local first = C.BY_ID[C.BY_ID[id].after[1]]
@@ -208,18 +228,11 @@ function C.sequence(mode, rng, random_start)
     else
       local pool = {}
       for _, seg in ipairs(C.SEGMENTS) do
-        if seg.kind ~= "finale" and not (seg.kind == "intro" and not random_start) then pool[#pool + 1] = seg.id end
+        if seg.kind ~= "finale" and not C.IN_STORY_START[seg.id] then pool[#pool + 1] = seg.id end
       end
       rng.shuffle(pool)
       order = {}
-      if not random_start then order[1] = "corson_intro" else
-        local starts = {}
-        for _, id in ipairs(pool) do if C.can_start(C.BY_ID[id]) then starts[#starts + 1] = id end end
-        table.sort(starts)
-        local first = rng.pick(starts)
-        order[1] = first
-        for i, id in ipairs(pool) do if id == first then table.remove(pool, i); break end end
-      end
+      for _, id in ipairs(C.STORY_START) do order[#order + 1] = id end
       for _, id in ipairs(pool) do order[#order + 1] = id end
       order[#order + 1] = "finale"
       -- repair: move each revisit after its first visit, and ability needs after their grant
@@ -235,14 +248,14 @@ function C.sequence(mode, rng, random_start)
           for i, id in ipairs(order) do pos[id] = i end
           local need = 0
           for _, d in ipairs(deps) do if pos[d] and pos[d] > need then need = pos[d] end end
-          if pos[seg.id] and pos[seg.id] < need and seg.kind ~= "finale" then
+          if pos[seg.id] and pos[seg.id] < need and seg.kind ~= "finale" and not C.IN_STORY_START[seg.id] then
             table.remove(order, pos[seg.id])
             table.insert(order, math.min(need, #order), seg.id)   -- right after the last dependency
           end
         end
       end
     end
-    local ok = C.hard_ok(order, not random_start)
+    local ok = C.hard_ok(order)
     if ok then return order, order[1] end
   end
   return nil, "no valid order"
@@ -298,10 +311,8 @@ function C.describe(order)
     L[#L + 1] = string.format("  %2d. %-13s %-15s %-8s %s%s%s%s", i, id, seg.planet, seg.hero,
                               seg.title or "", seg.boss and ("  [boss: " .. seg.boss .. "]") or "", need, gives)
   end
-  if order[1] ~= "corson_intro" then
-    L[#L + 1] = "  Random start: a new game always opens with the intro. The randomizer completes it for you"
-    L[#L + 1] = "  (its reward is paid then) and passes over its later slot. Needs the new_game_init capability."
-  end
+  L[#L + 1] = "  A new game plays the prologue, then Nefarious City, then Sargasso, as in the game; only the"
+  L[#L + 1] = "  visits after them are reordered."
   local vanilla = true
   for i, id in ipairs(order) do if C.SEGMENTS[i].id ~= id then vanilla = false end end
   if not vanilla then
@@ -309,234 +320,5 @@ function C.describe(order)
     L[#L + 1] = "  (docs/CAMPAIGN.md). Until then you play the game's own order with these rewards; the seed"
     L[#L + 1] = "  is checked to be finishable in that order too."
   end
-  return table.concat(L, "\n")
-end
-
--- =============================================================================================
--- 8.0: ZURKIE'S BATTLEPLEX AS THE CAMPAIGN HUB
---
--- A hub seed starts at Zurkie's (the runtime, 15_rando_hub.lua, takes Ratchet there from the
--- parade). Every other visit of the registry is a DESTINATION. The player picks any open one;
--- finishing it gives the next Coordinates of the seed's unlock queue. Two Coordinates are open
--- at the start, on two different planets.
---
--- What decides "open" (the custom randomized progression table):
---   * a planet destination needs its planet's Coordinates (start pair, then the queue: every
---     finished destination gives the next `per_completion` of them);
---   * Zurkie's own visits (kind "hub") are played at the hub and need no Coordinates;
---   * a revisit needs its first visit (`after`), and a visit needing a story ability needs the
---     visit whose story grants it (Viceron: the Phantom Dash of Nefarious City and the Hurlshot
---     of Torren IV) - the game's own dependencies, kept because the missions' scripts expect them;
---   * the finale needs every other destination (or half of them, hub_finale = "half"); its
---     Coordinates (Corson V) are given when it opens.
--- C.hub_check explores EVERY order a player could choose (all subsets of finished destinations,
--- 2^12 states) and accepts a plan only if no reachable state leaves nothing to do before the
--- finale. So whatever the player picks, the campaign goes on.
--- =============================================================================================
-C.HUB_PLANET = "scarstu"
-C.HUB_CHECKPOINTS = { "CHK_ZURK_00_DEFAULT", "CHK_ZURK_LANDING_SHIP" }   -- round 14 line 171; round 13/16
-C.FINALE_PLANET = "corson_v"
-
--- the destinations of a hub campaign, in registry order
-function C.hub_destinations(revisits)
-  local out = {}
-  for _, seg in ipairs(C.SEGMENTS) do
-    if seg.kind ~= "intro" and (revisits ~= false or seg.visit == 1 or seg.kind == "finale") then
-      local abilities = {}
-      for _, r in ipairs(seg.requires) do
-        local ab = r:match("^ability:(.+)$")
-        if ab then abilities[#abilities + 1] = ab end
-      end
-      local after = {}
-      for _, a in ipairs(seg.after) do
-        if revisits ~= false or C.BY_ID[a].visit == 1 then after[#after + 1] = a end
-      end
-      out[#out + 1] = {
-        id = seg.id, planet = seg.planet, visit = seg.visit, hero = seg.hero, title = seg.title, boss = seg.boss,
-        missions = seg.missions, entry = seg.entry, after = after, abilities = abilities, grants = seg.grants,
-        kind = (seg.kind == "finale") and "finale" or ((seg.planet == C.HUB_PLANET) and "hub" or "planet"),
-      }
-    end
-  end
-  return out
-end
-
--- planets a destination can start on: its first visit needs nothing but the starting kit
-local function hub_start_candidates(dests)
-  local ok, seen = {}, {}
-  for _, d in ipairs(dests) do
-    if d.kind == "planet" and d.visit == 1 and #d.abilities == 0 and #d.after == 0 and not seen[d.planet] then
-      seen[d.planet] = true; ok[#ok + 1] = d.planet
-    end
-  end
-  table.sort(ok)
-  return ok
-end
-
--- which destinations are open after `done` (set of ids) with `n` finished
-function C.hub_open_planets(plan, n)
-  local open = {}
-  for _, pid in ipairs(plan.start) do open[pid] = true end
-  local k = math.min(#plan.queue, n * plan.per_completion)
-  for i = 1, k do open[plan.queue[i]] = true end
-  return open
-end
-function C.hub_available(plan, done, n)
-  local open = C.hub_open_planets(plan, n)
-  local granted = {}
-  for id in pairs(done) do
-    local seg = C.BY_ID[id]
-    for _, g in ipairs(seg and seg.grants or {}) do granted[g] = true end
-  end
-  local total, fin = 0, nil
-  for _, d in ipairs(plan.destinations) do if d.kind ~= "finale" then total = total + 1 else fin = d end end
-  local out = {}
-  for _, d in ipairs(plan.destinations) do
-    if not done[d.id] then
-      local ok
-      if d.kind == "finale" then
-        ok = n >= (plan.finale_after or total)
-      else
-        ok = (d.kind == "hub") or open[d.planet] == true
-        for _, a in ipairs(d.after) do if not done[a] then ok = false end end
-        for _, ab in ipairs(d.abilities) do if not granted[ab] then ok = false end end
-      end
-      if ok then out[#out + 1] = d.id end
-    end
-  end
-  return out
-end
-
--- explores every order: true, or false and the first dead end found. yield (optional) is the
--- in-game generator's slice point: the check gives the frame back every 64 situations
-function C.hub_check(plan, yield)
-  local ids = {}
-  for _, d in ipairs(plan.destinations) do if d.kind ~= "finale" then ids[#ids + 1] = d.id end end
-  local bit = {}
-  for i, id in ipairs(ids) do bit[id] = 1 << (i - 1) end
-  local full = (1 << #ids) - 1
-  local seen = {}
-  local stack = { 0 }
-  local states = 0
-  while #stack > 0 do
-    local mask = table.remove(stack)
-    if not seen[mask] then
-      seen[mask] = true
-      states = states + 1
-      if yield and states % 64 == 0 then yield() end
-      local done, n = {}, 0
-      for i, id in ipairs(ids) do if mask & (1 << (i - 1)) ~= 0 then done[id] = true; n = n + 1 end end
-      local avail = C.hub_available(plan, done, n)
-      if #avail == 0 then
-        local list = {}
-        for _, id in ipairs(ids) do if done[id] then list[#list + 1] = id end end
-        return false, "dead end after " .. (#list > 0 and table.concat(list, ", ") or "nothing"), states
-      end
-      if mask == full then
-        local fin = false
-        for _, id in ipairs(avail) do if C.BY_ID[id].kind == "finale" then fin = true end end
-        if not fin then return false, "the finale does not open after everything", states end
-      else
-        for _, id in ipairs(avail) do
-          if bit[id] then stack[#stack + 1] = mask | bit[id] end
-        end
-      end
-    end
-  end
-  return true, nil, states
-end
-
--- the plan of one seed. rng: RANDO_GEN.rng (its own stream, so hub settings never change the
--- item placement of the same seed text). s: normalized settings.
-function C.hub_plan(s, rng, yield)
-  local dests = C.hub_destinations(s.hub_revisits)
-  local planets = {}
-  local seen = {}
-  for _, d in ipairs(dests) do
-    if d.kind == "planet" and not seen[d.planet] then seen[d.planet] = true; planets[#planets + 1] = d.planet end
-  end
-  local cands = hub_start_candidates(dests)
-  local want = math.min(s.hub_start_coordinates or 2, #cands)
-  local total = 0
-  for _, d in ipairs(dests) do if d.kind ~= "finale" then total = total + 1 end end
-  local finale_after = (s.hub_finale == "half") and math.ceil(total / 2) or total
-  for attempt = 1, 200 do
-    local pool = {}
-    for _, p in ipairs(cands) do pool[#pool + 1] = p end
-    rng.shuffle(pool)
-    local start = {}
-    for i = 1, want do start[i] = pool[i] end
-    table.sort(start)
-    local rest = {}
-    local in_start = {}
-    for _, p in ipairs(start) do in_start[p] = true end
-    for _, p in ipairs(planets) do if not in_start[p] then rest[#rest + 1] = p end end
-    rng.shuffle(rest)
-    local plan = {
-      version = 1, planet = C.HUB_PLANET, checkpoints = C.HUB_CHECKPOINTS, finale_planet = C.FINALE_PLANET,
-      start = start, queue = rest, per_completion = s.hub_unlocks or 1, finale_after = finale_after,
-      destinations = dests, finale = "finale", attempt = attempt,
-    }
-    local ok, why, states = C.hub_check(plan, yield)
-    if ok then
-      plan.states_checked = states
-      -- one way through, for the spoiler (always the first open destination in registry order)
-      local done, n, path = {}, 0, {}
-      while true do
-        local av = C.hub_available(plan, done, n)
-        if #av == 0 then break end
-        local pick = av[1]
-        path[#path + 1] = pick
-        done[pick] = true
-        n = n + 1
-        if C.BY_ID[pick].kind == "finale" then break end
-      end
-      plan.example = path
-      return plan
-    end
-    plan.last_error = why
-  end
-  return nil, "no hub plan without a dead end"
-end
-
--- what finishing the n-th destination opens
-function C.hub_unlocks_at(plan, n)
-  local out = {}
-  local a = (n - 1) * plan.per_completion + 1
-  for i = a, math.min(#plan.queue, n * plan.per_completion) do out[#out + 1] = plan.queue[i] end
-  return out
-end
-
-function C.hub_describe(plan, planet_name)
-  local L = {}
-  local name = planet_name or function(p) return p end
-  L[#L + 1] = string.format("  Start: Zurkie's Battleplex (%s). Starting Coordinates: %s and %s.", plan.checkpoints[1],
-                            name(plan.start[1] or "?"), name(plan.start[2] or "?"))
-  if #plan.start > 2 then
-    local extra = {}
-    for i = 3, #plan.start do extra[#extra + 1] = name(plan.start[i]) end
-    L[#L + 1] = "  More starting Coordinates: " .. table.concat(extra, ", ")
-  end
-  L[#L + 1] = plan.per_completion == 1 and "  Each finished destination gives the next Coordinates in this order:"
-              or string.format("  Each finished destination gives the next %d Coordinates in this order:", plan.per_completion)
-  for i, pid in ipairs(plan.queue) do
-    L[#L + 1] = string.format("    %2d. %s (after your %s destination)", i, name(pid),
-                              ({ "1st", "2nd", "3rd" })[math.ceil(i / plan.per_completion)] or (math.ceil(i / plan.per_completion) .. "th"))
-  end
-  L[#L + 1] = string.format("  The finale (%s) opens after %d finished destinations; its Coordinates come then.",
-                            name(plan.finale_planet), plan.finale_after)
-  L[#L + 1] = "  Destinations (any order the rules allow):"
-  for _, d in ipairs(plan.destinations) do
-    local rule = {}
-    if d.kind == "hub" then rule[#rule + 1] = "at the hub" end
-    if d.kind == "planet" then rule[#rule + 1] = "needs " .. name(d.planet) .. " Coordinates" end
-    for _, a in ipairs(d.after) do rule[#rule + 1] = "after " .. a end
-    for _, ab in ipairs(d.abilities) do rule[#rule + 1] = "needs the story's " .. ab end
-    if d.kind == "finale" then rule[#rule + 1] = "last" end
-    L[#L + 1] = string.format("    %-13s %-34s %-7s %s", d.id, name(d.planet), d.hero or "", table.concat(rule, "; "))
-  end
-  L[#L + 1] = "  One way through: " .. table.concat(plan.example or {}, " > ")
-  L[#L + 1] = string.format("  Checked: every order you could choose (%d situations) leaves something to do until the finale.",
-                            plan.states_checked or 0)
   return table.concat(L, "\n")
 end

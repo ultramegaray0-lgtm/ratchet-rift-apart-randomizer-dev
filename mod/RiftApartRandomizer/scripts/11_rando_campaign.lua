@@ -15,7 +15,7 @@
 --   * The game does not report mission states when a save loads (round 14), so the director
 --     asks the game (query) instead of waiting for events.
 --   * Travel (rivet.fly / rivet.warp) has not been used by the randomizer in your game yet.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["11_rando_campaign"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["11_rando_campaign"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_CAMPAIGN_RT = RANDO_CAMPAIGN_RT or {}
 local D = RANDO_CAMPAIGN_RT
 local C = RANDO_CAMPAIGN
@@ -498,11 +498,10 @@ end
 -- F12: go to the current visit (start its first mission, then travel there)
 function D.go()
   local active, why = D.active()
-  -- 8.4: the key means nothing in a hub seed or the game's own order: logged, no message (round
-  -- 20: the old F12, also Steam's screenshot key, put "Campaign order is not available" on screen)
-  local sd = seed()
-  if (sd and sd.hub) or why == "vanilla" then
-    log("RANDO-CAMPAIGN key: no campaign order in this seed (" .. ((sd and sd.hub) and "hub seed" or "the game's own order") .. ")")
+  -- 8.4: the key means nothing in the game's own order: logged, no message (round 20: the old
+  -- F12, also Steam's screenshot key, put "Campaign order is not available" on screen)
+  if why == "vanilla" then
+    log("RANDO-CAMPAIGN key: no campaign order in this seed (the game's own order)")
     return false
   end
   if not active then

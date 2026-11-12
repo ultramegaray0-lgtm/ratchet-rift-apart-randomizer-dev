@@ -1,17 +1,19 @@
--- Randomizer 8.0 seed generator, progression solver and spoiler log (Lua 5.4).
+-- Randomizer 9.0 seed generator, progression solver and spoiler log (Lua 5.4).
 --
 -- The same code runs inside the game (10_rando_runtime.lua generates the seed from your
 -- settings in small slices across frames) and offline (tools/rando.py, tests). It is fully
 -- deterministic: same seed text + same settings + same data version = same placements,
 -- on any machine. Nothing here depends on table iteration order: every key list is sorted.
 --
--- 8.0 (Zurkie's Battleplex hub, hub = true, the default "hub" preset):
---   * A new game is taken to Zurkie's Battleplex (15_rando_hub.lua). Two Coordinates on two
---     different planets are open at once; every destination you finish gives the next
---     Coordinates of the seed's unlock queue (seed.hub, built by 03_rando_campaign.lua's
---     C.hub_plan, which checks EVERY order a player could choose for dead ends).
---   * The item placement is the 7.0 one (planet_locks and travel_lock are off in a hub seed: the
---     hub's own Coordinates replace them). A seed without hub = true is a 7.0-style seed.
+-- 9.0 (no hub; the story starts as in the game):
+--   * The Zurkie's Battleplex hub of 8.0-8.5 is removed: its presets (hub, hub_chaos) and settings
+--     (hub, hub_start_coordinates, hub_unlocks, hub_finale, hub_revisits) are retired and say so.
+--   * A new game plays the prologue, then Nefarious City, then Sargasso, as in the game. Every
+--     campaign order starts that way (03_rando_campaign.lua C.STORY_START); random_start is retired.
+--   * The default preset is "balanced", which uses G.DEFAULTS as they stand (your 8.5.1 values:
+--     Coordinates as items, planet_shuffle, weapon prices, Raritanium 120-1000).
+--   * Seeds are format 9 (share code RA9). The generator version is in the fingerprint, so a 9.0
+--     seed is a new seed: start it with NEW GAME.
 -- 7.0 (one randomizer for everything):
 --   * LEVELS (levels = true): every planet's travel is locked behind its Coordinates, which are
 --     items of the seed. The planets the game itself takes you to (the prologue, Nefarious
@@ -53,10 +55,10 @@
 --   * Abilities the story gives (Speetle, Trudi, ...) cannot be granted: locations needing
 --     them, and locations whose trigger is not proven (armor finds, collectibles), only ever
 --     hold non-progression rewards.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_GEN = {}
 local G = RANDO_GEN
-G.VERSION = "8.0.0"
+G.VERSION = "9.0.0"
 local DB = RANDO_DATA
 
 -- ------------------------------------------------------------------------------------------
@@ -151,17 +153,9 @@ G.DEFAULTS = {
   accessibility = "full",         -- full: every location in logic | beatable: progression items only
   -- mission order (3.0, experimental: needs verified mission control, docs/CAMPAIGN.md; 7.0 name mission_order)
   campaign_mode = "planet_shuffle",      -- vanilla | planet_shuffle | mission_shuffle | full | chaos
-  random_start = false,           -- start on a random visit instead of the parade (full / chaos)
+                                  -- 9.0: every order starts with the prologue, Nefarious City, Sargasso
   exclude = "",                   -- comma-separated item keys never randomized, e.g. "weapon:ryno_8"
-  -- 8.0: Zurkie's Battleplex hub (experimental; docs/HUB.md)
-  hub = false,                    -- a new game starts at Zurkie's; destinations open with Coordinates
-  hub_start_coordinates = 3,      -- Coordinates open at the start (different planets)
-  hub_unlocks = 3,                -- Coordinates each finished destination gives
-  hub_finale = "all",             -- all | half: finished destinations before the finale opens
-  hub_revisits = true,            -- second visits (Zurkie's 2, Sargasso 2, Savali 2) are destinations too
 }
--- 8.0 settings that only count in a hub seed (left out of a 7.0-style seed's fingerprint)
-G.HUB_KEYS = { hub_start_coordinates = true, hub_unlocks = true, hub_finale = true, hub_revisits = true }
 -- items every seed starts with, whatever the settings say
 G.ALWAYS_START = { "hoverboots", "map_o_matic" }
 -- weapons the game itself hands out in the prologue whatever happens (Burst Pistol and
@@ -175,6 +169,8 @@ G.RETIRED = {
   armor_rewards = "armor", armor_finds = "armor", armor_mode = "armor", shop_weapons = "shop",
   filler_amount = "filler",
   include_hidden_weapons = "phantom", experimental_pickups = "phantom", experimental_collectibles = "phantom",
+  hub = "hub", hub_start_coordinates = "hub", hub_unlocks = "hub", hub_finale = "hub", hub_revisits = "hub",
+  random_start = "start",
 }
 G.RETIRED_WHY = {
   ["3.x"] = "is not used since 4.0 (no Gold Bolt prices: every Gold Bolt gives one item)",
@@ -182,7 +178,11 @@ G.RETIRED_WHY = {
   shop = "is replaced by shop = \"shuffle\" or \"vanilla\" in 5.0 (the vendor sells its own weapons, shuffled)",
   filler = "is replaced by bolts_min/bolts_max and raritanium_min/raritanium_max in 7.0",
   phantom = "is gone in 6.0: every reward must be obtainable (cut weapons, untested pickups and unbound collectibles are never placed)",
+  hub = "is gone in 9.0: the Zurkie's hub was removed (a new game plays the prologue, then Nefarious City)",
+  start = "is gone in 9.0: every seed starts with the prologue, then Nefarious City",
 }
+-- 9.0: presets that no longer exist, and the one used instead
+G.RETIRED_PRESETS = { hub = "balanced", hub_chaos = "chaos" }
 -- 7.0 names for existing settings (both are accepted)
 G.ALIASES = { restored_weapons = "include_arsenal_restored", mission_order = "campaign_mode" }
 G.CHOICES = {
@@ -192,7 +192,6 @@ G.CHOICES = {
   weapon_logic = { none = true, light = true, standard = true },
   accessibility = { full = true, beatable = true },
   campaign_mode = { vanilla = true, planet_shuffle = true, mission_shuffle = true, full = true, chaos = true },
-  hub_finale = { all = true, half = true },
 }
 -- the most rando_give.dll hands over in one request is 100,000 (RG_MAX_COUNT)
 G.RANGES = { start_weapons = { 0, 4 }, start_gadgets = { 0, 2 },
@@ -200,16 +199,9 @@ G.RANGES = { start_weapons = { 0, 4 }, start_gadgets = { 0, 2 },
              bolts_min = { 100, 100000 }, bolts_max = { 100, 100000 },
              raritanium_min = { 1, 5000 }, raritanium_max = { 1, 5000 },
              bolts_budget = { 0, 5000000 }, raritanium_budget = { 0, 500000 }, bolts_percent = { 0, 100 },
-             start_bolts = { 0, 100000 }, start_raritanium = { 0, 5000 },
-             hub_start_coordinates = { 2, 4 }, hub_unlocks = { 1, 3 } }
+             start_bolts = { 0, 100000 }, start_raritanium = { 0, 5000 } }
 G.PRESETS = {
-  -- 8.0: Zurkie's Battleplex hub (balanced items), and the hub with chaos' currency and prices
-  hub = { hub = true },
-  hub_chaos = { hub = true, start_weapons = 1, start_gadgets = 0, shop_prices = "random", shop_price_percent = 25,
-                shop_price_max_percent = 300, bolts_min = 500, bolts_max = 40000, raritanium_min = 10,
-                raritanium_max = 2000, bolts_budget = 350000, raritanium_budget = 10000, bolts_percent = 50,
-                currency_scaling = false },
-  -- 7.0 presets
+  -- 7.0 presets (9.0: the 8.0 hub presets are gone, G.RETIRED_PRESETS)
   -- balanced: every item system, the game's own level order, moderate currency, weapon prices
   balanced = {},
   -- chaos: wide currency swings, random prices, locked levels with the fewest open planets
@@ -233,11 +225,10 @@ G.PRESETS = {
   -- until then they play the game's own order, which every seed is also checked against)
   planet_shuffle = { campaign_mode = "planet_shuffle" },
   mission_shuffle = { campaign_mode = "mission_shuffle" },
-  full_campaign = { campaign_mode = "full", random_start = true, start_coordinates = "start_only" },
-  campaign_chaos = { campaign_mode = "chaos", random_start = true, start_coordinates = "start_only" },
+  full_campaign = { campaign_mode = "full", start_coordinates = "start_only" },
+  campaign_chaos = { campaign_mode = "chaos", start_coordinates = "start_only" },
 }
-G.PRESET_NAMES = { hub = "Zurkie's Hub", hub_chaos = "Zurkie's Hub (chaos)",
-                   balanced = "Balanced", chaos = "Chaos", full = "Full Randomizer", campaign = "Campaign Randomizer",
+G.PRESET_NAMES = { balanced = "Balanced", chaos = "Chaos", full = "Full Randomizer", campaign = "Campaign Randomizer",
                    everything = "Everything Randomized" }
 
 local function sorted_keys(t)
@@ -312,6 +303,11 @@ function G.normalize(user, preset)
   local s, warn = {}, {}
   for k, v in pairs(G.DEFAULTS) do s[k] = v end
   local p = G.PRESETS[preset or "balanced"]
+  if not p and G.RETIRED_PRESETS[preset] then
+    local use = G.RETIRED_PRESETS[preset]
+    warn[#warn + 1] = "preset " .. tostring(preset) .. " is gone in 9.0 (the Zurkie's hub was removed) - using " .. use
+    p = G.PRESETS[use]
+  end
   if not p then warn[#warn + 1] = "unknown preset " .. tostring(preset) .. " - using balanced"; p = {} end
   for k, v in pairs(p) do s[k] = v end
   user = G.translate(user, warn)
@@ -344,17 +340,6 @@ function G.normalize(user, preset)
       end
     end
   end
-  -- 8.0 hub: its own Coordinates and order; the 7.0 level locks and mission orders do not apply
-  if s.hub then
-    for k, off in pairs({ planet_locks = false, travel_lock = false, campaign_mode = "vanilla", random_start = false }) do
-      if s[k] ~= off then
-        -- only worth a note when you set it yourself (your defaults planet_locks = true and
-        -- campaign_mode = "planet_shuffle" are for the non-hub presets)
-        if (user or {})[k] ~= nil or p[k] ~= nil then warn[#warn + 1] = k .. " = " .. tostring(s[k]) .. " does not apply to a hub seed (hub = true) - " .. tostring(off) .. " used" end
-        s[k] = off
-      end
-    end
-  end
   -- travel locks need Coordinates
   if s.travel_lock and not s.planet_locks then
     s.planet_locks = true
@@ -365,9 +350,7 @@ end
 
 function G.canonical(s)
   local parts = {}
-  for _, k in ipairs(sorted_keys(G.DEFAULTS)) do
-    if not ((k == "hub" or G.HUB_KEYS[k]) and not s.hub) then parts[#parts + 1] = k .. "=" .. tostring(s[k]) end
-  end
+  for _, k in ipairs(sorted_keys(G.DEFAULTS)) do parts[#parts + 1] = k .. "=" .. tostring(s[k]) end
   return table.concat(parts, ";")
 end
 -- settings that differ from the defaults, as a short shareable text
@@ -379,12 +362,12 @@ function G.share_code(seed_text, s, preset)
   for _, k in ipairs(sorted_keys(G.DEFAULTS)) do
     if s[k] ~= base[k] then parts[#parts + 1] = k .. "=" .. tostring(s[k]) end
   end
-  return string.format("RA8|%s|%s|%s", seed_text, preset or "balanced", table.concat(parts, ","))
+  return string.format("RA9|%s|%s|%s", seed_text, preset or "balanced", table.concat(parts, ","))
 end
 function G.parse_share_code(code)
-  if code:match("^RA[4567]|") then return nil, "a 4.0-7.0 share code: 8.0 seeds differ (the Zurkie's hub, generator 8.0) - generate a new seed" end
-  local seed, preset, rest = code:match("^RA8|([^|]*)|([^|]*)|(.*)$")
-  if not seed then return nil, "not a Randomizer 8.0 share code" end
+  if code:match("^RA[45678]|") then return nil, "a 4.0-8.5 share code: 9.0 seeds differ (no hub, the story starts as in the game, generator 9.0) - generate a new seed" end
+  local seed, preset, rest = code:match("^RA9|([^|]*)|([^|]*)|(.*)$")
+  if not seed then return nil, "not a Randomizer 9.0 share code" end
   local user = {}
   for kv in rest:gmatch("[^,]+") do
     local k, v = kv:match("^([%w_]+)=(.*)$")
@@ -399,7 +382,7 @@ function G.parse_share_code(code)
 end
 
 function G.fingerprint(seed_text, s)
-  return G.hex(G.fnv1a(table.concat({ "RA8", G.VERSION, DB.version, seed_text, G.canonical(s) }, "\n"))):sub(1, 12)
+  return G.hex(G.fnv1a(table.concat({ "RA9", G.VERSION, DB.version, seed_text, G.canonical(s) }, "\n"))):sub(1, 12)
 end
 
 -- ------------------------------------------------------------------------------------------
@@ -747,7 +730,7 @@ local function attempt(seed_text, s, fp, n, yield)
   if s.campaign_mode ~= "vanilla" then
     local crng = G.rng(G.fnv1a(fp .. "#campaign#" .. n))
     local why
-    corder, why = RANDO_CAMPAIGN.sequence(s.campaign_mode, crng, s.random_start)
+    corder, why = RANDO_CAMPAIGN.sequence(s.campaign_mode, crng)
     if not corder then return nil, "campaign: " .. tostring(why) end
     s._campaign = RANDO_CAMPAIGN.build(corder, s, DB.locations)
     s._campaign_alt = vanilla_camp
@@ -1108,13 +1091,6 @@ function G.generate(seed_text, user, preset, yield)
           warnings[#warnings + 1] = string.format("start_weapons lowered to %d: the shop's 15 slots need the other weapons (restored_weapons adds 9)", r.start_short)
         end
         for _, m in ipairs(r.notes or {}) do warnings[#warnings + 1] = m end
-        if eff.hub then
-          -- 8.0: the hub's progression table, from its own random stream
-          if not (RANDO_CAMPAIGN and RANDO_CAMPAIGN.hub_plan) then return nil, "03_rando_campaign.lua (8.0) is missing" end
-          local plan, why = RANDO_CAMPAIGN.hub_plan(eff, G.rng(G.fnv1a(fp .. "#hub")), yield)
-          if not plan then return nil, "hub: " .. tostring(why) end
-          r.hub = plan
-        end
         return G.package(seed_text, eff, preset, fp, r, warnings, s)
       end
       errors[#errors + 1] = err
@@ -1125,13 +1101,13 @@ function G.generate(seed_text, user, preset, yield)
           warnings[#warnings + 1] = "armor turned on: without armor pieces these settings have " .. err:match(": (.*)$")
           break
         elseif eff.start_gadgets > 0 or eff.start_weapons > 0 then
-          -- 8.5.2: fewer items at the start leaves more for the Gold Bolts (a hub seed cannot use
-          -- Coordinates as items, so this comes before them)
+          -- 8.5.2: fewer items at the start leaves more for the Gold Bolts (this comes before
+          -- Coordinates as items)
           local k = eff.start_gadgets > 0 and "start_gadgets" or "start_weapons"
           eff[k] = eff[k] - 1
           warnings[#warnings + 1] = k .. " lowered to " .. eff[k] .. ": these settings have " .. err:match(": (.*)$")
           break
-        elseif not eff.planet_locks and not eff.hub then
+        elseif not eff.planet_locks then
           -- Coordinates are items too: with them the pool covers every Gold Bolt
           eff.planet_locks = true
           warnings[#warnings + 1] = "planet_locks turned on: without Coordinates these settings have " .. err:match(": (.*)$")
@@ -1211,7 +1187,7 @@ function G.package(seed_text, s, preset, fp, r, warnings, requested)
     G.stable_sort(levels.unlock, function(a, b) return a.sphere < b.sphere end)
   end
   return {
-    format = 8, generator = G.VERSION, data = DB.version,
+    format = 9, generator = G.VERSION, data = DB.version,
     seed = seed_text, preset = preset or "balanced", fingerprint = fp, settings = s,
     share_code = G.share_code(seed_text, requested or s, preset), warnings = warnings,
     start = { items = r.start, always = G.ALWAYS_START, bolts = s.start_bolts, raritanium = s.start_raritanium },
@@ -1227,7 +1203,6 @@ function G.package(seed_text, s, preset, fp, r, warnings, requested)
     campaign = r.campaign and { mode = s.campaign_mode, order = r.campaign, start = r.campaign[1],
                                 needs = RANDO_CAMPAIGN.NEEDS[s.campaign_mode] } or { mode = "vanilla" },
     restored_weapons = s.include_arsenal_restored == true,
-    hub = r.hub,                     -- 8.0: nil unless hub = true
   }
 end
 
@@ -1306,35 +1281,12 @@ function G.audit(seed)
       if not open[pid] then bad("levels: " .. pid .. " (the story takes you there) is not open from the start") end
     end
   end
-  -- 8.0 hub: the plan is whole and has no dead end in any order
-  if s.hub then
-    local h = seed.hub
-    if not h then bad("hub = true but the seed has no hub plan")
-    else
-      if #h.start ~= s.hub_start_coordinates then bad("hub: " .. #h.start .. " starting Coordinates, not " .. s.hub_start_coordinates) end
-      local seen = {}
-      for _, pid in ipairs(h.start) do
-        if seen[pid] then bad("hub: starting Coordinates twice for " .. pid) end
-        seen[pid] = "start"
-        if pid == h.planet or pid == h.finale_planet then bad("hub: " .. pid .. " cannot be a starting destination") end
-        if planet_index(pid) == nil then bad("hub: unknown planet " .. tostring(pid)) end
-      end
-      for _, pid in ipairs(h.queue) do
-        if seen[pid] then bad("hub: Coordinates for " .. pid .. " twice") end
-        seen[pid] = "queue"
-      end
-      for _, d in ipairs(h.destinations) do
-        if d.kind == "planet" and not seen[d.planet] then bad("hub: no Coordinates ever open " .. d.planet .. " (" .. d.id .. ")") end
-      end
-      if h.per_completion ~= s.hub_unlocks then bad("hub: unlocks per destination differ from the settings") end
-      local fin = h.destinations[#h.destinations]
-      if not (fin and fin.kind == "finale") then bad("hub: the finale is not the last destination") end
-      local ok, why = RANDO_CAMPAIGN.hub_check(h)
-      if not ok then bad("hub: " .. tostring(why)) end
+  -- 9.0: no hub plan; a campaign order begins with the story's start
+  if seed.hub then bad("a hub plan in a 9.0 seed (the hub was removed)") end
+  if seed.campaign and seed.campaign.order then
+    for i, id in ipairs(RANDO_CAMPAIGN.STORY_START) do
+      if seed.campaign.order[i] ~= id then bad("the campaign order does not start with " .. table.concat(RANDO_CAMPAIGN.STORY_START, " > ")) end
     end
-    if s.planet_locks or s.travel_lock then bad("hub seed with 7.0 level locks") end
-  elseif seed.hub then
-    bad("a hub plan in a seed without hub = true")
   end
   -- 6.0 the shop: every vendor slot sells one weapon, no weapon twice, none also elsewhere
   local sold = {}
@@ -1441,17 +1393,9 @@ function G.spoiler(seed)
     w(RANDO_CAMPAIGN.describe(seed.campaign.order))
     w("")
   end
-  if seed.hub then
-    w("ZURKIE'S BATTLEPLEX HUB (8.0, experimental: docs/HUB.md)")
-    w("  New Game: the randomizer takes Ratchet from the parade to Zurkie's. Travel from the hub with the")
-    w("  ship's planet menu or F6 (choose) / Ctrl+F6 (go). Finishing a destination takes you back to")
-    w("  Zurkie's, pays its rewards and opens the next Coordinates.")
-    w(RANDO_CAMPAIGN.hub_describe(seed.hub, function(pid)
-      local i = planet_index(pid)
-      return i and DB.planets[i].name or pid
-    end))
-    w("")
-  end
+  w("STORY START: a new game plays the prologue (Corson V), then Nefarious City, then Sargasso, as in")
+  w("  the game. The randomizer moves you nowhere; travel is the ship's planet menu.")
+  w("")
   if seed.levels then
     local lv = seed.levels
     w(lv.travel_lock and "LEVELS (locked: flying to a planet needs its Coordinates; the game's own story travel is never blocked)"

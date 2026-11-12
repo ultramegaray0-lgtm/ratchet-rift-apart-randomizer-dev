@@ -1,10 +1,10 @@
-"""Randomizer 8.0 offline command line and spoiler generator (needs Python 3.9+ and `pip install lupa`).
+"""Randomizer 9.0 offline command line and spoiler generator (needs Python 3.9+ and `pip install lupa`).
 
 It runs the same Lua generator the game runs (scripts/01_rando_data.lua, 02_rando_generator.lua, 03_rando_campaign.lua).
 
   python tools/rando.py generate --seed "my seed" [--preset balanced] [--set key=value ...] [--out DIR]
   python tools/rando.py random [--preset chaos]           # a random seed
-  python tools/rando.py share "RA8|my seed|hub|..."      # generate from a share code
+  python tools/rando.py share "RA9|my seed|balanced|..." # generate from a share code
   python tools/rando.py presets                           # the presets and what each changes
   python tools/rando.py batch --count 1000 [--preset all] # mass validation
   python tools/rando.py settings                          # list every setting and its default
@@ -104,7 +104,7 @@ def cmd_generate(args, eng, seed=None, preset=None, user=None):
     with open(os.path.join(out, "settings.lua"), "w", encoding="utf-8") as f:
         f.write(settings_lua(seed, preset, user))
     with open(os.path.join(out, "00_rando_seed.lua"), "w", encoding="utf-8", newline="\n") as f:
-        f.write("-- Pre-generated Randomizer 8.0 seed (tools/rando.py). Put it in <game>\\scripts to play this\n"
+        f.write("-- Pre-generated Randomizer 9.0 seed (tools/rando.py). Put it in <game>\\scripts to play this\n"
                 "-- exact seed; it replaces the seed in 04_rando_settings.lua. Delete it to go back.\n")
         f.write("RANDO_SEED = " + eng.G.serialize(s) + "\n")
     print(f"seed {seed!r} preset {preset} fingerprint {s.fingerprint} (attempt {s.attempt}, {time.time() - t:.3f}s)")
@@ -115,7 +115,7 @@ def cmd_generate(args, eng, seed=None, preset=None, user=None):
 
 
 def cmd_batch(args, eng):
-    presets = (["hub", "hub_chaos", "balanced", "chaos", "full", "campaign", "everything", "standard", "coordinates", "planet_shuffle",
+    presets = (["balanced", "chaos", "full", "campaign", "everything", "standard", "coordinates", "planet_shuffle",
                 "mission_shuffle", "full_campaign", "campaign_chaos"]
                if args.preset == "all" else [args.preset])
     import random
@@ -152,14 +152,13 @@ def random_settings(rnd, defaults):
     choice = {"start_coordinates": ["start_only", "first_two", "random_extra"],
               "weapon_logic": ["none", "light", "standard"], "accessibility": ["full", "beatable"],
               "campaign_mode": ["vanilla", "planet_shuffle", "mission_shuffle", "full", "chaos"],
-              "shop": ["shuffle", "vanilla"], "shop_prices": ["vanilla", "weapon", "percent", "random"],
-              "hub_finale": ["all", "half"]}
+              "shop": ["shuffle", "vanilla"], "shop_prices": ["vanilla", "weapon", "percent", "random"]}
     # some values outside the ranges on purpose: the generator must keep the default and say so
     ranges = {"start_weapons": (0, 6), "start_gadgets": (0, 3), "shop_price_percent": (0, 520),
               "shop_price_max_percent": (0, 520), "bolts_min": (50, 60000), "bolts_max": (50, 110000),
               "raritanium_min": (0, 3000), "raritanium_max": (0, 5200), "bolts_budget": (0, 600000),
               "raritanium_budget": (0, 20000), "bolts_percent": (0, 100), "start_bolts": (0, 120000),
-              "start_raritanium": (0, 6000), "hub_start_coordinates": (1, 5), "hub_unlocks": (0, 4)}
+              "start_raritanium": (0, 6000)}
     user = {}
     for k, d in defaults.items():
         if k in ("exclude", "start_items"):

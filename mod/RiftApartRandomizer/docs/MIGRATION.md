@@ -1,3 +1,21 @@
+# Moving from 8.5 (or 8.5.2) to 9.0
+
+**New seed: start a New Game.** 9.0 removes the Zurkie's hub, so its seeds differ (generator 9.0,
+share code RA9). Your progress files of earlier seeds stay in `companion\randomizer_saves`.
+
+1. Delete every old randomizer `.lua` file from `<game>\scripts`, **including `15_rando_hub.lua`**,
+   then copy the **13** new ones (each carries the kit version 9.0.0, checked at start as
+   `RANDO-KIT`, which also reports a leftover `15_rando_hub.lua`).
+2. `rando_give.dll` is unchanged (v6, the same bytes). Replace the `companion` folder (its version
+   text says 9.0). `rivet.toml` is unchanged.
+3. Use the kit's `04_rando_settings.lua`: it is your 8.5.2 file without the hub lines, preset
+   `balanced`. Your 8.5.2 file also works: rivet.log names each hub option it ignores, and
+   `preset = "hub"` becomes `balanced` (`hub_chaos` becomes `chaos`).
+4. Your defaults in `02_rando_generator.lua` (8.5.1) and Punk/Reaver owned from the start (8.5.2)
+   are part of 9.0 as they were.
+
+What changed for you: see CHANGELOG.md (9.0) and PLAYING.md.
+
 # Moving from 8.4 to 8.5
 
 **No new seed needed.** 8.5 gives identical seeds to 8.4 (and the same as 8.3), so progress carries

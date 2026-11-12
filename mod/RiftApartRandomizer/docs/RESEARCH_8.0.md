@@ -1,5 +1,7 @@
 # Randomizer 8.0: technical research report
 
+> **9.0 removed the hub** this report designed (CHANGELOG.md 9.0). The mission-system findings stay valid and are used by the lab and the director.
+
 What was investigated for the Zurkie's Battleplex hub, where each answer comes from, and which
 approach 8.0 implements. **Nothing in 8.0 has run in your game yet.** Every finding is marked by its
 source:

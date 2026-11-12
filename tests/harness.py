@@ -16,7 +16,41 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 MOD = pathlib.Path(os.environ.get("RANDO_MOD_DIR", ROOT / "mod" / "RiftApartRandomizer"))
 SIM = ROOT / "tests" / "sim" / "rivet_sim.lua"
 
+# 9.0: the tests were written for the 7.0-8.5 defaults (no Coordinates, the game's own order,
+# Raritanium 20-150); the user's defaults since 8.5.1 differ (02's G.DEFAULTS). Tests pin the
+# settings they were written for; tests/test_v90.py runs the user's real defaults and 04 file.
+# A pinned value never overrides what the test itself or its preset sets.
+CLASSIC_TEST_SETTINGS = {"planet_locks": False, "campaign_mode": "vanilla", "raritanium_min": 20, "raritanium_max": 150}
 DEFAULT_SETTINGS = {"seed": "test-seed-2", "preset": "standard"}
+# settings that also set a pinned key (7.0 names)
+_SETS_TOO = {"levels": ("planet_locks",), "mission_order": ("campaign_mode",), "filler_raritanium": ("raritanium_min", "raritanium_max")}
+_PRESET_KEYS = None
+
+
+def preset_keys(preset):
+    """the settings a preset of the kit's generator sets (read from 02_rando_generator.lua)"""
+    global _PRESET_KEYS
+    if _PRESET_KEYS is None:
+        L = lua54.LuaRuntime(unpack_returned_tuples=True)
+        L.execute("rivet = {}")
+        for f in ("01_rando_data.lua", "02_rando_generator.lua"):
+            L.execute((MOD / "scripts" / f).read_text(encoding="utf-8"))
+        P = L.globals().RANDO_GEN.PRESETS
+        _PRESET_KEYS = {name: set(P[name].keys()) for name in P.keys()}
+    return _PRESET_KEYS.get(preset, set())
+
+
+def classic_settings(settings=None):
+    """settings with CLASSIC_TEST_SETTINGS filled in where neither they nor their preset decide"""
+    st = dict(DEFAULT_SETTINGS)
+    st.update(settings or {})
+    taken = set(st) | preset_keys(st.get("preset") or "balanced")
+    for k in list(st):
+        taken |= set(_SETS_TOO.get(k, ()))
+    for k, v in CLASSIC_TEST_SETTINGS.items():
+        if k not in taken:
+            st[k] = v
+    return st
 
 
 def script_files(test_mode=False, dev_tools=False, scripts_dir=None):
@@ -55,8 +89,7 @@ class Game:
         self.files = files or script_files(test_mode, dev_tools, scripts_dir)
         if not settings_file:
             self.files = [f for f in self.files if not f.name.startswith("04_")]
-            st = dict(DEFAULT_SETTINGS)
-            st.update(settings or {})
+            st = classic_settings(settings)
             self.lua.execute("RANDO_SETTINGS = {" + ",".join(f"[{json.dumps(k)}]={lua_value(v)}" for k, v in st.items()) + "}")
         loader = self.lua.eval("function(src, name) local f, e = load(src, '@' .. name); if not f then return false, e end;"
                                " local ok, e2 = pcall(f); return ok, tostring(e2) end")

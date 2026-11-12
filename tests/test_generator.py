@@ -370,8 +370,8 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(cats["weapon"], 31 + 9)          # 31 usual (incl. ARSENAL_RESTORED) + 9 hidden
         # 5.0: the 24 armor pieces of the 8 sets you find, in 9 folders (2 of punk / reaver /
         # war machine are Robot Disguise and Wasteland Gear): 27 randomizable pieces
-        self.assertEqual(sum(1 for it in DB["items"].values() if it["category"] == "armor" and it["randomizable"]), 27)
-        self.assertEqual(sum(1 for it in DB["items"].values() if it["category"] == "armor" and it["owned_from_start"]), 30)
+        self.assertEqual(sum(1 for it in DB["items"].values() if it["category"] == "armor" and it["randomizable"]), 21)   # 8.5.2: not Punk, Reaver
+        self.assertEqual(sum(1 for it in DB["items"].values() if it["category"] == "armor" and it["owned_from_start"]), 36)   # 8.5.2: + Punk, Reaver
         self.assertEqual(cats["coordinates"], 10)
         self.assertEqual(cats["currency"], 2)
         self.assertEqual(len(VENDOR), 15)
@@ -442,7 +442,7 @@ class GeneratorTests(unittest.TestCase):
         user = {"start_weapons": 1, "weapon_logic": "standard", "raritanium": False, "shop": "vanilla",
                 "exclude": "weapon:ryno_8", "bolts_max": 20000, "shop_prices": "percent", "shop_price_percent": 80}
         a = self.gen("share-me", user, "chaos")
-        self.assertTrue(a["share_code"].startswith("RA8|share-me|chaos|"))
+        self.assertTrue(a["share_code"].startswith("RA9|share-me|chaos|"))
         self.assertIn("raritanium=false", a["share_code"])
         self.assertIn("bolts_max=20000", a["share_code"])
         seed, preset, u = self.eng.G.parse_share_code(a["share_code"])
@@ -450,7 +450,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(a["fingerprint"], b["fingerprint"])
         bad, why = self.eng.G.parse_share_code("RA6|x|standard|")[:2]
         self.assertIsNone(bad)
-        self.assertIn("8.0 seeds differ", why)
+        self.assertIn("9.0 seeds differ", why)
 
     def test_one_item_per_gold_bolt_and_fixed_start(self):
         for i in range(300):
@@ -486,9 +486,12 @@ class GeneratorTests(unittest.TestCase):
             self.assertNotIn(l.get("item"), ALWAYS_START)
 
     def test_too_few_items_is_refused_or_repaired(self):
-        # 5.0: armor fills Gold Bolts too; armor = false with too few items turns it back on
-        self.assertFalse(self.gen("vanilla-only", {"include_arsenal_restored": False})["settings"]["planet_locks"])
-        a = self.gen("vanilla-only", {"include_arsenal_restored": False, "armor": False})
+        # 5.0: armor fills Gold Bolts too; armor = false with too few items turns it back on.
+        # 8.5.2: without Coordinates the start gives up items first; Coordinates stay off
+        v = self.gen("vanilla-only", {"include_arsenal_restored": False, "planet_locks": False})
+        self.assertFalse(v["settings"]["planet_locks"])
+        self.assertTrue(any(w.startswith("start_gadgets lowered") for w in v["warnings"]), v["warnings"])
+        a = self.gen("vanilla-only", {"include_arsenal_restored": False, "armor": False, "planet_locks": False})
         self.assertTrue(a["settings"]["armor"])
         self.assertTrue(any("armor turned on" in w for w in a["warnings"]))
         armor = [k for k, it in DB["items"].items() if it["category"] == "armor" and it["randomizable"]]
@@ -699,7 +702,8 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(a["settings"]["start_gadgets"], 1)
         self.assertEqual(a["settings"]["bolts_max"], 10000)
         self.assertEqual(a["settings"]["shop_prices"], "weapon")
-        setting_warnings = [w for w in a["warnings"] if "scaled down" not in w]
+        # (currency notes: "scaled down", and the user's Raritanium minimum 120 x the rewards above the budget)
+        setting_warnings = [w for w in a["warnings"] if "scaled down" not in w and "budget" not in w]
         self.assertEqual(len(setting_warnings), 6, a["warnings"])
         self.assertTrue(any("not used since 4.0" in w for w in a["warnings"]))
 

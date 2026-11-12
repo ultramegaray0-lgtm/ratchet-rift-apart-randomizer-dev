@@ -3,9 +3,8 @@
   * 09_rando_real.lua:672 called a local before its definition (an error on every planet change)
   * Torren IV and Cordelion: "no checkpoint known" (they have no LANDING / SHIP / DEFAULT
     checkpoint): the checkpoint catalog places checkpoints by area and name and scores them
-  * a hub trip asked before the catalog is complete waits for it
   * a planet-menu landing is remembered as that planet's checkpoint
-  * the level bits are put back after a save load reset them
+  (9.0: the hub's trips, its catalog wait and its level bits are gone with the hub)
   * the shop search ran past rivet_hook's 8 ms frame budget every time: it is now sliced
   * mission names your game does not have are gone from the registry
   * ARSENAL_RESTORED's rivet_hook version: rivet.toml lists its folder, an installer puts it there
@@ -21,7 +20,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from luajson import py  # noqa: E402
 from harness import Game  # noqa: E402
-from test_hub import hub_game, to_hub, hub  # noqa: E402
+from story_helpers import level_game, started  # noqa: E402
 
 MOD = os.path.join(ROOT, "mod", "RiftApartRandomizer")
 SCRIPTS = os.path.join(MOD, "scripts")
@@ -97,7 +96,7 @@ class CatalogTests(unittest.TestCase):
         return T
 
     def test_every_planet_gets_a_checkpoint_and_never_a_tunnel(self):
-        g = to_hub(hub_game("v81-cat"))
+        g = started(level_game("v81-cat"))
         T = self.catalog(g)
         # 8.4: a planet's story start (CHK_<code>_START / _A_ / _01_) ranks first; Cordelion's and
         # Ardolis' are names your game listed in rounds 19-20
@@ -149,40 +148,9 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(n, 600)
         self.assertGreaterEqual(steps, 600 // int(T.CATALOG_SLICE))
 
-    def test_torren_and_cordelion_trips_land(self):
-        for pid in ("torren_iv", "cordelion"):
-            g = to_hub(hub_game("v81-trip-" + pid))
-            H = g.g.RANDO_HUB
-            self.catalog(g)
-            n = len(g.sim.warps) + len(g.sim.travels)
-            self.assertTrue(H.travel(pid, None, False, "test"))
-            g.step(400)
-            self.assertGreater(len(g.sim.warps) + len(g.sim.travels), n)
-            self.assertEqual(g.sim.planet, {"torren_iv": "Torren", "cordelion": "Cordelion"}[pid])
-            self.assertFalse(g.log_has("impossible"))
-
-    def test_a_trip_waits_for_the_catalog(self):
-        g = to_hub(hub_game("v81-wait"))
-        H, T = g.g.RANDO_HUB, g.g.RANDO_TRAVEL
-        T.catalog_reset()                                 # as if the catalog had just started
-        # (8.4: Cordelion has a landing seen in your logs now; Torren IV gets one only by its area:
-        # a SIMULATED name without the planet's code, so only the full catalog places it)
-        g.sim.checkpoint_list = g.lua.table_from([c for c in py(g.sim.checkpoint_list) if "_MOL" not in c] + ["CHK_GULCH_01_START"])
-        g.lua.execute('table.insert(SIM.CP_PLANET, { "GULCH", "Torren" })')
-        self.assertTrue(H.travel("torren_iv", None, False, "test"))
-        self.assertTrue(g.log_has("waits for the checkpoint catalog"))
-        for _ in range(60):
-            g.step(30)
-            if g.sim.planet == "Torren":
-                break
-        self.assertEqual(g.sim.planet, "Torren")
-        self.assertIsNone(H.wait_catalog)
-
     def test_a_menu_landing_is_remembered(self):
-        g = to_hub(hub_game("v81-menu"))
-        plan = py(g.seed.hub)
-        open_pid = plan["start"][0]
-        H = g.g.RANDO_HUB
+        g = started(level_game("v81-menu"))
+        open_pid = "sargasso"                             # open from the start with levels (the story goes there)
         cp = {"nefarious_city": "CHK_NEFCITY_SHIP", "savali": "CHK_SAV_01_LANDING", "blizar_prime": "CHK_BLIZAR_A_LANDINGPAD",
               "sargasso": "CHK_SARG_GELFACTORY_LANDINGPAD", "torren_iv": "CHK_MOL_01_START",
               "cordelion": "CHK_STATION_01_START", "ardolis": "CHK_ARD_01_ARRIVAL", "viceron": "CHK_ZORD_01_START"}[open_pid]
@@ -191,17 +159,6 @@ class CatalogTests(unittest.TestCase):
         g.step(900)
         self.assertEqual(py(g.state.travel.landed)[open_pid], cp)
         self.assertTrue(g.log_has("landing on"))
-
-
-class LevelBitsTests(unittest.TestCase):
-    def test_level_bits_come_back_after_a_load_reset_them(self):
-        g = to_hub(hub_game("v81-levels"))
-        self.assertEqual(g.sim.levels & 0x7FE, 0x7FE)
-        g.sim.levels = 0                                  # round 17: 0x0 after a reload
-        g.travel("NefCity", 30)
-        g.step(600)
-        self.assertEqual(g.sim.levels & 0x7FE, 0x7FE)
-        self.assertTrue(g.log_has("level bits were reset"))
 
 
 class ShopSliceTests(unittest.TestCase):

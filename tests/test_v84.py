@@ -13,8 +13,10 @@ What round 20 showed, and what each test here pins down:
     pointers to slot objects.
   * ARSENAL_RESTORED was loaded but the seed was made without it (the companion answered late).
   * A hub trip went to a mid-mission checkpoint a test trip had left as "where you last landed".
-The game here is the simulator (tests/sim/rivet_sim.lua), NOT your game. Its 8.4 additions (the
-hero swap and the "go to" step) are modelled on the round 17/20 logs and marked SIMULATED there.
+9.0: the hero checks, the story priming and the story reload lived in the Zurkie's hub script and
+are gone with it, with their tests; the registry, weapon types, shop, ARSENAL_RESTORED, landings,
+kit check and install tests stay. The game here is the simulator (tests/sim/rivet_sim.lua), NOT
+your game.
 """
 import os
 import sys
@@ -25,7 +27,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from luajson import py  # noqa: E402
 from harness import Game  # noqa: E402
-from test_hub import hub_game, to_hub, hub, go  # noqa: E402
+from story_helpers import level_game, started  # noqa: E402
 
 SCRIPTS = os.path.join(ROOT, "mod", "RiftApartRandomizer", "scripts")
 
@@ -33,7 +35,7 @@ SCRIPTS = os.path.join(ROOT, "mod", "RiftApartRandomizer", "scripts")
 def game(seed="v84-1", settings=None, missions=None, test_travel=True, **kw):
     st = {"test_travel": test_travel}
     st.update(settings or {})
-    g = to_hub(hub_game(seed, st, missions=missions, **kw))
+    g = started(level_game(seed, st, missions=missions, **kw))
     g.step(1200)                     # the checkpoint catalog
     return g
 
@@ -56,16 +58,6 @@ def warp(g, pid, frames=900):
     select(g, pid)
     g.press(".", ctrl=True)
     settle(g, frames)
-
-
-def go_to(g, mission, objective, planet, hero, on_start=True):
-    g.sim.go_to[mission] = g.lua.table_from({"o": objective, "planet": planet, "hero": hero})
-    g.sim.goto_on_start = on_start
-
-
-def obj(g, mission):
-    o = hub(g).get("obj", {}).get(mission)
-    return (o or {}).get("o"), (o or {}).get("s")
 
 
 class RegistryTests(unittest.TestCase):
@@ -93,111 +85,15 @@ class RegistryTests(unittest.TestCase):
         for seg in ("viceron_1", "cordelion_1", "ardolis_1"):
             self.assertIn(C.BY_ID[seg].entry, logs)
 
-    def test_heroes_do_not_change_the_seed(self):
-        a = hub_game("v84-fp")
+    def test_the_fingerprint_is_the_generators(self):
+        a = level_game("v84-fp")
         a.companion_restore()
         a.wait_seed()
         self.assertEqual(a.seed.fingerprint, a.g.RANDO_GEN.fingerprint("v84-fp", a.seed.settings))
-        self.assertEqual(a.g.RANDO_GEN.VERSION, "8.0.0")          # generator unchanged: saves carry over
+        self.assertEqual(a.g.RANDO_GEN.VERSION, "9.0.0")          # 9.0: new seeds (start them with NEW GAME)
 
 
-class HeroTests(unittest.TestCase):
-    def test_a_stale_saved_hero_is_never_trusted(self):
-        """round 20: the save said rivet, the game had Ratchet; Viceron was played as Ratchet"""
-        g = game("v84-stale")
-        g.g.RANDO_HUB.state().hero = "rivet"
-        self.assertEqual(g.sim.playing, "ratchet")
-        warp(g, "viceron")
-        self.assertEqual(g.sim.playing, "rivet")
-        self.assertEqual(g.sim.started_as["MIS_ZORD_01"], "rivet")
-        self.assertFalse(g.log_has("failed: already playing"))
-
-    def test_already_playing_counts_as_confirmed(self):
-        g = game("v84-already")
-        H = g.g.RANDO_HUB
-        got = []
-        H.ensure_hero("ratchet", lambda ok, how: got.append((ok, how)))
-        self.assertEqual(got, [(True, "already")])
-        self.assertEqual(len(py(g.sim.heroes)), 0)
-
-    def test_the_story_waits_for_a_slow_swap(self):
-        g = game("v84-slow")
-        g.sim.swap_frames = 150
-        warp(g, "torren_iv", 1500)
-        self.assertEqual(g.sim.started_as["MIS_MOL_01_FIRST_VISIT"], "rivet")
-        self.assertTrue(g.log_has("confirmed after the swap"))
-
-    def test_a_refused_swap_is_said_and_the_story_still_starts(self):
-        g = game("v84-refused")
-        g.sim.swap_refuse = "the hero has no HeroTransformationManager"
-        warp(g, "torren_iv", 1800)
-        self.assertTrue(g.note_has("could not switch to rivet"))
-        self.assertEqual(g.sim.get_mission("MIS_MOL_01_FIRST_VISIT"), 2)
-
-    def test_zurkies_own_visit_keeps_its_hero_through_a_load(self):
-        g = game("v84-hubhero", missions={"MIS_ZURK_01_VISIT_01": 4})
-        H = g.g.RANDO_HUB
-        h = H.state()
-        h.done["scarstu_1"] = 1
-        h.n_done = 1
-        g.press("/")                                       # scarstu_2 (Rivet) at Zurkie's
-        settle(g, 600)
-        self.assertEqual(hub(g)["current"], "scarstu_2")
-        self.assertEqual(g.sim.playing, "rivet")
-        g.travel("Zurkon")                                 # a load at Zurkie's
-        settle(g, 600)
-        self.assertEqual(g.sim.playing, "rivet")
-
-    def test_back_at_zurkies_is_ratchet(self):
-        g = game("v84-back")
-        warp(g, "torren_iv")
-        self.assertEqual(g.sim.playing, "rivet")
-        g.press("[")
-        g.press("[")
-        settle(g, 900)
-        self.assertEqual(g.sim.planet, "Zurkon")
-        self.assertEqual(g.sim.playing, "ratchet")
-
-
-class StoryStartTests(unittest.TestCase):
-    def test_hub_trip_primes_the_story_and_its_first_step_finishes_on_landing(self):
-        """the planet loads with the story active and its hero there (round 20: Savali)"""
-        g = hub_game("v84-prime")
-        g.sim.ship_near = True
-        to_hub(g)
-        plan = py(g.seed.hub)
-        target = next(d for d in plan["destinations"] if d["planet"] in plan["start"] and d["visit"] == 1)
-        planet = {"savali": "Savali", "blizar_prime": "Blizar", "torren_iv": "Torren", "cordelion": "Cordelion",
-                  "nefarious_city": "NefCity", "sargasso": "Sargasso", "ardolis": "Ardolis"}[target["planet"]]
-        m = target["missions"][0]
-        go_to(g, m, "OBJ_TEST_GO_TO_PLANET", planet, target["hero"], on_start=False)
-        go(g, target["id"])
-        settle(g, 600)
-        self.assertEqual(g.sim.started_as[m], target["hero"])
-        self.assertTrue(g.log_has("prime\t" + target["id"] + ":"))
-        self.assertEqual(obj(g, m), ("OBJ_TEST_GO_TO_PLANET", 2))
-        self.assertFalse(any("[STORY RELOAD]" in x for x in py(g.state.history)))
-
-    def test_on_planet_start_that_waits_is_reloaded_and_then_moves(self):
-        """the ship's menu lands first and starts the story there; when "go to" waits (it does
-        not finish on a start there), the planet is reloaded once (round 20: Viceron moved on
-        after its reload)"""
-        g = game("v84-reload", test_travel=False)
-        go_to(g, "MIS_ZORD_01", "OBJ_ZORD_01_GO_TO_ZORDOOM", "Viceron", "rivet", on_start=False)
-        H = g.g.RANDO_HUB
-        g.state.access["viceron"] = True
-        H.state().open["viceron"] = True
-        cp = "CHK_ZORDOOM_START"
-        g.fire("PlanetMenuAcceptEvent", DestinationCheckpointName=cp, InterplanetaryCheckpointName="CHK_TRANSITION_TO_ZORDOOM")
-        g.sim.travel_queue[len(g.sim.travel_queue) + 1] = g.lua.table_from({"planet": "Viceron", "at": g.sim.frame + 2, "cp": cp})
-        settle(g, 900)
-        self.assertEqual(obj(g, "MIS_ZORD_01"), ("OBJ_ZORD_01_GO_TO_ZORDOOM", 1))
-        settle(g, 2400)
-        self.assertTrue(any("[STORY RELOAD] viceron_1" in x for x in py(g.state.history)))
-        self.assertEqual(g.sim.planet, "Viceron")
-        self.assertEqual(obj(g, "MIS_ZORD_01"), ("OBJ_ZORD_01_GO_TO_ZORDOOM", 2))
-        self.assertFalse(g.log_has("RANDO-ERROR"))
-
+class LandingTests(unittest.TestCase):
     def test_menu_landings_are_remembered_test_trips_are_not(self):
         g = game("v84-landed")
         warp(g, "torren_iv")
@@ -308,7 +204,7 @@ class ArsenalTests(unittest.TestCase):
 
         def before(gm):
             gm.sim.configs["B9CBAD67F39CCC3F"] = gm.lua.table_from({"type": "WeaponItemConfig", "fields": gm.lua.table_from({})})
-        g = Game(settings={"seed": "v84-ar", "preset": "hub", "restored_weapons": "auto"}, before_scripts=before)
+        g = Game(settings={"seed": "v84-ar", "preset": "balanced", "restored_weapons": "auto"}, before_scripts=before)
         g.step(200)
         self.assertTrue(g.log_has("ARSENAL_RESTORED is installed"))
         self.assertTrue(g.log_has("Mr. Zurkon item config loaded"))
@@ -317,30 +213,30 @@ class ArsenalTests(unittest.TestCase):
         del marker
 
     def test_a_random_seed_waits_for_the_companion_not_a_timer(self):
-        g = Game(settings={"seed": "random", "preset": "hub", "restored_weapons": "auto"})
+        g = Game(settings={"seed": "random", "preset": "balanced", "restored_weapons": "auto"})
         g.step(4000)
         self.assertFalse(g.log_has("did not answer"))
         self.assertEqual(g.lua.eval("rando_arsenal_mode()"), "auto")
 
     def test_a_fixed_seed_still_times_out(self):
-        g = Game(settings={"seed": "v84-fixed", "preset": "hub", "restored_weapons": "auto"})
+        g = Game(settings={"seed": "v84-fixed", "preset": "balanced", "restored_weapons": "auto"})
         g.step(3700)
         self.assertTrue(g.log_has("the companion did not answer: treated as not installed"))
 
 
 class KeyTests(unittest.TestCase):
-    def test_campaign_key_says_nothing_in_a_hub_seed(self):
+    def test_campaign_key_says_nothing_in_the_games_own_order(self):
         g = game("v84-f12")
         n = len(py(g.sim.notes))
         g.press("F12")
         self.assertEqual(len(py(g.sim.notes)), n)
-        self.assertTrue(g.log_has("no campaign order in this seed (hub seed)"))
+        self.assertTrue(g.log_has("no campaign order in this seed (the game's own order)"))
 
 
 class Round20LogTests(unittest.TestCase):
     def test_round20_events_replay_without_errors(self):
         from test_runtime import RealLogReplayTests
-        g = hub_game("v84-r20")
+        g = level_game("v84-r20")
         g.companion_restore()
         g.travel("NefCity", 5)
         g.step(60)
@@ -360,8 +256,8 @@ class Round20LogTests(unittest.TestCase):
 
 class VersionTests(unittest.TestCase):
     def test_versions(self):
-        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "8.5.0"'), ("15_rando_hub.lua", 'H.VERSION = "8.5.0"'),
-                           ("16_rando_testtravel.lua", 'TT.VERSION = "8.5.0"')):
+        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "9.0.0"'), ("16_rando_testtravel.lua", 'TT.VERSION = "9.0.0"'),
+                           ("02_rando_generator.lua", 'G.VERSION = "9.0.0"'), ("03_rando_campaign.lua", 'C.VERSION = "9.0.0"')):
             with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
                 self.assertIn(want, f.read(), name)
 
@@ -374,7 +270,7 @@ class KitCheckTests(unittest.TestCase):
     def test_a_complete_kit_says_so(self):
         g = Game(settings_file=True)
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 8.5.0"))
+        self.assertTrue(g.log_has("RANDO-KIT all 13 scripts are 9.0.0"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
     def test_a_missing_or_older_script_is_reported(self):
@@ -399,10 +295,10 @@ class InstallTests(unittest.TestCase):
     def test_scripts(self):
         import re
         text = self.install_text()
-        listed = set(re.findall(r"\b(\d\d_rando_[a-z]+)\b", text.split("Copy the 14 files")[1].split("Use this kit")[0]))
+        listed = set(re.findall(r"\b(\d\d_rando_[a-z]+)\b", text.split("Copy the 13 files")[1].split("Use this kit")[0]))
         shipped = {f[:-4] for f in os.listdir(os.path.join(self.KIT, "scripts")) if f.endswith(".lua")}
         self.assertEqual(listed, shipped)
-        self.assertEqual(len(shipped), 14)
+        self.assertEqual(len(shipped), 13)
         g = Game()
         self.assertEqual(set(g.R.KIT_FILES.values()), shipped)
 

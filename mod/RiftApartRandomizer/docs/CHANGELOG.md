@@ -2,6 +2,59 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## 9.0 (2026-11-12): no hub; the story starts as in the game
+
+Asked for: a version without the Zurkie's hub, starting with the prologue, then Nefarious City.
+Built on your edited 8.5.2 scripts (01-06, 09), which are the baseline: your defaults in 02
+(`planet_locks = true`, `campaign_mode = "planet_shuffle"`, `shop_prices = "weapon"`, Raritanium
+120-1,000) and Punk/Reaver owned from the start are unchanged.
+
+### Removed: the Zurkie's hub (8.0-8.5)
+- `15_rando_hub.lua` is gone. A New Game is no longer taken to Zurkie's: the parade plays on, the
+  game's own rifts take you to Nefarious City, and finishing its story takes you to Sargasso. The
+  randomizer moves you nowhere, writes no mission state, sets no level bits or travel flag, and
+  swaps no hero. Round 22's crash followed a warp to `CHK_NEFCITY_SHIP` with the story primed from
+  Cordelion (the probable cause, not proven); 9.0 makes no warp of that kind.
+- Presets `hub` and `hub_chaos` are retired: they become `balanced` and `chaos`, with a note. The
+  seed is then identical to the replacement preset's.
+- Seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_revisits` and
+  in-game options `hub_*`, `key_hub`, `key_hub_return`, `story_on_arrival`,
+  `story_prime_before_travel`, `story_reload_stuck`, `key_story` are retired. Each one still in a
+  settings file is named in rivet.log (`... is gone in 9.0`) and ignored.
+- The story-on-arrival starter, the hero checks and the story reload lived in the hub script and
+  are gone with it. Test travel (`test_travel = true`) now only moves you.
+- The kit check reports a leftover `15_rando_hub.lua` from an older kit (rivet.log and on screen).
+  With a 9.0 seed that file does nothing (all of it waits for a hub plan), but it binds the old keys.
+
+### The story's start is fixed in every mission order
+- `03_rando_campaign.lua`: `C.STORY_START` = the leading visits the game itself travels to
+  (`arrival = "story"`): `corson_intro > nefcity_1 > sargasso_1`. Every order of every mode
+  (`planet_shuffle`, `mission_shuffle`, `full`, `chaos`) begins with them; only later visits move.
+- `random_start` (a campaign beginning elsewhere) is retired; `full_campaign` and `campaign_chaos`
+  keep their mission shuffle with the fixed start. No mode needs `new_game_init` any more.
+- The generator's audit checks the start of every campaign order.
+
+### Seeds
+- Generator 9.0.0, seed format 9, share code `RA9`. 4.0-8.5 share codes are refused with the reason.
+  The generator version is in the fingerprint, so every 9.0 seed is new: start it with New Game.
+- The kit's `04_rando_settings.lua` is your 8.5.2 file without its hub lines, with
+  `preset = "balanced"` (your G.DEFAULTS as they stand). Your commented values are kept.
+- The spoiler's hub section is replaced by a STORY START line.
+
+### Tools and tests
+- `tools/build_data.py` reproduces your 8.5.2 `01_rando_data.lua` byte for byte (Punk and Reaver
+  are `findable = "start"`; their sources stay as filler-only locations, as in your file). Before
+  this, re-running it reverted your edit. `data/game_db.json` matches.
+- `tests/test_v90.py` (new): no hub anywhere; retired presets and settings; every mode starts with
+  the prologue, Nefarious City and Sargasso; your 9.0 and 8.5.2 settings files; a New Game played to
+  Sargasso with no warp, flight, mission write or hero swap; a leftover hub script reported and
+  inert; the planet menu still locks planets with levels.
+- The tests now pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
+  no Coordinates, the game's own order, Raritanium 20-150) instead of relying on the defaults, which
+  you changed in 8.5.1. A pinned value never overrides the test's own settings or its preset.
+- Removed: `test_hub.py`, `test_regression_v83.py`, `test_regression_v84.py` (9.0 changes seeds on
+  purpose), and the hub's story/hero tests in test_v81-v85.
+
 ## 8.5 (2026-11-12): robustness pass on 8.4
 
 No round 21 log yet, so nothing here comes from a new game report: every fix comes from reading the

@@ -1,5 +1,7 @@
 # Features and limitations (Randomizer 8.0)
 
+> **9.0:** the Zurkie's hub below is removed. A New Game plays the prologue, then Nefarious City, then Sargasso, as in the game (PLAYING.md, CHANGELOG.md).
+
 Each line says how it is known to work:
 
 - **game**: seen working in your game, in a rivet.log you sent (rounds 1-16).
@@ -10,7 +12,7 @@ Each line says how it is known to work:
 
 Round 16 ran 4.0 in your game. 5.0, 6.0 and 7.0 have not run in the game yet.
 
-## The 8.0 requirements (Zurkie's hub, experimental)
+## The 8.0 requirements (Zurkie's hub, experimental; REMOVED in 9.0, kept for the record)
 
 | Requirement | 8.0 | Evidence |
 |---|---|---|

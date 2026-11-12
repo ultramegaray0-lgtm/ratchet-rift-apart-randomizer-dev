@@ -1,56 +1,57 @@
-# Verification report: Randomizer 8.5 (2026-11-12)
+# Verification report: Randomizer 9.0 (2026-11-12)
 
-Each feature is placed in the four categories you asked for. "Game" means one of your rivet.logs
-(rounds 13-20) shows it working. **Neither 8.5 nor 8.4 has run in the game** (there is no round 21
-log). Both were built on a Linux machine without the game. A feature is only listed under "actual
-game execution" when a round showed it with code that 8.5 kept unchanged.
+Each feature is placed in four categories. "Game" means one of your rivet.logs (rounds 13-22) shows
+it working. **9.0 has not run in the game.** It was built on a Linux machine without the game. A
+feature is only listed under "actual game execution" when a round showed it with code 9.0 kept.
 
 | | |
 |---|---|
-| **A** | verified by automated tests (run_tests.py: 340 tests, 0 failures; big_batch: 43,000 seeds valid) |
+| **A** | verified by automated tests (run_tests.py: 293 tests, 0 failures, 17 skipped; big_batch: 41,000 seeds valid) |
 | **S** | verified by static inspection (code review, byte checks, data checked against your logs) |
 | **G** | verified by actual game execution (round number) |
 | **N** | not verified: needs the game |
 
 | Feature | A | S | G | N: what is still unknown |
 |---|---|---|---|---|
-| Seed generation, solver, spoiler, share codes | A | S | G (14-20) | |
-| Same seeds as 8.3 (saved progress carries over) | A | S | | |
-| **8.5: identical seeds to 8.4** (every field, 175 seeds, 7 presets) | A | S (generation scripts differ only in the version tag) | | |
-| New Game → Zurkie's at the wrench, MIS_INTRO written complete | A | | G (17) | |
-| Two starting Coordinates, level bits, travel flag | A | | G (17-20) | |
-| rando_give.dll v6 (source = shipped binary, byte for byte) | A | S | G (17-20: "0x7") | |
-| Hub trips: warp, ship's flight, planet menu send-back | A | | G (17-20) | |
-| Destination ladder: available → start, inactive → available → start | A | | G (17: Zurkie's 1 played to the end) | replay step |
-| **8.4: hero checked with the game before a start** | A | S (rivet_hook source: "already playing as that hero") | | N: first run |
-| **8.4: four registry heroes corrected** | A | S (walkthroughs, rounds 17/20) | | N: each visit as its hero |
-| **8.4: story started before the trip** | A | | partly (20: Savali, active before the warp, finished "go to") | N: deliberate prime |
-| **8.4: reload of a story stuck at "go to"** | A | | partly (20: Viceron moved on after a reload) | N: the automatic reload |
-| **8.4: entry points CHK_ZORDOOM_START, CHK_CORD_A_START** | A | S (listed by your game) | CHK_ARD_START (20) | N: the two new ones |
-| Viceron's broken lighting | | | | N: cause unproven (KNOWN_ISSUES.md 1.5) |
-| Story on arrival (test travel, menu) | A | | G (20: Ardolis, Savali) | |
+| **9.0: no hub: the kit has 13 scripts, no RANDO_HUB, no hub options** | A | S | | |
+| **9.0: New Game plays the prologue, Nefarious City, Sargasso; the randomizer warps, flies, writes and swaps nothing** | A (simulated: the parade, the game's own travel) | S (the only warps, flights and mission writes left: test travel, the test-mode lab, the director once mission control is verified, and the locked-level send-back after a planet-menu landing) | the game's own travel itself: G (16: parade → Nefarious City → Sargasso without a planet menu) | N: a full 9.0 New Game |
+| **9.0: every mission order starts prologue > Nefarious City > Sargasso** | A (41,000 seeds, independent check) | S | | |
+| **9.0: retired presets/options named in rivet.log; your 8.5.2 settings file still loads** | A | | | |
+| **9.0: a leftover 15_rando_hub.lua is reported and inert with a 9.0 seed** | A (the real 8.5 file loaded) | S (every action in it waits for a hub plan) | | |
+| Your 8.5.1 defaults and 8.5.2 data (Punk/Reaver owned) | A | S (build_data.py reproduces your 01 byte for byte) | Punk/Reaver refused: G (22) | |
+| Seed generation, solver, spoiler, share codes | A | S | G (14-22) | |
+| rando_give.dll v6 (source = shipped binary, byte for byte) | A | S | G (17-22: "0x7") | |
+| Locked levels: planet menu send-back, story planets open | A | | send-back: G (17) | |
 | Test travel (off in the kit) | A | | G (19-20) | |
 | Checkpoint catalog without frame-budget errors | A | | G (19-20) | |
-| Weapon and gadget deliveries | A | | G (14-20) | Glitch is never confirmed |
-| **8.4: weapon types learned only from purchases** | A | S | | N |
-| Armor: Gold Bolt → armor, pod interception | A | | G (17, 20: "armor give verified", "intercepting 25") | which pods use it |
-| Bolts and Raritanium rewards | A | | sent (20) | N: amount actually added |
-| Ms. Zurkon slot map and prices | A | S (DDL: list of pointers) | | **N: never applied in game** (rounds 18-20 failed: fixed in 8.4) |
-| Shop fallback (non-vendor weapons given once) | A | | G (18, 20) | |
-| ARSENAL_RESTORED loaded by rivet_hook | | | G (18-20) | |
-| **8.4: ARSENAL_RESTORED detected by the game** | A | | | N: whether the config is loaded at start |
-| AR weapons as rewards | A | | | N |
-| Save / restore through the companion | A (Lua side) | S (PowerShell by hand) | G (14-20) | pwsh tests skipped |
-| **8.5: late restore keeps this session's currency, confirmed items, armor/shop/hub records** | A | S | | N: a late companion in game |
-| **8.5: companion keeps a refused save aside** | | S (by hand; pwsh can't run here) | | N |
-| **8.4: kit check (RANDO-KIT)** (8.5: all 14 scripts say 8.5.0) | A | | | N |
-| **8.5: mission calls wait through loads; unanswered requests are taken back** | A (simulated helper) | S (rando_give.dll source: one request per pump, DONE written last) | | N: needs a helper that stalls, which no round has shown |
-| **8.5: New Game clears the hub's and the delivery's session record** | A | S | | N |
-| **8.5: shop-only weapons given without a working helper** | A | S | | N |
-| **8.5: planet-menu landing saved at once (levels seeds)** | A | | | N |
+| Weapon and gadget deliveries | A | | G (14-22) | Glitch is never confirmed |
+| Weapon types learned only from purchases | A | S | | N |
+| Armor: Gold Bolt → armor, pod interception | A | | G (17, 20, 22) | which pods use it |
+| Bolts and Raritanium rewards | A | | sent (20, 22) | N: amount actually added |
+| Ms. Zurkon slot map and prices | A | S (DDL: list of pointers) | | **N: never applied in game** (22: frame budget, weapons given directly) |
+| Shop fallback (non-vendor weapons given once) | A | | G (18, 20, 22) | |
+| ARSENAL_RESTORED loaded by rivet_hook, detected in game | A | | G (18-22) | |
+| Save / restore through the companion | A (Lua side) | S (PowerShell by hand) | G (14-22) | pwsh tests skipped |
+| Kit check (RANDO-KIT) | A | | G (21-22) | |
+| 8.5: mailbox take-back, loads waited through, late restore merge, shop routes | A | S | | N: needs a stalled helper or late companion |
 | Finale | A | | | N: never reached |
 
-## What was done in this pass
+## What was done for 9.0
+
+1. **The hub removed**: `15_rando_hub.lua` deleted; its presets, seed settings and in-game options
+   retired with a rivet.log line each; every `RANDO_HUB` call taken out of 10, 11, 14 and 16; the
+   kit check reports a leftover hub script.
+2. **The story's start fixed**: 03's `C.STORY_START` (the visits with `arrival = "story"`) begins every
+   campaign order; `random_start` retired; the audit checks it.
+3. **Your edits kept**: 01-06 and 09 from your upload are the baseline commit. `build_data.py` now
+   reproduces your 01; before, re-running it reverted Punk/Reaver.
+4. **Tests**: `test_v90.py` (20 tests, above); the older suites pin the settings they were written for
+   instead of relying on defaults you changed; the hub's tests are removed.
+5. **Seeds**: 41,000 seeds (BATCH_9.0.txt), including 6,000 from your kit 04 file with and without
+   ARSENAL_RESTORED.
+
+## Earlier passes (8.5)
+
 
 1. **Audit of the 17 areas you listed**, by reading the 8.4 code with the question "what happens
    when this step fails, comes late, or happens twice": campaign generation, progression, hero

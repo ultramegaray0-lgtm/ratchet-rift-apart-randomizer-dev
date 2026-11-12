@@ -10,8 +10,8 @@ game:
   * the companion's late restore dropped this session's currency payments, could put a delivery
     the game had confirmed back to "queued" (a second give), and lost the armor sources, the shop's
     direct gifts, the hub's objective record and the armor baseline gathered before it.
-  * a New Game kept the hub's session record of the old run (a destination reloaded there could
-    not be reloaded in the new run) and the delivery's weapon-type session state.
+  * a New Game kept the delivery's weapon-type session state (and the hub's session record: 9.0
+    removed the hub and that test).
   * the history grew without bound in memory.
   * Ms. Zurkon: without rando_give.dll, with a helper that stopped, or with a vendor that was never
     found in memory, the seed's shop-only weapons had no route (the header promised a direct gift).
@@ -24,7 +24,6 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import Game  # noqa: E402
 from test_campaign import campaign_game  # noqa: E402
-from test_hub import hub_game, to_hub  # noqa: E402
 
 MB_REQ, MB_DONE, MB_STATUS = 0x10, 0x14, 0x0C
 
@@ -208,17 +207,6 @@ class NewGameTests(unittest.TestCase):
         self.assertFalse(G.baseline)
         self.assertIsNone(G.last_unknown)
         self.assertIsNone(G.last_bought)
-
-    def test_hub_session_record_is_cleared(self):
-        g = to_hub(hub_game("v85-ng"))
-        H = g.g.RANDO_HUB
-        g.lua.execute("RANDO_HUB.session.reloaded = { x = 5 }; RANDO_HUB.session.started = { MIS_X = 5 };"
-                      "RANDO_HUB.session.keeper = 3; RANDO_HUB.return_at = 99999")
-        g.R.reset_for_new_game("test")
-        self.assertEqual(len(list(H.session.reloaded.keys())), 0)
-        self.assertEqual(len(list(H.session.started.keys())), 0)
-        self.assertEqual(H.session.keeper, 0)
-        self.assertIsNone(H.return_at)
 
 
 class HistoryTests(unittest.TestCase):

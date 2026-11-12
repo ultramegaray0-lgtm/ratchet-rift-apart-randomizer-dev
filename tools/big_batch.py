@@ -1,4 +1,4 @@
-"""8.0 release validation: tens of thousands of seeds through the generator's own audit and the
+"""9.0 release validation: tens of thousands of seeds through the generator's own audit and the
 independent verifiers written in Python from the documented rules (tests/test_generator.py verify,
 tests/test_campaign.py verify_campaign / verify_fallback). Run from the project root:
 
@@ -11,9 +11,8 @@ Every seed must pass ALL of:
   verify_campaign  visit-by-visit replay (level-locked seeds in the game's own order, reordered
                    mission orders in their order): no visit ever waits for something unobtainable
   verify_fallback  the order that really runs until mission control is verified (the game's own)
-  verify_hub       8.0 hub seeds: the two (or more) starting Coordinates, every planet's Coordinates
-                   exactly once, and EVERY order a player could choose has something to do until
-                   the finale (tests/test_hub.py, written independently of 03_rando_campaign.lua)
+  verify_story_start  9.0: no hub plan, and every campaign order begins with the prologue, Nefarious
+                   City, Sargasso (tests/test_v90.py, written independently of 03_rando_campaign.lua)
 A refused seed counts only if the refusal is honest (fewer grantable items than Gold Bolts)."""
 import argparse
 import random
@@ -25,16 +24,12 @@ import rando  # noqa: E402
 from luajson import py  # noqa: E402
 from test_generator import verify, honest_refusal  # noqa: E402
 from test_campaign import verify_campaign, verify_fallback  # noqa: E402
-from test_hub import verify_hub  # noqa: E402
+from test_v90 import verify_story_start, USER_SETTINGS  # noqa: E402
 
 
 def check(d):
     probs = list(verify(d))
-    if d["settings"].get("hub"):
-        if not d.get("hub"):
-            probs.append("hub seed without a plan")
-        else:
-            probs += verify_hub(d["hub"], d["settings"])[0]
+    probs += verify_story_start(d)
     if d["settings"]["travel_lock"] or d["settings"]["campaign_mode"] != "vanilla":
         probs += verify_campaign(d)
         probs += verify_fallback(d)
@@ -69,16 +64,17 @@ def main(argv=None):
             bad.append((label, seed, preset, user, p[:3])); return
         valid += 1
 
-    hubs = ["hub", "hub_chaos"]
-    for p in hubs:
+    # 9.0: the user's own 04_rando_settings.lua (restored_weapons "auto" is decided in the game:
+    # both answers), and the retired hub presets (they fall back to balanced / chaos)
+    user_preset, user_opts = USER_SETTINGS()
+    for ar in (False, True):
+        u = dict(user_opts, restored_weapons=ar)
         for i in range(n(3000)):
-            run("hub", f"big8-{p}-{i}", {}, p)
-    for name, user in (("hub-3-coords", {"hub_start_coordinates": 3}), ("hub-unlock-2", {"hub_unlocks": 2}),
-                       ("hub-half", {"hub_finale": "half"}), ("hub-no-revisits", {"hub_revisits": False}),
-                       ("hub-restored", {"restored_weapons": True}), ("hub-4-3", {"hub_start_coordinates": 4, "hub_unlocks": 3})):
+            run("your-04", f"big9-04-{ar}-{i}", u, user_preset)
+    for p in ("hub", "hub_chaos"):
         for i in range(n(500)):
-            run(name, f"big8-{name}-{i}", user, "hub")
-    print(f"8.0 hub: {valid}/{total} valid, bad {len(bad)} ({time.time() - t:.0f}s)", flush=True)
+            run("retired-hub", f"big9-{p}-{i}", {}, p)
+    print(f"9.0 your settings and retired hub presets: {valid}/{total} valid, bad {len(bad)} ({time.time() - t:.0f}s)", flush=True)
     presets7 = ["balanced", "chaos", "full", "campaign", "everything"]
     for p in presets7:
         for i in range(n(2000)):
@@ -95,9 +91,9 @@ def main(argv=None):
     print(f"+ legacy presets and variants: {valid}/{total} valid, bad {len(bad)} ({time.time() - t:.0f}s)", flush=True)
     rnd = random.Random("big-random-7")
     for c in range(n(2000)):
-        p = rnd.choice(presets7 + ["standard", "coordinates"] + hubs)
+        p = rnd.choice(presets7 + ["standard", "coordinates"])
         u = rando.random_settings(rnd, d0)
-        u["campaign_mode"], u["random_start"] = "vanilla", False
+        u["campaign_mode"] = "vanilla"
         for i in range(4):
             run("random", f"big7r-{c}-{i}", u, p)
     print(f"+ random settings: {valid}/{total} valid, {refused} honestly refused, bad {len(bad)} ({time.time() - t:.0f}s)", flush=True)

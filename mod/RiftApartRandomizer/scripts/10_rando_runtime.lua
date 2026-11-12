@@ -1,4 +1,4 @@
--- Rift Apart Randomizer 8.0 runtime for rivet_hook (Lua 5.4).
+-- Rift Apart Randomizer 9.0 runtime for rivet_hook (Lua 5.4).
 --
 -- Files (rivet_hook loads scripts/*.lua in name order into one VM):
 --   01_rando_data.lua       game database (items, locations, planets) built from your game files
@@ -13,8 +13,8 @@
 --   12_rando_shop.lua       5.0 the weapon vendor's own weapons, shuffled over its slots
 --   13_rando_armor.lua      5.0 armor sources: the game's armor rewards become locations
 --   14_rando_travel.lua     7.0 locked levels: a planet's travel needs its Coordinates
---   15_rando_hub.lua        8.0 Zurkie's Battleplex hub: New Game at Zurkie's, two Coordinates,
---                           destinations, the mission ladder, the return to the hub
+--   16_rando_testtravel.lua 8.2 test travel (off unless test_travel = true)
+--   (9.0: 15_rando_hub.lua, the Zurkie's hub, is gone; delete it if an older kit left it there)
 --
 -- What happens in the game:
 --   1. The seed is generated from your settings over the first frames (a few milliseconds of
@@ -34,15 +34,15 @@
 --      rewards wait for its Coordinates instead (Gold Bolts never wait).
 --   6. The weapon vendor sells its own weapons shuffled over its slots (12_rando_shop.lua).
 --      Ammo and upgrades are not touched; 4.0's vendor lock is gone.
---   7. 8.0 hub seeds (hub = true): the new game is taken to Zurkie's Battleplex and the campaign is
---      played from there (15_rando_hub.lua, experimental).
+--   7. 9.0: NEW GAME plays the prologue, then Nefarious City, then Sargasso, as in the game. The
+--      randomizer moves you nowhere and starts no mission; travel is the ship's planet menu.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "8.5.0"
+R.KIT_VERSION = "9.0.0"
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -110,42 +110,25 @@ R.config = {
   armor_intercept = true,            -- armor sources give the seed's item instead of their own piece
   shop_runtime = true,               -- apply the seed's shop shuffle to the vendor in memory
   levels_runtime = true,             -- 7.0: send you back from a locked planet (false: its rewards wait)
-  -- 8.0 Zurkie's hub (15_rando_hub.lua; only for a hub seed)
-  hub_runtime = true,                -- false: no hub actions at all (no warps, no mission calls)
-  hub_trigger = "wrench",            -- New Game: go to Zurkie's once Ratchet has the wrench | "control" | "cinematic"
-  hub_intro = "force",               -- "force": mark the skipped prologue complete in the save | "leave"
-  hub_force_missions = true,         -- a destination's inactive story mission is made available, then started
-  hub_replay = true,                 -- if starting fails, try the game's replay call
-  hub_levels = "all",                -- "all": set every level bit UnlockLevelAction can set | "off"
-  hub_travel_flag = true,            -- turn planetary travel on at Zurkie's
-  hub_fly = true,                    -- from Zurkie's, use the ship's flight when a ship answers (else the warp)
-  hub_auto_return = true,            -- a finished destination takes you back to Zurkie's
-  hub_return_delay = 12,             -- seconds before that (F5 cancels)
-  hub_hero_swap = true,              -- Rivet's destinations swap the hero to Rivet (and back at Zurkie's)
-  key_hub = "]",                     -- ] next destination, Ctrl+] go (8.3; was F6)
-  key_hub_return = "[",              -- [ twice back to Zurkie's, Ctrl+[ twice finish a destination by hand (was F5)
   -- 8.2 test travel (16_rando_testtravel.lua): go to any planet, whatever Coordinates you hold
   test_travel = false,               -- true: F7 / F8 / Ctrl+F7 / Ctrl+F8 work and nothing sends you back
   key_test_travel = ".",            -- . next planet, Ctrl+. warp there (8.3; was F7)
   key_test_point = ",",              -- , next landing point on that planet, Ctrl+, fly there with the ship (was F8)
-  -- 8.3 the story on arrival (15_rando_hub.lua)
-  story_on_arrival = true,           -- landing on a planet (test travel, the ship's menu, a hub trip) starts its
-                                     -- story, even if the story before it is not finished
-  story_prime_before_travel = true,  -- 8.4: a hub trip / test-travel warp gets the hero and starts the story first
-  story_reload_stuck = true,         -- 8.4: a story still at "go to <planet>" after 20 s is reloaded once
-                                     -- (out to Zurkie's and straight back)
-  key_story = "/",                   -- / start the story of the planet you are on; Ctrl+/ twice restarts it
-  legacy_f_keys = true,              -- the old F5-F9 keys keep working as well
+  legacy_f_keys = true,              -- the old F7-F9 / F12 keys keep working as well
 }
-R.CHOICES = { hub_trigger = { wrench = true, control = true, cinematic = true }, hub_intro = { force = true, leave = true },
-              hub_levels = { all = true, off = true } }
+R.CHOICES = {}
 -- options that no longer exist
 local RETIRED_RUNTIME = { key_shop_next = "is not used since 4.0", key_shop_buy = "is not used since 4.0",
-                          story_restart_stuck = "is story_reload_stuck since 8.4 (the restart did not move a story in round 20)",
                           lock_vendor_weapons = "is not used since 5.0 (the vendor sells its own weapons, shuffled; ammo works)" }
+-- 9.0: the Zurkie's hub and its story starter (15_rando_hub.lua) are gone, with all their options
+for _, k in ipairs({ "hub_runtime", "hub_trigger", "hub_intro", "hub_force_missions", "hub_replay", "hub_levels",
+                     "hub_travel_flag", "hub_fly", "hub_auto_return", "hub_return_delay", "hub_hero_swap", "key_hub",
+                     "key_hub_return", "story_on_arrival", "story_prime_before_travel", "story_reload_stuck",
+                     "story_restart_stuck", "key_story" }) do
+  RETIRED_RUNTIME[k] = "is gone in 9.0: the Zurkie's hub was removed (a new game plays the prologue, then Nefarious City)"
+end
 local SETTINGS = RANDO_SETTINGS or {}
-local KEY_SETTINGS = { key_status = true, key_campaign = true, key_hub = true, key_hub_return = true,
-                       key_test_travel = true, key_test_point = true, key_story = true }
+local KEY_SETTINGS = { key_status = true, key_campaign = true, key_test_travel = true, key_test_point = true }
 local GEN_OPTIONS = {}
 for k, v in pairs(SETTINGS) do
   if R.config[k] ~= nil then
@@ -160,16 +143,14 @@ for k, v in pairs(SETTINGS) do
     end
   elseif RETIRED_RUNTIME[k] then
     log("RANDO-SETTINGS", k, RETIRED_RUNTIME[k])
-    if k == "story_restart_stuck" and v == false and SETTINGS.story_reload_stuck == nil then R.config.story_reload_stuck = false end
   elseif k ~= "seed" and k ~= "preset" then
     GEN_OPTIONS[k] = v
   end
 end
 
 -- 8.3: if rivet.key() does not use Windows key codes, keyboard key names cannot be bound: keys
--- that do not resolve go back to their old F keys (the story key to F4)
-R.LEGACY_KEYS = { key_status = "F9", key_campaign = "F12", key_hub = "F6", key_hub_return = "F5",
-                  key_test_travel = "F7", key_test_point = "F8", key_story = "F4" }
+-- that do not resolve go back to their old F keys
+R.LEGACY_KEYS = { key_status = "F9", key_campaign = "F12", key_test_travel = "F7", key_test_point = "F8" }
 for setting, legacy in pairs(R.LEGACY_KEYS) do
   if not R.vk(R.config[setting]) then
     log("RANDO-SETTINGS", setting, "=", tostring(R.config[setting]), "cannot be bound here - using", legacy)
@@ -434,10 +415,8 @@ function R.on_story_mission(pid, mission)
   for _, lid in ipairs(planet_locations(pid)) do
     if DB.locations[lid].fallback == "with_planet" and not bound[lid] then R.collect(lid, "paid with the planet") end
   end
-  -- second story missions of earlier planets: paid once the story has moved on (not in a hub
-  -- seed: there the order is yours, and a destination pays its own when it is finished)
+  -- second story missions of earlier planets: paid once the story has moved on
   local idx = story_index(pid) or 0
-  if SEED.hub then idx = 0 end
   for _, lid in ipairs(GEN.sorted_keys(SEED.locations)) do
     local loc = DB.locations[lid]
     if loc.fallback == "next_planet" and loc.planet and (story_index(loc.planet) or 99) < idx then
@@ -481,10 +460,6 @@ end
 function R.on_mission_state(name, state)
   if type(name) ~= "string" then return false end
   if state ~= 3 and state ~= 4 then return false end
-  if RANDO_HUB and RANDO_HUB.on_mission_state then
-    local okh, eh = pcall(RANDO_HUB.on_mission_state, name, state)
-    if not okh then log("RANDO-ERROR hub mission", tostring(eh)) end
-  end
   if R.is_finale(name) then R.on_finale(name) end
   local lid = BIND.missions[name]
   if lid then return R.collect(lid, "mission " .. name) end
@@ -592,7 +567,6 @@ function R.reset_for_new_game(why)
   if RANDO_ARMOR and RANDO_ARMOR.new_game then pcall(RANDO_ARMOR.new_game) end
   if RANDO_CAMPAIGN_RT and RANDO_CAMPAIGN_RT.new_game then pcall(RANDO_CAMPAIGN_RT.new_game) end
   if RANDO_TRAVEL and RANDO_TRAVEL.new_game then pcall(RANDO_TRAVEL.new_game) end
-  if RANDO_HUB and RANDO_HUB.new_game then pcall(RANDO_HUB.new_game) end
   history("NEW GAME: run " .. S.run .. " of seed " .. SEED.seed .. " (" .. why .. "); run " .. S.previous_run.run ..
           " had " .. S.previous_run.collected .. " location(s)")
   R.begin()
@@ -600,7 +574,6 @@ function R.reset_for_new_game(why)
   say("Randomizer: new game - seed " .. SEED.seed .. " starts over (run " .. S.run .. ")", { type = "planet", sub = R.start_text(), duration = 8 })
 end
 function R.on_objective(mission, objective, state)
-  if RANDO_HUB and RANDO_HUB.on_objective then pcall(RANDO_HUB.on_objective, mission, objective, state) end
   if not R.config.new_game_reset then return false end
   if mission ~= R.NEW_GAME_MISSION or objective ~= R.NEW_GAME_OBJECTIVE or state ~= 1 then return false end
   local now = (rivet.time and rivet.time()) or 0
@@ -629,17 +602,11 @@ function R.process_planet(name, old)
   local banked = 0
   for lid in pairs(S.banked) do if DB.locations[lid].planet == pid then banked = banked + 1 end end
   log("RANDO-PLANET", name, pid, S.access[pid] and "rewards unlocked" or "rewards locked")
-  -- 8.2 test travel: a test trip's landing is only reported (no hub action, nothing sends you back)
+  -- 8.2 test travel: a test trip's landing is only reported (nothing sends you back)
   if RANDO_TEST_TRAVEL and RANDO_TEST_TRAVEL.on_arrival then
     local okt, claimed = pcall(RANDO_TEST_TRAVEL.on_arrival, pid, from)
     if not okt then log("RANDO-ERROR test travel arrival", tostring(claimed)) end
     if okt and claimed then return pid end
-  end
-  -- 8.0 hub seeds: Zurkie's, destinations, the menu and the parade on a load (15_rando_hub.lua)
-  if SEED.hub and RANDO_HUB and RANDO_HUB.on_arrival then
-    local okh, handled = pcall(RANDO_HUB.on_arrival, pid, from)
-    if not okh then log("RANDO-ERROR hub arrival", tostring(handled)) end
-    if okh and handled then return pid end
   end
   -- 7.0 levels: a locked planet chosen in the planet menu sends you back (14_rando_travel.lua)
   if SEED.travel_lock and RANDO_TRAVEL and RANDO_TRAVEL.active() then
@@ -661,8 +628,6 @@ function R.status_text()
   if camp then real = real and (real .. " | " .. camp) or camp end
   local coords = SEED.planet_locks and string.format(" | Coordinates %d/%d", count(S.access), #DB.planets) or ""
   if SEED.travel_lock and RANDO_TRAVEL then coords = " | " .. RANDO_TRAVEL.status_text() end
-  local hub = RANDO_HUB and RANDO_HUB.status_text and RANDO_HUB.status_text()
-  if hub then coords = " | " .. hub end
   local armor = RANDO_ARMOR and RANDO_ARMOR.status_text and RANDO_ARMOR.status_text()
   if armor then real = real and (real .. " | " .. armor) or armor end
   local shop = RANDO_SHOP and RANDO_SHOP.status_text and RANDO_SHOP.status_text()
@@ -801,8 +766,7 @@ end
 -- minute late: round 20). Sets are united; a delivery keeps its furthest status (an item this
 -- session confirmed is never sent again because the save still had it queued); currency this
 -- session paid but has not given yet is kept (8.4 lost it with the replaced queue); armor
--- sources and finds, gadgets and the shop's one-time gift are kept; the hub's objective record
--- of this session wins (it is newer).
+-- sources and finds, gadgets and the shop's one-time gift are kept.
 R.MERGE_SETS = { "collected", "paid", "banked", "bolts_seen", "story_missions", "planets_detected", "inventory",
                  "weapons", "access", "tracked", "armor_found", "armor_sources", "armor_sets_done", "gadgets_seen",
                  "visited", "shop_given", "gadgets" }
@@ -832,11 +796,6 @@ function R.merge_live(live, S)
     end
   end
   if added > 0 then log("RANDO-SAVE kept", added, "currency payment(s) from before the restore") end
-  local lh, sh = live.hub, S.hub
-  if type(lh) == "table" and type(sh) == "table" and type(lh.obj) == "table" then
-    sh.obj = sh.obj or {}
-    for m, o in pairs(lh.obj) do sh.obj[m] = o end
-  end
   -- the armor baseline is measured once: a save without one takes this session's
   if S.armor_baseline == nil and type(live.armor_baseline) == "table" then S.armor_baseline = live.armor_baseline end
   if type(live.weapon_types) == "table" then
@@ -854,7 +813,6 @@ function rando_import_state(tbl)
   S = fill_defaults(tbl); R.state = S
   -- 8.0: where you are is this session's knowledge, not the save's
   if live and live.current_planet then S.current_planet = live.current_planet end
-  if RANDO_HUB and RANDO_HUB.on_restore then pcall(RANDO_HUB.on_restore, live) end
   -- what happened in this session before the restore (Gold Bolts, missions, the items they
   -- gave) is kept, so nothing collected while the companion was still connecting is lost
   if live and live.started then R.merge_live(live, S) end
@@ -1078,15 +1036,14 @@ R.bind_setting("key_status", "F9", function()
   say(R.status_text(), { type = "corner", duration = 6 })
 end)
 log("RANDO-KEYS", R.keys_numeric and "keyboard keys on" or "rivet.key() does not use Windows key codes: only its own key names work",
-    string.format("status %s | hub %s | back %s | test travel %s %s | story %s%s", R.key("key_status"), R.key("key_hub"),
-                  R.key("key_hub_return"), R.key("key_test_travel"), R.key("key_test_point"), R.key("key_story"),
-                  R.config.legacy_f_keys and " | old F5-F9 keys too" or ""))
+    string.format("status %s | test travel %s %s%s", R.key("key_status"), R.key("key_test_travel"), R.key("key_test_point"),
+                  R.config.legacy_f_keys and " | old F keys too" or ""))
 
 -- start: a pre-generated seed (tools/rando.py writes 00_rando_seed.lua), the settings' seed, or
 -- (seed = "random") one from the companion
 R.WAIT_FOR_COMPANION = 600
 R.WAIT_COMPANION_START = 3600
-if type(RANDO_SEED) == "table" and (RANDO_SEED.format == 8 or RANDO_SEED.format == 7) then
+if type(RANDO_SEED) == "table" and RANDO_SEED.format == 9 then
   local pre = RANDO_SEED
   seed_ready(pre)
   log("RANDO-SEED using the pre-generated seed in 00_rando_seed.lua")
@@ -1099,10 +1056,23 @@ end
 -- screen, so a scripts folder that mixes kits never plays silently half-updated.
 R.KIT_FILES = { "01_rando_data", "02_rando_generator", "03_rando_campaign", "04_rando_settings", "05_rando_bindings",
                 "06_rando_capabilities", "09_rando_real", "10_rando_runtime", "11_rando_campaign", "12_rando_shop",
-                "13_rando_armor", "14_rando_travel", "15_rando_hub", "16_rando_testtravel" }
+                "13_rando_armor", "14_rando_travel", "16_rando_testtravel" }
+-- 9.0: scripts of older kits that must not be in the folder any more
+R.GONE_FILES = { ["15_rando_hub"] = "the Zurkie's hub was removed in 9.0" }
 function R.kit_check()
   local files = RANDO_FILES or {}
   local missing, other = {}, {}
+  local gone = {}
+  for f, why in pairs(R.GONE_FILES) do
+    if files[f] ~= nil then gone[#gone + 1] = f .. ".lua (" .. why .. ")" end
+  end
+  table.sort(gone)
+  if #gone > 0 then
+    log("RANDO-ERROR RANDO-KIT delete from the scripts folder: " .. table.concat(gone, ", ") ..
+        " - it was left by an older kit")
+    say("Randomizer: delete 15_rando_hub.lua from the scripts folder (left by an older kit) - see rivet.log",
+        { type = "center", duration = 10 })
+  end
   for _, f in ipairs(R.KIT_FILES) do
     local v = files[f]
     if f == "04_rando_settings" then
@@ -1115,7 +1085,7 @@ function R.kit_check()
   end
   if #missing == 0 and #other == 0 then
     log("RANDO-KIT all " .. #R.KIT_FILES .. " scripts are " .. R.KIT_VERSION)
-    return true
+    return #gone == 0
   end
   log("RANDO-ERROR RANDO-KIT the scripts folder does not hold one kit:" ..
       (#missing > 0 and (" missing " .. table.concat(missing, ", ")) or "") ..
@@ -1189,10 +1159,6 @@ local function frame(dt)
   if RANDO_TRAVEL then
     local okt, et = pcall(RANDO_TRAVEL.tick, frames, ready)
     if not okt then log("RANDO-ERROR travel:", tostring(et)) end
-  end
-  if RANDO_HUB and SEED.hub then
-    local okh, eh = pcall(RANDO_HUB.tick, frames, ready)
-    if not okh then log("RANDO-ERROR hub:", tostring(eh)) end
   end
   if ready and RANDO_ARMOR then
     local oka, ea = pcall(RANDO_ARMOR.tick, frames)

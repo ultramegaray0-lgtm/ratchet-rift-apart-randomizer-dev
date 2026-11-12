@@ -1,4 +1,4 @@
-# Configuration (8.5)
+# Configuration (9.0)
 
 ## scripts\04_rando_settings.lua
 
@@ -16,9 +16,7 @@ solver proves every seed can be finished.
 
 | Preset | Name | What it changes from the defaults |
 |---|---|---|
-| `hub` | Zurkie's Hub | **8.0, the default in `04_rando_settings.lua`, experimental** (HUB.md): New Game starts at Zurkie's Battleplex with two random Coordinates; every finished destination opens the next ones. Items as `balanced` |
-| `hub_chaos` | Zurkie's Hub (chaos) | the hub, with chaos' currency, prices and start (no locked levels: the hub has its own) |
-| `balanced` | Balanced | nothing: every item system, the game's own level order, moderate currency, prices by weapon |
+| `balanced` | Balanced | **the kit's 04 file (9.0).** Nothing: your defaults (02's G.DEFAULTS since 8.5.1): every item system, Coordinates as items (a planet's mission rewards wait for them; travel is free), mission order `planet_shuffle` (played in the game's own order until verified), prices by weapon, Raritanium 120-1,000 |
 | `chaos` | Chaos | locked levels with the fewest open planets; 1 starting weapon, no starting gadget; random prices (25-300%); Bolts 500-40,000 and Raritanium 10-2,000 per reward (budgets 350,000 / 10,000), half and half, not scaled by the story |
 | `full` | Full Randomizer | Coordinates are items too: a planet's mission rewards wait for its Coordinates (travel stays free); Bolts up to 15,000, Raritanium up to 250 (budgets 180,000 / 3,000) |
 | `campaign` | Campaign Randomizer | **locked levels** (LEVELS.md): flying to a planet needs its Coordinates; the story's own planets plus the next one open at the start |
@@ -27,24 +25,12 @@ solver proves every seed can be finished.
 Older names still work: `standard`, `extended`, `armor` and `classic` are `balanced`, and
 `coordinates` is close to `full`. The experimental mission-order presets are `planet_shuffle`,
 `mission_shuffle` (6.0's `campaign`), `full_campaign` and `campaign_chaos` (LEVELS.md,
-CAMPAIGN.md). `python tools/rando.py presets` prints this list.
+CAMPAIGN.md); in 9.0 every one starts with the prologue, Nefarious City and Sargasso.
+`python tools/rando.py presets` prints this list.
 
-## The hub (8.0)
-
-Seed settings, only used when `hub = true` (the hub presets). They change the seed.
-
-| Setting | Default | |
-|---|---|---|
-| `hub` | false (true in the hub presets) | Zurkie's Battleplex hub (HUB.md). Turns `levels` / `planet_locks` / `travel_lock`, `mission_order` and `random_start` off, with a note in the spoiler |
-| `hub_start_coordinates` | 2 | Coordinates open at the start: 2 to 4, all different planets, each playable first |
-| `hub_unlocks` | 1 | Coordinates each finished destination opens: 1 to 3 |
-| `hub_finale` | `"all"` | `"half"`: the finale opens after half of the destinations |
-| `hub_revisits` | true | false: second visits (Zurkie's 2, Sargasso 2, Savali 2) are not destinations |
-
-In-game options (change any time): `hub_runtime`, `hub_trigger`, `hub_intro`, `hub_force_missions`,
-`hub_replay`, `hub_levels`, `hub_travel_flag`, `hub_fly`, `hub_auto_return`, `hub_return_delay`,
-`hub_hero_swap`, `story_on_arrival`, `story_prime_before_travel` (8.4), `story_reload_stuck` (8.4),
-`key_hub` (`]`), `key_hub_return` (`[`) and `key_story` (`/`). HUB.md, "Settings", explains each one.
+**9.0: the hub is gone.** `hub` and `hub_chaos` become `balanced` and `chaos` (with a note); the
+seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_revisits` and
+`random_start` are ignored and named in rivet.log.
 
 ## Toggles
 
@@ -127,8 +113,8 @@ always are.
 | `exclude` | `""` | item keys never randomized, e.g. `"weapon:enforcer,glitch"`. An excluded vendor weapon stays in its own slot; excluded Coordinates are owned from the start. Hoverboots and the Map-O-Matic can't be excluded |
 
 When the settings leave too few places for everything, the generator relaxes them in this order
-and says so: armor on, Coordinates on, weapon logic lower, one more planet open at the start,
-Coordinates/levels off. A seed that can't fill all 25 Gold Bolts even then is refused, with the
+and says so: armor on, fewer starting gadgets then weapons (8.5.2), Coordinates on, weapon logic
+lower, one more planet open at the start, Coordinates/levels off. A seed that can't fill all 25 Gold Bolts even then is refused, with the
 reason.
 
 ## In-game options (change any time)
@@ -136,8 +122,8 @@ reason.
 | Setting | Default | |
 |---|---|---|
 | `key_status` | `;` | status: Gold Bolts n/25, rewards, planets open, deliveries waiting. **Ctrl+; twice** (locked levels): open the planet you were last sent back from |
-| `key_campaign` | `'` | experimental mission order only (says nothing in a hub seed) |
-| `legacy_f_keys` | true | the old F4-F9 and F12 keys work as well |
+| `key_campaign` | `'` | experimental mission order only (logs a line and does nothing in the game's own order) |
+| `legacy_f_keys` | true | the old F7, F8, F9 and F12 keys work as well |
 | `test_travel` | false | **8.4: off in the kit.** true: `.` / `,` go to any planet for testing (TEST_TRAVEL.md) |
 | `real_items`, `real_weapons` | true | put rewards into your real inventory |
 | `armor_intercept` | true | armor sources give the seed's item instead of their own piece |
@@ -157,15 +143,17 @@ reason.
     `completion_gold_*`, `start_gold`, `gold_bolt_locations`;
   - 4.0: `armor_rewards`, `armor_finds`, `lock_vendor_weapons`;
   - 5.0: `include_hidden_weapons`, `experimental_pickups`, `experimental_collectibles`;
-  - 8.3: `story_restart_stuck` (8.4: `story_reload_stuck`; `false` in the old name still switches
-    the reload off).
+  - 9.0 (the hub's): `hub_runtime`, `hub_trigger`, `hub_intro`, `hub_force_missions`, `hub_replay`,
+    `hub_levels`, `hub_travel_flag`, `hub_fly`, `hub_auto_return`, `hub_return_delay`,
+    `hub_hero_swap`, `key_hub`, `key_hub_return`, `story_on_arrival`, `story_prime_before_travel`,
+    `story_reload_stuck`, `story_restart_stuck`, `key_story`.
 
 ## Sharing a seed
 
 The spoiler log's first lines contain a **share code**, e.g.
-`RA7|lombax-ryno|chaos|bolts_max=20000`. Someone else gets the same seed with the same seed text,
-preset and options, or in one step with `python tools/rando.py share "RA7|..."`. 4.0-6.0 codes are
-refused, because the same text gives a different 7.0 seed.
+`RA9|lombax-ryno|chaos|bolts_max=20000`. Someone else gets the same seed with the same seed text,
+preset and options, or in one step with `python tools/rando.py share "RA9|..."`. 4.0-8.5 codes are
+refused, because the same text gives a different 9.0 seed.
 
 ## Spoiler generator (offline, optional: Python 3.9+ and `pip install lupa`)
 

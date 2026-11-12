@@ -1,6 +1,6 @@
 # How the Randomizer works (7.0)
 
-> **8.0:** the hub layer (15_rando_hub.lua) sits on top of everything described here; see HUB.md and RESEARCH_8.0.md.
+> **9.0:** 8.0-8.5's hub layer (15_rando_hub.lua) is removed; the design below is the whole randomizer again. RESEARCH_8.0.md keeps the hub's research.
 
 ## The rules of 7.0
 

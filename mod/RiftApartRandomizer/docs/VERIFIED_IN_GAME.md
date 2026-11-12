@@ -1,5 +1,7 @@
 # Verified in actual gameplay
 
+> **9.0 has not run in your game yet.** It removes the hub; what it keeps (rewards, deliveries, shop, armor, Coordinates, locked levels) is what rounds 13-22 exercised. Rounds 17-22's hub findings below are history.
+
 **8.0 has not run in your game yet, nor have 5.0, 6.0 and 7.0.** What 8.0's hub rests on from your
 logs: the New Game objective sequence (rounds 14/15, replayed into hub seeds by
 `tests/test_hub.py`), `CHK_ZURK_00_DEFAULT` as the planet menu's Zurkie's destination (round 14

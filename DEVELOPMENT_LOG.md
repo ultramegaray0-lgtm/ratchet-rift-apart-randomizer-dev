@@ -809,3 +809,27 @@ companion answered after the 60 s wait).
   "given directly (rando_give.dll ...)".
 - Next real information can only come from a playthrough log.
 
+## 2026-11-12: 9.0 (no hub; the story starts as in the game)
+
+### Asked for
+"Make the new version not have the hub. And start with the prologue then Nefarious City." Uploaded:
+the user's edited 01-06 and 09 (their 8.5.2 state: the 8.5.1 `C.MODES` fix, their G.DEFAULTS,
+Punk/Reaver owned from the start) and the 8.5 install and dev zips.
+
+### Done
+- Baseline commit: the user's scripts over 8.5 (`d921fe7`), then branch `v9`.
+- 15_rando_hub.lua deleted; hub presets/settings/options retired with log lines; RANDO_HUB calls
+  removed from 10, 11, 14, 16; kit check reports a leftover hub script.
+- 03: `C.STORY_START` (leading `arrival = "story"` visits: intro, Nefarious City 1, Sargasso 1)
+  begins every order; `random_start` retired; no mode needs `new_game_init`.
+- 02: generator 9.0.0, format 9, RA9; audit checks the story start; spoiler STORY START line.
+- 04: the user's file without hub lines, `preset = "balanced"`; their values and comments kept.
+- `build_data.py` now reproduces the user's 01 (it reverted Punk/Reaver when re-run).
+- Tests: test_v90 (20); harness pins CLASSIC_TEST_SETTINGS (preset-aware) for the older suites;
+  hub tests and the 8.3/8.4 seed-identity regressions removed. 293 tests, 0 failures, 17 skipped.
+  big_batch: 41,000/41,000 valid.
+
+### Open
+- Nothing of 9.0 has run in the game. Round 23: the TESTING.md checklist.
+- The Punk/Reaver armor sources (6 filler-only locations from 8.5.2) probably never pay.
+

@@ -20,7 +20,7 @@
 --   * levels_runtime = false in 04_rando_settings.lua turns the warp off (rewards wait instead).
 -- Nothing here changes the game's files, missions or saves; a warp moves the save's checkpoint to
 -- the planet you came from, which is where you were anyway.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TRAVEL = RANDO_TRAVEL or {}
 local T = RANDO_TRAVEL
@@ -47,9 +47,9 @@ function T.active()
 end
 
 -- 8.4: `landed` holds only real landings (the ship's planet menu). Before 8.4 test trips and hub
--- warps were remembered there too, and round 20's hub trip to Torren IV went to a mid-mission
--- checkpoint a test trip had left (CHK_MOL_SALVAGE_PIRATES_COMMAND_SHIP). Older entries move to
--- `test_landed`, which only test travel offers.
+-- warps were remembered there too (round 20: a mid-mission checkpoint a test trip had left,
+-- CHK_MOL_SALVAGE_PIRATES_COMMAND_SHIP). Older entries move to `test_landed`, which only test
+-- travel offers.
 local function state()
   local s = S()
   s.travel = s.travel or { landed = {}, sent_back = 0, banked_planets = {}, landed_v = 2 }
@@ -406,8 +406,7 @@ function T.banks(pid)
   return state().banked_planets[pid] == true
 end
 
--- where a planet was landed on (the planet menu's destination, a warp that landed): the first
--- choice next time. Used by the hub too (15_rando_hub.lua).
+-- where a planet was landed on (the planet menu's destination): the first choice next time
 function T.remember(pid, cp)
   if not (pid and type(cp) == "string" and cp ~= "") then return end
   if cp:upper():find("TRANSITION_TO", 1, true) then return end
@@ -421,7 +420,7 @@ function T.remember(pid, cp)
   end
 end
 
--- 8.4: a test trip's landing: offered again by test travel, never used by the hub or the lock
+-- 8.4: a test trip's landing: offered again by test travel, never used by the lock
 function T.remember_test(pid, cp)
   if not (pid and type(cp) == "string" and cp ~= "") then return end
   local s = S()
@@ -437,13 +436,13 @@ function T.catalog_wanted()
   if T.catalog and T.catalog.done then return false end
   if type(rivet.checkpoints) ~= "function" then return false end
   local TT = RANDO_TEST_TRAVEL
-  return T.active() or (SEED() and SEED().hub ~= nil) or (TT ~= nil and TT.on ~= nil and TT.on())
+  return T.active() or (TT ~= nil and TT.on ~= nil and TT.on())
 end
 
 function T.tick(frame, ready)
   T.frame = frame
-  -- the catalog: one filter every 4 frames, every frame while a hub trip waits for it
-  local every = ((RANDO_HUB and RANDO_HUB.wait_catalog) or (RANDO_TEST_TRAVEL and RANDO_TEST_TRAVEL.want_catalog)) and 1 or 4
+  -- the catalog: one filter every 4 frames, every frame while test travel waits for it
+  local every = (RANDO_TEST_TRAVEL and RANDO_TEST_TRAVEL.want_catalog) and 1 or 4
   if ready and frame % every == 0 and T.catalog_wanted() and frame >= (T.catalog_from or 600) then T.catalog_step() end
   local w = T.warp
   if not (w and ready) or frame < w.at_frame then return end

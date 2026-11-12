@@ -1,10 +1,12 @@
 # Test travel (8.2)
 
+> **9.0:** the hub is gone; a test trip only moves you (no story start, no hero swap).
+
 Test travel takes you to any planet, whatever Coordinates you hold. It is there to try out the
 travel itself: which landing points work, what the warp and the ship's flight do on each planet,
 and what the planet menu shows.
 
-It is **off** in the 8.5 kit's `04_rando_settings.lua` (a real playthrough); set it to true to use it:
+It is **off** in the 9.0 kit's `04_rando_settings.lua` (a real playthrough); set it to true to use it:
 
 ```lua
 test_travel = true,          -- false for a real run
@@ -26,11 +28,10 @@ turn it on and off at any time (edit the file, then press Pause to reload the sc
 
 The landing points of a planet are listed best first:
 
-1. the hub's own entry points (8.4: a destination's story start first);
-2. where you last landed there with the ship's planet menu;
-3. where a test trip last went (8.4: never used by the hub's own trips);
-4. the ones seen in your logs;
-5. up to 12 from the checkpoint catalog, which lists every checkpoint `rivet.checkpoints()`
+1. where you last landed there with the ship's planet menu;
+2. where a test trip last went (never used by locked levels);
+3. the ones seen in your logs;
+4. up to 12 from the checkpoint catalog, which lists every checkpoint `rivet.checkpoints()`
    names, places each on its planet and scores it (landing pads first, cinematics, bosses and
    tunnels last).
 
@@ -39,15 +40,12 @@ known yet", wait a few seconds and press `.` again.
 
 ## While it is on
 
-- **A test trip starts the planet's story (8.3).** With `story_on_arrival`, landing starts that
-  planet's first unfinished story, even if the story before it isn't finished (docs/CHANGELOG.md).
-  8.4: a warp (Ctrl+.) switches to that story's hero and starts the story before it leaves.
-  A test trip opens no Coordinates and pays nothing by itself. Gold Bolts, armor pods and the rest pay
-  as usual. Zurkie's is still the hub's own arrival: Ratchet again, the level bits, and the hub key `]`.
-- **Nothing sends you back.** The ship's planet menu takes you to any planet. Neither the hub
-  nor locked levels warp you away, and the hub's Corson V keeper and startup guard stay still.
-- **The level bits** (the planet menu's list) are put back after a load, as the hub does.
-- **A landing is remembered** as that planet's landing point for later trips, test or hub.
+- **A test trip only moves you (9.0).** 8.3-8.5 started the planet's story on landing; that lived
+  in the hub script and is gone with it. A test trip opens no Coordinates and pays nothing by
+  itself. Gold Bolts, armor pods and the rest pay as usual.
+- **Nothing sends you back.** The ship's planet menu takes you to any planet; locked levels don't
+  warp you away.
+- **A landing is remembered** as that planet's test landing point for later test trips.
 - **Every trip is logged.** It goes into the randomizer history as `[TEST TRAVEL]` and into
   rivet.log as `RANDO-TEST` lines. The status line (`;`) says `TEST TRAVEL on`.
 

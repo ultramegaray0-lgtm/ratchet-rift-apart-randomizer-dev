@@ -1,6 +1,6 @@
 # Levels and the campaign in 7.0
 
-> **8.0:** the `hub` preset (the new default) plays the campaign from Zurkie's Battleplex instead: HUB.md. This page describes 7.0's level locks, which the 7.0 presets still use.
+> **9.0:** the 8.0 `hub` preset is removed. This page describes the level locks of the `campaign`, `chaos` and `everything` presets.
 
 **Short version.** 7.0 randomizes **which planets you can travel to, and when**. Each planet's
 travel is locked behind its **Coordinates**, which are items hidden in the seed (Gold Bolts,

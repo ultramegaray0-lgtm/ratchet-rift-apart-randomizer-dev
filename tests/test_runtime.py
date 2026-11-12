@@ -6,11 +6,11 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
-from harness import Game, MOD, script_files  # noqa: E402
+from harness import Game, MOD, script_files, CLASSIC_TEST_SETTINGS  # noqa: E402
 import rando  # noqa: E402
 
 ENGINE = rando.Engine()
-_seed, _ = ENGINE.generate("test-seed-2", {}, "standard")
+_seed, _ = ENGINE.generate("test-seed-2", dict(CLASSIC_TEST_SETTINGS), "standard")
 START = sorted(k for k in _seed.start["items"].values() if k.startswith("weapon:"))   # delivered in this order
 FINGERPRINT = _seed.fingerprint
 
@@ -47,7 +47,7 @@ class LoadingTests(unittest.TestCase):
         self.assertEqual(names, {"01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua",
                                  "04_rando_settings.lua", "05_rando_bindings.lua", "06_rando_capabilities.lua",
                                  "09_rando_real.lua", "10_rando_runtime.lua", "11_rando_campaign.lua",
-                                 "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua", "15_rando_hub.lua",
+                                 "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua",
                                  "16_rando_testtravel.lua"})
         g = Game(settings_file=True)
         self.assertEqual(g.load_errors, [])
@@ -102,7 +102,9 @@ class LoadingTests(unittest.TestCase):
         for text in ("not a key name", "start_weapons must be a whole number", "weapon_logic: unknown choice",
                      "unknown setting frobnicate", "shop_slots is not used since 4.0", "key_shop_buy\tis not used since 4.0"):
             self.assertTrue(g.log_has(text), text)
-        self.assertEqual(g.seed.settings.start_weapons, 2)
+        # the default (2), less what 8.5.2 takes off when 25 Gold Bolts need the items (no Coordinates,
+        # no ARSENAL_RESTORED): the same as a seed made without the typos
+        self.assertEqual(g.seed.settings.start_weapons, len(START))
         self.assertIsNone(g.seed.settings.shop_slots)
 
 
@@ -207,7 +209,9 @@ class ProgressTests(unittest.TestCase):
         g = Game(test_mode=True).ready(frames=600)
         items = list(g.seed.start["items"].values())
         self.assertEqual(items[:2], ["hoverboots", "map_o_matic"])
-        self.assertEqual(len([k for k in items if k.startswith("weapon:")]), 2)
+        # 8.5.2: without Coordinates or ARSENAL_RESTORED one starting weapon (the 25 Gold Bolts need the rest)
+        self.assertEqual(len([k for k in items if k.startswith("weapon:")]), g.seed.settings.start_weapons)
+        self.assertGreaterEqual(g.seed.settings.start_weapons, 1)
         for key in items:
             self.assertTrue(g.state.inventory[key], key)
             self.assertEqual(g.item_status(key), "confirmed", key)
@@ -370,7 +374,7 @@ class ArmorTests(unittest.TestCase):
     def test_intercepted_source_pays_its_location_once(self):
         g = Game().ready(frames=700)
         self.assertTrue(g.log_has("helper: armor give verified, armor sources on"))
-        self.assertTrue(g.log_has("intercepting 27 armor source(s)"))
+        self.assertTrue(g.log_has("intercepting 21 armor source(s)"))       # 8.5.2: Punk and Reaver are owned from the start
         self.assertEqual(self.mb(g, 0x100), 1)
         pid = g.data["items"]["armor:pirate_head"].id
         lid = "source:pirate_head"
@@ -389,7 +393,7 @@ class ArmorTests(unittest.TestCase):
         else:
             self.assertEqual(g.give_count(item), 1)
         # the table no longer lists it; the same source again gives the game's own piece
-        self.assertTrue(g.log_has("intercepting 26 armor source(s)"))
+        self.assertTrue(g.log_has("intercepting 20 armor source(s)"))
         self.assertEqual(g.sim.armor_source(pid), "given")
         g.step(40)
         self.assertEqual(g.count_logs("location " + lid), 1)
@@ -640,6 +644,9 @@ class DeliveryTests(unittest.TestCase):
         """the game took the message but reported the weapon only at the next planet load
         (round 13: WeaponAddedEvent 1015 on Nefarious City)"""
         g = proven(Game())
+        # a load replay of two or more weapons makes late answers recognisable (8.5.2 seeds without
+        # Coordinates start with one weapon: the save also owns the Bouncer)
+        g.sim.weapons_owned[g.g.RANDO_DATA.real_items["weapon:bouncer"].id] = True
         g.travel("Zurkon"); g.step(700)               # a load burst seen: types known
         ex = g.g.RANDO_DATA.real_items["weapon:revolver"].id
         g.sim.ignore_items[ex] = True
@@ -684,11 +691,11 @@ class DeliveryTests(unittest.TestCase):
         g = Game()
         g.sim.weapons_owned[g.g.RANDO_DATA.real_items["weapon:bouncer"].id] = True
         g.companion_restore()
-        g.sim.ignore_items[g.g.RANDO_DATA.real_items[START[1]].id] = True
+        g.sim.ignore_items[g.g.RANDO_DATA.real_items[START[-1]].id] = True
         g.travel("NefCity"); g.step(400)
         g.travel("Zurkon"); g.step(5)
-        # Bouncer was owned from the save; its WeaponAddedEvent must not confirm the Shatterbomb
-        self.assertNotIn(g.item_status(START[1]), ("confirmed", "owned"))
+        # Bouncer was owned from the save; its WeaponAddedEvent must not confirm the starting weapon
+        self.assertNotIn(g.item_status(START[-1]), ("confirmed", "owned"))
 
     def test_every_target_silent_switches_off_until_next_planet(self):
         g = Game(before_scripts=lambda gm: setattr(gm.sim, "accept_modes", gm.lua.table()))
@@ -706,7 +713,10 @@ class DeliveryTests(unittest.TestCase):
         g.sim.weapons_owned[g.g.RANDO_DATA.real_items[START[0]].id] = True
         g.ready(frames=1500)
         self.assertIn(g.item_status(START[0]), ("owned", "failed"))
-        self.assertEqual(g.item_status(START[1]), "confirmed")
+        # the other starting items still arrive (8.5.2 seeds without Coordinates have one weapon)
+        for key in g.seed.start["items"].values():
+            if key != START[0] and not key.startswith("access:"):
+                self.assertEqual(g.item_status(key), "confirmed", key)
 
     def test_wrong_exe_never_sends_and_says_where_rewards_go(self):
         g = Game(dll_status=2).ready(frames=200)

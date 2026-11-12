@@ -1,6 +1,7 @@
 -- Randomizer 8.2: test travel - go to any planet, whatever Coordinates you hold (rivet_hook, Lua 5.4).
--- Loaded after 14_rando_travel.lua and 15_rando_hub.lua. Off unless test_travel = true in
--- 04_rando_settings.lua (a runtime option: it never changes the seed or its fingerprint).
+-- Loaded after 14_rando_travel.lua. Off unless test_travel = true in 04_rando_settings.lua (a
+-- runtime option: it never changes the seed or its fingerprint). 9.0: a test trip only moves you;
+-- it starts no story (the hub's story starter is gone with the hub).
 --
 -- Keys (test_travel = true; 8.3 defaults, see key_test_travel / key_test_point):
 --   .           next planet (all 10, in story order, starting after the one you are on)
@@ -11,20 +12,16 @@
 --   (legacy_f_keys = true: F7 / F8 as well)
 --
 -- While it is on:
---   * a test trip's landing is remembered as that planet's landing point. 8.3: with
---     story_on_arrival (on by default) the planet's story starts, even if the story before it is
---     not finished (15_rando_hub.lua H.story_here; Zurkie's itself is the hub's as always)
---   * the ship's planet menu takes you anywhere: neither the hub nor locked levels send you back
---   * the hub's Corson V keeper and its startup guard do not move you
---   * the level bits (the planet menu's list) are put back after a load, as the hub does
+--   * a test trip's landing is remembered as that planet's test landing point
+--   * the ship's planet menu takes you anywhere: locked levels do not send you back
 --   * rewards follow the usual rules: test travel opens no Coordinates and pays nothing by itself
 -- Every trip is written to the randomizer history as [TEST TRAVEL], so a run that used it shows it.
 --
--- Landing points of a planet, best first: where you last landed there, the hub's own entry
--- points, the ones seen in your logs, then the checkpoint catalog (14_rando_travel.lua: every
--- checkpoint rivet.checkpoints() lists, placed on its planet and scored, landing pads first).
+-- Landing points of a planet, best first: where you last landed there, where a test trip went,
+-- the ones seen in your logs, then the checkpoint catalog (14_rando_travel.lua: every checkpoint
+-- rivet.checkpoints() lists, placed on its planet and scored, landing pads first).
 -- rivet.log lines start with RANDO-TEST.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_testtravel"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_testtravel"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TEST_TRAVEL = RANDO_TEST_TRAVEL or {}
 local TT = RANDO_TEST_TRAVEL
@@ -37,7 +34,7 @@ local function pname(pid) return (RANDO and RANDO.planet_name and RANDO.planet_n
 local function now() return (rivet.time and rivet.time()) or 0 end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 
-TT.VERSION = "8.5.0"
+TT.VERSION = "9.0.0"
 local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 TT.WINDOW = 180              -- seconds a trip waits for its landing
 TT.POINTS = 12               -- landing points offered per planet (catalog)
@@ -66,23 +63,7 @@ function TT.points(pid)
   end
   local s = S()
   local tr = (RANDO_TRAVEL and RANDO_TRAVEL.state and s) and RANDO_TRAVEL.state() or (s and s.travel)
-  -- 8.4: the story's start points first (a hub destination's entry), then real landings, then
-  -- where a test trip last went
-  local plan = SEED() and SEED().hub
-  if plan then
-    if pid == plan.planet then
-      local h = s and s.hub
-      add(h and h.home_cp, "the hub's landing")
-      for _, cp in ipairs(plan.checkpoints or {}) do add(cp, "the hub's landing") end
-    end
-    local hh = s and s.hub
-    for _, d in ipairs(plan.destinations or {}) do
-      if d.planet == pid and d.entry and not (hh and hh.done and hh.done[d.id]) then add(d.entry, "a hub destination's entry") end
-    end
-    for _, d in ipairs(plan.destinations or {}) do
-      if d.planet == pid and d.entry then add(d.entry, "a hub destination's entry") end
-    end
-  end
+  -- real landings first, then where a test trip last went
   if tr and tr.landed then add(tr.landed[pid], "where you last landed") end
   if tr and tr.test_landed then add(tr.test_landed[pid], "where a test trip went") end
   local i = planet_index(pid)
@@ -174,20 +155,6 @@ function TT.go(how)
   local pts = TT.points(pid)
   local pt = pts[TT.point[pid] or 1]
   if not pt then show(pid); return false end
-  -- 8.4: with story_on_arrival, the planet's story and its hero are made ready first, so the
-  -- planet loads with its story active (15_rando_hub.lua H.prime)
-  local H = RANDO_HUB
-  local plan = SEED() and SEED().hub
-  if plan and H and H.prime and H.story_dest and pid ~= plan.planet and RANDO.config.story_on_arrival ~= false
-     and H.enabled and H.enabled() and not TT.priming then
-    local d = H.story_dest(pid)
-    if d then
-      TT.priming = true
-      say(string.format("Test travel: getting %s ready...", d.title or d.id), { type = "corner", duration = 3 })
-      H.prime(d, function() TT.priming = nil; TT.travel(pid, pt, how) end, "test travel")
-      return true
-    end
-  end
   return TT.travel(pid, pt, how)
 end
 
@@ -226,19 +193,6 @@ function TT.on_arrival(pid, from)
   TT.trip = nil
   if RANDO_TRAVEL and RANDO_TRAVEL.remember_test then RANDO_TRAVEL.remember_test(pid, trip.cp) end
   log("arrived on", pid, "by", trip.how, "at", trip.cp)
-  local plan = SEED() and SEED().hub
-  if plan and pid == plan.planet then
-    return false                       -- Zurkie's: the hub's own arrival (Ratchet, the level bits, F6)
-  end
-  if plan and RANDO_HUB and RANDO_HUB.check_levels and RANDO_HUB.enabled and RANDO_HUB.enabled() then
-    pcall(RANDO_HUB.check_levels, pid)
-  end
-  -- 8.3: the planet's story starts here, whatever came before it (story_on_arrival)
-  if plan and RANDO_HUB and RANDO_HUB.story_here then
-    local okh, started = pcall(RANDO_HUB.story_here, pid, "test travel")
-    if not okh then log("RANDO-ERROR story on arrival", tostring(started)) end
-    if okh and started then return true end
-  end
   local s = S()
   local open = s and s.access and s.access[pid]
   say(string.format("Test travel: %s", pname(pid)), { type = "planet", duration = 6,
@@ -246,7 +200,7 @@ function TT.on_arrival(pid, from)
   return true
 end
 
--- the planet menu took you to a planet you hold no Coordinates for (14 / 15 call this)
+-- the planet menu took you to a planet you hold no Coordinates for (14 calls this)
 function TT.stayed(pid, how)
   log("no Coordinates for", pid, "- staying (" .. tostring(how) .. ", test_travel is on)")
   history(string.format("[TEST TRAVEL] %s without Coordinates (%s)", pid, tostring(how)))

@@ -70,8 +70,9 @@ def verify_campaign(seed, order=None):
     pos = {sid: i for i, sid in enumerate(order)}
     if order[-1] != "finale":
         probs.append("finale not last")
-    if not s["random_start"] and order[0] != "corson_intro":
-        probs.append("fixed start but intro not first")
+    # 9.0: every order begins with the story's own start (written here, not read from 03)
+    if list(order[:3]) != ["corson_intro", "nefcity_1", "sargasso_1"]:
+        probs.append("the order does not start prologue > Nefarious City > Sargasso")
     for sid in order:
         seg = BY_ID[sid]
         for a in seg.get("after", []):
@@ -214,8 +215,9 @@ class SequenceTests(unittest.TestCase):
                     r = ENG.G.rng(ENG.G.fnv1a(f"{mode}{rs}{i}"))
                     order, start = C.sequence(mode, r, rs)
                     self.assertIsNotNone(order, (mode, rs, i, start))
-                    ok, why = both(C.hard_ok(order, not rs or mode in ("vanilla", "planet_shuffle")))
+                    ok, why = both(C.hard_ok(order))
                     self.assertTrue(ok, (mode, rs, why, py(order)))
+                    self.assertEqual(py(order)[:3], ["corson_intro", "nefcity_1", "sargasso_1"], (mode, rs, i))
 
     def test_modes_really_reorder(self):
         C = ENG.lua.globals().RANDO_CAMPAIGN
@@ -224,16 +226,18 @@ class SequenceTests(unittest.TestCase):
             orders = {tuple(py(C.sequence(mode, ENG.G.rng(ENG.G.fnv1a(f"{mode}{i}")), mode in ("full", "chaos"))[0])) for i in range(100)}
             self.assertGreater(len(orders), 50, mode)
             self.assertTrue(any(list(o) != vanilla for o in orders))
-        starts = {py(C.sequence("full", ENG.G.rng(ENG.G.fnv1a(f"s{i}")), True)[0])[0] for i in range(200)}
-        self.assertGreaterEqual(len(starts), 6)                       # random starting visit
-        self.assertNotIn("torren_1", starts)                          # needs Hoverboots
-        self.assertNotIn("sargasso_2", starts)                        # a revisit
+        # 9.0: no random start: every mode begins prologue > Nefarious City > Sargasso, and the
+        # visit after them varies
+        for mode in ("full", "chaos", "mission_shuffle", "planet_shuffle"):
+            orders = [py(C.sequence(mode, ENG.G.rng(ENG.G.fnv1a(f"s{mode}{i}")), True)[0]) for i in range(200)]
+            self.assertEqual({tuple(o[:3]) for o in orders}, {("corson_intro", "nefcity_1", "sargasso_1")}, mode)
+            self.assertGreaterEqual(len({o[3] for o in orders}), 4, mode)
 
     def test_planet_shuffle_keeps_revisits_after_first_visits(self):
         C = ENG.lua.globals().RANDO_CAMPAIGN
         for i in range(200):
             order = py(C.sequence("planet_shuffle", ENG.G.rng(i + 7), False)[0])
-            self.assertEqual(order[0], "corson_intro")
+            self.assertEqual(order[:3], ["corson_intro", "nefcity_1", "sargasso_1"])
             for sid in ("sargasso_2", "savali_2", "scarstu_2"):
                 first = sid.replace("_2", "_1")
                 self.assertLess(order.index(first), order.index(sid))
@@ -264,7 +268,7 @@ class CampaignSeedTests(unittest.TestCase):
         text = ENG.spoiler(s)
         self.assertIn("MISSION ORDER (full, experimental)", text)
         d = py(s)
-        self.assertEqual(d["campaign"]["needs"], ["mission_control", "travel", "new_game_init"])
+        self.assertEqual(d["campaign"]["needs"], ["mission_control", "travel"])       # 9.0: no random start
 
     def test_hoverboots_come_before_the_visits_needing_them(self):
         for i in range(100):
@@ -490,47 +494,15 @@ class DirectorTests(unittest.TestCase):
         self.assertEqual(got, [11])
         self.assertIsNone(g.lua.eval("RANDO_REAL.mission_busy"))
 
-    def _random_start_game(self, intro, extra=None):
-        for i in range(40):
-            g = campaign_game(caps=True, preset="full_campaign", seed=f"rs-{i}", intro=intro, states=extra).ready()
-            if first_order(g)[0] != "corson_intro":
-                return g
-        self.fail("no random-start seed")
-
-    def test_random_start_skips_the_intro_with_new_game_init(self):
-        g = self._random_start_game(3)
-        D = g.g.RANDO_CAMPAIGN_RT
-        order = first_order(g)
-        start = g.g.RANDO_CAMPAIGN.BY_ID[order[0]]
-        open_next(g, start)
-        g.lua.execute(f'SIM.set_mission("{start.missions[1]}", 1, false)')
-        g.press("F12")
-        g.step(20)
-        self.assertEqual(g.sim.mission_state["MIS_INTRO"], 4, [l for l in g.logs() if "CAMPAIGN" in l][-6:])
-        self.assertEqual(g.sim.mission_state[start.missions[1]], 2)
-        cs = D.campaign_state()
-        self.assertTrue(cs.intro_skipped)
-        self.assertTrue(cs.done.corson_intro)
-        at = order.index("corson_intro")
-        cs.pos = at
-        prev = g.g.RANDO_CAMPAIGN.BY_ID[order[at - 1]]
-        g.lua.execute(f'SIM.set_mission("{prev.missions[len(prev.missions)]}", 4)')
-        g.step(2)
-        self.assertEqual(cs.pos, at + 2)
-
-    def test_random_start_waits_until_the_intro_is_active(self):
-        g = self._random_start_game(2)
-        g.press("F12")
-        g.step(20)
-        self.assertEqual(g.sim.mission_state["MIS_INTRO"], 2)
-        self.assertTrue(g.note_has("once it is active"), g.notes()[-3:])
-        self.assertEqual(len(g.sim.travels), 0)
-
-    def test_random_start_without_new_game_init_stays_vanilla(self):
-        g = campaign_game(caps=False, preset="full_campaign", seed="rs-0").ready()
-        active, why = both(g.g.RANDO_CAMPAIGN_RT.active())
-        self.assertFalse(active)
-        self.assertIn("new_game_init", why)
+    def test_full_campaign_starts_with_the_intro_and_needs_no_new_game_init(self):
+        """9.0: random_start is gone; full_campaign's order starts with the prologue like every mode"""
+        for i in range(10):
+            g = campaign_game(caps=False, preset="full_campaign", seed=f"rs-{i}").ready()
+            self.assertEqual(first_order(g)[:3], ["corson_intro", "nefcity_1", "sargasso_1"])
+            active, why = both(g.g.RANDO_CAMPAIGN_RT.active())
+            self.assertFalse(active)
+            self.assertNotIn("new_game_init", why)
+            self.assertIn("mission_control", why)
 
     def test_blocked_until_coordinates(self):
         g = campaign_game(caps=True, preset="mission_shuffle", seed="dir-2", settings={"planet_locks": True}).ready()

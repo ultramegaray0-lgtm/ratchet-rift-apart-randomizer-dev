@@ -1,13 +1,27 @@
-# Known issues (Randomizer 8.5)
+# Known issues (Randomizer 9.0)
 
-8.5 has passed every automated test, but neither 8.5 nor 8.4 has **run in your game yet** (there
-is no round 21 log). Everything below comes from your logs of rounds 13-20, from the code, or from
-the simulator. Each item says which. Use this page to tell a known issue from a new one.
+9.0 has passed every automated test, but it has **not run in your game yet**. Everything below
+comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
+Use this page to tell a known issue from a new one.
 
-## 1. Expected in your first 8.5 playthrough (unknown until then)
+## 0. Since 9.0
 
-Everything in this section came with 8.4 and is still unproven. 8.5 adds no new behaviour to
-watch for; its fixes are for failure cases (section 4).
+- **No hub.** A New Game plays the prologue, then Nefarious City, then Sargasso (the game's own
+  travel). The randomizer moves you nowhere. 8.0-8.5's hub items in section 1 below (heroes,
+  priming, reloads, hub trips) no longer apply; they are kept for the record.
+- **A leftover `15_rando_hub.lua`** from an older kit is reported at start (`RANDO-KIT ... delete`).
+  With a 9.0 seed it does nothing, but it binds the old hub keys. Delete it.
+- **The mission order in the spoiler** (your default `planet_shuffle`) is not followed in the game:
+  your game cannot open a mission out of order (CAMPAIGN.md). The game's own order is played, and
+  every seed is proven finishable in it.
+- **Punk and Reaver armor sources** (your 8.5.2 data) are still 6 filler-only locations. Their
+  pieces are owned from the start, so those locations probably never pay (offline: they are not
+  intercepted, and the start-owned pieces are in the armor baseline). Their currency counts toward
+  the Bolts/Raritanium budgets.
+- **Raritanium with your defaults** (min 120, budget 2,000): when more than 16 rewards are Raritanium,
+  every one gives 120 (the spoiler's NOTES say so).
+
+## 1. From 8.4/8.5, with the hub (kept for the record; 9.0 has no hub)
 
 1. **Whether the hero fix starts every story.** The rule "a story's first step needs the visit's
    own hero" fits all seven clean cases in rounds 17 and 20 (CHANGELOG.md). It is an inference, not
@@ -39,16 +53,15 @@ watch for; its fixes are for failure cases (section 4).
 
 ## 2. Known limitations (by design or engine)
 
-- **The parade.** A new save always starts in the parade. The hub leaves it once Ratchet has his
-  wrench.
+- **The parade.** A new save always starts in the parade (9.0: it plays to its end as in the game).
 - **Travel can only be undone after landing, not blocked before.**
 - **Whole visits move, never single missions.** The randomizer can't reorder or skip objectives
   inside a mission.
 - **A mission inside a visit may swap the hero itself** (Zurkie's 1: Ratchet, then Rivet in the
   arena). 8.4 only sets the hero before a story starts, or while its first step waits. It never
   sets it in the middle of a story.
-- **Story abilities come from the story itself in a hub seed** (Phantom Dash, Hurlshot, ...). A later
-  visit may need one whose story you skipped. Explore mode and `[` twice with Ctrl always work.
+- **Story abilities come from the story itself** (Phantom Dash, Hurlshot, ...). In the game's own
+  order they always come before they are needed.
 - **ARSENAL_RESTORED's vendor** sells the mod's weapons in its own slots. Those slots are not moved.
   A seed with the mod may also give one of those weapons as a reward. You then own it, and the
   vendor shows it as owned.

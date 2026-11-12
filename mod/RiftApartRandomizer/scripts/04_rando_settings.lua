@@ -1,4 +1,4 @@
--- Rift Apart Randomizer 8.4: your seed and settings.
+-- Rift Apart Randomizer 9.0: your seed and settings.
 -- Change, save, then restart the game (or press Pause to reload the scripts before you play).
 -- A different seed or different randomization options make a NEW seed with its own progress;
 -- start it with NEW GAME. Keys/logging can change any time.
@@ -12,27 +12,21 @@
 --     (docs\WEAPONS.md). Ammo and upgrades work as usual
 --   * a mission, side activity or armor pod with no item gives Bolts or Raritanium
 --   * the solver proves every seed can be finished (in the game's own mission order too)
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "8.5.0"   -- the kit check (10_rando_runtime.lua)
+--   * 9.0: NEW GAME plays the prologue, then Nefarious City, then Sargasso, as in the game (there is
+--     no Zurkie's hub any more); travel is the ship's planet menu
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_SETTINGS = {
   seed = "random",            -- any text, e.g. "lombax-ryno-2026"; "random" = the companion picks one and remembers it
-  preset = "hub",             -- hub | hub_chaos | balanced | chaos | full | campaign | everything (docs\CONFIGURATION.md)
-                              --   hub         8.0 (EXPERIMENTAL, docs\HUB.md): NEW GAME starts at Zurkie's Battleplex
-                              --               with two random Coordinates; every destination you finish
-                              --               opens the next ones; balanced items
-                              --   hub_chaos   the hub with chaos' currency and prices
-                              --   balanced    every item system, the game's own level order (7.0)
+  preset = "balanced",        -- balanced | chaos | full | campaign | everything (docs\CONFIGURATION.md)
+                              --   balanced    every item system with your defaults (02's G.DEFAULTS: Coordinates
+                              --               as items, planet_shuffle, weapon prices); travel is free
                               --   chaos       wide currency swings, random prices, locked levels (fewest open)
                               --   full        every item system + Coordinates as items (rewards wait for them)
                               --   campaign    LOCKED LEVELS: flying to a planet needs its Coordinates
                               --   everything  locked levels + random prices + start currency + more currency
                               -- experimental mission order (docs\CAMPAIGN.md): planet_shuffle | mission_shuffle |
-                              --   full_campaign | campaign_chaos (played in the game's own order until verified)
-
-  -- 8.0 hub (hub presets; leave a line out to use the default)
-  -- hub_start_coordinates = 4,        -- Coordinates open at the start (2 to 4, all different planets)
-  -- hub_unlocks = 3,                  -- Coordinates each finished destination opens (1 to 3)
-  -- hub_finale = "all",               -- all | half: finished destinations before the finale opens
-  -- hub_revisits = true,              -- second visits (Zurkie's 2, Sargasso 2, Savali 2) are destinations
+                              --   full_campaign | campaign_chaos (played in the game's own order until verified;
+                              --   9.0: every order starts with the prologue, Nefarious City, Sargasso)
 
   -- toggles (leave a line out to use the preset's value)
   -- weapons = true,                   -- shuffle the weapon pool over the shop, the start and the rewards
@@ -82,7 +76,7 @@ RANDO_SETTINGS = {
   -- rivet.log lists them at start (RANDO-KEYS) and logs every press (RANDO-KEY).
   key_status = ";",                  -- ; status; Ctrl+; twice opens a planet you were sent back from (levels)
   key_campaign = "'",                -- experimental mission order only
-  legacy_f_keys = true,              -- the old F5 / F6 / F7 / F8 / F9 keys keep working as well (false: off)
+  legacy_f_keys = true,              -- the old F7 / F8 / F9 / F12 keys keep working as well (false: off)
   real_items = true,                 -- put rewards into the real inventory
   real_weapons = true,
   armor_intercept = true,            -- armor pods give the seed's item instead of their own piece
@@ -90,32 +84,10 @@ RANDO_SETTINGS = {
                                      -- the seed's other shop weapons are then given to you directly)
   levels_runtime = true,             -- levels: send you back from a locked planet (false: its rewards wait instead)
   new_game_reset = true,             -- New Game starts the seed's randomizer progress over
-  -- 8.0 hub, in the game (change any time)
-  key_hub = "]",                     -- ] next destination, Ctrl+] go there (before the hub starts: go to Zurkie's)
-  key_hub_return = "[",              -- [ twice back to Zurkie's; Ctrl+[ twice finish this destination by hand
-  -- THE STORY ON ARRIVAL (8.3) and its hero (8.4)
-  story_on_arrival = true,           -- landing on a planet (test travel, the ship's menu, a hub trip) starts that
-                                     -- planet's story, even if the story before it is not finished
-  story_prime_before_travel = true,  -- a hub trip (and a test-travel warp) switches to the story's hero and starts
-                                     -- the story BEFORE it travels, so the planet loads with it running
-  story_reload_stuck = true,         -- a story still at "go to <planet>" 20 s after its start is reloaded once:
-                                     -- out to Zurkie's and straight back
-  key_story = "/",                   -- / start the story of the planet you are on; Ctrl+/ twice: start it again
-  hub_runtime = true,                -- false: a hub seed does nothing hub-specific (no warps, no mission calls)
-  hub_trigger = "wrench",            -- New Game: leave the parade once Ratchet has the wrench | "control" | "cinematic"
-  hub_intro = "force",               -- "force": mark the skipped prologue complete in the save | "leave" it active
-  hub_force_missions = true,         -- an inactive story mission of a destination is made available, then started
-  hub_replay = true,                 -- if starting fails, try the game's replay call
-  hub_levels = "all",                -- "all": set every level bit (1-10) at Zurkie's | "off"
-  hub_travel_flag = true,            -- turn the ship's planetary travel on at Zurkie's
-  hub_fly = true,                    -- leave Zurkie's with the ship's flight when a ship answers (else the warp)
-  hub_auto_return = true,            -- a finished destination takes you back to Zurkie's
-  hub_return_delay = 12,             -- seconds before that ([ cancels)
-  hub_hero_swap = true,              -- each destination is played as its own hero (checked with the game);
-                                     -- Ratchet again at Zurkie's. A story only starts with its own hero
   -- 8.2 TEST TRAVEL (docs\TEST_TRAVEL.md): go to any planet, whatever Coordinates you hold. A testing aid,
   -- OFF for a real playthrough (8.4); set it to true to use it (written into the history as [TEST TRAVEL]).
   test_travel = false,               -- true: the keys below work, and nothing sends you back from a planet
+                                     -- (9.0: a test trip only moves you; it starts no story)
   key_test_travel = ".",             -- . next planet, Ctrl+. warp there
   key_test_point = ",",              -- , next landing point on that planet, Ctrl+, fly there with the ship
   discovery = true,                  -- log the game events the randomizer listens to

@@ -1,7 +1,7 @@
 """Randomizer 8.2: test travel (16_rando_testtravel.lua) and the round 18 checkpoint catalog fix.
 
   * test_travel = true: F7 picks any planet, F8 its landing point, Ctrl+F7 warps, Ctrl+F8 flies
-  * a test trip is not sent back by the hub or by locked levels, and opens no Coordinates
+  * a test trip is not sent back by locked levels, and opens no Coordinates (9.0: no hub)
   * the ship's planet menu to a planet without Coordinates: you stay while test travel is on
   * test_travel = false (the default in the runtime): the keys only say so; 8.1 behaviour unchanged
   * round 18: the checkpoint catalog ran past rivet_hook's 8 ms frame budget (14_rando_travel.lua
@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from luajson import py  # noqa: E402
 from harness import Game  # noqa: E402
-from test_hub import hub_game, to_hub, hub  # noqa: E402
+from story_helpers import level_game, started  # noqa: E402
 from test_levels import LEVELS, locked_planet, menu_travel  # noqa: E402
 
 DATA = os.path.join(ROOT, "tests", "data")
@@ -55,7 +55,7 @@ def logged_checkpoint_names():
 def test_game(seed="tt-1", settings=None, **kw):
     st = {"test_travel": True}
     st.update(settings or {})
-    g = to_hub(hub_game(seed, st, **kw))
+    g = started(level_game(seed, st, **kw))
     g.step(1200)                     # the checkpoint catalog starts 600 frames in (as in the game)
     return g
 
@@ -78,13 +78,12 @@ class TestTravelTests(unittest.TestCase):
     def test_script_loads_and_is_on(self):
         g = test_game()
         self.assertTrue(g.g.RANDO_TEST_TRAVEL.on())
-        self.assertTrue(g.log_has("RANDO-TEST\tloaded (8.5.0) - test travel is ON"))
+        self.assertTrue(g.log_has("RANDO-TEST\tloaded (9.0.0) - test travel is ON"))
         self.assertIn("TEST TRAVEL on", g.R.status_text())
 
     def test_warp_to_a_planet_without_coordinates_stays_there(self):
         g = test_game()
-        h = hub(g)
-        locked = next(p["id"] for p in py(g.data.planets) if not h["open"].get(p["id"]) and p["id"] not in ("scarstu", "corson_v"))
+        locked = next(p["id"] for p in py(g.data.planets) if not g.state.access[p["id"]] and p["id"] not in ("scarstu", "corson_v"))
         select(g, locked)
         self.assertTrue(g.note_has("Test travel "))
         g.press("F7", ctrl=True)
@@ -92,12 +91,12 @@ class TestTravelTests(unittest.TestCase):
         self.assertEqual(g.g.RANDO_TRAVEL.planet_of_checkpoint(g.sim.last_cp), locked)
         self.assertEqual(g.state.current_planet, locked)
         self.assertFalse(g.state.access[locked])                    # no Coordinates were given
-        # 8.3: the planet's story starts there (story_on_arrival), whatever came before it
-        self.assertEqual(py(g.g.RANDO_HUB.dest(hub(g)["current"]))["planet"], locked)
+        # 9.0: a test trip starts no story (the hub's story starter is gone)
+        self.assertEqual([c.kind for c in g.sim.mission_calls.values() if c.kind != 1], [])
         land(g, 1200)
         self.assertEqual(g.state.current_planet, locked)            # nothing sent you back
         self.assertTrue(any("[TEST TRAVEL] warp to " + locked in x for x in py(g.state.history)))
-        # 8.4: a test trip's landing is offered again by test travel, never used by the hub
+        # 8.4: a test trip's landing is offered again by test travel, never used by the lock
         self.assertEqual(g.state.travel.test_landed[locked], g.sim.last_cp)
         self.assertIsNone(g.state.travel.landed[locked])
         self.assertFalse(g.log_has("RANDO-ERROR"))
@@ -134,7 +133,7 @@ class TestTravelTests(unittest.TestCase):
         g.sim.ship_near = False
         select(g, "savali")
         g.press("F8", ctrl=True)
-        g.step(120)                                   # 8.4: the story is made ready first
+        g.step(120)
         self.assertTrue(g.note_has("fly to"))
         self.assertTrue(g.note_has("Ctrl+. warps instead"))   # 8.3 keys
         g.sim.ship_near = True
@@ -145,8 +144,8 @@ class TestTravelTests(unittest.TestCase):
 
     def test_planet_menu_without_coordinates_stays(self):
         g = test_game("tt-menu")
-        plan = py(g.seed.hub)
-        locked = plan["queue"][-1]
+        locked = next(p["id"] for p in py(g.data.planets)
+                      if not g.state.access[p["id"]] and p["id"] not in ("scarstu", "corson_v"))
         cps = {"nefarious_city": "CHK_NEFCITY_SHIP", "savali": "CHK_SAV_01_LANDING", "blizar_prime": "CHK_BLIZAR_A_LANDINGPAD",
                "sargasso": "CHK_SARG_GELFACTORY_LANDINGPAD", "torren_iv": "CHK_MOL_01_START", "cordelion": "CHK_STATION_01_START",
                "ardolis": "CHK_ARD_01_ARRIVAL", "viceron": "CHK_ZORD_01_START"}
@@ -155,26 +154,14 @@ class TestTravelTests(unittest.TestCase):
             {"planet": g.sim.planet_of_cp(cps[locked]), "at": g.sim.frame + 2, "cp": cps[locked]})
         land(g, 1500)
         self.assertEqual(g.state.current_planet, locked)
-        self.assertFalse(hub(g).get("sent_back"))
+        self.assertFalse(g.state.travel.sent_back)
         self.assertTrue(g.note_has("no Coordinates, but you stay"))
 
-    def test_zurkies_is_still_the_hubs_arrival(self):
-        g = test_game("tt-home")
-        select(g, "savali")
-        g.press("F7", ctrl=True)
-        land(g)
-        select(g, "scarstu")
-        g.press("F7", ctrl=True)
-        land(g)
-        self.assertEqual(g.state.current_planet, "scarstu")
-        self.assertEqual(hub(g)["phase"], "hub")
-
-    def test_works_before_the_hub_has_started(self):
-        g = hub_game("tt-pre", {"test_travel": True})
+    def test_works_after_a_save_load(self):
+        g = level_game("tt-pre", {"test_travel": True})
         g.companion_restore()
         g.sim.load_save("NefCity")
         g.step(900)
-        self.assertFalse(hub(g).get("started"))
         select(g, "ardolis")
         g.press("F7", ctrl=True)
         land(g)
@@ -192,7 +179,7 @@ class TestTravelTests(unittest.TestCase):
         self.assertFalse(g.state.access[pid])
 
     def test_off_by_default_and_8_1_behaviour_kept(self):
-        g = to_hub(hub_game("tt-off"))
+        g = started(level_game("tt-off"))
         self.assertFalse(g.g.RANDO_TEST_TRAVEL.on())
         g.press("F7")
         self.assertTrue(g.note_has("test travel is off"))
@@ -204,8 +191,8 @@ class TestTravelTests(unittest.TestCase):
         self.assertEqual(g2.state.travel.sent_back, 1)
 
     def test_seed_is_unchanged_by_test_travel(self):
-        a = hub_game("tt-same")
-        b = hub_game("tt-same", {"test_travel": True})
+        a = level_game("tt-same")
+        b = level_game("tt-same", {"test_travel": True})
         for g in (a, b):
             g.companion_restore()
             g.wait_seed()
@@ -231,11 +218,11 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(diffs, [])
 
     def test_catalog_completes_in_slices_with_many_checkpoints(self):
-        g = hub_game("tt-big", {"test_travel": True})
+        g = level_game("tt-big", {"test_travel": True})
         big = ["CHK_ZURK_%04d_X" % i for i in range(1200)] + ["CHK_MOL_%04d_START" % i for i in range(600)] + \
               ["CHK_SARG_%04d_CINE" % i for i in range(300)]
         g.sim.checkpoint_list = g.lua.table_from(list(py(g.sim.checkpoint_list)) + big)
-        to_hub(g)
+        started(g)
         T = g.g.RANDO_TRAVEL
         for _ in range(200):
             if T.catalog and T.catalog.done:

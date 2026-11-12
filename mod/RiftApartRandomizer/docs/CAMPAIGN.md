@@ -1,6 +1,6 @@
 # Campaign randomization (experimental; unchanged since 3.2)
 
-> **8.0:** the Zurkie's hub (HUB.md, RESEARCH_8.0.md) builds on the mission-system findings here and adds the saved-state write (rando_give.dll v6). The 3.x director and lab below are unchanged.
+> **9.0:** every campaign order starts with the prologue, Nefarious City and Sargasso (`C.STORY_START`), and `random_start` is gone, so no mode needs `new_game_init`. 8.0-8.5's Zurkie's hub is removed (RESEARCH_8.0.md keeps its research). The 3.x director and lab below are unchanged.
 
 > **7.0 note.** The playable campaign randomizer in 7.0 is **locked levels** (LEVELS.md): each
 > planet's travel needs its Coordinates, and the story keeps the game's mission order. This page
@@ -40,7 +40,7 @@ it, what has been verified and what has not, and the exact obstacles.
 - Following the order in the game needs three abilities:
   - starting the next visit (`mission_control`);
   - travelling there (`travel`);
-  - for a random start, finishing the intro (`new_game_init`).
+  - (3.x-8.5: for a random start, finishing the intro, `new_game_init`; 9.0 has no random start).
 - 3.2 can **ask the game** for every mission's state. This is read-only, through
   rando_give.dll v4. None of the three abilities has been seen working yet.
 - Until they are verified, a campaign seed is played in the game's own order. Its randomized
@@ -105,8 +105,11 @@ that doesn't exist does no harm. Lab Ctrl+F12 lists which names exist, and
 | `vanilla` | standard, coordinates, chaos (and the aliases extended, armor, classic) | the game's order (2.0 behaviour) |
 | `planet_shuffle` | planet_shuffle | the planets' first visits are shuffled; each revisit comes after its planet's first visit |
 | `mission_shuffle` | campaign | every visit, including revisits, goes anywhere the rules allow |
-| `full` (+ `random_start`) | full_campaign | mission shuffle with a random first visit |
-| `chaos` | campaign_chaos | full, with the widest start choice |
+| `full` | full_campaign | mission shuffle (9.0: the same fixed start as every mode) |
+| `chaos` | campaign_chaos | mission shuffle with story-ability order checks only (9.0: the same fixed start) |
+
+9.0: every mode's order begins `corson_intro > nefcity_1 > sargasso_1`, the visits the game itself
+travels to; only the visits after them are reordered.
 
 These rules always hold:
 
@@ -149,9 +152,7 @@ These rules always hold:
      then flies you there.
    - If the game hasn't opened it, F12 says so (`... is not open in your game yet`) and
      changes nothing.
-5. **Random start, with `new_game_init` verified:** on a new game, once the intro is active
-   (3), the randomizer finishes `MIS_INTRO` the way `CompleteMissionAction` does, and passes
-   over its later slot.
+5. **Random start** (3.x-8.5, removed in 9.0): every order now starts with the prologue.
 6. **Progress** is saved by the companion with the rest of the seed's progress.
 
 ## Obstacles

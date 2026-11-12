@@ -1,18 +1,15 @@
-# Starting a new game with Randomizer 8.0
+# Starting a new game with Randomizer 9.0
 
-8.0 seeds differ from 7.0 seeds even with the same seed text, so 8.0 needs a **New Game**. Your
-7.0 progress files stay in `companion\randomizer_saves` and are never touched.
+9.0 seeds differ from 8.x seeds even with the same seed text, so 9.0 needs a **New Game**. Your
+earlier progress files stay in `companion\randomizer_saves` and are never touched.
 
-## With the hub (preset `hub`, the 8.0 default)
+## What happens (9.0: no hub)
 
 1. Start `companion\Start-Companion.bat`, then the game. **New Game** on a spare slot.
 2. The parade starts. "Randomizer: new game - seed ... starts over" and your start items appear.
-3. Pick up the wrench. "Randomizer: to Zurkie's Battleplex" appears, then a fade, and you are at
-   Zurkie's: "Zurkie's Battleplex: Coordinates for X and Y".
-4. F6 chooses a destination, Ctrl+F6 goes there. Finish it (or, in explore mode, Ctrl+F5 twice).
-   You come back to Zurkie's with new Coordinates. HUB.md has everything else.
-
-The rest of this page is the 7.0 walkthrough, which still applies to the 7.0 presets.
+3. The parade plays to its end; the game takes you to Nefarious City, then to Sargasso. The
+   randomizer moves you nowhere (8.0-8.5's hub took you to Zurkie's at the wrench).
+4. From then on, fly with the ship's planet menu. PLAYING.md has everything else.
 
 ## Once
 
@@ -20,7 +17,7 @@ The rest of this page is the 7.0 walkthrough, which still applies to the 7.0 pre
 2. Install the kit (INSTALL.txt): 13 scripts, `rivet.toml`, `rando_give.dll` (v6), the
    `companion` folder.
 3. In `<game>\scripts\04_rando_settings.lua` choose:
-   - `preset`: `hub` (8.0 default), `hub_chaos`, `balanced`, `chaos`, `full`, `campaign` or
+   - `preset`: `balanced` (the kit's file: your defaults), `chaos`, `full`, `campaign` or
      `everything` (CONFIGURATION.md);
    - `seed`: `"random"`, or any text you want to share or replay.
 
