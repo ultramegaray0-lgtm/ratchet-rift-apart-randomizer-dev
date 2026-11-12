@@ -38,6 +38,7 @@
 --      played from there (15_rando_hub.lua, experimental).
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "8.4.0"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
@@ -1047,10 +1048,42 @@ elseif rando_seed_mode() == "fixed" then
   R.start_generation(tostring(SETTINGS.seed), "04_rando_settings.lua")
 end
 
+-- 8.4 THE KIT CHECK: every script of this kit says its version (RANDO_FILES). On the first frame
+-- (all scripts loaded) a missing script or one from another kit is reported in rivet.log and on
+-- screen, so a scripts folder that mixes kits never plays silently half-updated.
+R.KIT_FILES = { "01_rando_data", "02_rando_generator", "03_rando_campaign", "04_rando_settings", "05_rando_bindings",
+                "06_rando_capabilities", "09_rando_real", "10_rando_runtime", "11_rando_campaign", "12_rando_shop",
+                "13_rando_armor", "14_rando_travel", "15_rando_hub", "16_rando_testtravel" }
+function R.kit_check()
+  local files = RANDO_FILES or {}
+  local missing, other = {}, {}
+  for _, f in ipairs(R.KIT_FILES) do
+    local v = files[f]
+    if f == "04_rando_settings" then
+      if v ~= R.KIT_VERSION then
+        log("RANDO-KIT 04_rando_settings.lua is from an older kit (" .. tostring(v or "before 8.4") ..
+            "): options it does not list use their defaults (docs\\CONFIGURATION.md)")
+      end
+    elseif v == nil then missing[#missing + 1] = f
+    elseif v ~= R.KIT_VERSION then other[#other + 1] = f .. " " .. tostring(v) end
+  end
+  if #missing == 0 and #other == 0 then
+    log("RANDO-KIT all " .. #R.KIT_FILES .. " scripts are " .. R.KIT_VERSION)
+    return true
+  end
+  log("RANDO-ERROR RANDO-KIT the scripts folder does not hold one kit:" ..
+      (#missing > 0 and (" missing " .. table.concat(missing, ", ")) or "") ..
+      (#other > 0 and (" | other versions: " .. table.concat(other, ", ")) or "") ..
+      " - copy every file of the kit's scripts folder (INSTALL.txt)")
+  say("Randomizer: the scripts folder mixes kits or misses files - see rivet.log (RANDO-KIT)", { type = "center", duration = 10 })
+  return false
+end
+
 local announced = false
 local frames = 0
 local function frame(dt)
   frames = frames + 1
+  if frames == 1 then pcall(R.kit_check) end
   if #pending > 0 and frames % 30 == 0 then R.retry_subscriptions() end
   if R.arsenal_pending and frames % R.ARSENAL_EVERY == 0 and R.arsenal_in_game() then
     R.resolve_arsenal(true, "the game has ARSENAL_RESTORED's Mr. Zurkon item config loaded")

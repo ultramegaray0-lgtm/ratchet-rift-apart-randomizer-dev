@@ -18,6 +18,7 @@
 --   guide  public walkthrough (gamepressure mission list, vulkk gear guide); NOT verified in the
 --          game files. The research kit (companion/research/Research-Campaign.bat) replaces these
 --          with the real names; tools/build_campaign_registry.py merges them.
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "8.4.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_CAMPAIGN = {}
 local C = RANDO_CAMPAIGN
 C.VERSION = "7.0.0"

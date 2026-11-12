@@ -1,6 +1,6 @@
-Rift Apart Randomizer 8.3 - test run 2026-11-12 07:05 UTC
+Rift Apart Randomizer 8.4 - test run 2026-11-12 07:12 UTC
 Python 3.13.18 on Linux
-ran 312, failures 1, errors 0, skipped 17
+ran 314, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -278,7 +278,7 @@ test_off_by_default_and_8_1_behaviour_kept (tests.test_v82.TestTravelTests.test_
 test_planet_menu_without_coordinates_stays (tests.test_v82.TestTravelTests.test_planet_menu_without_coordinates_stays) ... ok
 test_script_loads_and_is_on (tests.test_v82.TestTravelTests.test_script_loads_and_is_on) ... ok
 test_seed_is_unchanged_by_test_travel (tests.test_v82.TestTravelTests.test_seed_is_unchanged_by_test_travel) ... ok
-test_settings_file_turns_it_on (tests.test_v82.TestTravelTests.test_settings_file_turns_it_on) ... FAIL
+test_settings_file_has_it_off_for_a_real_run (tests.test_v82.TestTravelTests.test_settings_file_has_it_off_for_a_real_run) ... ok
 test_warp_to_a_planet_without_coordinates_stays_there (tests.test_v82.TestTravelTests.test_warp_to_a_planet_without_coordinates_stays_there) ... ok
 test_works_before_the_hub_has_started (tests.test_v82.TestTravelTests.test_works_before_the_hub_has_started) ... ok
 test_zurkies_is_still_the_hubs_arrival (tests.test_v82.TestTravelTests.test_zurkies_is_still_the_hubs_arrival) ... ok
@@ -317,6 +317,8 @@ test_back_at_zurkies_is_ratchet (tests.test_v84.HeroTests.test_back_at_zurkies_i
 test_the_story_waits_for_a_slow_swap (tests.test_v84.HeroTests.test_the_story_waits_for_a_slow_swap) ... ok
 test_zurkies_own_visit_keeps_its_hero_through_a_load (tests.test_v84.HeroTests.test_zurkies_own_visit_keeps_its_hero_through_a_load) ... ok
 test_campaign_key_says_nothing_in_a_hub_seed (tests.test_v84.KeyTests.test_campaign_key_says_nothing_in_a_hub_seed) ... ok
+test_a_complete_kit_says_so (tests.test_v84.KitCheckTests.test_a_complete_kit_says_so) ... ok
+test_a_missing_or_older_script_is_reported (tests.test_v84.KitCheckTests.test_a_missing_or_older_script_is_reported) ... ok
 test_entries_are_names_your_game_listed (tests.test_v84.RegistryTests.test_entries_are_names_your_game_listed) ... ok
 test_heroes (tests.test_v84.RegistryTests.test_heroes) ... ok
 test_heroes_do_not_change_the_seed (tests.test_v84.RegistryTests.test_heroes_do_not_change_the_seed) ... ok
@@ -338,16 +340,7 @@ test_a_purchase_is_never_a_late_answer (tests.test_v84.WeaponTypeTests.test_a_pu
 test_a_purchase_teaches_its_type_in_either_order (tests.test_v84.WeaponTypeTests.test_a_purchase_teaches_its_type_in_either_order) ... ok
 test_the_wrong_lessons_of_a_save_are_dropped (tests.test_v84.WeaponTypeTests.test_the_wrong_lessons_of_a_save_are_dropped) ... ok
 
-======================================================================
-FAIL: test_settings_file_turns_it_on (tests.test_v82.TestTravelTests.test_settings_file_turns_it_on)
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/claude/work/tests/test_v82.py", line 216, in test_settings_file_turns_it_on
-    self.assertEqual(g.R.config.test_travel, True)
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: False != True
+Ran 314 tests in 96.210s
 
-----------------------------------------------------------------------
-Ran 312 tests in 94.348s
-
-FAILED (failures=1, skipped=17)
+OK (skipped=17)

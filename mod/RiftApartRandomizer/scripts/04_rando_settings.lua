@@ -12,6 +12,7 @@
 --     (docs\WEAPONS.md). Ammo and upgrades work as usual
 --   * a mission, side activity or armor pod with no item gives Bolts or Raritanium
 --   * the solver proves every seed can be finished (in the game's own mission order too)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "8.4.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_SETTINGS = {
   seed = "random",            -- any text, e.g. "lombax-ryno-2026"; "random" = the companion picks one and remembers it
   preset = "hub",             -- hub | hub_chaos | balanced | chaos | full | campaign | everything (docs\CONFIGURATION.md)

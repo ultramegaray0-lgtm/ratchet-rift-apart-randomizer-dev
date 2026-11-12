@@ -69,6 +69,25 @@ class Game:
             ok, err = loader(f.read_text(encoding="utf-8"), f.name)
             if not ok:
                 self.load_errors.append((f.name, err))
+        if os.environ.get("RANDO_STRICT_GLOBALS"):
+            # audit aid: report any global the scripts create or read after loading (a typo or a
+            # missing `local` shows up here); the report goes to the file the variable names
+            self.lua.execute(r"""
+              local out = io.open(os.getenv("RANDO_STRICT_GLOBALS"), "a")
+              local allowed = { RANDO_TEST_MODE = true, RANDO_PROBE = true, RANDO_VTABLES = true, RANDO_DONOR_ROUTE = true,
+                                RANDO_EXE = true }
+              setmetatable(_G, {
+                __newindex = function(t, k, v)
+                  local info = debug.getinfo(2, "Sl")
+                  if info and info.short_src and info.short_src:find("rando_") then out:write("NEW ", tostring(k), " ", info.short_src, ":", tostring(info.currentline), "\n"); out:flush() end
+                  rawset(t, k, v)
+                end,
+                __index = function(t, k)
+                  local info = debug.getinfo(2, "Sl")
+                  if not allowed[k] and info and info.short_src and info.short_src:find("rando_") then out:write("READ ", tostring(k), " ", info.short_src, ":", tostring(info.currentline), "\n"); out:flush() end
+                  return nil
+                end })
+            """)
 
     # 5.0: the default vendor's stock in (simulated) memory: the ammo entry, then the vendor's
     # weapons in the data's order, plus the Burst Pistol (owned from the prologue, never moved)

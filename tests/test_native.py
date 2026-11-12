@@ -162,11 +162,12 @@ class ShippedDllTests(unittest.TestCase):
             subprocess.run(["sh", "build.sh"], cwd=work, check=True, capture_output=True)
             built = open(os.path.join(work, "out", "rando_give.dll"), "rb").read()
         shipped = (MOD / "rando_give.dll").read_bytes()
-        self.assertEqual(len(built), len(shipped))
-        pe = struct.unpack_from("<I", shipped, 0x3C)[0]
-        stamp = range(pe + 8, pe + 12)                  # IMAGE_FILE_HEADER.TimeDateStamp
-        diff = [i for i in range(len(built)) if built[i] != shipped[i] and i not in stamp]
-        self.assertEqual(diff, [])
+        # 8.4: build.sh pins the link time, so the build is byte for byte the shipped DLL (the one
+        # rounds 17-20 ran: sha256 efb92723...)
+        self.assertEqual(built, shipped)
+        import hashlib
+        self.assertEqual(hashlib.sha256(shipped).hexdigest(),
+                         "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12")
 
 
 if __name__ == "__main__":

@@ -368,3 +368,21 @@ class VersionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class KitCheckTests(unittest.TestCase):
+    def test_a_complete_kit_says_so(self):
+        g = Game(settings_file=True)
+        g.step(3)
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 8.4.0"))
+        self.assertFalse(g.log_has("RANDO-ERROR"))
+
+    def test_a_missing_or_older_script_is_reported(self):
+        from harness import script_files
+        files = [f for f in script_files() if not f.name.startswith("16_")]
+        g = Game(files=files)
+        g.lua.execute('RANDO_FILES["13_rando_armor"] = "8.3.0"')      # a file left from the 8.3 kit
+        g.step(3)
+        self.assertTrue(g.log_has("missing 16_rando_testtravel"))
+        self.assertTrue(g.log_has("other versions: 13_rando_armor 8.3.0"))
+        self.assertTrue(g.note_has("mixes kits"))
