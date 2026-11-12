@@ -41,7 +41,7 @@
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "8.3.0"
+R.KIT_VERSION = "8.4.0"
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -130,7 +130,9 @@ R.config = {
   -- 8.3 the story on arrival (15_rando_hub.lua)
   story_on_arrival = true,           -- landing on a planet (test travel, the ship's menu, a hub trip) starts its
                                      -- story, even if the story before it is not finished
-  story_restart_stuck = true,        -- a story mission left waiting at its "go to <planet>" step is restarted
+  story_prime_before_travel = true,  -- 8.4: a hub trip / test-travel warp gets the hero and starts the story first
+  story_reload_stuck = true,         -- 8.4: a story still at "go to <planet>" after 20 s is reloaded once
+                                     -- (out to Zurkie's and straight back)
   key_story = "/",                   -- / start the story of the planet you are on; Ctrl+/ twice restarts it
   legacy_f_keys = true,              -- the old F5-F9 keys keep working as well
 }
@@ -138,6 +140,7 @@ R.CHOICES = { hub_trigger = { wrench = true, control = true, cinematic = true },
               hub_levels = { all = true, off = true } }
 -- options that no longer exist
 local RETIRED_RUNTIME = { key_shop_next = "is not used since 4.0", key_shop_buy = "is not used since 4.0",
+                          story_restart_stuck = "is story_reload_stuck since 8.4 (the restart did not move a story in round 20)",
                           lock_vendor_weapons = "is not used since 5.0 (the vendor sells its own weapons, shuffled; ammo works)" }
 local SETTINGS = RANDO_SETTINGS or {}
 local KEY_SETTINGS = { key_status = true, key_campaign = true, key_hub = true, key_hub_return = true,
@@ -156,6 +159,7 @@ for k, v in pairs(SETTINGS) do
     end
   elseif RETIRED_RUNTIME[k] then
     log("RANDO-SETTINGS", k, RETIRED_RUNTIME[k])
+    if k == "story_restart_stuck" and v == false and SETTINGS.story_reload_stuck == nil then R.config.story_reload_stuck = false end
   elseif k ~= "seed" and k ~= "preset" then
     GEN_OPTIONS[k] = v
   end
@@ -847,6 +851,19 @@ function rando_set_arsenal(found)
   return "ok"
 end
 function rando_arsenal_mode() return R.arsenal_pending and "auto" or "fixed" end
+-- 8.4: the game itself answers when it can. ARSENAL_RESTORED adds Mr. Zurkon's item config
+-- (DB.arsenal_marker, an asset the game does not have); once it is loaded, the mod is installed.
+-- Round 20: rivet_hook loaded mods/ARSENAL_RESTORED.stage (wpn_mr_zurkon_item.config resolved),
+-- but the companion answered after the 60 s wait, so the seed was made without the mod's weapons.
+-- Only "installed" is concluded here; "not installed" still needs the companion (or, for a fixed
+-- seed, the wait). With seed = "random" there is no wait at all: the seed comes from the
+-- companion, which answers the check first.
+R.ARSENAL_EVERY = 60
+function R.arsenal_in_game()
+  if type(rivet.config) ~= "function" or not DB.arsenal_marker then return false end
+  local ok, c = pcall(rivet.config, DB.arsenal_marker)
+  return ok and type(c) == "table"
+end
 -- the companion supplies the seed when 04_rando_settings.lua says seed = "random":
 -- rando_use_seed("") asks for a new random seed, rando_use_seed(text) continues one
 function rando_use_seed(text)
@@ -1035,7 +1052,10 @@ local frames = 0
 local function frame(dt)
   frames = frames + 1
   if #pending > 0 and frames % 30 == 0 then R.retry_subscriptions() end
-  if R.arsenal_pending and frames >= R.WAIT_COMPANION_START then
+  if R.arsenal_pending and frames % R.ARSENAL_EVERY == 0 and R.arsenal_in_game() then
+    R.resolve_arsenal(true, "the game has ARSENAL_RESTORED's Mr. Zurkon item config loaded")
+  end
+  if R.arsenal_pending and frames >= R.WAIT_COMPANION_START and rando_seed_mode() == "fixed" then
     R.resolve_arsenal(false, "the companion did not answer: treated as not installed")
   end
   -- generation

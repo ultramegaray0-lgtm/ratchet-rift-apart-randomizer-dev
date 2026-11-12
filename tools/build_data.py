@@ -90,8 +90,8 @@ PLANET_CHECKPOINTS = {
     "savali": {"known": ["CHK_SAV_01_LANDING"], "codes": ["SAV", "SVALI"], "areas": ["savali"]},
     "blizar_prime": {"known": ["CHK_BLIZAR_A_LANDINGPAD"], "codes": ["BLIZAR"], "areas": ["blizar"]},
     "torren_iv": {"known": [], "codes": ["MOL", "MOLONOTH", "TORREN"], "areas": ["molonoth", "torren"]},
-    "cordelion": {"known": [], "codes": ["CORD", "KEDARO"], "areas": ["kedaro", "cordelion"]},
-    "ardolis": {"known": [], "codes": ["ARD", "ARDOLIS"], "areas": ["ardolis"]},
+    "cordelion": {"known": ["CHK_CORD_A_TELE_SHIP"], "codes": ["CORD", "KEDARO"], "areas": ["kedaro", "cordelion"]},
+    "ardolis": {"known": ["CHK_ARD_START"], "codes": ["ARD", "ARDOLIS"], "areas": ["ardolis"]},
     "viceron": {"known": [], "codes": ["ZORD", "ZORDOOM", "VICERON"], "areas": ["zordoom", "viceron"]},
 }
 # 8.1: "areas" are fragments of rivet.checkpoints()' area field (round 17: Zurkons, Sargasso (open

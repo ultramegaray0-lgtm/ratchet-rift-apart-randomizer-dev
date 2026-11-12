@@ -26,6 +26,14 @@
 -- that holds the vendor's weapons is used, so a neighbouring object is never taken for it.
 -- If anything does not match, the vendor is left as it is and rivet.log says why (RANDO-SHOP).
 --
+-- 8.4 (rounds 18-20): the search never found the slots: "only 0 vendor weapon(s) in the array at
+-- +0x48", every try, every round. ItemDatas is List<VendorItemData?> (rivet's DDL,
+-- VendorConfig.cs: GetObjects), an array of POINTERS to the slot objects, not the slots
+-- themselves. The ids were found past the end of the pointer array (in the slot objects the
+-- heap put after it), so no match fell inside it. Now an array whose elements are pointers is
+-- also tried: each slot object's first H.OBJ bytes are searched for a vendor weapon's id, and
+-- the Item field is the offset most slots agree on. The inline layout is still tried first.
+--
 -- 7.0 PRICES (seed.shop.prices: slot -> Bolts). The Price field's position is not known from your
 -- game, so it is found the same way as the Item field: every slot's element is searched for that
 -- slot's own vanilla price (Enforcer 1,250 ... Headhunter 40,000, data/weapon_registry.json), as a
@@ -53,6 +61,7 @@ H.CHUNK = 0x200                 -- rivet.read's limit is 512 bytes
 H.MAX_DATA = 0x4000             -- bytes of one array searched for ids
 H.vendors = H.vendors or {}     -- config id -> { status, tries, pending, ... }
 H.NO_WEAPONS = "no array of the vendor's weapons in this config"
+H.OBJ = 0x80                    -- 8.4: bytes of one slot object searched (pointer layout)
 
 -- every weapon of the registry, by item id (a slot is recognised by the weapon it sells)
 H.VENDOR = {}
@@ -110,8 +119,48 @@ end
 
 local function gcd(a, b) while b ~= 0 do a, b = b, a % b end; return a end
 
--- 3 and 4 above. Returns { data = address, stride, offset, slots = { { index, key, addr } }, count }
--- or nil and why.
+-- 8.4: an array of pointers to slot objects. Returns the layout, or nil and why.
+local function valid_ptr(p) return p and p > 0x10000 and p < 0x7FFFFFFFFFFF and p % 8 == 0 end
+function H.discover_pointers(ptr, count, header_at)
+  local raw = read_span(ptr, count * 8)
+  if #raw < count * 8 then return nil, "pointer array not readable" end
+  local elems = {}
+  for e = 0, count - 1 do
+    local p = tonumber(hex64(raw, e * 8 + 1), 16)
+    if p and p ~= 0 then
+      if not valid_ptr(p) then return nil, "not an array of pointers" end
+      elems[#elems + 1] = { index = e, base = p }
+    end
+  end
+  if #elems < 3 then return nil, "too few slot objects" end
+  local votes, hits = {}, {}
+  for _, el in ipairs(elems) do
+    local b = read_span(el.base, H.OBJ)
+    el.bytes = b
+    for i = 1, #b - 7, 8 do
+      local id = hex64(b, i)
+      if id and H.VENDOR[id] then
+        hits[#hits + 1] = { el = el, off = i - 1, key = H.VENDOR[id] }
+        votes[i - 1] = (votes[i - 1] or 0) + 1
+      end
+    end
+  end
+  local off, nv = nil, 0
+  for o, v in pairs(votes) do if v > nv or (v == nv and off and o < off) then off, nv = o, v end end
+  if not off then return nil, string.format("no vendor weapon in the %d slot objects of the array at +0x%X", #elems, header_at) end
+  local slots, used, seen_key = {}, {}, {}
+  for _, m in ipairs(hits) do
+    if m.off == off and not used[m.el.index] and not seen_key[m.key] then
+      used[m.el.index] = true; seen_key[m.key] = true
+      slots[#slots + 1] = { index = m.el.index, key = m.key, addr = m.el.base + off, base = m.el.base }
+    end
+  end
+  if #slots < 3 then return nil, string.format("only %d vendor weapon(s) in the slot objects of the array at +0x%X", #slots, header_at) end
+  return { data = ptr, stride = H.OBJ, offset = off, slots = slots, count = count, header_at = header_at, pointers = true }
+end
+
+-- 3 and 4 above. Returns { data = address, stride, offset, slots = { { index, key, addr, base } },
+-- count, pointers } or nil and why.
 function H.discover(obj)
   local head = read_span(obj, H.HEADER)
   if #head < 0x40 then return nil, "config not readable" end
@@ -121,7 +170,12 @@ function H.discover(obj)
     local ptr = p and tonumber(p, 16)
     local count, cap = s32(head, o + 8), s32(head, o + 12)
     if ptr and ptr > 0x10000 and ptr < 0x7FFFFFFFFFFF and ptr % 8 == 0 and count >= 2 and count <= 256 and cap >= count and cap <= 4096 then
-      local data = read_span(ptr, math.min(H.MAX_DATA, count * 0x400))
+      -- 8.4: an array of pointers to slot objects (VendorConfig.ItemDatas) first
+      if not best then
+        local lp, whyp = H.discover_pointers(ptr, count, o - 1)
+        if lp then best = lp elseif whyp ~= "not an array of pointers" and whyp ~= "too few slot objects" and whyp ~= "pointer array not readable" then why = whyp end
+      end
+      local data = (not best) and read_span(ptr, math.min(H.MAX_DATA, count * 0x400)) or {}
       local pos = {}
       for i = 1, #data - 7, 8 do
         local id = hex64(data, i)
@@ -141,7 +195,7 @@ function H.discover(obj)
             local idx = (m.at - off) // g
             if m.at % g == off and idx < count and not used[idx] and not seen_key[m.key] then
               used[idx] = true; seen_key[m.key] = true
-              slots[#slots + 1] = { index = idx, key = m.key, addr = ptr + m.at }
+              slots[#slots + 1] = { index = idx, key = m.key, addr = ptr + m.at, base = ptr + idx * g }
             end
           end
           if #slots >= 3 and not best then
@@ -276,8 +330,9 @@ function H.apply(id, obj_hex, v)
   v.status = string.format("%d of %d weapon slots changed", wrote, #lay.slots)
   v.applied = (v.applied or 0) + 1
   H.applied_total = (H.applied_total or 0) + 1
-  log(string.format("vendor %s at %s: %d weapon slots, %d changed (element 0x%X bytes, Item at +0x%X, array of %d at +0x%X) - %s",
-                    id, obj_hex, #lay.slots, wrote, lay.stride, lay.offset, lay.count, lay.header_at, table.concat(parts, " ")))
+  log(string.format("vendor %s at %s: %d weapon slots, %d changed (%s, Item at +0x%X, array of %d at +0x%X) - %s",
+                    id, obj_hex, #lay.slots, wrote, lay.pointers and "slot objects by pointer" or string.format("element 0x%X bytes", lay.stride),
+                    lay.offset, lay.count, lay.header_at, table.concat(parts, " ")))
   if not H.said then
     H.said = true
     say(string.format("Randomizer: Ms. Zurkon's %d weapon slots sell this seed's weapons", mine), { type = "corner", duration = 5 })
@@ -295,7 +350,7 @@ function H.find_price(lay)
   local elems = {}
   for _, sl in ipairs(lay.slots) do
     local price = DB.items[sl.key] and DB.items[sl.key].price
-    local base = lay.data + sl.index * lay.stride
+    local base = sl.base or (lay.data + sl.index * lay.stride)
     local b = read_span(base, lay.stride)
     if #b >= lay.stride then
       elems[#elems + 1] = { sl = sl, b = b, base = base, price = price }
@@ -348,7 +403,7 @@ function H.apply_prices(id, lay, prices, v)
   for _, sl in ipairs(lay.slots) do
     local p = prices[sl.key]
     if p then
-      local addr = lay.data + sl.index * lay.stride + pf.offset
+      local addr = (sl.base or (lay.data + sl.index * lay.stride)) + pf.offset
       local raw = pf.enc == "u32" and math.floor(p) or f32_bits(p)
       local ok, err = pcall(rivet.write, hexaddr(addr), le32(raw))
       local back = ok and read_span(addr, 4)

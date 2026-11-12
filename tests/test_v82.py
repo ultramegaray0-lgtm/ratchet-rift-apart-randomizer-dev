@@ -78,7 +78,7 @@ class TestTravelTests(unittest.TestCase):
     def test_script_loads_and_is_on(self):
         g = test_game()
         self.assertTrue(g.g.RANDO_TEST_TRAVEL.on())
-        self.assertTrue(g.log_has("RANDO-TEST\tloaded (8.3.0) - test travel is ON"))
+        self.assertTrue(g.log_has("RANDO-TEST\tloaded (8.4.0) - test travel is ON"))
         self.assertIn("TEST TRAVEL on", g.R.status_text())
 
     def test_warp_to_a_planet_without_coordinates_stays_there(self):
@@ -97,7 +97,9 @@ class TestTravelTests(unittest.TestCase):
         land(g, 1200)
         self.assertEqual(g.state.current_planet, locked)            # nothing sent you back
         self.assertTrue(any("[TEST TRAVEL] warp to " + locked in x for x in py(g.state.history)))
-        self.assertEqual(g.state.travel.landed[locked], g.sim.last_cp)   # the landing is learned
+        # 8.4: a test trip's landing is offered again by test travel, never used by the hub
+        self.assertEqual(g.state.travel.test_landed[locked], g.sim.last_cp)
+        self.assertIsNone(g.state.travel.landed[locked])
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
     def test_every_planet_can_be_reached(self):
@@ -132,6 +134,7 @@ class TestTravelTests(unittest.TestCase):
         g.sim.ship_near = False
         select(g, "savali")
         g.press("F8", ctrl=True)
+        g.step(120)                                   # 8.4: the story is made ready first
         self.assertTrue(g.note_has("fly to"))
         self.assertTrue(g.note_has("Ctrl+. warps instead"))   # 8.3 keys
         g.sim.ship_near = True
@@ -208,9 +211,9 @@ class TestTravelTests(unittest.TestCase):
             g.wait_seed()
         self.assertEqual(a.seed.fingerprint, b.seed.fingerprint)
 
-    def test_settings_file_turns_it_on(self):
+    def test_settings_file_has_it_off_for_a_real_run(self):
         g = Game(settings_file=True)
-        self.assertEqual(g.R.config.test_travel, True)
+        self.assertEqual(g.R.config.test_travel, False)       # 8.4: off in the release kit
         self.assertEqual(g.R.config.key_test_travel, ".")   # 8.3 keys
         self.assertEqual(g.R.config.key_test_point, ",")
 

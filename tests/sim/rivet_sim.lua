@@ -94,6 +94,8 @@ function S.reset()
   S.ship_near = false
   S.fly_frames = 120
   S.heroes = {}
+  S.playing, S.swap_pending, S.swap_frames, S.swap_refuse = "ratchet", nil, 0, nil
+  S.go_to, S.goto_on_start = {}, true
   S.levels, S.levels_other, S.level_current = 0x6, 0x2, 2
   S.travel_flag = 0
   S.v6_bits = 7
@@ -112,6 +114,10 @@ function S.reset()
     "CHK_MOL_02_FIXER_CHASE_CINE", "CHK_MOL_01_START",                      -- SIMULATED
     "CHK_STATION_01_START", "CHK_STATION_FORGE_BOSS",                       -- SIMULATED (Cordelion)
     "CHK_ARD_01_ARRIVAL", "CHK_ZORD_01_START",                              -- SIMULATED
+    -- 8.4: listed by your game in rounds 19-20 (test travel and the catalog)
+    "CHK_ARD_START", "CHK_ARD_QWARKSHIP_ENTRANCE", "CHK_CORD_A_START", "CHK_CORD_A_TELE_SHIP", "CHK_CORD_B_HAX_START",
+    "CHK_ZORDOOM_START", "CHK_ZORDOOM_LANDING_COMBAT", "CHK_MOL_SALVAGE_PIRATES_COMMAND_SHIP",
+    "CHK_MOL_SALVAGE_PIRATES_COMMAND_SHIP_SCUTTLE",
     "CHK_TRANSITION_TO_MOL", "CHK_TRANSITION_TO_SARG", "CHK_TRANSITION_TO_KEDARO", "CHK_TRANSITION_TO_ARDOLIS",
     "CHK_TRANSITION_TO_BLIZAR", "CHK_TRANSITION_TO_NEFARIOUS_CITY", "CHK_TRANSITION_TO_SAVALI",
     "CHK_TRANSITION_TO_ZORDOOM", "CHK_TRANSITION_TO_ZURKIES",
@@ -137,10 +143,13 @@ function S.reload_configs()
   for id, c in pairs(S.configs) do
     if c.type == "VendorConfig" then for k, v in pairs(VENDOR_DEFAULTS) do c.fields[k] = v end end
     local vm = S.vendor_mem[id]
-    if vm then for i, item in ipairs(vm.authored) do S.put_hex_id(vm.data + (i - 1) * 0x58 + 0x10, item) end end
+    if vm then for i, item in ipairs(vm.authored) do S.put_hex_id(vm.slot(i) + 0x10, item) end end
   end
 end
--- 5.0: the vendor's stock in memory (INVENTED layout, see the top of this file)
+-- 5.0: the vendor's stock in memory (INVENTED layout, see the top of this file).
+-- 8.4: S.vendor_pointers = true lays ItemDatas out as the game's DDL declares it (List<VendorItemData?>,
+-- rivet's VendorConfig.cs): an array of POINTERS, with the slot objects allocated right after the
+-- array - which is why 7.0-8.3 found the ids "past the end of the array" (rounds 18-20)
 S.VENDOR_OBJ = 0x23400000
 function S.install_vendor_memory(id, items, prices)
   local obj = S.VENDOR_OBJ + 0x10000 * (#S.config_objects + (S.vendor_count or 0))
@@ -151,19 +160,28 @@ function S.install_vendor_memory(id, items, prices)
   S.put_u64(obj + 0x88, data)
   S.put_u32(obj + 0x90, #items)
   S.put_u32(obj + 0x94, #items + 3)
-  S.map(data, #items * 0x58 + 0x400)
+  local slot
+  if S.vendor_pointers then
+    local objs = data + #items * 8 + 0x20
+    S.map(data, #items * 8 + 0x20 + #items * 0x60 + 0x400)
+    slot = function(i) return objs + (i - 1) * 0x60 end
+    for i = 1, #items do S.put_u64(data + (i - 1) * 8, slot(i)) end
+  else
+    S.map(data, #items * 0x58 + 0x400)
+    slot = function(i) return data + (i - 1) * 0x58 end
+  end
   for i, item in ipairs(items) do
-    local e = data + (i - 1) * 0x58
+    local e = slot(i)
     S.put_u64(e + 0x08, 0x40000 + i)              -- some other field
     S.put_hex_id(e + 0x10, item)
     S.put_u32(e + 0x18, (prices and prices[i]) or 1000 * i)  -- Price (7.0: the weapon's vanilla price when given)
   end
-  S.vendor_mem[id] = { obj = obj, data = data, authored = items }
+  S.vendor_mem[id] = { obj = obj, data = data, authored = items, slot = slot }
   S.config_objects[id] = obj
 end
-function S.vendor_slot_item(id, i) return S.get_hex_id(S.vendor_mem[id].data + (i - 1) * 0x58 + 0x10) end
+function S.vendor_slot_item(id, i) return S.get_hex_id(S.vendor_mem[id].slot(i) + 0x10) end
 function S.vendor_slot_price(id, i)
-  local a = S.vendor_mem[id].data + (i - 1) * 0x58 + 0x18
+  local a = S.vendor_mem[id].slot(i) + 0x18
   return S.mem[a] + S.mem[a + 1] * 0x100 + S.mem[a + 2] * 0x10000 + S.mem[a + 3] * 0x1000000
 end
 -- the player holds the vendor's buy button for `seconds` on a weapon (SIMULATED behaviour)
@@ -389,7 +407,38 @@ function rivet.checkpoints(filter)
   end
   return out
 end
-function rivet.hero_play_as(name) S.heroes[#S.heroes + 1] = name; return "applied" end
+-- 8.4: rivet_hook's play_as (hero_look.cpp): raises "already playing as that hero" when the hero
+-- is that one (the randomizer's check), else asks the game for the swap ("applied"). The swap
+-- lands after S.swap_frames frames (SIMULATED: round 17's swaps were logged "applied"; how long
+-- the game takes is not known). S.swap_refuse = "reason" makes it raise that instead.
+local HEROES = { ratchet = true, clank = true, rivet = true, kit = true }
+function rivet.hero_play_as(name)
+  if not HEROES[name] then raise("the hero is ratchet, clank, rivet or kit") end
+  if not S.scene then raise("no hero") end
+  if S.swap_refuse then raise(S.swap_refuse) end
+  if S.playing == name and not S.swap_pending then raise("already playing as that hero") end
+  if S.swap_pending and S.swap_pending.name == name then return "applied" end
+  S.heroes[#S.heroes + 1] = name
+  if (S.swap_frames or 0) <= 0 then S.playing = name
+  else S.swap_pending = { name = name, at = S.frame + S.swap_frames } end
+  return "applied"
+end
+-- 8.4 the story's first step ("go to <planet>"), SIMULATED from rounds 17 and 20:
+-- S.go_to[mission] = { o = objective, planet = event planet name, hero = hero }. A start (or a
+-- load of the planet while the mission is active) reports the objective; it finishes only when
+-- the hero is the mission's hero and the hero is on the planet: at once on a start there if
+-- S.goto_on_start (Ardolis, round 20), and on any load of the planet (Savali, Viceron, round 20).
+S.go_to = {}
+S.goto_on_start = true
+function S.goto_check(name, why)
+  local g = S.go_to[name]
+  if not g or S.mstate == nil or S.mstate[name] ~= 2 or g.done then return end
+  if S.planet == g.planet and S.playing == g.hero then
+    g.done = true
+    S.emit("ObjectiveStateChangedEvent", { MissionName = name, ObjectiveName = g.o, ObjectiveState = 2 })
+    if g.next then S.emit("ObjectiveStateChangedEvent", { MissionName = name, ObjectiveName = g.next, ObjectiveState = 1 }) end
+  end
+end
 function S.parade_control()
   S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_START_CINE", ObjectiveState = 2 })
   S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_START", ObjectiveState = 1 })
@@ -575,6 +624,14 @@ local function dll_mission(kind, name, flag)
   elseif kind == 3 then
     if system == 2 and (before ~= 1 or not S.can_start) then return 10, before, before, i, system end
     S.set_mission(name, S.start_effect)
+    S.started_as = S.started_as or {}
+    S.started_as[name] = S.playing
+    local g = S.go_to[name]
+    if g and S.start_effect == 2 then
+      g.done = false
+      S.emit("ObjectiveStateChangedEvent", { MissionName = name, ObjectiveName = g.o, ObjectiveState = 1 })
+      if S.goto_on_start then S.goto_check(name, "start") end
+    end
   elseif kind == 4 then
     if before ~= 3 then return 10, before, before, i, system end
     S.set_mission(name, 4)
@@ -688,6 +745,7 @@ function S.step(n)
   for _ = 1, n or 1 do
     S.frame = S.frame + 1
     S.clock = S.clock + 1 / 60
+    if S.swap_pending and S.frame >= S.swap_pending.at then S.playing = S.swap_pending.name; S.swap_pending = nil end
     if S.speed >= 0.5 and #S.held > 0 then
       local held = S.held; S.held = {}
       for _, id in ipairs(held) do S.apply_give(id) end
@@ -752,6 +810,10 @@ function S.travel(new_name, loading_frames)
   for id in pairs(S.weapons_owned) do ids[#ids + 1] = id end
   table.sort(ids)
   for _, id in ipairs(ids) do S.emit("WeaponAddedEvent", { WeaponType = S.weapon_type_of(id) }) end
+  local gnames = {}
+  for name in pairs(S.go_to) do gnames[#gnames + 1] = name end
+  table.sort(gnames)
+  for _, name in ipairs(gnames) do S.goto_check(name, "load") end
   S.step(1)
 end
 

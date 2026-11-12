@@ -2802,7 +2802,9 @@
      "CORD",
      "KEDARO"
     ],
-    "known": []
+    "known": [
+     "CHK_CORD_A_TELE_SHIP"
+    ]
    },
    "codes": [
     "mis_cord_01_first_visit",
@@ -2827,7 +2829,9 @@
      "ARD",
      "ARDOLIS"
     ],
-    "known": []
+    "known": [
+     "CHK_ARD_START"
+    ]
    },
    "codes": [
     "mis_ard",

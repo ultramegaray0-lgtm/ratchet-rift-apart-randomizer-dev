@@ -99,7 +99,9 @@ class CatalogTests(unittest.TestCase):
     def test_every_planet_gets_a_checkpoint_and_never_a_tunnel(self):
         g = to_hub(hub_game("v81-cat"))
         T = self.catalog(g)
-        want = {"torren_iv": "CHK_MOL_01_START", "cordelion": "CHK_STATION_01_START", "ardolis": "CHK_ARD_01_ARRIVAL",
+        # 8.4: a planet's story start (CHK_<code>_START / _A_ / _01_) ranks first; Cordelion's and
+        # Ardolis' are names your game listed in rounds 19-20
+        want = {"torren_iv": "CHK_MOL_01_START", "cordelion": "CHK_CORD_A_START", "ardolis": "CHK_ARD_START",
                 "sargasso": "CHK_SARG_GELFACTORY_LANDINGPAD", "blizar_prime": "CHK_BLIZAR_A_LANDINGPAD"}
         for pid, cp in want.items():
             self.assertEqual(T.best_in_catalog(pid), cp, pid)
@@ -163,13 +165,17 @@ class CatalogTests(unittest.TestCase):
         g = to_hub(hub_game("v81-wait"))
         H, T = g.g.RANDO_HUB, g.g.RANDO_TRAVEL
         T.catalog_reset()                                 # as if the catalog had just started
-        self.assertTrue(H.travel("cordelion", None, False, "test"))
+        # (8.4: Cordelion has a landing seen in your logs now; Torren IV gets one only by its area:
+        # a SIMULATED name without the planet's code, so only the full catalog places it)
+        g.sim.checkpoint_list = g.lua.table_from([c for c in py(g.sim.checkpoint_list) if "_MOL" not in c] + ["CHK_GULCH_01_START"])
+        g.lua.execute('table.insert(SIM.CP_PLANET, { "GULCH", "Torren" })')
+        self.assertTrue(H.travel("torren_iv", None, False, "test"))
         self.assertTrue(g.log_has("waits for the checkpoint catalog"))
         for _ in range(60):
             g.step(30)
-            if g.sim.planet == "Cordelion":
+            if g.sim.planet == "Torren":
                 break
-        self.assertEqual(g.sim.planet, "Cordelion")
+        self.assertEqual(g.sim.planet, "Torren")
         self.assertIsNone(H.wait_catalog)
 
     def test_a_menu_landing_is_remembered(self):

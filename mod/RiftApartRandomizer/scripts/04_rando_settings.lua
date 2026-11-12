@@ -1,4 +1,4 @@
--- Rift Apart Randomizer 8.3: your seed and settings.
+-- Rift Apart Randomizer 8.4: your seed and settings.
 -- Change, save, then restart the game (or press Pause to reload the scripts before you play).
 -- A different seed or different randomization options make a NEW seed with its own progress;
 -- start it with NEW GAME. Keys/logging can change any time.
@@ -92,10 +92,13 @@ RANDO_SETTINGS = {
   -- 8.0 hub, in the game (change any time)
   key_hub = "]",                     -- ] next destination, Ctrl+] go there (before the hub starts: go to Zurkie's)
   key_hub_return = "[",              -- [ twice back to Zurkie's; Ctrl+[ twice finish this destination by hand
-  -- 8.3 THE STORY ON ARRIVAL
+  -- THE STORY ON ARRIVAL (8.3) and its hero (8.4)
   story_on_arrival = true,           -- landing on a planet (test travel, the ship's menu, a hub trip) starts that
                                      -- planet's story, even if the story before it is not finished
-  story_restart_stuck = true,        -- a story left waiting at its "go to <planet>" step is started again on its planet
+  story_prime_before_travel = true,  -- a hub trip (and a test-travel warp) switches to the story's hero and starts
+                                     -- the story BEFORE it travels, so the planet loads with it running
+  story_reload_stuck = true,         -- a story still at "go to <planet>" 20 s after its start is reloaded once:
+                                     -- out to Zurkie's and straight back
   key_story = "/",                   -- / start the story of the planet you are on; Ctrl+/ twice: start it again
   hub_runtime = true,                -- false: a hub seed does nothing hub-specific (no warps, no mission calls)
   hub_trigger = "wrench",            -- New Game: leave the parade once Ratchet has the wrench | "control" | "cinematic"
@@ -107,10 +110,11 @@ RANDO_SETTINGS = {
   hub_fly = true,                    -- leave Zurkie's with the ship's flight when a ship answers (else the warp)
   hub_auto_return = true,            -- a finished destination takes you back to Zurkie's
   hub_return_delay = 12,             -- seconds before that ([ cancels)
-  hub_hero_swap = true,              -- Rivet's destinations swap the hero to Rivet (Ratchet again at Zurkie's)
-  -- 8.2 TEST TRAVEL (docs\TEST_TRAVEL.md): go to any planet, whatever Coordinates you hold.
-  -- Set it to false for a real run (it is written into the history as [TEST TRAVEL]).
-  test_travel = true,                -- true: the keys below work, and nothing sends you back from a planet
+  hub_hero_swap = true,              -- each destination is played as its own hero (checked with the game);
+                                     -- Ratchet again at Zurkie's. A story only starts with its own hero
+  -- 8.2 TEST TRAVEL (docs\TEST_TRAVEL.md): go to any planet, whatever Coordinates you hold. A testing aid,
+  -- OFF for a real playthrough (8.4); set it to true to use it (written into the history as [TEST TRAVEL]).
+  test_travel = false,               -- true: the keys below work, and nothing sends you back from a planet
   key_test_travel = ".",             -- . next planet, Ctrl+. warp there
   key_test_point = ",",              -- , next landing point on that planet, Ctrl+, fly there with the ship
   discovery = true,                  -- log the game events the randomizer listens to

@@ -648,7 +648,7 @@ class DeliveryTests(unittest.TestCase):
         g.sim.weapons_owned[ex] = True                # it did arrive, unreported
         g.sim.ignore_items[ex] = None
         g.travel("NefCity")
-        g.step(5)
+        g.step(700)                                   # 8.4: judged when the load's replay is over
         self.assertEqual(g.item_status("weapon:revolver"), "owned", [l for l in g.logs() if "REAL" in l][-6:])
 
     def test_travel_during_a_delivery_is_not_misread(self):

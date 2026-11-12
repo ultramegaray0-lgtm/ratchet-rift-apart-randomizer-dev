@@ -47,13 +47,28 @@
 -- has started (a save from before 8.0, or the warp failed), Ctrl+] goes to Zurkie's and starts it.
 --
 -- 8.3 THE STORY ON ARRIVAL: landing on a planet (test travel, the ship's menu, a hub trip) starts
--- that planet's first unfinished story, whatever came before it (H.story_here). A story mission
--- that is active but still at its "go to <planet>" step is started again on its planet (H.stuck).
+-- that planet's first unfinished story, whatever came before it (H.story_here).
+--
+-- 8.4 (round 20) THE HERO DECIDES WHETHER A STORY STARTS. A story's first step ("go to <planet>")
+-- finished at once when the visit's own hero was on the planet (Ardolis, Savali, Zurkie's 1 as
+-- Ratchet) and never with the other hero (Torren IV and Viceron as Ratchet, Nefarious City as
+-- Rivet in round 17). Round 20 played those as the wrong hero because the save's remembered hero
+-- ("rivet") was trusted while the game had Ratchet: every swap was skipped or refused with
+-- "already playing as that hero". Now:
+--   * the hero is never taken from the save: rivet.hero_play_as answers "already playing as that
+--     hero" exactly when the hero is the one asked for, and that answer is the check (H.ensure_hero);
+--   * a story is started only after its hero is confirmed (H.activate);
+--   * a hub trip (and a test-travel warp) gets the hero and starts the story BEFORE it travels
+--     (story_prime_before_travel), so the planet loads with its story active, as Savali did;
+--   * a story whose first step is still waiting after the start is reloaded once: out to Zurkie's
+--     (or, for Zurkie's own visits, another planet) and straight back (story_reload_stuck). Round
+--     20's Viceron finished that step on its reload. The 8.3 restart of an active mission is gone
+--     from the automatic path: in round 20 it changed the state but never moved the story.
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "8.3.0"
+H.VERSION = "8.4.0"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -83,10 +98,16 @@ H.TRIGGER_TIMEOUT = 5400    -- New Game seen but the trigger objective never cam
 H.CONFIRM = 4               -- seconds for the second press of F5 / Ctrl+F5
 H.KEEPER_MAX = 3            -- parade-on-load corrections per session
 H.STUCK_WAIT = 1200         -- 8.3: after a start, frames before a story still at "go to <planet>" is reported
+H.HERO_EVERY = 60           -- 8.4: frames between hero checks while a swap is under way
+H.HERO_TRIES = 15           -- 8.4: checks before a swap counts as failed (about 15 s)
+H.PRIME_TIMEOUT = 900       -- 8.4: a trip waits at most this long for its story to be primed
+H.BOUNCE_TIMEOUT = 7200     -- 8.4: a reload trip that has not come back by then is forgotten
 
 H.frame = 0
 H.session = H.session or { new_game = nil, control = nil, wrench = nil, researched = false, keeper = 0, started = {} }
 H.session.started = H.session.started or {}   -- 8.3: missions this session started (name -> frame)
+H.session.reloaded = H.session.reloaded or {} -- 8.4: destinations reloaded this session (id -> frame)
+H.bounce = nil              -- 8.4: a reload trip in flight: { dest, via, at }
 H.force_restart = {}        -- 8.3: destination id -> true (Ctrl+story key twice)
 H.expect = nil              -- our own travel in flight: { planet, dest, at, how, cp, tries }
 H.menu = nil                -- the last planet-menu choice: { planet, dest, at }
@@ -292,6 +313,7 @@ end
 -- New Game (10_rando_runtime.lua calls this after starting the seed over)
 function H.new_game()
   H.expect, H.menu, H.pending, H.ladder, H.sel = nil, nil, nil, nil, 0
+  H.bounce, H.priming, H.watching = nil, nil, nil
   H.return_at = nil
   local h = H.state()
   if h then h.phase = "pre" end
@@ -376,9 +398,11 @@ function H.at_hub(how)
   h.phase = "hub"
   -- back at the hub: a planet destination you left stays open (F6 / the menu take you back)
   local cur = h.current and dest_by_id(h.current)
-  if cur and cur.kind ~= "hub" then h.current = nil; H.ladder = nil end
-  if h.hero ~= "ratchet" and cfg("hub_hero_swap", true) then
-    H.after(60, function() H.play_as("ratchet") end, "back to Ratchet")
+  if cur and cur.kind ~= "hub" then h.current = nil; H.ladder = nil; cur = nil end
+  -- 8.4: Ratchet at the hub, unless one of Zurkie's own visits is in progress (its hero is the
+  -- ladder's); checked with the game, never from the save
+  if not (cur and not h.done[cur.id]) and cfg("hub_hero_swap", true) then
+    H.after(60, function() H.ensure_hero("ratchet", nil, "back at Zurkie's") end, "back to Ratchet")
   end
   local opened = h.unannounced or {}
   h.unannounced = nil
@@ -504,13 +528,42 @@ end
 -- ---------------------------------------------------------------------------------------------
 -- a destination's story: the mission ladder
 -- ---------------------------------------------------------------------------------------------
-function H.play_as(hero)
+-- 8.4: the hero, checked with the game. rivet.hero_play_as(hero) answers "already playing as that
+-- hero" exactly when the hero is that one (rivet_hook hero_look.cpp play_as: transform_state), so
+-- asking again after a swap is the confirmation. "applied" / "loading" mean the swap is under way.
+-- cb(ok, how): ok when the game confirmed the hero (or hub_hero_swap is off).
+function H.is_already(res) return tostring(res):find("already playing", 1, true) ~= nil end
+function H.ensure_hero(hero, cb, why)
+  cb = cb or function() end
   local h = H.state()
-  if not cfg("hub_hero_swap", true) or h.hero == hero then return end
-  local ok, res = pcall(rivet.hero_play_as, hero)
-  log("hero:", h.hero, "->", hero, ok and tostring(res) or ("failed: " .. tostring(res)))
-  if ok then h.hero = hero; changed() end
+  if not hero or not cfg("hub_hero_swap", true) then return cb(true, "no swap") end
+  local tries, asked = 0, false
+  local function try()
+    tries = tries + 1
+    local ok, res = pcall(rivet.hero_play_as, hero)
+    if not ok and H.is_already(res) then
+      if h.hero ~= hero then h.hero = hero; changed() end
+      log("hero:", hero, asked and ("confirmed after the swap (" .. tries .. " checks)") or "confirmed", why and ("(" .. why .. ")") or "")
+      return cb(true, asked and "swapped" or "already")
+    end
+    if ok then
+      if not asked then log("hero: swapping to", hero, "-", tostring(res), why and ("(" .. why .. ")") or "") end
+      asked = true
+    else
+      log("hero: swap to", hero, "refused:", tostring(res), "(check " .. tries .. ")")
+    end
+    if tries >= H.HERO_TRIES then
+      log("hero:", hero, "NOT confirmed after", tries, "checks - the story is started anyway")
+      say(string.format("Randomizer: could not switch to %s (%s) - the story may wait at its first step", hero, tostring(res)),
+          { type = "center", duration = 8 })
+      return cb(false, tostring(res))
+    end
+    H.after(H.HERO_EVERY, try, "hero " .. hero)
+  end
+  try()
 end
+-- kept for older callers: a confirmed swap, nothing waits for it
+function H.play_as(hero) H.ensure_hero(hero, nil, "play_as") end
 
 local function set_attempt(d, what, detail)
   local h = H.state()
@@ -538,16 +591,20 @@ local function next_mission(d, answers)
   end
   return nil, real
 end
+H.next_mission = next_mission
 
--- 8.3: is this active mission waiting at its first step? Every story mission starts with an
--- objective "go to <planet>" (round 17: OBJ_ZURK_01_GO_TO_ZURKONS, OBJ_NEFCITY_GO_TO_NEFCITY).
--- Started while you were on its planet, that step finished at once and the story played
--- (MIS_ZURK_01_VISIT_01, round 17). Started anywhere else, it never finished, not even after you
--- got there (MIS_NEFCITY_01, round 17): the step is checked when it starts, by the planet's own
--- level. So a mission left at that step (or with no step seen yet) is restarted on its planet.
+-- Every story mission starts with an objective "go to <planet>" (OBJ_ZURK_01_GO_TO_ZURKONS,
+-- OBJ_NEFCITY_GO_TO_NEFCITY, OBJ_MOL_GO_TO_MOLONOTH, OBJ_ZORD_01_GO_TO_ZORDOOM, OBJ_ARD_GO_TO_ARDOLIS).
 function H.goto_step(objective)
   return type(objective) == "string" and (objective:find("_GO_TO_", 1, true) ~= nil or objective:find("_GOTO_", 1, true) ~= nil)
 end
+-- 8.4: is this mission known to wait at its first step? (the last objective seen is "go to" and not done)
+function H.waiting_goto(name)
+  local h = H.state()
+  local last = h and h.obj[name]
+  return last ~= nil and H.goto_step(last.o) and last.s ~= 2
+end
+-- 8.3 compatibility (tests, tools): stuck = waiting at "go to", or nothing seen of it yet
 function H.stuck(name)
   local h = H.state()
   if H.session.started[name] then return false, "started this session" end
@@ -585,8 +642,48 @@ function H.story_here(pid, how)
   return true
 end
 
+-- 8.4: before a trip, the destination's hero and its story: the planet then loads with the story
+-- active (round 20: MIS_SAV_01, active before the warp, finished "go to" on the landing). Only a
+-- mission that is inactive or available is started; nothing here can stop the trip: cb() always
+-- comes, at the latest after H.PRIME_TIMEOUT frames.
+function H.prime(d, cb, why)
+  local done = false
+  local function go(what)
+    if done then return end
+    done = true
+    log("prime", d.id .. ":", what)
+    cb()
+  end
+  local dd = D()
+  if not (d and cfg("story_prime_before_travel", true) and cfg("hub_runtime", true) ~= false) then return go("off") end
+  if not (dd and dd.native_ok("query")) then return go("no mission calls") end
+  H.after(H.PRIME_TIMEOUT, function() go("timed out") end, "prime timeout " .. d.id)
+  H.ensure_hero(d.hero, function(okh)
+    dd.refresh(d.missions or {}, function(answers)
+      if done then return end
+      local m = next_mission(d, answers)
+      if not m then return go("no mission to start") end
+      local function start()
+        call("start", m.name, function(r)
+          if r.code == 11 and r.after == 2 then H.session.started[m.name] = H.frame end
+          go(string.format("hero %s %s, %s start: %s", tostring(d.hero), okh and "confirmed" or "not confirmed", m.name, describe(r)))
+        end)
+      end
+      if m.state == 1 then return start() end
+      if m.state == 0 and cfg("hub_force_missions", true) and dd.native_ok("set_state") then
+        return call("set_state", m.name, function(w)
+          if w.code == 11 and w.after == 1 then return start() end
+          go("forcing " .. m.name .. " available: " .. describe(w))
+        end, 1)
+      end
+      go(string.format("%s is %s - left as it is", m.name, dd.STATE_NAMES[m.state] or tostring(m.state)))
+    end)
+  end, "before the trip to " .. d.id .. (why and (", " .. why) or ""))
+end
+
 -- try to get the visit's story running. Every step is the game's own call (or the v6 record
--- write); the result of each is logged. cb(ok, how)
+-- write); the result of each is logged. 8.4: the hero is confirmed before a story is started, or
+-- when an active story still waits at its first step. cb(ok, how)
 function H.activate(d, cb)
   cb = cb or function() end
   local dd = D()
@@ -611,19 +708,17 @@ function H.activate(d, cb)
       H.ladder = nil
       set_attempt(d, "story", m.name .. " " .. how)
       say(string.format("%s: %s - the story is running (%s)", pname(d.planet), d.title or m.name, how), { type = "corner", duration = 6 })
-      if how == "started" or how == "restarted" or how == "replayed" then
-        H.session.started[m.name] = H.frame
-        H.watch_story(d, m.name)
-      end
+      if how ~= "already active" then H.session.started[m.name] = H.frame end
+      H.watch_story(d, m.name)
       cb(true, how)
     end
-    local function replay_then_explore(why)
+    local function replay_then_explore(why2)
       call("replay", m.name, function(rr)
         if not live() then return end
         log("replay", m.name, describe(rr))
         if rr.code == 11 and rr.after == 2 then return running("replayed") end
         H.ladder = nil
-        H.explore(d, why .. "; replay: " .. describe(rr))
+        H.explore(d, why2 .. "; replay: " .. describe(rr))
         cb(false, "explore")
       end)
     end
@@ -638,61 +733,80 @@ function H.activate(d, cb)
       end)
     end
     log("destination", d.id, "mission", m.name, "is", dd.STATE_NAMES[m.state] or tostring(m.state))
+    -- the steps that follow need the visit's hero first
+    local function with_hero(fn)
+      H.ensure_hero(d.hero, function() if live() then fn() end end, d.id)
+    end
     if m.state == 2 then
-      -- 8.3: active but waiting at "go to <planet>" (or Ctrl+story key twice): start it again
-      -- here, on its planet. Available first (the v6 record write), then the game's start; if the
-      -- game refuses, the record goes back to active and the replay call is tried.
       local forced = H.force_restart[d.id]
       H.force_restart[d.id] = nil
-      local stuck, why = H.stuck(m.name)
-      if not forced and not (stuck and cfg("story_restart_stuck", true)) then return running("already active") end
+      if not forced then
+        -- running: an active story is left to the game. Only one known to wait at "go to" gets
+        -- its hero checked (a story in the middle may have swapped the hero itself)
+        if H.waiting_goto(m.name) or not h.obj[m.name] then return with_hero(function() running("already active") end) end
+        return running("already active")
+      end
+      -- Ctrl + story key twice (experimental): available, then the game's start; if the game
+      -- refuses, the record goes back to active and the replay call is tried
       local okv, whyv = dd.native_ok("set_state")
-      if not okv then return replay_then_explore("active, " .. (forced and "restart asked" or why) .. ", and " .. whyv) end
-      log("restart", m.name, forced and "(asked)" or ("(" .. why .. ")"))
-      return call("set_state", m.name, function(w)
-        if not live() then return end
-        log("restart: available", m.name, describe(w))
-        if not (w.code == 11 and w.after == 1) then return replay_then_explore("restart: " .. describe(w)) end
-        call("start", m.name, function(r)
+      if not okv then return replay_then_explore("active, restart asked, and " .. whyv) end
+      log("restart", m.name, "(asked)")
+      return with_hero(function()
+        call("set_state", m.name, function(w)
           if not live() then return end
-          log("restart: start", m.name, describe(r))
-          if r.code == 11 and r.after == 2 then return running("restarted") end
-          -- the game would not start it again: put the record back to active, then try replay
-          call("set_state", m.name, function(b)
-            log("restart: back to active", m.name, describe(b))
-            if cfg("hub_replay", true) then return replay_then_explore("restart refused: " .. describe(r)) end
-            H.ladder = nil; running("already active")
-          end, 2)
-        end)
-      end, 1)
+          log("restart: available", m.name, describe(w))
+          if not (w.code == 11 and w.after == 1) then return replay_then_explore("restart: " .. describe(w)) end
+          call("start", m.name, function(r)
+            if not live() then return end
+            log("restart: start", m.name, describe(r))
+            if r.code == 11 and r.after == 2 then return running("restarted") end
+            call("set_state", m.name, function(b)
+              log("restart: back to active", m.name, describe(b))
+              if cfg("hub_replay", true) then return replay_then_explore("restart refused: " .. describe(r)) end
+              H.ladder = nil; running("already active")
+            end, 2)
+          end)
+        end, 1)
+      end)
     end
-    if m.state == 1 then return start() end
+    if m.state == 1 then return with_hero(function() start() end) end
     if m.state == 0 and cfg("hub_force_missions", true) then
       local okv, whyv = dd.native_ok("set_state")
       if not okv then return replay_then_explore("inactive and " .. whyv) end
-      return call("set_state", m.name, function(w)
-        if not live() then return end
-        log("force available", m.name, describe(w))
-        if w.code == 11 and w.after == 1 then return start() end
-        replay_then_explore("forcing it available: " .. describe(w))
-      end, 1)
+      return with_hero(function()
+        call("set_state", m.name, function(w)
+          if not live() then return end
+          log("force available", m.name, describe(w))
+          if w.code == 11 and w.after == 1 then return start() end
+          replay_then_explore("forcing it available: " .. describe(w))
+        end, 1)
+      end)
     end
     replay_then_explore("it is " .. (dd.STATE_NAMES[m.state] or tostring(m.state)))
   end)
 end
 
--- 8.3: a started story should leave its "go to <planet>" step at once (round 17: 2 seconds). If
--- it has not after H.STUCK_WAIT frames, say so: the story key restarts it.
+-- a story should leave its "go to <planet>" step within seconds once its hero is there. If it
+-- has not after H.STUCK_WAIT frames, 8.4 reloads the destination once (story_reload_stuck).
 function H.watch_story(d, name)
+  local token = {}
+  H.watching = H.watching or {}
+  H.watching[d.id] = token
   H.after(H.STUCK_WAIT, function()
+    if H.watching[d.id] ~= token then return end
+    H.watching[d.id] = nil
     local h = H.state()
-    local last = h.obj[name]
     if h.done[d.id] then return end
-    if last and H.goto_step(last.o) and last.s ~= 2 then
+    local last = h.obj[name]
+    if H.waiting_goto(name) then
       log("story still waiting at", last.o, "for", name, "after", H.STUCK_WAIT, "frames")
-      say(string.format("%s: the story is waiting at its first step - press %s to start it again here",
-                        pname(d.planet), K("key_story")), { type = "center", duration = 8 })
-      H.session.started[name] = nil         -- the next try may restart it
+      H.session.started[name] = nil
+      local cur = S().current_planet
+      if cur ~= d.planet then
+        log("story", name, "waits for", d.planet, "- you are on", tostring(cur))
+        return
+      end
+      H.reload_story(d, "its first step " .. last.o .. " did not finish")
     elseif last then
       log("story", name, "is at", last.o, "(state " .. tostring(last.s) .. ")")
     else
@@ -701,7 +815,73 @@ function H.watch_story(d, name)
   end, "watch " .. name)
 end
 
--- arrived for a destination (our travel, the menu, or a load): settle, hero, then the ladder
+-- 8.4: reload a destination whose story waits at its first step: out to another planet and
+-- straight back, so the planet loads with the story active and its hero there. Once per
+-- destination per session; after that the story key (/) is the way.
+function H.reload_story(d, why)
+  local p, h = H.plan(), H.state()
+  if not cfg("story_reload_stuck", true) then
+    say(string.format("%s: the story waits at its first step - leave the planet and come back to start it", pname(d.planet)),
+        { type = "center", duration = 8 })
+    return false
+  end
+  if H.session.reloaded[d.id] then
+    log("reload of", d.id, "already tried this session -", why)
+    say(string.format("%s: the story still waits at its first step - press %s to try again, or leave and come back",
+                      pname(d.planet), K("key_story")), { type = "center", duration = 8 })
+    return false
+  end
+  local via, cp
+  if d.planet ~= p.planet then
+    via = p.planet
+    cp = H.zurk_candidates()[1]
+  else
+    -- Zurkie's own visit: out to an open planet with a known checkpoint
+    local list = {}
+    for pid in pairs(h.open) do if pid ~= p.planet then list[#list + 1] = pid end end
+    table.sort(list)
+    for _, pid in ipairs(list) do
+      local c = H.checkpoint_for(pid)
+      if c then via, cp = pid, c; break end
+    end
+  end
+  if not (via and cp) then
+    log("reload of", d.id, "impossible: no checkpoint to go out to")
+    say(string.format("%s: the story waits at its first step - leave the planet and come back to start it", pname(d.planet)),
+        { type = "center", duration = 8 })
+    return false
+  end
+  local ok, res = pcall(rivet.warp, cp)
+  if not ok or res == false then
+    log("reload of", d.id, "- the warp to", cp, "failed:", tostring(res))
+    return false
+  end
+  H.session.reloaded[d.id] = H.frame
+  H.ladder = nil
+  H.bounce = { dest = d.id, via = via, at = H.frame }
+  H.expect = { planet = via, at = H.frame, how = "warp", cp = cp, why = "reload " .. d.id, tries = 1 }
+  history(string.format("[STORY RELOAD] %s (%s) - out to %s and back", d.id, why, via))
+  log("reload:", d.id, why, "- out to", via, "at", cp, tostring(res))
+  say(string.format("Randomizer: %s - the story did not start; reloading it (out to %s and straight back)", pname(d.planet), pname(via)),
+      { type = "center", duration = 8 })
+  return true
+end
+
+-- the reload trip landed on its way-out planet: straight back to the destination
+function H.bounce_back(b)
+  local d = dest_by_id(b.dest)
+  H.bounce = nil
+  if not d then return end
+  log("reload: back to", d.id)
+  if d.kind == "hub" then
+    if H.go_home("reload " .. d.id) and H.expect then H.expect.dest = d.id end
+  else
+    H.travel(d.planet, d, false, "reload " .. d.id)
+  end
+end
+
+-- arrived for a destination (our travel, the menu, or a load): settle, then the ladder (which
+-- confirms the hero first)
 function H.arrive(d, how)
   local h = H.state()
   h.current = d.id
@@ -709,10 +889,7 @@ function H.arrive(d, how)
   changed()
   log("arrived for", d.id, "(" .. how .. ")")
   say(string.format("%s: %s", pname(d.planet), d.title or d.id), { type = "planet", sub = "Randomized destination", duration = 6 })
-  H.after(H.SETTLE, function()
-    if d.hero and d.hero ~= h.hero then H.play_as(d.hero) end
-    H.after(120, function() H.activate(d) end, "ladder " .. d.id)
-  end, "arrive " .. d.id)
+  H.after(H.SETTLE, function() H.activate(d) end, "arrive " .. d.id)
 end
 
 -- ---------------------------------------------------------------------------------------------
@@ -765,7 +942,7 @@ function H.finish(d, how)
   end
   if h.current == d.id and d.kind == "hub" then
     h.current = nil
-    if h.hero ~= "ratchet" then H.after(300, function() H.play_as("ratchet") end, "back to Ratchet") end
+    H.after(300, function() H.ensure_hero("ratchet", nil, "Zurkie's visit finished") end, "back to Ratchet")
   end
   return true
 end
@@ -840,6 +1017,13 @@ function H.on_arrival(pid, from)
   H.check_levels(pid)
   local exp = H.expect
   H.expect = nil
+  -- 8.4: a story reload on its way out: straight back, nothing else happens here
+  local b = H.bounce
+  if b and pid == b.via and h.started then
+    log("reload: out on", pid, "- going back for", b.dest)
+    H.after(H.SETTLE, function() H.bounce_back(b) end, "reload back " .. b.dest)
+    return true
+  end
   if not h.started then
     if pid == p.planet and (h.phase == "to_hub" or (exp and exp.planet == pid)) then
       H.hub_started(exp and exp.cp or "arrived")
@@ -860,7 +1044,8 @@ function H.on_arrival(pid, from)
   end
   -- our own trip
   if exp and exp.planet == pid then
-    if exp.cp and RANDO_TRAVEL and RANDO_TRAVEL.remember and exp.how_found ~= "registry" then RANDO_TRAVEL.remember(pid, exp.cp) end
+    -- (8.4: a warp's checkpoint is not remembered as the planet's landing: round 20's Torren IV
+    -- trip used a mid-mission checkpoint a test trip had left there)
     local d = exp.dest and dest_by_id(exp.dest)
     if d then H.arrive(d, exp.how) else h.phase = "away"; h.current = nil end
     return true
@@ -969,13 +1154,24 @@ function H.key_go()
   if d.kind == "hub" then
     if S().current_planet == p.planet then H.arrive(d, "at the hub")
     else
-      if H.go_home("for " .. d.id) and H.expect then H.expect.dest = d.id end
+      if H.priming then return end
+      H.priming = true
+      H.prime(d, function()
+        H.priming = nil
+        if H.go_home("for " .. d.id) and H.expect then H.expect.dest = d.id end
+      end, K("key_hub", true))
     end
     return
   end
   local at_hub = S().current_planet == p.planet
-  if not H.travel(d.planet, d, at_hub, K("key_hub", true)) then return end
+  if H.priming then return say("Randomizer: getting the story ready...", { type = "corner", duration = 3 }) end
+  H.priming = true
   say("Randomizer: off to " .. describe_dest(d), { type = "corner", duration = 5 })
+  -- 8.4: the hero and the story first, then the trip (the planet loads with its story active)
+  H.prime(d, function()
+    H.priming = nil
+    if not H.travel(d.planet, d, at_hub, K("key_hub", true)) then return end
+  end, K("key_hub", true))
 end
 
 local confirm = { ["return"] = -100, finish = -100, restart = -100 }
@@ -1006,7 +1202,17 @@ function H.key_story(ctrl)
   changed()
   log("story key:", pid, "->", d.id, ctrl and "(restart)" or "")
   say(string.format("%s: %s - starting the story", pname(pid), d.title or d.id), { type = "corner", duration = 5 })
-  if d.hero and d.hero ~= h.hero then H.play_as(d.hero) end
+  -- 8.4: the ladder confirms the hero; a story already known to wait at its first step is
+  -- reloaded right away (the story key may reload again: it is the player's own choice)
+  if not ctrl then
+    local m
+    for _, name in ipairs(d.missions or {}) do if H.waiting_goto(name) then m = name; break end end
+    if m and pid == d.planet then
+      H.session.reloaded[d.id] = nil
+      H.ensure_hero(d.hero, function() H.reload_story(d, "story key: " .. m .. " waits at its first step") end, "story key")
+      return
+    end
+  end
   H.after(60, function() H.activate(d) end, "story key " .. d.id)
 end
 function H.key_return()
@@ -1104,6 +1310,11 @@ function H.tick(frame, ready)
       H.expect = nil
       say("Randomizer: the trip to " .. pname(e.planet) .. " did not land (see rivet.log)", { type = "center", duration = 6 })
     end
+  end
+  -- 8.4: a reload trip that never came back is forgotten
+  if H.bounce and frame - H.bounce.at > H.BOUNCE_TIMEOUT then
+    log("reload of", H.bounce.dest, "never came back - forgotten")
+    H.bounce = nil
   end
   -- automatic return after a finished destination
   if H.return_at and ready and frame >= H.return_at then

@@ -36,7 +36,7 @@ local function pname(pid) return (RANDO and RANDO.planet_name and RANDO.planet_n
 local function now() return (rivet.time and rivet.time()) or 0 end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 
-TT.VERSION = "8.3.0"
+TT.VERSION = "8.4.0"
 local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 TT.WINDOW = 180              -- seconds a trip waits for its landing
 TT.POINTS = 12               -- landing points offered per planet (catalog)
@@ -64,8 +64,9 @@ function TT.points(pid)
     out[#out + 1] = { cp = cp, why = why }
   end
   local s = S()
-  local landed = s and s.travel and s.travel.landed
-  if landed then add(landed[pid], "where you last landed") end
+  local tr = (RANDO_TRAVEL and RANDO_TRAVEL.state and s) and RANDO_TRAVEL.state() or (s and s.travel)
+  -- 8.4: the story's start points first (a hub destination's entry), then real landings, then
+  -- where a test trip last went
   local plan = SEED() and SEED().hub
   if plan then
     if pid == plan.planet then
@@ -73,10 +74,16 @@ function TT.points(pid)
       add(h and h.home_cp, "the hub's landing")
       for _, cp in ipairs(plan.checkpoints or {}) do add(cp, "the hub's landing") end
     end
+    local hh = s and s.hub
+    for _, d in ipairs(plan.destinations or {}) do
+      if d.planet == pid and d.entry and not (hh and hh.done and hh.done[d.id]) then add(d.entry, "a hub destination's entry") end
+    end
     for _, d in ipairs(plan.destinations or {}) do
       if d.planet == pid and d.entry then add(d.entry, "a hub destination's entry") end
     end
   end
+  if tr and tr.landed then add(tr.landed[pid], "where you last landed") end
+  if tr and tr.test_landed then add(tr.test_landed[pid], "where a test trip went") end
   local i = planet_index(pid)
   local known = i and DB.planets[i].checkpoints and DB.planets[i].checkpoints.known
   for _, cp in ipairs(known or {}) do add(cp, "seen in your logs") end
@@ -166,6 +173,24 @@ function TT.go(how)
   local pts = TT.points(pid)
   local pt = pts[TT.point[pid] or 1]
   if not pt then show(pid); return false end
+  -- 8.4: with story_on_arrival, the planet's story and its hero are made ready first, so the
+  -- planet loads with its story active (15_rando_hub.lua H.prime)
+  local H = RANDO_HUB
+  local plan = SEED() and SEED().hub
+  if plan and H and H.prime and H.story_dest and pid ~= plan.planet and RANDO.config.story_on_arrival ~= false
+     and H.enabled and H.enabled() and not TT.priming then
+    local d = H.story_dest(pid)
+    if d then
+      TT.priming = true
+      say(string.format("Test travel: getting %s ready...", d.title or d.id), { type = "corner", duration = 3 })
+      H.prime(d, function() TT.priming = nil; TT.travel(pid, pt, how) end, "test travel")
+      return true
+    end
+  end
+  return TT.travel(pid, pt, how)
+end
+
+function TT.travel(pid, pt, how)
   local fn = (how == "fly") and rivet.fly or rivet.warp
   local ok, res = pcall(fn, pt.cp)
   if not ok or res == false then
@@ -198,7 +223,7 @@ function TT.on_arrival(pid, from)
     return false
   end
   TT.trip = nil
-  if RANDO_TRAVEL and RANDO_TRAVEL.remember then RANDO_TRAVEL.remember(pid, trip.cp) end
+  if RANDO_TRAVEL and RANDO_TRAVEL.remember_test then RANDO_TRAVEL.remember_test(pid, trip.cp) end
   log("arrived on", pid, "by", trip.how, "at", trip.cp)
   local plan = SEED() and SEED().hub
   if plan and pid == plan.planet then

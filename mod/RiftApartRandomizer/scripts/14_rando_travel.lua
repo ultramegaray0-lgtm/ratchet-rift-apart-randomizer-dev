@@ -45,13 +45,25 @@ function T.active()
   return true
 end
 
+-- 8.4: `landed` holds only real landings (the ship's planet menu). Before 8.4 test trips and hub
+-- warps were remembered there too, and round 20's hub trip to Torren IV went to a mid-mission
+-- checkpoint a test trip had left (CHK_MOL_SALVAGE_PIRATES_COMMAND_SHIP). Older entries move to
+-- `test_landed`, which only test travel offers.
 local function state()
   local s = S()
-  s.travel = s.travel or { landed = {}, sent_back = 0, banked_planets = {} }
-  s.travel.landed = s.travel.landed or {}
-  s.travel.banked_planets = s.travel.banked_planets or {}
-  return s.travel
+  s.travel = s.travel or { landed = {}, sent_back = 0, banked_planets = {}, landed_v = 2 }
+  local tr = s.travel
+  tr.landed = tr.landed or {}
+  tr.banked_planets = tr.banked_planets or {}
+  tr.test_landed = tr.test_landed or {}
+  if tr.landed_v ~= 2 then
+    for pid, cp in pairs(tr.landed) do tr.test_landed[pid] = tr.test_landed[pid] or cp end
+    tr.landed = {}
+    tr.landed_v = 2
+  end
+  return tr
 end
+T.state = state
 
 -- 8.2: lookups built once. Round 18's catalog ran past rivet_hook's 8 ms frame budget in T.place,
 -- T.catalog_add and T.ranked (14_rando_travel.lua:115/140/141/197) and never finished: every
@@ -120,7 +132,22 @@ function T.score_checkpoint(name)
   if cached then return cached end
   local up = tostring(name):upper()
   local score = 0
-  for _, s in ipairs(T.SCORE) do if up:find(s[1], 1, true) then score = math.max(score, s[2]) end end
+  local toks = {}
+  for t in up:gmatch("[^_]+") do toks[#toks + 1] = t end
+  for _, s in ipairs(T.SCORE) do
+    if up:find(s[1], 1, true) then
+      local v = s[2]
+      -- 8.4: "_SHIP" is a landing only as a short name (CHK_NEFCITY_SHIP, CHK_ZURK_LANDING_SHIP,
+      -- CHK_CORD_A_TELE_SHIP), not CHK_MOL_SALVAGE_PIRATES_COMMAND_SHIP, a mid-mission point
+      if s[1] == "_SHIP" and #toks > 5 then v = 30 end
+      score = math.max(score, v)
+    end
+  end
+  -- 8.4: a planet's story start: CHK_<code>_START, CHK_<code>_A_START or CHK_<code>_01_START
+  -- (round 20: the story of Ardolis ran from CHK_ARD_START)
+  if toks[1] == "CHK" and #toks >= 3 and #toks <= 4 and toks[#toks] == "START" then
+    if #toks == 3 or toks[3] == "A" or toks[3]:match("^0%d$") then score = math.max(score, 95) end
+  end
   for _, a in ipairs(T.AVOID) do if up:find(a, 1, true) then score = score - 60 end end
   if type(name) == "string" then T.scores[name] = score end
   return score
@@ -387,6 +414,18 @@ function T.remember(pid, cp)
   if tr.landed[pid] ~= cp then
     tr.landed[pid] = cp
     log("landing on", pid, "remembered:", cp)
+    if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
+  end
+end
+
+-- 8.4: a test trip's landing: offered again by test travel, never used by the hub or the lock
+function T.remember_test(pid, cp)
+  if not (pid and type(cp) == "string" and cp ~= "") then return end
+  local s = S()
+  if not s then return end
+  local tr = state()
+  if tr.test_landed[pid] ~= cp then
+    tr.test_landed[pid] = cp
     if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
   end
 end

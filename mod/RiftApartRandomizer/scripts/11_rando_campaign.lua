@@ -476,6 +476,13 @@ end
 -- F12: go to the current visit (start its first mission, then travel there)
 function D.go()
   local active, why = D.active()
+  -- 8.4: the key means nothing in a hub seed or the game's own order: logged, no message (round
+  -- 20: the old F12, also Steam's screenshot key, put "Campaign order is not available" on screen)
+  local sd = seed()
+  if (sd and sd.hub) or why == "vanilla" then
+    log("RANDO-CAMPAIGN key: no campaign order in this seed (" .. ((sd and sd.hub) and "hub seed" or "the game's own order") .. ")")
+    return false
+  end
   if not active then
     say("Campaign order is not available yet (" .. why .. ") - play the game's own order; rewards are randomized as usual",
         { type = "center", duration = 8 })

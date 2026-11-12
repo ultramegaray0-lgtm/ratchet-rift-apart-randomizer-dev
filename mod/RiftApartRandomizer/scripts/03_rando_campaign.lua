@@ -33,7 +33,7 @@ C.SEGMENTS = {
   { id = "corson_intro", planet = "corson_v", visit = 1, hero = "ratchet", src = "game",
     missions = { "MIS_INTRO" }, entry = nil, kind = "intro", arrival = "story",
     title = "Parade, pursue Dr. Nefarious" },
-  { id = "nefcity_1", planet = "nefarious_city", visit = 1, hero = "rivet", src = "game",
+  { id = "nefcity_1", planet = "nefarious_city", visit = 1, hero = "ratchet", src = "game",
     missions = { "MIS_NEFCITY_01" }, entry = "CHK_NEFCITY_SHIP", arrival = "story",
     grants = { "phantom_dash" }, title = "Market, Club Nefarious, follow the Phantom, the statue" },
   { id = "sargasso_1", planet = "sargasso", visit = 1, hero = "rivet", src = "game",
@@ -52,25 +52,33 @@ C.SEGMENTS = {
     missions = { "MIS_MOL_01_FIRST_VISIT" }, requires = { "hoverboots" },
     grants = { "hurlshot" }, boss = "the Fixer (chase)", title = "Find the Fixer, the Hurlshot, escape" },
   { id = "cordelion_1", planet = "cordelion", visit = 1, hero = "ratchet", src = "game",
-    missions = { "MIS_CORD_01_FIRST_VISIT" }, boss = "Cordelion boss",
+    missions = { "MIS_CORD_01_FIRST_VISIT" }, entry = "CHK_CORD_A_START", boss = "Cordelion boss",
     title = "Kedaro Station, the Rubion Forge, a new Dimensionator" },
   { id = "scarstu_2", planet = "scarstu", visit = 2, hero = "rivet", src = "game",
     missions = { "MIS_ZURK_02B_VISIT_02B" }, after = { "scarstu_1" }, title = "Meet Ratchet in the Gastropub" },
-  { id = "ardolis_1", planet = "ardolis", visit = 1, hero = "rivet", src = "game",
-    missions = { "MIS_ARD_01_FIRST_VISIT" }, requires = { "hoverboots" },
+  { id = "ardolis_1", planet = "ardolis", visit = 1, hero = "ratchet", src = "game",
+    missions = { "MIS_ARD_01_FIRST_VISIT" }, entry = "CHK_ARD_START", requires = { "hoverboots" },
     title = "Pierre Le Fer, treasure hunt, Pirate Trials, Captain Quantum" },
-  { id = "sargasso_2", planet = "sargasso", visit = 2, hero = "ratchet", src = "game",
+  { id = "sargasso_2", planet = "sargasso", visit = 2, hero = "rivet", src = "game",
     missions = { "MIS_SARG_02_REVISIT_SHIPS" }, entry = "CHK_SARG_02_MININGPLATFORM_LANDINGPAD", after = { "sargasso_1" },
     title = "Protect the Morts, free the Seekerpede, Nefarious' ships" },
   { id = "savali_2", planet = "savali", visit = 2, hero = "ratchet", src = "game",
     missions = { "MIS_SVALI_02_SECOND_VISIT" }, after = { "savali_1" }, title = "The Archives' machines, the catacombs" },
-  { id = "viceron_1", planet = "viceron", visit = 1, hero = "ratchet", src = "dag",
-    missions = { "MIS_ZORD_01" }, requires = { "ability:phantom_dash", "ability:hurlshot" },
+  { id = "viceron_1", planet = "viceron", visit = 1, hero = "rivet", src = "game",
+    missions = { "MIS_ZORD_01" }, entry = "CHK_ZORDOOM_START", requires = { "ability:phantom_dash", "ability:hurlshot" },
     boss = "Zordoom Prison warden", title = "Find Ratchet and Kit, reactor shutdown, follow the cell" },
   { id = "finale", planet = "corson_v", visit = 2, hero = "ratchet", src = "game",
     missions = { "MIS_MEGA_FINALE" }, entry = "CHK_MEGA_FINALE_START", kind = "finale", boss = "Emperor Nefarious",
     title = "The final battle" },
 }
+-- 8.4 (round 20): the hero of each visit, checked against the walkthroughs (Ratchet & Clank wiki
+-- plot; gamepressure; thegamer) and against round 17/20: a story's first "go to <planet>" step
+-- finished only when the visit's own hero was there (Ardolis, Savali, Zurkie's 1 as Ratchet: at
+-- once; Torren IV, Viceron as Ratchet and Nefarious City as Rivet: never). Four heroes were wrong
+-- and are fixed: nefcity_1 Ratchet ("Ratchet awakens in Nefarious City"), sargasso_2 Rivet ("Rivet
+-- and Kit fly to Sargasso"), ardolis_1 Ratchet ("Ratchet and Clank fly to Ardolis"), viceron_1
+-- Rivet ("Rivet flies to Zordoom Prison"). Entries: CHK_ARD_START (round 20: the story ran from
+-- it), CHK_CORD_A_START and CHK_ZORDOOM_START (listed by rivet.checkpoints() in round 19).
 -- 8.1 (round 17 research, rando_give.dll v6 queries): MIS_BLIZAR_01, MIS_CORD_BOSS, MIS_ZURK_02,
 -- MIS_SARG_02_REVISIT and MIS_MEGA_01_RIVET are "not a mission in your game"; the names above all
 -- exist (MIS_BLIZAR from MissionStateChanged events). Entries CHK_SARG_02_MININGPLATFORM_LANDINGPAD

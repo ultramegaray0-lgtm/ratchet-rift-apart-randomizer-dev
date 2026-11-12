@@ -165,6 +165,7 @@ end
 -- Called after the companion's restore (or after waiting for it).
 function G.sync()
   local s = S(); if not s then return 0 end
+  G.sanitize_types()
   local n = 0
   for item, r in pairs(s.real or {}) do      -- a grant cut off by a restart is sent again
     if r.status == "sent" and not (G.busy and G.busy.item == item) then r.status = "queued" end
@@ -598,16 +599,50 @@ end
 local function learn_type(t, item)
   local wt = weapon_types()
   if t and item and wt[t] ~= item then
+    for other, it in pairs(wt) do if it == item and other ~= t then wt[other] = nil end end   -- one type per weapon
     wt[t] = item; changed()
     log("weapon type", t, "is", item)
   end
 end
 local function end_burst()
-  if G.burst and G.burst.n >= 2 then
-    if not G.baseline then log("weapon replay seen (" .. G.burst.n .. " weapons) - late answers can be recognised now") end
+  local b = G.burst
+  G.burst = nil
+  if not b then return end
+  local new = b.new or {}
+  if G.baseline and #new == 1 then
+    local ok, err = pcall(G.unknown_type_expired, new[1])
+    if not ok then log("late answer:", tostring(err)) end
+  elseif #new > 1 then
+    log("weapon replay with", #new, "types new to this session - none taken as a late answer")
+  end
+  if b.n >= 2 then
+    if not G.baseline then log("weapon replay seen (" .. b.n .. " weapons) - late answers can be recognised now") end
     G.baseline = true
   end
-  G.burst = nil
+end
+G.end_burst = end_burst
+-- 8.4 (round 20): a load equips the current weapon (UserEquippedWeaponEvent) and then replays
+-- WeaponAddedEvent for every weapon owned. 8.3 took every unknown type within 60 frames of a
+-- weapon NAME as that weapon, so Cordelion's replay taught "1002 ... 1012 are the Burst Pistol".
+-- Now a type is learned from a name only from a purchase (PurchaseWeaponEvent), never during a
+-- load's replay, one type per purchase, in either order (round 20: WeaponAddedEvent 1013 came
+-- just BEFORE PurchaseWeaponEvent WEAPON_SHEEPINATOR). An unknown type is held 90 frames before it
+-- may count as a late answer, so a purchase is never credited to a waiting delivery.
+G.NAME_FRAMES = 90
+-- one weapon has one type: types the save maps to the same weapon are all dropped (8.3's bad lessons)
+function G.sanitize_types()
+  local s = S(); if not (s and s.weapon_types) then return 0 end
+  local by_item = {}
+  for t, item in pairs(s.weapon_types) do by_item[item] = (by_item[item] or 0) + 1 end
+  local dropped = 0
+  for t, item in pairs(s.weapon_types) do
+    if by_item[item] > 1 then s.weapon_types[t] = nil; dropped = dropped + 1 end
+  end
+  if dropped > 0 then
+    changed()
+    log("weapon types: dropped", dropped, "wrong lesson(s) (several types for one weapon)")
+  end
+  return dropped
 end
 function G.on_weapon_added(raw)
   local t = math.tointeger(raw) or raw
@@ -621,20 +656,37 @@ function G.on_weapon_added(raw)
     finish(true)
     return
   end
-  if G.last_named and G.frame - G.last_named.frame <= 60 and t and not known then
-    learn_type(t, G.last_named.item)               -- bought from a vendor / equipped just now
-    return
-  end
   if G.burst then G.burst.n = G.burst.n + 1 end
   if known then
     local r = rec(known)
     if r and r.status ~= "confirmed" and r.status ~= "owned" then set_owned(known, "reported by the game (type " .. tostring(t) .. ")") end
     return
   end
-  if not (new and G.baseline) then return end
+  if not t then return end
+  if G.burst then
+    -- a load's replay: weapons from the save. A type new to this session in a replay is a late
+    -- answer only when it is the replay's ONLY new type (round 13: Executor 1015 on Nefarious
+    -- City); round 20's first full replay (1002-1012 on Cordelion) taught nothing
+    if new then G.burst.new = G.burst.new or {}; G.burst.new[#G.burst.new + 1] = t end
+    return
+  end
+  local bought = G.last_bought
+  if bought and G.frame - bought.frame <= G.NAME_FRAMES then
+    G.last_bought = nil
+    learn_type(t, bought.item)                     -- bought just now (the name came first)
+    return
+  end
+  if not new then return end
+  G.last_unknown = { t = t, frame = G.frame }      -- a purchase may still name it
+end
+-- an unknown type no purchase claimed: a late answer for the one weapon still waiting, if exactly one
+function G.unknown_type_expired(t)
+  if not G.baseline then return end
   local s, waiting = S(), {}
   for item, r in pairs((s and s.real) or {}) do
-    if ITEMS[item] and ITEMS[item].kind == "weapon" and (r.silent or 0) > 0 and (r.status == "queued" or r.status == "sent") then
+    -- (8.4: also one given up on - "not confirmed" - since the answer can come after the tries)
+    if ITEMS[item] and ITEMS[item].kind == "weapon" and (r.silent or 0) > 0
+       and (r.status == "queued" or r.status == "sent" or r.status == "failed") then
       waiting[#waiting + 1] = item
     end
   end
@@ -645,11 +697,19 @@ function G.on_weapon_added(raw)
   end
 end
 
--- equipping or buying a weapon proves it is owned
+-- equipping or buying a weapon proves it is owned; only a purchase teaches a type
 function G.on_weapon_name(weapon_name, why)
   local item = G.weapon_item(weapon_name)
   if not item then return end
-  G.last_named = { item = item, frame = G.frame }
+  if why == "bought" then
+    local u = G.last_unknown
+    if u and G.frame - u.frame <= G.NAME_FRAMES then
+      G.last_unknown = nil
+      learn_type(u.t, item)
+    else
+      G.last_bought = { item = item, frame = G.frame }
+    end
+  end
   local r = rec(item)
   if r and (r.status == "confirmed" or r.status == "owned") then return end
   if G.busy and G.busy.item == item then return end
@@ -712,6 +772,12 @@ function G.on_frame()
   local running = G.game_running()
   if running then G.gframe = G.gframe + 1 end
   if G.burst and G.frame >= G.burst.ends then end_burst() end
+  local u = G.last_unknown
+  if u and G.frame - u.frame > G.NAME_FRAMES then
+    G.last_unknown = nil
+    local oku, eu = pcall(G.unknown_type_expired, u.t)
+    if not oku then log("late answer:", tostring(eu)) end
+  end
   if G.donor_job then local ok, err = pcall(G.donor_step); if not ok then log("donor step:", tostring(err)); G.donor_job = nil end end
   local b = G.busy
   if b and b.via == "native" and b.stage == "handover" then G.native_handover(b); return end

@@ -2670,7 +2670,7 @@ RANDO_DATA = {
       checkpoints = {
         areas = { "kedaro", "cordelion" },
         codes = { "CORD", "KEDARO" },
-        known = {}
+        known = { "CHK_CORD_A_TELE_SHIP" }
       },
       codes = { "mis_cord_01_first_visit", "mis_cord_boss" },
       event_names = { "Cordelion" },
@@ -2683,7 +2683,7 @@ RANDO_DATA = {
       checkpoints = {
         areas = { "ardolis" },
         codes = { "ARD", "ARDOLIS" },
-        known = {}
+        known = { "CHK_ARD_START" }
       },
       codes = { "mis_ard", "ardolis" },
       event_names = { "Ardolis" },

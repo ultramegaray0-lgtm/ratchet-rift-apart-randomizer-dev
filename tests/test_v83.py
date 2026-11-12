@@ -66,8 +66,10 @@ class StoryOnArrivalTests(unittest.TestCase):
         warp(g, "viceron")
         self.assertEqual(g.sim.get_mission("MIS_ZORD_01"), 2)
         self.assertEqual(hub(g)["current"], "viceron_1")
-        self.assertIn("MIS_ZORD_01 started", hub(g)["attempts"]["viceron_1"]["detail"])
-        self.assertIn("ratchet", list(py(g.sim.heroes)) + ["ratchet"])
+        # 8.4: started before the warp (story_prime_before_travel), running when it landed
+        self.assertTrue(g.log_has("prime\tviceron_1:\thero rivet confirmed, MIS_ZORD_01 start: done"))
+        self.assertIn("MIS_ZORD_01 already active", hub(g)["attempts"]["viceron_1"]["detail"])
+        self.assertEqual(g.sim.playing, "rivet")                     # 8.4: Viceron is Rivet's
         self.assertTrue(g.log_has("story on arrival:\tviceron\t->\tviceron_1"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
@@ -108,20 +110,26 @@ class StoryOnArrivalTests(unittest.TestCase):
 
 
 class StuckStoryTests(unittest.TestCase):
-    def test_active_story_with_no_step_seen_is_restarted_on_its_planet(self):
+    """8.4 replaced 8.3's automatic restart (round 20: it changed the state but never moved a story)
+    with the hero check and a reload; these are the 8.3 cases with 8.4's answers."""
+    def test_active_story_with_no_step_seen_gets_its_hero_and_runs(self):
         g = game("v83-stuck", missions={"MIS_CORD_01_FIRST_VISIT": 2})
         warp(g, "cordelion")
-        calls = [(c["name"], c["state"]) for c in py(g.sim.set_state_calls)]
-        self.assertIn(("MIS_CORD_01_FIRST_VISIT", 1), calls)
+        self.assertEqual([c for c in py(g.sim.set_state_calls) if c["name"] == "MIS_CORD_01_FIRST_VISIT"], [])
         self.assertEqual(g.sim.get_mission("MIS_CORD_01_FIRST_VISIT"), 2)
-        self.assertIn("restarted", hub(g)["attempts"]["cordelion_1"]["detail"])
+        self.assertIn("already active", hub(g)["attempts"]["cordelion_1"]["detail"])
+        self.assertTrue(g.log_has("hero:\tratchet\tconfirmed"))
 
-    def test_active_story_waiting_at_go_to_is_restarted(self):
+    def test_active_story_waiting_at_go_to_is_reloaded(self):
         g = game("v83-goto", missions={"MIS_CORD_01_FIRST_VISIT": 2})
         g.fire("ObjectiveStateChangedEvent", MissionName="MIS_CORD_01_FIRST_VISIT",
                ObjectiveName="OBJ_CORD_01_GO_TO_CORDELION", ObjectiveState=1)
         warp(g, "cordelion")
-        self.assertIn("restarted", hub(g)["attempts"]["cordelion_1"]["detail"])
+        self.assertIn("already active", hub(g)["attempts"]["cordelion_1"]["detail"])
+        settle(g, 2400)
+        self.assertTrue(any("[STORY RELOAD] cordelion_1" in x for x in py(g.state.history)))
+        self.assertEqual(g.state.current_planet, "cordelion")            # out to Zurkie's and back
+        self.assertEqual([c for c in py(g.sim.set_state_calls) if c["name"] == "MIS_CORD_01_FIRST_VISIT"], [])
 
     def test_active_story_in_progress_is_left_alone(self):
         g = game("v83-busy", missions={"MIS_CORD_01_FIRST_VISIT": 2})
@@ -130,33 +138,51 @@ class StuckStoryTests(unittest.TestCase):
         warp(g, "cordelion")
         self.assertEqual([c for c in py(g.sim.set_state_calls) if c["name"] == "MIS_CORD_01_FIRST_VISIT"], [])
         self.assertIn("already active", hub(g)["attempts"]["cordelion_1"]["detail"])
+        settle(g, 2400)
+        self.assertFalse(any("[STORY RELOAD]" in x for x in py(g.state.history)))
 
-    def test_refused_restart_goes_back_to_active_then_replays(self):
+    def test_refused_restart_by_hand_goes_back_to_active_then_replays(self):
         g = game("v83-refuse", missions={"MIS_CORD_01_FIRST_VISIT": 2})
+        g.fire("ObjectiveStateChangedEvent", MissionName="MIS_CORD_01_FIRST_VISIT",
+               ObjectiveName="OBJ_CORD_04_FORGE_FIGHT", ObjectiveState=1)
+        warp(g, "cordelion")
         g.sim.can_start = False
         g.sim.replay_effect = 2
-        warp(g, "cordelion")
+        g.press("/", ctrl=True)
+        g.press("/", ctrl=True)
+        settle(g, 300)
         states = [c["state"] for c in py(g.sim.set_state_calls) if c["name"] == "MIS_CORD_01_FIRST_VISIT"]
         self.assertEqual(states, [1, 2])
         self.assertEqual(g.sim.get_mission("MIS_CORD_01_FIRST_VISIT"), 2)
         self.assertIn("replayed", hub(g)["attempts"]["cordelion_1"]["detail"])
 
-    def test_off_switch_leaves_active_stories(self):
-        g = game("v83-nostuck", {"story_restart_stuck": False}, missions={"MIS_CORD_01_FIRST_VISIT": 2})
+    def test_off_switch_never_reloads(self):
+        g = game("v83-nostuck", {"story_reload_stuck": False}, missions={"MIS_CORD_01_FIRST_VISIT": 2})
+        g.fire("ObjectiveStateChangedEvent", MissionName="MIS_CORD_01_FIRST_VISIT",
+               ObjectiveName="OBJ_CORD_01_GO_TO_CORDELION", ObjectiveState=1)
         warp(g, "cordelion")
+        settle(g, 2400)
         self.assertIn("already active", hub(g)["attempts"]["cordelion_1"]["detail"])
+        self.assertFalse(any("[STORY RELOAD]" in x for x in py(g.state.history)))
+        self.assertTrue(g.note_has("leave the planet and come back"))
 
-    def test_a_story_still_at_go_to_is_reported(self):
+    def test_old_setting_name_still_switches_it_off(self):
+        g = game("v83-oldname", {"story_restart_stuck": False})
+        self.assertFalse(g.R.config.story_reload_stuck)
+        self.assertTrue(g.log_has("is story_reload_stuck since 8.4"))
+
+    def test_a_story_still_at_go_to_is_reloaded_then_the_key_reloads_again(self):
         g = game("v83-watch")
         warp(g, "viceron")
         g.fire("ObjectiveStateChangedEvent", MissionName="MIS_ZORD_01", ObjectiveName="OBJ_ZORD_01_GO_TO_ZORDOOM", ObjectiveState=1)
-        settle(g, 1500)
-        self.assertTrue(g.note_has("waiting at its first step"))
-        # the story key then starts it again
-        before = len(py(g.sim.set_state_calls))
-        g.press("/")
-        settle(g, 300)
-        self.assertGreater(len(py(g.sim.set_state_calls)), before)
+        settle(g, 2400)
+        self.assertEqual(sum("[STORY RELOAD] viceron_1" in x for x in py(g.state.history)), 1)
+        settle(g, 2400)                                     # still waiting: once per session
+        self.assertEqual(sum("[STORY RELOAD] viceron_1" in x for x in py(g.state.history)), 1)
+        self.assertTrue(g.note_has("press / to try again"))
+        g.press("/")                                        # the player's own choice: again
+        settle(g, 900)
+        self.assertEqual(sum("[STORY RELOAD] viceron_1" in x for x in py(g.state.history)), 2)
 
     def test_a_story_that_moves_on_is_not_reported(self):
         g = game("v83-moves")
@@ -164,7 +190,7 @@ class StuckStoryTests(unittest.TestCase):
         g.fire("ObjectiveStateChangedEvent", MissionName="MIS_ZORD_01", ObjectiveName="OBJ_ZORD_01_GO_TO_ZORDOOM", ObjectiveState=1)
         g.fire("ObjectiveStateChangedEvent", MissionName="MIS_ZORD_01", ObjectiveName="OBJ_ZORD_01_GO_TO_ZORDOOM", ObjectiveState=2)
         settle(g, 1500)
-        self.assertFalse(g.note_has("waiting at its first step"))
+        self.assertFalse(any("[STORY RELOAD]" in x for x in py(g.state.history)))
 
 
 class StoryKeyTests(unittest.TestCase):
@@ -245,7 +271,9 @@ class KeyTests(unittest.TestCase):
         self.assertEqual((c.key_status, c.key_hub, c.key_hub_return, c.key_test_travel, c.key_test_point, c.key_story),
                          (";", "]", "[", ".", ",", "/"))
         self.assertTrue(c.story_on_arrival)
-        self.assertTrue(c.story_restart_stuck)
+        self.assertTrue(c.story_reload_stuck)                  # 8.4 name
+        self.assertTrue(c.story_prime_before_travel)
+        self.assertFalse(c.test_travel)                         # 8.4: off for a real playthrough
         self.assertTrue(c.legacy_f_keys)
 
     def test_seed_is_unchanged(self):
