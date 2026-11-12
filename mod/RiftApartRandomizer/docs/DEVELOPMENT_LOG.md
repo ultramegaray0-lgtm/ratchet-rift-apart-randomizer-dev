@@ -768,7 +768,7 @@ companion answered after the 60 s wait).
   (test_native).
 - Sim: hero swap ("already playing", swap_frames, swap_refuse), GO_TO steps (go_to, goto_on_start),
   vendor_pointers layout, the round 19/20 checkpoint names.
-- Tests: 315 ran, 0 failed, 17 skipped. New: test_v84.py (28), test_regression_v83.py,
+- Tests: 318 ran, 0 failed, 17 skipped. New: test_v84.py (31), test_regression_v83.py,
   tests/data/round20_rivet.log. big_batch 43,000/43,000. Strict-globals run: clean.
 
 ## Handoff (8.4)

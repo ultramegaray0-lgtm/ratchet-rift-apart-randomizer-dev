@@ -65,8 +65,8 @@ progress carries over.
   settings for a real playthrough.
 
 ### Tests
-- 315 automated tests, 0 failures (17 skipped: PowerShell 7 and pre-8.3 git history unavailable on
-  the build machine). New: `tests/test_v84.py` (28), `tests/test_regression_v83.py` (175 seeds in 7 presets against 8.3).
+- 318 automated tests, 0 failures (17 skipped: PowerShell 7 and pre-8.3 git history unavailable on
+  the build machine). New: `tests/test_v84.py` (31), `tests/test_regression_v83.py` (175 seeds in 7 presets against 8.3).
 - 43,000 seeds valid (`BATCH_8.4.txt`). Strict-global audit of the scripts: no stray globals.
 
 ## Randomizer 8.3: the story starts where you land, and keyboard keys

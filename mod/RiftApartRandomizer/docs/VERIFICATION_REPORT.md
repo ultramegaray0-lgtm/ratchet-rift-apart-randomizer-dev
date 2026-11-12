@@ -7,7 +7,7 @@ showed it with code that 8.4 kept unchanged.
 
 | | |
 |---|---|
-| **A** | verified by automated tests (run_tests.py: 315 tests, 0 failures; big_batch: 43,000 seeds valid) |
+| **A** | verified by automated tests (run_tests.py: 318 tests, 0 failures; big_batch: 43,000 seeds valid) |
 | **S** | verified by static inspection (code review, byte checks, data checked against your logs) |
 | **G** | verified by actual game execution (round number) |
 | **N** | not verified: needs the game |

@@ -386,3 +386,35 @@ class KitCheckTests(unittest.TestCase):
         self.assertTrue(g.log_has("missing 16_rando_testtravel"))
         self.assertTrue(g.log_has("other versions: 13_rando_armor 8.3.0"))
         self.assertTrue(g.note_has("mixes kits"))
+
+
+class InstallTests(unittest.TestCase):
+    """INSTALL.txt names exactly the files the kit holds"""
+    KIT = os.path.join(ROOT, "mod", "RiftApartRandomizer")
+
+    def install_text(self):
+        with open(os.path.join(self.KIT, "INSTALL.txt"), encoding="utf-8") as f:
+            return f.read()
+
+    def test_scripts(self):
+        import re
+        text = self.install_text()
+        listed = set(re.findall(r"\b(\d\d_rando_[a-z]+)\b", text.split("Copy the 14 files")[1].split("Use this kit")[0]))
+        shipped = {f[:-4] for f in os.listdir(os.path.join(self.KIT, "scripts")) if f.endswith(".lua")}
+        self.assertEqual(listed, shipped)
+        self.assertEqual(len(shipped), 14)
+        g = Game()
+        self.assertEqual(set(g.R.KIT_FILES.values()), shipped)
+
+    def test_docs(self):
+        import re
+        text = self.install_text()
+        block = text.split("docs\\")[-1]
+        listed = set(re.findall(r"([A-Z_0-9.]+\.(?:md|txt))", block))
+        shipped = {f for f in os.listdir(os.path.join(self.KIT, "docs")) if f.endswith((".md", ".txt"))}
+        self.assertEqual(listed, shipped)
+
+    def test_top_level(self):
+        shipped = set(os.listdir(self.KIT))
+        self.assertEqual(shipped, {"INSTALL.txt", "rivet.toml", "rando_give.dll", "rando_give_source", "scripts",
+                                   "companion", "extras", "docs"})

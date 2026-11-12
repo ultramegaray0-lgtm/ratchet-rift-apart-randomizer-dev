@@ -1,6 +1,6 @@
-Rift Apart Randomizer 8.4 - test run 2026-11-12 13:46 UTC
+Rift Apart Randomizer 8.4 - test run 2026-11-12 13:51 UTC
 Python 3.13.18 on Linux
-ran 315, failures 0, errors 0, skipped 17
+ran 318, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -317,6 +317,9 @@ test_already_playing_counts_as_confirmed (tests.test_v84.HeroTests.test_already_
 test_back_at_zurkies_is_ratchet (tests.test_v84.HeroTests.test_back_at_zurkies_is_ratchet) ... ok
 test_the_story_waits_for_a_slow_swap (tests.test_v84.HeroTests.test_the_story_waits_for_a_slow_swap) ... ok
 test_zurkies_own_visit_keeps_its_hero_through_a_load (tests.test_v84.HeroTests.test_zurkies_own_visit_keeps_its_hero_through_a_load) ... ok
+test_docs (tests.test_v84.InstallTests.test_docs) ... ok
+test_scripts (tests.test_v84.InstallTests.test_scripts) ... ok
+test_top_level (tests.test_v84.InstallTests.test_top_level) ... ok
 test_campaign_key_says_nothing_in_a_hub_seed (tests.test_v84.KeyTests.test_campaign_key_says_nothing_in_a_hub_seed) ... ok
 test_a_complete_kit_says_so (tests.test_v84.KitCheckTests.test_a_complete_kit_says_so) ... ok
 test_a_missing_or_older_script_is_reported (tests.test_v84.KitCheckTests.test_a_missing_or_older_script_is_reported) ... ok
@@ -342,6 +345,6 @@ test_a_purchase_teaches_its_type_in_either_order (tests.test_v84.WeaponTypeTests
 test_the_wrong_lessons_of_a_save_are_dropped (tests.test_v84.WeaponTypeTests.test_the_wrong_lessons_of_a_save_are_dropped) ... ok
 
 ----------------------------------------------------------------------
-Ran 315 tests in 137.287s
+Ran 318 tests in 143.638s
 
 OK (skipped=17)

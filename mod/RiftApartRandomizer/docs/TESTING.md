@@ -6,7 +6,7 @@ first full playthrough.
 
 ## 1. Automated tests (this build)
 
-`python run_tests.py`: **315 tests, 0 failures, 0 errors, 17 skipped** (TEST_RESULTS.txt).
+`python run_tests.py`: **318 tests, 0 failures, 0 errors, 17 skipped** (TEST_RESULTS.txt).
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
 - 8 need the 5.0 and 6.0 git commits, which are not in this repository (the 8.3 regression runs).
@@ -18,7 +18,7 @@ The skipped tests:
 | test_hub | 32 | hub plans (every order a player could choose), New Game → Zurkie's, destinations to the finale |
 | test_runtime | 86 | deliveries, the shop, armor, currency, save/restore, the real event streams of rounds 13-20 |
 | test_v81, test_v82, test_v83 | 55 | checkpoint catalog, test travel, story on arrival, keys |
-| **test_v84** | 28 | the round 20 fixes, below |
+| **test_v84** | 31 | the round 20 fixes, below, and INSTALL.txt naming exactly the kit's files |
 | test_regression_v83 | 1 (175 seeds) | 8.4 generates the same seeds as 8.3 in 7 presets; only 4 heroes and 3 entries differ |
 | test_native | 3 | rando_give.dll: the source rebuilds to the shipped DLL **byte for byte**; its game-code checks match both code dumps |
 | test_companion, test_tools | 13 | companion (needs pwsh), spoiler and log tools |
