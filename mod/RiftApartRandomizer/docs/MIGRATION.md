@@ -1,3 +1,18 @@
+# Moving from 8.3 to 8.4
+
+**No new seed needed.** 8.4 gives the same seeds as 8.3 (same fingerprint), so progress carries
+over; a New Game is still the best way to play a full run.
+
+1. Delete every old randomizer `.lua` file from `<game>\scripts`, then copy the **14** new ones
+   (every one changed: each now carries its kit version, checked at start as `RANDO-KIT`).
+2. `rando_give.dll` is unchanged (v6). Replace `rivet.toml` and the `companion` folder anyway.
+3. Use the kit's `04_rando_settings.lua`: it has `story_prime_before_travel`, `story_reload_stuck`
+   and `test_travel = false`. 8.3's `story_restart_stuck` is retired (rivet.log names it).
+4. Saved 8.3 state is cleaned up on load: wrong weapon-type lessons are dropped, and landings
+   remembered from test trips move to test travel's own list.
+
+What changed for you: see CHANGELOG.md.
+
 # Moving from 7.0 to 8.0
 
 **Start a NEW GAME for an 8.0 seed** (on a spare slot: 8.0 is experimental and may break saves).
@@ -13,7 +28,7 @@ are refused). Your 7.0 progress files stay in `companion\randomizer_saves` untou
 4. The hub's keys are F6 and F5 (HUB.md). Change them with `key_hub` / `key_hub_return` if they
    clash with something.
 
-What changed for you: see COMPLETION_REPORT.md and HUB.md.
+What changed for you: see CHANGELOG.md and HUB.md.
 
 # Moving from 6.0 to 7.0
 
@@ -35,7 +50,7 @@ refused). Your 6.0 progress files stay in `companion\randomizer_saves` untouched
    - new options (currency ranges, prices, levels, `start_items`) use their defaults.
 4. ARSENAL_RESTORED: leave `restored_weapons = "auto"`; keep the mod installed for its weapons.
 
-What changed for you: see COMPLETION_REPORT.md.
+What changed for you: see CHANGELOG.md.
 
 # Moving from 5.0 to 6.0
 

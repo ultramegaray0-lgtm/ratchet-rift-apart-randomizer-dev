@@ -1,104 +1,83 @@
-Ratchet & Clank: Rift Apart - Randomizer 8.3 (EXPERIMENTAL: Zurkie's Battleplex hub)
-=======================================================================
-For the PC (Steam) game, RiftApart.exe 3.0630.1.0, with rivet_hook 2.0.x. One mod: everything is
-in this folder. ARSENAL_RESTORED is optional: its weapons join the randomizer automatically when it
-is installed (docs\ARSENAL_RESTORED.md). Nothing here changes the game's own files.
+Ratchet & Clank: Rift Apart - Randomizer 8.4 (release candidate)
+===============================================================
+For the PC (Steam) game with rivet_hook 2.0.x. Everything is in this folder. ARSENAL_RESTORED is
+optional: its weapons join the randomizer automatically when it is installed
+(docs\ARSENAL_RESTORED.md). Nothing here changes the game's own files.
 
-8.3 = 8.2 + THE STORY STARTS WHERE YOU LAND, and KEYBOARD KEYS (docs\CHANGES_8.3.md).
-  Landing on a planet (test travel, the ship's menu, a hub trip) starts its story, even if the
-  story before it isn't finished. A story stuck at "go to <planet>" is started again there.
-  Keys: ; status | ] destination, Ctrl+] go | [ back | . / Ctrl+. test travel | , / Ctrl+, landing
-  point / fly | / start this planet's story, Ctrl+/ twice start it again. The old F keys still
-  work. Every key is a setting in 04_rando_settings.lua. 8.3 HAS NOT RUN IN YOUR GAME YET.
+8.4 is a STABILIZATION release of 8.3: no new features, the same seeds, fixes for round 20.
+  - Every destination is played as its own hero, checked with the game. In round 20 a stale saved
+    hero made Torren IV and Viceron run as Ratchet, and their stories never started. Four heroes
+    in the registry were also wrong.
+  - Hub trips start the story first, then travel. A story stuck at "go to <planet>" is reloaded
+    once (out to Zurkie's and straight back).
+  - Weapon types are no longer mislearned from a load. Ms. Zurkon's slots are read the way the
+    game stores them. The game itself now detects ARSENAL_RESTORED.
+  - A kit check reports a scripts folder that mixes kits. Test travel is OFF in this kit.
+  See docs\CHANGELOG.md. 8.4 HAS NOT RUN IN YOUR GAME YET: docs\VERIFICATION_REPORT.md says
+  exactly what has been verified, and how.
 
-8.2 = 8.1 + TEST TRAVEL (docs\TEST_TRAVEL.md) and the round 18 fix for the checkpoint catalog
-(docs\CHANGES_8.2.md). Test travel is ON in this kit's 04_rando_settings.lua:
-  (8.3 keys) . next planet, , next landing point, Ctrl+. warp there, Ctrl+, fly there with the ship.
-  Nothing sends you back while it is on, and it opens no Coordinates. Set test_travel = false
-  for a real run. Same seed, same fingerprint, same progress as 8.1. 8.2 HAS NOT RUN IN YOUR GAME YET.
-
-8.1 = 8.0 + the fixes for your round 17 log (docs\CHANGES_8.1.md): Torren IV / Cordelion trips
-(checkpoint catalog), the shop's frame-budget errors, the planet-change error, the level bits after
-a load, mission names, and the rivet_hook version of ARSENAL_RESTORED. Your 8.0 seed and progress
-carry over (same fingerprint). 8.1 HAS NOT RUN IN YOUR GAME YET; 8.0's hub did (round 17).
-
-8.0 WAS EXPERIMENTAL. Its new parts write to the game's memory (mission states, the
-level mask, planetary travel) and move the hero with warps: saves may break. Play on a SPARE save
-slot and back up your saves first.
-
-WHAT 8.0 ADDS (preset "hub", the default; docs\HUB.md)
-  - NEW GAME AT ZURKIE'S: once Ratchet has his wrench in the parade, the randomizer takes him to
-    Zurkie's Battleplex. The skipped prologue's reward is paid.
-  - TWO RANDOM COORDINATES at once, on two different planets.
-  - DESTINATIONS: ] chooses, Ctrl+] goes (the ship's flight or a warp). The randomizer asks the
-    game to start that visit's story (and tries harder ways, see docs\HUB.md); if the game won't,
-    you explore the planet and finish it by hand (Ctrl+[ twice).
-  - THE LOOP: finish a destination -> its rewards -> the next Coordinates -> back to Zurkie's.
-    The finale opens when everything else is done. Every order you could choose is checked to
-    lead to the finale.
-  - Everything 7.0 randomizes is kept: weapons (restored ones too), armor, gadgets, Bolts,
-    Raritanium, the shop and its prices, the start (Hoverboots and Map-O-Matic always), one item
-    per Gold Bolt, spoiler logs.
+Play on a SPARE save slot and back up your saves first: the randomizer writes mission states,
+level bits and planetary travel into the game's memory, and moves the hero with warps.
 
 BEFORE YOU START
   1. Back up your saves: Documents\Ratchet & Clank Rift Apart (copy the folder somewhere safe).
   2. rivet_hook 2.0.x must be installed (hid.dll + rivet_hook.dll next to RiftApart.exe).
   3. ARSENAL_RESTORED (optional), either version:
        - Overstrike version: keep it installed through Overstrike.
-       - rivet_hook version (8.1): drag its zip onto companion\Install-ArsenalRestored.bat. It goes
-         to <game>\mods\ARSENAL_RESTORED, its .lua files to <game>\scripts, and rivet.toml gets
-         its path. By hand: put the folder that holds info.json in <game>\mods and name it
-         ARSENAL_RESTORED (rivet.toml already lists that name), its .lua files in <game>\scripts.
-     The companion checks which is installed (restored_weapons = "auto").
+       - rivet_hook version: drag its zip onto companion\Install-ArsenalRestored.bat. By hand: put
+         the folder that holds info.json in <game>\mods named ARSENAL_RESTORED, and its .lua files
+         in <game>\scripts.
 
-INSTALL
-  1. In <game>\scripts, delete EVERY old randomizer .lua file (00_ to 15_ from older kits,
-     including any 00_rando_seed.lua and 07_rando_testmode.lua).
+INSTALL (also when updating from 8.3)
+  1. In <game>\scripts, delete EVERY old randomizer .lua file (all *_rando_*.lua from older kits,
+     including any 00_rando_seed.lua, 07_rando_testmode.lua and 08_rando_probe.lua). Leave the
+     ARSENAL_RESTORED .lua files alone.
   2. Copy the 14 files from this kit's scripts folder into <game>\scripts:
        01_rando_data  02_rando_generator  03_rando_campaign  04_rando_settings
        05_rando_bindings  06_rando_capabilities  09_rando_real  10_rando_runtime  11_rando_campaign
-       12_rando_shop  13_rando_armor  14_rando_travel  15_rando_hub  16_rando_testtravel (new in 8.2)
-     Updating from 8.2: copy all 14 (04, 10, 11, 14, 15 and 16 changed). If you edited your
-     04_rando_settings.lua, use this kit's copy and put your seed / preset back in: the key and
-     story lines are new.
+       12_rando_shop  13_rando_armor  14_rando_travel  15_rando_hub  16_rando_testtravel
+     Use this kit's 04_rando_settings.lua and put your seed / preset back in. An older settings
+     file still works, but new options then use their defaults (rivet.log says so).
   3. Copy rivet.toml and rando_give.dll next to RiftApart.exe, replacing the old ones.
-     rando_give.dll is v6 (unchanged from 8.0). rivet.toml is new in 8.1 (ARSENAL_RESTORED paths):
-     if you already added your own [assets] paths, keep them in the new file.
-  4. Copy the companion folder to <game>\rando_companion (the AR installer finds the game from
-     there), replacing the old one.
-  5. In <game>\scripts\04_rando_settings.lua: preset = "hub" (already set) and your seed
-     (seed = "random": the companion picks one and remembers it). The 7.0 presets (balanced,
-     chaos, full, campaign, everything) are still there and play like 7.0.
+     rando_give.dll is v6, the same binary as 8.0-8.3. If you added your own [assets] paths to
+     rivet.toml, keep them.
+  4. Copy the companion folder to <game>\rando_companion, replacing the old one.
+  5. Check the install: start the game and look in rivet.log (next to RiftApart.exe) for
+       RANDO-KIT all 14 scripts are 8.4.0
+     If it says a file is missing or from another kit, repeat steps 1-2.
+
+YOUR SEED AND PROGRESS
+  8.4 makes the same seeds as 8.3 (same fingerprint), so 8.3 progress carries over. For a full
+  playthrough, start a NEW GAME (the randomizer starts its progress over with it; the previous
+  run's file is kept).
 
 NEW GAME (docs\HUB.md has the full walkthrough)
   1. Start companion\Start-Companion.bat, then the game. Keep the companion window open: it saves
-     your randomizer progress (hub included), checks for ARSENAL_RESTORED and writes the spoiler
-     (companion\randomizer_saves\spoilers - only open it if you want spoilers).
+     your randomizer progress, sends a random seed, checks for ARSENAL_RESTORED and writes the
+     spoiler (companion\randomizer_saves\spoilers - only open it if you want spoilers).
   2. Choose NEW GAME on a spare slot. Pick up the wrench in the parade: you are taken to Zurkie's,
      "Zurkie's Battleplex: Coordinates for X and Y".
-  3. ] / Ctrl+] to a destination. ; shows the status (hub n/13 done). [ twice goes back to
-     Zurkie's. / starts the story of the planet you are on (Ctrl+/ twice: start it again).
-     Ctrl+[ twice finishes a destination whose story won't start. (The old F keys work too.)
-  4. Saving and loading is normal. If a load ever puts you back in the parade, you are taken to
-     Zurkie's again.
+  3. ] shows a destination, Ctrl+] goes there (hero and story first). ; shows the status.
+     [ twice goes back to Zurkie's. / starts (or reloads) the story of the planet you are on.
+     Ctrl+[ twice finishes a destination whose story won't start. The old F keys work too.
+  4. Saving and loading is normal.
 
 IF SOMETHING GOES WRONG
-  rivet.log next to RiftApart.exe has every step (search for RANDO-HUB, RANDO-ERROR).
-  - docs\HUB.md "If it goes wrong" and docs\KNOWN_ISSUES.md.
-  - hub_runtime = false in 04_rando_settings.lua plays the seed without the hub (like 7.0).
-  - preset = "balanced" (or another 7.0 preset) and a New Game: 7.0 behaviour.
-  - docs\TESTING.md has the checklist for your first 8.0 session; docs\RECOVERY.md the rest.
+  rivet.log has every step (search for RANDO-HUB, RANDO-ERROR, RANDO-KIT).
+  - docs\HUB.md "If it goes wrong", docs\KNOWN_ISSUES.md, docs\RECOVERY.md.
+  - hub_runtime = false in 04_rando_settings.lua plays the seed without the hub.
+  - story_prime_before_travel = false / story_reload_stuck = false switch off 8.4's story changes.
 
 FILES
-  scripts\       the randomizer (13 files)
-  companion\     saving, random seeds, spoiler logs, the ARSENAL_RESTORED check (PowerShell, comes
-                 with Windows); companion\research\ holds read-only research tools
-  extras\        test mode and developer tools (not needed to play)
-  docs\          CHANGES_8.3.md (new in 8.3), TEST_TRAVEL.md and CHANGES_8.2.md, CHANGES_8.1.md (what 8.1 fixes), HUB.md (start here), COMPLETION_REPORT.md (what 8.0 does and its status),
-                 RESEARCH_8.0.md (technical research report), KNOWN_ISSUES.md, TESTING.md (testing
-                 report and the first-session checklist), BATCH_8.0.txt, TEST_RESULTS.txt,
-                 CONFIGURATION.md, NEW_GAME.md, MIGRATION.md, LEVELS.md, WEAPONS.md, SHOP.md,
-                 ARMOR.md, ARSENAL_RESTORED.md, FEATURES_AND_LIMITATIONS.md, DESIGN.md, RECOVERY.md,
-                 VERIFIED_IN_GAME.md, COMPATIBILITY.md, CAMPAIGN.md, RESEARCH.md, DEVELOPMENT_LOG.md,
-                 examples\ (spoiler logs, hub included)
-  rando_give.dll + rando_give_source\  the helper (v6) and its source
+  scripts\       the randomizer (14 files)
+  rivet.toml     rivet_hook's settings (loads rando_give.dll, ARSENAL_RESTORED paths)
+  rando_give.dll the native helper (v6); rando_give_source\ rebuilds it byte for byte (build.sh)
+  companion\     saving, random seeds, spoiler logs, the ARSENAL_RESTORED installer and check
+                 (PowerShell, comes with Windows); companion\research\ read-only research tools
+  extras\        test mode and developer tools (not needed to play; do not copy for a real run)
+  docs\          HUB.md (start here), CHANGELOG.md, VERIFICATION_REPORT.md, KNOWN_ISSUES.md,
+                 TESTING.md (with the playthrough checklist), CONFIGURATION.md, TEST_TRAVEL.md,
+                 BATCH_8.4.txt, TEST_RESULTS.txt, WEAPONS.md, SHOP.md, ARMOR.md, ARSENAL_RESTORED.md,
+                 LEVELS.md, NEW_GAME.md, MIGRATION.md, RECOVERY.md, COMPATIBILITY.md,
+                 FEATURES_AND_LIMITATIONS.md, VERIFIED_IN_GAME.md, DESIGN.md, CAMPAIGN.md,
+                 RESEARCH.md, RESEARCH_8.0.md, DEVELOPMENT_LOG.md, examples\ (spoiler logs)

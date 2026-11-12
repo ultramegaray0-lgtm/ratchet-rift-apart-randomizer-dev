@@ -1,6 +1,6 @@
-Rift Apart Randomizer 8.4 - test run 2026-11-12 13:36 UTC
+Rift Apart Randomizer 8.4 - test run 2026-11-12 13:46 UTC
 Python 3.13.18 on Linux
-ran 314, failures 0, errors 0, skipped 17
+ran 315, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -155,6 +155,7 @@ test_same_helper_dll (tests.test_regression_v6.RegressionV6Tests.test_same_helpe
 8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... skipped 'the 6.0 commit is not in this repository'
 test_same_locations_and_rules (tests.test_regression_v6.RegressionV6Tests.test_same_locations_and_rules) ... skipped 'the 6.0 commit is not in this repository'
 test_versions (tests.test_regression_v6.RegressionV6Tests.test_versions) ... skipped 'the 6.0 commit is not in this repository'
+test_same_seeds_in_every_preset (tests.test_regression_v83.RegressionV83Tests.test_same_seeds_in_every_preset) ... ok
 test_armor_rewards_go_through_the_armor_code (tests.test_runtime.ArmorTests.test_armor_rewards_go_through_the_armor_code) ... ok
 test_intercepted_source_pays_its_location_once (tests.test_runtime.ArmorTests.test_intercepted_source_pays_its_location_once) ... ok
 test_interception_can_be_switched_off (tests.test_runtime.ArmorTests.test_interception_can_be_switched_off) ... ok
@@ -341,6 +342,6 @@ test_a_purchase_teaches_its_type_in_either_order (tests.test_v84.WeaponTypeTests
 test_the_wrong_lessons_of_a_save_are_dropped (tests.test_v84.WeaponTypeTests.test_the_wrong_lessons_of_a_save_are_dropped) ... ok
 
 ----------------------------------------------------------------------
-Ran 314 tests in 152.388s
+Ran 315 tests in 137.287s
 
 OK (skipped=17)

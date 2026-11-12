@@ -1,13 +1,13 @@
-# Rift Apart Randomizer 8.3 (development project)
+# Rift Apart Randomizer 8.4 (development project)
 
-8.3 = 8.2 + the story starts where you land, keyboard keys: `mod/RiftApartRandomizer/docs/CHANGES_8.3.md`.
-8.2 = 8.1 + test travel and the round 18 catalog fix: `mod/RiftApartRandomizer/docs/CHANGES_8.2.md`.
-8.1 = 8.0 + the round 17 fixes: `mod/RiftApartRandomizer/docs/CHANGES_8.1.md`.
+8.4 = 8.3 stabilized after round 20 (no new features, the same seeds):
+`mod/RiftApartRandomizer/docs/CHANGELOG.md` (8.1-8.4), `docs/VERIFICATION_REPORT.md` (what is verified,
+and how), `docs/KNOWN_ISSUES.md`, `docs/TESTING.md`.
 
 | Path | What it holds |
 |---|---|
 | `mod/RiftApartRandomizer/` | The install-ready folder. Start with its `INSTALL.txt`. Its `docs/` covers levels, weapons, shop and prices, armor, ARSENAL_RESTORED, design, configuration and presets, New Game, limitations, testing (report and round 17 checklist), compatibility, recovery and migration |
-| `mod/RiftApartRandomizer/docs/COMPLETION_REPORT.md` | **Start here for 8.0**: the Zurkie's hub, its status in four categories (verified automatically / not verified in game / investigated but unsuccessful / unknown), files |
+| `mod/RiftApartRandomizer/docs/VERIFICATION_REPORT.md` | **Start here for 8.4**: every feature in four categories (automated tests / static inspection / game execution / not verified) |
 | `mod/RiftApartRandomizer/docs/HUB.md`, `RESEARCH_8.0.md`, `KNOWN_ISSUES.md` | 8.0: the player's guide to the hub, the technical research report, known bugs and limitations |
 | `mod/RiftApartRandomizer/scripts/15_rando_hub.lua` | 8.0 hub runtime: New Game at Zurkie's, Coordinates, travel, the mission ladder, the return |
 | `data/` | The game database (`game_db.json`), the weapon registry (`weapon_registry.json`) and their real sources (your dag's item ids, the 1.x model) |
@@ -19,7 +19,7 @@
 | `tools/analyze_dump.py` | Decodes `companion/research` dumps |
 | `tools/summarize_log.py` | Summarizes a rivet.log |
 | `mod/RiftApartRandomizer/rando_give_source/` | `rando_give.dll` v6 source (portable core + Windows layer), `build.sh` |
-| `tests/` | Weapon registry; generator with independent verifiers and mutation tests; regression against 5.0 and 6.0 (from git); runtime against a simulated game (levels and the warp back, prices, currency, restored-weapons check, shop slots, armor, a New Game to finale on level-locked seeds); your real logs replayed (rounds 13-16); the DLL core; companion (PowerShell 7); tools |
+| `tests/` | Weapon registry; generator with independent verifiers and mutation tests; regression against 5.0 and 6.0 (from git); runtime against a simulated game (levels and the warp back, prices, currency, restored-weapons check, shop slots, armor, a New Game to finale on level-locked seeds); your real logs replayed (rounds 13-20); 8.4: hero checks, story prime and reload, weapon types, the shop's pointer layout, the kit check (`test_v84.py`), and the same seeds as 8.3 (`test_regression_v83.py`); the DLL core; companion (PowerShell 7); tools |
 | `run_tests.py` | Runs everything and writes `TEST_RESULTS.txt` |
 | `DEVELOPMENT_LOG.md` | History, findings and handoff |
 

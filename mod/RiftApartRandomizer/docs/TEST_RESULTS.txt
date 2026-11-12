@@ -1,6 +1,6 @@
-Rift Apart Randomizer 8.3 - test run 2026-11-12 06:20 UTC
+Rift Apart Randomizer 8.4 - test run 2026-11-12 13:46 UTC
 Python 3.13.18 on Linux
-ran 285, failures 0, errors 0, skipped 17
+ran 315, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -155,6 +155,7 @@ test_same_helper_dll (tests.test_regression_v6.RegressionV6Tests.test_same_helpe
 8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... skipped 'the 6.0 commit is not in this repository'
 test_same_locations_and_rules (tests.test_regression_v6.RegressionV6Tests.test_same_locations_and_rules) ... skipped 'the 6.0 commit is not in this repository'
 test_versions (tests.test_regression_v6.RegressionV6Tests.test_versions) ... skipped 'the 6.0 commit is not in this repository'
+test_same_seeds_in_every_preset (tests.test_regression_v83.RegressionV83Tests.test_same_seeds_in_every_preset) ... ok
 test_armor_rewards_go_through_the_armor_code (tests.test_runtime.ArmorTests.test_armor_rewards_go_through_the_armor_code) ... ok
 test_intercepted_source_pays_its_location_once (tests.test_runtime.ArmorTests.test_intercepted_source_pays_its_location_once) ... ok
 test_interception_can_be_switched_off (tests.test_runtime.ArmorTests.test_interception_can_be_switched_off) ... ok
@@ -278,7 +279,7 @@ test_off_by_default_and_8_1_behaviour_kept (tests.test_v82.TestTravelTests.test_
 test_planet_menu_without_coordinates_stays (tests.test_v82.TestTravelTests.test_planet_menu_without_coordinates_stays) ... ok
 test_script_loads_and_is_on (tests.test_v82.TestTravelTests.test_script_loads_and_is_on) ... ok
 test_seed_is_unchanged_by_test_travel (tests.test_v82.TestTravelTests.test_seed_is_unchanged_by_test_travel) ... ok
-test_settings_file_turns_it_on (tests.test_v82.TestTravelTests.test_settings_file_turns_it_on) ... ok
+test_settings_file_has_it_off_for_a_real_run (tests.test_v82.TestTravelTests.test_settings_file_has_it_off_for_a_real_run) ... ok
 test_warp_to_a_planet_without_coordinates_stays_there (tests.test_v82.TestTravelTests.test_warp_to_a_planet_without_coordinates_stays_there) ... ok
 test_works_before_the_hub_has_started (tests.test_v82.TestTravelTests.test_works_before_the_hub_has_started) ... ok
 test_zurkies_is_still_the_hubs_arrival (tests.test_v82.TestTravelTests.test_zurkies_is_still_the_hubs_arrival) ... ok
@@ -298,15 +299,49 @@ test_off_switch (tests.test_v83.StoryOnArrivalTests.test_off_switch) ... ok
 test_rivets_story_swaps_the_hero (tests.test_v83.StoryOnArrivalTests.test_rivets_story_swaps_the_hero) ... ok
 test_second_visit_waits_for_the_first_on_the_same_planet (tests.test_v83.StoryOnArrivalTests.test_second_visit_waits_for_the_first_on_the_same_planet) ... ok
 test_test_trip_starts_the_planets_story_out_of_order (tests.test_v83.StoryOnArrivalTests.test_test_trip_starts_the_planets_story_out_of_order) ... ok
-test_a_story_still_at_go_to_is_reported (tests.test_v83.StuckStoryTests.test_a_story_still_at_go_to_is_reported) ... ok
+test_a_story_still_at_go_to_is_reloaded_then_the_key_reloads_again (tests.test_v83.StuckStoryTests.test_a_story_still_at_go_to_is_reloaded_then_the_key_reloads_again) ... ok
 test_a_story_that_moves_on_is_not_reported (tests.test_v83.StuckStoryTests.test_a_story_that_moves_on_is_not_reported) ... ok
 test_active_story_in_progress_is_left_alone (tests.test_v83.StuckStoryTests.test_active_story_in_progress_is_left_alone) ... ok
-test_active_story_waiting_at_go_to_is_restarted (tests.test_v83.StuckStoryTests.test_active_story_waiting_at_go_to_is_restarted) ... ok
-test_active_story_with_no_step_seen_is_restarted_on_its_planet (tests.test_v83.StuckStoryTests.test_active_story_with_no_step_seen_is_restarted_on_its_planet) ... ok
-test_off_switch_leaves_active_stories (tests.test_v83.StuckStoryTests.test_off_switch_leaves_active_stories) ... ok
-test_refused_restart_goes_back_to_active_then_replays (tests.test_v83.StuckStoryTests.test_refused_restart_goes_back_to_active_then_replays) ... ok
+test_active_story_waiting_at_go_to_is_reloaded (tests.test_v83.StuckStoryTests.test_active_story_waiting_at_go_to_is_reloaded) ... ok
+test_active_story_with_no_step_seen_gets_its_hero_and_runs (tests.test_v83.StuckStoryTests.test_active_story_with_no_step_seen_gets_its_hero_and_runs) ... ok
+test_off_switch_never_reloads (tests.test_v83.StuckStoryTests.test_off_switch_never_reloads) ... ok
+test_old_setting_name_still_switches_it_off (tests.test_v83.StuckStoryTests.test_old_setting_name_still_switches_it_off) ... ok
+test_refused_restart_by_hand_goes_back_to_active_then_replays (tests.test_v83.StuckStoryTests.test_refused_restart_by_hand_goes_back_to_active_then_replays) ... ok
+test_a_fixed_seed_still_times_out (tests.test_v84.ArsenalTests.test_a_fixed_seed_still_times_out) ... ok
+test_a_random_seed_waits_for_the_companion_not_a_timer (tests.test_v84.ArsenalTests.test_a_random_seed_waits_for_the_companion_not_a_timer) ... ok
+test_the_game_itself_says_the_mod_is_installed (tests.test_v84.ArsenalTests.test_the_game_itself_says_the_mod_is_installed) ... ok
+test_a_refused_swap_is_said_and_the_story_still_starts (tests.test_v84.HeroTests.test_a_refused_swap_is_said_and_the_story_still_starts) ... ok
+test_a_stale_saved_hero_is_never_trusted (tests.test_v84.HeroTests.test_a_stale_saved_hero_is_never_trusted)
+round 20: the save said rivet, the game had Ratchet; Viceron was played as Ratchet ... ok
+test_already_playing_counts_as_confirmed (tests.test_v84.HeroTests.test_already_playing_counts_as_confirmed) ... ok
+test_back_at_zurkies_is_ratchet (tests.test_v84.HeroTests.test_back_at_zurkies_is_ratchet) ... ok
+test_the_story_waits_for_a_slow_swap (tests.test_v84.HeroTests.test_the_story_waits_for_a_slow_swap) ... ok
+test_zurkies_own_visit_keeps_its_hero_through_a_load (tests.test_v84.HeroTests.test_zurkies_own_visit_keeps_its_hero_through_a_load) ... ok
+test_campaign_key_says_nothing_in_a_hub_seed (tests.test_v84.KeyTests.test_campaign_key_says_nothing_in_a_hub_seed) ... ok
+test_a_complete_kit_says_so (tests.test_v84.KitCheckTests.test_a_complete_kit_says_so) ... ok
+test_a_missing_or_older_script_is_reported (tests.test_v84.KitCheckTests.test_a_missing_or_older_script_is_reported) ... ok
+test_entries_are_names_your_game_listed (tests.test_v84.RegistryTests.test_entries_are_names_your_game_listed) ... ok
+test_heroes (tests.test_v84.RegistryTests.test_heroes) ... ok
+test_heroes_do_not_change_the_seed (tests.test_v84.RegistryTests.test_heroes_do_not_change_the_seed) ... ok
+test_round20_events_replay_without_errors (tests.test_v84.Round20LogTests.test_round20_events_replay_without_errors) ... ok
+test_inline_layout_still_works (tests.test_v84.ShopTests.test_inline_layout_still_works) ... ok
+test_slot_objects_by_pointer_are_found_and_changed (tests.test_v84.ShopTests.test_slot_objects_by_pointer_are_found_and_changed)
+rounds 18-20: "only 0 vendor weapon(s) in the array at +0x48" - ItemDatas holds pointers ... ok
+test_hub_trip_primes_the_story_and_its_first_step_finishes_on_landing (tests.test_v84.StoryStartTests.test_hub_trip_primes_the_story_and_its_first_step_finishes_on_landing)
+the planet loads with the story active and its hero there (round 20: Savali) ... ok
+test_menu_landings_are_remembered_test_trips_are_not (tests.test_v84.StoryStartTests.test_menu_landings_are_remembered_test_trips_are_not) ... ok
+test_old_saves_move_their_landings_to_test_landings (tests.test_v84.StoryStartTests.test_old_saves_move_their_landings_to_test_landings) ... ok
+test_on_planet_start_that_waits_is_reloaded_and_then_moves (tests.test_v84.StoryStartTests.test_on_planet_start_that_waits_is_reloaded_and_then_moves)
+the ship's menu lands first and starts the story there; when "go to" waits (it does ... ok
+test_story_starts_rank_first_and_command_ship_is_not_a_landing (tests.test_v84.StoryStartTests.test_story_starts_rank_first_and_command_ship_is_not_a_landing) ... ok
+test_versions (tests.test_v84.VersionTests.test_versions) ... ok
+test_a_load_after_an_equip_teaches_nothing (tests.test_v84.WeaponTypeTests.test_a_load_after_an_equip_teaches_nothing)
+round 20: Cordelion's replay (1002-1012) right after the Burst Pistol was equipped ... ok
+test_a_purchase_is_never_a_late_answer (tests.test_v84.WeaponTypeTests.test_a_purchase_is_never_a_late_answer) ... ok
+test_a_purchase_teaches_its_type_in_either_order (tests.test_v84.WeaponTypeTests.test_a_purchase_teaches_its_type_in_either_order) ... ok
+test_the_wrong_lessons_of_a_save_are_dropped (tests.test_v84.WeaponTypeTests.test_the_wrong_lessons_of_a_save_are_dropped) ... ok
 
 ----------------------------------------------------------------------
-Ran 285 tests in 121.742s
+Ran 315 tests in 137.287s
 
 OK (skipped=17)

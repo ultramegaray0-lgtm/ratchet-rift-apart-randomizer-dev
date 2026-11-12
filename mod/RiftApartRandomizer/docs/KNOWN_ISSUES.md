@@ -1,80 +1,77 @@
-# Known bugs and limitations (Randomizer 8.0 / 8.1)
+# Known issues (Randomizer 8.4)
 
-**8.1 (CHANGES_8.1.md)** fixes the round 17 findings: the planet-change error (u32_at), "no
-checkpoint known" for Torren IV and Cordelion (checkpoint catalog, with the ship's planet menu as
-the fallback, which is remembered), the shop's 8 ms frame-budget errors (sliced search), the level
-bits lost on a save load, and five mission names your game lacks. Still open after round 17:
-Glitch deliveries are not confirmed by an event; rivet.configs("Mission") lists nothing; whether
-the catalog's warp points on Torren IV and Cordelion are good places to land is unknown until you
-try them (rivet.log line "checkpoint catalog").
+8.4 has passed every automated test, but it has **not run in your game yet**. Everything below
+comes from your logs of rounds 13-20, from the code, or from the simulator. Each item says which.
+Use this page to tell a known issue from a new one.
 
-8.0 is an experimental build. It has been tested offline only (TESTING.md). This page lists what
-is known or expected to go wrong, so you can tell a known issue from a new one.
+## 1. Expected in your first 8.4 playthrough (unknown until then)
 
-## Expected in your first session (unknown until then)
+1. **Whether the hero fix starts every story.** The rule "a story's first step needs the visit's
+   own hero" fits all seven clean cases in rounds 17 and 20 (CHANGELOG.md). It is an inference, not
+   game code. If a story still waits at "go to <planet>" with the right hero, 8.4 reloads it once.
+   If it still waits after that, press `/` (reload again) or `[` twice and come back. Send the
+   rivet.log lines `hero:`, `prime`, `story still waiting`, `reload:`.
+2. **Starting a story before the trip.** In round 20 a story that was already active when you
+   travelled (Savali) finished its first step on landing. 8.4 now does this on purpose for hub
+   trips and test-travel warps. No story has yet been started on purpose from another planet.
+   `story_prime_before_travel = false` switches it off: the story then starts after landing, as in 8.3.
+3. **The reload trip** (out to Zurkie's and back) uses the same warps as a hub trip, which work.
+   It has never been used for a stuck story. `story_reload_stuck = false` switches it off.
+4. **New entry points.** `CHK_ZORDOOM_START` (Viceron) and `CHK_CORD_A_START` (Cordelion) are names
+   your game listed, but nobody has warped there yet. `CHK_ARD_START` (Ardolis) worked in round 20.
+   Torren IV still has no known story start: the catalog picks one.
+5. **Viceron's broken lighting (round 20).** It happened after a warp to
+   `CHK_ZORDOOM_LANDING_COMBAT`, a mid-mission point, as Ratchet, with the story not yet running.
+   The cause is not proven. 8.4 changes all three (story start point, Rivet, story started first).
+   rivet_hook's docs say a planet's story overlays load from the save's mission state, which fits.
+   If the lighting is still wrong, say where you landed (`travel:` line).
+6. **The shop's new layout.** Reading the slot list as an array of pointers matches the game's data
+   definition and explains rounds 18-20's "only 0 vendor weapons". It has only run in the
+   simulator. If it fails, the old fallback still gives you the seed's non-vendor shop weapons once.
+   `RANDO-SHOP vendor ... slot objects by pointer` in rivet.log means it worked. The Price field
+   search and the slot map writes have never run in your game.
+7. **ARSENAL_RESTORED detected in game.** This depends on Mr. Zurkon's item config being loaded when
+   the game starts. If it isn't, the companion still decides as before. `RANDO-SEED
+   ARSENAL_RESTORED is installed (the game has ...)` means the in-game check found it.
 
-1. **The warp from the parade.** rivet_hook's checkpoint warp loads another planet's region
-   (rivet_hook docs; earlier rounds warped onto unreached planets). It has never been used from the
-   parade. If it doesn't land, the hub retries other Zurkie's checkpoints, then opens your
-   Coordinates where you are ("could not reach Zurkie's").
-2. **The prologue's state write.** `hub_intro = "force"` writes Complete Finished into MIS_INTRO's
-   saved record. Possible outcomes:
-   - no visible effect;
-   - the game moves on to Nefarious City's story (the hub undoes travel for 2 minutes after the
-     start);
-   - something breaks in the parade's leftovers.
+## 2. Known limitations (by design or engine)
 
-   `hub_intro = "leave"` turns it off.
-3. **Destination stories may not start.** System 2 has no make-available. 8.0's write of
-   "Available" is an experiment, and so is replay. Expect explore mode on most destinations until
-   the log shows what works. Ctrl+F5 twice finishes a destination.
-4. **A started story may misbehave.** A mission started out of its order may expect things an
-   earlier mission set up: a planet state, a ship, a cutscene, Clank or Kit. Possible results: a
-   stuck objective, a missing door, a wrong cutscene. Back out with F5 twice. The destination stays
-   open.
-5. **Hero swaps.** `rivet.hero_play_as` is the game's own swap, but a swap during a planet's arrival
-   has not been tried. A Rivet visit with Ratchet (or the other way round) may break that visit's
-   scripts. Use `hub_hero_swap = false` to test without it.
-6. **The ship at Zurkie's.** After a warp, Ratchet's ship may not be at Zurkie's. Then the planet
-   menu isn't reachable and Ctrl+F6 warps instead of flying. Both reach the destination.
-7. **The level bits.** What bits 1-10 mean is unknown. With `hub_levels = "all"`, the ship's menu
-   may list every planet. A planet without Coordinates sends you back. `"off"` leaves them alone.
-8. **Landing checkpoints.** Five planets have a known landing checkpoint
-   (`CHK_NEFCITY_SHIP`, `CHK_SAV_01_LANDING`, `CHK_BLIZAR_A_LANDINGPAD`, Zurkie's two). The others
-   are found with `rivet.checkpoints()` by name code, landing pads first. A wrong pick lands you
-   somewhere odd on the right planet. The research lines list every LANDING checkpoint, for the
-   next version.
-9. **The finale's checkpoint** is searched by `MEGA` / `MALINON` / `CORSON`. It may land on a parade
-   checkpoint instead of the final battle's area.
+- **The parade.** A new save always starts in the parade. The hub leaves it once Ratchet has his
+  wrench.
+- **Travel can only be undone after landing, not blocked before.**
+- **Whole visits move, never single missions.** The randomizer can't reorder or skip objectives
+  inside a mission.
+- **A mission inside a visit may swap the hero itself** (Zurkie's 1: Ratchet, then Rivet in the
+  arena). 8.4 only sets the hero before a story starts, or while its first step waits. It never
+  sets it in the middle of a story.
+- **Story abilities come from the story itself in a hub seed** (Phantom Dash, Hurlshot, ...). A later
+  visit may need one whose story you skipped. Explore mode and `[` twice with Ctrl always work.
+- **ARSENAL_RESTORED's vendor** sells the mod's weapons in its own slots. Those slots are not moved.
+  A seed with the mod may also give one of those weapons as a reward. You then own it, and the
+  vendor shows it as owned.
+- **Armor you already owned** before a seed started can pay its source location when the randomizer
+  sees it (round 18, a finished save). On a New Game this cannot happen.
+- **Progress made while the companion is closed is not saved.**
 
-## Known limitations (by design or engine)
+## 3. Still open from earlier rounds
 
-- The game itself always starts a new save in the parade. The hub leaves it as soon as Ratchet has
-  his wrench; changing the start as data is not possible yet (RESEARCH_8.0.md, section 6).
-- Travel can't be blocked before landing, only undone after.
-- 8.0 moves whole visits, never single missions inside a visit.
-- The 3.x mission-order presets (`planet_shuffle`, ...) and 7.0's level locks don't apply to a hub
-  seed. They are switched off with a note in the spoiler.
-- In a hub seed, story abilities (Phantom Dash, Hurlshot, ...) come only from the story itself.
-  If the Nefarious City or Torren IV story never runs, Viceron's own story may need them. Viceron
-  still opens in order, and explore mode always works.
-- The randomizer can't reorder or skip objectives inside a mission.
-- Progress made while the companion is closed is not saved (as in 7.0).
+- **Glitch deliveries** are never confirmed by an event (round 16 onwards). The delivery is retried,
+  then counted as given.
+- **Currency amounts.** In round 20, "currency sent: 3000 / 8250 Bolts" was logged. Whether the game
+  added exactly that amount has not been checked.
+- **"rivet_hook: game version mismatch, invalidating pointers"** (rounds 19-20) is rivet_hook's own
+  message. Everything that uses rivet_hook still worked. rando_give.dll checks the game's bytes
+  itself (0x7 = all paths matched).
+- **The PowerShell companion** is checked by hand only. PowerShell 7 could not run on the build
+  machine, so its 9 tests were skipped.
 
-## Carried over from 7.0 (still open)
+## 4. Fixed in 8.4 (see CHANGELOG.md)
 
-- The vendor's Price field search, the shop's slot map, currency counts as amounts, armor sources
-  through the game's armor code, and the ARSENAL_RESTORED toc check have still not run in your game
-  (7.0's round 17 checklist).
-- The PowerShell companion's new code is checked by hand only: PowerShell 7 couldn't run on the
-  build machine.
-
-## Bugs found and fixed while building 8.0
-
-- **A stale "current planet" after the companion's restore (7.0 too).** Until the next planet
-  change, the randomizer's current planet was the one stored in the save, not the one you were on.
-  Now this session's planet wins, for every seed.
-- **A hub destination left from the menu kept counting as "in progress"** at Zurkie's. It now stays
-  open, and Ctrl+F5 at the hub does nothing.
-- **Keys during a loading screen** could warp from rivet_hook's render-thread fallback. Hub keys now
-  wait until the game has loaded.
+- Stories that did not start, and Viceron as Ratchet: the save's hero was trusted, and 4
+  registry heroes were wrong.
+- 8.3's automatic restart, which never moved a story.
+- A hub trip to a test trip's mid-mission checkpoint (Torren IV).
+- "weapon type 1002 ... 1012 is weapon:burst_pistol".
+- The shop's "only 0 vendor weapons" (rounds 18-20).
+- ARSENAL_RESTORED treated as not installed because the companion answered late.
+- The campaign message from the F12 key in a hub seed.

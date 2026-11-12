@@ -1,4 +1,4 @@
-# Configuration (8.0)
+# Configuration (8.4)
 
 ## scripts\04_rando_settings.lua
 
@@ -43,14 +43,15 @@ Seed settings, only used when `hub = true` (the hub presets). They change the se
 
 In-game options (change any time): `hub_runtime`, `hub_trigger`, `hub_intro`, `hub_force_missions`,
 `hub_replay`, `hub_levels`, `hub_travel_flag`, `hub_fly`, `hub_auto_return`, `hub_return_delay`,
-`hub_hero_swap`, `key_hub` (F6) and `key_hub_return` (F5). HUB.md, "Settings", explains each one.
+`hub_hero_swap`, `story_on_arrival`, `story_prime_before_travel` (8.4), `story_reload_stuck` (8.4),
+`key_hub` (`]`), `key_hub_return` (`[`) and `key_story` (`/`). HUB.md, "Settings", explains each one.
 
 ## Toggles
 
 | Setting | Default | |
 |---|---|---|
 | `weapons` | true | the weapon pool (the vendor's 15, Pixelizer, Bouncer, plus restored weapons) is spread over the shop's 15 slots, the start and reward locations. false: the vendor sells as usual |
-| `restored_weapons` | `"auto"` | ARSENAL_RESTORED's 9 weapons join the pool. `"auto"`: when the companion finds the mod installed (ARSENAL_RESTORED.md). `true`: always, **only with the mod installed**. `false`: never. (6.0 name: `include_arsenal_restored`) |
+| `restored_weapons` | `"auto"` | ARSENAL_RESTORED's 9 weapons join the pool. `"auto"`: when the game has the mod's Mr. Zurkon item config loaded (8.4) or the companion finds the mod installed (ARSENAL_RESTORED.md). `true`: always, **only with the mod installed**. `false`: never. (6.0 name: `include_arsenal_restored`) |
 | `gadgets` | true | Box Breaker, Omniglove, Glitch |
 | `armor` | true | the 27 findable armor pieces (helmets, chests, boots, each its own item) are rewards; every armor source is a location (ARMOR.md). Without armor there are too few items for 25 Gold Bolts, so `false` is turned back on with a warning |
 | `levels` | false | **locked levels**: each planet's travel needs its Coordinates (LEVELS.md). Sets `planet_locks` and `travel_lock` |
@@ -134,8 +135,10 @@ reason.
 
 | Setting | Default | |
 |---|---|---|
-| `key_status` | F9 | status: Gold Bolts n/25, rewards, planets open, deliveries waiting. **Ctrl+F9 twice** (locked levels): open the planet you were last sent back from |
-| `key_campaign` | F12 | experimental mission order only |
+| `key_status` | `;` | status: Gold Bolts n/25, rewards, planets open, deliveries waiting. **Ctrl+; twice** (locked levels): open the planet you were last sent back from |
+| `key_campaign` | `'` | experimental mission order only (says nothing in a hub seed) |
+| `legacy_f_keys` | true | the old F4-F9 and F12 keys work as well |
+| `test_travel` | false | **8.4: off in the kit.** true: `.` / `,` go to any planet for testing (TEST_TRAVEL.md) |
 | `real_items`, `real_weapons` | true | put rewards into your real inventory |
 | `armor_intercept` | true | armor sources give the seed's item instead of their own piece |
 | `shop_runtime` | true | write the seed's weapons and prices into the vendor. false (or when that fails): the weapons only the shop would sell are given to you once |
@@ -153,7 +156,9 @@ reason.
   - 3.x: `key_shop_next`, `key_shop_buy`, `shop_slots`, `economy`, `luxury_slots`,
     `completion_gold_*`, `start_gold`, `gold_bolt_locations`;
   - 4.0: `armor_rewards`, `armor_finds`, `lock_vendor_weapons`;
-  - 5.0: `include_hidden_weapons`, `experimental_pickups`, `experimental_collectibles`.
+  - 5.0: `include_hidden_weapons`, `experimental_pickups`, `experimental_collectibles`;
+  - 8.3: `story_restart_stuck` (8.4: `story_reload_stuck`; `false` in the old name still switches
+    the reload off).
 
 ## Sharing a seed
 

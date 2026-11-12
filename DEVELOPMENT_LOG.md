@@ -716,3 +716,67 @@ planet it finishes at once (MIS_ZURK_01_VISIT_01), started elsewhere it never do
 - Per landing: "story on arrival", then "start"/"restart" results, and whether the mission's
   GO_TO objective reaches state 2 (ObjectiveStateChangedEvent). If a restart is refused, the
   "restart: back to active" and replay lines.
+
+## 8.4 (2026-11-12): stabilization after round 20 (no new features)
+Round 20 log (8.3, v2.618 install, seed b25846f17df5; ARSENAL_RESTORED loaded by rivet_hook but the
+companion answered after the 60 s wait).
+- Findings:
+  - Torren IV's story never left OBJ_MOL_GO_TO_MOLONOTH;
+  - Viceron played as Ratchet with broken lighting; its GO_TO finished only after a full reload;
+  - Cordelion and Zurkie's 2 "restarted" but never moved;
+  - every hero swap logged "rivet -> ratchet failed: already playing as that hero";
+  - "weapon type 1002 ... 1012 is weapon:burst_pistol";
+  - shop "only 0 vendor weapon(s) at +0x48" again;
+  - "Campaign order is not available yet" from F12.
+- The rule the logs support (7 clean cases, rounds 17 and 20): GO_TO finishes when the visit's
+  own hero is on the planet (at once on a start there, or on a load with the story active). The
+  8.3 rule ("started on the planet") was wrong: round 17's NefCity was started on NefCity, as Rivet.
+- 15_rando_hub.lua:
+  - H.ensure_hero: rivet.hero_play_as until "already playing as that hero" (rivet_hook
+    hero_look.cpp play_as), one job at a time;
+  - H.activate confirms the hero before start / force / replay, or while an active story waits at
+    GO_TO;
+  - H.prime before hub trips and test-travel warps;
+  - H.watch_story → H.reload_story (once per destination per session, out to Zurkie's or another
+    open planet and back, H.bounce);
+  - automatic restart removed (Ctrl+/ twice kept);
+  - at_hub / finish swap back to Ratchet only when no trip is being prepared.
+- 03_rando_campaign.lua: heroes nefcity_1 ratchet, sargasso_2 rivet, ardolis_1 ratchet, viceron_1
+  rivet (wiki plot, gamepressure, thegamer); entries CHK_ZORDOOM_START, CHK_CORD_A_START,
+  CHK_ARD_START. The fingerprint does not include the registry: same seeds (test_regression_v83).
+- 14_rando_travel.lua:
+  - tr.landed holds menu landings only; the landed_v = 2 migration moves older entries to
+    tr.test_landed;
+  - T.remember_test;
+  - score 95 for CHK_<code>_START / _A_START / _0n_START; long *_SHIP names score 30.
+- 16_rando_testtravel.lua: entries first, then menu landings, then test landings; H.prime before a warp.
+- 09_rando_real.lua:
+  - types are learned only from purchases (G.last_bought / G.last_unknown, 90 frames, either
+    order) and never during a load burst;
+  - late answers come only from a burst with exactly one new type, or from an unclaimed type
+    after 90 frames;
+  - G.sanitize_types drops duplicates; one type per weapon.
+- 12_rando_shop.lua: H.discover_pointers (ItemDatas is List<VendorItemData?>: an array of pointers;
+  the 8.3 search found the ids in the slot objects after the pointer array, so idx >= count for all).
+- 10_rando_runtime.lua:
+  - R.arsenal_in_game (rivet.config(DB.arsenal_marker));
+  - no AR timeout for seed = "random";
+  - R.kit_check (RANDO_FILES tags in every script, build_data / build_capabilities write them too);
+  - story_prime_before_travel, story_reload_stuck (story_restart_stuck retired).
+- 11_rando_campaign.lua: D.go is silent in a hub seed or the game's own order.
+- rando_give_source/build.sh: /timestamp pinned, so the rebuild equals the shipped DLL byte for byte
+  (test_native).
+- Sim: hero swap ("already playing", swap_frames, swap_refuse), GO_TO steps (go_to, goto_on_start),
+  vendor_pointers layout, the round 19/20 checkpoint names.
+- Tests: 315 ran, 0 failed, 17 skipped. New: test_v84.py (28), test_regression_v83.py,
+  tests/data/round20_rivet.log. big_batch 43,000/43,000. Strict-globals run: clean.
+
+## Handoff (8.4)
+- Round 21 (first full playthrough): TESTING.md section 2.
+- Lines to read:
+  - RANDO-KIT;
+  - "hero: X confirmed", "prime <id>:", "story still waiting", "reload:";
+  - RANDO-SHOP "slot objects by pointer";
+  - "ARSENAL_RESTORED is installed (the game has ...)".
+- If a story with the right hero still stalls at GO_TO, compare its objective name and the
+  landing checkpoint: the hero rule may need a planet exception.
