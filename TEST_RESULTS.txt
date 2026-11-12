@@ -1,4 +1,4 @@
-Rift Apart Randomizer 8.4 - test run 2026-11-12 07:12 UTC
+Rift Apart Randomizer 8.4 - test run 2026-11-12 13:36 UTC
 Python 3.13.18 on Linux
 ran 314, failures 0, errors 0, skipped 17
 
@@ -341,6 +341,6 @@ test_a_purchase_teaches_its_type_in_either_order (tests.test_v84.WeaponTypeTests
 test_the_wrong_lessons_of_a_save_are_dropped (tests.test_v84.WeaponTypeTests.test_the_wrong_lessons_of_a_save_are_dropped) ... ok
 
 ----------------------------------------------------------------------
-Ran 314 tests in 96.210s
+Ran 314 tests in 152.388s
 
 OK (skipped=17)
