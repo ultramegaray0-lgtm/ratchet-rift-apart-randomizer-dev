@@ -115,12 +115,13 @@ D.RESULT = { [0] = "nothing", [1] = "sent", [2] = "no target", [3] = "faulted (c
              [10] = "the game's action does nothing in this state", [11] = "done",
              [12] = "the game has no such action in its mission system", [13] = "not found",
              [-1] = "timed out", [-2] = "helper not available" }
-D.MB = { KIND = 0x48, SLOT = 0x4C, FLAG = 0x50, BEFORE = 0x54, AFTER = 0x58, RET = 0x5C, MISSIONS = 0x60, INDEX = 0x64,
+D.MB = { PUMPS = 0x28, KIND = 0x48, SLOT = 0x4C, FLAG = 0x50, BEFORE = 0x54, AFTER = 0x58, RET = 0x5C, MISSIONS = 0x60, INDEX = 0x64,
          OBJECT = 0x68, SYSTEM = 0x70, NAMES = 0x400, NAME_SIZE = 0x40, SLOTS = 48, REQ = 0x10, DONE = 0x14, RESULT = 0x24,
          STATUS = 0x0C, VERSION = 0x08, COUNT = 0x20, V6 = 0x78 }
 D.HELPER_VERSION = 4
 D.native = D.native or { queue = {}, cur = nil, slots = {}, next_slot = 0 }
 D.NATIVE_TIMEOUT = 300
+D.NATIVE_LOAD_WAIT = 3600       -- 8.5: the longest a request waits through a loading screen
 
 function D.native_ok(kind)
   local rr = RANDO_REAL
@@ -206,7 +207,19 @@ function D.native_tick()
       end
       finish_call(c, r)
     elseif frame - c.sent > D.NATIVE_TIMEOUT then
-      log("RANDO-CAMPAIGN mission call timed out", c.kind, c.name)
+      -- 8.5: a loading screen is not a timeout: while the helper's pump has not run and the scene
+      -- is not up, the request simply waits (as item and currency requests do, 09_rando_real.lua)
+      local pumps = read_u32(addr + D.MB.PUMPS)
+      local ready = false
+      pcall(function() ready = rivet.scene_ready() and rivet.hero() ~= nil end)
+      if pumps == c.pumps and not ready and frame - c.sent <= D.NATIVE_LOAD_WAIT then
+        return
+      end
+      -- 8.5: take the request back before giving up, so the helper can never carry it out later
+      -- behind the script's back (a late start or state write the ladder thinks failed)
+      local done = read_u32(addr + D.MB.DONE)
+      if done and done ~= c.req then pcall(rivet.write, hexaddr(addr + D.MB.REQ), le32(done)) end
+      log("RANDO-CAMPAIGN mission call timed out and was taken back", c.kind, c.name)
       finish_call(c, { code = -1 })
     end
     return
@@ -233,6 +246,7 @@ function D.native_tick()
   okw = okw and pcall(rivet.write, hexaddr(addr + D.MB.REQ), le32(req))           -- last
   if not okw then log("RANDO-CAMPAIGN cannot write the mailbox"); nat.cur = q; finish_call(q, { code = -1 }); return end
   q.req, q.sent = req, frame
+  q.pumps = read_u32(addr + D.MB.PUMPS)
   nat.cur = q
   rr.mission_busy = true
 end

@@ -315,7 +315,12 @@ end
 function H.new_game()
   H.expect, H.menu, H.pending, H.ladder, H.sel = nil, nil, nil, nil, 0
   H.bounce, H.priming, H.watching, H.hero_job = nil, nil, nil, nil
-  H.return_at = nil
+  H.return_at, H.wait_catalog, H.force_restart = nil, nil, {}
+  -- 8.5: this session's record of the old run must not steer the new one (a destination reloaded
+  -- in the old run could not be reloaded again; the old start's guard window). The parade's own
+  -- markers (new_game, control, wrench) were just set by the objective that started this.
+  local ss = H.session
+  ss.started, ss.reloaded, ss.keeper, ss.started_frame, ss.researched = {}, {}, 0, nil, false
   local h = H.state()
   if h then h.phase = "pre" end
   log("new game: waiting for the parade's", cfg("hub_trigger", "wrench") == "wrench" and "wrench" or "first control", "to go to Zurkie's")
@@ -539,7 +544,6 @@ end
 function H.is_already(res) return tostring(res):find("already playing", 1, true) ~= nil end
 function H.ensure_hero(hero, cb, why)
   cb = cb or function() end
-  local h = H.state()
   if not hero or not cfg("hub_hero_swap", true) then return cb(true, "no swap") end
   local tries, asked = 0, false
   -- one swap at a time: a newer request (another hero, or the same one again) takes over, and the
@@ -551,7 +555,8 @@ function H.ensure_hero(hero, cb, why)
     tries = tries + 1
     local ok, res = pcall(rivet.hero_play_as, hero)
     if not ok and H.is_already(res) then
-      if h.hero ~= hero then h.hero = hero; changed() end
+      local hh = H.state()
+      if hh and hh.hero ~= hero then hh.hero = hero; changed() end
       log("hero:", hero, asked and ("confirmed after the swap (" .. tries .. " checks)") or "confirmed", why and ("(" .. why .. ")") or "")
       H.hero_job = nil
       return cb(true, asked and "swapped" or "already")
@@ -956,8 +961,9 @@ function H.finish(d, how)
     h.current = nil
     H.after(300, function()
       if H.priming or H.expect or H.bounce then return end
-      local now_cur = h.current and dest_by_id(h.current)
-      if now_cur and not h.done[now_cur.id] then return end   -- another visit started meanwhile
+      local hh = H.state()
+      local now_cur = hh and hh.current and dest_by_id(hh.current)
+      if now_cur and not hh.done[now_cur.id] then return end   -- another visit started meanwhile
       H.ensure_hero("ratchet", nil, "Zurkie's visit finished")
     end, "back to Ratchet")
   end
@@ -984,7 +990,10 @@ function H.on_mission_state(name, state)
             H.finish(d, "story: " .. name)
           elseif d == cur and H.enabled() then
             log(name, "complete; the next mission of", d.id, "is looked at in", H.NEXT_MISSION_WAIT, "frames")
-            H.after(H.NEXT_MISSION_WAIT, function() if not h.done[d.id] then H.activate(d) end end, "next mission " .. d.id)
+            H.after(H.NEXT_MISSION_WAIT, function()
+              local hh = H.state()                      -- 8.5: the state then, not now (a restore may replace it)
+              if hh and not hh.done[d.id] then H.activate(d) end
+            end, "next mission " .. d.id)
           end
           return
         end

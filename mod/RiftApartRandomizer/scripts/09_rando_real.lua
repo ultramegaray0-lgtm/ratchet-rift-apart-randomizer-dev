@@ -207,6 +207,10 @@ end
 -- the old save this session say nothing about the new one
 function G.new_game()
   G.seen = {}
+  -- 8.5: the weapon types this session saw belong to the old save: a late answer in the new run
+  -- needs a fresh replay first, and a purchase name or unknown type in flight is dropped
+  G.wseen, G.baseline, G.last_unknown, G.last_bought = {}, false, nil, nil
+  if G.burst then G.burst.new = nil end
   if G.busy then
     local b = G.busy
     if b.restore and not b.restored then pcall(b.restore); b.restored = true end

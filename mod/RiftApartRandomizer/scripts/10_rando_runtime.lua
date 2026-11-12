@@ -242,9 +242,12 @@ local function fresh_state(run)
   return fill_defaults({ fingerprint = SEED.fingerprint, seed = SEED.seed, format = 8, started = false, run = run or 1 })
 end
 
+R.HISTORY_KEEP = 400            -- 8.5: entries kept in memory (the save keeps the last 60; rivet.log has all)
 local function history(msg)
   if S then
-    S.history[#S.history + 1] = string.format("[%d] %s", math.floor((rivet.time and rivet.time()) or 0), msg)
+    local h = S.history
+    h[#h + 1] = string.format("[%d] %s", math.floor((rivet.time and rivet.time()) or 0), msg)
+    if #h > R.HISTORY_KEEP + 100 then table.move(h, #h - R.HISTORY_KEEP + 1, #h, 1); for i = #h, R.HISTORY_KEEP + 1, -1 do h[i] = nil end end
     changed()
   end
   log(msg)
@@ -794,6 +797,52 @@ function rando_export_chunk(i)
   local text = export_text()
   return text:sub((i - 1) * CHUNK + 1, i * CHUNK)
 end
+-- 8.5: the merge of this session's state into the restored one (the companion can connect a
+-- minute late: round 20). Sets are united; a delivery keeps its furthest status (an item this
+-- session confirmed is never sent again because the save still had it queued); currency this
+-- session paid but has not given yet is kept (8.4 lost it with the replaced queue); armor
+-- sources and finds, gadgets and the shop's one-time gift are kept; the hub's objective record
+-- of this session wins (it is newer).
+R.MERGE_SETS = { "collected", "paid", "banked", "bolts_seen", "story_missions", "planets_detected", "inventory",
+                 "weapons", "access", "tracked", "armor_found", "armor_sources", "armor_sets_done", "gadgets_seen",
+                 "visited", "shop_given", "gadgets" }
+R.STATUS_RANK = { failed = 1, queued = 2, sent = 3, owned = 4, confirmed = 5 }
+function R.merge_live(live, S)
+  local restored_paid = {}
+  for lid in pairs(S.paid or {}) do restored_paid[lid] = true end
+  for _, k in ipairs(R.MERGE_SETS) do
+    S[k] = S[k] or {}
+    for key, v in pairs(live[k] or {}) do if S[k][key] == nil then S[k][key] = v end end
+  end
+  S.real = S.real or {}
+  for item, r in pairs(live.real or {}) do
+    local old = S.real[item]
+    if old == nil or (R.STATUS_RANK[r.status] or 0) > (R.STATUS_RANK[old.status] or 0) then S.real[item] = r end
+  end
+  -- currency: an entry is the payment of one location (why = its id); entries of locations the
+  -- restored save had not paid yet are this session's
+  S.currency_queue = S.currency_queue or {}
+  local queued = {}
+  for _, c in ipairs(S.currency_queue) do queued[tostring(c.why)] = true end
+  local added = 0
+  for _, c in ipairs(live.currency_queue or {}) do
+    local why = tostring(c.why)
+    if not queued[why] and not restored_paid[why] and why ~= "start" then
+      S.currency_queue[#S.currency_queue + 1] = c; added = added + 1
+    end
+  end
+  if added > 0 then log("RANDO-SAVE kept", added, "currency payment(s) from before the restore") end
+  local lh, sh = live.hub, S.hub
+  if type(lh) == "table" and type(sh) == "table" and type(lh.obj) == "table" then
+    sh.obj = sh.obj or {}
+    for m, o in pairs(lh.obj) do sh.obj[m] = o end
+  end
+  if type(live.weapon_types) == "table" then
+    S.weapon_types = S.weapon_types or {}
+    for t, it in pairs(live.weapon_types) do if S.weapon_types[t] == nil then S.weapon_types[t] = it end end
+  end
+end
+
 function rando_import_state(tbl)
   if not SEED then return false end
   if type(tbl) ~= "table" or tbl.fingerprint ~= SEED.fingerprint then
@@ -806,12 +855,7 @@ function rando_import_state(tbl)
   if RANDO_HUB and RANDO_HUB.on_restore then pcall(RANDO_HUB.on_restore, live) end
   -- what happened in this session before the restore (Gold Bolts, missions, the items they
   -- gave) is kept, so nothing collected while the companion was still connecting is lost
-  if live and live.started then
-    for _, k in ipairs({ "collected", "paid", "banked", "bolts_seen", "story_missions", "planets_detected",
-                         "inventory", "weapons", "access", "tracked", "real" }) do
-      for key, v in pairs(live[k] or {}) do if S[k][key] == nil then S[k][key] = v end end
-    end
-  end
+  if live and live.started then R.merge_live(live, S) end
   R.restored = true
   if R.new_game_pending then
     R.new_game_pending = nil
