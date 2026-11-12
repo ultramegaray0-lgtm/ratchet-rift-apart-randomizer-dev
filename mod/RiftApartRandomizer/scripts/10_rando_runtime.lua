@@ -837,6 +837,8 @@ function R.merge_live(live, S)
     sh.obj = sh.obj or {}
     for m, o in pairs(lh.obj) do sh.obj[m] = o end
   end
+  -- the armor baseline is measured once: a save without one takes this session's
+  if S.armor_baseline == nil and type(live.armor_baseline) == "table" then S.armor_baseline = live.armor_baseline end
   if type(live.weapon_types) == "table" then
     S.weapon_types = S.weapon_types or {}
     for t, it in pairs(live.weapon_types) do if S.weapon_types[t] == nil then S.weapon_types[t] = it end end

@@ -316,7 +316,14 @@ function Restore-State($st) {
         }
         $ok = Invoke-Lua ("return tostring(rando_import_state((function() " + $text + " end)()))")
         if ($ok -eq "true") { Write-Line "restored progress from $from" }
-        else { Write-Line "the game refused $from (different seed?)"; [void](Invoke-Lua "return rando_mark_restored()") }
+        else {
+            # 8.5: the refused file is kept aside first - the next save replaces this file (and its
+            # .bak two saves later), and the progress in it would otherwise be gone
+            $aside = $file + ".refused-" + (Get-Date -Format "yyyyMMdd-HHmmss")
+            Copy-Item -LiteralPath $from -Destination $aside -Force
+            Write-Line "the game refused $from (different seed?) - kept as $aside, starting fresh"
+            [void](Invoke-Lua "return rando_mark_restored()")
+        }
     } else {
         [void](Invoke-Lua "return rando_mark_restored()")
         Write-Line "no saved progress for seed $($st.Fingerprint) yet; starting fresh"

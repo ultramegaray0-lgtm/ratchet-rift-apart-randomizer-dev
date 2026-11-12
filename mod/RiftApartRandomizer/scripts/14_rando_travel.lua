@@ -355,7 +355,9 @@ function T.on_arrival(pid, from)
     return false
   end
   if s.access[pid] then
-    if p.dest then tr.landed[pid] = p.dest end
+    -- 8.5: through T.remember (8.4 wrote it here directly: a TRANSITION_TO name was kept, and
+    -- the landing was not saved until something else changed)
+    if p.dest then T.remember(pid, p.dest) end
     log("arrived on", pid, "(open) at", tostring(p.dest))
     return false
   end

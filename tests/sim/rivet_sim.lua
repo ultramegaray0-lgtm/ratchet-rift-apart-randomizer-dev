@@ -646,6 +646,9 @@ local function dll_pump()
   if not S.mailbox or not S.mailbox.pump then return end
   S.put_u32(mb + 0x28, S.get_u32(mb + 0x28) + 1)
   if S.get_u32(mb + 0x0C) ~= 1 then return end
+  -- 8.5 SIMULATED: a helper that runs (heartbeat) but leaves requests alone; nothing in a log
+  -- showed this, it stands for any reason a request is not taken (the tests of the take-back)
+  if S.mailbox.hold then return end
   local req = S.get_u32(mb + 0x10)
   if req == S.get_u32(mb + 0x14) then return end
   local kind = S.get_u32(mb + 0x48)

@@ -451,6 +451,15 @@ function H.run_job()
   end
 end
 
+-- why the vendor can never be changed in this session, or nil while it still might be
+function H.helper_missing(n)
+  n = n or {}
+  if not n.addr then return "rando_give.dll is not loaded" end
+  if n.dead then return "rando_give.dll stopped working" end
+  if n.version and n.version < 5 then return "rando_give.dll is older than v5" end
+  return nil
+end
+
 function H.tick(frame)
   H.frame = frame
   local seed, s = SEED(), S()
@@ -475,10 +484,12 @@ function H.tick(frame)
   local okv5, v5 = pcall(rr.native_v5)
   if not (okv5 and v5) then
     if not H.waiting_said and frame - H.since > 3600 then H.waiting_said = true; log("waiting for rando_give.dll (v5 or later, needed to find the vendor in memory)") end
+    -- 8.5: also without the helper at all, or with one that stopped (the header always promised
+    -- this; 8.4 only covered an old helper, so the shop's extra weapons had no route otherwise).
+    -- A helper that is only paused until the next planet (soft_off) is waited for.
     if frame - H.since > H.COMPENSATE_AFTER and not H.comp_old then
-      H.comp_old = true
-      local n = rr.native or {}
-      if n.addr and (n.version or 0) < 5 then H.compensate(nil, "rando_give.dll is older than v5") end
+      local why = H.helper_missing(rr.native)
+      if why then H.comp_old = true; H.compensate(nil, why) end
     end
     return
   end
@@ -514,7 +525,11 @@ function H.tick(frame)
             v.tries = (v.tries or 0) + 1
             v.status = "not found: " .. tostring(err)
             log("vendor", id, "not found in memory:", tostring(err))
-            if v.tries >= H.MAX_TRIES then v.off = true end
+            if v.tries >= H.MAX_TRIES then
+              -- 8.5: as for a vendor that could not be changed (8.4 turned it off without a route)
+              v.off = true
+              H.compensate(nil, "the vendor could not be found in memory")
+            end
             return
           end
           v.pending = true

@@ -218,7 +218,14 @@ function D.native_tick()
       -- 8.5: take the request back before giving up, so the helper can never carry it out later
       -- behind the script's back (a late start or state write the ladder thinks failed)
       local done = read_u32(addr + D.MB.DONE)
-      if done and done ~= c.req then pcall(rivet.write, hexaddr(addr + D.MB.REQ), le32(done)) end
+      if done == c.req then return end                  -- answered just now: read next frame
+      if done then
+        pcall(rivet.write, hexaddr(addr + D.MB.REQ), le32(done))
+        -- if the helper took it between the read and the write, its answer stands
+        if read_u32(addr + D.MB.DONE) == c.req then
+          pcall(rivet.write, hexaddr(addr + D.MB.REQ), le32(c.req)); return
+        end
+      end
       log("RANDO-CAMPAIGN mission call timed out and was taken back", c.kind, c.name)
       finish_call(c, { code = -1 })
     end

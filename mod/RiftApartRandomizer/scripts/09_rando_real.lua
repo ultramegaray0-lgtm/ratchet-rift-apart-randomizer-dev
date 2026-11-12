@@ -214,8 +214,12 @@ function G.new_game()
   if G.busy then
     local b = G.busy
     if b.restore and not b.restored then pcall(b.restore); b.restored = true end
+    -- 8.5: an item of the old run still in the mailbox is taken back, not given to the new one
+    if b.via == "native" and b.stage == "handover" then G.take_back(b.req) end
     G.busy = nil
   end
+  -- 8.5: likewise a currency payment of the old run (a config lookup simply runs again)
+  if G.aux_busy and G.aux_busy.kind == 0 then G.aux_withdraw("a new game") end
   G.visit = G.visit + 1
   log("new game: delivery state cleared")
 end
@@ -741,11 +745,13 @@ function G.on_planet_change(new_name)
   if b and b.via == "native" then
     -- a load replays WeaponAddedEvent for every owned weapon: none of those may be taken as the
     -- answer to a request still in flight. A request the helper has not taken yet is withdrawn.
-    if b.stage == "handover" and G.native.addr then
-      local done = G.u32_at(G.native.addr + G.MB.DONE)
-      if done and done ~= b.req then pcall(rivet.write, hexaddr(G.native.addr + G.MB.REQ), G.le32(done)) end
+    if b.stage == "handover" and G.native.addr and not G.take_back(b.req) then
+      -- answered in the meantime: the answer is read now, before the load's replay
+      G.native_handover(b)
+      if G.busy == b and b.stage == "confirm" then finish(false, true) end
+    else
+      finish(false, true)
     end
-    finish(false, true)
   elseif b and not b.restored then
     finish(false, true)
   end
@@ -1026,6 +1032,8 @@ local function native_handover(b)
       b.sent = G.frame
       return
     end
+    -- 8.5: taken back first: a helper that comes back later must not give it a second time
+    if not G.take_back(b.req) then return end      -- answered after all: read next frame
     G.busy = nil
     local r = not b.probe and rec(b.item) or nil
     if r then r.status = "queued"; changed() end
@@ -1158,15 +1166,30 @@ local function aux_start()
   G.aux_busy = cur
 end
 
+-- 8.5: takes a request the helper has not answered out of the mailbox (REQ back to DONE), so it
+-- can never be carried out later behind the script's back. false when the helper answered it
+-- after all (just now, or between the read and the write): that answer stands.
+function G.take_back(req)
+  local n = G.native
+  if not n.addr then return true end
+  local done = u32_at(n.addr + G.MB.DONE)
+  if done == req then return false end
+  if done then
+    pcall(rivet.write, hexaddr(n.addr + G.MB.REQ), le32(done))
+    if u32_at(n.addr + G.MB.DONE) == req then pcall(rivet.write, hexaddr(n.addr + G.MB.REQ), le32(req)); return false end
+  end
+  return true
+end
+
 -- an aux request the helper has not taken is taken back (a load, or a hook that stopped)
 function G.aux_withdraw(why)
-  local cur, n = G.aux_busy, G.native
+  local cur = G.aux_busy
   if not cur then return end
+  if not G.take_back(cur.req) then return end     -- answered: aux_poll reads it
   G.aux_busy = nil
-  local done = n.addr and u32_at(n.addr + G.MB.DONE)
-  if done and done ~= cur.req then pcall(rivet.write, hexaddr(n.addr + G.MB.REQ), le32(done)) end
   if cur.cb then cur.cb(nil, why) end           -- currency stays first in its queue
   log("aux request withdrawn:", why)
+  return true
 end
 
 local function aux_poll()
@@ -1177,7 +1200,7 @@ local function aux_poll()
       local ready = false
       pcall(function() ready = rivet.scene_ready() and rivet.hero() ~= nil end)
       if pumps == cur.pumps and not ready then cur.asked = G.frame; return end      -- loading: wait
-      G.aux_withdraw("the helper did not answer")
+      if not G.aux_withdraw("the helper did not answer") then return end
       if pumps == cur.pumps then G.native_disable("its hook is not running") else G.native_soft_off("it did not pick up the request") end
     end
     return
