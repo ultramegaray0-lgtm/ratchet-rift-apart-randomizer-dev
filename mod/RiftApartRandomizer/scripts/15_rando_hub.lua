@@ -314,7 +314,7 @@ end
 -- New Game (10_rando_runtime.lua calls this after starting the seed over)
 function H.new_game()
   H.expect, H.menu, H.pending, H.ladder, H.sel = nil, nil, nil, nil, 0
-  H.bounce, H.priming, H.watching = nil, nil, nil
+  H.bounce, H.priming, H.watching, H.hero_job = nil, nil, nil, nil
   H.return_at = nil
   local h = H.state()
   if h then h.phase = "pre" end
@@ -403,7 +403,10 @@ function H.at_hub(how)
   -- 8.4: Ratchet at the hub, unless one of Zurkie's own visits is in progress (its hero is the
   -- ladder's); checked with the game, never from the save
   if not (cur and not h.done[cur.id]) and cfg("hub_hero_swap", true) then
-    H.after(60, function() H.ensure_hero("ratchet", nil, "back at Zurkie's") end, "back to Ratchet")
+    H.after(60, function()
+      if H.priming or H.expect or H.bounce then return end      -- a trip is being prepared: its hero wins
+      H.ensure_hero("ratchet", nil, "back at Zurkie's")
+    end, "back to Ratchet")
   end
   local opened = h.unannounced or {}
   h.unannounced = nil
@@ -539,12 +542,18 @@ function H.ensure_hero(hero, cb, why)
   local h = H.state()
   if not hero or not cfg("hub_hero_swap", true) then return cb(true, "no swap") end
   local tries, asked = 0, false
+  -- one swap at a time: a newer request (another hero, or the same one again) takes over, and the
+  -- older one stops without answering (its caller has a timeout or was replaced as well)
+  local job = { hero = hero }
+  H.hero_job = job
   local function try()
+    if H.hero_job ~= job then log("hero:", hero, "request replaced by a newer one (" .. tostring(H.hero_job and H.hero_job.hero) .. ")"); return end
     tries = tries + 1
     local ok, res = pcall(rivet.hero_play_as, hero)
     if not ok and H.is_already(res) then
       if h.hero ~= hero then h.hero = hero; changed() end
       log("hero:", hero, asked and ("confirmed after the swap (" .. tries .. " checks)") or "confirmed", why and ("(" .. why .. ")") or "")
+      H.hero_job = nil
       return cb(true, asked and "swapped" or "already")
     end
     if ok then
@@ -555,6 +564,7 @@ function H.ensure_hero(hero, cb, why)
     end
     if tries >= H.HERO_TRIES then
       log("hero:", hero, "NOT confirmed after", tries, "checks - the story is started anyway")
+      H.hero_job = nil
       say(string.format("Randomizer: could not switch to %s (%s) - the story may wait at its first step", hero, tostring(res)),
           { type = "center", duration = 8 })
       return cb(false, tostring(res))
@@ -876,8 +886,9 @@ function H.bounce_back(b)
   log("reload: back to", d.id)
   if d.kind == "hub" then
     if H.go_home("reload " .. d.id) and H.expect then H.expect.dest = d.id end
-  else
-    H.travel(d.planet, d, false, "reload " .. d.id)
+  elseif not H.travel(d.planet, d, false, "reload " .. d.id) then
+    say(string.format("Randomizer: the way back to %s failed - press %s to go there", pname(d.planet), K("key_hub", true)),
+        { type = "center", duration = 8 })
   end
 end
 
@@ -943,7 +954,12 @@ function H.finish(d, how)
   end
   if h.current == d.id and d.kind == "hub" then
     h.current = nil
-    H.after(300, function() H.ensure_hero("ratchet", nil, "Zurkie's visit finished") end, "back to Ratchet")
+    H.after(300, function()
+      if H.priming or H.expect or H.bounce then return end
+      local now_cur = h.current and dest_by_id(h.current)
+      if now_cur and not h.done[now_cur.id] then return end   -- another visit started meanwhile
+      H.ensure_hero("ratchet", nil, "Zurkie's visit finished")
+    end, "back to Ratchet")
   end
   return true
 end
@@ -1166,6 +1182,12 @@ function H.key_go()
   end
   local at_hub = S().current_planet == p.planet
   if H.priming then return say("Randomizer: getting the story ready...", { type = "corner", duration = 3 }) end
+  -- (no landing point known and none coming: the trip cannot happen, so nothing is changed first)
+  local T = RANDO_TRAVEL
+  if not H.checkpoint_for(d) and not (T and T.catalog_wanted and T.catalog_wanted()) then
+    H.travel(d.planet, d, at_hub, K("key_hub", true))
+    return
+  end
   H.priming = true
   say("Randomizer: off to " .. describe_dest(d), { type = "corner", duration = 5 })
   -- 8.4: the hero and the story first, then the trip (the planet loads with its story active)

@@ -1,6 +1,6 @@
-Ratchet & Clank: Rift Apart Randomizer 7.0.0 - spoiler log
-Seed: lombax-ryno-2026    Preset: everything    Fingerprint: dc1360d95b64
-Share code: RA7|lombax-ryno-2026|everything|
+Ratchet & Clank: Rift Apart Randomizer 8.0.0 - spoiler log
+Seed: lombax-ryno-2026    Preset: everything    Fingerprint: 520f981cd04d
+Share code: RA8|lombax-ryno-2026|everything|
 Data 5.0.0, generated in attempt 1
 
 SETTINGS
@@ -15,6 +15,11 @@ SETTINGS
   currency_scaling = true
   exclude = 
   gadgets = true
+  hub = false
+  hub_finale = all
+  hub_revisits = true
+  hub_start_coordinates = 2
+  hub_unlocks = 1
   include_arsenal_restored = false
   planet_locks = true
   random_start = false
@@ -39,18 +44,18 @@ SETTINGS
   weapons = true
 
 NOTES (settings adjusted or capped for this seed)
-  bolts rewards scaled down to the bolts_budget of 250000 (they would have given 251500)
+  bolts rewards scaled down to the bolts_budget of 250000 (they would have given 319500)
 
 LEVELS (locked: flying to a planet needs its Coordinates; the game's own story travel is never blocked)
   Open from the start: Corson V (Megalopolis), Nefarious City, Sargasso
   Planets open in this order (playthrough sphere of their Coordinates):
-    sphere  1  Scarstu Debris Field (Zurkie's)      Coordinates at Corson V (Megalopolis): first story mission
-    sphere  1  Viceron (Zordoom Prison)             Coordinates at Nefarious City: first story mission
-    sphere  2  Cordelion                            Coordinates at Scarstu Debris Field (Zurkie's) Gold Bolt
-    sphere  2  Savali                               Coordinates at Zurkie's Battleplex: Bronze Cup
-    sphere  3  Ardolis                              Coordinates at Savali Gold Bolt
-    sphere  3  Blizar Prime                         Coordinates at Savali Gold Bolt
-    sphere  4  Torren IV (Molonoth Fields)          Coordinates at Blizar Prime Gold Bolt
+    sphere  1  Torren IV (Molonoth Fields)          Coordinates at Sargasso Gold Bolt
+    sphere  1  Cordelion                            Coordinates at Sargasso Gold Bolt
+    sphere  1  Savali                               Coordinates at Nefarious City: first story mission
+    sphere  1  Scarstu Debris Field (Zurkie's)      Coordinates at Sargasso: first story mission
+    sphere  2  Ardolis                              Coordinates at Savali Gold Bolt
+    sphere  2  Blizar Prime                         Coordinates at Scarstu Debris Field (Zurkie's): first story mission
+    sphere  3  Viceron (Zordoom Prison)             Coordinates at Ardolis Gold Bolt
   The story keeps the game's mission order; the solver proves each planet the story needs next is
   open by then. Without its Coordinates, the randomizer flies you back to the planet you came from.
 
@@ -61,154 +66,154 @@ START (Hoverboots and Map-O-Matic are in every seed)
   Coordinates: Nefarious City
   Coordinates: Sargasso
   Headhunter
-  Pixelizer
-  Box Breaker
+  Bombardier
+  Omniglove (wall panels)
   2500 Bolts
   25 Raritanium
   The game's own starting gadgets: grapple, glide, wallrun, grindboots, magboots, rift_tether
 
 GOLD BOLTS (one item each; a planet's Gold Bolts are matched in the order you pick them up,
             preferring one whose requirements you meet)
-   1  Nefarious City Gold Bolt                     Galactic Ranger boots
-   2  Nefarious City Gold Bolt                     Q-Force boots
-   3  Nefarious City Gold Bolt                     Lombax Praetorian helmet
-   4  Sargasso Gold Bolt                           Punk helmet
-   5  Sargasso Gold Bolt                           Galactic Ranger helmet
-   6  Sargasso Gold Bolt                           Robot Pirate boots  [needs a story ability]
-   7  Scarstu Debris Field (Zurkie's) Gold Bolt    Coordinates: Cordelion
-   8  Scarstu Debris Field (Zurkie's) Gold Bolt    Lombax Praetorian chest
-   9  Scarstu Debris Field (Zurkie's) Gold Bolt    Omniglove (wall panels)
-  10  Savali Gold Bolt                             Coordinates: Ardolis
-  11  Savali Gold Bolt                             Coordinates: Blizar Prime
-  12  Savali Gold Bolt                             Carbonox Advanced helmet
-  13  Blizar Prime Gold Bolt                       Carbonox Advanced chest
-  14  Blizar Prime Gold Bolt                       Reaver boots
-  15  Blizar Prime Gold Bolt                       Coordinates: Torren IV (Molonoth Fields)
-  16  Torren IV (Molonoth Fields) Gold Bolt        Lombax Praetorian boots
-  17  Torren IV (Molonoth Fields) Gold Bolt        Q-Force chest
-  18  Cordelion Gold Bolt                          Robot Pirate chest
-  19  Cordelion Gold Bolt                          Punk boots
-  20  Cordelion Gold Bolt                          War Machine boots
-  21  Ardolis Gold Bolt                            Reaver helmet
-  22  Ardolis Gold Bolt                            Glitch  [needs a story ability]
-  23  Viceron (Zordoom Prison) Gold Bolt           Carbonox Advanced boots  [needs a story ability]
-  24  Viceron (Zordoom Prison) Gold Bolt           War Machine helmet
-  25  Viceron (Zordoom Prison) Gold Bolt           Captain Starshield helmet
+   1  Nefarious City Gold Bolt                     Punk chest
+   2  Nefarious City Gold Bolt                     Lombax Praetorian boots
+   3  Nefarious City Gold Bolt                     Box Breaker
+   4  Sargasso Gold Bolt                           Coordinates: Torren IV (Molonoth Fields)
+   5  Sargasso Gold Bolt                           Coordinates: Cordelion
+   6  Sargasso Gold Bolt                           Robot Pirate helmet  [needs a story ability]
+   7  Scarstu Debris Field (Zurkie's) Gold Bolt    Q-Force chest
+   8  Scarstu Debris Field (Zurkie's) Gold Bolt    Reaver helmet
+   9  Scarstu Debris Field (Zurkie's) Gold Bolt    Captain Starshield chest
+  10  Savali Gold Bolt                             Reaver chest
+  11  Savali Gold Bolt                             Coordinates: Ardolis
+  12  Savali Gold Bolt                             Captain Starshield boots
+  13  Blizar Prime Gold Bolt                       Punk boots
+  14  Blizar Prime Gold Bolt                       Galactic Ranger chest
+  15  Blizar Prime Gold Bolt                       Captain Starshield helmet
+  16  Torren IV (Molonoth Fields) Gold Bolt        Reaver boots
+  17  Torren IV (Molonoth Fields) Gold Bolt        Q-Force helmet
+  18  Cordelion Gold Bolt                          Glitch
+  19  Cordelion Gold Bolt                          War Machine boots
+  20  Cordelion Gold Bolt                          Robot Pirate boots
+  21  Ardolis Gold Bolt                            Coordinates: Viceron (Zordoom Prison)
+  22  Ardolis Gold Bolt                            Carbonox Advanced boots  [needs a story ability]
+  23  Viceron (Zordoom Prison) Gold Bolt           War Machine chest  [needs a story ability]
+  24  Viceron (Zordoom Prison) Gold Bolt           Lombax Praetorian helmet
+  25  Viceron (Zordoom Prison) Gold Bolt           Galactic Ranger boots
 
 SHOP (Ms. Zurkon's 15 weapon slots; each keeps the point in the story it unlocks)
   prices: random per slot
-  the slot of Blackhole Storm        sells Enforcer                   21350 Bolts
-  the slot of Bombardier             sells Blackhole Storm            42500 Bolts
-  the slot of Buzz Blades            sells Negatron Collider          46500 Bolts
-  the slot of Cold Snap              sells Warmonger                  36000 Bolts
-  the slot of Drillhound             sells Mr. Fungi                  6500 Bolts
-  the slot of Enforcer               sells Topiary Sprinkler          2050 Bolts
-  the slot of Glove of Doom          sells Bombardier                 18700 Bolts
-  the slot of Headhunter             sells Drillhound                 25600 Bolts
-  the slot of Lightning Rod          sells Ricochet                   9850 Bolts
-  the slot of Mr. Fungi              sells Cold Snap                  2900 Bolts
-  the slot of Negatron Collider      sells Bouncer                    2800 Bolts
-  the slot of Ricochet               sells Buzz Blades                8250 Bolts
-  the slot of Topiary Sprinkler      sells Void Repulser              3750 Bolts
-  the slot of Void Repulser          sells Glove of Doom              14350 Bolts
-  the slot of Warmonger              sells Lightning Rod              52800 Bolts
+  the slot of Blackhole Storm        sells Glove of Doom              26600 Bolts
+  the slot of Bombardier             sells Enforcer                   49250 Bolts
+  the slot of Buzz Blades            sells Negatron Collider          18150 Bolts
+  the slot of Cold Snap              sells Ricochet                   20400 Bolts
+  the slot of Drillhound             sells Warmonger                  7300 Bolts
+  the slot of Enforcer               sells Blackhole Storm            2500 Bolts
+  the slot of Glove of Doom          sells Void Repulser              33550 Bolts
+  the slot of Headhunter             sells Pixelizer                  40800 Bolts
+  the slot of Lightning Rod          sells Drillhound                 10500 Bolts
+  the slot of Mr. Fungi              sells Cold Snap                  2350 Bolts
+  the slot of Negatron Collider      sells Topiary Sprinkler          6250 Bolts
+  the slot of Ricochet               sells Mr. Fungi                  8600 Bolts
+  the slot of Topiary Sprinkler      sells Lightning Rod              5700 Bolts
+  the slot of Void Repulser          sells Bouncer                    15250 Bolts
+  the slot of Warmonger              sells Buzz Blades                55500 Bolts
   Shatterbomb and RYNO 8 (after all 10 Spybots) stay in their own slots; ammo and upgrades as usual
   New prices apply only once the runtime finds the game's own prices in memory (docs/SHOP.md)
 
 ARMOR: the armor pieces you can find are rewards above and below; each armor source (pocket dimension, Zurkie's challenge, the Lorb monk) gives the item listed for it instead of its own piece
 CURRENCY: a location without an item gives bolts or raritanium (amounts listed below)
-  bolts      1000-20000 per reward, 245500 in all
-  raritanium 20-400 per reward, 3615 in all
+  bolts      1000-20000 per reward, 246500 in all
+  raritanium 20-400 per reward, 2405 in all
 
 LOCATIONS
   Corson V (Megalopolis)
-    planet:corson_v        Corson V (Megalopolis): first story mission  Coordinates: Scarstu Debris Field (Zurkie's)
-    story2:corson_v        Corson V (Megalopolis): second story mission 1750 Bolts
+    planet:corson_v        Corson V (Megalopolis): first story mission  Lombax Praetorian chest
+    story2:corson_v        Corson V (Megalopolis): second story mission 4000 Bolts
   Nefarious City
-    goldbolt:01            Nefarious City Gold Bolt                     Galactic Ranger boots
-    goldbolt:02            Nefarious City Gold Bolt                     Q-Force boots
-    goldbolt:03            Nefarious City Gold Bolt                     Lombax Praetorian helmet
-    planet:nefarious_city  Nefarious City: first story mission          Coordinates: Viceron (Zordoom Prison)
-    story2:nefarious_city  Nefarious City: second story mission         55 Raritanium
+    goldbolt:01            Nefarious City Gold Bolt                     Punk chest
+    goldbolt:02            Nefarious City Gold Bolt                     Lombax Praetorian boots
+    goldbolt:03            Nefarious City Gold Bolt                     Box Breaker
+    planet:nefarious_city  Nefarious City: first story mission          Coordinates: Savali
+    story2:nefarious_city  Nefarious City: second story mission         1000 Bolts
   Sargasso
-    goldbolt:04            Sargasso Gold Bolt                           Punk helmet
-    goldbolt:05            Sargasso Gold Bolt                           Galactic Ranger helmet
-    goldbolt:06            Sargasso Gold Bolt                           Robot Pirate boots  [out of logic]
-    planet:sargasso        Sargasso: first story mission                Robot Pirate helmet
-    side:sargasso_trudi    Sargasso: Trudi activity                     120 Raritanium
-    story2:sargasso        Sargasso: second story mission               1750 Bolts
+    goldbolt:04            Sargasso Gold Bolt                           Coordinates: Torren IV (Molonoth Fields)
+    goldbolt:05            Sargasso Gold Bolt                           Coordinates: Cordelion
+    goldbolt:06            Sargasso Gold Bolt                           Robot Pirate helmet  [out of logic]
+    planet:sargasso        Sargasso: first story mission                Coordinates: Scarstu Debris Field (Zurkie's)
+    side:sargasso_trudi    Sargasso: Trudi activity                     6250 Bolts
+    story2:sargasso        Sargasso: second story mission               7000 Bolts
   Scarstu Debris Field (Zurkie's)
-    goldbolt:07            Scarstu Debris Field (Zurkie's) Gold Bolt    Coordinates: Cordelion
-    goldbolt:08            Scarstu Debris Field (Zurkie's) Gold Bolt    Lombax Praetorian chest
-    goldbolt:09            Scarstu Debris Field (Zurkie's) Gold Bolt    Omniglove (wall panels)
-    planet:scarstu         Scarstu Debris Field (Zurkie's): first story mission Reaver chest
-    side:zurkies_bronze    Zurkie's Battleplex: Bronze Cup              Coordinates: Savali
-    side:zurkies_gold      Zurkie's Battleplex: Gold Cup                205 Raritanium
-    side:zurkies_silver    Zurkie's Battleplex: Silver Cup              5750 Bolts
-    story2:scarstu         Scarstu Debris Field (Zurkie's): second story mission 165 Raritanium
+    goldbolt:07            Scarstu Debris Field (Zurkie's) Gold Bolt    Q-Force chest
+    goldbolt:08            Scarstu Debris Field (Zurkie's) Gold Bolt    Reaver helmet
+    goldbolt:09            Scarstu Debris Field (Zurkie's) Gold Bolt    Captain Starshield chest
+    planet:scarstu         Scarstu Debris Field (Zurkie's): first story mission Coordinates: Blizar Prime
+    side:zurkies_bronze    Zurkie's Battleplex: Bronze Cup              8000 Bolts
+    side:zurkies_gold      Zurkie's Battleplex: Gold Cup                7000 Bolts
+    side:zurkies_silver    Zurkie's Battleplex: Silver Cup              130 Raritanium
+    story2:scarstu         Scarstu Debris Field (Zurkie's): second story mission 9500 Bolts
   Savali
-    goldbolt:10            Savali Gold Bolt                             Coordinates: Ardolis
-    goldbolt:11            Savali Gold Bolt                             Coordinates: Blizar Prime
-    goldbolt:12            Savali Gold Bolt                             Carbonox Advanced helmet
-    planet:savali          Savali: first story mission                  Punk chest
-    story2:savali          Savali: second story mission                 175 Raritanium
+    goldbolt:10            Savali Gold Bolt                             Reaver chest
+    goldbolt:11            Savali Gold Bolt                             Coordinates: Ardolis
+    goldbolt:12            Savali Gold Bolt                             Captain Starshield boots
+    planet:savali          Savali: first story mission                  War Machine helmet
+    story2:savali          Savali: second story mission                 7500 Bolts
   Blizar Prime
-    goldbolt:13            Blizar Prime Gold Bolt                       Carbonox Advanced chest
-    goldbolt:14            Blizar Prime Gold Bolt                       Reaver boots
-    goldbolt:15            Blizar Prime Gold Bolt                       Coordinates: Torren IV (Molonoth Fields)
-    planet:blizar_prime    Blizar Prime: first story mission            Q-Force helmet
-    side:blizar_chef       Blizar Prime: the chef's side activity       295 Raritanium
-    story2:blizar_prime    Blizar Prime: second story mission           315 Raritanium
+    goldbolt:13            Blizar Prime Gold Bolt                       Punk boots
+    goldbolt:14            Blizar Prime Gold Bolt                       Galactic Ranger chest
+    goldbolt:15            Blizar Prime Gold Bolt                       Captain Starshield helmet
+    planet:blizar_prime    Blizar Prime: first story mission            Punk helmet
+    side:blizar_chef       Blizar Prime: the chef's side activity       Galactic Ranger helmet
+    story2:blizar_prime    Blizar Prime: second story mission           9250 Bolts
   Torren IV (Molonoth Fields)
-    goldbolt:16            Torren IV (Molonoth Fields) Gold Bolt        Lombax Praetorian boots
-    goldbolt:17            Torren IV (Molonoth Fields) Gold Bolt        Q-Force chest
-    planet:torren_iv       Torren IV (Molonoth Fields): first story mission Galactic Ranger chest
-    story2:torren_iv       Torren IV (Molonoth Fields): second story mission 340 Raritanium
+    goldbolt:16            Torren IV (Molonoth Fields) Gold Bolt        Reaver boots
+    goldbolt:17            Torren IV (Molonoth Fields) Gold Bolt        Q-Force helmet
+    planet:torren_iv       Torren IV (Molonoth Fields): first story mission Carbonox Advanced chest
+    story2:torren_iv       Torren IV (Molonoth Fields): second story mission 13500 Bolts
   Cordelion
-    goldbolt:18            Cordelion Gold Bolt                          Robot Pirate chest
-    goldbolt:19            Cordelion Gold Bolt                          Punk boots
-    goldbolt:20            Cordelion Gold Bolt                          War Machine boots
-    planet:cordelion       Cordelion: first story mission               Captain Starshield chest
-    story2:cordelion       Cordelion: second story mission              19500 Bolts
+    goldbolt:18            Cordelion Gold Bolt                          Glitch
+    goldbolt:19            Cordelion Gold Bolt                          War Machine boots
+    goldbolt:20            Cordelion Gold Bolt                          Robot Pirate boots
+    planet:cordelion       Cordelion: first story mission               Q-Force boots
+    story2:cordelion       Cordelion: second story mission              395 Raritanium
   Ardolis
-    goldbolt:21            Ardolis Gold Bolt                            Reaver helmet
-    goldbolt:22            Ardolis Gold Bolt                            Glitch  [out of logic]
-    planet:ardolis         Ardolis: first story mission                 Captain Starshield boots
-    side:ardolis_mapomatic Ardolis: Map-O-Matic side activity           15000 Bolts
-    story2:ardolis         Ardolis: second story mission                395 Raritanium
+    goldbolt:21            Ardolis Gold Bolt                            Coordinates: Viceron (Zordoom Prison)
+    goldbolt:22            Ardolis Gold Bolt                            Carbonox Advanced boots  [out of logic]
+    planet:ardolis         Ardolis: first story mission                 Robot Pirate chest
+    side:ardolis_mapomatic Ardolis: Map-O-Matic side activity           330 Raritanium
+    story2:ardolis         Ardolis: second story mission                340 Raritanium
   Viceron (Zordoom Prison)
-    goldbolt:23            Viceron (Zordoom Prison) Gold Bolt           Carbonox Advanced boots  [out of logic]
-    goldbolt:24            Viceron (Zordoom Prison) Gold Bolt           War Machine helmet
-    goldbolt:25            Viceron (Zordoom Prison) Gold Bolt           Captain Starshield helmet
-    planet:viceron         Viceron (Zordoom Prison): first story mission War Machine chest
+    goldbolt:23            Viceron (Zordoom Prison) Gold Bolt           War Machine chest  [out of logic]
+    goldbolt:24            Viceron (Zordoom Prison) Gold Bolt           Lombax Praetorian helmet
+    goldbolt:25            Viceron (Zordoom Prison) Gold Bolt           Galactic Ranger boots
+    planet:viceron         Viceron (Zordoom Prison): first story mission Carbonox Advanced helmet
   Anywhere (armor sources and collectibles)
-    source:carbonox_armor_head armor source of the Carbonox Advanced helmet 11500 Bolts
-    source:carbonox_armor_legs armor source of the Carbonox Advanced boots  9500 Bolts
-    source:carbonox_armor_torso armor source of the Carbonox Advanced chest  8000 Bolts
-    source:galactic_ranger_head armor source of the Galactic Ranger helmet   10500 Bolts
-    source:galactic_ranger_legs armor source of the Galactic Ranger boots    225 Raritanium
-    source:galactic_ranger_torso armor source of the Galactic Ranger chest    13750 Bolts
-    source:lombax_armor_head armor source of the Lombax Praetorian helmet 130 Raritanium
-    source:lombax_armor_legs armor source of the Lombax Praetorian boots  10750 Bolts
-    source:lombax_armor_torso armor source of the Lombax Praetorian chest  10250 Bolts
-    source:pirate_head     armor source of the Robot Pirate helmet      8250 Bolts
-    source:pirate_legs     armor source of the Robot Pirate boots       12750 Bolts
-    source:pirate_torso    armor source of the Robot Pirate chest       7750 Bolts
-    source:punk_armor_head armor source of the Punk helmet              8000 Bolts
-    source:punk_armor_legs armor source of the Punk boots               13500 Bolts
-    source:punk_armor_torso armor source of the Punk chest               9750 Bolts
-    source:qforce_armor_head armor source of the Q-Force helmet           260 Raritanium
-    source:qforce_armor_legs armor source of the Q-Force boots            245 Raritanium
-    source:qforce_armor_torso armor source of the Q-Force chest            215 Raritanium
-    source:reaver_armor_head armor source of the Reaver helmet            205 Raritanium
-    source:reaver_armor_legs armor source of the Reaver boots             7750 Bolts
-    source:reaver_armor_torso armor source of the Reaver chest             155 Raritanium
-    source:starshield_armor_head armor source of the Captain Starshield helmet 13250 Bolts
-    source:starshield_armor_legs armor source of the Captain Starshield boots 10750 Bolts
-    source:starshield_armor_torso armor source of the Captain Starshield chest 14500 Bolts
-    source:warmachine_armor_head armor source of the War Machine helmet       7000 Bolts
-    source:warmachine_armor_legs armor source of the War Machine boots        115 Raritanium
-    source:warmachine_armor_torso armor source of the War Machine chest        14250 Bolts
+    source:carbonox_armor_head armor source of the Carbonox Advanced helmet 4750 Bolts
+    source:carbonox_armor_legs armor source of the Carbonox Advanced boots  11000 Bolts
+    source:carbonox_armor_torso armor source of the Carbonox Advanced chest  8500 Bolts
+    source:galactic_ranger_head armor source of the Galactic Ranger helmet   8000 Bolts
+    source:galactic_ranger_legs armor source of the Galactic Ranger boots    9750 Bolts
+    source:galactic_ranger_torso armor source of the Galactic Ranger chest    10000 Bolts
+    source:lombax_armor_head armor source of the Lombax Praetorian helmet 290 Raritanium
+    source:lombax_armor_legs armor source of the Lombax Praetorian boots  4500 Bolts
+    source:lombax_armor_torso armor source of the Lombax Praetorian chest  7000 Bolts
+    source:pirate_head     armor source of the Robot Pirate helmet      140 Raritanium
+    source:pirate_legs     armor source of the Robot Pirate boots       10250 Bolts
+    source:pirate_torso    armor source of the Robot Pirate chest       165 Raritanium
+    source:punk_armor_head armor source of the Punk helmet              10750 Bolts
+    source:punk_armor_legs armor source of the Punk boots               210 Raritanium
+    source:punk_armor_torso armor source of the Punk chest               4750 Bolts
+    source:qforce_armor_head armor source of the Q-Force helmet           11500 Bolts
+    source:qforce_armor_legs armor source of the Q-Force boots            6250 Bolts
+    source:qforce_armor_torso armor source of the Q-Force chest            7250 Bolts
+    source:reaver_armor_head armor source of the Reaver helmet            120 Raritanium
+    source:reaver_armor_legs armor source of the Reaver boots             285 Raritanium
+    source:reaver_armor_torso armor source of the Reaver chest             10000 Bolts
+    source:starshield_armor_head armor source of the Captain Starshield helmet 7250 Bolts
+    source:starshield_armor_legs armor source of the Captain Starshield boots 9250 Bolts
+    source:starshield_armor_torso armor source of the Captain Starshield chest 8750 Bolts
+    source:warmachine_armor_head armor source of the War Machine helmet       6250 Bolts
+    source:warmachine_armor_legs armor source of the War Machine boots        6500 Bolts
+    source:warmachine_armor_torso armor source of the War Machine chest        11250 Bolts
 
 ITEM ROUTES
   location                     36
@@ -218,55 +223,54 @@ ITEM ROUTES
   start (game kit)             5
 
 PLAYTHROUGH (spheres: what can be collected with what the previous spheres gave)
-  Sphere 1: 8 locations
-      goldbolt:01 -> Galactic Ranger boots
-      goldbolt:02 -> Q-Force boots
-      goldbolt:04 -> Punk helmet
-      goldbolt:05 -> Galactic Ranger helmet
-      planet:corson_v -> Coordinates: Scarstu Debris Field (Zurkie's)
-      planet:nefarious_city -> Coordinates: Viceron (Zordoom Prison)
-      planet:sargasso -> Robot Pirate helmet
-      story2:nefarious_city -> 55 Raritanium
-  Sphere 2: 6 locations
-      goldbolt:07 -> Coordinates: Cordelion
-      goldbolt:08 -> Lombax Praetorian chest
-      goldbolt:09 -> Omniglove (wall panels)
-      planet:scarstu -> Reaver chest
-      side:zurkies_bronze -> Coordinates: Savali
-      side:zurkies_silver -> 5750 Bolts
-  Sphere 3: 5 locations
-      goldbolt:03 -> Lombax Praetorian helmet
-      goldbolt:10 -> Coordinates: Ardolis
-      goldbolt:11 -> Coordinates: Blizar Prime
-      goldbolt:12 -> Carbonox Advanced helmet
-      planet:savali -> Punk chest
-  Sphere 4: 6 locations
-      goldbolt:13 -> Carbonox Advanced chest
-      goldbolt:14 -> Reaver boots
-      goldbolt:15 -> Coordinates: Torren IV (Molonoth Fields)
-      planet:blizar_prime -> Q-Force helmet
-      side:blizar_chef -> 295 Raritanium
-      story2:blizar_prime -> 315 Raritanium
-  Sphere 5: 22 locations
-      goldbolt:16 -> Lombax Praetorian boots
-      goldbolt:17 -> Q-Force chest
-      goldbolt:18 -> Robot Pirate chest
-      goldbolt:19 -> Punk boots
-      goldbolt:20 -> War Machine boots
-      goldbolt:21 -> Reaver helmet
-      goldbolt:24 -> War Machine helmet
-      goldbolt:25 -> Captain Starshield helmet
-      planet:ardolis -> Captain Starshield boots
-      planet:cordelion -> Captain Starshield chest
-      planet:torren_iv -> Galactic Ranger chest
-      planet:viceron -> War Machine chest
-      side:ardolis_mapomatic -> 15000 Bolts
-      side:sargasso_trudi -> 120 Raritanium
-      side:zurkies_gold -> 205 Raritanium
-      story2:ardolis -> 395 Raritanium
-      story2:cordelion -> 19500 Bolts
-      story2:corson_v -> 1750 Bolts
-      story2:sargasso -> 1750 Bolts
-      story2:savali -> 175 Raritanium
-      story2:scarstu -> 165 Raritanium
-      story2:torren_iv -> 340 Raritanium
+  Sphere 1: 9 locations
+      goldbolt:01 -> Punk chest
+      goldbolt:02 -> Lombax Praetorian boots
+      goldbolt:03 -> Box Breaker
+      goldbolt:04 -> Coordinates: Torren IV (Molonoth Fields)
+      goldbolt:05 -> Coordinates: Cordelion
+      planet:corson_v -> Lombax Praetorian chest
+      planet:nefarious_city -> Coordinates: Savali
+      planet:sargasso -> Coordinates: Scarstu Debris Field (Zurkie's)
+      story2:nefarious_city -> 1000 Bolts
+  Sphere 2: 10 locations
+      goldbolt:07 -> Q-Force chest
+      goldbolt:08 -> Reaver helmet
+      goldbolt:09 -> Captain Starshield chest
+      goldbolt:10 -> Reaver chest
+      goldbolt:11 -> Coordinates: Ardolis
+      goldbolt:12 -> Captain Starshield boots
+      planet:savali -> War Machine helmet
+      planet:scarstu -> Coordinates: Blizar Prime
+      side:zurkies_bronze -> 8000 Bolts
+      side:zurkies_silver -> 130 Raritanium
+  Sphere 3: 24 locations
+      goldbolt:13 -> Punk boots
+      goldbolt:14 -> Galactic Ranger chest
+      goldbolt:15 -> Captain Starshield helmet
+      goldbolt:16 -> Reaver boots
+      goldbolt:17 -> Q-Force helmet
+      goldbolt:18 -> Glitch
+      goldbolt:19 -> War Machine boots
+      goldbolt:20 -> Robot Pirate boots
+      goldbolt:21 -> Coordinates: Viceron (Zordoom Prison)
+      planet:ardolis -> Robot Pirate chest
+      planet:blizar_prime -> Punk helmet
+      planet:cordelion -> Q-Force boots
+      planet:torren_iv -> Carbonox Advanced chest
+      side:ardolis_mapomatic -> 330 Raritanium
+      side:blizar_chef -> Galactic Ranger helmet
+      side:sargasso_trudi -> 6250 Bolts
+      side:zurkies_gold -> 7000 Bolts
+      story2:ardolis -> 340 Raritanium
+      story2:blizar_prime -> 9250 Bolts
+      story2:cordelion -> 395 Raritanium
+      story2:sargasso -> 7000 Bolts
+      story2:savali -> 7500 Bolts
+      story2:scarstu -> 9500 Bolts
+      story2:torren_iv -> 13500 Bolts
+  Sphere 4: 4 locations
+      goldbolt:24 -> Lombax Praetorian helmet
+      goldbolt:25 -> Galactic Ranger boots
+      planet:viceron -> Carbonox Advanced helmet
+      story2:corson_v -> 4000 Bolts

@@ -60,7 +60,7 @@ ZURKIE'S BATTLEPLEX HUB (8.0, experimental: docs/HUB.md)
      6. Cordelion (after your 6th destination)
   The finale (Corson V (Megalopolis)) opens after 12 finished destinations; its Coordinates come then.
   Destinations (any order the rules allow):
-    nefcity_1     Nefarious City                     rivet   needs Nefarious City Coordinates
+    nefcity_1     Nefarious City                     ratchet needs Nefarious City Coordinates
     sargasso_1    Sargasso                           rivet   needs Sargasso Coordinates
     scarstu_1     Scarstu Debris Field (Zurkie's)    ratchet at the hub
     savali_1      Savali                             ratchet needs Savali Coordinates
@@ -68,10 +68,10 @@ ZURKIE'S BATTLEPLEX HUB (8.0, experimental: docs/HUB.md)
     torren_1      Torren IV (Molonoth Fields)        rivet   needs Torren IV (Molonoth Fields) Coordinates
     cordelion_1   Cordelion                          ratchet needs Cordelion Coordinates
     scarstu_2     Scarstu Debris Field (Zurkie's)    rivet   at the hub; after scarstu_1
-    ardolis_1     Ardolis                            rivet   needs Ardolis Coordinates
-    sargasso_2    Sargasso                           ratchet needs Sargasso Coordinates; after sargasso_1
+    ardolis_1     Ardolis                            ratchet needs Ardolis Coordinates
+    sargasso_2    Sargasso                           rivet   needs Sargasso Coordinates; after sargasso_1
     savali_2      Savali                             ratchet needs Savali Coordinates; after savali_1
-    viceron_1     Viceron (Zordoom Prison)           ratchet needs Viceron (Zordoom Prison) Coordinates; needs the story's phantom_dash; needs the story's hurlshot
+    viceron_1     Viceron (Zordoom Prison)           rivet   needs Viceron (Zordoom Prison) Coordinates; needs the story's phantom_dash; needs the story's hurlshot
     finale        Corson V (Megalopolis)             ratchet last
   One way through: sargasso_1 > nefcity_1 > scarstu_1 > torren_1 > blizar_1 > savali_1 > cordelion_1 > scarstu_2 > ardolis_1 > sargasso_2 > savali_2 > viceron_1 > finale
   Checked: every order you could choose (523 situations) leaves something to do until the finale.
