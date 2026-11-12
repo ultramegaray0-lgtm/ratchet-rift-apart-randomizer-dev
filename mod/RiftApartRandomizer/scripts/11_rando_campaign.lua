@@ -599,17 +599,26 @@ pcall(rivet.on_frame, function()
 end)
 
 D.KEY = (R and R.config and R.config.key_campaign) or "F12"
+local function vk_of(name)          -- 8.3: keyboard keys through the runtime's resolver
+  if R and R.vk then local v = R.vk(name); return v ~= nil, v end
+  return pcall(rivet.key, name)
+end
 local function ctrl_down()
   local ctrl = false
   pcall(function() ctrl = rivet.is_key_down(rivet.key("CONTROL")) end)
   return ctrl
 end
-local okk, vk = pcall(rivet.key, D.KEY)
-if okk then pcall(rivet.on_key, vk, function()
-  if ctrl_down() then return end
-  local ok, err = pcall(D.go)
-  if not ok then log("RANDO-ERROR campaign F12", tostring(err)) end
-end) end
+-- 8.3: the setting's key, and the old F12 too while legacy_f_keys is on
+D.KEYS = { D.KEY }
+if R and R.config and R.config.legacy_f_keys and D.KEY ~= "F12" then D.KEYS[2] = "F12" end
+for _, name in ipairs(D.KEYS) do
+  local okk, vk = vk_of(name)
+  if okk then pcall(rivet.on_key, vk, function()
+    if ctrl_down() then return end
+    local ok, err = pcall(D.go)
+    if not ok then log("RANDO-ERROR campaign key", tostring(err)) end
+  end) end
+end
 
 -- ---------------------------------------------------------------------------------------------
 -- the lab (test mode, a SPARE save). Ctrl+F12 only asks; Ctrl+F11 changes the spare save's story.
@@ -761,12 +770,14 @@ function D.lab_travel()
 end
 
 if RANDO_TEST_MODE then
-  local okc, vc = pcall(rivet.key, D.KEY)
-  if okc then pcall(rivet.on_key, vc, function()
-    if not ctrl_down() then return end
-    local ok, err = pcall(D.lab_read)
-    if not ok then log("RANDO-ERROR lab read", tostring(err)) end
-  end) end
+  for _, name in ipairs(D.KEYS) do
+    local okc, vc = vk_of(name)
+    if okc then pcall(rivet.on_key, vc, function()
+      if not ctrl_down() then return end
+      local ok, err = pcall(D.lab_read)
+      if not ok then log("RANDO-ERROR lab read", tostring(err)) end
+    end) end
+  end
   local okt, vt = pcall(rivet.key, "F11")
   if okt then pcall(rivet.on_key, vt, function()
     if not ctrl_down() then return end

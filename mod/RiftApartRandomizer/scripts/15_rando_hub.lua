@@ -41,14 +41,19 @@
 --     destination mission's state, MIS_INTRO's record, the LANDING / ZURK / MEGA checkpoints and
 --     the loaded Mission* configs go into rivet.log (RANDO-HUB research).
 --
--- Keys: F6 next destination, Ctrl+F6 go, F5 twice back to Zurkie's (cancels an automatic
--- return), Ctrl+F5 twice finish this destination by hand. Before the hub has started (a save
--- from before 8.0, or the warp failed), Ctrl+F6 goes to Zurkie's and starts it.
+-- Keys (8.3 defaults; the old F keys still work with legacy_f_keys): ] next destination, Ctrl+] go,
+-- [ twice back to Zurkie's (cancels an automatic return), Ctrl+[ twice finish this destination by
+-- hand, / start the story of the planet you are on, Ctrl+/ twice start it again. Before the hub
+-- has started (a save from before 8.0, or the warp failed), Ctrl+] goes to Zurkie's and starts it.
+--
+-- 8.3 THE STORY ON ARRIVAL: landing on a planet (test travel, the ship's menu, a hub trip) starts
+-- that planet's first unfinished story, whatever came before it (H.story_here). A story mission
+-- that is active but still at its "go to <planet>" step is started again on its planet (H.stuck).
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "8.2.0"
+H.VERSION = "8.3.0"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -62,6 +67,8 @@ end
 local function say(text, opts) if RANDO and RANDO.say then RANDO.say(text, opts) else pcall(rivet.notify, text, opts) end end
 local function pname(pid) return (RANDO and RANDO.planet_name and RANDO.planet_name(pid)) or tostring(pid) end
 local function changed() if RANDO and RANDO.mark_changed then RANDO.mark_changed() end end
+-- 8.3: the key a setting names, for on-screen text ("]", "Ctrl+]")
+local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 local function now() return (rivet.time and rivet.time()) or 0 end
 
@@ -75,9 +82,12 @@ H.STARTUP_GUARD = 7200      -- after the hub starts, unexpected travel is undone
 H.TRIGGER_TIMEOUT = 5400    -- New Game seen but the trigger objective never came: go anyway
 H.CONFIRM = 4               -- seconds for the second press of F5 / Ctrl+F5
 H.KEEPER_MAX = 3            -- parade-on-load corrections per session
+H.STUCK_WAIT = 1200         -- 8.3: after a start, frames before a story still at "go to <planet>" is reported
 
 H.frame = 0
-H.session = H.session or { new_game = nil, control = nil, wrench = nil, researched = false, keeper = 0 }
+H.session = H.session or { new_game = nil, control = nil, wrench = nil, researched = false, keeper = 0, started = {} }
+H.session.started = H.session.started or {}   -- 8.3: missions this session started (name -> frame)
+H.force_restart = {}        -- 8.3: destination id -> true (Ctrl+story key twice)
 H.expect = nil              -- our own travel in flight: { planet, dest, at, how, cp, tries }
 H.menu = nil                -- the last planet-menu choice: { planet, dest, at }
 H.pending = nil             -- something to do after a settle: { at, fn, why }
@@ -104,6 +114,7 @@ function H.state()
   h.level_seen = h.level_seen or {}
   h.phase = h.phase or "pre"
   h.hero = h.hero or "ratchet"
+  h.obj = h.obj or {}               -- 8.3: mission -> { o = last objective, s = its state }
   return h
 end
 local function dest_by_id(id)
@@ -143,7 +154,7 @@ function H.sync_open(quiet)
     for _, pid in ipairs(opened) do names[#names + 1] = pname(pid); history("Coordinates: " .. pid .. " (hub)") end
     log("Coordinates opened:", table.concat(opened, ", "))
     if not quiet then
-      say("Coordinates: " .. table.concat(names, " and ") .. " - F6 to choose, Ctrl+F6 to go", { type = "center", duration = 7 })
+      say("Coordinates: " .. table.concat(names, " and ") .. " - " .. K("key_hub") .. " to choose, " .. K("key_hub", true) .. " to go", { type = "center", duration = 7 })
     end
   end
   return opened
@@ -162,7 +173,7 @@ function H.status_text()
   if not H.plan() then return nil end
   local h = H.state()
   if not h then return nil end
-  if not h.started then return "hub: not started (Ctrl+F6 to go to Zurkie's)" end
+  if not h.started then return "hub: not started (" .. K("key_hub", true) .. " to go to Zurkie's)" end
   local p = H.plan()
   local total = #p.destinations
   local cur = h.current and dest_by_id(h.current)
@@ -289,6 +300,11 @@ end
 
 -- the parade's objectives (every ObjectiveStateChangedEvent, also before the seed is ready)
 function H.on_objective(mission, objective, state)
+  -- 8.3: every mission's latest objective (a story waiting at "go to <planet>" is restarted)
+  if type(mission) == "string" and type(objective) == "string" and H.plan() and S() then
+    local h = H.state()
+    if h then h.obj[mission] = { o = objective, s = state, f = H.frame } end
+  end
   if mission ~= "MIS_INTRO" then return end
   if objective == "OBJ_INTRO_PARADE_START_CINE" and state == 1 then
     H.session.new_game, H.session.control, H.session.wrench = H.frame, nil, nil
@@ -325,7 +341,7 @@ end
 function H.start_failed(why)
   local h = H.state()
   log("could not reach Zurkie's:", why)
-  say("Randomizer: could not reach Zurkie's (" .. why .. ") - your Coordinates are open; F6 / Ctrl+F6 travel from anywhere",
+  say("Randomizer: could not reach Zurkie's (" .. why .. ") - your Coordinates are open; " .. K("key_hub") .. " / " .. K("key_hub", true) .. " travel from anywhere",
       { type = "center", duration = 9 })
   H.hub_started("unreached")
   h.phase = "hub_unreached"
@@ -347,7 +363,7 @@ function H.hub_started(how)
   if SEED().locations["planet:corson_v"] and RANDO and RANDO.collect then
     RANDO.collect("planet:corson_v", "the prologue (the hub starts at Zurkie's)")
   end
-  say("Zurkie's Battleplex: Coordinates for " .. table.concat(names, " and ") .. " - F6 to choose, Ctrl+F6 to go",
+  say("Zurkie's Battleplex: Coordinates for " .. table.concat(names, " and ") .. " - " .. K("key_hub") .. " to choose, " .. K("key_hub", true) .. " to go",
       { type = "planet", sub = "Finish a destination to open the next Coordinates", duration = 10 })
   changed()
   H.after(H.SETTLE, function() H.intro_done(); H.apply_world(); H.research() end, "hub start")
@@ -370,9 +386,9 @@ function H.at_hub(how)
   if #opened > 0 then
     local names = {}
     for _, pid in ipairs(opened) do names[#names + 1] = pname(pid) end
-    say("New Coordinates: " .. table.concat(names, ", "), { type = "planet", sub = #av .. " destination(s) open - F6 to choose", duration = 8 })
+    say("New Coordinates: " .. table.concat(names, ", "), { type = "planet", sub = #av .. " destination(s) open - " .. K("key_hub") .. " to choose", duration = 8 })
   else
-    say(string.format("Zurkie's: %d destination(s) open - F6 to choose, Ctrl+F6 to go", #av), { type = "corner", duration = 5 })
+    say(string.format("Zurkie's: %d destination(s) open - " .. K("key_hub") .. " to choose, " .. K("key_hub", true) .. " to go", #av), { type = "corner", duration = 5 })
   end
   changed()
   H.after(H.SETTLE, function() H.apply_world(); H.research() end, "at the hub")
@@ -506,7 +522,7 @@ end
 -- explore: the story could not be started here
 function H.explore(d, why)
   set_attempt(d, "explore", why)
-  say(string.format("%s: explore - Gold Bolts, armor pods and side activities pay. Ctrl+F5 twice finishes it, F5 twice goes back",
+  say(string.format("%s: explore - Gold Bolts, armor pods and side activities pay. " .. K("key_hub_return", true) .. " twice finishes it, " .. K("key_hub_return") .. " twice goes back",
                     pname(d.planet)), { type = "center", duration = 9 })
 end
 
@@ -521,6 +537,52 @@ local function next_mission(d, answers)
     if x.state ~= 3 and x.state ~= 4 then return x, real end
   end
   return nil, real
+end
+
+-- 8.3: is this active mission waiting at its first step? Every story mission starts with an
+-- objective "go to <planet>" (round 17: OBJ_ZURK_01_GO_TO_ZURKONS, OBJ_NEFCITY_GO_TO_NEFCITY).
+-- Started while you were on its planet, that step finished at once and the story played
+-- (MIS_ZURK_01_VISIT_01, round 17). Started anywhere else, it never finished, not even after you
+-- got there (MIS_NEFCITY_01, round 17): the step is checked when it starts, by the planet's own
+-- level. So a mission left at that step (or with no step seen yet) is restarted on its planet.
+function H.goto_step(objective)
+  return type(objective) == "string" and (objective:find("_GO_TO_", 1, true) ~= nil or objective:find("_GOTO_", 1, true) ~= nil)
+end
+function H.stuck(name)
+  local h = H.state()
+  if H.session.started[name] then return false, "started this session" end
+  local last = h and h.obj[name]
+  if not last then return true, "no step of it seen yet" end
+  if H.goto_step(last.o) and last.s ~= 2 then return true, "waiting at " .. last.o end
+  return false, "at " .. tostring(last.o)
+end
+
+-- 8.3: the story of a planet, whatever came before it: its first destination (registry order)
+-- that is not finished. The prologue is never one.
+function H.story_dest(pid)
+  local p, h = H.plan(), H.state()
+  if not (p and h) then return nil end
+  for _, d in ipairs(p.destinations or {}) do
+    if d.planet == pid and not h.done[d.id] and d.kind ~= "intro" then return d end
+  end
+  return nil
+end
+
+-- 8.3: landing on a planet starts its story (story_on_arrival). Returns true when a story was
+-- looked for. Zurkie's is the hub: its story starts with the story key or the hub's own key.
+function H.story_here(pid, how)
+  local p, h = H.plan(), H.state()
+  if not (p and h) or not H.enabled() then return false end
+  if not cfg("story_on_arrival", true) then return false end
+  if pid == p.planet then return false end
+  local d = H.story_dest(pid)
+  if not d then
+    say(pname(pid) .. ": its story is finished for the randomizer - explore", { type = "corner", duration = 5 })
+    return false
+  end
+  log("story on arrival:", pid, "->", d.id, "(" .. tostring(how) .. ")")
+  H.arrive(d, how)
+  return true
 end
 
 -- try to get the visit's story running. Every step is the game's own call (or the v6 record
@@ -549,6 +611,10 @@ function H.activate(d, cb)
       H.ladder = nil
       set_attempt(d, "story", m.name .. " " .. how)
       say(string.format("%s: %s - the story is running (%s)", pname(d.planet), d.title or m.name, how), { type = "corner", duration = 6 })
+      if how == "started" or how == "restarted" or how == "replayed" then
+        H.session.started[m.name] = H.frame
+        H.watch_story(d, m.name)
+      end
       cb(true, how)
     end
     local function replay_then_explore(why)
@@ -561,18 +627,45 @@ function H.activate(d, cb)
         cb(false, "explore")
       end)
     end
-    local function start()
+    local function start(how)
       call("start", m.name, function(r)
         if not live() then return end
         log("start", m.name, describe(r))
-        if r.code == 11 and r.after == 2 then return running("started") end
+        if r.code == 11 and r.after == 2 then return running(how or "started") end
         if r.code == 11 and (r.after == 3 or r.after == 4) then H.ladder = nil; return H.on_mission_state(m.name, r.after) end
         if cfg("hub_replay", true) then return replay_then_explore("start: " .. describe(r)) end
         H.ladder = nil; H.explore(d, "start: " .. describe(r)); cb(false, "explore")
       end)
     end
     log("destination", d.id, "mission", m.name, "is", dd.STATE_NAMES[m.state] or tostring(m.state))
-    if m.state == 2 then return running("already active") end
+    if m.state == 2 then
+      -- 8.3: active but waiting at "go to <planet>" (or Ctrl+story key twice): start it again
+      -- here, on its planet. Available first (the v6 record write), then the game's start; if the
+      -- game refuses, the record goes back to active and the replay call is tried.
+      local forced = H.force_restart[d.id]
+      H.force_restart[d.id] = nil
+      local stuck, why = H.stuck(m.name)
+      if not forced and not (stuck and cfg("story_restart_stuck", true)) then return running("already active") end
+      local okv, whyv = dd.native_ok("set_state")
+      if not okv then return replay_then_explore("active, " .. (forced and "restart asked" or why) .. ", and " .. whyv) end
+      log("restart", m.name, forced and "(asked)" or ("(" .. why .. ")"))
+      return call("set_state", m.name, function(w)
+        if not live() then return end
+        log("restart: available", m.name, describe(w))
+        if not (w.code == 11 and w.after == 1) then return replay_then_explore("restart: " .. describe(w)) end
+        call("start", m.name, function(r)
+          if not live() then return end
+          log("restart: start", m.name, describe(r))
+          if r.code == 11 and r.after == 2 then return running("restarted") end
+          -- the game would not start it again: put the record back to active, then try replay
+          call("set_state", m.name, function(b)
+            log("restart: back to active", m.name, describe(b))
+            if cfg("hub_replay", true) then return replay_then_explore("restart refused: " .. describe(r)) end
+            H.ladder = nil; running("already active")
+          end, 2)
+        end)
+      end, 1)
+    end
     if m.state == 1 then return start() end
     if m.state == 0 and cfg("hub_force_missions", true) then
       local okv, whyv = dd.native_ok("set_state")
@@ -586,6 +679,26 @@ function H.activate(d, cb)
     end
     replay_then_explore("it is " .. (dd.STATE_NAMES[m.state] or tostring(m.state)))
   end)
+end
+
+-- 8.3: a started story should leave its "go to <planet>" step at once (round 17: 2 seconds). If
+-- it has not after H.STUCK_WAIT frames, say so: the story key restarts it.
+function H.watch_story(d, name)
+  H.after(H.STUCK_WAIT, function()
+    local h = H.state()
+    local last = h.obj[name]
+    if h.done[d.id] then return end
+    if last and H.goto_step(last.o) and last.s ~= 2 then
+      log("story still waiting at", last.o, "for", name, "after", H.STUCK_WAIT, "frames")
+      say(string.format("%s: the story is waiting at its first step - press %s to start it again here",
+                        pname(d.planet), K("key_story")), { type = "center", duration = 8 })
+      H.session.started[name] = nil         -- the next try may restart it
+    elseif last then
+      log("story", name, "is at", last.o, "(state " .. tostring(last.s) .. ")")
+    else
+      log("story", name, "reported no step yet")
+    end
+  end, "watch " .. name)
 end
 
 -- arrived for a destination (our travel, the menu, or a load): settle, hero, then the ladder
@@ -645,9 +758,9 @@ function H.finish(d, how)
   if d.kind ~= "hub" and cfg("hub_auto_return", true) and h.current == d.id then
     local delay = cfg("hub_return_delay", 12)
     H.return_at = H.frame + math.max(1, delay) * 60
-    say(msg, { type = "planet", sub = string.format("Back to Zurkie's in %d s (F5 to stay)", delay), duration = 8 })
+    say(msg, { type = "planet", sub = string.format("Back to Zurkie's in %d s (" .. K("key_hub_return") .. " to stay)", delay), duration = 8 })
   else
-    say(msg, { type = "planet", sub = "F6 to choose the next destination", duration = 8 })
+    say(msg, { type = "planet", sub = K("key_hub") .. " to choose the next destination", duration = 8 })
     if d.kind == "hub" then h.unannounced = nil end
   end
   if h.current == d.id and d.kind == "hub" then
@@ -758,16 +871,18 @@ function H.on_arrival(pid, from)
     H.menu = nil
     if h.open[pid] then
       if RANDO_TRAVEL and RANDO_TRAVEL.remember then RANDO_TRAVEL.remember(pid, m.dest) end
-      local d = first_dest_on(pid)
+      -- 8.3: with story_on_arrival, the planet's story whatever came before it
+      local d = cfg("story_on_arrival", true) and H.story_dest(pid) or first_dest_on(pid)
       if d then H.arrive(d, "planet menu") else
         h.phase, h.current = "away", nil
-        say(pname(pid) .. ": nothing left to play here for the hub - explore, F5 twice to go back", { type = "corner", duration = 6 })
+        say(pname(pid) .. ": nothing left to play here for the hub - explore, " .. K("key_hub_return") .. " twice to go back", { type = "corner", duration = 6 })
       end
     elseif test_travel_on() then
       -- 8.2: test travel lets every planet stay; its landing is learned like an open planet's
       if RANDO_TRAVEL and RANDO_TRAVEL.remember then RANDO_TRAVEL.remember(pid, m.dest) end
       h.phase, h.current = "away", nil
       RANDO_TEST_TRAVEL.stayed(pid, "planet menu")
+      H.story_here(pid, "planet menu (test travel)")
     else
       log("no Coordinates for", pid, "- back to Zurkie's")
       say(string.format("Randomizer: no Coordinates for %s yet - back to Zurkie's", pname(pid)), { type = "center", duration = 6 })
@@ -817,6 +932,7 @@ end
 -- keys
 -- ---------------------------------------------------------------------------------------------
 local function ctrl_down()
+  if RANDO and RANDO.ctrl_down then return RANDO.ctrl_down() end
   local ctrl = false
   pcall(function() ctrl = rivet.is_key_down(rivet.key("CONTROL")) end)
   return ctrl
@@ -829,21 +945,21 @@ end
 function H.key_select()
   local h = H.state()
   if not h.started then
-    say("Randomizer: Ctrl+F6 goes to Zurkie's and starts the hub campaign", { type = "center", duration = 6 })
+    say("Randomizer: " .. K("key_hub", true) .. " goes to Zurkie's and starts the hub campaign", { type = "center", duration = 6 })
     return
   end
   local av = H.available()
   if #av == 0 then say("Randomizer: no destination open", { type = "corner", duration = 4 }); return end
   H.sel = (H.sel % #av) + 1
   local d = dest_by_id(av[H.sel])
-  say(string.format("Destination %d/%d - %s - Ctrl+F6 to go", H.sel, #av, describe_dest(d)), { type = "center", duration = 6 })
+  say(string.format("Destination %d/%d - %s - " .. K("key_hub", true) .. " to go", H.sel, #av, describe_dest(d)), { type = "center", duration = 6 })
 end
 
 function H.key_go()
   local h, p = H.state(), H.plan()
   if not h.started then
     if h.phase == "to_hub" and H.expect then return end
-    return H.begin_hub("Ctrl+F6")
+    return H.begin_hub(K("key_hub", true))
   end
   local av = H.available()
   if #av == 0 then say("Randomizer: no destination open", { type = "corner", duration = 4 }); return end
@@ -858,25 +974,55 @@ function H.key_go()
     return
   end
   local at_hub = S().current_planet == p.planet
-  if not H.travel(d.planet, d, at_hub, "Ctrl+F6") then return end
+  if not H.travel(d.planet, d, at_hub, K("key_hub", true)) then return end
   say("Randomizer: off to " .. describe_dest(d), { type = "corner", duration = 5 })
 end
 
-local confirm = { ["return"] = -100, finish = -100 }
+local confirm = { ["return"] = -100, finish = -100, restart = -100 }
+
+-- 8.3 the story key: start the story of the planet you are on (whatever came before it).
+-- Ctrl + the key twice: start it again from its first step, even if it is running.
+function H.key_story(ctrl)
+  local h = H.state()
+  local pid = S().current_planet
+  if not pid then return say("Randomizer: the planet is not known yet", { type = "corner", duration = 4 }) end
+  local d = H.story_dest(pid)
+  if not d then return say(pname(pid) .. ": its story is finished for the randomizer", { type = "corner", duration = 5 }) end
+  if ctrl then
+    local t = now()
+    if t - confirm.restart > H.CONFIRM then
+      confirm.restart = t
+      say(string.format("Randomizer: press %s again to start %s again from its first step", K("key_story", true), d.title or d.id),
+          { type = "center", duration = 5 })
+      return
+    end
+    confirm.restart = -100
+    H.force_restart[d.id] = true
+    log("[STORY RESTART BY HAND]", d.id)
+    history("[STORY RESTART BY HAND] " .. d.id)
+  end
+  h.current = d.id
+  if pid ~= H.plan().planet then h.phase = "away" end
+  changed()
+  log("story key:", pid, "->", d.id, ctrl and "(restart)" or "")
+  say(string.format("%s: %s - starting the story", pname(pid), d.title or d.id), { type = "corner", duration = 5 })
+  if d.hero and d.hero ~= h.hero then H.play_as(d.hero) end
+  H.after(60, function() H.activate(d) end, "story key " .. d.id)
+end
 function H.key_return()
   local h, p = H.state(), H.plan()
   if H.return_at then
     H.return_at = nil
-    say("Randomizer: staying here - F5 twice goes back to Zurkie's", { type = "corner", duration = 5 })
+    say("Randomizer: staying here - " .. K("key_hub_return") .. " twice goes back to Zurkie's", { type = "corner", duration = 5 })
     return
   end
-  if not h.started then return say("Randomizer: the hub has not started - Ctrl+F6 goes to Zurkie's", { type = "corner", duration = 5 }) end
+  if not h.started then return say("Randomizer: the hub has not started - " .. K("key_hub", true) .. " goes to Zurkie's", { type = "corner", duration = 5 }) end
   if S().current_planet == p.planet then return say("Randomizer: you are at Zurkie's", { type = "corner", duration = 3 }) end
   local t = now()
   if t - confirm["return"] > H.CONFIRM then
     confirm["return"] = t
     local cur = h.current and dest_by_id(h.current)
-    say("Randomizer: press F5 again to go back to Zurkie's" .. ((cur and not h.done[cur.id]) and " (this destination stays open)" or ""),
+    say("Randomizer: press " .. K("key_hub_return") .. " again to go back to Zurkie's" .. ((cur and not h.done[cur.id]) and " (this destination stays open)" or ""),
         { type = "center", duration = 5 })
     return
   end
@@ -884,7 +1030,7 @@ function H.key_return()
   local cur = h.current and dest_by_id(h.current)
   if cur and not h.done[cur.id] then h.current = nil end
   H.ladder = nil
-  if not H.go_home("F5") then say("Randomizer: the warp to Zurkie's failed (see rivet.log)", { type = "center", duration = 6 }) end
+  if not H.go_home(K("key_hub_return")) then say("Randomizer: the warp to Zurkie's failed (see rivet.log)", { type = "center", duration = 6 }) end
 end
 
 function H.key_finish()
@@ -894,7 +1040,7 @@ function H.key_finish()
   local t = now()
   if t - confirm.finish > H.CONFIRM then
     confirm.finish = t
-    say(string.format("Randomizer: press Ctrl+F5 again to finish %s by hand (it is recorded)", d.id), { type = "center", duration = 5 })
+    say(string.format("Randomizer: press " .. K("key_hub_return", true) .. " again to finish %s by hand (it is recorded)", d.id), { type = "center", duration = 5 })
     return
   end
   confirm.finish = -100
@@ -964,7 +1110,7 @@ function H.tick(frame, ready)
     H.return_at = nil
     h.current = nil
     if not H.go_home("destination finished") then
-      say("Randomizer: the warp to Zurkie's failed - F5 twice to try again", { type = "center", duration = 6 })
+      say("Randomizer: the warp to Zurkie's failed - " .. K("key_hub_return") .. " twice to try again", { type = "center", duration = 6 })
     end
   end
 end
@@ -1001,21 +1147,20 @@ pcall(rivet.on_event, "PlanetMenuAcceptEvent", function(ev)
   if not ok then log("RANDO-ERROR menu", tostring(err)) end
 end)
 
-local function bind(setting, default, fn)
-  local name = cfg(setting, default)
-  local okk, vk = pcall(rivet.key, name)
-  if not okk then log("RANDO-ERROR key", tostring(name), tostring(vk)); return end
-  pcall(rivet.on_key, vk, function()
+-- 8.3: keys through the runtime's binder (keyboard keys; legacy_f_keys keeps the old F key too)
+local function bind(setting, legacy, fn)
+  if not (RANDO and RANDO.bind_setting) then return end
+  RANDO.bind_setting(setting, legacy, function()
     if not (H.plan() and S()) then return end
     if not H.enabled() then return say("Randomizer: hub_runtime is off", { type = "corner", duration = 3 }) end
     local ready = false
     pcall(function() ready = rivet.scene_ready() and rivet.hero() ~= nil end)
     if not ready then return say("Randomizer: wait until the game has loaded", { type = "corner", duration = 3 }) end
-    local ok, err = pcall(fn, ctrl_down())
-    if not ok then log("RANDO-ERROR key", tostring(name), tostring(err)) end
+    fn(ctrl_down())
   end)
 end
 bind("key_hub", "F6", function(ctrl) if ctrl then H.key_go() else H.key_select() end end)
 bind("key_hub_return", "F5", function(ctrl) if ctrl then H.key_finish() else H.key_return() end end)
+bind("key_story", nil, function(ctrl) H.key_story(ctrl) end)
 
 log("loaded (" .. H.VERSION .. ")")

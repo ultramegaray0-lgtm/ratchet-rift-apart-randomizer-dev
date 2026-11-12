@@ -41,7 +41,7 @@
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "8.2.0"
+R.KIT_VERSION = "8.3.0"
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -50,6 +50,47 @@ BIND.mission_prefixes = BIND.mission_prefixes or {}; BIND.collectible_events = B
 
 local function log(...) pcall(rivet.log, "[rando]", ...) end
 R.log = log
+
+-- ---------------------------------------------------------------------------------------
+-- 8.3 keys: ordinary keyboard keys, not only F1-F12. A key setting is a name: one character
+-- ("]", "/", "K", "7"), NUMPAD0-NUMPAD9, INSERT / DELETE / HOME / END / PAGEUP / PAGEDOWN, or F1-F24.
+-- The names map to Windows virtual-key codes, the numbers rivet.key() itself returns (it gives
+-- 0x75 for "F6"; checked at load, below). rivet_hook's own key names are tried last.
+-- ---------------------------------------------------------------------------------------
+R.VK = { CONTROL = 0x11, SHIFT = 0x10, ALT = 0x12, PAUSE = 0x13, SPACE = 0x20, PAGEUP = 0x21, PAGEDOWN = 0x22,
+         ["END"] = 0x23, HOME = 0x24, INSERT = 0x2D, DELETE = 0x2E, BACKSPACE = 0x08, TAB = 0x09, ENTER = 0x0D }
+for i = 1, 24 do R.VK["F" .. i] = 0x6F + i end
+for i = 0, 9 do R.VK["NUMPAD" .. i] = 0x60 + i; R.VK[tostring(i)] = 0x30 + i end
+for c = string.byte("A"), string.byte("Z") do R.VK[string.char(c)] = c end
+R.VK_PUNCT = { [";"] = 0xBA, ["="] = 0xBB, [","] = 0xBC, ["-"] = 0xBD, ["."] = 0xBE, ["/"] = 0xBF, ["`"] = 0xC0,
+               ["["] = 0xDB, ["\\"] = 0xDC, ["]"] = 0xDD, ["'"] = 0xDE }
+-- does rivet.key() use these numbers? (it must, for our numbers to mean the same keys)
+do
+  local ok, f6 = pcall(rivet.key, "F6")
+  R.keys_numeric = ok and f6 == 0x75
+end
+function R.vk(name)
+  if type(name) ~= "string" or name == "" then return nil, "no key name" end
+  if R.keys_numeric then
+    local v = R.VK_PUNCT[name] or R.VK[name:upper()]
+    if v then return v end
+  end
+  local ok, k = pcall(rivet.key, name)
+  if ok and k ~= nil then return k end
+  return nil, (R.keys_numeric and "unknown key " or "this rivet_hook knows only its own key names, not ") .. name
+end
+function R.key_down(name)
+  local vk = R.vk(name)
+  local down = false
+  if vk then pcall(function() down = rivet.is_key_down(vk) == true end) end
+  return down
+end
+function R.ctrl_down() return R.key_down("CONTROL") end
+-- the key a setting names, for on-screen text ("]", "Ctrl+]")
+function R.key(setting, ctrl)
+  local name = (R.config and R.config[setting]) or setting
+  return (ctrl and "Ctrl+" or "") .. tostring(name)
+end
 
 if not (DB and GEN) then
   log("RANDO-ERROR 01_rando_data.lua or 02_rando_generator.lua is missing from the scripts folder")
@@ -62,7 +103,7 @@ end
 -- ---------------------------------------------------------------------------------------
 R.config = {
   discovery = true, discovery_cap = 60, log_notifications = true,
-  key_status = "F9", key_campaign = "F12",
+  key_status = ";", key_campaign = "'",       -- 8.3: keyboard keys (were F9 / F12)
   real_items = true, real_weapons = true, auto_equip_armor = false,
   new_game_reset = true,             -- a new game starts the seed's progress over
   armor_intercept = true,            -- armor sources give the seed's item instead of their own piece
@@ -80,12 +121,18 @@ R.config = {
   hub_auto_return = true,            -- a finished destination takes you back to Zurkie's
   hub_return_delay = 12,             -- seconds before that (F5 cancels)
   hub_hero_swap = true,              -- Rivet's destinations swap the hero to Rivet (and back at Zurkie's)
-  key_hub = "F6",                    -- F6 next destination, Ctrl+F6 go
-  key_hub_return = "F5",             -- F5 twice back to Zurkie's, Ctrl+F5 twice finish a destination by hand
+  key_hub = "]",                     -- ] next destination, Ctrl+] go (8.3; was F6)
+  key_hub_return = "[",              -- [ twice back to Zurkie's, Ctrl+[ twice finish a destination by hand (was F5)
   -- 8.2 test travel (16_rando_testtravel.lua): go to any planet, whatever Coordinates you hold
   test_travel = false,               -- true: F7 / F8 / Ctrl+F7 / Ctrl+F8 work and nothing sends you back
-  key_test_travel = "F7",            -- F7 next planet, Ctrl+F7 warp there
-  key_test_point = "F8",             -- F8 next landing point on that planet, Ctrl+F8 fly there with the ship
+  key_test_travel = ".",            -- . next planet, Ctrl+. warp there (8.3; was F7)
+  key_test_point = ",",              -- , next landing point on that planet, Ctrl+, fly there with the ship (was F8)
+  -- 8.3 the story on arrival (15_rando_hub.lua)
+  story_on_arrival = true,           -- landing on a planet (test travel, the ship's menu, a hub trip) starts its
+                                     -- story, even if the story before it is not finished
+  story_restart_stuck = true,        -- a story mission left waiting at its "go to <planet>" step is restarted
+  key_story = "/",                   -- / start the story of the planet you are on; Ctrl+/ twice restarts it
+  legacy_f_keys = true,              -- the old F5-F9 keys keep working as well
 }
 R.CHOICES = { hub_trigger = { wrench = true, control = true, cinematic = true }, hub_intro = { force = true, leave = true },
               hub_levels = { all = true, off = true } }
@@ -94,13 +141,13 @@ local RETIRED_RUNTIME = { key_shop_next = "is not used since 4.0", key_shop_buy 
                           lock_vendor_weapons = "is not used since 5.0 (the vendor sells its own weapons, shuffled; ammo works)" }
 local SETTINGS = RANDO_SETTINGS or {}
 local KEY_SETTINGS = { key_status = true, key_campaign = true, key_hub = true, key_hub_return = true,
-                       key_test_travel = true, key_test_point = true }
+                       key_test_travel = true, key_test_point = true, key_story = true }
 local GEN_OPTIONS = {}
 for k, v in pairs(SETTINGS) do
   if R.config[k] ~= nil then
     if type(v) ~= type(R.config[k]) then
       log("RANDO-SETTINGS", k, "must be a " .. type(R.config[k]) .. " - keeping", tostring(R.config[k]))
-    elseif KEY_SETTINGS[k] and not pcall(rivet.key, v) then
+    elseif KEY_SETTINGS[k] and not R.vk(v) then
       log("RANDO-SETTINGS", k, "= " .. tostring(v) .. " is not a key name rivet_hook knows - keeping", R.config[k])
     elseif R.CHOICES[k] and not R.CHOICES[k][v] then
       log("RANDO-SETTINGS", k, "= " .. tostring(v) .. " is not a choice - keeping", tostring(R.config[k]))
@@ -111,6 +158,17 @@ for k, v in pairs(SETTINGS) do
     log("RANDO-SETTINGS", k, RETIRED_RUNTIME[k])
   elseif k ~= "seed" and k ~= "preset" then
     GEN_OPTIONS[k] = v
+  end
+end
+
+-- 8.3: if rivet.key() does not use Windows key codes, keyboard key names cannot be bound: keys
+-- that do not resolve go back to their old F keys (the story key to F4)
+R.LEGACY_KEYS = { key_status = "F9", key_campaign = "F12", key_hub = "F6", key_hub_return = "F5",
+                  key_test_travel = "F7", key_test_point = "F8", key_story = "F4" }
+for setting, legacy in pairs(R.LEGACY_KEYS) do
+  if not R.vk(R.config[setting]) then
+    log("RANDO-SETTINGS", setting, "=", tostring(R.config[setting]), "cannot be bound here - using", legacy)
+    R.config[setting] = legacy
   end
 end
 
@@ -922,22 +980,43 @@ for _, c in ipairs({ "MissionStartedEvent", "MissionObjectiveCompleteEvent",
                      "LevelLoadedEvent", "SaveDataAppliedEvent", "PlanetMenuAcceptEvent",
                      "GainBoltEvent", "GainRaritaniumEvent" }) do on(c) end
 
-local function on_key(name, fn)
-  local okk, vk = pcall(rivet.key, name)
-  if not okk then log("RANDO-ERROR key", name, tostring(vk)); return end
-  pcall(rivet.on_key, vk, function()
-    if not (SEED and S) then say("Randomizer: the seed is still being prepared"); return end
-    local ok, err = pcall(fn)
-    if not ok then log("RANDO-ERROR key " .. name .. ":", tostring(err)) end
+-- bind a key by name; every press is logged (RANDO-KEY), so a key the game never passes on shows
+-- up as missing in rivet.log. Returns true when bound.
+R.bound = R.bound or {}
+function R.bind_key(name, fn, what)
+  local vk, why = R.vk(name)
+  if not vk then log("RANDO-ERROR key", tostring(name), tostring(why)); return false end
+  if R.bound[vk] then log("RANDO-SETTINGS key", tostring(name), "is used twice:", R.bound[vk], "and", tostring(what)) end
+  R.bound[vk] = what or name
+  local okb, err = pcall(rivet.on_key, vk, function()
+    log("RANDO-KEY", tostring(name), R.ctrl_down() and "with Ctrl" or "", tostring(what or ""))
+    local ok, e = pcall(fn)
+    if not ok then log("RANDO-ERROR key " .. tostring(name) .. ":", tostring(e)) end
   end)
+  if not okb then log("RANDO-ERROR key", tostring(name), tostring(err)); return false end
+  return true
+end
+-- a setting's key, and (legacy_f_keys) its old F key too
+function R.bind_setting(setting, legacy, fn)
+  R.bind_key(R.config[setting], fn, setting)
+  if legacy and R.config.legacy_f_keys and R.config[setting] ~= legacy then R.bind_key(legacy, fn, setting .. " (old key)") end
+end
+local function on_key(name, fn)
+  R.bind_key(name, function()
+    if not (SEED and S) then say("Randomizer: the seed is still being prepared"); return end
+    fn()
+  end, name)
 end
 R.on_key = on_key
-on_key(R.config.key_status, function()
-  local ctrl = false
-  pcall(function() ctrl = rivet.is_key_down(rivet.key("CONTROL")) end)
-  if ctrl and RANDO_TRAVEL and SEED.travel_lock then RANDO_TRAVEL.hatch(); return end
+R.bind_setting("key_status", "F9", function()
+  if not (SEED and S) then say("Randomizer: the seed is still being prepared"); return end
+  if R.ctrl_down() and RANDO_TRAVEL and SEED.travel_lock then RANDO_TRAVEL.hatch(); return end
   say(R.status_text(), { type = "corner", duration = 6 })
 end)
+log("RANDO-KEYS", R.keys_numeric and "keyboard keys on" or "rivet.key() does not use Windows key codes: only its own key names work",
+    string.format("status %s | hub %s | back %s | test travel %s %s | story %s%s", R.key("key_status"), R.key("key_hub"),
+                  R.key("key_hub_return"), R.key("key_test_travel"), R.key("key_test_point"), R.key("key_story"),
+                  R.config.legacy_f_keys and " | old F5-F9 keys too" or ""))
 
 -- start: a pre-generated seed (tools/rando.py writes 00_rando_seed.lua), the settings' seed, or
 -- (seed = "random") one from the companion

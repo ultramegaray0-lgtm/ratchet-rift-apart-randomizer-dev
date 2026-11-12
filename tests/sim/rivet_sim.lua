@@ -714,8 +714,14 @@ function S.step(n)
     end
   end
 end
+-- 8.3: keyboard keys the randomizer maps itself (Windows virtual-key codes; rivet.key() above
+-- knows only rivet_hook-style names, as the real one may)
+S.KEYS = { [";"] = 0xBA, ["="] = 0xBB, [","] = 0xBC, ["-"] = 0xBD, ["."] = 0xBE, ["/"] = 0xBF, ["`"] = 0xC0,
+           ["["] = 0xDB, ["\\"] = 0xDC, ["]"] = 0xDD, ["'"] = 0xDE }
+for c = string.byte("A"), string.byte("Z") do S.KEYS[string.char(c)] = c end
+for i = 0, 9 do S.KEYS[tostring(i)] = 0x30 + i end
 function S.press(name, ctrl)
-  local vk = rivet.key(name)
+  local vk = S.KEYS[name] or rivet.key(name)
   if ctrl then S.down[VK.CONTROL] = true end
   for _, fn in ipairs(S.key_cbs[vk] or {}) do
     local ok, err = pcall(fn)

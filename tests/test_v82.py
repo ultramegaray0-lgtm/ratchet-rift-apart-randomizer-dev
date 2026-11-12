@@ -78,7 +78,7 @@ class TestTravelTests(unittest.TestCase):
     def test_script_loads_and_is_on(self):
         g = test_game()
         self.assertTrue(g.g.RANDO_TEST_TRAVEL.on())
-        self.assertTrue(g.log_has("RANDO-TEST\tloaded (8.2.0) - test travel is ON"))
+        self.assertTrue(g.log_has("RANDO-TEST\tloaded (8.3.0) - test travel is ON"))
         self.assertIn("TEST TRAVEL on", g.R.status_text())
 
     def test_warp_to_a_planet_without_coordinates_stays_there(self):
@@ -92,7 +92,8 @@ class TestTravelTests(unittest.TestCase):
         self.assertEqual(g.g.RANDO_TRAVEL.planet_of_checkpoint(g.sim.last_cp), locked)
         self.assertEqual(g.state.current_planet, locked)
         self.assertFalse(g.state.access[locked])                    # no Coordinates were given
-        self.assertFalse(hub(g).get("current"))                     # the hub did not start a destination
+        # 8.3: the planet's story starts there (story_on_arrival), whatever came before it
+        self.assertEqual(py(g.g.RANDO_HUB.dest(hub(g)["current"]))["planet"], locked)
         land(g, 1200)
         self.assertEqual(g.state.current_planet, locked)            # nothing sent you back
         self.assertTrue(any("[TEST TRAVEL] warp to " + locked in x for x in py(g.state.history)))
@@ -132,7 +133,7 @@ class TestTravelTests(unittest.TestCase):
         select(g, "savali")
         g.press("F8", ctrl=True)
         self.assertTrue(g.note_has("fly to"))
-        self.assertTrue(g.note_has("Ctrl+F7 warps instead"))
+        self.assertTrue(g.note_has("Ctrl+. warps instead"))   # 8.3 keys
         g.sim.ship_near = True
         g.press("F8", ctrl=True)
         land(g)
@@ -210,8 +211,8 @@ class TestTravelTests(unittest.TestCase):
     def test_settings_file_turns_it_on(self):
         g = Game(settings_file=True)
         self.assertEqual(g.R.config.test_travel, True)
-        self.assertEqual(g.R.config.key_test_travel, "F7")
-        self.assertEqual(g.R.config.key_test_point, "F8")
+        self.assertEqual(g.R.config.key_test_travel, ".")   # 8.3 keys
+        self.assertEqual(g.R.config.key_test_point, ",")
 
 
 class CatalogTests(unittest.TestCase):

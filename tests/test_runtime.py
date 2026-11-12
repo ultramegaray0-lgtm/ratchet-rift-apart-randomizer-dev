@@ -95,7 +95,7 @@ class LoadingTests(unittest.TestCase):
     def test_settings_typos_are_caught(self):
         g = Game(settings={"key_status": "F99", "key_campaign": "F6", "discovery": "yes", "start_weapons": 99,
                            "weapon_logic": "insane", "frobnicate": 1, "shop_slots": 10, "key_shop_buy": "F8"})
-        self.assertEqual(g.R.config.key_status, "F9")
+        self.assertEqual(g.R.config.key_status, ";")         # 8.3: the default is a keyboard key
         self.assertEqual(g.R.config.key_campaign, "F6")
         self.assertTrue(g.R.config.discovery)
         g.ready()

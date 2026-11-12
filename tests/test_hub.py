@@ -535,8 +535,8 @@ class HubRuntimeTests(unittest.TestCase):
         g = to_hub(hub_game("hub-rt-keys"))
         g.press("F9")
         self.assertTrue(g.note_has("hub 0/13 done"))
-        g.press("F6")
-        self.assertTrue(g.note_has("Ctrl+F6 to go"))
+        g.press("F6")                                   # 8.3: the old key still works (legacy_f_keys)
+        self.assertTrue(g.note_has("Ctrl+] to go"))     # and the text names the new one
         g.press("F5")
         self.assertTrue(g.note_has("you are at Zurkie's"))
 
@@ -647,7 +647,7 @@ class HubLogSummaryTests(unittest.TestCase):
         import summarize_log
         g = to_hub(hub_game("hub-sum"))
         s = summarize_log.summarize([l.replace("[rando]", "[script] [rando]") for l in g.logs()])
-        self.assertEqual(s["kit"], "8.2.0")
+        self.assertEqual(s["kit"], "8.3.0")
         self.assertTrue(any(x.startswith("the campaign starts at Zurkie's") for x in s["hub_done"]), s["hub_done"])
         self.assertTrue(any("research: rando_give.dll v6" in x for x in s["hub_research"]))
         self.assertTrue(any("Coordinates opened" in x for x in s["hub"]))

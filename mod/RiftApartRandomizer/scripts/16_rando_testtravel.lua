@@ -2,16 +2,18 @@
 -- Loaded after 14_rando_travel.lua and 15_rando_hub.lua. Off unless test_travel = true in
 -- 04_rando_settings.lua (a runtime option: it never changes the seed or its fingerprint).
 --
--- Keys (test_travel = true):
---   F7          next planet (all 10, in story order, starting after the one you are on)
---   F8          next landing point on that planet
---   Ctrl+F7     warp there (rivet_hook's checkpoint warp, the one level scripts use)
---   Ctrl+F8     fly there with the ship (rivet.fly; needs the ship's planet menu nearby, e.g. at
+-- Keys (test_travel = true; 8.3 defaults, see key_test_travel / key_test_point):
+--   .           next planet (all 10, in story order, starting after the one you are on)
+--   ,           next landing point on that planet
+--   Ctrl+.      warp there (rivet_hook's checkpoint warp, the one level scripts use)
+--   Ctrl+,      fly there with the ship (rivet.fly; needs the ship's planet menu nearby, e.g. at
 --               a landing pad - round 17: Zurkie's -> CHK_NEFCITY_SHIP worked)
+--   (legacy_f_keys = true: F7 / F8 as well)
 --
 -- While it is on:
---   * a test trip's landing is only reported and remembered as that planet's landing point; the hub
---     does not start or finish destinations because of it (Zurkie's itself is the hub's as always)
+--   * a test trip's landing is remembered as that planet's landing point. 8.3: with
+--     story_on_arrival (on by default) the planet's story starts, even if the story before it is
+--     not finished (15_rando_hub.lua H.story_here; Zurkie's itself is the hub's as always)
 --   * the ship's planet menu takes you anywhere: neither the hub nor locked levels send you back
 --   * the hub's Corson V keeper and its startup guard do not move you
 --   * the level bits (the planet menu's list) are put back after a load, as the hub does
@@ -34,7 +36,8 @@ local function pname(pid) return (RANDO and RANDO.planet_name and RANDO.planet_n
 local function now() return (rivet.time and rivet.time()) or 0 end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 
-TT.VERSION = "8.2.0"
+TT.VERSION = "8.3.0"
+local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 TT.WINDOW = 180              -- seconds a trip waits for its landing
 TT.POINTS = 12               -- landing points offered per planet (catalog)
 TT.sel = TT.sel or 0         -- selected planet (index into DB.planets; not saved)
@@ -112,7 +115,7 @@ local function show(pid)
   if #pts == 0 then
     hurry()
     say(head .. " - no landing point known yet", { type = "center", duration = 7,
-        sub = catalog_note() .. "; press F7 again in a few seconds, or use the ship's planet menu" })
+        sub = catalog_note() .. "; press " .. K("key_test_travel") .. " again in a few seconds, or use the ship's planet menu" })
     log("selected", pid, "- no landing point yet:", catalog_note())
     return
   end
@@ -121,7 +124,8 @@ local function show(pid)
   TT.point[pid] = k
   local pt = pts[k]
   say(head, { type = "center", duration = 7,
-      sub = string.format("%s (%d/%d, %s) - Ctrl+F7 warp, Ctrl+F8 fly, F8 next landing point", pt.cp, k, #pts, pt.why) })
+      sub = string.format("%s (%d/%d, %s) - %s warp, %s fly, %s next landing point", pt.cp, k, #pts, pt.why,
+                          K("key_test_travel", true), K("key_test_point", true), K("key_test_point")) })
   log("selected", pid, pt.cp, string.format("(%d/%d, %s)", k, #pts, pt.why))
 end
 
@@ -156,7 +160,7 @@ function TT.go(how)
   if not TT.on() then return off_message() end
   local pid = TT.selected()
   if not pid then
-    say("Randomizer: press F7 first to choose a planet", { type = "corner", duration = 4 })
+    say("Randomizer: press " .. K("key_test_travel") .. " first to choose a planet", { type = "corner", duration = 4 })
     return false
   end
   local pts = TT.points(pid)
@@ -166,8 +170,8 @@ function TT.go(how)
   local ok, res = pcall(fn, pt.cp)
   if not ok or res == false then
     log(how, "to", pt.cp, "for", pid, "failed:", tostring(res))
-    local hint = (how == "fly") and " - the ship's flight needs its planet menu nearby (a landing pad); Ctrl+F7 warps instead"
-                 or " - F8 picks another landing point"
+    local hint = (how == "fly") and (" - the ship's flight needs its planet menu nearby (a landing pad); " .. K("key_test_travel", true) .. " warps instead")
+                 or (" - " .. K("key_test_point") .. " picks another landing point")
     say(string.format("Test travel: %s to %s failed (%s)%s", how, pt.cp, tostring(res), hint), { type = "center", duration = 8 })
     return false
   end
@@ -203,6 +207,12 @@ function TT.on_arrival(pid, from)
   if plan and RANDO_HUB and RANDO_HUB.check_levels and RANDO_HUB.enabled and RANDO_HUB.enabled() then
     pcall(RANDO_HUB.check_levels, pid)
   end
+  -- 8.3: the planet's story starts here, whatever came before it (story_on_arrival)
+  if plan and RANDO_HUB and RANDO_HUB.story_here then
+    local okh, started = pcall(RANDO_HUB.story_here, pid, "test travel")
+    if not okh then log("RANDO-ERROR story on arrival", tostring(started)) end
+    if okh and started then return true end
+  end
   local s = S()
   local open = s and s.access and s.access[pid]
   say(string.format("Test travel: %s", pname(pid)), { type = "planet", duration = 6,
@@ -220,30 +230,23 @@ end
 
 function TT.status_text()
   if not TT.on() then return nil end
-  return "TEST TRAVEL on (F7 / Ctrl+F7)"
+  return "TEST TRAVEL on (" .. K("key_test_travel") .. " / " .. K("key_test_travel", true) .. ")"
 end
 
 -- keys
-local function ctrl_down()
-  local ctrl = false
-  pcall(function() ctrl = rivet.is_key_down(rivet.key("CONTROL")) end)
-  return ctrl
-end
-local function bind(setting, default, fn)
-  local name = (RANDO and RANDO.config and RANDO.config[setting]) or default
-  local okk, vk = pcall(rivet.key, name)
-  if not okk then log("RANDO-ERROR key", tostring(name), tostring(vk)); return end
-  pcall(rivet.on_key, vk, function()
+local function bind(setting, legacy, fn)
+  if not (RANDO and RANDO.bind_setting) then return end
+  RANDO.bind_setting(setting, legacy, function()
     if not (SEED() and S()) then return end
     if not TT.on() then return off_message() end
     local ready = false
     pcall(function() ready = rivet.scene_ready() and rivet.hero() ~= nil end)
     if not ready then return say("Randomizer: wait until the game has loaded", { type = "corner", duration = 3 }) end
-    local ok, err = pcall(fn, ctrl_down())
-    if not ok then log("RANDO-ERROR key", tostring(name), tostring(err)) end
+    fn(RANDO.ctrl_down())
   end)
 end
 bind("key_test_travel", "F7", function(ctrl) if ctrl then TT.go("warp") else TT.key_next() end end)
 bind("key_test_point", "F8", function(ctrl) if ctrl then TT.go("fly") else TT.key_point() end end)
 
-log("loaded (" .. TT.VERSION .. ")" .. (TT.on() and " - test travel is ON: F7 planet, F8 landing point, Ctrl+F7 warp, Ctrl+F8 fly" or " - off"))
+log("loaded (" .. TT.VERSION .. ")" .. (TT.on() and string.format(" - test travel is ON: %s planet, %s landing point, %s warp, %s fly",
+    K("key_test_travel"), K("key_test_point"), K("key_test_travel", true), K("key_test_point", true)) or " - off"))

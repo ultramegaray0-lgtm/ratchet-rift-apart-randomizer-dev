@@ -1,6 +1,6 @@
-Rift Apart Randomizer 8.2 - test run 2026-11-12 05:58 UTC
+Rift Apart Randomizer 8.3 - test run 2026-11-12 06:20 UTC
 Python 3.13.18 on Linux
-ran 262, failures 0, errors 0, skipped 17
+ran 285, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -282,8 +282,31 @@ test_settings_file_turns_it_on (tests.test_v82.TestTravelTests.test_settings_fil
 test_warp_to_a_planet_without_coordinates_stays_there (tests.test_v82.TestTravelTests.test_warp_to_a_planet_without_coordinates_stays_there) ... ok
 test_works_before_the_hub_has_started (tests.test_v82.TestTravelTests.test_works_before_the_hub_has_started) ... ok
 test_zurkies_is_still_the_hubs_arrival (tests.test_v82.TestTravelTests.test_zurkies_is_still_the_hubs_arrival) ... ok
+test_any_key_name (tests.test_v83.KeyTests.test_any_key_name) ... ok
+test_bad_key_name_keeps_the_default (tests.test_v83.KeyTests.test_bad_key_name_keeps_the_default) ... ok
+test_keyboard_keys_and_the_old_f_keys (tests.test_v83.KeyTests.test_keyboard_keys_and_the_old_f_keys) ... ok
+test_legacy_keys_off (tests.test_v83.KeyTests.test_legacy_keys_off) ... ok
+test_rivet_key_without_windows_codes_falls_back_to_f_keys (tests.test_v83.KeyTests.test_rivet_key_without_windows_codes_falls_back_to_f_keys) ... ok
+test_seed_is_unchanged (tests.test_v83.KeyTests.test_seed_is_unchanged) ... ok
+test_settings_file_uses_keyboard_keys (tests.test_v83.KeyTests.test_settings_file_uses_keyboard_keys) ... ok
+test_ctrl_story_key_twice_restarts_a_running_story (tests.test_v83.StoryKeyTests.test_ctrl_story_key_twice_restarts_a_running_story) ... ok
+test_story_key_at_zurkies_starts_zurkies_story (tests.test_v83.StoryKeyTests.test_story_key_at_zurkies_starts_zurkies_story) ... ok
+test_story_key_starts_the_story_here (tests.test_v83.StoryKeyTests.test_story_key_starts_the_story_here) ... ok
+test_finished_planet_says_so (tests.test_v83.StoryOnArrivalTests.test_finished_planet_says_so) ... ok
+test_menu_landing_starts_the_story_of_a_planet_without_coordinates (tests.test_v83.StoryOnArrivalTests.test_menu_landing_starts_the_story_of_a_planet_without_coordinates) ... ok
+test_off_switch (tests.test_v83.StoryOnArrivalTests.test_off_switch) ... ok
+test_rivets_story_swaps_the_hero (tests.test_v83.StoryOnArrivalTests.test_rivets_story_swaps_the_hero) ... ok
+test_second_visit_waits_for_the_first_on_the_same_planet (tests.test_v83.StoryOnArrivalTests.test_second_visit_waits_for_the_first_on_the_same_planet) ... ok
+test_test_trip_starts_the_planets_story_out_of_order (tests.test_v83.StoryOnArrivalTests.test_test_trip_starts_the_planets_story_out_of_order) ... ok
+test_a_story_still_at_go_to_is_reported (tests.test_v83.StuckStoryTests.test_a_story_still_at_go_to_is_reported) ... ok
+test_a_story_that_moves_on_is_not_reported (tests.test_v83.StuckStoryTests.test_a_story_that_moves_on_is_not_reported) ... ok
+test_active_story_in_progress_is_left_alone (tests.test_v83.StuckStoryTests.test_active_story_in_progress_is_left_alone) ... ok
+test_active_story_waiting_at_go_to_is_restarted (tests.test_v83.StuckStoryTests.test_active_story_waiting_at_go_to_is_restarted) ... ok
+test_active_story_with_no_step_seen_is_restarted_on_its_planet (tests.test_v83.StuckStoryTests.test_active_story_with_no_step_seen_is_restarted_on_its_planet) ... ok
+test_off_switch_leaves_active_stories (tests.test_v83.StuckStoryTests.test_off_switch_leaves_active_stories) ... ok
+test_refused_restart_goes_back_to_active_then_replays (tests.test_v83.StuckStoryTests.test_refused_restart_goes_back_to_active_then_replays) ... ok
 
 ----------------------------------------------------------------------
-Ran 262 tests in 124.188s
+Ran 285 tests in 121.742s
 
 OK (skipped=17)

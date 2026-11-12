@@ -428,14 +428,14 @@ function T.hatch()
   local t = now()
   if t - hatch_at > T.HATCH_WINDOW then
     hatch_at = t
-    say(string.format("Randomizer: press Ctrl+F9 again to open %s by hand (it is recorded in the history)", RANDO.planet_name(pid)),
+    say(string.format("Randomizer: press %s again to open %s by hand (it is recorded in the history)", RANDO.key("key_status", true), RANDO.planet_name(pid)),
         { type = "center", duration = 5 })
     return false
   end
   hatch_at = -100
   tr.opened_by_hand = (tr.opened_by_hand or 0) + 1
   log("[OPENED BY HAND]", pid)
-  if RANDO.history then RANDO.history("[OPENED BY HAND] Coordinates for " .. pid .. " (Ctrl+F9)") end
+  if RANDO.history then RANDO.history("[OPENED BY HAND] Coordinates for " .. pid .. " (" .. RANDO.key("key_status", true) .. ")") end
   RANDO.grant("access:" .. pid, false, "[OPENED BY HAND] ")
   return true
 end

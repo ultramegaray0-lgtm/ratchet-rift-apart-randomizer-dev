@@ -1,12 +1,19 @@
-Ratchet & Clank: Rift Apart - Randomizer 8.2 (EXPERIMENTAL: Zurkie's Battleplex hub)
+Ratchet & Clank: Rift Apart - Randomizer 8.3 (EXPERIMENTAL: Zurkie's Battleplex hub)
 =======================================================================
 For the PC (Steam) game, RiftApart.exe 3.0630.1.0, with rivet_hook 2.0.x. One mod: everything is
 in this folder. ARSENAL_RESTORED is optional: its weapons join the randomizer automatically when it
 is installed (docs\ARSENAL_RESTORED.md). Nothing here changes the game's own files.
 
+8.3 = 8.2 + THE STORY STARTS WHERE YOU LAND, and KEYBOARD KEYS (docs\CHANGES_8.3.md).
+  Landing on a planet (test travel, the ship's menu, a hub trip) starts its story, even if the
+  story before it isn't finished. A story stuck at "go to <planet>" is started again there.
+  Keys: ; status | ] destination, Ctrl+] go | [ back | . / Ctrl+. test travel | , / Ctrl+, landing
+  point / fly | / start this planet's story, Ctrl+/ twice start it again. The old F keys still
+  work. Every key is a setting in 04_rando_settings.lua. 8.3 HAS NOT RUN IN YOUR GAME YET.
+
 8.2 = 8.1 + TEST TRAVEL (docs\TEST_TRAVEL.md) and the round 18 fix for the checkpoint catalog
 (docs\CHANGES_8.2.md). Test travel is ON in this kit's 04_rando_settings.lua:
-  F7 next planet, F8 next landing point, Ctrl+F7 warp there, Ctrl+F8 fly there with the ship.
+  (8.3 keys) . next planet, , next landing point, Ctrl+. warp there, Ctrl+, fly there with the ship.
   Nothing sends you back while it is on, and it opens no Coordinates. Set test_travel = false
   for a real run. Same seed, same fingerprint, same progress as 8.1. 8.2 HAS NOT RUN IN YOUR GAME YET.
 
@@ -23,9 +30,9 @@ WHAT 8.0 ADDS (preset "hub", the default; docs\HUB.md)
   - NEW GAME AT ZURKIE'S: once Ratchet has his wrench in the parade, the randomizer takes him to
     Zurkie's Battleplex. The skipped prologue's reward is paid.
   - TWO RANDOM COORDINATES at once, on two different planets.
-  - DESTINATIONS: F6 chooses, Ctrl+F6 goes (the ship's flight or a warp). The randomizer asks the
+  - DESTINATIONS: ] chooses, Ctrl+] goes (the ship's flight or a warp). The randomizer asks the
     game to start that visit's story (and tries harder ways, see docs\HUB.md); if the game won't,
-    you explore the planet and finish it by hand (Ctrl+F5 twice).
+    you explore the planet and finish it by hand (Ctrl+[ twice).
   - THE LOOP: finish a destination -> its rewards -> the next Coordinates -> back to Zurkie's.
     The finale opens when everything else is done. Every order you could choose is checked to
     lead to the finale.
@@ -51,8 +58,9 @@ INSTALL
        01_rando_data  02_rando_generator  03_rando_campaign  04_rando_settings
        05_rando_bindings  06_rando_capabilities  09_rando_real  10_rando_runtime  11_rando_campaign
        12_rando_shop  13_rando_armor  14_rando_travel  15_rando_hub  16_rando_testtravel (new in 8.2)
-     Updating from 8.1: copy all 14 (10, 14, 15 and 04 changed; 16 is new). If you edited your
-     04_rando_settings.lua, keep yours and add the three test_travel lines from this kit's copy.
+     Updating from 8.2: copy all 14 (04, 10, 11, 14, 15 and 16 changed). If you edited your
+     04_rando_settings.lua, use this kit's copy and put your seed / preset back in: the key and
+     story lines are new.
   3. Copy rivet.toml and rando_give.dll next to RiftApart.exe, replacing the old ones.
      rando_give.dll is v6 (unchanged from 8.0). rivet.toml is new in 8.1 (ARSENAL_RESTORED paths):
      if you already added your own [assets] paths, keep them in the new file.
@@ -68,8 +76,9 @@ NEW GAME (docs\HUB.md has the full walkthrough)
      (companion\randomizer_saves\spoilers - only open it if you want spoilers).
   2. Choose NEW GAME on a spare slot. Pick up the wrench in the parade: you are taken to Zurkie's,
      "Zurkie's Battleplex: Coordinates for X and Y".
-  3. F6 / Ctrl+F6 to a destination. F9 shows the status (hub n/13 done). F5 twice goes back to
-     Zurkie's. Ctrl+F5 twice finishes a destination whose story won't start.
+  3. ] / Ctrl+] to a destination. ; shows the status (hub n/13 done). [ twice goes back to
+     Zurkie's. / starts the story of the planet you are on (Ctrl+/ twice: start it again).
+     Ctrl+[ twice finishes a destination whose story won't start. (The old F keys work too.)
   4. Saving and loading is normal. If a load ever puts you back in the parade, you are taken to
      Zurkie's again.
 
@@ -85,7 +94,7 @@ FILES
   companion\     saving, random seeds, spoiler logs, the ARSENAL_RESTORED check (PowerShell, comes
                  with Windows); companion\research\ holds read-only research tools
   extras\        test mode and developer tools (not needed to play)
-  docs\          TEST_TRAVEL.md and CHANGES_8.2.md (new in 8.2), CHANGES_8.1.md (what 8.1 fixes), HUB.md (start here), COMPLETION_REPORT.md (what 8.0 does and its status),
+  docs\          CHANGES_8.3.md (new in 8.3), TEST_TRAVEL.md and CHANGES_8.2.md, CHANGES_8.1.md (what 8.1 fixes), HUB.md (start here), COMPLETION_REPORT.md (what 8.0 does and its status),
                  RESEARCH_8.0.md (technical research report), KNOWN_ISSUES.md, TESTING.md (testing
                  report and the first-session checklist), BATCH_8.0.txt, TEST_RESULTS.txt,
                  CONFIGURATION.md, NEW_GAME.md, MIGRATION.md, LEVELS.md, WEAPONS.md, SHOP.md,

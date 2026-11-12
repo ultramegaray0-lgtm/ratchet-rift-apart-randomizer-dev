@@ -691,3 +691,28 @@ travel flag were set, the ARSENAL_RESTORED .stage loaded through rivet_hook.
 - For each planet: which landing point worked by warp and by fly. Put the good ones in
   01_rando_data.lua `checkpoints.known` (through tools/build_data.py); check whether that changes
   the fingerprint first.
+
+## 8.3 (2026-11-12): the story starts where you land, keyboard keys
+Round 19 log (8.2, v2.618 install; rivet_hook printed "game version mismatch, invalidating
+pointers" but everything worked; the companion answered late, so the seed was made without
+ARSENAL_RESTORED: b25846f17df5). Test trips to Viceron / Torren IV / Cordelion started no story
+(8.2 claimed the landing); Cordelion's MIS_CORD_01_FIRST_VISIT was "already active" and left alone.
+Round 17 explains active-but-still: the first objective is "go to <planet>"; started on the
+planet it finishes at once (MIS_ZURK_01_VISIT_01), started elsewhere it never does (MIS_NEFCITY_01).
+- 15_rando_hub.lua: H.story_dest / H.story_here (first unfinished destination of the planet, hub
+  order ignored), called from test-trip landings, menu landings (open planets too), and the
+  existing hub trips. h.obj records each mission's last objective. H.stuck: active + last step a
+  GO_TO (or none seen) + not started this session -> set_state 1, start; refused -> set_state 2,
+  replay. H.watch_story reports a story still at GO_TO after 1200 frames. Story key (/), Ctrl twice
+  forces a restart ([STORY RESTART BY HAND]).
+- 10_rando_runtime.lua: R.VK / R.vk (Windows virtual-key codes, checked against rivet.key("F6") ==
+  0x75), R.bind_key (RANDO-KEY log per press), R.bind_setting (+ legacy F key), R.key (on-screen
+  names). Defaults ; ] [ . , / '. Unresolvable keys fall back to F9/F6/F5/F7/F8/F4/F12.
+- 11 / 14 / 16: keys through R.vk / R.key; campaign key also binds F12 with legacy_f_keys.
+- Tests: 285 ran, 0 failed, 17 skipped. New tests/test_v83.py (23), tests/data/round19_rivet.log.
+
+## Handoff (8.3)
+- Round 20: RANDO-KEYS line (keyboard keys on?), RANDO-KEY lines for ] . , / ; presses.
+- Per landing: "story on arrival", then "start"/"restart" results, and whether the mission's
+  GO_TO objective reaches state 2 (ObjectiveStateChangedEvent). If a restart is refused, the
+  "restart: back to active" and replay lines.
