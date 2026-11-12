@@ -689,4 +689,5 @@ travel flag were set, the ARSENAL_RESTORED .stage loaded through rivet_hook.
 - Next log: `RANDO-TEST` lines for each trip (selected / warp / arrived), the `RANDO-TRAVEL
   checkpoint catalog:` line (it should appear now), and no 14_rando_travel frame-budget lines.
 - For each planet: which landing point worked by warp and by fly. Put the good ones in
-  01_rando_data.lua `checkpoints.known` (through tools/build_data.py), which changes no fingerprint.
+  01_rando_data.lua `checkpoints.known` (through tools/build_data.py); check whether that changes
+  the fingerprint first.
