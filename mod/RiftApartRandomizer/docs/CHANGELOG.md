@@ -2,6 +2,48 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## 10.0.4 / Public Release v0.53 (2026-11-13): the boss fight's shifts find planetary travel off
+
+Reported (round 25, v0.52's first run, tests/data/round25_rivet.log, seed pocket-pocket-zurkie-839,
+a restored save at nefcity_1): Nefarious City's boss fight sends Ratchet to Sargasso or Savali in
+the middle of the level; with the randomizer Ratchet landed **with the ship**, on ground that was not
+solid, fell and died, several times. **Nothing of v0.53 has run in the game.**
+
+Round 25, what the log shows:
+- The city's story ran (OBJ_NEFCITY_SKIDD_*, ROOFTOP_*, BAZAAR_RETURN, TOWERPATH_*) to
+  CHK_NEFCITY_HEAVY_FIGHT; then the story's own rift: PlanetChangedEvent Savali,
+  CHK_NEFCITY_HEAVYSHIFT_SAVALI, "arrived on savali during nefcity_1 - the story's own travel".
+- Before it, on arriving in the city, the hub had run H.apply_world: `planetary travel: done (0x0 ->
+  0x1)` and `level bits 0x0 - unlocking 1-10`. After every death the city loaded again (the load
+  clears both, `0x0`), the hub turned the byte on again 180 frames later, and the next shift came:
+  three shifts to Savali, each with the byte on.
+- The hub also announced "Nefarious City: 2 destination(s) open" on every return.
+
+Cause (inference): the travel byte is SetPlanetaryTravelAction's, all planetary travel on or off.
+The game has it off during the city's story (Ratchet has no ship yet); with it on, the shift's
+planet change was played as a ship arrival at a spot whose ground the shift does not load. The
+level bits (UnlockLevelAction's mask) are also set by nothing in the game at that point.
+
+Changes (15_rando_hub.lua):
+- `H.running()`: the destination being played (current, not done).
+- `H.apply_world(why)`: does nothing while a destination runs (`planetary travel and level bits
+  left to the game while <id> runs`). It records what it turned on in this session
+  (`H.session.world`: the byte, each level bit it set).
+- `H.take_back_world(why)`: the byte off and the recorded level bits cleared; called by
+  `H.launch_dest` for the hub's own story (`/`, `Ctrl+]`), which is played on the planet you are on
+  without a load that would clear them. A New Game forgets the record.
+- `H.finish`: when the hub's own story finishes on the hub planet, `apply_world` runs (the ship's
+  menu works again); returning from elsewhere runs it through `at_hub` as before.
+- `H.on_arrival`: back on the hub planet from another planet, with the hub's story running and no
+  trip of ours: `back on <hub> from <planet> during <id> - the story's own travel`, no hub message.
+- Kit 10.0.4; generator stays 10.0.2 (seeds and fingerprints unchanged).
+- Tests: `tests/test_v053.py` (8): the round 25 evidence, the shift and the return, a reload, the
+  finished story, the relaunch take-back, the settings. Against v0.52's 15_rando_hub.lua five of its
+  six simulator tests fail. test_v100's hub-start test now expects the byte off while the story runs.
+
+Not changed, still open from round 25: the shop (`only 0 vendor weapon(s) in the array at +0x48`,
+its weapons given directly). Round 25 is a restored save, so the opening's name is still not in a log.
+
 ## 10.0.3 / Public Release v0.52 (2026-11-13): Nefarious City's story starts at its opening scene
 
 Reported (round 24, v0.51's first run, tests/data/round24_rivet.log): the first Nefarious City

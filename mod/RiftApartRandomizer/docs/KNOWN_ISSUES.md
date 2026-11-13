@@ -4,6 +4,17 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0c. Since v0.53 (10.0.4)
+
+- **The cause of round 25's ship landings is an inference.** The travel byte is the only thing about
+  ship travel the randomizer changes, and the game has it off during the city's story. If Ratchet
+  still lands with the ship in the boss fight's shifts, the log line `planetary travel and level
+  bits left to the game while nefcity_1 runs` shows the hub did not turn it on.
+- **The ship's planet menu is not opened by the hub while a story runs.** The byte and the level
+  bits go on at the hub when nothing is running (as before), and when the city's story finishes.
+- **Other stories' rifts** (later visits) run with whatever the byte was when they were launched
+  from the hub; only the hub's own story takes it back first. No such report yet.
+
 ## 0b. Since v0.52 (10.0.3)
 
 - **The city's opening checkpoint has no name in any log.** It is found by its hash among the names

@@ -1,0 +1,591 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[loader] mod path mods/default does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED.stage is overstrike stage format.
+[loader] B2B746D0573FD296 resolved to asset id b2b746d0573fd296, type 0, language 0
+[loader] BE097E4CF400C6EC resolved to asset id be097e4cf400c6ec, type 0, language 0
+[loader] BFBF34400EB134D7 resolved to asset id bfbf34400eb134d7, type 0, language 0
+[loader] characters\ambient\amb_uwb_jellyfish\amb_uwb_jellyfish.animset resolved to asset id 9bc6e16e94226fed, type 0, language 0
+[loader] characters\ambient\amb_uwb_jellyfish\amb_uwb_jellyfish.model resolved to asset id 9b648c07363924af, type 0, language 0
+[loader] characters\enemy\enm_antara_swarmer\enm_antara_swarmer.animset resolved to asset id be78516c45c41088, type 0, language 0
+[loader] characters\enemy\enm_antara_swarmer\enm_antara_swarmer.model resolved to asset id 84220c2c235f5624, type 0, language 0
+[loader] characters\enemy\enm_darter_bat_ps4\enm_darter_bat_ps4.animset resolved to asset id adf50c92533c075d, type 0, language 0
+[loader] characters\enemy\enm_darter_bat_ps4\enm_darter_bat_ps4.model resolved to asset id a6263c24790d7c76, type 0, language 0
+[loader] configs\equipment\equip_loadout_allweapons.config resolved to asset id b44f9479be5c766b, type 0, language 0
+[loader] configs\equipment\equip_loadout_allweapons_v5.config resolved to asset id b3ecb318d034e7f8, type 0, language 0
+[loader] configs\equipment\equip_loadout_finale.config resolved to asset id a0bb27681322ddac, type 0, language 0
+[loader] configs\equipment\equip_loadout_ratchet_allweapons.config resolved to asset id 838c29827674a544, type 0, language 0
+[loader] configs\equipment\wpn_predator_launcher_weapon.config resolved to asset id 9a65e33f75221b90, type 0, language 0
+[loader] configs\equipment\wpn_schrodinger_weapon.config resolved to asset id 9a790f8c1dfab119, type 0, language 0
+[loader] configs\equipment\wpn_volcaniceruptor_subshot.config resolved to asset id bbecbb36071f2ffd, type 0, language 0
+[loader] configs\equipment\wpn_volcaniceruptor_weapon.config resolved to asset id 86f63fc43d59eb15, type 0, language 0
+[loader] configs\masterweaponlist\masterweaponlist.config resolved to asset id 8a6fccd73fcf10cc, type 0, language 0
+[loader] configs\other\test\mdaly\test1.config resolved to asset id 9832f07483740510, type 0, language 0
+[loader] configs\other\test\mdaly\test2.config resolved to asset id a77434027a95fac1, type 0, language 0
+[loader] configs\other\test\mdaly\test3.config resolved to asset id 91db91698b742d11, type 0, language 0
+[loader] configs\system\system_localizationswapsystem.config resolved to asset id 81e803087bd7a281, type 0, language 0
+[loader] coretest\textures\default_pink_shader\default_pink_shader_c.texture resolved to asset id bcaeafe4dd3b1308, type 0, language 0
+[loader] coretest\textures\default_pink_shader\default_pink_shader_g.texture resolved to asset id bc74117172fc9457, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_a_m.texture resolved to asset id 899194b9d31e6cdc, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_b1_m.texture resolved to asset id a2ee163b2536ffb5, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_c_m.texture resolved to asset id 8d446c34ad4f04b7, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_d_m.texture resolved to asset id 825099e59094083e, type 0, language 0
+[loader] equipment\weapon\wpn_magnamissile\wpn_magnamissile.actor resolved to asset id b58498c9464262f1, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_c.texture resolved to asset id 80a5c3b83651c3b9, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_g.texture resolved to asset id 807f7d2d999644e6, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_c.texture resolved to asset id aaa4eaec4fcb0f0d, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_g.texture resolved to asset id aa7e5479e00c8852, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_m.texture resolved to asset id 99fd63fd1d818693, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_n.texture resolved to asset id b2d00c056e8286d3, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_m.texture resolved to asset id b3fc4aa9641b4a27, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_n.texture resolved to asset id 98d1255117184a67, type 0, language 0
+[loader] equipment\weapon\wpn_predator_launcher\textures\wpn_predator_rocket_launcher_upgrade_n.texture resolved to asset id b65c66cd3067f4f8, type 0, language 0
+[loader] equipment\weapon\wpn_predator_launcher\wpn_predator_launcher.model resolved to asset id a68394f2a16a9879, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\default_pink_shader\Predator_Launcher_V5_c.texture resolved to asset id 9de69270b549a1f3, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\default_pink_shader\Predator_Launcher_V5_g.texture resolved to asset id 9d3c2ce51a8e26ac, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\default_pink_shader\Predator_Launcher_V5_m.texture resolved to asset id aebf1b61e703286d, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_c.texture resolved to asset id b7f202338cf96a8e, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_g.texture resolved to asset id b728bca6233eedd1, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_m.texture resolved to asset id 84ab8b22deb3e310, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_c.texture resolved to asset id b06214ffd49eb618, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_g.texture resolved to asset id b0b8aa6a7b593147, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_m.texture resolved to asset id 833b9dee86d43f86, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_n.texture resolved to asset id a816f216f5d73fc6, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\wpn_schrodinger.actor resolved to asset id 9409674d67fb6102, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_c.texture resolved to asset id 833fca5d14450ea2, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_g.texture resolved to asset id 83e574c8bb8289fd, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_m.texture resolved to asset id b066434c460f873c, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_n.texture resolved to asset id 9b4b2cb4350c877c, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\wpn_sheepinator.actor resolved to asset id 8e30fa59d573cbef, type 0, language 0
+[loader] material\equipment\weapon\wpn_combuster\wpn_combuster.material resolved to asset id 8adb1504dd49679b, type 0, language 0
+[loader] material\equipment\weapon\wpn_combuster_hoses\wpn_combuster_hoses.material resolved to asset id b6013a90302b0d10, type 0, language 0
+[loader] material\equipment\weapon\wpn_combuster_v5\wpn_combuster_v5.material resolved to asset id a107c276d6568f05, type 0, language 0
+[loader] material\equipment\weapon\wpn_predator_launcher_base\wpn_predator_launcher_base.material resolved to asset id 8fc853823b0642fc, type 0, language 0
+[loader] material\equipment\weapon\wpn_predator_launcher_projectile\wpn_predator_launcher_shared_base.material resolved to asset id b331fed256c82b9e, type 0, language 0
+[loader] material\equipment\weapon\wpn_predator_launcher_upgrade\wpn_predator_launcher_upgrade.material resolved to asset id 88f1df221ecab0d0, type 0, language 0
+[loader] material\equipment\weapon\wpn_predator_launcher_upgrade\wpn_predator_launcher_upgrade2.material resolved to asset id ba034667f4ea272f, type 0, language 0
+[loader] material\equipment\weapon\wpn_schrodinger\wpn_schrodinger.material resolved to asset id aef05986578a96bb, type 0, language 0
+[loader] material\equipment\weapon\wpn_sheepinator_base\wpn_sheepinator_base.material resolved to asset id bfc2b17aa3b4ce86, type 0, language 0
+[loader] materialgraph\visualeffect\global\gbl_sparks\gbl_sparks_random.materialgraph resolved to asset id 889b9797a6fd82ed, type 0, language 0
+[loader] movies\corv\010_parade_090_courtyard.movie resolved to asset id 9da1f43eee421e29, type 0, language 0
+[loader] movies\gp_a1\nefnews\nefnews.movie resolved to asset id bdf527e91569c8d6, type 0, language 0
+[loader] movies\zurkies\120_zurkies3_010_themap.movie resolved to asset id 9f7802d07e6c56c0, type 0, language 0
+[loader] sound\banks\events.wwiselookup_vanilla resolved to asset id a6f3bc1403e8a46d, type 0, language 0
+[loader] sound\banks\wpn_sheepinator.bnk resolved to asset id 8f8f406944477012, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\galleryjellyfish.texture resolved to asset id 85088411d9888d68, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\gallerypiratebladeball.texture resolved to asset id 9a2a978061916fd2, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\gallerypiratemelee01.texture resolved to asset id 8c9f99f48bd36a02, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\gallerypirateshooter01.texture resolved to asset id a8181e7dda217b0e, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\vendor_new_predatorlauncher.texture resolved to asset id 9a73558a3c5a480c, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\vendor_new_predatorlauncher_v5.texture resolved to asset id 982eaa4497d0618f, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\vendor_new_sheepinator.texture resolved to asset id 9c71cacdb9a75874, type 0, language 0
+[loader] characters\npc\npc_junktrader\textures\npc_junktrader_backpack_04_c.texture resolved to asset id b9d6b47108828128, type 1, language 0
+[loader] characters\npc\npc_junktrader\textures\npc_junktrader_backpack_04_g.texture resolved to asset id b90c0ae4a7450677, type 1, language 0
+[loader] characters\npc\npc_junktrader\textures\npc_junktrader_backpack_04_n.texture resolved to asset id a1a2529829cb08f6, type 1, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_a_m.texture resolved to asset id 899194b9d31e6cdc, type 1, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_b1_m.texture resolved to asset id a2ee163b2536ffb5, type 1, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_c_m.texture resolved to asset id 8d446c34ad4f04b7, type 1, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_d_m.texture resolved to asset id 825099e59094083e, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_c.texture resolved to asset id 80a5c3b83651c3b9, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_g.texture resolved to asset id 807f7d2d999644e6, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_c.texture resolved to asset id aaa4eaec4fcb0f0d, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_g.texture resolved to asset id aa7e5479e00c8852, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_m.texture resolved to asset id 99fd63fd1d818693, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_n.texture resolved to asset id b2d00c056e8286d3, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_m.texture resolved to asset id b3fc4aa9641b4a27, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_n.texture resolved to asset id 98d1255117184a67, type 1, language 0
+[loader] equipment\weapon\wpn_predator_launcher\textures\wpn_predator_rocket_launcher_upgrade_n.texture resolved to asset id b65c66cd3067f4f8, type 1, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_c.texture resolved to asset id b7f202338cf96a8e, type 1, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_g.texture resolved to asset id b728bca6233eedd1, type 1, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_m.texture resolved to asset id 84ab8b22deb3e310, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_c.texture resolved to asset id b06214ffd49eb618, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_g.texture resolved to asset id b0b8aa6a7b593147, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_m.texture resolved to asset id 833b9dee86d43f86, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_n.texture resolved to asset id a816f216f5d73fc6, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_c.texture resolved to asset id 833fca5d14450ea2, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_g.texture resolved to asset id 83e574c8bb8289fd, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_m.texture resolved to asset id b066434c460f873c, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_n.texture resolved to asset id 9b4b2cb4350c877c, type 1, language 0
+[loader] conduit\equipment\weapon\wpn_sheepinator_vfx\wpn_sheepinator_vfx.conduit resolved to asset id 829ce9dc640e815c, type 0, language 0
+[loader] equipment\weapon\wpn_blaster_combuster\wpn_blaster_combuster.model resolved to asset id bd736cd30f17fe36, type 0, language 0
+[loader] equipment\weapon\wpn_blaster_combuster\wpn_blaster_combuster.ascii resolved to asset id 8c73a9e679a1af7d, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\wpn_schrodinger_weapon.model resolved to asset id 8be46ab82b8833e6, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_blaster_aud\wpn_blaster_aud.conduit resolved to asset id 95c95f5a5524806a, type 0, language 0
+[loader] sound\banks\wpn_blaster.soundbank resolved to asset id 8740410be42410e9, type 0, language 0
+[loader] sound\banks\wpn_magna_missile.soundbank resolved to asset id b7539ed3d3c7537b, type 0, language 0
+[loader] sound\banks\wpn_predatorlauncher1.soundbank resolved to asset id 999ddb60b60e86d1, type 0, language 0
+[loader] material\equipment\weapon\wpn_Sheepinator_Internal_Energy\wpn_Sheepinator_Internal_Energy1.material resolved to asset id 8cf5bf64bcd4d67f, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_c.texture resolved to asset id b4aabc2a53db9ade, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_m.texture resolved to asset id 87f3353b01911340, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_n.texture resolved to asset id acde5ac372921300, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_c.texture resolved to asset id b4aabc2a53db9ade, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_m.texture resolved to asset id 87f3353b01911340, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_n.texture resolved to asset id acde5ac372921300, type 1, language 0
+[loader] textures\character\npc\Sheep\npc_Sheep_BLACK_c.texture resolved to asset id af4fbb7daa31faea, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_Sheep_BLACK_c.texture resolved to asset id af4fbb7daa31faea, type 1, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_c.texture resolved to asset id 80ab88ab15c6fc48, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_g.texture resolved to asset id 8071363eba017b17, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_fursg_fur_control.texture resolved to asset id 9c767603181b7bde, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_n.texture resolved to asset id 98df6e42348f7596, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_fursg_c.texture resolved to asset id 9101c150ed4e5d80, type 1, language 0
+[loader] characters\npc\npc_sheep\textures\npc_sheep_fursg_c.texture resolved to asset id 881eab94fe48d811, type 1, language 0
+[loader] characters\npc\npc_sheep\textures\sheep_fur_black.material resolved to asset id a82873d63d6e08ff, type 0, language 0
+[loader] material\character\npc\npc_sheep\sheep_fur_black.material resolved to asset id 9bc63c17c574d422, type 0, language 0
+[loader] characters\npc\npc_sheep\textures\npc_V5_c2.texture resolved to asset id bc24c156d1d4dcda, type 0, language 0
+[loader] configs\ally\ally_sheep_v2_movement.config resolved to asset id 82b4b386e2d56a1c, type 0, language 0
+[loader] textures\character\npc\Sheep\v5_horns_c.texture resolved to asset id 85c5b0679cf2ce01, type 0, language 0
+[loader] textures\character\npc\Sheep\v5_horns_c.texture resolved to asset id 85c5b0679cf2ce01, type 1, language 0
+[loader] textures\character\npc\Sheep\v5_horns_n.texture resolved to asset id 9db1568ebdbb47df, type 0, language 0
+[loader] textures\character\npc\Sheep\v5_horns_g.texture resolved to asset id 851f0ef23335495e, type 0, language 0
+[loader] textures\character\npc\Sheep\v5_horns_g.texture resolved to asset id 851f0ef23335495e, type 1, language 0
+[loader] textures\character\npc\Sheep\v5_horns_n.texture resolved to asset id 9db1568ebdbb47df, type 1, language 0
+[loader] configs\ally\ally_sheep_movement.config resolved to asset id a997696ca0151bec, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_c.texture resolved to asset id b26c402d149979aa, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_c.texture resolved to asset id b26c402d149979aa, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_g.texture resolved to asset id b2b6feb8bb5efef5, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_g.texture resolved to asset id b2b6feb8bb5efef5, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_m.texture resolved to asset id 8135c93c46d3f034, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_m.texture resolved to asset id 8135c93c46d3f034, type 1, language 0
+[loader] material\equipment\weapon\wpn_schrodinger\wpn_schrodinger_glass.material resolved to asset id 89d49db44c52518a, type 0, language 0
+[loader] visualeffect\character\enemy\enm_snagglebeast_lava_fissure\wpn_volcanic_eruptor_geyser_01.visualeffect resolved to asset id 87fdfe4671a1d1bc, type 0, language 0
+[loader] visualeffect\character\enemy\enm_snagglebeast_lava_fissure\wpn_volcanic_eruptor_geyser_01_source.visualeffect resolved to asset id 8f9ccb82fd4e4433, type 0, language 0
+[loader] equipment\projectile\proj_volcaniceruptor\volcaniceruptorgeyser.actor resolved to asset id 8de30c6793eb7d8b, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_volcanic_eruptor_geyser\wpn_volcanic_eruptor_projectile.conduit resolved to asset id 84c0a17fb9d8c591, type 0, language 0
+[loader] materialgraph\characters\npc\npc_nefarious_polish_tubefx\volcanic_eruptor_glove_lava.materialgraph resolved to asset id 8bff4c9344ca350b, type 0, language 0
+[loader] material\characters\hero\hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava\hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava.material resolved to asset id 8f8e339e40013c4e, type 0, language 0
+[loader] material\characters\hero\hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava_red\hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava_red.material resolved to asset id b1aa25370a00a6c7, type 0, language 0
+[loader] visualeffect\character\enemy\enm_zurkn_blaster_projectile_fx\enm_zurkn_blaster_projectile_fx.visualeffect resolved to asset id 93e581949f378ed7, type 0, language 0
+[loader] visualeffect\character\enemy\enm_zurkn_v1_trooper_projectile_impact\enm_zurkn_v1_trooper_projectile_impact.visualeffect resolved to asset id a0981d4774da58ca, type 0, language 0
+[loader] visualeffect\character\global\gbl_projectile_shape_zrk\gbl_projectile_shape_zrk.model resolved to asset id 85127a4d716e10e6, type 0, language 0
+[loader] equipment\weapon\wpn_mr_zurkon\wpn_mr_zurkon.model resolved to asset id bf8509a0f8b0a90b, type 0, language 0
+[loader] equipment\weapon\wpn_zurkon\wpn_zurkon.actor resolved to asset id 82cc8aa220f51b6a, type 0, language 0
+[loader] equipment\projectile\proj_zurkon_shot\proj_zurkon_shot.actor resolved to asset id 91435a9a06273865, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_grid.config resolved to asset id a925ce5a6686fa95, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_mod.config resolved to asset id 96625742c69a7259, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_shot.config resolved to asset id a8fc6fae053eda1e, type 0, language 0
+[loader] conduit\equipment\projectile\proj_warbot_vfx\proj_zurkn_trooper_vfx.conduit resolved to asset id a4e60401d35d8f09, type 0, language 0
+[loader] visualeffect\global\gbl_projectile_shape_zrk\gbl_projectile_shape_zrk.model resolved to asset id 820cef88891e6869, type 0, language 0
+[loader] visualeffect\character\enemy\enm_evil_zurkon_teleport\enm_evil_zurkon_teleport.visualeffect resolved to asset id 91745a97cf2a1374, type 0, language 0
+[loader] visualeffect\equipment\weapon\wpn_mr_zurkon_jetpack_flare\wpn_mr_zurkon_jetpack_flare.visualeffect resolved to asset id bb60e9917a2abc6b, type 0, language 0
+[loader] sound\banks\wep_mr_zurkon.soundbank resolved to asset id ac67497a40c9abe4, type 0, language 0
+[loader] sound\banks\zurk_emergent.soundbank resolved to asset id bfe09d7ed64d5b61, type 0, language 0
+[loader] sound\banks\zurk_emergent.soundbank resolved to asset id bfe09d7ed64d5b61, type 0, language 8
+[loader] sound\banks\zurk_emergent.soundbank resolved to asset id bfe09d7ed64d5b61, type 0, language 1
+[loader] configs\emergentvo\zurkon_emergentvo.config resolved to asset id b70f719ba0cde1c1, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_emergentvo.config resolved to asset id b142fa4543243441, type 0, language 0
+[loader] equipment\weapon\wpn_zurkon_jr\wpn_zurkon_jr.actor resolved to asset id 97a48dfa55bac936, type 0, language 0
+[loader] sound\banks\zrkj_emergent.soundbank resolved to asset id a9589c6c0f208682, type 0, language 0
+[loader] sound\banks\zrkj_emergent.soundbank resolved to asset id a9589c6c0f208682, type 0, language 8
+[loader] sound\banks\zrkj_emergent.soundbank resolved to asset id a9589c6c0f208682, type 0, language 1
+[loader] equipment\weapon\wpn_zurkon_jr\wpn_zurkon_jr.model resolved to asset id 86e888d837df67f2, type 0, language 0
+[loader] configs\emergentvo\bot_emergentvo.config resolved to asset id bb876cac4c37b181, type 0, language 0
+[loader] configs\loot\loot_list_ammo_crate.config resolved to asset id a229cdcb15211400, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_weapon.config resolved to asset id 86b4ab7e64a862ae, type 0, language 0
+[loader] configs\equipment\wpn_thumper_weapon.config resolved to asset id b8ec8c05816e61ee, type 0, language 0
+[loader] equipment\projectile\proj_thumper\proj_thumper.actor resolved to asset id aa942e947ef85479, type 0, language 0
+[loader] equipment\weapon\wpn_thumper\wpn_thumper.actor resolved to asset id 96a91a59cbc75e75, type 0, language 0
+[loader] equipment\weapon\wpn_thumper\wpn_thumper.model resolved to asset id 87e51f7ba9a2f0b1, type 0, language 0
+[loader] sound\banks\wpn_thumper.soundbank resolved to asset id a8d814ac6281976d, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_core_sparks\proj_thumper_core_sparks.visualeffect resolved to asset id 9b15c2eb3609191e, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_activated\proj_thumper_activated.visualeffect resolved to asset id 96ab51eaec16670b, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_core\proj_thumper_core.visualeffect resolved to asset id bb192755691975b0, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_core_pop\proj_thumper_core_pop.visualeffect resolved to asset id 9f37012297319292, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_deactivate\proj_thumper_deactivate.visualeffect resolved to asset id 8274c7751db974f6, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_thump\proj_thumper_thump.visualeffect resolved to asset id ac00b271426a1087, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_arc_strike\proj_thumper_arc_strike.visualeffect resolved to asset id aea13061cad413f4, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_core_arcs\proj_thumper_core_arcs.visualeffect resolved to asset id a8f4d54e0005bf80, type 0, language 0
+[loader] equipment\projectile\proj_thumper_shockwave\proj_thumper_shockwave.model resolved to asset id a5c541ec3fe51797, type 0, language 0
+[loader] material\equipment\projectile\proj_thumper_field\thumper_ps4_shockw.material resolved to asset id aee2abd7505bccb7, type 0, language 0
+[loader] conduit\equipment\projectile\proj_thumper_shockwave_vfx\proj_thumper_shockwave_vfx.conduit resolved to asset id bdd3cfbb466e8e92, type 0, language 0
+[loader] conduit\equipment\projectile\proj_thumper_vfx\proj_thumper_vfx.conduit resolved to asset id bb87dedb047dee0d, type 0, language 0
+[loader] equipment\projectile\proj_thumper_shockwave\proj_thumper_shocknull.model resolved to asset id 80d1522dba040dc5, type 0, language 0
+[loader] equipment\projectile\proj_thumper_shockwave\proj_thumper_shockwave.actor resolved to asset id b48944ce5d80b953, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_thump_ring\proj_thumper_thump_ring.visualeffect resolved to asset id 9c59ddb0346508c0, type 0, language 0
+[loader] movies\weaponvids\wpn_mr_zurkon\wpn_mr_zurkon.movie resolved to asset id b61dbc3eb7e125d9, type 0, language 0
+[loader] movies\weaponvids\wpn_mr_zurkon\wpn_mr_zurkon.movie resolved to asset id b61dbc3eb7e125d9, type 0, language 8
+[loader] configs\video\wpn_mr_zurkon_video.config resolved to asset id 9f7c0699833ad216, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_item.config resolved to asset id b9cbad67f39ccc3f, type 0, language 0
+[loader] configs\other\test\mdaly\test4.config resolved to asset id bd4f9725629582c2, type 0, language 0
+[loader] movies\boot\bootsequence_china.movie resolved to asset id 851735c03e050852, type 0, language 8
+[loader] movies\boot\bootsequence_china.movie resolved to asset id 851735c03e050852, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_liquid.texture resolved to asset id a0ec25697b6153e4, type 0, language 0
+[loader] material\equipment\weapon\wpn_sheepinator_internal_energy\wpn_sheepinator_internal_energy.material resolved to asset id 968d30ff1412ee0a, type 0, language 0
+[loader] material\equipment\weapon\wpn_sheepinator_liquid\wpn_sheepinator_liquid.material resolved to asset id b294c0b5c763d6d7, type 0, language 0
+[loader] configs\ally\ally_sheep_awareness.config resolved to asset id b81591eab36651df, type 0, language 0
+[loader] configs\ally\ally_sheep_v5_firing.config resolved to asset id 964626580b2df749, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\wpn_sheepinator.model resolved to asset id bd551220c60f1abc, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\wpn_sheepinator.model resolved to asset id 9f7cff7bb716652b, type 0, language 0
+[loader] characters\npc\npc_sheep_v2\npc_sheep_v2.actor resolved to asset id 85558e97661fbc42, type 0, language 0
+[loader] conduit\equipment\projectile\proj_combust_vfx\proj_combust_vfx.conduit resolved to asset id 9666f56da5c2b206, type 0, language 0
+[loader] configs\equipment\wpn_blaster_weapon.config resolved to asset id 8a5cae2261550ee1, type 0, language 0
+[loader] equipment\projectile\proj_combust\proj_combust.actor resolved to asset id a38d95743f8209a5, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_combust\proj_combust.visualeffect resolved to asset id b27ef8c2680722cc, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_combuster_ps4_impact_effect\proj_combuster_ps4_impact_effect.visualeffect resolved to asset id ada9e24f2ebed24f, type 0, language 0
+[loader] conduit\character\npc\npc_sheep_aud\npc_sheep_aud.conduit resolved to asset id abd7f319fd3e55e7, type 0, language 0
+[loader] conduit\equipment\projectile\proj_predator_launcher_aud\proj_predator_launcher_aud.conduit resolved to asset id 996e22f8f8ef2050, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_predator_launcher_aud\wpn_predator_launcher_aud.conduit resolved to asset id 972c916cef20a5b4, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_sheepinator_aud\wpn_sheepinator_aud.conduit resolved to asset id ae553bf73892532f, type 0, language 0
+[loader] sound\banks\events.wwiselookup resolved to asset id a81ab0a616889cc2, type 0, language 0
+[loader] sound\banks\wpn_predatorlauncher.soundbank resolved to asset id a14aa30042e0be0c, type 0, language 0
+[loader] configs\equipment\wpn_blaster_mod.config resolved to asset id b096ce6a56f894a0, type 0, language 0
+[loader] configs\equipment\wpn_fusion_grenade_mod.config resolved to asset id 8f7f55cd7f5978b9, type 0, language 0
+[loader] configs\equipment\wpn_magnamissile_mod.config resolved to asset id acda75d68e2d3a18, type 0, language 0
+[loader] configs\equipment\wpn_predator_launcher_mod.config resolved to asset id b42677887b8713c2, type 0, language 0
+[loader] configs\equipment\wpn_schrodinger_mod.config resolved to asset id 9e913e2fbe76156e, type 0, language 0
+[loader] configs\equipment\wpn_volcaniceruptor_mod.config resolved to asset id 8eb61ba104d1ec4e, type 0, language 0
+[loader] configs\equipment\wpn_thumper_mod.config resolved to asset id 83142d5e65db3f6e, type 0, language 0
+[loader] configs\equipment\wpn_sheepinator_mod.config resolved to asset id 8a9e265619088f91, type 0, language 0
+[loader] ui\loaded\authored\_art\icons\kmovementspread.svg resolved to asset id a8bcd57cabf4cfce, type 0, language 0
+[loader] conduit\equipment\projectile\proj_fusion_grenade_subshot_aud\proj_fusion_grenade_subshot_aud.conduit resolved to asset id 9608168b578e12ac, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_fusion_grenade_aud\wpn_fusion_grenade_aud.conduit resolved to asset id a62e84b8966b4d7b, type 0, language 0
+[loader] equipment\projectile\proj_fusion_grenade\proj_fusion_grenade.actor resolved to asset id 817de8c22b46cc9b, type 0, language 0
+[loader] sound\banks\wpn_fusiongrenade.soundbank resolved to asset id b38d870739a77774, type 0, language 0
+[loader] configs\equipment\wpn_fusiongrenade_subshotconfig.config resolved to asset id 8221f07ab2c82c9d, type 0, language 0
+[loader] equipment\weapon\wpn_volcaniceruptor\wpn_volcaniceruptor.actor resolved to asset id 967227bf8fadf270, type 0, language 0
+[loader] equipment\projectile\proj_volcaniceruptor\proj_volcaniceruptor.model resolved to asset id 9973f92a0b4366cc, type 0, language 0
+[loader] equipment\weapon\wpn_volcaniceruptor\display_volcanic_eruptor.actor resolved to asset id 8f87dfec38da03cb, type 0, language 0
+[loader] sound\banks\wpn_sheepinator.soundbank resolved to asset id 98f5d2e4a9c2a074, type 0, language 0
+[loader] configs\equipment\wpn_blaster_item.config resolved to asset id a348b82e699e1784, type 0, language 0
+[loader] configs\equipment\wpn_fusion_grenade_item.config resolved to asset id a74236af892d1b3e, type 0, language 0
+[loader] configs\equipment\wpn_magnamissile_item.config resolved to asset id b6efbb1e32ce5336, type 0, language 0
+[loader] configs\equipment\wpn_predator_launcher_item.config resolved to asset id 8034ef9f017cd311, type 0, language 0
+[loader] configs\equipment\wpn_schrodinger_item.config resolved to asset id 8204eb5b857474bc, type 0, language 0
+[loader] configs\equipment\wpn_sheepinator_item.config resolved to asset id ba3b8c1f25cac5f0, type 0, language 0
+[loader] configs\equipment\wpn_thumper_item.config resolved to asset id bf3863dd1ebff180, type 0, language 0
+[loader] configs\equipment\wpn_volcaniceruptor_item.config resolved to asset id 8d6ed40e943f3883, type 0, language 0
+[loader] configs\equipment\wpn_fusion_grenade_weapon.config resolved to asset id b9c868f9888356da, type 0, language 0
+[loader] configs\equipment\wpn_magnamissile_weapon.config resolved to asset id 972794263a3ef5fa, type 0, language 0
+[loader] configs\equipment\wpn_sheepinator_weapon.config resolved to asset id b17794ba3892355a, type 0, language 0
+[loader] configs\vendor\ven_weapon_vendor.config resolved to asset id ae5ce1e22662e244, type 0, language 0
+[loader] configs\uiconfig\uiicons.config resolved to asset id b745c3b9be03eb55, type 0, language 0
+[loader] configs\uiconfig\uiobjectdisplayer.config resolved to asset id abdf0fc34d26854b, type 0, language 0
+[loader] localization\localization_all.localization resolved to asset id be55d94f171bf8de, type 0, language 0
+[loader] localization\localization_all.localization resolved to asset id be55d94f171bf8de, type 0, language 1
+[loader] localization\localization_all.localization resolved to asset id be55d94f171bf8de, type 0, language 8
+[loader] characters\npc\npc_emperor_nefarious\animations\dimmodblizar_portal_out_nefarious_boss_wpn_dimensionator.animclip resolved to asset id 99777a24dbcb0a8e, type 0, language 0
+[loader] characters\npc\npc_emperor_nefarious\animations\dimmodidle_hover_dimensionator_nefarious_boss_wpn_dimensionator.animclip resolved to asset id ba13703a7b5f2882, type 0, language 0
+[loader] characters\npc\npc_emperor_nefarious\animations\dimmod_dimensionator_wpn_dimensionator.animclip resolved to asset id a0a993b757626b04, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_dimensionator\dim_proj_aud.conduit resolved to asset id a333e0d956e8398a, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_dimensionator\dim_proj_vfx.conduit resolved to asset id a1ad35af5e1548ca, type 0, language 0
+[loader] configs\equipment\wpn_dimensionator_item.config resolved to asset id a6d296288aeb581b, type 0, language 0
+[loader] configs\equipment\wpn_dimensionator_weapon.config resolved to asset id 86a4a897616ca6eb, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_dimensionator.animset resolved to asset id 988ac738a93aa80a, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_dimensionator.model resolved to asset id be5afadcf91a2542, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_proj.actor resolved to asset id ad9127942d4a3b04, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_closed_a.actor resolved to asset id af035e9c14bfadb3, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_closed_b.actor resolved to asset id b6cf1b66c3fd46fe, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_in.actor resolved to asset id b73f55ddcfc449a0, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_portal.actor resolved to asset id a639f30b10c3e7ca, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_shift.actor resolved to asset id 816a0dc4ee72fb6e, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_tell.actor resolved to asset id 8dc7c8a3e136aef6, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\wpn_dimensionator_hand.actor resolved to asset id 9b6b1a3eab284bad, type 0, language 0
+[loader] ui\loaded\authored\_art\icons\wpndimensionator.svg resolved to asset id 92c22629d131b832, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF6C4D1A8C0, QueueEvent at 00007FF6BFB16A60
+[time] time scale system at 00007FF6C3F602E0
+[camera] fov scale at 00007FF6C3D9EEC8
+[camera] camera system at 00007FF6C3D9EDE0
+[hud] ShowMessage at 00007FF6BF0DD160
+[vanity] EquipBundle at 00007FF6BF33A8E0
+[hero_look] HandleTransformationEvent at 00007FF6BEFE8D40, OnTransformationPostActivate at 00007FF6BF1F63F0
+[configs] config asset manager at 00007FF6C3DABFE0
+[script] signal queue at 00007FF6C520FB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF6BF203900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[overlay] loading dxgi and d3d12...
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	RANDO-KEYS	keyboard keys on	status ; | hub ] | back [ | story / | test travel . , | old F keys too
+[script] [rando]	Randomizer 10.0.3 loaded (data 5.0.0, generator 10.0.2)
+[script] [rando]	RANDO-STATUS events subscribed 20/20
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] [rando]	RANDO-SHOP	loaded (15 vendor weapons)
+[script] [rando]	RANDO-ARMOR	loaded (21 armor pieces, interception needs rando_give.dll v5)
+[script] [rando]	RANDO-TRAVEL	loaded
+[script] [rando]	RANDO-HUB	loaded (10.0.3)
+[script] [rando]	RANDO-TEST	loaded (10.0.3) - off
+[script] loaded 14 of 14 scripts, 3 frame and 13 key callbacks
+[bridge] script.exec return rando_bridge_status() took 109ms on the engine thread
+[script] [rando]	RANDO-KIT all 14 scripts are 10.0.3
+[script] [rando]	RANDO-SEED ARSENAL_RESTORED is installed: its 9 weapons are in the pool (the companion checked rivet.toml and the game's toc)
+[script] [rando]	RANDO-SEED generating seed	pocket-pocket-zurkie-839	(random seed from the companion)
+[script] [rando]	RANDO-SETTINGS	raritanium rewards scaled down to the raritanium_budget of 2000 (they would have given 5430)
+[script] [rando]	RANDO-SEED ready	pocket-pocket-zurkie-839	bea785df0754	preset balanced	attempt 1
+[script] [rando]	RANDO-SEED share code	RA10|pocket-pocket-zurkie-839|balanced|distribution=goldbolts_first,include_arsenal_restored=true,travel_lock=true
+[built] invalid path 87821287ddaab515
+[built] skipped 87821287ddaab515
+[built] invalid path 982d1a247d597d03
+[built] skipped 982d1a247d597d03
+[built] invalid path 9dda6842c0d4815d
+[built] skipped 9dda6842c0d4815d
+[built] invalid path aa161bdb69c544bb
+[built] skipped aa161bdb69c544bb
+[built] invalid path b4550dbac69d5518
+[built] skipped b4550dbac69d5518
+[built] invalid path 88e9d90192dbe238
+[built] skipped 88e9d90192dbe238
+[built] invalid path ab0509479b54be89
+[built] skipped ab0509479b54be89
+[built] invalid path b2a34a0357e2a969
+[built] skipped b2a34a0357e2a969
+[built] invalid path b3536b2367f87fd0
+[built] skipped b3536b2367f87fd0
+[built] invalid path b7b74fe72d108776
+[built] skipped b7b74fe72d108776
+[built] invalid path aee7e54cfd243abc
+[built] skipped aee7e54cfd243abc
+[built] invalid path b53bca27a3789bfd
+[built] skipped b53bca27a3789bfd
+[built] invalid path b445dc337c907642
+[built] skipped b445dc337c907642
+[built] invalid path b712936aef2e71de
+[built] skipped b712936aef2e71de
+[built] invalid path a9e67385715fac0e
+[built] skipped a9e67385715fac0e
+[built] invalid path a377d6de6d0bdaf6
+[built] skipped a377d6de6d0bdaf6
+[built] invalid path 91b1cd860d770c1c
+[built] skipped 91b1cd860d770c1c
+[built] invalid path 8e0dd587d53e37c1
+[built] skipped 8e0dd587d53e37c1
+[built] invalid path b0d2dba5fbd0098d
+[built] skipped b0d2dba5fbd0098d
+[built] invalid path b52cb4fb30e68f84
+[built] skipped b52cb4fb30e68f84
+[script] [rando]	RANDO-SAVE restored:	Gold Bolts 2/25 | rewards 3/77 | planets open 3/10 | hub 1/14 done, 2 open | at nefcity_1 | planets 0 | in inventory 10 | armor sources 0/27
+[script] [rando]	notify failed:	the player hud is not loaded
+[DDL] indexed 2013 types for struct walking
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=55DB1EB07D15970475FED8EA6C474E51
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=0969E1F80E87730988D9EF8BB037D1F9
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 2 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-ARMOR	helper: armor give verified, armor sources on
+[script] [rando]	RANDO-NOTIFY	Randomizer 10. - seed pocket-pocket-zurkie-839 (bea785df0754)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129937 ItemHandle=2130324
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129997 ItemHandle=2130325
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129937 ItemHandle=2130326
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129997 ItemHandle=2130327
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129937 ItemHandle=2130331
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-NOTIFY	Randomizer progress restored: Gold Bolts 2/25 | rewards 3/77 | planets open 3/10 | hub 1/14 done, 2 open | at nefcity_1 | planets 0 | in inventory 10 | armor sources 0/27
+[script] [rando]	RANDO-ARMOR	intercepting 21 armor source(s)
+[script] [rando]	RANDO-SHOP	helper: config manager at 00007FF6C3DABFE0 (exe +0x52EBFE0, rivet_hook's signature matched 1x)
+[script] [rando]	RANDO-CAMPAIGN mission helper:	ready (rando_give.dll v4, mission code matches this exe)
+[script] [rando]	RANDO-CAMPAIGN mission system 2: MIS_INTRO is active (done)
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x0 -> 0x1)
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000199F5C0AEA0	-	only 0 vendor weapon(s) in the array at +0x48	(try 1)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 100 frames
+[script] [rando]	RANDO-HUB	level bits 0x0 - unlocking 1-10
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2192094 ItemHandle=2192241
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2192094 ItemHandle=2192242
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2192094 ItemHandle=2192246
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2192034 ItemHandle=2192374
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2192034 ItemHandle=2192375
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2192034 ItemHandle=2192376
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2192034 ItemHandle=2192377
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2192034 ItemHandle=2192378
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 2 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-TRAVEL	checkpoint catalog:	corson_v 116=CHK_DEMO_START, nefarious_city 90=CHK_NEFCITY_START, sargasso 112=CHK_SARG_GELFACTORY_LANDINGPAD, scarstu 56=CHK_ZURK_LANDING_SHIP, savali 60=CHK_SAV_01_START, blizar_prime 109=CHK_BLIZAR_A_LANDINGPAD, torren_iv 55=CHK_MOL_START, cordelion 45=CHK_CORD_A_START, ardolis 46=CHK_ARD_START, viceron 52=CHK_ZORDOOM_START
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000199F5C0AEA0	-	only 0 vendor weapon(s) in the array at +0x48	(try 2)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 171 frames
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x1 -> 0x1)
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=757 TotalBolts=1824
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000199F5C0AEA0	-	only 0 vendor weapon(s) in the array at +0x48	(try 3)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 100 frames
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000199F5C0AEA0	-	only 0 vendor weapon(s) in the array at +0x48	(try 4)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 100 frames
+[script] [rando]	RANDO-REAL	weapon replay with	4	types new to this session - none taken as a late answer
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000199F5C0AEA0	-	only 0 vendor weapon(s) in the array at +0x48	(try 5)
+[script] [rando]	RANDO-NOTIFY	Randomizer: Ms. Zurkon could not be changed - she sells her usual weapons (some are also rewards in this seed); the seed's other shop weapons were given to you (see rivet.log)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 100 frames
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=1.0 TotalRaritanium=3.0
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=1 TotalBolts=1827
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_SKIDD_GETGLOVE_COMPLETE_MID ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_SKIDD_GETGLOVE_COMPLETE_MID	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_SKIDD_TRAVERSAL ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_SKIDD_TRAVERSAL	1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1830426183 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_SKIDD_TRAVERSAL	hash 1830426183	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_SKIDD_TRAVERSAL ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_SKIDD_TRAVERSAL	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_SKIDD_TRAVERSAL_CINE_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_SKIDD_TRAVERSAL_CINE_COMPLETE	1
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=11 TotalBolts=1838
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=23 TotalBolts=1861
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_SKIDD_TRAVERSAL_CINE_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_SKIDD_TRAVERSAL_CINE_COMPLETE	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_SKIDD_TRAVERSAL_MID ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_SKIDD_TRAVERSAL_MID	1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=643836122 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_SKIDD_TRAVERSAL_MID	hash 643836122	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=22 TotalBolts=1883
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_SKIDD_TRAVERSAL_MID ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_SKIDD_TRAVERSAL_MID	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_ZURKON ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_ZURKON	1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1523646017 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_ROOFTOP_SPA_CINE	hash 1523646017	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=4.0 TotalRaritanium=6.0
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_ZURKON ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_ZURKON	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_SPA ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_SPA	1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_SPA ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_SPA	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_SPA_CINE_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_SPA_CINE_COMPLETE	1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2162614406 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_ROOFTOP_SPA	hash 2162614406	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=74 TotalBolts=1957
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=3 TotalBolts=1960
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=22 TotalBolts=1982
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=66 TotalBolts=2048
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=117 TotalBolts=2165
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=66 TotalBolts=2231
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=33 TotalBolts=2264
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=73 TotalBolts=2337
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=186 TotalBolts=2523
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=67 TotalBolts=2590
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_SPA_CINE_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_SPA_CINE_COMPLETE	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_SPA_END_CINE ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_SPA_END_CINE	1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_SPA_END_CINE ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_SPA_END_CINE	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_SPA_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_SPA_COMPLETE	1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2764228336 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_ROOFTOP_SPA_COMPLETE	hash 2764228336	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=515 TotalBolts=3105
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1176643395 Loaded=false
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_BAZAAR_WEAPON_VENDOR	hash 1176643395	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1176643395 Loaded=true
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_ROOFTOP_SPA_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_ROOFTOP_SPA_COMPLETE	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_BAZAAR_RETURN ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_BAZAAR_RETURN	1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2225321484 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_BAZAAR_RETURN	hash 2225321484	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_BAZAAR_RETURN ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_BAZAAR_RETURN	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_TOWERPATH_START ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_TOWERPATH_START	1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3103698112 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_TOWERPATH_START	hash 3103698112	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_TOWERPATH_START ObjectiveState=2
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_TOWERPATH_START	2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01 ObjectiveName=OBJ_NEFCITY_TOWERPATH_CINE_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-HUB	objective	MIS_NEFCITY_01	OBJ_NEFCITY_TOWERPATH_CINE_COMPLETE	1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1675524253 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_HEAVY_FIGHT	hash 1675524253	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=208 TotalBolts=3313
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Savali OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Savali	savali	rewards locked
+[script] [rando]	RANDO-HUB	arrived on	savali	during	nefcity_1	- the story's own travel
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2922336782 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_HEAVYSHIFT_SAVALI	hash 2922336782	on	savali
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=5.0 TotalRaritanium=7.0
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Savali
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=8394324 ItemHandle=8394484
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=8394324 ItemHandle=8394485
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=8394324 ItemHandle=8394489
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=8394261 ItemHandle=8394624
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=8394261 ItemHandle=8394625
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=8394261 ItemHandle=8394626
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=8394261 ItemHandle=8394627
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=8394261 ItemHandle=8394628
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 2 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x0 -> 0x1)
+[script] [rando]	RANDO-PLANET	Savali	savali	rewards locked
+[script] [rando]	RANDO-HUB	arrived on	savali	during	nefcity_1	- the story's own travel
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=10499558 ItemHandle=10499836
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=10499558 ItemHandle=10499837
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=10499558 ItemHandle=10499867
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=10499486 ItemHandle=10500147
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=10499486 ItemHandle=10500148
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=10499486 ItemHandle=10500149
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=10499486 ItemHandle=10500150
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=10499486 ItemHandle=10500151
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 2 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=962.37231445312 MissionName=MIS_INTRO MissionSegmentId=7546557B3E6FE0BD2361FD13B18BC86F
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=916.85876464844 MissionName=MIS_NEFCITY_01 MissionSegmentId=E16A95A078A70200FDCC4E72D32ED2EB
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=962.37231445312 MissionName=MIS_RYNO_PLANS MissionSegmentId=970897F7B91D18FB5DF9060E5ACD462B
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=7F76965F863FF583E6480F4BE1788686
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=7D776FA7666AADAF97703A11EC9E2FB9
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 2 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x0 -> 0x1)
+[script] [rando]	RANDO-HUB	level bits 0x0 - unlocking 1-10
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=6404392 ItemHandle=8502763
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=6405128 ItemHandle=8502764
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=6404392 ItemHandle=8502765
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=6405128 ItemHandle=6405657
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=6404392 ItemHandle=8502742
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x1 -> 0x1)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=10541017 ItemHandle=12639484
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=10541017 ItemHandle=12639485
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=10541017 ItemHandle=12639496
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=12638085 ItemHandle=12639938
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=12638085 ItemHandle=12639943
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=12638085 ItemHandle=12639948
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=12638085 ItemHandle=12639953
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=12638085 ItemHandle=12639958
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 2 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=2196 TotalBolts=5509
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x1 -> 0x1)
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=6 TotalBolts=5515
+[script] [rando]	RANDO-PLANET	Savali	savali	rewards locked
+[script] [rando]	RANDO-HUB	arrived on	savali	during	nefcity_1	- the story's own travel
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=12595892 ItemHandle=14693281
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=12595892 ItemHandle=14693282
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=12595892 ItemHandle=14693286
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=12595832 ItemHandle=14693760
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=12595832 ItemHandle=14693761
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=12595832 ItemHandle=14693762
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=12595832 ItemHandle=14693763
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=12595832 ItemHandle=14693764
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 2 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-HUB	planetary travel:	done (0x0 -> 0x1)

@@ -13,8 +13,8 @@ import shutil
 import sys
 import zipfile
 
-VERSION = "0.52"
-BUILD = "10.0.3"
+VERSION = "0.53"
+BUILD = "10.0.4"
 NAME = f"Ratchet_Rift_Apart_Randomizer_v{VERSION}"
 ZIP_NAME = f"Ratchet_Rift_Apart_Randomizer_Public_Release_v{VERSION}.zip"
 DATE = (2026, 11, 13, 0, 0, 0)

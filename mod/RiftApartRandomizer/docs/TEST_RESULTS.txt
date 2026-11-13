@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.52 (build 10.0.3) - test run 2026-11-13 13:03 UTC
+Rift Apart Randomizer v0.53 (build 10.0.4) - test run 2026-11-13 13:46 UTC
 Python 3.13.18 on Linux
-ran 371, failures 0, errors 0, skipped 17
+ran 379, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -254,6 +254,14 @@ test_the_opening_is_given_time_then_loaded_once_more (tests.test_v052.OpeningTes
 test_the_story_key_loads_the_opening_only_while_the_first_step_waits (tests.test_v052.OpeningTests.test_the_story_key_loads_the_opening_only_while_the_first_step_waits) ... ok
 test_v051_prologue_timing_is_kept_by_a_setting (tests.test_v052.OpeningTests.test_v051_prologue_timing_is_kept_by_a_setting) ... ok
 test_without_a_catalog_the_wait_is_bounded (tests.test_v052.OpeningTests.test_without_a_catalog_the_wait_is_bounded) ... ok
+test_round25_the_hub_announced_itself_on_every_return (tests.test_v053.EvidenceTests.test_round25_the_hub_announced_itself_on_every_return) ... ok
+test_round25_travel_was_on_at_every_shift (tests.test_v053.EvidenceTests.test_round25_travel_was_on_at_every_shift) ... ok
+test_a_reload_on_the_city_during_its_story_turns_nothing_on (tests.test_v053.ShiftTests.test_a_reload_on_the_city_during_its_story_turns_nothing_on) ... ok
+test_other_destinations_and_the_settings_are_unchanged (tests.test_v053.ShiftTests.test_other_destinations_and_the_settings_are_unchanged) ... ok
+test_relaunching_the_citys_story_takes_back_what_the_hub_turned_on (tests.test_v053.ShiftTests.test_relaunching_the_citys_story_takes_back_what_the_hub_turned_on) ... ok
+test_the_boss_fights_shift_finds_travel_off_and_the_return_is_quiet (tests.test_v053.ShiftTests.test_the_boss_fights_shift_finds_travel_off_and_the_return_is_quiet) ... ok
+test_the_city_story_runs_with_the_games_own_world (tests.test_v053.ShiftTests.test_the_city_story_runs_with_the_games_own_world) ... ok
+test_the_world_goes_on_once_the_citys_story_is_finished (tests.test_v053.ShiftTests.test_the_world_goes_on_once_the_citys_story_is_finished) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -394,6 +402,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 371 tests in 169.608s
+Ran 379 tests in 104.827s
 
 OK (skipped=17)

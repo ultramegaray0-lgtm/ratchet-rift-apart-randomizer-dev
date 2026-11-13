@@ -1,4 +1,4 @@
-# Player guide: Ratchet Rift Apart Randomizer v0.52
+# Player guide: Ratchet Rift Apart Randomizer v0.53
 
 ## How a run goes
 

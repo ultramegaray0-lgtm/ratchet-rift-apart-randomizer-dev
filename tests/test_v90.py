@@ -264,13 +264,13 @@ class KitTests(unittest.TestCase):
         self.assertIn("15_rando_hub.lua", names)           # 10.0: the hub is back
         self.assertEqual(len(names), 14, names)
         for p in SCRIPTS.glob("*.lua"):
-            self.assertIn('"] = "10.0.3"', p.read_text(encoding="utf-8"), p.name)   # v0.52: every RANDO_FILES tag
+            self.assertIn('"] = "10.0.4"', p.read_text(encoding="utf-8"), p.name)   # v0.53: every RANDO_FILES tag
 
     def test_kit_check_passes(self):
         g = Game()
         self.assertEqual(g.load_errors, [])
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.3"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.4"), [l for l in g.logs() if "KIT" in l])
 
     def test_hub_keys_do_nothing_without_a_hub(self):
         g = Game()

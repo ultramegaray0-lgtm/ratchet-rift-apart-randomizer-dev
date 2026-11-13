@@ -1,4 +1,4 @@
-# Troubleshooting: Ratchet Rift Apart Randomizer v0.52
+# Troubleshooting: Ratchet Rift Apart Randomizer v0.53
 
 Most answers are in `rivet.log`, in the game folder. Open it in Notepad and search for `RANDO-`.
 
@@ -120,6 +120,15 @@ If the story still waits after about a minute, the opening is loaded once more. 
 it again yourself, or `Ctrl+[` twice to count the city's story as finished by hand. Either way,
 please send your `rivet.log`.
 
+## Ratchet lands with the ship and falls to his death in Nefarious City's boss fight
+
+v0.53 fixes this (v0.52 had it). The boss fight's rifts to Savali or Sargasso were played as ship
+landings because the randomizer had turned the ship's planetary travel on. While a story runs it
+now leaves that to the game. Load your save; the fight's checkpoint works as it is. In `rivet.log`
+you should see `planetary travel and level bits left to the game while nefcity_1 runs` and, after
+each rift back, `back on nefarious_city from savali during nefcity_1`. If Ratchet still comes down
+with the ship, please send your `rivet.log`.
+
 ## Ratchet can't move after the warp
 
 v0.51 and later are meant to prevent this. If it still happens:
@@ -157,7 +166,7 @@ put in the shop but she doesn't sell are then given to you directly, once (said 
 
 On the mod page, please include:
 
-- the release version (v0.52) and your game version (right-click `RiftApart.exe` → Properties →
+- the release version (v0.53) and your game version (right-click `RiftApart.exe` → Properties →
   Details → File version; v3.630.1.0 shows as 3.0630.1.0);
 - the `rivet.log` from the game folder, uploaded as a file;
 - the companion window's text, if it shows an error;

@@ -12,6 +12,11 @@ This is the player guide for 10.0's default mode (`hub = true`). The technical n
 > leaving "go to Nefarious City" at CHK_NEFCITY_START. The hub now ends the prologue first, starts
 > the story with its train-station mission, and warps to the checkpoint the game itself loads after
 > the prologue (hash 3046787773, named at run time). See CHANGELOG.md, 10.0.3.
+>
+> **v0.53 (build 10.0.4): the boss fight's shifts.** Round 25: the city's boss fight rifts Ratchet
+> to Savali or Sargasso, and with the hub's planetary travel on the game played them as ship
+> landings (Ratchet fell to his death). The travel byte and the level bits are now left to the game
+> while a destination runs, and go on again when none is running. See CHANGELOG.md, 10.0.4.
 
 **Nothing of 10.0 has run in your game yet.** `VERIFICATION_REPORT.md` separates what your logs have
 shown from what has only passed offline tests.

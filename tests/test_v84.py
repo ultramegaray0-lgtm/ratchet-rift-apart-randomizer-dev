@@ -256,9 +256,9 @@ class Round20LogTests(unittest.TestCase):
 
 class VersionTests(unittest.TestCase):
     def test_versions(self):
-        # v0.52: kit 10.0.3, the generator stays 10.0.2 (same seeds and fingerprints)
-        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.3"'), ("16_rando_testtravel.lua", 'TT.VERSION = "10.0.3"'),
-                           ("02_rando_generator.lua", 'G.VERSION = "10.0.2"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.3"')):
+        # v0.53: kit 10.0.4, the generator stays 10.0.2 (same seeds and fingerprints)
+        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.4"'), ("16_rando_testtravel.lua", 'TT.VERSION = "10.0.4"'),
+                           ("02_rando_generator.lua", 'G.VERSION = "10.0.2"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.4"')):
             with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
                 self.assertIn(want, f.read(), name)
 
@@ -271,7 +271,7 @@ class KitCheckTests(unittest.TestCase):
     def test_a_complete_kit_says_so(self):
         g = Game(settings_file=True)
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.3"))
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.4"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
     def test_a_missing_or_older_script_is_reported(self):

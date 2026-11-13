@@ -30,7 +30,7 @@ other values are noted in rivet.log and ignored. `start_coordinates` does not ap
 | `hub_trigger` | `"wrench"` | when New Game goes to Zurkie's; `"cinematic"`: at once |
 | `hub_force_missions` | `true` | an inactive story mission is made available, then started |
 | `hub_replay` | `true` | if starting fails, try the game's replay call |
-| `hub_levels` / `hub_travel_flag` | `"all"` / `true` | level bits 1-10 and planetary travel on (round 17) |
+| `hub_levels` / `hub_travel_flag` | `"all"` / `true` | level bits 1-10 and planetary travel on (round 17); v0.53: only while no destination runs (round 25) |
 | `hub_fly` | `true` | to a landing pad, fly when a ship answers |
 | `hub_auto_return` / `hub_return_delay` | `true` / `12` | back to Zurkie's after a finished destination |
 | `hub_hero_swap` | `true` | the destination's hero is set first |

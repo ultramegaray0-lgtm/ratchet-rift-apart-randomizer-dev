@@ -1,5 +1,29 @@
 # Changelog: Ratchet Rift Apart Randomizer
 
+## Public Release v0.53 (beta), 2026-11-13. Randomizer build 10.0.4
+
+A small fix. **It has not been run in the game yet** (see README).
+
+**Nefarious City's boss fight: no more falling to your death after the rift**
+- Near the end of the city's story, the boss fight's rifts send Ratchet to Savali or Sargasso and
+  back. In v0.52 Ratchet arrived there **with the ship**, on ground that isn't solid, fell and died,
+  again after every reload.
+- The cause: at the hub the randomizer turns the ship's planetary travel on (and unlocks the
+  planets' level bits), so the ship's planet menu works. During the city's story the game has
+  planetary travel off, and with it on the game played those rifts as ship landings.
+- Now, while a destination's story is being played, planetary travel and the level bits are left
+  exactly as the game has them. They're switched back on once no story is running (for example when
+  the city's story is finished and you're back at the hub).
+- Coming back from one of those rifts no longer shows the hub's "destinations open" message in the
+  middle of the fight.
+- **If you're stuck in that fight now:** install v0.53 and load your save. You don't need a New
+  Game; the fight's checkpoint works as it is.
+
+**Unchanged**
+- Seeds are the same as v0.52 (generator 10.0.2), so your seed keeps its fingerprint and its
+  progress. `rivet.log` shows `RANDO-KIT all 14 scripts are 10.0.4`.
+- `rando_give.dll`, `rivet.toml` and the companion are unchanged.
+
 ## Public Release v0.52 (beta), 2026-11-13. Randomizer build 10.0.3
 
 A small fix. **It has not been run in the game yet** (see README).

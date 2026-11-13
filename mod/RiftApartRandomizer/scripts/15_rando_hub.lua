@@ -78,15 +78,23 @@
 --   at the opening; / loads the opening again while the story waits at its first step.
 -- None of this has run in your game yet.
 --
+-- v0.53 (10.0.4) THE BOSS FIGHT'S SHIFTS. Round 25 (v0.52's first run): the city's story ran, but
+-- its boss fight (CHK_NEFCITY_HEAVY_FIGHT) shifts Ratchet to Savali or Sargasso, and with the
+-- planetary travel byte on (set at the hub, set again on every return) the game played each shift
+-- as a ship landing on ground that is not there: Ratchet fell and died, again after every reload.
+-- The travel byte and the level bits are now left to the game while a destination runs (see
+-- H.apply_world), taken back before the hub's own story is launched, and the hub stays quiet when
+-- the story brings you back from a shift. They go on again once no destination is running.
+--
 -- Keys (8.3 defaults; legacy_f_keys keeps F6/F5): ] next destination, Ctrl+] go, [ twice back to
 -- the hub (cancels an automatic return), Ctrl+[ twice finish this destination by hand, / start the
 -- story of the planet you are on.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "10.0.3"
+H.VERSION = "10.0.4"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -365,6 +373,7 @@ function H.new_game()
   H.ending_prologue = nil
   H.session.started, H.session.reloaded, H.session.started_frame = {}, {}, nil
   H.session.opening_loaded = {}
+  H.session.world = { travel = false, levels = {} }   -- a new game clears both (v0.53)
   local h = H.state()
   if h then h.phase = "pre" end
   log("new game: the parade plays until Ratchet has his wrench and the parade hands him back, then " .. HUBN())
@@ -487,7 +496,7 @@ function H.hub_started(how)
   say(HUBN() .. " - the hub" .. (running and ": its story starts here. " or ". ") .. K("key_hub") .. " lists what is open, "
       .. K("key_hub", true) .. " goes", { type = "planet", sub = H.menu_text(), duration = 12 })
   changed()
-  H.after(H.SETTLE, function() H.apply_world() end, "hub start")
+  H.after(H.SETTLE, function() H.apply_world("hub start") end, "hub start")
   H.after(H.SETTLE, function() H.prologue_check() end, "prologue")
 end
 
@@ -521,7 +530,7 @@ function H.at_hub(how)
         { type = "corner", duration = 6 })
   end
   changed()
-  H.after(H.SETTLE, function() H.apply_world() end, "at the hub")
+  H.after(H.SETTLE, function() H.apply_world("at the hub") end, "at the hub")
   if not h.prologue_ended then H.after(H.SETTLE, function() H.prologue_check() end, "prologue") end
 end
 
@@ -546,11 +555,40 @@ H.describe = describe
 
 -- round 17: with the travel byte on and level bits 1-10 set, the planet menu offered Blizar and
 -- Savali at Zurkie's. A save load clears the bits (8.1), so they are put back on every arrival.
-function H.apply_world()
+--
+-- v0.53 (10.0.4) NOT WHILE A STORY RUNS. Round 25: in Nefarious City's boss fight
+-- (CHK_NEFCITY_HEAVY_FIGHT) the story's own rift shifts Ratchet to Savali or Sargasso
+-- (CHK_NEFCITY_HEAVYSHIFT_SAVALI) and back. The travel byte had been turned on at the hub (and
+-- again on every return from a shift, after the death reload cleared it), so the game played the
+-- shift as a SHIP LANDING: Ratchet came down with the ship where the shift's ground is not solid,
+-- fell and died, several times. In the game the city's story runs with both off (no ship yet). So
+-- while a destination is being played, the world is left as the game has it: nothing is turned
+-- on, and what this session turned on is taken back before the hub's own story is launched. The
+-- byte and the bits go on again once no destination is running (at the hub, a finished story).
+H.session.world = H.session.world or { travel = false, levels = {} }
+
+-- the destination being played, if any (not finished)
+function H.running()
+  local h = H.state()
+  local cur = h and h.current and dest_by_id(h.current)
+  if cur and not h.done[cur.id] then return cur end
+  return nil
+end
+
+function H.apply_world(why)
   local dd = D()
   if not (dd and dd.native_ok and dd.native_ok("level_read")) then return end
+  local cur = H.running()
+  if cur then
+    log("planetary travel and level bits left to the game while", cur.id, "runs (its own rifts)", why and ("(" .. why .. ")") or "")
+    return
+  end
+  local w = H.session.world
   if cfg("hub_travel_flag", true) then
-    call("travel_set", nil, function(r) log("planetary travel:", describe(r)) end, 1)
+    call("travel_set", nil, function(r)
+      log("planetary travel:", describe(r))
+      if r.code == 11 and r.after == 1 then w.travel = true end
+    end, 1)
   end
   if cfg("hub_levels", "all") ~= "all" then return end
   call("level_read", nil, function(r)
@@ -560,10 +598,30 @@ function H.apply_world()
     log(string.format("level bits 0x%X - unlocking 1-10", r.after or 0))
     for level = 1, 10 do
       if ((r.after or 0) >> level) & 1 == 0 then
-        call("level_set", nil, function(w) end, 1, level)
+        call("level_set", nil, function(res) if res.code == 11 then w.levels[level] = true end end, 1, level)
       end
     end
   end)
+end
+
+-- v0.53: take back what apply_world turned on in this session (the travel byte, the level bits it
+-- set), so a story starts with the game's own world. A load since then has cleared them already;
+-- writing them off again changes nothing.
+function H.take_back_world(why)
+  local w = H.session.world
+  local levels = {}
+  for level in pairs(w.levels) do levels[#levels + 1] = level end
+  table.sort(levels)
+  if not w.travel and #levels == 0 then return false end
+  local dd = D()
+  if not (dd and dd.native_ok and dd.native_ok("level_read")) then return false end
+  if w.travel then
+    call("travel_set", nil, function(r) log("planetary travel off (" .. tostring(why) .. "):", describe(r)) end, 0)
+  end
+  for _, level in ipairs(levels) do call("level_set", nil, function(res) end, 0, level) end
+  if #levels > 0 then log("level bits taken back (" .. tostring(why) .. "):", table.concat(levels, ",")) end
+  H.session.world = { travel = false, levels = {} }
+  return true
 end
 
 -- ---------------------------------------------------------------------------------------------
@@ -816,6 +874,9 @@ function H.launch_dest(d, why)
   changed()
   say(string.format("Randomizer: %s - getting the story ready", d.label or (pname(d.planet) .. ": " .. (d.title or d.id))), { type = "corner", duration = 5 })
   log("launch", d.id, "(" .. tostring(why) .. ")")
+  -- v0.53: the hub's own story is played on the planet you are on (no load clears the world):
+  -- its rifts must find the travel byte and the level bits as the game has them (round 25)
+  if d.kind == "hub" then H.take_back_world("launch " .. d.id) end
   H.activate(d, function(result, how, mission)
     if result == "complete" then
       H.launch = nil
@@ -1037,6 +1098,10 @@ function H.finish(d, how, quiet)
     say(msg, { type = "planet", sub = K("key_hub") .. " to choose the next destination", duration = 8 })
     if d.kind == "hub" then
       h.unannounced = nil
+      -- v0.53: the world was left to the game while the story ran; the hub's travel goes on now
+      if S() and S().current_planet == p.planet then
+        H.after(H.SETTLE, function() H.apply_world("the hub's story finished") end, "world after " .. d.id)
+      end
       H.after(300, function()
         if H.expect or H.launch then return end
         local hh = H.state()
@@ -1156,6 +1221,16 @@ function H.on_arrival(pid, from)
       log("arrived at the hub (" .. HUBN() .. ") for", d.id)
       h.phase = "away"
       say(d.label or (d.title or d.id), { type = "planet", sub = "Randomized destination", duration = 6 })
+      return true
+    end
+    -- v0.53: back from another planet in the middle of the hub's own story (round 25: the boss
+    -- fight's shifts to Savali / Sargasso and back) - the story's own travel: no hub message, and
+    -- the world stays the game's (H.apply_world)
+    local cur = H.running()
+    if not exp and cur and cur.kind == "hub" and from and from ~= pid then
+      h.phase = "hub"
+      log("back on", pid, "from", from, "during", cur.id, "- the story's own travel")
+      if not h.prologue_ended then H.after(H.SETTLE, function() H.prologue_check() end, "prologue") end
       return true
     end
     H.at_hub(exp and exp.how or "arrived")
@@ -1435,7 +1510,7 @@ function H.on_restore(live)
   end
   local h = s.hub
   if not (H.plan() and h and h.started and H.enabled()) then return end
-  if s.current_planet == H.plan().planet then H.after(H.SETTLE, function() H.apply_world() end, "restored at the hub") end
+  if s.current_planet == H.plan().planet then H.after(H.SETTLE, function() H.apply_world("restored at the hub") end, "restored at the hub") end
 end
 
 -- ---------------------------------------------------------------------------------------------

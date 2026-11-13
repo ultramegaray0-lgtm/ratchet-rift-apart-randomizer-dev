@@ -27,7 +27,22 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
-## 2. Round 25: v0.52 (build 10.0.3)
+## 2. Round 26: v0.53 (build 10.0.4)
+
+Your round 25 save carries over (same seed, same fingerprint). Load it; no New Game is needed.
+
+1. **Install check.** `RANDO-KIT all 14 scripts are 10.0.4`.
+2. **Load the save in Nefarious City.** `planetary travel and level bits left to the game while
+   nefcity_1 runs` (and **no** `planetary travel: done (0x0 -> 0x1)` while the city's story runs).
+3. **The boss fight (the key test).** At the shift to Savali / Sargasso: does Ratchet arrive
+   **without** the ship, on solid ground? Logged: `arrived on savali during nefcity_1`, then on the
+   way back `back on nefarious_city from savali during nefcity_1 - the story's own travel` (no
+   "destinations open" message in the fight).
+4. **After the city's story.** Once MIS_NEFCITY_01 completes and you are back in the city:
+   `planetary travel: done (0x0 -> 0x1)` and the level bits again; the ship's planet menu works.
+5. Then continue with the round 25 list below from step 4.
+
+## 2b. Round 25: v0.52 (build 10.0.3)
 
 Use a spare save slot and the kit's settings (hub = true). Your round 24 seed carries over (same
 fingerprint), but start a **New Game**: the new start only runs from the parade. Send the whole

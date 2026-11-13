@@ -467,10 +467,13 @@ class HubStartTests(unittest.TestCase):
         self.assertEqual(menu_ids(g), START_MENU)
         self.assertIsNone(g.sim.hero_held)                            # the warp came after GOING_DOWN
         self.assertEqual(h["parade_cp"], PARADE_CP)
-        # only the three planets are open; the ship's travel on and every level bit set
+        # only the three planets are open. v0.53 (round 25): while the city's story runs, the ship's
+        # travel and the level bits stay as the game has them (its boss fight's shifts became ship
+        # landings with travel on); they go on once the story is finished (tests/test_v053.py)
         self.assertEqual({k for k, v in py(g.state.access).items() if v}, START_PLANETS)
-        self.assertEqual(g.sim.travel_flag, 1)
-        self.assertEqual(g.sim.levels & 0x7FE, 0x7FE)
+        self.assertEqual(g.sim.travel_flag, 0)
+        self.assertEqual(g.sim.levels & 0x7FE, 0x6 & 0x7FE)
+        self.assertTrue(g.log_has("planetary travel and level bits left to the game while\tnefcity_1"))
         self.assertFalse(g.log_has("RANDO-ERROR"), [l for l in g.logs() if "RANDO-ERROR" in l][:3])
 
     def test_prologue_resumes_where_the_parade_was_left(self):
@@ -901,7 +904,7 @@ class SettingsFileTests(unittest.TestCase):
         self.assertEqual(s["settings"]["campaign_mode"], "planet_shuffle")
         self.assertEqual((s["settings"]["raritanium_min"], s["settings"]["raritanium_max"]), (120, 1000))
         self.assertEqual(verify_hub_seed(s), [])
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.3"))
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.4"))
         self.assertFalse(g.log_has("is from an older kit"))
         c = g.R.config
         self.assertEqual((c.key_hub, c.key_hub_return, c.key_story), ("]", "[", "/"))

@@ -29,7 +29,7 @@
 -- checkpoint is logged by name (RANDO-CHECKPOINT) and the hub knows where a mission really starts.
 -- In a hub seed (15_rando_hub.lua) the hub handles every arrival itself; this file's send-back is
 -- used by 7.0-9.0 style seeds.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TRAVEL = RANDO_TRAVEL or {}
 local T = RANDO_TRAVEL

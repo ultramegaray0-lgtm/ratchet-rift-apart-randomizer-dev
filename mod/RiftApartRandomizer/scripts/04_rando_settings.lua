@@ -1,4 +1,4 @@
--- Rift Apart Randomizer (Public Release v0.52, build 10.0.3): your seed and settings.
+-- Rift Apart Randomizer (Public Release v0.53, build 10.0.4): your seed and settings.
 -- Change, save, then restart the game (or press Pause to reload the scripts before you play).
 -- A different seed or different randomization options make a NEW seed with its own progress;
 -- start it with NEW GAME. Keys/logging can change any time.
@@ -18,7 +18,7 @@
 --   * a mission, side activity or armor pod with no item gives Bolts or Raritanium
 --   * the solver proves every seed can be finished (in the game's own mission order too)
 --   * hub = false gives 9.0's start instead: the prologue, then Nefarious City, then Sargasso
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
 RANDO_SETTINGS = {
   seed = "random",            -- any text, e.g. "lombax-ryno-2026"; "random" = the companion picks one and remembers it
   preset = "balanced",        -- balanced | chaos | full | campaign | everything (docs\PLAYER_GUIDE.md)

@@ -4,6 +4,20 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-13: Public Release v0.53 (build 10.0.4): the boss fight's shifts find planetary travel off
+
+- Round 25 (v0.52's first run, a restored save at nefcity_1): the city's story ran to
+  CHK_NEFCITY_HEAVY_FIGHT. Its rift to Savali (CHK_NEFCITY_HEAVYSHIFT_SAVALI) landed Ratchet with the
+  ship on ground that is not there; he fell and died, three shifts in the log.
+- The hub had turned the planetary travel byte on and set the level bits on arriving in the city,
+  and again after each death reload (the load had cleared them). The game has both off during the
+  city's story; the shift was played as a ship landing (inference).
+- 15: H.apply_world does nothing while a destination runs; H.take_back_world before the hub's own
+  story is launched; on again when the city's story finishes; a quiet return from the story's own
+  shifts. Kit 10.0.4, generator 10.0.2.
+- tests/test_v053.py (8), round25_rivet.log added; 379 run, 0 failures, 17 skipped.
+- Branch release-v0.53. Details: mod/RiftApartRandomizer/docs/CHANGELOG.md.
+
 ## 2026-11-13: Public Release v0.52 (build 10.0.3): the city's story starts at its opening scene
 
 - Round 24 (v0.51's first run): the city's story stayed at OBJ_NEFCITY_GO_TO_NEFCITY through six
