@@ -194,8 +194,7 @@ class WayHomeTests(unittest.TestCase):
     def test_going_home_from_the_city_waits_for_no_arrival(self):
         g = to_hub(hub_game("v051-same"))
         H = g.g.RANDO_HUB
-        g.press("[")
-        g.press("[")
+        H.go_home("test")            # v0.54: [ no longer goes home; the auto-return still does this
         g.step(60)
         self.assertIsNone(H.expect)
         g.step(H.ARRIVE_TIMEOUT + 300)

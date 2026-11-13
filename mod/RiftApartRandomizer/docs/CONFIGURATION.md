@@ -35,7 +35,9 @@ other values are noted in rivet.log and ignored. `start_coordinates` does not ap
 | `hub_auto_return` / `hub_return_delay` | `true` / `12` | back to Zurkie's after a finished destination |
 | `hub_hero_swap` | `true` | the destination's hero is set first |
 | `hub_follow_story` | `false` | `true`: when the game's own story takes you to an open destination, play it |
-| `key_hub` / `key_hub_return` / `key_story` | `]` / `[` / `/` | legacy F6 / F5 / F4 |
+| `key_hub` / `key_hub_return` / `key_story` | `]` / `[` / `/` | legacy F6 / F5 / F4; v0.54: `[` only cancels the automatic return |
+| `key_shuffle` | `0` | v0.54: planet shuffle off / on (saved in the randomizer state); Ctrl+0 twice gives your items back |
+| `restore_inventory` | `true` | v0.54: give your items back when a hub trip or a load reports fewer than half of your weapons |
 | `shop_close_slots` | `true` | closed slots show the Burst Pistol; `false`: their own weapon |
 
 ## Presets

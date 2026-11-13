@@ -27,7 +27,25 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
-## 2. Round 26: v0.53 (build 10.0.4)
+## 2. Round 27: v0.54 (build 10.0.5)
+
+Your round 26 save carries over (same seed, same fingerprint). No New Game is needed.
+
+1. **Install check.** `RANDO-KIT all 14 scripts are 10.0.5`; RANDO-KEYS lists `planet shuffle 0`;
+   the banner reads `Randomizer v0.54 (kit 10.0.5)`.
+2. **Load the Viceron save.** `arrived on viceron (a load) - nothing changed` and **no** `the
+   game's own story took you to`. Then, 7 s later, `RANDO-RESTORE after the load on viceron: ...`:
+   do your weapons come back ("Given back: ...")? If not, press `Ctrl+0` twice.
+3. **`0`.** `planet shuffle OFF`; `]` / `Ctrl+]` answer "planet shuffle is off"; travel with the
+   ship: nothing sends you back. Press `0` again: `planet shuffle ON`. Restart the game: the
+   choice is kept (`planet shuffle is OFF in this save` when it was off).
+4. **A trip with `Ctrl+]`.** After landing: `RANDO-RESTORE after the trip to <planet>: ... nothing
+   to do` with your weapons intact. If the inventory is emptied, the line says so and the items come
+   back. Please send the log either way: the lines around the landing show what emptied it.
+5. **`[`** shows "only cancels the trip back"; no warp.
+6. **The shop:** look for `as pointers:` and `slot object 0 of the array` in RANDO-SHOP lines.
+
+## 2a. Round 26: v0.53 (build 10.0.4)
 
 Your round 25 save carries over (same seed, same fingerprint). Load it; no New Game is needed.
 

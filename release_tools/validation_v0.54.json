@@ -1,0 +1,142 @@
+[
+ {
+  "check": "zip CRC test",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "single top-level folder",
+  "ok": true,
+  "detail": "Ratchet_Rift_Apart_Randomizer_v0.54"
+ },
+ {
+  "check": "entry names valid and safe on Windows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "installed paths fit MAX_PATH (260) in the default Steam folder",
+  "ok": true,
+  "detail": "longest 118 chars"
+ },
+ {
+  "check": "no names that differ only by case",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "extracts with unzip as well",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "both extractions identical",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "SHA256SUMS.txt matches every file",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "every file is in SHA256SUMS.txt",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "all required files present",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "14 scripts",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "no development, debug, log, save or test files",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "packaged files byte-identical to the final build (repo)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "all 14 scripts carry the same kit tag",
+  "ok": true,
+  "detail": "{'10.0.5'}"
+ },
+ {
+  "check": "rando_give.dll is the verified v6 binary",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "no personal names, user folders, absolute dev paths or local folder names",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "rando_give.dll holds no absolute build path or user name",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "no hard-coded drive-letter paths in anything that runs",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": ".bat files use CRLF line endings",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "scripts are pure ASCII (safe for Windows PowerShell 5.1 without a BOM)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "Start-Companion.bat finds its script relative to itself, quoted",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "install changes no game file (only adds files; rivet.toml replaced as documented)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "installed rivet.toml parses (TOML) and has every required setting",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "rivet.toml's dll_path and scripts path are relative and resolve in the game folder",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "rando_companion sits next to RiftApart.exe (where Install-ArsenalRestored.ps1 looks)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "check": "simulator suites pass against the installed copy (test_v100, test_v90, test_runtime, test_levels, test_generator, test_campaign, test_v85, test_v84, test_registry)",
+  "ok": true,
+  "detail": "275 ran; 6 fail only because they load the developer test mode, which is not shipped"
+ },
+ {
+  "check": "gameplay rules hold on 1,000 seeds generated from the installed scripts",
+  "ok": true,
+  "detail": "seeds checked: 1000 (kit settings: preset=balanced, {'restored_weapons': 'auto', 'distribution': 'goldbolts_first'}; half with ARSENAL_RESTORED) / failures: 0"
+ },
+ {
+  "check": "documented uninstall returns the game folder to exactly its pre-install state",
+  "ok": true,
+  "detail": "[]"
+ }
+]

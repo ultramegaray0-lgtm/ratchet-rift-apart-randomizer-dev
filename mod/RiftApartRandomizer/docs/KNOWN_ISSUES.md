@@ -4,6 +4,20 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0d. Since v0.54 (10.0.5)
+
+- **What empties the inventory is not known.** Round 26 shows the result (a save on Viceron with no
+  weapon), not the cause. The give-back only covers items the randomizer knows as yours (given, or
+  seen bought / equipped / reported); Bolts, Raritanium and armor are not sent again.
+- **The automatic check needs the load's weapon replay.** A trip or load whose replay reports
+  fewer than half of your known weapons sends everything again; owned items then cost a second or
+  so each in the mailbox and stay owned (`still in your inventory`). If a load replays only part of
+  what you own, this happens without need; it is harmless.
+- **Planet shuffle off is a plain switch.** It does not undo anything the hub did before (a story it
+  started stays started). Destinations still finish and pay while it is off, without the trip back.
+- **The shop** still finds no slot ("only 0 vendor weapon(s) in the array at +0x48", rounds 18-26);
+  v0.54 logs the pointer layout's own reason and, once, a slot object's bytes for round 27.
+
 ## 0c. Since v0.53 (10.0.4)
 
 - **The cause of round 25's ship landings is an inference.** The travel byte is the only thing about

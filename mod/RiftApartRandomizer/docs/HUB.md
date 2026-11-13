@@ -17,6 +17,13 @@ This is the player guide for 10.0's default mode (`hub = true`). The technical n
 > to Savali or Sargasso, and with the hub's planetary travel on the game played them as ship
 > landings (Ratchet fell to his death). The travel byte and the level bits are now left to the game
 > while a destination runs, and go on again when none is running. See CHANGELOG.md, 10.0.4.
+>
+> **v0.54 (build 10.0.5): planet shuffle on `0`, items given back.** `0` switches planet shuffle
+> off and on (saved with the randomizer state): off, the hub and the levels lock leave travel,
+> levels and stories to the game; items stay randomized. `[` no longer goes back to the hub (it only
+> cancels the automatic return). After the hub's own trips and loads elsewhere, an emptied
+> inventory is sent again; `Ctrl+0` twice does it by hand. A load on another planet is no longer
+> taken for the game's own story travel in a later session (round 26). See CHANGELOG.md, 10.0.5.
 
 **Nothing of 10.0 has run in your game yet.** `VERIFICATION_REPORT.md` separates what your logs have
 shown from what has only passed offline tests.
@@ -111,7 +118,8 @@ the hub's own (`campaign_mode` is ignored, with a note).
 
 In-game options: `hub_runtime`, `hub_trigger` (`"wrench"`), `hub_force_missions`, `hub_replay`,
 `hub_levels`, `hub_travel_flag`, `hub_fly`, `hub_auto_return`, `hub_return_delay`, `hub_hero_swap`,
-`hub_follow_story`, `key_hub`, `key_hub_return`, `key_story`, `shop_close_slots`
+`hub_follow_story`, `key_hub`, `key_hub_return`, `key_story`, `key_shuffle`, `restore_inventory`,
+`shop_close_slots`
 (`CONFIGURATION.md`).
 
 ## Technical notes: what each step rests on

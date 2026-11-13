@@ -46,7 +46,7 @@
 --     from their own queue (G.give_currency); nothing is retried once the game took the message
 --   * G.lookup_config asks the helper where a loaded config lives (kind 7, read only), for the
 --     shop (12_rando_shop.lua)
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["09_rando_real"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["09_rando_real"] = "10.0.5"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_REAL = RANDO_REAL or {}
 local G = RANDO_REAL
@@ -210,6 +210,7 @@ function G.new_game()
   -- 8.5: the weapon types this session saw belong to the old save: a late answer in the new run
   -- needs a fresh replay first, and a purchase name or unknown type in flight is dropped
   G.wseen, G.baseline, G.last_unknown, G.last_bought = {}, false, nil, nil
+  G.inv_watch = nil                                  -- v0.54
   if G.burst then G.burst.new = nil end
   if G.busy then
     local b = G.busy
@@ -228,6 +229,70 @@ function G.counts()
   local s = S(); local c = { queued = 0, sent = 0, confirmed = 0, owned = 0, failed = 0 }
   for _, r in pairs((s and s.real) or {}) do c[r.status] = (c[r.status] or 0) + 1 end
   return c
+end
+
+-- ---- v0.54 (kit 10.0.5): giving your items back ---------------------------------------------
+-- Round 26: after trips with ] / Ctrl+] the inventory was empty, and the save kept it that way
+-- (its next load on Viceron replayed no weapon at all, where the randomizer knew 15 items as
+-- yours). What empties it is not known (a mission's start loadout is one candidate: every
+-- mission and objective node carries a SpawnLoadout for "loading directly into it", RESEARCH_8.0).
+-- Every weapon and gadget the randomizer knows you own (given and confirmed, or recognised as
+-- owned) can be sent again: one the game still has is answered with nothing new and simply stays
+-- owned, one it lost is added again ("Given back: ..."). Bolts, Raritanium and armor are not.
+G.RESTORE_KINDS = { weapon = true, gadget = true }
+G.LOSS_CHECK_FRAMES = 420          -- after a trip has landed: the load's weapon replay has come by then
+G.visit_weapons = G.visit_weapons or 0   -- WeaponAddedEvents since the last planet load
+-- the items the randomizer knows you own; `strict` leaves out the ones only "probably owned"
+function G.owned_items(kinds, strict)
+  local s, out = S(), {}
+  for item, r in pairs((s and s.real) or {}) do
+    local info = ITEMS[item]
+    if info and (kinds or G.RESTORE_KINDS)[info.kind] and (r.status == "confirmed" or r.status == "owned"
+       or (not strict and r.status == "failed")) then
+      out[#out + 1] = item
+    end
+  end
+  table.sort(out)
+  return out
+end
+-- queue them all again (quietly: only what the game really adds back is announced). Returns n.
+function G.restore_inventory(why)
+  local s = S(); if not s then return 0 end
+  local n = 0
+  for _, item in ipairs(G.owned_items()) do
+    local r = s.real[item]
+    if not (G.busy and G.busy.item == item) then
+      r.status, r.restoring, r.tries = "queued", true, 0
+      r.hold, r.skip_visit, r.silent, r.donor_visit = nil, nil, nil, nil
+      n = n + 1
+    end
+  end
+  G.inv_watch = nil
+  if n > 0 then changed() end
+  log("RANDO-RESTORE", n, "item(s) sent again (" .. tostring(why) .. ")")
+  if RANDO and RANDO.history then RANDO.history("[RESTORE] " .. n .. " item(s) sent again (" .. tostring(why) .. ")") end
+  return n
+end
+-- the hub's own trip has landed: look at the load's weapon replay a moment later. `same_planet`:
+-- a warp that loads a checkpoint without a planet change (no PlanetChangedEvent starts the count)
+function G.watch_inventory(why, same_planet)
+  if same_planet then G.visit_weapons = 0 end
+  G.inv_watch = { why = why, at = G.gframe }
+end
+function G.check_inventory()
+  local w = G.inv_watch
+  G.inv_watch = nil
+  if not (w and RANDO and RANDO.config and RANDO.config.restore_inventory ~= false) then return nil end
+  local known = #G.owned_items({ weapon = true }, true)
+  local seen = G.visit_weapons or 0
+  if known < 2 or seen >= math.max(1, known // 2) then
+    log("RANDO-RESTORE after", w.why .. ":", seen, "weapon(s) reported by the load,", known, "known as yours - nothing to do")
+    return false
+  end
+  log("RANDO-RESTORE after", w.why .. ": the load reported", seen, "of the", known, "weapons you own - giving your items back")
+  say(string.format("Randomizer: your inventory looks emptied (%d of %d weapons) - giving your items back", seen, known))
+  G.restore_inventory("the load after " .. w.why .. " reported " .. seen .. " of " .. known .. " weapons")
+  return true
 end
 
 -- ---- nodes -------------------------------------------------------------------------------
@@ -493,14 +558,23 @@ local function finish(confirmed, interrupted)
     if b.via == "native" then G.native_target_works(b.mode) end
     r.status = "confirmed"
     r.hold, r.skip_visit = nil, nil
-    log("confirmed", b.item, "via", b.via, "after", G.frame - b.sent, "frames")
-    say("Added to your inventory: " .. name(b.item))
+    log("confirmed", b.item, "via", b.via, "after", G.frame - b.sent, "frames", r.restoring and "(given back)" or "")
+    say((r.restoring and "Given back: " or "Added to your inventory: ") .. name(b.item))
+    r.restoring = nil
   elseif r.status == "owned" or r.status == "confirmed" then
     -- recognised as owned while we waited (equipped/bought/reported late): nothing more to do
+    r.restoring = nil
   elseif interrupted then
     r.status = "queued"
     if b.via == "node" then r.tries = math.max(0, (r.tries or 1) - 1) end
     log("interrupted by a level change:", b.item)
+  elseif r.restoring and not (b.via == "native" and S() and S().real_mode ~= b.mode) then
+    -- v0.54: an item given back that the game reported nothing new for is still yours: it stays
+    -- owned, quietly (no tries counted, the delivery target is not questioned)
+    r.status = "owned"
+    r.restoring, r.hold, r.skip_visit = nil, nil, nil
+    if b.via == "native" and (G.inv_changed_frame or -1) >= (b.asked or b.sent) then G.native_target_works(b.mode) end
+    log("still in your inventory:", b.item, "(given back, nothing new reported)")
   elseif b.via == "native" then
     local s = S()
     -- b.asked: the frame the request was written. The game's answer can arrive in the same pump
@@ -654,6 +728,7 @@ function G.sanitize_types()
   return dropped
 end
 function G.on_weapon_added(raw)
+  G.visit_weapons = (G.visit_weapons or 0) + 1      -- v0.54: the inventory check after a trip
   local t = math.tointeger(raw) or raw
   local b = G.busy
   local wt = weapon_types()
@@ -731,6 +806,7 @@ function G.on_planet_change(new_name)
   G.settle_until = G.frame + G.SETTLE_FRAMES
   if new_name and new_name ~= "" then
     G.visit = G.visit + 1
+    G.visit_weapons = 0
     end_burst()
     G.burst = { n = 0, ends = G.frame + G.BURST_FRAMES }
     local n = G.native
@@ -790,6 +866,10 @@ function G.on_frame()
     if not oku then log("late answer:", tostring(eu)) end
   end
   if G.donor_job then local ok, err = pcall(G.donor_step); if not ok then log("donor step:", tostring(err)); G.donor_job = nil end end
+  if G.inv_watch and G.gframe >= G.inv_watch.at + G.LOSS_CHECK_FRAMES then
+    local okc, ec = pcall(G.check_inventory)
+    if not okc then log("inventory check:", tostring(ec)) end
+  end
   local b = G.busy
   if b and b.via == "native" and b.stage == "handover" then G.native_handover(b); return end
   if b then

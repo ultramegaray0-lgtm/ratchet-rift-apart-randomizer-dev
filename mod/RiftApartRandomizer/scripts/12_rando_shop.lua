@@ -53,7 +53,7 @@
 -- rivet.read returns is now turned into bytes by one gsub with a lookup table and string.byte (no
 -- Lua loop per byte), reads are smaller, a slice also yields after H.SLICE_SECONDS, and a budget
 -- error makes the next try use half the read size instead of counting against the vendor.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "10.0.5"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SHOP = RANDO_SHOP or {}
 local H = RANDO_SHOP
@@ -176,7 +176,16 @@ function H.discover_pointers(ptr, count, header_at)
   end
   local off, nv = nil, 0
   for o, v in pairs(votes) do if v > nv or (v == nv and off and o < off) then off, nv = o, v end end
-  if not off then return nil, string.format("no vendor weapon in the %d slot objects of the array at +0x%X", #elems, header_at) end
+  if not off then
+    -- v0.54: the first slot object's bytes, once per session, so the next round shows its layout
+    if not H.dumped_slot and elems[1] and elems[1].bytes and #elems[1].bytes > 0 then
+      H.dumped_slot = true
+      local hx = {}
+      for i = 1, #elems[1].bytes do hx[#hx + 1] = string.format("%02X", elems[1].bytes[i]) end
+      log(string.format("slot object 0 of the array at +0x%X (%d objects), first %d bytes:", header_at, #elems, #hx), table.concat(hx, " "))
+    end
+    return nil, string.format("no vendor weapon in the %d slot objects of the array at +0x%X", #elems, header_at)
+  end
   local slots, used, seen_key = {}, {}, {}
   for _, m in ipairs(hits) do
     if m.off == off and not used[m.el.index] and not seen_key[m.key] then
@@ -194,6 +203,7 @@ function H.discover(obj)
   local head = read_span(obj, H.HEADER)
   if #head < 0x40 then return nil, "config not readable" end
   local best, why = nil, H.NO_WEAPONS
+  local ptr_why = nil
   for o = 1, #head - 15, 8 do
     local p = hex64(head, o)
     local ptr = p and tonumber(p, 16)
@@ -202,14 +212,19 @@ function H.discover(obj)
       -- 8.4: an array of pointers to slot objects (VendorConfig.ItemDatas) first
       if not best then
         local lp, whyp = H.discover_pointers(ptr, count, o - 1)
-        if lp then best = lp elseif whyp ~= "not an array of pointers" and whyp ~= "too few slot objects" and whyp ~= "pointer array not readable" then why = whyp end
+        if lp then best = lp elseif whyp ~= "not an array of pointers" and whyp ~= "too few slot objects" and whyp ~= "pointer array not readable" then
+          why = whyp
+          ptr_why = whyp                               -- v0.54: kept for the log (the inline try overwrote it)
+        end
       end
       local data = (not best) and read_span(ptr, math.min(H.MAX_DATA, count * 0x400)) or {}
       local pos = {}
       for i = 1, #data - 7, 8 do
         local id = hex64(data, i)
         if id and H.VENDOR[id] then pos[#pos + 1] = { at = i - 1, key = H.VENDOR[id] } end
-        if i % 512 == 1 then H.pause(true) end
+        -- v0.54: round 26 still ran past the 8 ms frame budget on this loop (a smaller READ size does
+        -- not shorten it): it now yields every 256 bytes instead of every 512
+        if i % 256 == 1 then H.pause(true) end
       end
       if #pos >= 2 then
         local g = 0
@@ -238,7 +253,11 @@ function H.discover(obj)
       end
     end
   end
-  if not best then return nil, why end
+  if not best then
+    -- v0.54: both layouts' reasons reach rivet.log (rounds 18-26 only ever showed the inline one)
+    if ptr_why and ptr_why ~= why then why = why .. "; as pointers: " .. ptr_why end
+    return nil, why
+  end
   table.sort(best.slots, function(a, b) return a.index < b.index end)
   return best
 end

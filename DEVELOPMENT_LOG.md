@@ -4,6 +4,20 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-13: Public Release v0.54 (build 10.0.5): planet shuffle on 0, items given back, no stale guard
+
+- Round 26 (v0.53, a restored save continuing on Viceron): no key, no planet menu, yet `the game's
+  own story took you to viceron - back to the hub`. The guard after a finish read `h.finished_at`, a
+  saved frame of an earlier session. Now this session's frames only.
+- The Viceron load replayed no weapon against 15 items given: the save had lost its inventory
+  (cause unknown). 09: `G.restore_inventory` sends every known item again (lost ones come back,
+  owned ones stay quietly); automatic after hub trips and loads elsewhere when fewer than half of
+  the known weapons are reported; `Ctrl+0` twice by hand.
+- `0` toggles planet shuffle (state.planet_shuffle_off, saved by the companion, kept over New Game).
+  `[` no longer goes home. Banner `Randomizer v0.54 (kit 10.0.5)`. Shop: better reasons, smaller slices.
+- tests/test_v054.py (22), round26_rivet.log added. Kit 10.0.5, generator 10.0.2.
+- Branch release-v0.54. Details: mod/RiftApartRandomizer/docs/CHANGELOG.md.
+
 ## 2026-11-13: Public Release v0.53 (build 10.0.4): the boss fight's shifts find planetary travel off
 
 - Round 25 (v0.52's first run, a restored save at nefcity_1): the city's story ran to

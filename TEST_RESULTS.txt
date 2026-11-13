@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.53 (build 10.0.4) - test run 2026-11-13 13:46 UTC
+Rift Apart Randomizer v0.54 (build 10.0.5) - test run 2026-11-13 15:25 UTC
 Python 3.13.18 on Linux
-ran 379, failures 0, errors 0, skipped 17
+ran 401, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -262,6 +262,28 @@ test_relaunching_the_citys_story_takes_back_what_the_hub_turned_on (tests.test_v
 test_the_boss_fights_shift_finds_travel_off_and_the_return_is_quiet (tests.test_v053.ShiftTests.test_the_boss_fights_shift_finds_travel_off_and_the_return_is_quiet) ... ok
 test_the_city_story_runs_with_the_games_own_world (tests.test_v053.ShiftTests.test_the_city_story_runs_with_the_games_own_world) ... ok
 test_the_world_goes_on_once_the_citys_story_is_finished (tests.test_v053.ShiftTests.test_the_world_goes_on_once_the_citys_story_is_finished) ... ok
+test_bracket_no_longer_goes_back_to_the_hub (tests.test_v054.BackKeyTests.test_bracket_no_longer_goes_back_to_the_hub) ... ok
+test_bracket_still_cancels_the_automatic_return (tests.test_v054.BackKeyTests.test_bracket_still_cancels_the_automatic_return) ... ok
+test_ctrl_bracket_still_finishes_by_hand (tests.test_v054.BackKeyTests.test_ctrl_bracket_still_finishes_by_hand) ... ok
+test_the_banner_names_the_release_and_the_kit (tests.test_v054.BannerTests.test_the_banner_names_the_release_and_the_kit) ... ok
+test_round26_banner (tests.test_v054.EvidenceTests.test_round26_banner) ... ok
+test_round26_the_hub_sent_a_save_load_home (tests.test_v054.EvidenceTests.test_round26_the_hub_sent_a_save_load_home) ... ok
+test_round26_viceron_loaded_without_your_weapons (tests.test_v054.EvidenceTests.test_round26_viceron_loaded_without_your_weapons) ... ok
+test_a_save_on_another_planet_is_left_alone_in_the_next_session (tests.test_v054.GuardTests.test_a_save_on_another_planet_is_left_alone_in_the_next_session) ... ok
+test_an_old_saved_frame_is_ignored (tests.test_v054.GuardTests.test_an_old_saved_frame_is_ignored) ... ok
+test_the_guard_still_keeps_the_order_right_after_a_finish (tests.test_v054.GuardTests.test_the_guard_still_keeps_the_order_right_after_a_finish) ... ok
+test_a_save_that_lost_its_items_gets_them_back_when_it_loads (tests.test_v054.RestoreTests.test_a_save_that_lost_its_items_gets_them_back_when_it_loads) ... ok
+test_an_emptied_inventory_comes_back_after_a_trip (tests.test_v054.RestoreTests.test_an_emptied_inventory_comes_back_after_a_trip) ... ok
+test_an_intact_inventory_is_left_alone (tests.test_v054.RestoreTests.test_an_intact_inventory_is_left_alone) ... ok
+test_ctrl_zero_twice_gives_everything_back_quietly (tests.test_v054.RestoreTests.test_ctrl_zero_twice_gives_everything_back_quietly) ... ok
+test_the_setting_turns_the_automatic_give_back_off (tests.test_v054.RestoreTests.test_the_setting_turns_the_automatic_give_back_off) ... ok
+test_a_choice_made_before_the_restore_wins (tests.test_v054.ShuffleKeyTests.test_a_choice_made_before_the_restore_wins) ... ok
+test_after_a_load_elsewhere_the_saves_travel_is_left_on (tests.test_v054.ShuffleKeyTests.test_after_a_load_elsewhere_the_saves_travel_is_left_on) ... ok
+test_off_nothing_scheduled_fires_later (tests.test_v054.ShuffleKeyTests.test_off_nothing_scheduled_fires_later) ... ok
+test_off_the_games_own_travel_is_never_undone (tests.test_v054.ShuffleKeyTests.test_off_the_games_own_travel_is_never_undone) ... ok
+test_the_choice_is_saved_restored_and_kept_over_a_new_game (tests.test_v054.ShuffleKeyTests.test_the_choice_is_saved_restored_and_kept_over_a_new_game) ... ok
+test_the_travel_byte_the_game_had_on_is_not_turned_off (tests.test_v054.ShuffleKeyTests.test_the_travel_byte_the_game_had_on_is_not_turned_off) ... ok
+test_zero_turns_planet_shuffle_off_and_on (tests.test_v054.ShuffleKeyTests.test_zero_turns_planet_shuffle_off_and_on) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -402,6 +424,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 379 tests in 104.827s
+Ran 401 tests in 166.606s
 
 OK (skipped=17)

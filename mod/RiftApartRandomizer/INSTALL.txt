@@ -57,8 +57,10 @@ NEW GAME (docs\HUB.md has the full walkthrough)
        2. Battle Arena - Zurkie's Battleplex (Zurkie's first visit)
        3. Nefarious City (from the city's real start)
      More destinations appear as you find Coordinates. The ship's planet menu works too.
-  4. [ twice: back to Zurkie's.  Ctrl+[ twice: finish a destination by hand if its story will not
-     start.  / : start the story of the planet you are on.  ; : status.  Old F keys work too.
+  4. [ : cancel the automatic return after a finished destination (v0.54: it no longer takes you
+     back).  Ctrl+[ twice: finish a destination by hand if its story will not start.  / : start the
+     story of the planet you are on.  0 : planet shuffle off / on (remembered).  Ctrl+0 twice:
+     give back every item the randomizer knows you own.  ; : status.  Old F keys work too.
   5. Saving and loading is normal.
 
 IF SOMETHING GOES WRONG

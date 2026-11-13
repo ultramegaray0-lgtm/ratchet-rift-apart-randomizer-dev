@@ -1,4 +1,4 @@
--- Rift Apart Randomizer (Public Release v0.53, build 10.0.4): your seed and settings.
+-- Rift Apart Randomizer (Public Release v0.54, build 10.0.5): your seed and settings.
 -- Change, save, then restart the game (or press Pause to reload the scripts before you play).
 -- A different seed or different randomization options make a NEW seed with its own progress;
 -- start it with NEW GAME. Keys/logging can change any time.
@@ -18,7 +18,7 @@
 --   * a mission, side activity or armor pod with no item gives Bolts or Raritanium
 --   * the solver proves every seed can be finished (in the game's own mission order too)
 --   * hub = false gives 9.0's start instead: the prologue, then Nefarious City, then Sargasso
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.5"   -- the kit check (10_rando_runtime.lua)
 RANDO_SETTINGS = {
   seed = "random",            -- any text, e.g. "lombax-ryno-2026"; "random" = the companion picks one and remembers it
   preset = "balanced",        -- balanced | chaos | full | campaign | everything (docs\PLAYER_GUIDE.md)
@@ -86,8 +86,14 @@ RANDO_SETTINGS = {
   -- in-game options (change any time)
   -- 10.0 the hub (only with hub = true)
   key_hub = "]",                     -- ] next destination, Ctrl+] go
-  key_hub_return = "[",              -- [ twice back to the hub, Ctrl+[ twice finish a destination by hand
+  key_hub_return = "[",              -- [ cancels the trip back after a finished destination (v0.54: it no longer
+                                     -- takes you to the hub), Ctrl+[ twice finish a destination by hand
   key_story = "/",                   -- / start the story of the planet you are on
+  key_shuffle = "0",                 -- v0.54: 0 planet shuffle OFF / ON (remembered in your randomizer save):
+                                     -- off, travel and levels are the game's own, items stay randomized.
+                                     -- Ctrl+0 twice gives back every item the randomizer knows you own
+  restore_inventory = true,          -- v0.54: after the hub's trips, give your items back by itself when the
+                                     -- game reports fewer than half of your weapons
   hub_return_delay = 12,             -- seconds after a finished destination before you go back to the hub
   -- hub_trigger = "parade",         -- v0.51: go once the parade hands Ratchet back after his wrench | "wrench"
   -- hub_prologue = "end",           -- v0.51: the prologue counts as done at the hub | "keep": choose it later

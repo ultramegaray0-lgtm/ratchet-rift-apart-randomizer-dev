@@ -1,5 +1,47 @@
 # Changelog: Ratchet Rift Apart Randomizer
 
+## Public Release v0.54 (beta), 2026-11-13. Randomizer build 10.0.5
+
+Fixes from your round-26 report. **It has not been run in the game yet** (see README).
+
+**Levels: no more being sent back to Nefarious City when a save loads elsewhere**
+- When you continued a save on another planet (Viceron in the report), the randomizer took the load
+  for the game's own story travel and sent you back to Nefarious City. It compared the current
+  session's timer with one saved in an earlier session, so its "just finished a destination" guard
+  stayed on long into the next session. The guard now only uses this session's timer, and the old
+  saved value is ignored.
+
+**`0`: planet shuffle off / on**
+- Press `0` to switch planet shuffle off: the game handles travel, levels and stories its own way.
+  Nothing is undone, nothing warps you, no planet sends you back, and the ship's travel and level
+  unlocks the randomizer turned on in this session go back to the game's own. Items stay
+  randomized and rewards still pay. Press `0` again to switch it back on.
+- The choice is saved with your randomizer progress by the companion, so it survives a restart and
+  a New Game.
+
+**Your items come back**
+- After the randomizer's own trips, and when a save loads on another planet, it compares the
+  game's weapon list with the weapons it gave you. If fewer than half are there, it sends everything
+  it knows you own again: lost items come back ("Given back: ..."), the rest stay as they are.
+- `Ctrl+0` twice does the same by hand, for example in a save that already lost them.
+  `restore_inventory = false` turns the automatic check off.
+
+**`[` no longer takes you back to Nefarious City**
+- `[` only cancels the automatic return after a finished destination. `Ctrl+[` twice still finishes
+  a destination by hand.
+
+**Smaller fixes**
+- The start banner said "Randomizer 10." and now shows "Randomizer v0.54 (kit 10.0.5)".
+- When the shop can't be changed, `rivet.log` now gives the reason for both slot layouts it tries,
+  and its search pauses more often, so it should stay inside rivet_hook's frame budget.
+- Switching planet shuffle off only turns the ship's travel off if the randomizer turned it on.
+
+**Unchanged**
+- Seeds are the same as v0.53 (generator 10.0.2), so your seed keeps its fingerprint and its
+  progress. `rivet.log` shows `RANDO-KIT all 14 scripts are 10.0.5`.
+- `rando_give.dll`, `rivet.toml` and the companion are unchanged.
+- Ms. Zurkon's shop still can't be changed in memory (open since round 18): she sells her usual weapons, and the seed's other shop weapons are given to you directly.
+
 ## Public Release v0.53 (beta), 2026-11-13. Randomizer build 10.0.4
 
 A small fix. **It has not been run in the game yet** (see README).

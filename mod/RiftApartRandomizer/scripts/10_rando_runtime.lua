@@ -40,11 +40,12 @@
 --      Coordinates (15_rando_hub.lua). hub = false: the 9.0 story start.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.5"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.4"
+R.KIT_VERSION = "10.0.5"
+R.RELEASE = "v0.54"                 -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -135,11 +136,16 @@ R.config = {
   hub_fly = true,                    -- to a landing (not a mission's start), fly when a ship answers
   hub_auto_return = true,            -- a finished destination takes you back to the hub
   hub_return_delay = 12,             -- seconds before that ([ cancels)
+  restore_inventory = true,          -- v0.54: after the hub's own trips, give your items back when the load
+                                     -- reports fewer than half of your weapons (Ctrl+0 twice does it by hand)
   hub_hero_swap = true,              -- a destination's hero is set before its story starts
   hub_follow_story = false,          -- true: when the game's own story takes you to an open destination, play it
   key_hub = "]",                     -- ] next destination, Ctrl+] go
-  key_hub_return = "[",              -- [ twice back to the hub, Ctrl+[ twice finish a destination by hand
+  key_hub_return = "[",              -- v0.54: [ cancels the automatic return (it no longer goes back to the
+                                     -- hub), Ctrl+[ twice finish a destination by hand
   key_story = "/",                   -- / start the story of the planet you are on
+  key_shuffle = "0",                 -- v0.54: 0 planet shuffle off / on (remembered), Ctrl+0 twice give your
+                                     -- items back
   shop_close_slots = true,           -- 10.0: closed vendor slots show the Burst Pistol (false: their own weapon)
 }
 R.CHOICES = { hub_trigger = { parade = true, wrench = true, cinematic = true }, hub_levels = { all = true, off = true },
@@ -155,7 +161,7 @@ RETIRED_RUNTIME.story_reload_stuck = "is not used in 10.0: a story waiting at it
 RETIRED_RUNTIME.story_restart_stuck = RETIRED_RUNTIME.story_reload_stuck
 local SETTINGS = RANDO_SETTINGS or {}
 local KEY_SETTINGS = { key_status = true, key_campaign = true, key_test_travel = true, key_test_point = true,
-                       key_hub = true, key_hub_return = true, key_story = true }
+                       key_hub = true, key_hub_return = true, key_story = true, key_shuffle = true }
 local GEN_OPTIONS = {}
 for k, v in pairs(SETTINGS) do
   if R.config[k] ~= nil then
@@ -593,7 +599,9 @@ local last_new_game = -1000
 function R.reset_for_new_game(why)
   local old = S
   -- 10.0: the hub's learned mission starts describe the game, not the run: they are kept
-  local keep = { real_mode = old.real_mode, weapon_types = old.weapon_types, hub_learned = old.hub_learned }
+  -- v0.54: and planet shuffle on/off is your choice, not the run's
+  local keep = { real_mode = old.real_mode, weapon_types = old.weapon_types, hub_learned = old.hub_learned,
+                 planet_shuffle_off = old.planet_shuffle_off }
   S = fresh_state((old.run or 1) + 1); R.state = S
   for k, v in pairs(keep) do S[k] = v end
   S.previous_run = { run = old.run or 1, collected = count(old.collected), bolts = 0, complete = old.campaign_complete or nil }
@@ -870,6 +878,8 @@ function rando_import_state(tbl)
   -- what happened in this session before the restore (Gold Bolts, missions, the items they
   -- gave) is kept, so nothing collected while the companion was still connecting is lost
   if live and live.started then R.merge_live(live, S) end
+  -- v0.54: planet shuffle on/off (the 0 key) as this session or the save has it
+  if RANDO_HUB and RANDO_HUB.after_restore then pcall(RANDO_HUB.after_restore) end
   R.restored = true
   if R.new_game_pending then
     R.new_game_pending = nil
@@ -1097,8 +1107,8 @@ R.bind_setting("key_status", "F9", function()
   say(R.status_text(), { type = "corner", duration = 6 })
 end)
 log("RANDO-KEYS", R.keys_numeric and "keyboard keys on" or "rivet.key() does not use Windows key codes: only its own key names work",
-    string.format("status %s | hub %s | back %s | story %s | test travel %s %s%s", R.key("key_status"), R.key("key_hub"),
-                  R.key("key_hub_return"), R.key("key_story"), R.key("key_test_travel"), R.key("key_test_point"),
+    string.format("status %s | hub %s | stay %s | story %s | planet shuffle %s | test travel %s %s%s", R.key("key_status"), R.key("key_hub"),
+                  R.key("key_hub_return"), R.key("key_story"), R.key("key_shuffle"), R.key("key_test_travel"), R.key("key_test_point"),
                   R.config.legacy_f_keys and " | old F keys too" or ""))
 
 -- start: a pre-generated seed (tools/rando.py writes 00_rando_seed.lua), the settings' seed, or
@@ -1237,7 +1247,9 @@ local function frame(dt)
   end
   if not announced and ready then
     announced = true
-    say("Randomizer " .. R.KIT_VERSION:sub(1, 3) .. " - seed " .. SEED.seed .. " (" .. SEED.fingerprint .. ")", { type = "planet", sub = R.status_text(), duration = 6 })
+    -- (v0.54: round 26 showed "Randomizer 10. - seed ...": the kit's first 3 characters)
+    say("Randomizer " .. R.RELEASE .. " (kit " .. R.KIT_VERSION .. ") - seed " .. SEED.seed .. " (" .. SEED.fingerprint .. ")",
+        { type = "planet", sub = R.status_text(), duration = 6 })
   end
   if frames % 120 == 0 then
     pcall(rivet.ui_publish, 0, string.format('{"gold_bolts":%d,"planets":%d}', R.bolts_collected(), S.planets_done))
@@ -1294,7 +1306,7 @@ function R.test_reset()
   end
   reset_armed_at = -100
   local keep = { real = S.real, real_nodes = S.real_nodes, real_mode = S.real_mode, weapon_types = S.weapon_types,
-                 armor_baseline = S.armor_baseline }
+                 armor_baseline = S.armor_baseline, planet_shuffle_off = S.planet_shuffle_off }
   S = fresh_state(); R.state = S
   for k, v in pairs(keep) do S[k] = v end
   S.test_used = true

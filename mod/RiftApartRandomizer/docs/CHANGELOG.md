@@ -2,6 +2,58 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## 10.0.5 / Public Release v0.54 (2026-11-13): planet shuffle on 0, items given back, no stale guard
+
+Reported (round 26, v0.53, tests/data/round26_rivet.log, seed pocket-pocket-zurkie-839, a restored
+save): `[` (back to the hub) is useless; after trips with `]` / `Ctrl+]` the whole inventory was
+gone; some levels do not work when warped to. Asked: a key to turn the planet randomizer off and on,
+remembered. **Nothing of v0.54 has run in the game.**
+
+Round 26, what the log shows:
+- The game booted on Nefarious City (the restored state: Gold Bolts 3/25, hub 4/14, `in inventory
+  15`), then the save continued on Viceron. No key was pressed (no `RANDO-KEY`), no planet menu was
+  used, the hub launched nothing.
+- Yet: `the game's own story took you to viceron - back to the hub`, `[ORDER KEPT]`, and the trip
+  back was announced. `H.on_arrival`'s guard after a finished destination compared `H.frame` with
+  `h.finished_at`, which was SAVED with the hub's state; frames start at 0 in every session, so a
+  finish of an earlier session held the 2-minute guard far into the next one. Every load on another
+  planet early in a session was undone.
+- The Viceron load replayed one gadget and **no weapon**, against 15 items the randomizer counts as
+  given: that save had lost them (the user's "lost all my inventory"). The cause is not in this log.
+- The banner: `Randomizer 10. - seed ...` (`R.KIT_VERSION:sub(1, 3)`).
+- The shop: `only 0 vendor weapon(s) in the array at +0x48` again, and once `ran past the 8 ms frame
+  budget` at the id loop of `H.discover` (line 210).
+
+Changes:
+- 15: the guards use this session's frames only (`H.session.finished_frame`); `h.finished_at` is no
+  longer written and is cleared on restore.
+- 15: `[` (`H.key_return`) no longer warps home; it only cancels `H.return_at`. `Ctrl+[` twice is
+  unchanged. Messages that offered `[` twice now point to `]` / `Ctrl+]` or the ship.
+- 15: `0` (`key_shuffle`) toggles planet shuffle (`H.set_shuffle`). Off: `H.enabled()` is false (no
+  arrival handling, no pending action, no auto return, no story ladder, hub keys answer "planet
+  shuffle is off"), `14 T.active()` is false (no send-back), `H.take_back_world`. On: `apply_world`
+  at the hub when nothing runs. Stored as `state.planet_shuffle_off` (saved by the companion, kept by
+  `R.reset_for_new_game` and the test reset); a press before the companion's restore wins
+  (`H.after_restore`). Destinations still finish and pay while it is off (no trip back).
+- 15: `apply_world` records the travel byte as its own only when it was off before (`r.before ~=
+  1`), and `H.on_arrival` drops the record at every planet change (a load sets the save's own
+  values), so turning shuffle off never turns off the game's own travel.
+- 09: `G.restore_inventory(why)`: every weapon and gadget with status confirmed / owned / failed is
+  queued again with `restoring`; an answer adds it back ("Given back: ..."), no answer or "inventory
+  changed, nothing new" keeps it owned quietly (no tries, the target is not questioned).
+  `G.watch_inventory` / `G.check_inventory`: 420 game frames after the hub's own trip lands, a
+  same-planet warp, or a load on another planet with nothing running, fewer reported weapons
+  (WeaponAddedEvent since the planet change) than half of the weapons known as yours (at least 2)
+  restores. `restore_inventory = false` turns the check off. `Ctrl+0` twice restores by hand.
+- 10: `key_shuffle = "0"`, `restore_inventory = true`; RANDO-KEYS lists `planet shuffle 0`; banner
+  `Randomizer v0.54 (kit 10.0.5)` (`R.RELEASE`).
+- 12: the id loop yields every 256 bytes (was 512); a failed pointer layout's reason is kept in the
+  log next to the inline one; the first slot object's bytes are logged once when no slot object
+  holds a vendor weapon.
+- Kit 10.0.5; generator stays 10.0.2 (seeds and fingerprints unchanged).
+- Tests: tests/test_v054.py (22); 13 of them fail against v0.53's scripts. test_v051's way-home test
+  calls `H.go_home` (the key no longer does).
+
 ## 10.0.4 / Public Release v0.53 (2026-11-13): the boss fight's shifts find planetary travel off
 
 Reported (round 25, v0.52's first run, tests/data/round25_rivet.log, seed pocket-pocket-zurkie-839,

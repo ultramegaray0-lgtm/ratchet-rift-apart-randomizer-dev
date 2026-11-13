@@ -1,4 +1,4 @@
-# Troubleshooting: Ratchet Rift Apart Randomizer v0.53
+# Troubleshooting: Ratchet Rift Apart Randomizer v0.54
 
 Most answers are in `rivet.log`, in the game folder. Open it in Notepad and search for `RANDO-`.
 
@@ -129,6 +129,29 @@ you should see `planetary travel and level bits left to the game while nefcity_1
 each rift back, `back on nefarious_city from savali during nefcity_1`. If Ratchet still comes down
 with the ship, please send your `rivet.log`.
 
+## A level sends me back to Nefarious City, or "doesn't work" after a warp
+
+v0.54 fixes one cause (v0.53 had it). When you continued a save on another planet, the randomizer
+could mistake that load for the game's own story travel and send you back to Nefarious City. That
+came from a timer the randomizer saved in a previous session. In `rivet.log` you now see
+`arrived on <planet> (a load) - nothing changed` instead of `the game's own story took you to`.
+
+If a level still misbehaves, press `0` to switch **planet shuffle** off. The game then handles
+travel, levels and stories its own way: nothing is undone, nothing warps you, no planet sends you
+back. Items stay randomized. If the level works with it off, please send your `rivet.log`. Press `0`
+again to switch it back on; the choice is remembered with your randomizer progress.
+
+## My weapons and gadgets are gone after a trip
+
+After the randomizer's own trips (`Ctrl+]`, the ship's menu landing it starts a story from) and
+when a save loads on another planet, it compares the game's weapon list with the weapons it gave
+you. If fewer than half are there, it sends everything it knows you own again: lost items come back
+("Given back: ..."), items you still have stay as they are. Press `Ctrl+0` twice to do this by hand
+at any time, for example in a save that lost them before v0.54. In `rivet.log` these lines start
+with `RANDO-RESTORE`. Weapons you bought yourself come back too once the randomizer has seen them
+(bought or equipped); Bolts, Raritanium and armor aren't sent again. What empties the inventory is
+not known yet; please send your `rivet.log` if it happens.
+
 ## Ratchet can't move after the warp
 
 v0.51 and later are meant to prevent this. If it still happens:
@@ -145,8 +168,8 @@ retried and then counted as given. If an item is missing after a reload, see the
 ## I loaded an older save and now items are missing
 
 Loading an older game save doesn't undo randomizer progress. The randomizer still counts items
-as given that the older save doesn't have. Play forward from your latest save. To start the seed
-over, choose New Game.
+as given that the older save doesn't have. Press `Ctrl+0` twice to have them sent again (v0.54), or
+play forward from your latest save. To start the seed over, choose New Game.
 
 ## The shop shows its normal weapons
 
@@ -166,7 +189,7 @@ put in the shop but she doesn't sell are then given to you directly, once (said 
 
 On the mod page, please include:
 
-- the release version (v0.53) and your game version (right-click `RiftApart.exe` → Properties →
+- the release version (v0.54) and your game version (right-click `RiftApart.exe` → Properties →
   Details → File version; v3.630.1.0 shows as 3.0630.1.0);
 - the `rivet.log` from the game folder, uploaded as a file;
 - the companion window's text, if it shows an error;

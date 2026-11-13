@@ -1,4 +1,4 @@
-# Player guide: Ratchet Rift Apart Randomizer v0.53
+# Player guide: Ratchet Rift Apart Randomizer v0.54
 
 ## How a run goes
 
@@ -18,14 +18,23 @@
    depends on in the story (Sargasso's second visit comes after its first, for example). The finale
    opens last.
 5. **Finishing a destination** pays its rewards and lists what's newly open. 12 seconds later
-   you're back in Nefarious City. Press `[` once to cancel that return and stay. If the game's own
+   you're back in Nefarious City. Press `[` to cancel that return and stay. If the game's own
    story tries to carry you to the next planet (to Sargasso after the city's story, for example),
    you're brought back to Nefarious City instead, so you always choose.
 6. **The ship's planet menu works too.** Landing on a planet whose Coordinates you don't have sends
    you back to Nefarious City. Landing on an open planet starts its next destination.
 7. **Revisits.** Once a planet's destinations are done, it appears in the `]` list as "revisit":
    go there for Gold Bolts, armor and side activities.
-8. **Saving and loading are normal.** The companion saves the randomizer's own progress separately
+8. **Planet shuffle off and on (`0`).** If a level misbehaves, press `0`: planet shuffle switches
+   off and the game handles travel, levels and stories its own way (nothing is undone, no warps, no
+   send-backs). Your items stay randomized and rewards still pay. Press `0` again to switch it back
+   on. The choice is saved with your randomizer progress (also over a game restart and a New Game).
+9. **Lost your items?** After the randomizer's own trips, and when a save loads on another planet,
+   it checks the game's weapon list. If fewer than half of the weapons it gave you are there, it
+   sends everything it knows you own again: what you lost comes back ("Given back: ..."), and what
+   you still have stays as it is. `Ctrl+0` twice does the same by hand at any time. Bolts,
+   Raritanium and armor aren't sent again.
+10. **Saving and loading are normal.** The companion saves the randomizer's own progress separately
    (every ~2 seconds when something changes).
 
 ## Keys
@@ -34,15 +43,17 @@
 |---|---|
 | `]` | Show the next destination |
 | `Ctrl+]` | Go to it |
-| `[` twice | Back to Nefarious City (once: cancel an automatic return) |
+| `[` | Cancel the automatic return after a finished destination (since v0.54 it no longer takes you to Nefarious City) |
 | `Ctrl+[` twice | Finish the current destination by hand, if its story will not start |
 | `/` | Start the story of the planet you're on |
+| `0` | Planet shuffle off / on (remembered) |
+| `Ctrl+0` twice | Give back every item the randomizer knows you own |
 | `;` | Status: Gold Bolts, rewards, Coordinates, deliveries still on the way |
 | `Pause` | Reload the scripts (rivet_hook) |
 | `F3` | rivet_hook's overlay window |
 
 The old F keys also work (`F6` = `]`, `F5` = `[`, `F4` = `/`). To change any key, edit
-`scripts\04_rando_settings.lua` (`key_hub`, `key_hub_return`, `key_story`, `key_status`).
+`scripts\04_rando_settings.lua` (`key_hub`, `key_hub_return`, `key_story`, `key_shuffle`, `key_status`).
 
 ## What is randomized
 
@@ -86,6 +97,7 @@ Keys and in-game options can change at any time. A wrong value is reported in `r
 | `hub_prologue_timing` | `"before"` | `"before"`: the prologue is marked done before the city's story starts, as in the game. `"after"`: once you're in the city (v0.51) |
 | `hub_opening` | `true` | Load the city at its opening scene while its story waits at "go to Nefarious City". `false`: at `CHK_NEFCITY_START` (v0.51) |
 | `hub_start_story` | `true` | The first warp starts Nefarious City's story. `false`: just go there |
+| `restore_inventory` | `true` | Give your items back by itself when a trip or a load leaves fewer than half of your weapons. `false`: only `Ctrl+0` twice does it |
 
 ### Presets
 

@@ -86,15 +86,35 @@
 -- H.apply_world), taken back before the hub's own story is launched, and the hub stays quiet when
 -- the story brings you back from a shift. They go on again once no destination is running.
 --
--- Keys (8.3 defaults; legacy_f_keys keeps F6/F5): ] next destination, Ctrl+] go, [ twice back to
--- the hub (cancels an automatic return), Ctrl+[ twice finish this destination by hand, / start the
--- story of the planet you are on.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
+-- v0.54 (10.0.5) ROUND 26. You report: [ (back to the hub) is useless; after trips with ] / Ctrl+]
+-- the inventory was gone; some levels "don't work" when you warp to them. The log (a restored save
+-- that continues on Viceron) shows the hub calling the save's own planet "the game's own story"
+-- and sending you back to Nefarious City: h.finished_at, a frame number of an EARLIER session,
+-- was saved with the hub's state, and frame numbers start at 0 again in every session, so the
+-- 2-minute guard after a finished destination held for the whole first stretch of the next one.
+--   * the guards after a finish and after the hub start are this session's only (H.session)
+--   * [ no longer takes you back to the hub; it only cancels the automatic trip back after a
+--     finished destination. Ctrl+[ twice still finishes a destination by hand
+--   * 0 turns PLANET SHUFFLE off and on (H.set_shuffle): off, the hub and the levels lock leave
+--     travel to the game (no trip undone, no warp, no story started, no send-back, the travel
+--     byte and level bits this session turned on are taken back); items stay randomized. The
+--     choice is part of the randomizer state the companion saves, and survives a New Game
+--   * Ctrl+0 twice gives back everything the randomizer knows you own (09_rando_real.lua
+--     G.restore_inventory); after the hub's own trips and after a load on another planet this
+--     happens by itself when the load reports fewer than half of your weapons
+--   * apply_world records the travel byte as its own only when it was off before, and the record
+--     is dropped at every planet change (a load sets the save's own values): turning shuffle off
+--     never turns off a travel the game itself has on
+--
+-- Keys (8.3 defaults; legacy_f_keys keeps F6/F5): ] next destination, Ctrl+] go, [ cancels an
+-- automatic return, Ctrl+[ twice finish this destination by hand, / start the story of the planet
+-- you are on, 0 planet shuffle off/on, Ctrl+0 twice give your items back.
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.5"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "10.0.4"
+H.VERSION = "10.0.5"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -157,7 +177,9 @@ H.intro_restart = nil       -- frame until which a restarted prologue is not a N
 -- state
 -- ---------------------------------------------------------------------------------------------
 function H.plan() local sd = SEED(); return sd and sd.hub end
-function H.enabled() return H.plan() ~= nil and cfg("hub_runtime", true) ~= false end
+-- v0.54: planet shuffle switched off with the 0 key (saved in the randomizer state)
+function H.shuffle_off() local s = S(); return s ~= nil and s.planet_shuffle_off == true end
+function H.enabled() return H.plan() ~= nil and cfg("hub_runtime", true) ~= false and not H.shuffle_off() end
 function H.state()
   local s = S()
   if not s then return nil end
@@ -266,8 +288,10 @@ function H.status_text()
   if not h.started then return "hub: not started (" .. K("key_hub", true) .. " goes to " .. HUBN() .. ")" end
   local total = #H.plan().destinations
   local cur = h.current and dest_by_id(h.current)
-  return string.format("hub %d/%d done, %d open%s%s", h.n_done, total, #H.available(), cur and (" | at " .. cur.id) or "",
-                       H.enabled() and "" or " (hub_runtime off)")
+  local off = ""
+  if H.shuffle_off() then off = " (planet shuffle OFF - " .. K("key_shuffle") .. " turns it on)"
+  elseif not H.enabled() then off = " (hub_runtime off)" end
+  return string.format("hub %d/%d done, %d open%s%s", h.n_done, total, #H.available(), cur and (" | at " .. cur.id) or "", off)
 end
 
 -- ---------------------------------------------------------------------------------------------
@@ -307,6 +331,7 @@ function H.go(pid, cp, d, prefer_fly, why)
   -- a warp on the planet you are on loads its checkpoint without a planet change: nothing to wait for
   if S() and S().current_planet == pid and method == "warp" then
     if d then H.state().phase = (pid == H.plan().planet) and H.state().phase or "away" end
+    H.watch_inventory("the warp to " .. tostring(cp), true)
     return true
   end
   H.expect = { planet = pid, dest = d and d.id or nil, at = H.frame, how = method, cp = cp, why = why }
@@ -372,6 +397,7 @@ function H.new_game()
   H.return_at, H.hero_job, H.watching, H.intro_restart, H.order_kept = nil, nil, nil, nil, nil
   H.ending_prologue = nil
   H.session.started, H.session.reloaded, H.session.started_frame = {}, {}, nil
+  H.session.finished_frame = nil                       -- v0.54: this session's last finish
   H.session.opening_loaded = {}
   H.session.world = { travel = false, levels = {} }   -- a new game clears both (v0.53)
   local h = H.state()
@@ -587,7 +613,8 @@ function H.apply_world(why)
   if cfg("hub_travel_flag", true) then
     call("travel_set", nil, function(r)
       log("planetary travel:", describe(r))
-      if r.code == 11 and r.after == 1 then w.travel = true end
+      -- v0.54: ours to take back only when the game had it off (0x1 -> 0x1 is the game's own)
+      if r.code == 11 and r.after == 1 and r.before ~= 1 then w.travel = true end
     end, 1)
   end
   if cfg("hub_levels", "all") ~= "all" then return end
@@ -1089,7 +1116,14 @@ function H.finish(d, how, quiet)
   end
   local msg = string.format("Destination complete (%d/%d)%s", h.n_done, #p.destinations,
                             #fresh > 0 and string.format(" - %d new destination(s) open", #fresh) or "")
-  h.finished_at = H.frame
+  -- v0.54: a frame of THIS session (h.finished_at was saved, and a later session's frames start at
+  -- 0 again: the guard below then held long into the next session - round 26)
+  H.session.finished_frame = H.frame
+  h.finished_at = nil
+  if not H.enabled() then
+    say(msg, { type = "planet", sub = "planet shuffle is off - " .. K("key_shuffle") .. " turns it on", duration = 8 })
+    return true
+  end
   if d.kind ~= "hub" and cfg("hub_auto_return", true) then
     local delay = cfg("hub_return_delay", 12)
     H.return_at = H.frame + math.max(1, delay) * 60
@@ -1198,11 +1232,22 @@ function H.playable_on(pid)
   return nil
 end
 
+-- v0.54: the inventory is looked at after every trip of the hub's own (09_rando_real.lua)
+function H.watch_inventory(why, same_planet)
+  local G = RANDO_REAL
+  if G and G.watch_inventory then pcall(G.watch_inventory, why, same_planet) end
+end
+
 function H.on_arrival(pid, from)
   local p, h, s = H.plan(), H.state(), S()
+  -- v0.54: a planet change may be a load, which sets the travel byte and the level bits to the
+  -- save's own values (a later save can have travel ON): what apply_world recorded before it is
+  -- not ours to take back any more (H.take_back_world, planet shuffle off)
+  H.session.world = { travel = false, levels = {} }
   if not (p and h) or not H.enabled() then return false end
   local exp = H.expect
   H.expect = nil
+  if exp and exp.planet == pid then H.watch_inventory("the trip to " .. tostring(pid)) end
   if not h.started then
     if pid == p.planet and (h.phase == "to_hub" or (exp and exp.planet == pid)) then
       -- (v0.52: never an opening scene: the way home must not play it again)
@@ -1260,7 +1305,8 @@ function H.on_arrival(pid, from)
         H.after(H.SETTLE, function() H.launch_dest(d, "planet menu") end, "menu launch " .. d.id)
       else
         h.phase, h.current = "away", nil
-        say(pname(pid) .. ": nothing to play here yet - explore; " .. K("key_hub_return") .. " twice goes back", { type = "corner", duration = 6 })
+        say(pname(pid) .. ": nothing to play here yet - explore, or choose a destination with " .. K("key_hub") .. " / " .. K("key_hub", true),
+            { type = "corner", duration = 6 })
       end
     elseif test_travel_on() then
       h.phase, h.current = "away", nil
@@ -1282,8 +1328,9 @@ function H.on_arrival(pid, from)
   end
   -- the game's own travel right after the hub started, or after a destination finished: the
   -- game would carry on with its own (linear) order - back to the hub
+  -- (v0.54: both frames are this session's; a save of an earlier session never holds the guard)
   local guard = H.session.started_frame and (H.frame - H.session.started_frame) < H.STARTUP_GUARD
-  local after_finish = h.finished_at and (H.frame - h.finished_at) < H.STARTUP_GUARD
+  local after_finish = H.session.finished_frame and (H.frame - H.session.finished_frame) < H.STARTUP_GUARD
   if guard or after_finish or H.return_at then
     local d = H.playable_on(pid)
     if d and cfg("hub_follow_story", false) then
@@ -1301,6 +1348,9 @@ function H.on_arrival(pid, from)
     return true
   end
   log("arrived on", pid, "(a load) - nothing changed")
+  -- v0.54: a save that continues elsewhere is looked at too (round 26: Viceron loaded without a
+  -- single weapon of the 15 items the randomizer had given)
+  H.watch_inventory("the load on " .. tostring(pid))
   return true
 end
 
@@ -1371,7 +1421,7 @@ function H.key_go()
   H.launch_dest(e.dest, K("key_hub", true))
 end
 
-local confirm = { ["return"] = -100, finish = -100 }
+local confirm = { finish = -100, restore = -100 }
 
 -- the story key: start the story of the planet you are on (its next playable destination)
 function H.key_story()
@@ -1389,27 +1439,17 @@ function H.key_story()
   H.launch_dest(d, K("key_story"))
 end
 
+-- v0.54: [ no longer warps back to the hub (round 26: "useless"). It only cancels the automatic
+-- trip back after a finished destination; the ship, ] / Ctrl+] and the next finish take you on.
 function H.key_return()
-  local h, p = H.state(), H.plan()
   if H.return_at then
     H.return_at = nil
-    say("Randomizer: staying here - " .. K("key_hub_return") .. " twice goes back to " .. HUBN(), { type = "corner", duration = 5 })
+    log("automatic return cancelled")
+    say("Randomizer: staying here", { type = "corner", duration = 4 })
     return
   end
-  if not h.started then return say("Randomizer: the hub has not started - " .. K("key_hub", true) .. " goes to " .. HUBN(), { type = "corner", duration = 5 }) end
-  local t = now()
-  if t - confirm["return"] > H.CONFIRM then
-    confirm["return"] = t
-    local cur = h.current and dest_by_id(h.current)
-    say("Randomizer: press " .. K("key_hub_return") .. " again to go back to " .. HUBN() .. ((cur and not h.done[cur.id]) and " (this destination stays open)" or ""),
-        { type = "center", duration = 5 })
-    return
-  end
-  confirm["return"] = -100
-  local cur = h.current and dest_by_id(h.current)
-  if cur and not h.done[cur.id] then h.current = nil end
-  H.ladder, H.launch = nil, nil
-  if not H.go_home(K("key_hub_return")) then say("Randomizer: the warp to " .. HUBN() .. " failed (see rivet.log)", { type = "center", duration = 6 }) end
+  say("Randomizer: " .. K("key_hub_return") .. " only cancels the trip back after a finished destination; "
+      .. K("key_hub_return", true) .. " twice finishes this one by hand", { type = "corner", duration = 5 })
 end
 
 function H.key_finish()
@@ -1425,6 +1465,80 @@ function H.key_finish()
   confirm.finish = -100
   log("[FINISHED BY HAND]", d.id)
   H.finish(d, "by hand")
+end
+
+-- ---------------------------------------------------------------------------------------------
+-- v0.54 planet shuffle off / on (the 0 key), and giving your items back (Ctrl+0 twice)
+-- ---------------------------------------------------------------------------------------------
+-- everything the hub has scheduled or is waiting for is dropped (nothing fires later)
+function H.quiet(why)
+  H.expect, H.menu, H.pending, H.ladder, H.launch = nil, nil, nil, nil, nil
+  H.return_at, H.order_kept, H.watching, H.hero_job = nil, nil, nil, nil
+  if why then log("hub at rest:", why) end
+end
+
+-- off: the game travels and plays its levels its own way; the randomizer's items stay
+function H.set_shuffle(on, why)
+  local s = S()
+  if not s then return false end
+  local was_on = not H.shuffle_off()
+  if on == was_on then return false end
+  s.planet_shuffle_off = (not on) or nil
+  H.session.shuffle_set = not on            -- this session's choice outlives a later restore
+  changed()
+  history(string.format("[PLANET SHUFFLE %s] (%s)", on and "ON" or "OFF", tostring(why)))
+  if not on then
+    H.quiet("planet shuffle off")
+    -- the travel byte and level bits this session turned on go back to what the game had
+    H.take_back_world("planet shuffle off")
+    log("planet shuffle OFF (" .. tostring(why) .. "): the game's own travel, levels and stories are left alone")
+    say("Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)",
+        { type = "center", sub = K("key_shuffle") .. " turns it back on", duration = 8 })
+    return true
+  end
+  log("planet shuffle ON (" .. tostring(why) .. ")")
+  local p, h = H.plan(), H.state()
+  if p and h and h.started and s.current_planet == p.planet and not H.running() then
+    H.after(H.SETTLE, function() H.apply_world("planet shuffle on") end, "planet shuffle on")
+  end
+  say("Randomizer: planet shuffle ON", { type = "center",
+      sub = K("key_hub") .. " lists the destinations, " .. K("key_hub", true) .. " goes", duration = 6 })
+  return true
+end
+function H.key_shuffle()
+  H.set_shuffle(H.shuffle_off(), K("key_shuffle"))
+end
+
+function H.key_restore()
+  local G = RANDO_REAL
+  if not (G and G.restore_inventory and G.owned_items) then
+    return say("Randomizer: 09_rando_real.lua is missing", { type = "corner", duration = 4 })
+  end
+  local n = #G.owned_items()
+  if n == 0 then return say("Randomizer: no items of the randomizer to give back yet", { type = "corner", duration = 4 }) end
+  local t = now()
+  if t - confirm.restore > H.CONFIRM then
+    confirm.restore = t
+    say(string.format("Randomizer: press %s again to send your %d items again (lost ones come back, owned ones stay as they are)",
+                      K("key_shuffle", true), n), { type = "center", duration = 5 })
+    return
+  end
+  confirm.restore = -100
+  local sent = G.restore_inventory("by hand (" .. K("key_shuffle", true) .. ")")
+  say(string.format("Randomizer: sending %d item(s) again - lost ones come back over the next seconds", sent), { type = "corner", duration = 6 })
+end
+
+-- after the companion's restore (10_rando_runtime.lua): a choice made this session wins over the
+-- save's; with planet shuffle off nothing the hub scheduled before the restore may fire
+function H.after_restore()
+  local s = S()
+  if not s then return end
+  if H.session.shuffle_set ~= nil then s.planet_shuffle_off = H.session.shuffle_set or nil end
+  if s.hub then s.hub.finished_at = nil end   -- v0.54: an earlier session's frame (never used again)
+  if H.shuffle_off() then
+    H.quiet("planet shuffle is off (restored)")
+    log("planet shuffle is OFF in this save -", K("key_shuffle"), "turns it on")
+  end
 end
 
 -- ---------------------------------------------------------------------------------------------
@@ -1490,7 +1604,8 @@ function H.tick(frame, ready)
     if S().current_planet == H.plan().planet then
       log("destination finished - already at the hub, no trip back")
     elseif not H.go_home("destination finished") then
-      say("Randomizer: the warp to " .. HUBN() .. " failed - " .. K("key_hub_return") .. " twice to try again", { type = "center", duration = 6 })
+      say("Randomizer: the warp to " .. HUBN() .. " failed - take the ship, or choose a destination with " .. K("key_hub", true),
+          { type = "center", duration = 6 })
     end
   end
 end
@@ -1525,6 +1640,9 @@ local function bind(setting, legacy, fn)
   if not (RANDO and RANDO.bind_setting) then return end
   RANDO.bind_setting(setting, legacy, function()
     if not (H.plan() and S()) then return end
+    if H.shuffle_off() then
+      return say("Randomizer: planet shuffle is off - " .. K("key_shuffle") .. " turns it on", { type = "corner", duration = 4 })
+    end
     if not H.enabled() then return say("Randomizer: hub_runtime is off", { type = "corner", duration = 3 }) end
     local ready = false
     pcall(function() ready = rivet.scene_ready() and rivet.hero() ~= nil end)
@@ -1535,4 +1653,13 @@ end
 bind("key_hub", "F6", function(ctrl) if ctrl then H.key_go() else H.key_select() end end)
 bind("key_hub_return", "F5", function(ctrl) if ctrl then H.key_finish() else H.key_return() end end)
 bind("key_story", nil, function() H.key_story() end)
-log("loaded (" .. H.VERSION .. ")")
+-- v0.54: 0 planet shuffle off / on, Ctrl+0 twice give your items back (both work with it off)
+if RANDO and RANDO.bind_setting then
+  RANDO.bind_setting("key_shuffle", nil, function()
+    if not S() then return say("Randomizer: the seed is still being prepared", { type = "corner", duration = 3 }) end
+    if ctrl_down() then return H.key_restore() end
+    if not H.plan() then return say("Randomizer: planet shuffle is part of hub seeds (hub = true)", { type = "corner", duration = 4 }) end
+    H.key_shuffle()
+  end)
+end
+log("loaded (" .. H.VERSION .. ")" .. (H.shuffle_off() and " - planet shuffle OFF" or ""))

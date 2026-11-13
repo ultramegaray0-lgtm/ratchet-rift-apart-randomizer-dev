@@ -29,7 +29,7 @@
 -- checkpoint is logged by name (RANDO-CHECKPOINT) and the hub knows where a mission really starts.
 -- In a hub seed (15_rando_hub.lua) the hub handles every arrival itself; this file's send-back is
 -- used by 7.0-9.0 style seeds.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "10.0.4"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "10.0.5"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TRAVEL = RANDO_TRAVEL or {}
 local T = RANDO_TRAVEL
@@ -55,6 +55,8 @@ function T.active()
   local seed, s = SEED(), S()
   if not (seed and s and seed.travel_lock) then return false end
   if RANDO and RANDO.config and RANDO.config.levels_runtime == false then return false end
+  -- v0.54: planet shuffle switched off with the 0 key: no planet is locked either
+  if RANDO_HUB and RANDO_HUB.shuffle_off and RANDO_HUB.shuffle_off() then return false end
   return true
 end
 

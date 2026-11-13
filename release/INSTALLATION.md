@@ -1,4 +1,4 @@
-# Installation: Ratchet Rift Apart Randomizer v0.53
+# Installation: Ratchet Rift Apart Randomizer v0.54
 
 Time needed: about 10 minutes. You don't need any programming tools.
 
@@ -96,7 +96,7 @@ companion finds the mod.
 `docs/PLAYER_GUIDE.md` covers the rest of a run.
 
 **Check the install (optional).** Open `rivet.log` in the game folder and search for
-`RANDO-KIT all 14 scripts are 10.0.4`. If you see `RANDO-ERROR` instead, see TROUBLESHOOTING.md.
+`RANDO-KIT all 14 scripts are 10.0.5`. If you see `RANDO-ERROR` instead, see TROUBLESHOOTING.md.
 
 ### Your seed
 
