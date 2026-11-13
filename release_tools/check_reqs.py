@@ -1,6 +1,6 @@
 """Independent check of the release's gameplay requirements (Phase 2) over many seeds.
 
-Run from the repo root:  python3 -I /home/claude/scripts/check_reqs.py <repo> [count]
+Run from the repo root:  python3 -I release_tools/check_reqs.py <repo> [count]
 Uses the shipped Lua generator through tools/rando.py, with the kit's own 04_rando_settings.lua.
 """
 import collections
