@@ -20,7 +20,16 @@
 --   * levels_runtime = false in 04_rando_settings.lua turns the warp off (rewards wait instead).
 -- Nothing here changes the game's files, missions or saves; a warp moves the save's checkpoint to
 -- the planet you came from, which is where you were anyway.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
+--
+-- 10.0 CHECKPOINT NAMES. CheckpointTriggeredEvent carries only CheckpointHash. That number is the
+-- engine's 32-bit string hash of the checkpoint's name (the CRC-32 table with start value
+-- 0xEDB88320 and no final xor, the one rivet.hash uses: MIS_INTRO = 1000115474): 29 names your
+-- game listed match hashes in your rounds 13-23 logs, e.g. CHK_NEFCITY_START = 2052464476 and
+-- CHK_ZURK_00_DEFAULT = 2229284024. Every name the catalog lists is hashed, so each triggered
+-- checkpoint is logged by name (RANDO-CHECKPOINT) and the hub knows where a mission really starts.
+-- In a hub seed (15_rando_hub.lua) the hub handles every arrival itself; this file's send-back is
+-- used by 7.0-9.0 style seeds.
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TRAVEL = RANDO_TRAVEL or {}
 local T = RANDO_TRAVEL
@@ -36,6 +45,9 @@ T.MENU_WINDOW = 180          -- seconds a planet-menu choice waits for its landi
 T.SETTLE_FRAMES = 180        -- frames after the landing (scene and hero ready) before the warp
 T.HATCH_WINDOW = 4           -- seconds between the two Ctrl+F9 presses
 T.pending = nil              -- the last planet-menu choice not landed yet
+T.hash_names = T.hash_names or {}   -- 10.0: engine hash -> checkpoint name (every name the catalog saw)
+T.last_checkpoint = nil      -- 10.0: { hash, name, planet, frame, loaded } of the last CheckpointTriggeredEvent
+T.cp_seen = T.cp_seen or {}  -- hashes already logged this session
 T.warp = nil                 -- { to, planet, from, at_frame }
 T.frame = 0
 
@@ -198,6 +210,50 @@ end
 
 -- add one rivet.checkpoints() answer to the catalog (entries first..last). With `budget` (seconds)
 -- it stops early once that much time has gone. Returns how many it placed and the next entry.
+-- 10.0 the engine's string hash (identical to rivet.hash; in Lua so it never depends on the
+-- hook's version)
+local CRC = {}
+for i = 0, 255 do
+  local c = i
+  for _ = 1, 8 do c = (c & 1 == 1) and ((c >> 1) ~ 0xEDB88320) or (c >> 1) end
+  CRC[i] = c
+end
+function T.hash(text)
+  local c = 0xEDB88320
+  for i = 1, #text do c = (c >> 8) ~ CRC[(c ~ text:byte(i)) & 0xFF] end
+  return c
+end
+function T.name_of_hash(h)
+  h = math.tointeger(tonumber(h)) or h
+  return T.hash_names[h]
+end
+-- every name we know already (the registry's starts, entries, the hub's checkpoints, the logs)
+do
+  local function add(n) if type(n) == "string" and n ~= "" then T.hash_names[T.hash(n)] = n end end
+  for _, seg in ipairs((RANDO_CAMPAIGN and RANDO_CAMPAIGN.SEGMENTS) or {}) do add(seg.entry); add(seg.start_cp) end
+  for _, n in ipairs((RANDO_CAMPAIGN and RANDO_CAMPAIGN.HUB_CHECKPOINTS) or {}) do add(n) end
+  for _, p in ipairs(DB.planets or {}) do
+    for _, n in ipairs((p.checkpoints and p.checkpoints.known) or {}) do add(n) end
+  end
+end
+
+-- CheckpointTriggeredEvent (10_rando_runtime.lua)
+function T.on_checkpoint(hash, loaded)
+  if hash == nil then return end
+  local s = S()
+  local name = T.name_of_hash(hash)
+  local pid = (name and T.planet_of_checkpoint(name)) or (s and s.current_planet)
+  T.last_checkpoint = { hash = hash, name = name, planet = pid, frame = T.frame, loaded = loaded }
+  if not T.cp_seen[hash] then
+    T.cp_seen[hash] = true
+    log("RANDO-CHECKPOINT", name or "(not listed yet)", string.format("hash %s", tostring(hash)), "on", tostring(s and s.current_planet))
+  end
+  if RANDO_HUB and RANDO_HUB.on_checkpoint then
+    local ok, err = pcall(RANDO_HUB.on_checkpoint, T.last_checkpoint)
+    if not ok then log("RANDO-ERROR hub checkpoint", tostring(err)) end
+  end
+end
+
 function T.catalog_add(list, first, last, budget)
   local cat = T.catalog
   local n = 0
@@ -207,6 +263,7 @@ function T.catalog_add(list, first, last, budget)
   local i = first or 1
   while i <= stop do
     local name, area = entry_of(list[i])
+    if type(name) == "string" then T.hash_names[T.hash(name)] = name end
     local pid = T.place(name, area)
     if pid then
       cat.planets[pid] = cat.planets[pid] or {}

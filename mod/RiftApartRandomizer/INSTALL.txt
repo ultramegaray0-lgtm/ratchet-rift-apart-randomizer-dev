@@ -1,15 +1,17 @@
-Ratchet & Clank: Rift Apart - Randomizer 9.0
-============================================
+Ratchet & Clank: Rift Apart - Randomizer 10.0
+=============================================
 For the PC (Steam) game with rivet_hook 2.0.x. Everything is in this folder. ARSENAL_RESTORED is
 optional: its weapons join the randomizer automatically when it is installed
 (docs\ARSENAL_RESTORED.md). Nothing here changes the game's own files.
 
-9.0 REMOVES THE ZURKIE'S HUB. A New Game plays the prologue (the parade on Corson V), then Nefarious
-City, then Sargasso, exactly as the game does. The randomizer moves you nowhere, starts no mission
-and swaps no hero; you travel with the ship's planet menu. Rewards, the shop, armor, Coordinates and
-locked levels work as before. Your 8.5.2 edits are kept (your defaults in 02, Punk and Reaver owned
-from the start). See docs\CHANGELOG.md. 9.0 HAS NOT RUN IN YOUR GAME YET:
-docs\VERIFICATION_REPORT.md says exactly what has been verified, and how.
+10.0 BRINGS THE HUB BACK, WITH PLANET SHUFFLE ON BY DEFAULT. After the parade's wrench, a New Game
+takes you to Zurkie's Battleplex. Choose your first mission there: the Prologue, the Battle Arena or
+Nefarious City. Every other planet opens when you find its Coordinates, which can be anywhere: a Gold
+Bolt, a story mission, a side activity or an armor pod. Finishing a destination brings you back to
+Zurkie's; the game's own next mission does not take over. Rewards are spread over every kind of
+location, and a weapon you can find is never also for sale. docs\HUB.md is the player guide.
+10.0 HAS NOT RUN IN YOUR GAME YET: docs\VERIFICATION_REPORT.md says exactly what has been verified,
+and how.
 
 Play on a SPARE save slot and back up your saves first.
 
@@ -22,55 +24,60 @@ BEFORE YOU START
          the folder that holds info.json in <game>\mods named ARSENAL_RESTORED, and its .lua files
          in <game>\scripts.
 
-INSTALL (also when updating from 8.x)
+INSTALL (also when updating from 9.0 or 8.x)
   1. In <game>\scripts, delete EVERY old randomizer .lua file (all *_rando_*.lua from older kits,
-     including any 00_rando_seed.lua, 07_rando_testmode.lua and 08_rando_probe.lua).
-     DELETE 15_rando_hub.lua: 9.0 has no such file. Leave the ARSENAL_RESTORED .lua files alone.
-  2. Copy the 13 files from this kit's scripts folder into <game>\scripts:
+     including any 00_rando_seed.lua, 07_rando_testmode.lua and 08_rando_probe.lua, and an 8.x
+     15_rando_hub.lua). Leave the ARSENAL_RESTORED .lua files alone.
+  2. Copy the 14 files from this kit's scripts folder into <game>\scripts:
        01_rando_data  02_rando_generator  03_rando_campaign  04_rando_settings
        05_rando_bindings  06_rando_capabilities  09_rando_real  10_rando_runtime  11_rando_campaign
-       12_rando_shop  13_rando_armor  14_rando_travel  16_rando_testtravel
-     Use this kit's 04_rando_settings.lua: it is your 8.5.2 file without the hub lines, preset
-     "balanced". An 8.x settings file still works: rivet.log names every hub option it ignores,
-     and preset "hub" becomes "balanced" ("hub_chaos" becomes "chaos").
+       12_rando_shop  13_rando_armor  14_rando_travel  15_rando_hub  16_rando_testtravel
+     Use this kit's 04_rando_settings.lua: it is your 9.0 file (your 8.5.2 values) plus the 10.0
+     lines. hub = false in it gives 9.0's story start back.
   3. Copy rivet.toml and rando_give.dll next to RiftApart.exe, replacing the old ones.
-     rando_give.dll is v6, the same binary as 8.0-8.5. If you added your own [assets] paths to
+     rando_give.dll is v6, the same binary as 8.0-9.0. If you added your own [assets] paths to
      rivet.toml, keep them.
   4. Copy the companion folder to <game>\rando_companion, replacing the old one.
   5. Check the install: start the game and look in rivet.log (next to RiftApart.exe) for
-       RANDO-KIT all 13 scripts are 9.0.0
-     If it says a file is missing, from another kit, or that 15_rando_hub.lua must be deleted,
-     repeat steps 1-2.
+       RANDO-KIT all 14 scripts are 10.0.0
+     If it says a file is missing or from another kit, repeat steps 1-2.
 
 YOUR SEED AND PROGRESS
-  9.0 seeds are new seeds (generator 9.0, share code RA9): start a NEW GAME. The previous runs'
+  10.0 seeds are new seeds (generator 10.0, share code RA10): start a NEW GAME. The previous runs'
   files stay in companion\randomizer_saves and are never touched.
 
-NEW GAME (docs\PLAYING.md has the full walkthrough)
+NEW GAME (docs\HUB.md has the full walkthrough)
   1. Start companion\Start-Companion.bat, then the game. Keep the companion window open: it saves
      your randomizer progress, sends a random seed, checks for ARSENAL_RESTORED and writes the
      spoiler (companion\randomizer_saves\spoilers - only open it if you want spoilers).
-  2. Choose NEW GAME on a spare slot. The parade plays as usual; your start items arrive.
-  3. Play on: the game takes you to Nefarious City, then Sargasso. After that, fly with the ship's
-     planet menu as the story opens planets. ; shows the status. The old F keys work too.
-  4. Saving and loading is normal.
+  2. Choose NEW GAME on a spare slot. The parade starts as usual. Once Ratchet picks up his wrench
+     you are taken to Zurkie's.
+  3. At Zurkie's:  ]  shows the next destination,  Ctrl+]  goes there.
+       1. Prologue - the parade on Corson V (it carries on where you left it)
+       2. Battle Arena - Zurkie's Battleplex (Zurkie's first visit)
+       3. Nefarious City (from the city's real start)
+     More destinations appear as you find Coordinates. The ship's planet menu works too.
+  4. [ twice: back to Zurkie's.  Ctrl+[ twice: finish a destination by hand if its story will not
+     start.  / : start the story of the planet you are on.  ; : status.  Old F keys work too.
+  5. Saving and loading is normal.
 
 IF SOMETHING GOES WRONG
   rivet.log has every step (search for RANDO-ERROR, RANDO-KIT, RANDO-TRAVEL, RANDO-REAL).
-  - docs\KNOWN_ISSUES.md, docs\RECOVERY.md.
+  - docs\KNOWN_ISSUES.md, docs\RECOVERY.md, docs\HUB.md ("If a destination will not start").
+  - The hub logs every step as RANDO-HUB, and every checkpoint the game loads as RANDO-CHECKPOINT.
   - With locked levels (preset campaign / chaos / everything): Ctrl+; twice opens the planet you
     were last sent back from.
 
 FILES
-  scripts\       the randomizer (13 files)
+  scripts\       the randomizer (14 files)
   rivet.toml     rivet_hook's settings (loads rando_give.dll, ARSENAL_RESTORED paths)
-  rando_give.dll the native helper (v6); rando_give_source\ rebuilds it byte for byte (build.sh)
+  rando_give.dll the native helper (v6, unchanged); rando_give_source\ rebuilds it byte for byte (build.sh)
   companion\     saving, random seeds, spoiler logs, the ARSENAL_RESTORED installer and check
                  (PowerShell, comes with Windows); companion\research\ read-only research tools
   extras\        test mode and developer tools (not needed to play; do not copy for a real run)
-  docs\          PLAYING.md (start here), CHANGELOG.md, VERIFICATION_REPORT.md, KNOWN_ISSUES.md,
+  docs\          HUB.md (start here), PLAYING.md, CHANGELOG.md, VERIFICATION_REPORT.md, KNOWN_ISSUES.md,
                  TESTING.md (with the playthrough checklist), CONFIGURATION.md, TEST_TRAVEL.md,
-                 BATCH_9.0.txt, TEST_RESULTS.txt, WEAPONS.md, SHOP.md, ARMOR.md, ARSENAL_RESTORED.md,
+                 BATCH_10.0.txt, TEST_RESULTS.txt, WEAPONS.md, SHOP.md, ARMOR.md, ARSENAL_RESTORED.md,
                  LEVELS.md, NEW_GAME.md, MIGRATION.md, RECOVERY.md, COMPATIBILITY.md,
                  FEATURES_AND_LIMITATIONS.md, VERIFIED_IN_GAME.md, DESIGN.md, CAMPAIGN.md,
                  RESEARCH.md, RESEARCH_8.0.md, DEVELOPMENT_LOG.md, examples\ (spoiler logs)

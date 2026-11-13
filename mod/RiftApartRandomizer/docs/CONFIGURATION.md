@@ -1,4 +1,4 @@
-# Configuration (9.0)
+# Configuration (10.0)
 
 ## scripts\04_rando_settings.lua
 
@@ -11,6 +11,32 @@ used.
 These are fixed: every Gold Bolt gives one item; Hoverboots and the Map-O-Matic are in the start;
 every weapon has exactly one route (a shop slot, the start or a reward location, WEAPONS.md); the
 solver proves every seed can be finished.
+
+## 10.0: the hub, distribution, shop
+
+| Seed setting | Default | |
+|---|---|---|
+| `hub` | `true` | New Game → Zurkie's Battleplex; choose the Prologue, the Battle Arena or Nefarious City; Coordinates open the rest (HUB.md). `false`: 9.0's story start |
+| `distribution` | `"spread"` | items over Gold Bolts, story missions, side activities and armor pods; `"goldbolts_first"`: every Gold Bolt an item first (4.0-9.0) |
+| `shop_weapons` | `8` | 0-15 different weapons Ms. Zurkon sells; her other normal slots are closed and those weapons are rewards |
+| `early_weapons` | `2` | 0-6 weapons where the start alone can reach (with `weapon_logic = "none"`) |
+
+A hub seed always has `planet_locks = true`, `travel_lock = true` and `campaign_mode = "planet_shuffle"`;
+other values are noted in rivet.log and ignored. `start_coordinates` does not apply.
+
+| In-game option | Default | |
+|---|---|---|
+| `hub_runtime` | `true` | `false`: no hub actions at all |
+| `hub_trigger` | `"wrench"` | when New Game goes to Zurkie's; `"cinematic"`: at once |
+| `hub_force_missions` | `true` | an inactive story mission is made available, then started |
+| `hub_replay` | `true` | if starting fails, try the game's replay call |
+| `hub_levels` / `hub_travel_flag` | `"all"` / `true` | level bits 1-10 and planetary travel on (round 17) |
+| `hub_fly` | `true` | to a landing pad, fly when a ship answers |
+| `hub_auto_return` / `hub_return_delay` | `true` / `12` | back to Zurkie's after a finished destination |
+| `hub_hero_swap` | `true` | the destination's hero is set first |
+| `hub_follow_story` | `false` | `true`: when the game's own story takes you to an open destination, play it |
+| `key_hub` / `key_hub_return` / `key_story` | `]` / `[` / `/` | legacy F6 / F5 / F4 |
+| `shop_close_slots` | `true` | closed slots show the Burst Pistol; `false`: their own weapon |
 
 ## Presets
 

@@ -1,8 +1,38 @@
-# Known issues (Randomizer 9.0)
+# Known issues (Randomizer 10.0)
 
 9.0 has passed every automated test, but it has **not run in your game yet**. Everything below
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
+
+## 0a. Since 10.0
+
+- **Nothing of the 10.0 hub has run in the game.** The steps it uses were seen working in round 17
+  (the warp to Zurkie's, the mission writes and starts, the travel flag and level bits). Three things
+  are new and untested: Nefarious City loaded at `CHK_NEFCITY_START`, the prologue resumed at the
+  parade's checkpoint, and the warp back to Zurkie's after the game's own follow-on travel.
+- **Starts are only known for three destinations** (Nefarious City, Zurkie's first visit, the
+  prologue). The others warp to their landing pad, or fly there when a ship answers. The first
+  checkpoint their story triggers is learned for the next run. If a story waits at its "go to" step,
+  it is loaded once more; after that, `/` or `Ctrl+[` twice.
+- **Heroes.** Round 20 showed every hero swap failing under 8.3; 8.4's confirmation check has never
+  appeared in a log. A destination started as the wrong hero may stall at its first step.
+- **Spybots are not reward locations.** Their pickup event has never appeared in any log, and a
+  location that never triggers would lose its reward. The randomizer will add them once one log
+  shows the event.
+- **The randomizer gives no Gold Bolts.** There is no verified way to add a real one, and a fake one
+  is exactly what you asked to avoid. So Gold Bolts are neither rewards nor shop replacements.
+  `configs/pickup/pup_gold_bolt_item.config` exists in your game's files; whether granting it counts
+  as a real Gold Bolt is untested.
+- **Shop replacements are closed slots, not gadgets or armor.** The vendor sells weapon items only.
+  Putting a gadget or armor id into a weapon slot was judged too risky to try blind. Gadgets and
+  armor are rewards at locations instead.
+- **Armor pods hold weapons, armor and gadgets, but not Coordinates.** Their planets are not known
+  (polling finds a piece after the fact, sometimes on the next planet), so the solver cannot rely on
+  them.
+- **Closed slots and the frame-budget fix are untested.** If the vendor still cannot be changed, it
+  sells its usual weapons, some of which are rewards in your seed (said on screen).
+- **The prologue stays active** while you play other destinations. If loading a save ever drops you
+  back into the parade, that is the reason: `[` twice returns to Zurkie's.
 
 ## 0. Since 9.0
 

@@ -93,8 +93,9 @@ class KeyTests(unittest.TestCase):
         g = Game(settings_file=True)
         c = g.R.config
         self.assertEqual((c.key_status, c.key_campaign, c.key_test_travel, c.key_test_point), (";", "'", ".", ","))
-        for gone in ("key_hub", "key_hub_return", "key_story", "story_on_arrival", "story_reload_stuck"):
-            self.assertIsNone(c[gone], gone)                    # 9.0: gone with the hub
+        self.assertEqual((c.key_hub, c.key_hub_return, c.key_story), ("]", "[", "/"))   # 10.0: the hub is back
+        for gone in ("story_on_arrival", "story_reload_stuck"):
+            self.assertIsNone(c[gone], gone)                    # 8.x hub options the 10.0 hub does not have
         self.assertFalse(c.test_travel)                         # 8.4: off for a real playthrough
         self.assertTrue(c.legacy_f_keys)
 

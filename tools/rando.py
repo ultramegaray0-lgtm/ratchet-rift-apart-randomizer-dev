@@ -152,13 +152,14 @@ def random_settings(rnd, defaults):
     choice = {"start_coordinates": ["start_only", "first_two", "random_extra"],
               "weapon_logic": ["none", "light", "standard"], "accessibility": ["full", "beatable"],
               "campaign_mode": ["vanilla", "planet_shuffle", "mission_shuffle", "full", "chaos"],
-              "shop": ["shuffle", "vanilla"], "shop_prices": ["vanilla", "weapon", "percent", "random"]}
+              "shop": ["shuffle", "vanilla"], "shop_prices": ["vanilla", "weapon", "percent", "random"],
+              "distribution": ["spread", "goldbolts_first"]}
     # some values outside the ranges on purpose: the generator must keep the default and say so
     ranges = {"start_weapons": (0, 6), "start_gadgets": (0, 3), "shop_price_percent": (0, 520),
               "shop_price_max_percent": (0, 520), "bolts_min": (50, 60000), "bolts_max": (50, 110000),
               "raritanium_min": (0, 3000), "raritanium_max": (0, 5200), "bolts_budget": (0, 600000),
               "raritanium_budget": (0, 20000), "bolts_percent": (0, 100), "start_bolts": (0, 120000),
-              "start_raritanium": (0, 6000)}
+              "start_raritanium": (0, 6000), "shop_weapons": (0, 16), "early_weapons": (0, 7)}
     user = {}
     for k, d in defaults.items():
         if k in ("exclude", "start_items"):

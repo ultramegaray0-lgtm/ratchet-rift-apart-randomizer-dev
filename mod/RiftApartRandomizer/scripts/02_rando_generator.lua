@@ -1,11 +1,31 @@
--- Randomizer 9.0 seed generator, progression solver and spoiler log (Lua 5.4).
+-- Randomizer 10.0 seed generator, progression solver and spoiler log (Lua 5.4).
 --
 -- The same code runs inside the game (10_rando_runtime.lua generates the seed from your
 -- settings in small slices across frames) and offline (tools/rando.py, tests). It is fully
 -- deterministic: same seed text + same settings + same data version = same placements,
 -- on any machine. Nothing here depends on table iteration order: every key list is sorted.
 --
--- 9.0 (no hub; the story starts as in the game):
+-- 10.0 (the hub and planet shuffle; the user's 8.5.2 defaults stay the baseline):
+--   * HUB (hub = true, the default): a new game goes to Zurkie's Battleplex after the parade's
+--     wrench. You choose the prologue, the Battle Arena or Nefarious City there; every other visit
+--     opens when you hold its planet's Coordinates (items of this seed) and the visits it depends
+--     on are done (03_rando_campaign.lua C.hub_*). The solver's campaign reach is a fixpoint over
+--     the visits, so the order planets open in is decided by where the Coordinates are. A hub seed
+--     always has Coordinates as items and locked travel (planet_locks, travel_lock).
+--   * REWARDS SPREAD (distribution = "spread", the default): items are no longer poured into the
+--     25 Gold Bolts first. Progression (Coordinates, gadgets a location needs) goes anywhere in
+--     logic; early_weapons weapons go to locations open from the start; every other item is shared
+--     out over Gold Bolts, story missions, side activities and armor pods in proportion to how many
+--     of each there are. Locations left over give Bolts or Raritanium (a Gold Bolt too: the game's
+--     own Gold Bolt still counts as one, the randomizer adds the currency). "goldbolts_first" is
+--     the 4.0-9.0 fill.
+--   * SHOP vs REWARDS (shop_weapons, default 8): Ms. Zurkon's 15 normal slots sell shop_weapons
+--     different weapons; her other slots are CLOSED (the runtime makes them sell the Burst Pistol,
+--     which every save owns, so nothing can be bought there). Every weapon has exactly one route:
+--     a weapon given at the start or at a location is never sold. ARSENAL_RESTORED's weapons are
+--     never shop weapons: they are rewards (their slots in that mod's vendor are closed too).
+--   * Seeds are format 10 (share code RA10).
+-- 9.0 (hub = false: no hub; the story starts as in the game):
 --   * The Zurkie's Battleplex hub of 8.0-8.5 is removed: its presets (hub, hub_chaos) and settings
 --     (hub, hub_start_coordinates, hub_unlocks, hub_finale, hub_revisits) are retired and say so.
 --   * A new game plays the prologue, then Nefarious City, then Sargasso, as in the game. Every
@@ -55,10 +75,10 @@
 --   * Abilities the story gives (Speetle, Trudi, ...) cannot be granted: locations needing
 --     them, and locations whose trigger is not proven (armor finds, collectibles), only ever
 --     hold non-progression rewards.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
 RANDO_GEN = {}
 local G = RANDO_GEN
-G.VERSION = "9.0.0"
+G.VERSION = "10.0.0"
 local DB = RANDO_DATA
 
 -- ------------------------------------------------------------------------------------------
@@ -154,7 +174,15 @@ G.DEFAULTS = {
   -- mission order (3.0, experimental: needs verified mission control, docs/CAMPAIGN.md; 7.0 name mission_order)
   campaign_mode = "planet_shuffle",      -- vanilla | planet_shuffle | mission_shuffle | full | chaos
                                   -- 9.0: every order starts with the prologue, Nefarious City, Sargasso
+                                  -- 10.0: a hub seed is always planet_shuffle (Coordinates decide the order)
   exclude = "",                   -- comma-separated item keys never randomized, e.g. "weapon:ryno_8"
+  -- 10.0
+  hub = true,                     -- a new game goes to Zurkie's Battleplex; choose the prologue, the Battle
+                                  -- Arena or Nefarious City; Coordinates open every other destination
+  distribution = "spread",        -- spread: items over every kind of location | goldbolts_first (4.0-9.0)
+  shop_weapons = 8,               -- different weapons Ms. Zurkon sells (0-15); her other slots are closed
+                                  -- and those weapons become rewards
+  early_weapons = 2,              -- weapons placed at locations open from the start (0-6)
 }
 -- items every seed starts with, whatever the settings say
 G.ALWAYS_START = { "hoverboots", "map_o_matic" }
@@ -169,7 +197,7 @@ G.RETIRED = {
   armor_rewards = "armor", armor_finds = "armor", armor_mode = "armor", shop_weapons = "shop",
   filler_amount = "filler",
   include_hidden_weapons = "phantom", experimental_pickups = "phantom", experimental_collectibles = "phantom",
-  hub = "hub", hub_start_coordinates = "hub", hub_unlocks = "hub", hub_finale = "hub", hub_revisits = "hub",
+  hub_start_coordinates = "hub", hub_unlocks = "hub", hub_finale = "hub", hub_revisits = "hub",
   random_start = "start",
 }
 G.RETIRED_WHY = {
@@ -178,10 +206,10 @@ G.RETIRED_WHY = {
   shop = "is replaced by shop = \"shuffle\" or \"vanilla\" in 5.0 (the vendor sells its own weapons, shuffled)",
   filler = "is replaced by bolts_min/bolts_max and raritanium_min/raritanium_max in 7.0",
   phantom = "is gone in 6.0: every reward must be obtainable (cut weapons, untested pickups and unbound collectibles are never placed)",
-  hub = "is gone in 9.0: the Zurkie's hub was removed (a new game plays the prologue, then Nefarious City)",
+  hub = "is not used in 10.0: the hub's destinations open with Coordinates found in the seed (the start offers the prologue, the Battle Arena and Nefarious City)",
   start = "is gone in 9.0: every seed starts with the prologue, then Nefarious City",
 }
--- 9.0: presets that no longer exist, and the one used instead
+-- 9.0: presets that no longer exist, and the one used instead (10.0: the hub is on in every preset)
 G.RETIRED_PRESETS = { hub = "balanced", hub_chaos = "chaos" }
 -- 7.0 names for existing settings (both are accepted)
 G.ALIASES = { restored_weapons = "include_arsenal_restored", mission_order = "campaign_mode" }
@@ -192,6 +220,7 @@ G.CHOICES = {
   weapon_logic = { none = true, light = true, standard = true },
   accessibility = { full = true, beatable = true },
   campaign_mode = { vanilla = true, planet_shuffle = true, mission_shuffle = true, full = true, chaos = true },
+  distribution = { spread = true, goldbolts_first = true },
 }
 -- the most rando_give.dll hands over in one request is 100,000 (RG_MAX_COUNT)
 G.RANGES = { start_weapons = { 0, 4 }, start_gadgets = { 0, 2 },
@@ -199,7 +228,8 @@ G.RANGES = { start_weapons = { 0, 4 }, start_gadgets = { 0, 2 },
              bolts_min = { 100, 100000 }, bolts_max = { 100, 100000 },
              raritanium_min = { 1, 5000 }, raritanium_max = { 1, 5000 },
              bolts_budget = { 0, 5000000 }, raritanium_budget = { 0, 500000 }, bolts_percent = { 0, 100 },
-             start_bolts = { 0, 100000 }, start_raritanium = { 0, 5000 } }
+             start_bolts = { 0, 100000 }, start_raritanium = { 0, 5000 },
+             shop_weapons = { 0, 15 }, early_weapons = { 0, 6 } }
 G.PRESETS = {
   -- 7.0 presets (9.0: the 8.0 hub presets are gone, G.RETIRED_PRESETS)
   -- balanced: every item system, the game's own level order, moderate currency, weapon prices
@@ -305,7 +335,7 @@ function G.normalize(user, preset)
   local p = G.PRESETS[preset or "balanced"]
   if not p and G.RETIRED_PRESETS[preset] then
     local use = G.RETIRED_PRESETS[preset]
-    warn[#warn + 1] = "preset " .. tostring(preset) .. " is gone in 9.0 (the Zurkie's hub was removed) - using " .. use
+    warn[#warn + 1] = "preset " .. tostring(preset) .. " is gone (10.0: every preset has the hub, hub = true) - using " .. use
     p = G.PRESETS[use]
   end
   if not p then warn[#warn + 1] = "unknown preset " .. tostring(preset) .. " - using balanced"; p = {} end
@@ -340,6 +370,18 @@ function G.normalize(user, preset)
       end
     end
   end
+  -- 10.0 hub: Coordinates are items and travel is locked; the order is planet_shuffle (the hub's
+  -- own: Coordinates decide it); start_coordinates does not apply (the start is the hub's three)
+  if s.hub then
+    local u = user or {}
+    for k, want in pairs({ planet_locks = true, travel_lock = true, campaign_mode = "planet_shuffle" }) do
+      if s[k] ~= want then
+        if u[k] ~= nil then warn[#warn + 1] = k .. " = " .. tostring(s[k]) .. " does not apply to a hub seed (hub = true) - " .. tostring(want) .. " used" end
+        s[k] = want
+      end
+    end
+    if u.start_coordinates ~= nil then warn[#warn + 1] = "start_coordinates does not apply to a hub seed: the prologue's, Zurkie's and Nefarious City's planets are open" end
+  end
   -- travel locks need Coordinates
   if s.travel_lock and not s.planet_locks then
     s.planet_locks = true
@@ -362,12 +404,12 @@ function G.share_code(seed_text, s, preset)
   for _, k in ipairs(sorted_keys(G.DEFAULTS)) do
     if s[k] ~= base[k] then parts[#parts + 1] = k .. "=" .. tostring(s[k]) end
   end
-  return string.format("RA9|%s|%s|%s", seed_text, preset or "balanced", table.concat(parts, ","))
+  return string.format("RA10|%s|%s|%s", seed_text, preset or "balanced", table.concat(parts, ","))
 end
 function G.parse_share_code(code)
-  if code:match("^RA[45678]|") then return nil, "a 4.0-8.5 share code: 9.0 seeds differ (no hub, the story starts as in the game, generator 9.0) - generate a new seed" end
-  local seed, preset, rest = code:match("^RA9|([^|]*)|([^|]*)|(.*)$")
-  if not seed then return nil, "not a Randomizer 9.0 share code" end
+  if code:match("^RA[456789]|") then return nil, "a 4.0-9.0 share code: 10.0 seeds differ (the hub, planet shuffle, rewards spread, generator 10.0) - generate a new seed" end
+  local seed, preset, rest = code:match("^RA10|([^|]*)|([^|]*)|(.*)$")
+  if not seed then return nil, "not a Randomizer 10.0 share code" end
   local user = {}
   for kv in rest:gmatch("[^,]+") do
     local k, v = kv:match("^([%w_]+)=(.*)$")
@@ -382,7 +424,7 @@ function G.parse_share_code(code)
 end
 
 function G.fingerprint(seed_text, s)
-  return G.hex(G.fnv1a(table.concat({ "RA9", G.VERSION, DB.version, seed_text, G.canonical(s) }, "\n"))):sub(1, 12)
+  return G.hex(G.fnv1a(table.concat({ "RA10", G.VERSION, DB.version, seed_text, G.canonical(s) }, "\n"))):sub(1, 12)
 end
 
 -- ------------------------------------------------------------------------------------------
@@ -573,6 +615,13 @@ function G.in_weapon_pool(key, s)
   if not (it and it.category == "weapon") then return false end
   return it.acquisition == "pool" or (it.acquisition == "arsenal_restored" and s.include_arsenal_restored == true)
 end
+-- 10.0: a weapon Ms. Zurkon may sell in one of her 15 normal slots. ARSENAL_RESTORED's weapons are
+-- never shop weapons (that mod's vendor sells them in slots of its own, which the runtime closes
+-- when the seed gives them elsewhere), so they are always rewards.
+function G.shop_eligible(key, s)
+  local it = DB.items[key]
+  return G.in_weapon_pool(key, s) and it.acquisition == "pool"
+end
 -- the vendor's 15 normal slots, named by the weapon each sells in the normal game (sorted)
 function G.vendor_weapons()
   local out = {}
@@ -599,9 +648,20 @@ local function weapon_count(owned)
 end
 
 -- can this location be collected with what is owned? (story progress is free)
-local function can_collect(s, loc, owned, wcount, reach, reach_alt)
+local function can_collect(s, loc, owned, wcount, reach, reach_alt, hreach)
   if not loc.in_logic then return false end
   local camp = s._campaign
+  if camp and camp.hub then
+    -- 10.0 hub: a location counts once the visit holding it can be played
+    local sid = camp.loc_seg[loc.id]
+    if sid and not (hreach and hreach[sid]) then return false end
+    if s.planet_locks and loc.planet and (owned["access:" .. loc.planet] or 0) == 0 then return false end
+    for _, r in ipairs(loc.requires) do
+      if (owned[r] or 0) == 0 then return false end
+    end
+    if loc.planet and wcount < G.weapons_needed(s, planet_index(loc.planet)) then return false end
+    return true
+  end
   if camp then
     local idx = camp.loc_segment[loc.id]
     if idx and idx > (reach or 0) then return false end
@@ -659,9 +719,22 @@ function G.solve(s, pool, placement, start_items, extra, opts)
   for _, g in ipairs(DB.start_kit) do kit[g] = true end
   local creach, cwhy = 0, nil
   local alt, areach, awhy = s._campaign_alt, 0, nil
+  local hreach, horder
+  local hub_first, hub_seq = {}, {}
   while true do
     local wcount = weapon_count(owned)
-    if camp then
+    if camp and camp.hub then
+      hreach, horder = RANDO_CAMPAIGN.hub_reach(camp.dests, owned, kit)
+      creach = #horder
+      if creach < #camp.dests then
+        for _, d in ipairs(camp.dests) do
+          if not hreach[d.id] then cwhy = d.id; break end
+        end
+      else cwhy = nil end
+      for _, id in ipairs(horder) do
+        if not hub_first[id] then hub_first[id] = #spheres + 1; hub_seq[#hub_seq + 1] = id end
+      end
+    elseif camp then
       creach, cwhy = RANDO_CAMPAIGN.reach(camp, owned, kit, wcount, function(i) return G.weapons_needed(s, G.campaign_tier(camp, i)) end)
     end
     if alt then
@@ -669,7 +742,7 @@ function G.solve(s, pool, placement, start_items, extra, opts)
     end
     local sphere = {}
     for _, loc in ipairs(pool) do
-      if not reach[loc.id] and can_collect(s, loc, owned, wcount, creach, areach) then
+      if not reach[loc.id] and can_collect(s, loc, owned, wcount, creach, areach, hreach) then
         sphere[#sphere + 1] = loc.id
       end
     end
@@ -683,7 +756,7 @@ function G.solve(s, pool, placement, start_items, extra, opts)
     if opts.yield then opts.yield() end
   end
   return { reachable = reach, spheres = spheres, owned = owned, campaign_reach = creach, campaign_block = cwhy,
-           alt_reach = areach, alt_block = awhy }
+           alt_reach = areach, alt_block = awhy, hub_route = (camp and camp.hub) and hub_seq or nil, hub_first = hub_first }
 end
 
 -- ------------------------------------------------------------------------------------------
@@ -715,7 +788,18 @@ local function attempt(seed_text, s, fp, n, yield)
   s = copy
   s._campaign = nil
   local corder, vanilla_camp
-  if s.campaign_mode ~= "vanilla" or s.travel_lock then
+  s._campaign_alt = nil
+  if s.hub then
+    -- 10.0: the hub's destinations; a location belongs to the visit that holds it
+    if not (RANDO_CAMPAIGN and RANDO_CAMPAIGN.hub_destinations) then return nil, "03_rando_campaign.lua (10.0) is missing" end
+    local dests = RANDO_CAMPAIGN.hub_destinations()
+    local loc_seg = {}
+    for _, lid in ipairs(sorted_keys(DB.locations)) do
+      local sid = RANDO_CAMPAIGN.location_segment(lid, DB.locations[lid].planet)
+      if sid then loc_seg[lid] = sid end
+    end
+    s._campaign = { hub = true, dests = dests, segments = dests, loc_seg = loc_seg }
+  elseif s.campaign_mode ~= "vanilla" or s.travel_lock then
     if not RANDO_CAMPAIGN then return nil, "03_rando_campaign.lua is missing" end
     -- the game's own order: what runs while mission control is not verified (7.0: every
     -- reordered seed must be finishable in it too), and the order a level-locked seed follows
@@ -726,8 +810,9 @@ local function attempt(seed_text, s, fp, n, yield)
     -- they hold back a planet's rewards, never its story
     vanilla_camp.planet_locks = s.travel_lock == true
   end
-  s._campaign_alt = nil
-  if s.campaign_mode ~= "vanilla" then
+  if s.hub then
+    -- (no linear order: the player chooses among the open destinations)
+  elseif s.campaign_mode ~= "vanilla" then
     local crng = G.rng(G.fnv1a(fp .. "#campaign#" .. n))
     local why
     corder, why = RANDO_CAMPAIGN.sequence(s.campaign_mode, crng)
@@ -784,6 +869,7 @@ local function attempt(seed_text, s, fp, n, yield)
       if not have[pid] then start_coords[#start_coords + 1] = pid; have[pid] = true end
     end
   end
+  if s.hub then start_coords = RANDO_CAMPAIGN.hub_start_planets() end
   if not s.planet_locks then start_coords = {} end
   for _, pid in ipairs(start_coords) do start[#start + 1] = "access:" .. pid; registry["access:" .. pid] = "start" end
   -- a gadget a campaign visit needs that the randomizer will not hand out (gadgets off, or the
@@ -819,20 +905,23 @@ local function attempt(seed_text, s, fp, n, yield)
       registry[it.key] = "start"; start[#start + 1] = it.key
     end
   end
-  -- 6.0 the weapon pool is split: the shop's slots first need enough weapons, so the start takes
-  -- at most what is left over (a warning says so)
+  -- 10.0 the weapons are split three ways: the start, the shop and the reward locations. Ms. Zurkon
+  -- sells shop_weapons different weapons in her free slots (shuffle); her other free slots are
+  -- closed. A slot of an excluded weapon, or every slot of an unshuffled shop, sells its own.
   local slots = G.vendor_weapons()
   local shuffle = s.weapons and s.shop == "shuffle"
   local fixed = {}                     -- slots selling their own weapon (vanilla shop, or excluded)
   for _, k in ipairs(slots) do if not shuffle or ex[k] then fixed[k] = true end end
-  local free_slots = 0
-  for _, k in ipairs(slots) do if not fixed[k] then free_slots = free_slots + 1 end end
-  local wpool = 0
-  for _, it in ipairs(items) do
-    if category(it.key) == "weapon" and not registry[it.key] and not fixed[it.key] then wpool = wpool + 1 end
+  local free = {}
+  for _, k in ipairs(slots) do if not fixed[k] then free[#free + 1] = k end end
+  local function eligible_count()
+    local n = 0
+    for _, it in ipairs(items) do
+      if category(it.key) == "weapon" and not registry[it.key] and not fixed[it.key] and G.shop_eligible(it.key, s) then n = n + 1 end
+    end
+    return n
   end
-  -- 7.0 start_items: items you always start with (from this seed's pool; a weapon only while the
-  -- shop's slots keep enough weapons)
+  -- 7.0 start_items: items you always start with (from this seed's pool)
   local notes = {}
   for key in s.start_items:gmatch("[^,%s]+") do
     local found
@@ -841,31 +930,35 @@ local function attempt(seed_text, s, fp, n, yield)
       -- already there (Hoverboots, Map-O-Matic)
     elseif not found then
       notes[#notes + 1] = "start_items: " .. key .. " is not an item this seed randomizes - ignored"
-    elseif category(key) == "weapon" and (fixed[key] or wpool - 1 < free_slots) then
-      notes[#notes + 1] = "start_items: " .. key .. " - the shop's slots need the other weapons - ignored"
+    elseif category(key) == "weapon" and fixed[key] then
+      notes[#notes + 1] = "start_items: " .. key .. " - its shop slot sells it (shop = vanilla or excluded) - ignored"
     else
       registry[key] = "start (chosen)"; start[#start + 1] = key
-      if category(key) == "weapon" then wpool = wpool - 1 end
     end
   end
-  local start_w = math.max(0, math.min(s.start_weapons, wpool - free_slots))
-  if start_w < s.start_weapons then s._start_short = start_w end
-  take(function(it) return category(it.key) == "weapon" and not fixed[it.key] end, start_w)
-  take(function(it) return category(it.key) == "gadget" end, s.start_gadgets)
-  -- the shop: every slot sells one weapon; shuffled slots get weapons of the pool at random (a
-  -- slot selling its own weapon is avoided when possible), fixed slots their own
-  local shop_slots = {}
+  -- the shop's sellers: open_n of the free slots, chosen at random; the rest are closed
+  local open_n = math.min(#free, s.shop_weapons)
+  local elig = eligible_count()
+  if open_n > elig then
+    notes[#notes + 1] = string.format("shop_weapons lowered to %d: only %d weapons can be sold in this seed", elig, elig)
+    open_n = elig
+  end
+  local shop_slots, closed = {}, {}
   for _, k in ipairs(slots) do if fixed[k] then shop_slots[k] = k; registry[k] = registry[k] or "shop" end end
-  if free_slots > 0 then
+  if open_n > 0 then
     local cands = {}
-    for _, it in ipairs(items) do if category(it.key) == "weapon" and not registry[it.key] then cands[#cands + 1] = it.key end end
+    for _, it in ipairs(items) do
+      if category(it.key) == "weapon" and not registry[it.key] and G.shop_eligible(it.key, s) then cands[#cands + 1] = it.key end
+    end
     rng.shuffle(cands)
-    if #cands < free_slots then return nil, "too few weapons for the shop's slots" end
     local sellers = {}
-    for j = 1, free_slots do sellers[j] = cands[j] end
+    for j = 1, open_n do sellers[j] = cands[j] end
     local open = {}
-    for _, k in ipairs(slots) do if not fixed[k] then open[#open + 1] = k end end
-    -- a derangement when one exists (a few tries are always enough with 15 slots)
+    for _, k in ipairs(free) do open[#open + 1] = k end
+    rng.shuffle(open)
+    for j = #open, open_n + 1, -1 do closed[#closed + 1] = open[j]; open[j] = nil end
+    table.sort(open)
+    -- a derangement when one exists (a slot selling its own weapon is avoided)
     for _ = 1, 50 do
       rng.shuffle(sellers)
       local own = false
@@ -873,7 +966,18 @@ local function attempt(seed_text, s, fp, n, yield)
       if not own then break end
     end
     for i, k in ipairs(open) do shop_slots[k] = sellers[i]; registry[sellers[i]] = "shop" end
+  else
+    for _, k in ipairs(free) do closed[#closed + 1] = k end
   end
+  table.sort(closed)
+  s._shop_closed = closed
+  -- start weapons: any weapon the shop does not sell
+  local wleft = 0
+  for _, it in ipairs(items) do if category(it.key) == "weapon" and not registry[it.key] then wleft = wleft + 1 end end
+  local start_w = math.max(0, math.min(s.start_weapons, wleft))
+  if start_w < s.start_weapons then s._start_short = start_w end
+  take(function(it) return category(it.key) == "weapon" and not fixed[it.key] end, start_w)
+  take(function(it) return category(it.key) == "gadget" end, s.start_gadgets)
   s._shop_slots = shop_slots
   -- 7.0 prices: what each of the 15 slots costs (nil: every slot keeps the game's own price).
   -- Rounded to 50 Bolts. Their own random stream, so prices never move the placements.
@@ -910,26 +1014,8 @@ local function attempt(seed_text, s, fp, n, yield)
   for _, g in ipairs(DB.start_kit) do if DB.items[g] then registry[g] = "start (game kit)" end end
   for _, g in ipairs(G.GAME_GIVEN) do if DB.items[g] then registry[g] = "start (game kit)" end end
 
-  -- one item per Gold Bolt: there must be enough grantable items left for all of them
   local bolts = {}
   for _, loc in ipairs(pool) do if loc.kind == "goldbolt" then bolts[#bolts + 1] = loc.id end end
-  local worthy = 0
-  for _, it in ipairs(items) do if not registry[it.key] and G.bolt_worthy(it.key) then worthy = worthy + 1 end end
-  if worthy < #bolts then
-    return nil, string.format("too few items for one per Gold Bolt: %d items for %d Gold Bolts", worthy, #bolts)
-  end
-
-  -- progression fill (assumed fill): each item goes to a location reachable with everything
-  -- not yet placed assumed owned
-  local prog = {}
-  for _, it in ipairs(items) do if not registry[it.key] and it.class == "progression" then prog[#prog + 1] = it.key end end
-  rng.shuffle(prog)
-  -- coordinates first: they open the most
-  table.sort(prog, function(a, b)
-    local ca, cb = category(a) == "coordinates", category(b) == "coordinates"
-    if ca ~= cb then return ca end
-    return false
-  end)
   local function free_locations(reach, logic_only)
     local out = {}
     for _, loc in ipairs(pool) do
@@ -939,87 +1025,210 @@ local function attempt(seed_text, s, fp, n, yield)
     end
     return out
   end
-  -- Gold Bolts can only take grantable items; count how many Gold Bolts are still free, so the
-  -- progression fill never uses up the items they need
-  local function bolts_free()
-    local c = 0
-    for _, lid in ipairs(bolts) do if not placement[lid] then c = c + 1 end end
-    return c
-  end
-  local base = G.solve(s, pool, placement, start, nil).reachable
-  local worthy_left = worthy
-  while #prog > 0 do
-    local key = table.remove(prog)
-    local assumed = {}
-    for _, k in ipairs(prog) do assumed[#assumed + 1] = k end
-    local res = G.solve(s, pool, placement, start, assumed)
-    local spots = free_locations(res.reachable, true)
-    -- a non-grantable progression item (none today) never goes on a Gold Bolt
-    if not G.bolt_worthy(key) then
-      local keep = {}
-      for _, lid in ipairs(spots) do if DB.locations[lid].kind ~= "goldbolt" then keep[#keep + 1] = lid end end
-      spots = keep
-    elseif worthy_left - 1 < bolts_free() then
-      -- every remaining grantable item is needed by a Gold Bolt: this one must take one
-      local keep = {}
-      for _, lid in ipairs(spots) do if DB.locations[lid].kind == "goldbolt" then keep[#keep + 1] = lid end end
-      spots = keep
+  if s.distribution == "spread" then
+    -- 1) early weapons first: locations you can reach with the start alone get early_weapons weapons
+    --    (weapons that are not progression; the progression fill below works around them)
+    local first = G.solve(s, pool, {}, start, nil).spheres[1] or {}
+    local early = {}
+    for _, lid in ipairs(first) do
+      if not placement[lid] and DB.locations[lid].holds ~= "filler" then early[#early + 1] = lid end
     end
-    if #spots == 0 then return nil, "no reachable location left for " .. key end
-    local deep = {}
-    for _, lid in ipairs(spots) do if not base[lid] then deep[#deep + 1] = lid end end
-    if #deep > 0 and #spots - #deep <= #prog then spots = deep end
-    local lid = rng.pick(spots)
-    placement[lid] = key; registry[key] = "location"
-    if G.bolt_worthy(key) then worthy_left = worthy_left - 1 end
-    if yield then yield() end
-  end
-
-  -- every Gold Bolt still empty gets one grantable item (weapons and gadgets first, armor last)
-  local rest = {}
-  for _, it in ipairs(items) do if not registry[it.key] then rest[#rest + 1] = it.key end end
-  rng.shuffle(rest)
-  local ordered = {}
-  for _, key in ipairs(rest) do if category(key) ~= "armor" then ordered[#ordered + 1] = key end end
-  for _, key in ipairs(rest) do if category(key) == "armor" then ordered[#ordered + 1] = key end end
-  local free_bolts = {}
-  for _, lid in ipairs(bolts) do if not placement[lid] then free_bolts[#free_bolts + 1] = lid end end
-  rng.shuffle(free_bolts)
-  local left = {}
-  for _, key in ipairs(ordered) do
-    if #free_bolts > 0 and G.bolt_worthy(key) then
-      local lid = table.remove(free_bolts)
+    rng.shuffle(early)
+    local ws = {}
+    for _, it in ipairs(items) do
+      if not registry[it.key] and category(it.key) == "weapon" and it.class ~= "progression" then ws[#ws + 1] = it.key end
+    end
+    rng.shuffle(ws)
+    local used = 0
+    for j = 1, math.min(s.early_weapons, #ws, #early) do
+      placement[early[j]] = ws[j]; registry[ws[j]] = "location"; used = j
+    end
+    -- and one Coordinates there, so the first planet beyond the start comes early (any Coordinates
+    -- may go to a location the start reaches: it needs nothing)
+    if s.planet_locks and early[used + 1] then
+      local cs = {}
+      for _, it in ipairs(items) do if not registry[it.key] and category(it.key) == "coordinates" then cs[#cs + 1] = it.key end end
+      if #cs > 0 then
+        local key = cs[rng.below(#cs) + 1]
+        placement[early[used + 1]] = key; registry[key] = "location"
+      end
+    end
+    -- 10.0 SPREAD. 2) progression (Coordinates, gadgets a location needs; weapons with weapon_logic)
+    -- by assumed fill: each goes to a location reachable with everything not yet placed assumed
+    -- owned, any kind of location, no preference for late ones (an early find may open a planet)
+    local prog = {}
+    for _, it in ipairs(items) do if not registry[it.key] and it.class == "progression" then prog[#prog + 1] = it.key end end
+    rng.shuffle(prog)
+    table.sort(prog, function(a, b)
+      local ca, cb = category(a) == "coordinates", category(b) == "coordinates"
+      if ca ~= cb then return ca end
+      return false
+    end)
+    while #prog > 0 do
+      local key = table.remove(prog)
+      local res = G.solve(s, pool, placement, start, prog)
+      local spots = {}
+      for _, lid in ipairs(free_locations(res.reachable, true)) do
+        if DB.locations[lid].holds ~= "filler" then spots[#spots + 1] = lid end
+      end
+      if #spots == 0 then return nil, "no reachable location left for " .. key end
+      local lid = rng.pick(spots)
       placement[lid] = key; registry[key] = "location"
-    else
-      left[#left + 1] = key
+      if yield then yield() end
     end
-  end
-  if #free_bolts > 0 then return nil, "Gold Bolt left without an item: " .. free_bolts[1] end
-  rng.shuffle(left)
+    -- 3) everything else, shared out over the kinds of location in proportion to their number
+    --    (largest remainder), then at random within each kind. Armor pods (anywhere) take part.
+    local left = {}
+    for _, it in ipairs(items) do if not registry[it.key] then left[#left + 1] = it.key end end
+    rng.shuffle(left)
+    local by_kind, kinds, nfree = {}, {}, 0
+    for _, lid in ipairs(free_locations(nil, false)) do
+      if DB.locations[lid].holds ~= "filler" then
+        local k = DB.locations[lid].kind
+        if not by_kind[k] then by_kind[k] = {}; kinds[#kinds + 1] = k end
+        table.insert(by_kind[k], lid)
+        nfree = nfree + 1
+      end
+    end
+    table.sort(kinds)
+    local take_n = math.min(#left, nfree)
+    local quota, given, rems = {}, 0, {}
+    for _, k in ipairs(kinds) do
+      local exact = take_n * #by_kind[k] / math.max(1, nfree)
+      quota[k] = math.floor(exact)
+      given = given + quota[k]
+      rems[#rems + 1] = { k = k, r = exact - quota[k] }
+    end
+    G.stable_sort(rems, function(x, y) return x.r > y.r end)
+    for i = 1, take_n - given do quota[rems[i].k] = quota[rems[i].k] + 1 end
+    local spots = {}
+    for _, k in ipairs(kinds) do
+      rng.shuffle(by_kind[k])
+      for j = 1, quota[k] do spots[#spots + 1] = by_kind[k][j] end
+    end
+    rng.shuffle(spots)
+    for i, key in ipairs(left) do
+      if spots[i] then placement[spots[i]] = key; registry[key] = "location"
+      elseif category(key) == "weapon" then
+        -- more items than locations (few location kinds switched on): a weapon still needs its
+        -- one route, so it starts with you
+        start[#start + 1] = key; registry[key] = "start (no location left)"
+        notes[#notes + 1] = "too few locations: " .. key .. " is given at the start"
+      else registry[key] = "excluded (no location left)" end
+    end
+  else
+    local worthy = 0
+    for _, it in ipairs(items) do if not registry[it.key] and G.bolt_worthy(it.key) then worthy = worthy + 1 end end
+    if worthy < #bolts then
+      return nil, string.format("too few items for one per Gold Bolt: %d items for %d Gold Bolts", worthy, #bolts)
+    end
 
-  -- the rest: the first story mission of each planet first, then every other mission, side
-  -- activity and armor source at random (in-logic first). Filler-only armor sources (the two
-  -- of three folders that are Robot Disguise and Wasteland Gear) never take an item.
-  local free = {}
-  for _, lid in ipairs(free_locations(nil, false)) do
-    if DB.locations[lid].holds ~= "filler" then free[#free + 1] = lid end
-  end
-  rng.shuffle(free)
-  G.stable_sort(free, function(a, b)
-    local ka, kb = KIND_RANK[DB.locations[a].kind] or 9, KIND_RANK[DB.locations[b].kind] or 9
-    return ka < kb
-  end)
-  local fi = 1
-  for _, key in ipairs(left) do
-    if fi > #free then registry[key] = "excluded (no location left)" else
-      placement[free[fi]] = key; registry[key] = "location"; fi = fi + 1
+    -- progression fill (assumed fill): each item goes to a location reachable with everything
+    -- not yet placed assumed owned
+    local prog = {}
+    for _, it in ipairs(items) do if not registry[it.key] and it.class == "progression" then prog[#prog + 1] = it.key end end
+    rng.shuffle(prog)
+    -- coordinates first: they open the most
+    table.sort(prog, function(a, b)
+      local ca, cb = category(a) == "coordinates", category(b) == "coordinates"
+      if ca ~= cb then return ca end
+      return false
+    end)
+    local function free_locations(reach, logic_only)
+      local out = {}
+      for _, loc in ipairs(pool) do
+        if not placement[loc.id] and (not logic_only or (loc.in_logic and reach[loc.id])) then
+          out[#out + 1] = loc.id
+        end
+      end
+      return out
+    end
+    -- Gold Bolts can only take grantable items; count how many Gold Bolts are still free, so the
+    -- progression fill never uses up the items they need
+    local function bolts_free()
+      local c = 0
+      for _, lid in ipairs(bolts) do if not placement[lid] then c = c + 1 end end
+      return c
+    end
+    local base = G.solve(s, pool, placement, start, nil).reachable
+    local worthy_left = worthy
+    while #prog > 0 do
+      local key = table.remove(prog)
+      local assumed = {}
+      for _, k in ipairs(prog) do assumed[#assumed + 1] = k end
+      local res = G.solve(s, pool, placement, start, assumed)
+      local spots = free_locations(res.reachable, true)
+      -- a non-grantable progression item (none today) never goes on a Gold Bolt
+      if not G.bolt_worthy(key) then
+        local keep = {}
+        for _, lid in ipairs(spots) do if DB.locations[lid].kind ~= "goldbolt" then keep[#keep + 1] = lid end end
+        spots = keep
+      elseif worthy_left - 1 < bolts_free() then
+        -- every remaining grantable item is needed by a Gold Bolt: this one must take one
+        local keep = {}
+        for _, lid in ipairs(spots) do if DB.locations[lid].kind == "goldbolt" then keep[#keep + 1] = lid end end
+        spots = keep
+      end
+      if #spots == 0 then return nil, "no reachable location left for " .. key end
+      local deep = {}
+      for _, lid in ipairs(spots) do if not base[lid] then deep[#deep + 1] = lid end end
+      if #deep > 0 and #spots - #deep <= #prog then spots = deep end
+      local lid = rng.pick(spots)
+      placement[lid] = key; registry[key] = "location"
+      if G.bolt_worthy(key) then worthy_left = worthy_left - 1 end
+      if yield then yield() end
+    end
+
+    -- every Gold Bolt still empty gets one grantable item (weapons and gadgets first, armor last)
+    local rest = {}
+    for _, it in ipairs(items) do if not registry[it.key] then rest[#rest + 1] = it.key end end
+    rng.shuffle(rest)
+    local ordered = {}
+    for _, key in ipairs(rest) do if category(key) ~= "armor" then ordered[#ordered + 1] = key end end
+    for _, key in ipairs(rest) do if category(key) == "armor" then ordered[#ordered + 1] = key end end
+    local free_bolts = {}
+    for _, lid in ipairs(bolts) do if not placement[lid] then free_bolts[#free_bolts + 1] = lid end end
+    rng.shuffle(free_bolts)
+    local left = {}
+    for _, key in ipairs(ordered) do
+      if #free_bolts > 0 and G.bolt_worthy(key) then
+        local lid = table.remove(free_bolts)
+        placement[lid] = key; registry[key] = "location"
+      else
+        left[#left + 1] = key
+      end
+    end
+    if #free_bolts > 0 then return nil, "Gold Bolt left without an item: " .. free_bolts[1] end
+    rng.shuffle(left)
+
+    -- the rest: the first story mission of each planet first, then every other mission, side
+    -- activity and armor source at random (in-logic first). Filler-only armor sources (the two
+    -- of three folders that are Robot Disguise and Wasteland Gear) never take an item.
+    local free = {}
+    for _, lid in ipairs(free_locations(nil, false)) do
+      if DB.locations[lid].holds ~= "filler" then free[#free + 1] = lid end
+    end
+    rng.shuffle(free)
+    G.stable_sort(free, function(a, b)
+      local ka, kb = KIND_RANK[DB.locations[a].kind] or 9, KIND_RANK[DB.locations[b].kind] or 9
+      return ka < kb
+    end)
+    local fi = 1
+    for _, key in ipairs(left) do
+      if fi > #free and category(key) == "weapon" then
+        -- 10.0: a weapon keeps its one route even when the locations run out
+        start[#start + 1] = key; registry[key] = "start (no location left)"
+        notes[#notes + 1] = "too few locations: " .. key .. " is given at the start"
+      elseif fi > #free then registry[key] = "excluded (no location left)" else
+        placement[free[fi]] = key; registry[key] = "location"; fi = fi + 1
+      end
     end
   end
   -- 7.0 currency: every other location gives Bolts or Raritanium, each its own amount (none
   -- with bolts = false and raritanium = false). Its own random stream: currency never moves items.
   local cur_lids = {}
   for _, loc in ipairs(pool) do
-    if not placement[loc.id] and loc.kind ~= "goldbolt" then cur_lids[#cur_lids + 1] = loc.id end
+    if not placement[loc.id] and (loc.kind ~= "goldbolt" or s.distribution == "spread") then cur_lids[#cur_lids + 1] = loc.id end
   end
   local amounts, totals, cnotes = G.currency_amounts(s, cur_lids, G.rng(G.fnv1a(fp .. "#currency#" .. n)))
   for lid, key in pairs(amounts) do placement[lid] = key end
@@ -1058,14 +1267,17 @@ local function attempt(seed_text, s, fp, n, yield)
       if s.accessibility == "full" or loc.kind == "planet" then return nil, "location not reachable: " .. loc.id end
     end
   end
-  for _, lid in ipairs(bolts) do
-    if not (placement[lid] and G.bolt_worthy(placement[lid])) then return nil, "Gold Bolt without a grantable item: " .. lid end
+  if s.distribution ~= "spread" then
+    for _, lid in ipairs(bolts) do
+      if not (placement[lid] and G.bolt_worthy(placement[lid])) then return nil, "Gold Bolt without a grantable item: " .. lid end
+    end
   end
   return {
     pool = pool, placement = placement, registry = registry, start = start,
     solve = res, attempt = n, campaign = corder, shop_slots = s._shop_slots, start_short = s._start_short,
     shop_prices = s._shop_prices, currency_totals = totals, notes = notes,
-    start_coords = start_coords,
+    start_coords = start_coords, shop_closed = s._shop_closed,
+    hub_route = res.hub_route, hub_first = res.hub_first,
   }
 end
 
@@ -1088,7 +1300,7 @@ function G.generate(seed_text, user, preset, yield)
       local r, err = attempt(seed_text, eff, fp, n, yield)
       if r then
         if r.start_short then
-          warnings[#warnings + 1] = string.format("start_weapons lowered to %d: the shop's 15 slots need the other weapons (restored_weapons adds 9)", r.start_short)
+          warnings[#warnings + 1] = string.format("start_weapons lowered to %d: no other weapon is left once the shop has its shop_weapons", r.start_short)
         end
         for _, m in ipairs(r.notes or {}) do warnings[#warnings + 1] = m end
         return G.package(seed_text, eff, preset, fp, r, warnings, s)
@@ -1129,12 +1341,12 @@ function G.generate(seed_text, user, preset, yield)
       local was = eff.weapon_logic
       eff.weapon_logic = (was == "standard") and "light" or "none"
       warnings[#warnings + 1] = "weapon_logic lowered from " .. was .. " to " .. eff.weapon_logic .. ": too few locations with these settings"
-    elseif room > 0 and eff.planet_locks and eff.start_coordinates ~= "random_extra" then
+    elseif room > 0 and eff.planet_locks and not eff.hub and eff.start_coordinates ~= "random_extra" then
       -- too few locations to chain every planet's Coordinates: start with one more planet open
       local was = eff.start_coordinates
       eff.start_coordinates = (was == "start_only") and "first_two" or "random_extra"
       warnings[#warnings + 1] = "start_coordinates raised from " .. was .. " to " .. eff.start_coordinates .. ": too few locations with these settings"
-    elseif room > 0 and eff.planet_locks then
+    elseif room > 0 and eff.planet_locks and not eff.hub then
       -- last resort: too few reward locations to chain every planet's Coordinates
       eff.planet_locks = false
       eff.travel_lock = false
@@ -1186,8 +1398,17 @@ function G.package(seed_text, s, preset, fp, r, warnings, requested)
     end
     G.stable_sort(levels.unlock, function(a, b) return a.sphere < b.sphere end)
   end
+  -- 10.0: the hub's plan (destinations, the start choices, one route the solver found)
+  local hub
+  if s.hub then
+    local route = {}
+    for _, id in ipairs(r.hub_route or {}) do route[#route + 1] = id end
+    hub = { planet = RANDO_CAMPAIGN.HUB_PLANET, checkpoints = RANDO_CAMPAIGN.HUB_CHECKPOINTS,
+            start = RANDO_CAMPAIGN.HUB_START, destinations = RANDO_CAMPAIGN.hub_destinations(),
+            route = route, finale_planet = RANDO_CAMPAIGN.BY_ID.finale.planet }
+  end
   return {
-    format = 9, generator = G.VERSION, data = DB.version,
+    format = 10, generator = G.VERSION, data = DB.version, hub = hub,
     seed = seed_text, preset = preset or "balanced", fingerprint = fp, settings = s,
     share_code = G.share_code(seed_text, requested or s, preset), warnings = warnings,
     start = { items = r.start, always = G.ALWAYS_START, bolts = s.start_bolts, raritanium = s.start_raritanium },
@@ -1196,12 +1417,13 @@ function G.package(seed_text, s, preset, fp, r, warnings, requested)
     planet_locks = s.planet_locks, travel_lock = s.travel_lock == true, levels = levels,
     -- 6.0: vendor slot -> weapon it sells; 7.0: vendor slot -> price (nil: the game's prices)
     shop = { mode = (s.weapons and s.shop) or "vanilla", slots = r.shop_slots, prices = r.shop_prices,
-             price_mode = s.shop_prices },
+             price_mode = s.shop_prices, closed = r.shop_closed or {} },
     armor = s.armor,
     filler = { kinds = G.filler_kinds(s), bolts = { s.bolts_min, s.bolts_max }, raritanium = { s.raritanium_min, s.raritanium_max },
                totals = r.currency_totals },
-    campaign = r.campaign and { mode = s.campaign_mode, order = r.campaign, start = r.campaign[1],
-                                needs = RANDO_CAMPAIGN.NEEDS[s.campaign_mode] } or { mode = "vanilla" },
+    campaign = (r.campaign and { mode = s.campaign_mode, order = r.campaign, start = r.campaign[1],
+                                 needs = RANDO_CAMPAIGN.NEEDS[s.campaign_mode] })
+               or (s.hub and { mode = "hub" }) or { mode = "vanilla" },
     restored_weapons = s.include_arsenal_restored == true,
   }
 end
@@ -1230,8 +1452,9 @@ function G.audit(seed)
     local kind = loc and loc.kind
     local fk, amount = G.parse_filler(it)
     if fk then
-      -- currency repeats; never on a Gold Bolt, only the currencies switched on, inside the range
-      if kind == "goldbolt" then bad(lid .. " holds currency") end
+      -- currency repeats; only the currencies switched on, inside the range (10.0: a Gold Bolt may
+      -- give currency with distribution = "spread")
+      if kind == "goldbolt" and s.distribution ~= "spread" then bad(lid .. " holds currency") end
       if not fkinds[fk] then bad(lid .. " holds " .. it .. " but " .. fk .. " = false")
       else
         if amount < s[fk .. "_min"] or amount > s[fk .. "_max"] then
@@ -1248,7 +1471,7 @@ function G.audit(seed)
         if item.category == "currency" then bad(lid .. " holds currency as an item") end
       end
       if loc and loc.holds == "filler" then bad(lid .. " is a filler-only armor source but holds " .. it) end
-    elseif kind ~= "goldbolt" and #G.filler_kinds(s) > 0 then
+    elseif (kind ~= "goldbolt" or s.distribution == "spread") and #G.filler_kinds(s) > 0 then
       bad(lid .. " holds nothing although currency rewards are on")
     end
     if kind == "armor_source" and not s.armor then bad(lid .. " is an armor source with armor = false") end
@@ -1273,27 +1496,83 @@ function G.audit(seed)
     end
   end
   -- 7.0 levels: travel locks need Coordinates; the story's own arrivals are open from the start
+  -- (10.0 hub: exactly the planets of the three starting missions)
+  local open = {}
+  for _, k in ipairs(seed.start.items) do if k:match("^access:") then open[k:sub(8)] = true end end
   if s.travel_lock then
     if not s.planet_locks then bad("travel_lock without planet_locks") end
-    local open = {}
-    for _, k in ipairs(seed.start.items) do if k:match("^access:") then open[k:sub(8)] = true end end
-    for _, pid in ipairs(RANDO_CAMPAIGN.story_arrival_planets()) do
-      if not open[pid] then bad("levels: " .. pid .. " (the story takes you there) is not open from the start") end
+    local want = s.hub and RANDO_CAMPAIGN.hub_start_planets() or RANDO_CAMPAIGN.story_arrival_planets()
+    for _, pid in ipairs(want) do
+      if not open[pid] then bad("levels: " .. pid .. " is not open from the start") end
     end
   end
-  -- 9.0: no hub plan; a campaign order begins with the story's start
-  if seed.hub then bad("a hub plan in a 9.0 seed (the hub was removed)") end
+  -- 10.0 the hub: planet locks and travel locks on, the three starting planets and no other open,
+  -- every destination in the solver's route, the finale last
+  if s.hub then
+    if not (s.planet_locks and s.travel_lock) then bad("hub seed without Coordinates and locked travel") end
+    local starts = {}
+    for _, pid in ipairs(RANDO_CAMPAIGN.hub_start_planets()) do starts[pid] = true end
+    local exs = excluded_set(s)
+    for pid in pairs(open) do
+      if not starts[pid] and not exs["access:" .. pid] and seed.registry["access:" .. pid] ~= "start (chosen)" then
+        bad("hub: " .. pid .. " is open from the start")
+      end
+    end
+    local h = seed.hub
+    if not h then bad("hub = true but the seed has no hub plan")
+    else
+      local ids, seen_r = {}, {}
+      for _, d in ipairs(h.destinations or {}) do ids[d.id] = true end
+      for _, id in ipairs(h.route or {}) do
+        if seen_r[id] then bad("hub route: " .. id .. " twice") end
+        seen_r[id] = true
+      end
+      for id in pairs(ids) do if not seen_r[id] then bad("hub: destination " .. id .. " is never reachable") end end
+      if (h.route or {})[#(h.route or {})] ~= "finale" then bad("hub: the finale is not the last destination of the route") end
+      for i, id in ipairs(RANDO_CAMPAIGN.HUB_START) do
+        if h.start[i] ~= id then bad("hub: the starting missions are not " .. table.concat(RANDO_CAMPAIGN.HUB_START, ", ")) end
+      end
+      local reach = RANDO_CAMPAIGN.hub_reach(h.destinations, (function()
+        local o = {}
+        for _, k in ipairs(seed.start.items) do o[k] = 1 end
+        return o
+      end)(), (function()
+        local k = {}
+        for _, g in ipairs(DB.start_kit) do k[g] = true end
+        return k
+      end)())
+      for _, id in ipairs(RANDO_CAMPAIGN.HUB_START) do
+        if not reach[id] then bad("hub: the starting mission " .. id .. " cannot be played with the start") end
+      end
+    end
+  elseif seed.hub then
+    bad("a hub plan in a seed without hub = true")
+  end
   if seed.campaign and seed.campaign.order then
     for i, id in ipairs(RANDO_CAMPAIGN.STORY_START) do
       if seed.campaign.order[i] ~= id then bad("the campaign order does not start with " .. table.concat(RANDO_CAMPAIGN.STORY_START, " > ")) end
     end
   end
   -- 6.0 the shop: every vendor slot sells one weapon, no weapon twice, none also elsewhere
+  -- (10.0: or is closed; at most shop_weapons sell a weapon other than their own; no
+  -- ARSENAL_RESTORED weapon is sold)
   local sold = {}
+  local closed = {}
+  for _, k in ipairs((seed.shop and seed.shop.closed) or {}) do
+    if closed[k] then bad("the vendor slot of " .. k .. " is closed twice") end
+    closed[k] = true
+    if seed.shop.slots and seed.shop.slots[k] then bad("the vendor slot of " .. k .. " is closed and sells " .. seed.shop.slots[k]) end
+    if seed.shop.mode ~= "shuffle" then bad("an unshuffled shop closes " .. k) end
+  end
+  local moved = 0
   for _, k in ipairs(G.vendor_weapons()) do
     local w = seed.shop and seed.shop.slots and seed.shop.slots[k]
-    if not w then bad("the vendor slot of " .. k .. " sells nothing")
+    if closed[k] then
+      -- closed: sells nothing the seed routes
+    elseif not w then bad("the vendor slot of " .. k .. " sells nothing")
     else
+      if not (seed.shop.mode ~= "shuffle" or excluded_set(s)[k]) then moved = moved + 1 end
+      if DB.items[w] and DB.items[w].acquisition == "arsenal_restored" then bad(w .. " (ARSENAL_RESTORED) is sold in the shop") end
       if sold[w] then bad(w .. " is sold in two vendor slots") end
       sold[w] = k
       if not (G.in_weapon_pool(w, s) or w == k) then bad(w .. " is sold but is not in the weapon pool") end
@@ -1314,6 +1593,7 @@ function G.audit(seed)
       if not G.in_weapon_pool(key, s) and sold[key] and sold[key] ~= key then bad(key .. " is sold in another slot") end
     end
   end
+  if seed.shop.mode == "shuffle" and moved > s.shop_weapons then bad(moved .. " vendor slots sell a seed weapon, above shop_weapons " .. s.shop_weapons) end
   for _, key in ipairs(sorted_keys(seed.registry)) do
     local route = seed.registry[key]
     if route == "location" and not (seen[key] and seen[key] ~= "start") then bad(key .. " registered at a location but not placed") end
@@ -1325,6 +1605,7 @@ function G.audit(seed)
     if not route or route:sub(1, #want) ~= want then bad(key .. " is at " .. where .. " but registered as " .. tostring(route)) end
   end
   -- 4.0: Hoverboots and the Map-O-Matic always start; every Gold Bolt holds one grantable item
+  -- (10.0 spread: a grantable item or currency)
   for _, g in ipairs(G.ALWAYS_START) do
     if seen[g] ~= "start" then bad(g .. " is not in the starting inventory (" .. tostring(seen[g]) .. ")") end
   end
@@ -1334,11 +1615,31 @@ function G.audit(seed)
       nbolts = nbolts + 1
       local l = seed.locations[lid]
       if not l then bad(lid .. " is not a reward location")
-      elseif not l.item then bad(lid .. " holds nothing")
-      elseif not G.bolt_worthy(l.item) then bad(lid .. " holds " .. l.item .. ", which cannot be handed over") end
+      elseif not l.item then
+        if s.distribution ~= "spread" or #G.filler_kinds(s) > 0 then bad(lid .. " holds nothing") end
+      elseif not G.bolt_worthy(l.item) and not (s.distribution == "spread" and G.parse_filler(l.item)) then
+        bad(lid .. " holds " .. l.item .. ", which cannot be handed over")
+      end
     end
   end
   if nbolts ~= 25 then bad("the game has 25 Gold Bolts, the data has " .. nbolts) end
+  -- 10.0 spread: the start's own reach holds early_weapons weapons (as many as the seed has left)
+  -- (with weapon_logic the weapons the logic counts are progression and go where the fill puts them)
+  if s.distribution == "spread" and s.weapon_logic == "none" and seed.spheres and seed.spheres[1] then
+    local early_w, reward_w = 0, 0
+    for _, lid in ipairs(seed.spheres[1]) do
+      local it = seed.locations[lid] and seed.locations[lid].item
+      if it and DB.items[it] and DB.items[it].category == "weapon" then early_w = early_w + 1 end
+    end
+    for _, l in pairs(seed.locations) do
+      if l.item and DB.items[l.item] and DB.items[l.item].category == "weapon" then reward_w = reward_w + 1 end
+    end
+    local spots = 0
+    for _, lid in ipairs(seed.spheres[1]) do if DB.locations[lid].holds ~= "filler" then spots = spots + 1 end end
+    if early_w < math.min(s.early_weapons, reward_w, spots) then
+      bad(string.format("only %d weapon(s) where the start can reach, early_weapons is %d", early_w, s.early_weapons))
+    end
+  end
 
   -- self-locking: a gadget or Coordinates behind its own requirement
   for _, lid in ipairs(sorted_keys(seed.locations)) do
@@ -1393,8 +1694,20 @@ function G.spoiler(seed)
     w(RANDO_CAMPAIGN.describe(seed.campaign.order))
     w("")
   end
-  w("STORY START: a new game plays the prologue (Corson V), then Nefarious City, then Sargasso, as in")
-  w("  the game. The randomizer moves you nowhere; travel is the ship's planet menu.")
+  if seed.hub then
+    local coords_at = {}
+    for _, lid in ipairs(sorted_keys(seed.locations)) do
+      local it = seed.locations[lid].item and DB.items[seed.locations[lid].item]
+      if it and it.category == "coordinates" then coords_at[it.planet] = DB.locations[lid].name end
+    end
+    w("HUB AND PLANET SHUFFLE (Zurkie's Battleplex)")
+    w(RANDO_CAMPAIGN.hub_describe(seed.hub, function(pid) return DB.planets[planet_index(pid)].name end, coords_at))
+    w("  Without a planet's Coordinates the ship's planet menu sends you back to Zurkie's. Finishing a")
+    w("  destination brings you back to Zurkie's; the game's own next mission does not take over.")
+  else
+    w("STORY START: a new game plays the prologue (Corson V), then Nefarious City, then Sargasso, as in")
+    w("  the game. The randomizer moves you nowhere; travel is the ship's planet menu.")
+  end
   w("")
   if seed.levels then
     local lv = seed.levels
@@ -1407,7 +1720,10 @@ function G.spoiler(seed)
     for _, u in ipairs(lv.unlock) do
       w(string.format("    sphere %2d  %-36s Coordinates at %s", u.sphere, DB.planets[planet_index(u.planet)].name, DB.locations[u.at].name))
     end
-    if lv.travel_lock then
+    if seed.hub then
+      w("  Each planet's destinations open with its Coordinates (the hub above). Without them, the ship's")
+      w("  planet menu sends you back to Zurkie's; a mission's own rifts and cutscene travel are never blocked.")
+    elseif lv.travel_lock then
       w("  The story keeps the game's mission order; the solver proves each planet the story needs next is")
       w("  open by then. Without its Coordinates, the randomizer flies you back to the planet you came from.")
     end
@@ -1419,8 +1735,13 @@ function G.spoiler(seed)
   if (seed.start.raritanium or 0) > 0 then w("  ", seed.start.raritanium, " Raritanium") end
   w("  The game's own starting gadgets: ", table.concat(DB.start_kit, ", "))
   w("")
-  w("GOLD BOLTS (one item each; a planet's Gold Bolts are matched in the order you pick them up,")
-  w("            preferring one whose requirements you meet)")
+  if seed.settings.distribution == "spread" then
+    w("GOLD BOLTS (each one you pick up is a real Gold Bolt in the game; the randomizer adds the reward")
+    w("            below. A planet's Gold Bolts are matched in the order you pick them up)")
+  else
+    w("GOLD BOLTS (one item each; a planet's Gold Bolts are matched in the order you pick them up,")
+    w("            preferring one whose requirements you meet)")
+  end
   for i, lid in ipairs(seed.gold_bolts or {}) do
     local l = seed.locations[lid]
     w(string.format("  %2d  %-44s %s%s", i, DB.locations[lid].name, names(l.item or "-"), l.in_logic and "" or "  [needs a story ability]"))
@@ -1432,12 +1753,20 @@ function G.spoiler(seed)
       or "SHOP (Ms. Zurkon sells her own weapons)")
     w("  prices: " .. ({ vanilla = "the game's own", weapon = "what the weapon sold costs in the normal game",
                          percent = "a percentage of each slot's price", random = "random per slot" })[pm])
+    local closed = {}
+    for _, k in ipairs(seed.shop.closed or {}) do closed[k] = true end
     for _, k in ipairs(G.vendor_weapons()) do
       local p = seed.shop.prices and seed.shop.prices[k]
-      w(string.format("  the slot of %-22s sells %-26s %s", names(k), names(seed.shop.slots[k]),
-                      p and string.format("%d Bolts", p) or string.format("(%s Bolts)", tostring(DB.items[k].price or "?"))))
+      if closed[k] then
+        w(string.format("  the slot of %-22s CLOSED (shows the Burst Pistol you own; its weapon is a reward)", names(k)))
+      else
+        w(string.format("  the slot of %-22s sells %-26s %s", names(k), names(seed.shop.slots[k]),
+                        p and string.format("%d Bolts", p) or string.format("(%s Bolts)", tostring(DB.items[k].price or "?"))))
+      end
     end
     w("  Shatterbomb and RYNO 8 (after all 10 Spybots) stay in their own slots; ammo and upgrades as usual")
+    w("  No weapon is both sold and given: a weapon at the start or at a location is never in a shop slot,")
+    w("  and a slot of another vendor (ARSENAL_RESTORED's) selling such a weapon is closed by the runtime")
     if seed.shop.prices then w("  New prices apply only once the runtime finds the game's own prices in memory (docs/SHOP.md)") end
   end
   w("")

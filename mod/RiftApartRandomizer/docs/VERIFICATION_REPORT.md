@@ -1,3 +1,57 @@
+# Verification report: Randomizer 10.0 (2026-11-13)
+
+Each feature is placed in four categories. "Game" means one of your rivet.logs (rounds 13-23) shows it
+working. **10.0 has not run in the game.** It was built on a Linux machine without the game. Nothing is
+listed under G unless a round showed exactly that code path working.
+
+| | |
+|---|---|
+| **A** | verified by automated tests (run_tests.py: 332 tests, 0 failures, 17 skipped; big_batch: 56,600 seeds valid) |
+| **S** | verified by static inspection (code review, data checked against your logs) |
+| **G** | verified by actual game execution (round number) |
+| **N** | not verified: needs the game |
+
+| Feature (10.0) | A | S | G | N: what is still unknown |
+|---|---|---|---|---|
+| Hub seeds: three start choices, Coordinates-driven order, every order finishable | A (19,600 hub seeds, independent sphere walk) | S | | |
+| New Game → Zurkie's at the parade's wrench | A (simulated; round 23's real events start it at the wrench; round 13's save loads never do) | | the warp: G (17, kit 8.0) | N: with the prologue left active |
+| Prologue resumes at the parade's checkpoint | A (simulated) | S (a warp to the last checkpoint with the mission unchanged = a save load) | | **N** |
+| Battle Arena: `MIS_ZURK_01_VISIT_01` started at Zurkie's | A | | the same calls: G (17, played to completion) | N: with the warp to `CHK_ZURK_00_DEFAULT` after the start |
+| Nefarious City at `CHK_NEFCITY_START` | A (simulated rule) | S (rounds 16/23: the game's own load of the story is hash 2052464476 = that name) | | **N: the key test of round 24** |
+| Mission ladder (write "available", then start) | A | S | G (17: NEFCITY_01, ZURK_01, ZURK_02B) | |
+| Hero set before a story | A | S | | N (round 20 showed every swap failing under 8.3; the 8.4 check never ran in a log) |
+| A story stuck at "go to" reloaded on the same planet | A (simulated) | | | **N** |
+| The game's follow-on travel undone (`[ORDER KEPT]`) | A (simulated chain from round 23, including its order: complete on Ardolis, then the rift) | S (round 23 lines 695-729) | warps: G (17, 19) | **N** |
+| Planet menu: locked → Zurkie's; open → its destination starts | A | | send-back: G (17) | N: the start on an open planet |
+| Travel flag + level bits on every arrival | A | | G (17) | |
+| Checkpoint names from hashes (`RANDO-CHECKPOINT`) | A (29 names match real logs) | S | | |
+| Learned starts (kept over a New Game) | A | | | N |
+| Rewards spread; early weapons and Coordinates | A (statistics over 200+ seeds; verifier) | | | |
+| Gold Bolts stay real (the game counts them; the randomizer adds a reward) | A | S (no Gold Bolt event is changed or faked) | the game's count: G (16-23) | |
+| One route per weapon; no ARSENAL_RESTORED weapon sold | A (56,600 seeds) | | | |
+| Closed vendor slots (Burst Pistol) and other vendors' duplicate slots closed | A (simulated memory) | | | **N: never applied in game; whether the screen accepts it** |
+| Shop search within the frame budget | A (parse 512 bytes well under 2 ms here) | S | | **N: rounds 17-23 all overran** |
+| 9.0 story start with `hub = false` | A | | G (23) | |
+| rando_give.dll v6 (unchanged) | A | S | G (17-23) | |
+| Spybots as reward locations | | | | **not done**: their pickup event has never been seen |
+| Real Gold Bolts as rewards or shop items | | | | **not done**: no verified way to grant one |
+
+## What was done for 10.0
+
+1. **Round 23 read in full.** It showed why planet shuffle never ran (the director waits for lab lines
+   that were never written) and that the shop overran its budget again. Reading the checkpoint
+   hashes against every name your game listed also showed that the hash is the engine's CRC-32, and
+   that Nefarious City's story loads at `CHK_NEFCITY_START`.
+2. **Generator**: hub mode, fixpoint reach, spread fill, shop split, audit rules (destinations
+   reachable, start planets only, one route per weapon, no ARSENAL_RESTORED weapon sold, closed
+   slots, early weapons), and a spoiler with the route.
+3. **Runtime**: `15_rando_hub.lua` (new), hooks in 10 and 14, closed slots and parsing in 12.
+4. **Tests**: `test_v100.py` (39 tests). The older suites run their original rules with
+   `PRE10_SETTINGS`. The simulator gained checkpoint events, the start-checkpoint rule and the
+   game's own next-mission chain, each marked SIMULATED with its log evidence.
+5. **Seeds**: 56,600 (BATCH_10.0.txt): 19,600 hub seeds (your 04 file, every preset, with and
+   without ARSENAL_RESTORED, random settings) plus 37,000 pre-10.0-mode seeds.
+
 # Verification report: Randomizer 9.0 (2026-11-12)
 
 Each feature is placed in four categories. "Game" means one of your rivet.logs (rounds 13-22) shows
@@ -47,7 +101,7 @@ feature is only listed under "actual game execution" when a round showed it with
    reproduces your 01; before, re-running it reverted Punk/Reaver.
 4. **Tests**: `test_v90.py` (20 tests, above); the older suites pin the settings they were written for
    instead of relying on defaults you changed; the hub's tests are removed.
-5. **Seeds**: 41,000 seeds (BATCH_9.0.txt), including 6,000 from your kit 04 file with and without
+5. **Seeds**: 41,000 seeds (BATCH_9.0.txt, replaced by BATCH_10.0.txt), including 6,000 from your kit 04 file with and without
    ARSENAL_RESTORED.
 
 ## Earlier passes (8.5)

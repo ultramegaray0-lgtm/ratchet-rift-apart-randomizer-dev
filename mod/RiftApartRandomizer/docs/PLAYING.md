@@ -1,5 +1,9 @@
 # Playing Randomizer 9.0
 
+> **10.0:** with the default `hub = true`, a New Game goes to Zurkie's Battleplex after the wrench and you
+> choose the first mission there. See **HUB.md**. The text below describes `hub = false` (9.0's story start)
+> and everything that is the same in both (rewards, shop, armor, saves).
+
 9.0 has no Zurkie's hub. A run is the game's own story with randomized rewards:
 
 1. **Start.** `companion\Start-Companion.bat`, then the game. **New Game** on a spare slot.

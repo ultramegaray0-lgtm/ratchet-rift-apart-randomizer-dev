@@ -1,5 +1,6 @@
-"""Randomizer 9.0: no Zurkie's hub; a new game plays the prologue, then Nefarious City, then
-Sargasso, as in the game.
+"""Randomizer 9.0's story start, kept in 10.0 as hub = false: a new game plays the prologue, then
+Nefarious City, then Sargasso, as in the game. (10.0 brings the hub back as the default; its tests
+are tests/test_v100.py. Every seed here sets hub = false.)
 
 Generator: the hub presets and settings are retired (and say so), and every campaign order of every
 mode begins with the story's start (checked by verify_story_start, written here independently of
@@ -30,7 +31,8 @@ SCRIPTS = MOD / "scripts"
 # the game's own start (the parade's rifts end on Nefarious City; finishing MIS_NEFCITY_01 takes
 # you to Sargasso, round 16 lines 338-344) - written down here, not read from 03
 STORY_START = ["corson_intro", "nefcity_1", "sargasso_1"]
-HUB_KEYS = {"hub", "hub_start_coordinates", "hub_unlocks", "hub_finale", "hub_revisits", "random_start"}
+HUB_KEYS = {"hub_start_coordinates", "hub_unlocks", "hub_finale", "hub_revisits", "random_start"}
+NO_HUB = {"hub": False}
 
 
 def verify_story_start(d):
@@ -42,8 +44,10 @@ def verify_story_start(d):
     for k in HUB_KEYS:
         if k in s:
             probs.append("the seed's settings still hold " + k)
-    if d.get("format") != 9:
-        probs.append("format %r, not 9" % d.get("format"))
+    if s.get("hub"):
+        probs.append("hub = true")
+    if d.get("format") != 10:
+        probs.append("format %r, not 10" % d.get("format"))
     order = (d.get("campaign") or {}).get("order")
     if order:
         if list(order[:3]) != STORY_START:
@@ -84,7 +88,7 @@ def story_game(settings=None, scripts_dir=None, settings_file=False, **kw):
         game.sim.auto_travel = True
         game.sim.ship_near = True
 
-    st = {"seed": "v90-story"}
+    st = {"seed": "v90-story", "hub": False}
     st.update(settings or {})
     g = Game(settings=None if settings_file else st, scripts_dir=scripts_dir, settings_file=settings_file,
              dll_version=6, before_scripts=before, **kw)
@@ -137,19 +141,25 @@ class GeneratorTests(unittest.TestCase):
         cls.eng = rando.Engine()
 
     def gen(self, seed, user=None, preset="balanced"):
-        s, audit = self.eng.generate(seed, user or {}, preset)
+        st = dict(NO_HUB)
+        st.update(user or {})
+        s, audit = self.eng.generate(seed, st, preset)
         self.assertIsNotNone(s, audit)
         self.assertEqual(audit, [], seed)
         return py(s)
 
-    def test_no_hub_in_the_generator(self):
+    def test_no_hub_plan_with_hub_false(self):
         G = self.eng.G
         d = py(G.DEFAULTS)
         self.assertFalse(HUB_KEYS & set(d), HUB_KEYS & set(d))
+        self.assertTrue(d["hub"])                       # 10.0: the hub is the default
         self.assertIsNone(G.PRESETS["hub"])
         self.assertIsNone(G.PRESETS["hub_chaos"])
-        self.assertIsNone(self.eng.lua.globals().RANDO_CAMPAIGN.hub_plan)
-        self.assertEqual(G.VERSION, "9.0.0")
+        self.assertIsNone(self.eng.lua.globals().RANDO_CAMPAIGN.hub_plan)   # the 8.x plan builder is gone
+        self.assertEqual(G.VERSION, "10.0.0")
+        s = self.gen("v90-nohub")
+        self.assertIsNone(s.get("hub"))
+        self.assertEqual(s["campaign"]["order"][:3], STORY_START)
 
     def test_your_defaults_are_kept(self):
         d = py(self.eng.G.DEFAULTS)
@@ -161,17 +171,17 @@ class GeneratorTests(unittest.TestCase):
         for old, new in (("hub", "balanced"), ("hub_chaos", "chaos")):
             a = self.gen("v90-retired", None, old)
             b = self.gen("v90-retired", None, new)
-            self.assertTrue(any(("preset %s is gone in 9.0" % old) in w for w in a["warnings"]), a["warnings"])
+            self.assertTrue(any(("preset %s is gone" % old) in w for w in a["warnings"]), a["warnings"])
             self.assertEqual(a["fingerprint"], b["fingerprint"])
             self.assertEqual(a["locations"], b["locations"])
             self.assertEqual(verify_story_start(a), [])
 
     def test_retired_settings_are_named_and_ignored(self):
-        a = self.gen("v90-settings", {"hub": True, "hub_unlocks": 2, "hub_start_coordinates": 4, "hub_finale": "half",
+        a = self.gen("v90-settings", {"hub_unlocks": 2, "hub_start_coordinates": 4, "hub_finale": "half",
                                       "hub_revisits": False, "random_start": True})
         b = self.gen("v90-settings")
-        gone = [w for w in a["warnings"] if "is gone in 9.0" in w]
-        self.assertEqual(len(gone), 6, a["warnings"])
+        gone = [w for w in a["warnings"] if "is gone in 9.0" in w or "is not used in 10.0" in w]
+        self.assertEqual(len(gone), 5, a["warnings"])
         self.assertEqual(a["fingerprint"], b["fingerprint"])
         self.assertEqual(verify_story_start(a), [])
 
@@ -208,17 +218,17 @@ class GeneratorTests(unittest.TestCase):
 
     def test_share_code_and_format(self):
         d = self.gen("share-v90", None, "chaos")
-        self.assertTrue(d["share_code"].startswith("RA9|share-v90|chaos|"), d["share_code"])
-        self.assertEqual(d["format"], 9)
+        self.assertTrue(d["share_code"].startswith("RA10|share-v90|chaos|"), d["share_code"])
+        self.assertEqual(d["format"], 10)
         G = self.eng.G
         seed, preset, user = G.parse_share_code(d["share_code"])
         self.assertEqual((seed, preset), ("share-v90", "chaos"))
         old, why = G.parse_share_code("RA8|x|hub|")
         self.assertIsNone(old)
-        self.assertIn("9.0", why)
+        self.assertIn("10.0", why)
 
     def test_spoiler_says_how_the_story_starts(self):
-        s, _ = self.eng.generate("v90-spoiler", {}, "balanced")
+        s, _ = self.eng.generate("v90-spoiler", dict(NO_HUB), "balanced")
         text = self.eng.spoiler(s)
         self.assertIn("STORY START", text)
         self.assertIn("prologue (Corson V), then Nefarious City, then Sargasso", text)
@@ -226,6 +236,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertNotIn("Random start", text)
 
     def test_your_04_settings_generate(self):
+        # your 10.0 file with hub = false (its hub = true default is tests/test_v100.py's)
         preset, opts = USER_SETTINGS()
         self.assertEqual(preset, "balanced")
         self.assertFalse(HUB_KEYS & set(opts))
@@ -243,38 +254,33 @@ class GeneratorTests(unittest.TestCase):
         preset, opts = USER_SETTINGS(DATA / "user_04_rando_settings_8.5.2.lua")
         self.assertEqual(preset, "hub")
         d = self.gen("v90-old-04", dict(opts, restored_weapons=False), preset)
-        self.assertTrue(any("preset hub is gone in 9.0" in w for w in d["warnings"]), d["warnings"])
+        self.assertTrue(any("preset hub is gone" in w for w in d["warnings"]), d["warnings"])
         self.assertEqual(verify_story_start(d), [])
 
 
 class KitTests(unittest.TestCase):
-    def test_the_kit_has_no_hub_script(self):
+    def test_the_kit_is_one_version(self):
         names = sorted(p.name for p in SCRIPTS.glob("*.lua"))
-        self.assertNotIn("15_rando_hub.lua", names)
-        self.assertEqual(len(names), 13, names)
+        self.assertIn("15_rando_hub.lua", names)           # 10.0: the hub is back
+        self.assertEqual(len(names), 14, names)
         for p in SCRIPTS.glob("*.lua"):
-            text = p.read_text(encoding="utf-8")
-            self.assertNotIn("RANDO_HUB", text, p.name)
-            self.assertIn('= "9.0.0"', text, p.name)
+            self.assertIn('= "10.0.0"', p.read_text(encoding="utf-8"), p.name)
 
     def test_kit_check_passes(self):
         g = Game()
         self.assertEqual(g.load_errors, [])
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 13 scripts are 9.0.0"), [l for l in g.logs() if "KIT" in l])
-        self.assertIsNone(g.g.RANDO_HUB)
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.0"), [l for l in g.logs() if "KIT" in l])
 
-    def test_hub_keys_are_not_bound(self):
+    def test_hub_keys_do_nothing_without_a_hub(self):
         g = Game()
         g.ready()
-        for key in ("]", "[", "/", "F5", "F6", "F4"):
+        for key in ("]", "[", "/"):
             g.press(key)
             g.press(key, ctrl=True)
-        pressed = [l for l in g.logs() if "RANDO-KEY\t" in l]
-        self.assertEqual(pressed, [])
-        keys = [l for l in g.logs() if "RANDO-KEYS" in l][0]
-        self.assertNotIn("hub", keys)
-        self.assertNotIn("story", keys)
+        self.assertEqual(list(g.sim.warps.values()), [])
+        self.assertEqual(list(g.sim.travels.values()), [])
+        self.assertIsNone(g.state.hub)
 
 
 class SettingsFileTests(unittest.TestCase):
@@ -296,31 +302,38 @@ class SettingsFileTests(unittest.TestCase):
         g.bridge("return rando_set_arsenal(false)")
         self.assertTrue(g.wait_seed(), g.logs()[-5:])
 
-    def test_your_9_0_settings_file(self):
-        g = story_game(settings_file=True)
+    def test_your_settings_file_with_hub_false(self):
+        d = pathlib.Path(tempfile.mkdtemp(prefix="rando90-"))
+        self.addCleanup(shutil.rmtree, d, True)
+        for p in SCRIPTS.glob("*.lua"):
+            shutil.copy(p, d / p.name)
+        text = (SCRIPTS / "04_rando_settings.lua").read_text(encoding="utf-8")
+        (d / "04_rando_settings.lua").write_text(text.replace("  -- hub = true,", "  hub = false,", 1), encoding="utf-8")
+        g = story_game(settings_file=True, scripts_dir=d)
         self.start(g, "v90-your-04")
         self.assertEqual(g.seed.preset, "balanced")
         self.assertFalse(any("is gone in 9.0" in l for l in g.logs()), [l for l in g.logs() if "gone" in l])
         self.assertTrue(g.seed.planet_locks)
         self.assertFalse(g.seed.travel_lock)
+        self.assertIsNone(g.seed.hub)
         play_the_story_start(self, g)
 
     def test_your_8_5_2_settings_file_still_loads(self):
+        # 10.0: its hub options mean something again; preset "hub" is balanced (which has the hub)
         g = story_game(settings_file=True, scripts_dir=self.scripts_with(DATA / "user_04_rando_settings_8.5.2.lua"))
         self.start(g, "v90-old-04")
-        self.assertTrue(g.log_has("preset hub is gone in 9.0"))
-        for k in ("key_hub", "hub_trigger", "story_on_arrival", "key_story"):
-            self.assertTrue(g.log_has(k + "\tis gone in 9.0"), k)
+        self.assertTrue(g.log_has("preset hub is gone"))
+        self.assertTrue(g.log_has("story_on_arrival\tis not used in 10.0"))
+        self.assertFalse(g.log_has("key_hub\tis gone"))
         self.assertEqual(g.seed.settings.campaign_mode, "planet_shuffle")
-        play_the_story_start(self, g)
+        self.assertTrue(g.seed.settings.hub)
+        self.assertIsNotNone(g.seed.hub)
 
-    def test_a_leftover_hub_script_is_reported_and_does_nothing(self):
+    def test_an_8_5_hub_script_is_reported_as_another_version(self):
         d = self.scripts_with(extra={"15_rando_hub.lua": DATA / "old_15_rando_hub_8.5.lua"})
         g = story_game(scripts_dir=d)
         g.step(2)
-        self.assertTrue(g.log_has("delete from the scripts folder: 15_rando_hub.lua"))
-        self.assertTrue(g.note_has("delete 15_rando_hub.lua"))
-        play_the_story_start(self, g)
+        self.assertTrue(g.log_has("other versions: 15_rando_hub 8.5.0"), [l for l in g.logs() if "KIT" in l])
 
 
 class StoryStartTests(unittest.TestCase):

@@ -11,6 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import rando  # noqa: E402
+from harness import pre10_engine  # noqa: E402  (10.0: the 4.0-9.0 rules, see harness.py)
 from luajson import py  # noqa: E402
 
 with open(os.path.join(ROOT, "data", "game_db.json"), encoding="utf-8") as f:
@@ -412,7 +413,7 @@ class DatabaseTests(unittest.TestCase):
 class GeneratorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.eng = rando.Engine()
+        cls.eng = pre10_engine()
 
     def gen(self, seed, user=None, preset="balanced"):
         s, audit = self.eng.generate(seed, user or {}, preset)
@@ -422,7 +423,7 @@ class GeneratorTests(unittest.TestCase):
 
     def test_reproducible_across_lua_states(self):
         for preset in ("standard", "chaos", "armor", "classic"):
-            ea, eb = rando.Engine(), rando.Engine()      # separate Lua states: different string hashing
+            ea, eb = pre10_engine(), pre10_engine()      # separate Lua states: different string hashing
             a = ea.generate("same-seed", {}, preset)[0]
             b = eb.generate("same-seed", {}, preset)[0]
             self.assertEqual(a.fingerprint, b.fingerprint)
@@ -442,7 +443,7 @@ class GeneratorTests(unittest.TestCase):
         user = {"start_weapons": 1, "weapon_logic": "standard", "raritanium": False, "shop": "vanilla",
                 "exclude": "weapon:ryno_8", "bolts_max": 20000, "shop_prices": "percent", "shop_price_percent": 80}
         a = self.gen("share-me", user, "chaos")
-        self.assertTrue(a["share_code"].startswith("RA9|share-me|chaos|"))
+        self.assertTrue(a["share_code"].startswith("RA10|share-me|chaos|"))
         self.assertIn("raritanium=false", a["share_code"])
         self.assertIn("bolts_max=20000", a["share_code"])
         seed, preset, u = self.eng.G.parse_share_code(a["share_code"])
@@ -450,7 +451,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(a["fingerprint"], b["fingerprint"])
         bad, why = self.eng.G.parse_share_code("RA6|x|standard|")[:2]
         self.assertIsNone(bad)
-        self.assertIn("9.0 seeds differ", why)
+        self.assertIn("10.0 seeds differ", why)
 
     def test_one_item_per_gold_bolt_and_fixed_start(self):
         for i in range(300):
@@ -734,7 +735,7 @@ class BatchTests(unittest.TestCase):
     PRESETS = ("balanced", "chaos", "full", "campaign", "everything", "standard", "coordinates")
 
     def test_presets(self):
-        eng = rando.Engine()
+        eng = pre10_engine()
         n = 0
         for preset in self.PRESETS:
             for i in range(300):
@@ -750,13 +751,15 @@ class BatchTests(unittest.TestCase):
         self.assertEqual(n, 2100)
 
     def test_random_setting_combinations(self):
-        eng = rando.Engine()
+        eng = pre10_engine()
         rnd = random.Random("unit-batch-7")
         d = eng.defaults()
         n = refused = 0
         for c in range(250):
             preset = rnd.choice(self.PRESETS)
             user = rando.random_settings(rnd, d)
+            for k10 in ("hub", "distribution", "shop_weapons", "early_weapons"):
+                user.pop(k10, None)        # 10.0 keys: this suite checks the pre-10.0 rules (harness.PRE10_SETTINGS)
             # the vanilla planet order is checked here; campaign combinations by test_campaign.py
             user["campaign_mode"], user["random_start"] = "vanilla", False
             for i in range(4):
@@ -778,7 +781,7 @@ class VerifierMutationTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.eng = rando.Engine()
+        cls.eng = pre10_engine()
 
     def seed(self, preset="campaign", user=None, name="mut"):
         s, audit = self.eng.generate(name, user or {}, preset)

@@ -40,7 +40,20 @@
 -- 32-bit integer or a 32-bit float. Only an offset where at least 3 slots hold their own price,
 -- and no slot holds a different one there, is taken; then each slot's price is written there in
 -- the same encoding and read back. Otherwise prices stay the game's own (RANDO-SHOP says so).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "9.0.0"   -- the kit check (10_rando_runtime.lua)
+-- 10.0 CLOSED SLOTS AND NO DUPLICATES. A seed's shop sells shop_weapons different weapons; its
+-- other normal slots are listed in seed.shop.closed. A closed slot is made to sell the Burst Pistol
+-- (every save owns it from the start, so the slot shows an owned weapon and nothing can be bought
+-- there). Any other slot this vendor has (ARSENAL_RESTORED's own slots, Challenge Mode's Pixelizer /
+-- Bouncer slots) is closed the same way when it sells a weapon the seed gives at the start or at a
+-- location, so no weapon is both a reward and for sale. shop_close_slots = false leaves those
+-- slots selling their own weapon (said in rivet.log). Whether the vendor screen accepts the Burst
+-- Pistol in a slot has NOT been seen in your game yet.
+-- 10.0 FRAME BUDGET. Rounds 17-23 logged "ran past the 8 ms frame budget" in this file at every
+-- try, always while bytes were being parsed (8.x lines 88/110/113, 9.0 lines 98/182). The hex text
+-- rivet.read returns is now turned into bytes by one gsub with a lookup table and string.byte (no
+-- Lua loop per byte), reads are smaller, a slice also yields after H.SLICE_SECONDS, and a budget
+-- error makes the next try use half the read size instead of counting against the vendor.
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SHOP = RANDO_SHOP or {}
 local H = RANDO_SHOP
@@ -58,7 +71,7 @@ H.MARK_FIELD = "UpgradeCellYOffset"
 H.MARK_FRACTION = 0.0625
 H.MAX_TRIES = 5
 H.HEADER = 0x100                -- config bytes searched for arrays
-H.CHUNK = 0x200                 -- rivet.read's limit is 512 bytes
+H.CHUNK = 0x100                 -- bytes per rivet.read (its limit is 512; 10.0: 256, halved after a budget error)
 H.MAX_DATA = 0x4000             -- bytes of one array searched for ids
 H.vendors = H.vendors or {}     -- config id -> { status, tries, pending, ... }
 H.NO_WEAPONS = "no array of the vendor's weapons in this config"
@@ -71,11 +84,21 @@ for _, key in ipairs(GEN.sorted_keys(DB.items)) do
 end
 H.COMPENSATE_AFTER = 7200      -- frames without a usable helper before the shop's extra weapons are given
 
-local function bytes_of(text)
-  local b = {}
-  for x in (text or ""):gmatch("%x%x") do b[#b + 1] = tonumber(x, 16) end
-  return b
+-- 10.0: hex text -> bytes without a Lua loop per byte (gsub with a table, then string.byte)
+local HEXB = {}
+for i = 0, 255 do
+  local hi, lo = string.format("%02X", i), string.format("%02x", i)
+  local ch = string.char(i)
+  HEXB[hi] = ch; HEXB[lo] = ch; HEXB[hi:sub(1, 1) .. lo:sub(2, 2)] = ch; HEXB[lo:sub(1, 1) .. hi:sub(2, 2)] = ch
 end
+local function bytes_of(text)
+  local hex = (text or ""):gsub("[^%x]", "")
+  if #hex % 2 == 1 then hex = hex:sub(1, #hex - 1) end
+  if #hex == 0 then return {} end
+  local bin = hex:gsub("%x%x", HEXB)
+  return { bin:byte(1, -1) }
+end
+H.bytes_of = bytes_of
 local function hex64(b, i)
   if not b[i + 7] then return nil end
   return string.format("%02X%02X%02X%02X%02X%02X%02X%02X", b[i + 7], b[i + 6], b[i + 5], b[i + 4], b[i + 3], b[i + 2], b[i + 1], b[i])
@@ -96,7 +119,7 @@ local function read_span(addr, len)
     local ok, text = pcall(rivet.read, hexaddr(addr + at), n)
     if not ok or not text then break end
     local b = bytes_of(text)
-    for i = 1, #b do out[#out + 1] = b[i] end
+    table.move(b, 1, #b, #out + 1, out)
     if #b < n then break end
     at = at + n
     H.pause()
@@ -109,13 +132,18 @@ H.read_span = read_span
 -- 8 ms frame budget at every try (round 17: 440 "ran past the 8 ms frame budget" in 12_rando_shop
 -- lines 88/110/113) and the vendor was never changed. H.pause() yields when called from a job
 -- after H.SLICE_READS reads; outside a job (tests, tools) it does nothing.
-H.SLICE_READS = 2
+H.SLICE_READS = 1
+H.SLICE_SECONDS = 0.002         -- 10.0: a slice also ends after this long (the whole randomizer shares 8 ms)
 H.jobs = H.jobs or {}
 local reads_in_slice = 0
+local slice_t0 = 0
+local function clock() return (os and os.clock and os.clock()) or 0 end
 function H.pause(force)
   if not coroutine.isyieldable() or reads_in_slice < 0 then return end
   reads_in_slice = reads_in_slice + 1
-  if force or reads_in_slice >= H.SLICE_READS then reads_in_slice = 0; coroutine.yield() end
+  if force or reads_in_slice >= H.SLICE_READS or clock() - slice_t0 >= H.SLICE_SECONDS then
+    reads_in_slice = 0; coroutine.yield(); slice_t0 = clock()
+  end
 end
 
 local function gcd(a, b) while b ~= 0 do a, b = b, a % b end; return a end
@@ -181,7 +209,7 @@ function H.discover(obj)
       for i = 1, #data - 7, 8 do
         local id = hex64(data, i)
         if id and H.VENDOR[id] then pos[#pos + 1] = { at = i - 1, key = H.VENDOR[id] } end
-        if i % 1024 == 1 then H.pause(true) end
+        if i % 512 == 1 then H.pause(true) end
       end
       if #pos >= 2 then
         local g = 0
@@ -214,6 +242,8 @@ function H.discover(obj)
   table.sort(best.slots, function(a, b) return a.index < b.index end)
   return best
 end
+
+H.CLOSE_KEY = "weapon:burst_pistol"   -- 10.0: what a closed slot sells (owned on every save)
 
 -- weapons of the seed's shop that the normal vendor does not sell (or `list`), given directly
 -- once per run, so they always have a route
@@ -256,7 +286,7 @@ function H.apply(id, obj_hex, v)
       H.compensate(nil, "the vendor could not be changed")
       if not H.failed_said then
         H.failed_said = true
-        say("Randomizer: Ms. Zurkon could not be changed - she sells her usual weapons; the seed's other shop weapons were given to you (see rivet.log)", { type = "corner", duration = 6 })
+        say("Randomizer: Ms. Zurkon could not be changed - she sells her usual weapons (some are also rewards in this seed); the seed's other shop weapons were given to you (see rivet.log)", { type = "corner", duration = 6 })
       end
     end
     return false
@@ -276,15 +306,42 @@ function H.apply(id, obj_hex, v)
   local map = seed.shop.slots
   local parts, wrote, mine = {}, 0, 0
   local found = {}
-  for _, sl in ipairs(lay.slots) do if map[sl.key] then found[sl.key] = true; mine = mine + 1 end end
-  if mine == 0 then
+  -- 10.0: the slots to close: the seed's closed slots, and any other slot of this vendor selling a
+  -- weapon the seed gives at the start or at a location
+  local closing = {}
+  local close_on = not (RANDO and RANDO.config and RANDO.config.shop_close_slots == false)
+  for _, k in ipairs(seed.shop.closed or {}) do closing[k] = "closed by the seed" end
+  local mapped = {}
+  for k, w in pairs(map) do if k ~= w then mapped[w] = k end end
+  for _, sl in ipairs(lay.slots) do
+    if not map[sl.key] and not closing[sl.key] and sl.key ~= H.CLOSE_KEY then
+      local route = seed.registry and seed.registry[sl.key]
+      if route and (route:sub(1, 5) == "start" or route == "location") then closing[sl.key] = "the seed gives it (" .. route .. ")"
+      elseif mapped[sl.key] then closing[sl.key] = "the slot of " .. mapped[sl.key] .. " sells it" end
+    end
+  end
+  local nclose = 0
+  for _, sl in ipairs(lay.slots) do
+    if map[sl.key] then found[sl.key] = true; mine = mine + 1
+    elseif closing[sl.key] and close_on then found[sl.key] = true; nclose = nclose + 1 end
+  end
+  if mine + nclose == 0 then
     v.off, v.no_weapons = true, true
     v.status = "no slot of the seed's shop in this config"
     log("vendor", id, "sells none of the 15 normal weapons: left alone")
     return false
   end
+  local close_id = DB.items[H.CLOSE_KEY] and DB.items[H.CLOSE_KEY].id:upper()
+  v.closed = 0
   for _, sl in ipairs(lay.slots) do
     local new = map[sl.key]
+    if not new and closing[sl.key] then
+      if close_on and close_id then new = H.CLOSE_KEY
+      elseif not H.dup_said then
+        H.dup_said = true
+        log("vendor", id, "slot of", sl.key, "kept (shop_close_slots = false):", closing[sl.key], "- it may come twice")
+      end
+    end
     if new and new ~= sl.key then
       local ok, err = pcall(rivet.write, hexaddr(sl.addr), le64(DB.items[new].id:upper()))
       local back = ok and read_span(sl.addr, 8)
@@ -301,14 +358,11 @@ function H.apply(id, obj_hex, v)
       end
       wrote = wrote + 1
     end
-    parts[#parts + 1] = (sl.key:gsub("^weapon:", "")) .. "->" .. ((new or sl.key):gsub("^weapon:", "")) .. (new and "" or " (kept)")
-  end
-  -- a slot the randomizer does not move that sells a weapon this seed also gives (a slot added
-  -- by another mod, or Challenge Mode's Pixelizer / Bouncer): said, so a second copy is no surprise
-  for _, sl in ipairs(lay.slots) do
-    if not map[sl.key] and GEN.in_weapon_pool(sl.key, seed.settings) and not H.dup_said then
-      H.dup_said = true
-      log("vendor", id, "also sells", sl.key, "in a slot of its own (another mod, or Challenge Mode): it may come twice")
+    if new == H.CLOSE_KEY then
+      parts[#parts + 1] = (sl.key:gsub("^weapon:", "")) .. "->CLOSED"
+      v.closed = (v.closed or 0) + 1
+    else
+      parts[#parts + 1] = (sl.key:gsub("^weapon:", "")) .. "->" .. ((new or sl.key):gsub("^weapon:", "")) .. (new and "" or " (kept)")
     end
   end
   -- a slot of the seed's shop this vendor does not have: its weapon is given directly
@@ -336,7 +390,8 @@ function H.apply(id, obj_hex, v)
                     lay.offset, lay.count, lay.header_at, table.concat(parts, " ")))
   if not H.said then
     H.said = true
-    say(string.format("Randomizer: Ms. Zurkon's %d weapon slots sell this seed's weapons", mine), { type = "corner", duration = 5 })
+    say(string.format("Randomizer: Ms. Zurkon's %d weapon slots sell this seed's weapons%s", mine,
+                      nclose > 0 and string.format(" (%d slots closed: those weapons are rewards)", nclose) or ""), { type = "corner", duration = 5 })
   end
   return true
 end
@@ -429,6 +484,7 @@ function H.run_job()
   local job = H.jobs[1]
   if not job then return end
   reads_in_slice = 0
+  slice_t0 = clock()
   local first = job.args_given == nil
   job.args_given = true
   local ok, res
@@ -438,6 +494,12 @@ function H.run_job()
   table.remove(H.jobs, 1)
   local v = job.v
   v.pending = nil
+  if not ok and tostring(res):find("frame budget", 1, true) and (v.budget_hits or 0) < 4 then
+    v.budget_hits = (v.budget_hits or 0) + 1
+    H.CHUNK = math.max(0x40, H.CHUNK // 2)
+    log("apply:", tostring(res), string.format("- reading 0x%X bytes at a time from now on (not counted as a try)", H.CHUNK))
+    return
+  end
   if not ok then
     v.tries = (v.tries or 0) + 1
     log("apply:", tostring(res), "(try " .. v.tries .. ")")
@@ -543,7 +605,11 @@ end
 function H.status_text()
   local seed = SEED()
   if not (seed and seed.shop and seed.shop.mode == "shuffle") then return nil end
-  if (H.applied_total or 0) > 0 then return "shop randomized" end
+  if (H.applied_total or 0) > 0 then
+    local closed = 0
+    for _, v in pairs(H.vendors) do if (v.closed or 0) > closed then closed = v.closed end end
+    return "shop randomized" .. (closed > 0 and string.format(" (%d slots closed)", closed) or "")
+  end
   for _, v in pairs(H.vendors) do if v.off and not v.no_weapons then return "shop as usual" end end
   return nil
 end

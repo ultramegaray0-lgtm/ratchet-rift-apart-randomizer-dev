@@ -1,6 +1,6 @@
-Rift Apart Randomizer 9.0 - test run 2026-11-12 20:08 UTC
+Rift Apart Randomizer 10.0 - test run 2026-11-13 00:16 UTC
 Python 3.13.18 on Linux
-ran 293, failures 0, errors 0, skipped 17
+ran 332, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -216,6 +216,45 @@ test_batch_command (tests.test_tools.CliTests.test_batch_command) ... ok
 test_generate_twice_in_separate_processes (tests.test_tools.CliTests.test_generate_twice_in_separate_processes) ... ok
 test_round13_log (tests.test_tools.SummarizeLogTests.test_round13_log) ... ok
 test_simulated_session (tests.test_tools.SummarizeLogTests.test_simulated_session) ... ok
+test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
+test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
+test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
+test_the_engine_hash_names_checkpoints (tests.test_v100.CheckpointNameTests.test_the_engine_hash_names_checkpoints) ... ok
+test_triggered_checkpoints_are_logged_by_name (tests.test_v100.CheckpointNameTests.test_triggered_checkpoints_are_logged_by_name) ... ok
+test_audit_catches_mistakes (tests.test_v100.HubGeneratorTests.test_audit_catches_mistakes) ... ok
+test_defaults (tests.test_v100.HubGeneratorTests.test_defaults) ... ok
+test_early_rewards_are_meaningful (tests.test_v100.HubGeneratorTests.test_early_rewards_are_meaningful) ... ok
+test_gold_bolts_first_is_still_there (tests.test_v100.HubGeneratorTests.test_gold_bolts_first_is_still_there) ... ok
+test_hub_settings_that_do_not_apply (tests.test_v100.HubGeneratorTests.test_hub_settings_that_do_not_apply) ... ok
+test_many_seeds_every_preset (tests.test_v100.HubGeneratorTests.test_many_seeds_every_preset) ... ok
+test_planet_order_really_varies (tests.test_v100.HubGeneratorTests.test_planet_order_really_varies) ... ok
+test_random_settings (tests.test_v100.HubGeneratorTests.test_random_settings) ... ok
+test_rewards_are_spread (tests.test_v100.HubGeneratorTests.test_rewards_are_spread) ... ok
+test_share_code_and_spoiler (tests.test_v100.HubGeneratorTests.test_share_code_and_spoiler) ... ok
+test_shop_and_rewards_are_separate (tests.test_v100.HubGeneratorTests.test_shop_and_rewards_are_separate) ... ok
+test_a_restarted_prologue_is_no_new_game (tests.test_v100.HubStartTests.test_a_restarted_prologue_is_no_new_game) ... ok
+test_battle_arena_starts_at_zurkies (tests.test_v100.HubStartTests.test_battle_arena_starts_at_zurkies) ... ok
+test_nefarious_city_starts_at_its_real_start (tests.test_v100.HubStartTests.test_nefarious_city_starts_at_its_real_start) ... ok
+test_new_game_goes_to_the_hub_and_offers_three_missions (tests.test_v100.HubStartTests.test_new_game_goes_to_the_hub_and_offers_three_missions) ... ok
+test_prologue_resumes_where_the_parade_was_left (tests.test_v100.HubStartTests.test_prologue_resumes_where_the_parade_was_left) ... ok
+test_prologue_without_a_parade_checkpoint_uses_the_intro_default (tests.test_v100.HubStartTests.test_prologue_without_a_parade_checkpoint_uses_the_intro_default) ... ok
+test_the_8x_landing_would_not_have_started_it (tests.test_v100.HubStartTests.test_the_8x_landing_would_not_have_started_it) ... ok
+test_a_start_is_learned_and_kept_over_a_new_game (tests.test_v100.PlanetShuffleTests.test_a_start_is_learned_and_kept_over_a_new_game) ... ok
+test_follow_story_option (tests.test_v100.PlanetShuffleTests.test_follow_story_option) ... ok
+test_menu_to_a_locked_planet_goes_back_to_the_hub (tests.test_v100.PlanetShuffleTests.test_menu_to_a_locked_planet_goes_back_to_the_hub) ... ok
+test_menu_to_an_open_planet_starts_its_destination (tests.test_v100.PlanetShuffleTests.test_menu_to_an_open_planet_starts_its_destination) ... ok
+test_only_open_destinations_are_offered_and_coordinates_open_more (tests.test_v100.PlanetShuffleTests.test_only_open_destinations_are_offered_and_coordinates_open_more) ... ok
+test_revisit_entries (tests.test_v100.PlanetShuffleTests.test_revisit_entries) ... ok
+test_a_launch_cancels_the_pending_return (tests.test_v100.PrologueEndTests.test_a_launch_cancels_the_pending_return) ... ok
+test_home_after_a_timeout_without_a_checkpoint (tests.test_v100.PrologueEndTests.test_home_after_a_timeout_without_a_checkpoint) ... ok
+test_home_after_the_new_planet_loads (tests.test_v100.PrologueEndTests.test_home_after_the_new_planet_loads) ... ok
+test_round13_save_loads_never_start_it (tests.test_v100.RealLogTests.test_round13_save_loads_never_start_it) ... ok
+test_round23_new_game_starts_the_hub_at_the_wrench (tests.test_v100.RealLogTests.test_round23_new_game_starts_the_hub_at_the_wrench) ... ok
+test_your_settings_file_makes_a_hub_seed (tests.test_v100.SettingsFileTests.test_your_settings_file_makes_a_hub_seed) ... ok
+test_a_budget_error_halves_the_reads (tests.test_v100.ShopTests.test_a_budget_error_halves_the_reads) ... ok
+test_bytes_are_parsed_fast_and_right (tests.test_v100.ShopTests.test_bytes_are_parsed_fast_and_right) ... ok
+test_close_slots_off_keeps_them (tests.test_v100.ShopTests.test_close_slots_off_keeps_them) ... ok
+test_closed_slots_and_no_duplicates (tests.test_v100.ShopTests.test_closed_slots_and_no_duplicates) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -295,7 +334,7 @@ test_a_working_shop_gives_nothing_directly (tests.test_v85.ShopRouteTests.test_a
 test_no_helper_at_all_gives_the_extra_weapons (tests.test_v85.ShopRouteTests.test_no_helper_at_all_gives_the_extra_weapons) ... ok
 test_a_menu_landing_on_an_open_planet_is_saved (tests.test_v85.TravelTests.test_a_menu_landing_on_an_open_planet_is_saved) ... ok
 test_every_mode_starts_with_the_prologue_then_nefarious_city (tests.test_v90.GeneratorTests.test_every_mode_starts_with_the_prologue_then_nefarious_city) ... ok
-test_no_hub_in_the_generator (tests.test_v90.GeneratorTests.test_no_hub_in_the_generator) ... ok
+test_no_hub_plan_with_hub_false (tests.test_v90.GeneratorTests.test_no_hub_plan_with_hub_false) ... ok
 test_retired_presets_give_the_same_seed_as_their_replacement (tests.test_v90.GeneratorTests.test_retired_presets_give_the_same_seed_as_their_replacement) ... ok
 test_retired_settings_are_named_and_ignored (tests.test_v90.GeneratorTests.test_retired_settings_are_named_and_ignored) ... ok
 test_share_code_and_format (tests.test_v90.GeneratorTests.test_share_code_and_format) ... ok
@@ -305,17 +344,17 @@ test_the_rest_is_still_reordered (tests.test_v90.GeneratorTests.test_the_rest_is
 test_your_04_settings_generate (tests.test_v90.GeneratorTests.test_your_04_settings_generate) ... ok
 test_your_defaults_are_kept (tests.test_v90.GeneratorTests.test_your_defaults_are_kept) ... ok
 test_your_old_8_5_2_settings_still_generate (tests.test_v90.GeneratorTests.test_your_old_8_5_2_settings_still_generate) ... ok
-test_hub_keys_are_not_bound (tests.test_v90.KitTests.test_hub_keys_are_not_bound) ... ok
+test_hub_keys_do_nothing_without_a_hub (tests.test_v90.KitTests.test_hub_keys_do_nothing_without_a_hub) ... ok
 test_kit_check_passes (tests.test_v90.KitTests.test_kit_check_passes) ... ok
-test_the_kit_has_no_hub_script (tests.test_v90.KitTests.test_the_kit_has_no_hub_script) ... ok
-test_a_leftover_hub_script_is_reported_and_does_nothing (tests.test_v90.SettingsFileTests.test_a_leftover_hub_script_is_reported_and_does_nothing) ... ok
+test_the_kit_is_one_version (tests.test_v90.KitTests.test_the_kit_is_one_version) ... ok
+test_an_8_5_hub_script_is_reported_as_another_version (tests.test_v90.SettingsFileTests.test_an_8_5_hub_script_is_reported_as_another_version) ... ok
 test_your_8_5_2_settings_file_still_loads (tests.test_v90.SettingsFileTests.test_your_8_5_2_settings_file_still_loads) ... ok
-test_your_9_0_settings_file (tests.test_v90.SettingsFileTests.test_your_9_0_settings_file) ... ok
+test_your_settings_file_with_hub_false (tests.test_v90.SettingsFileTests.test_your_settings_file_with_hub_false) ... ok
 test_campaign_key_says_nothing (tests.test_v90.StoryStartTests.test_campaign_key_says_nothing) ... ok
 test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartTests.test_new_game_plays_the_prologue_then_nefarious_city) ... ok
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 293 tests in 100.507s
+Ran 332 tests in 157.883s
 
 OK (skipped=17)

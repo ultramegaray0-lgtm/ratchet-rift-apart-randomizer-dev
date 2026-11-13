@@ -43,6 +43,14 @@
 --     S.fly_frames. rivet.hero_play_as records the swap. rando_give.dll v6: kind 8 writes a
 --     mission's state (no event: what the game does after such a write is unknown), kind 12
 --     finds it, kinds 9-11 change S.levels / S.travel_flag like the two actions do
+--   * 10.0: a landing (warp or flight, also a warp on the same planet, which reloads it) reports
+--     CheckpointTriggeredEvent{CheckpointHash = the engine's CRC-32 of the checkpoint's name,
+--     Loaded = true} (rounds 13-23: 29 listed names match their hashes). S.go_to[m].at = cp makes
+--     a story's first step finish only on a load at that checkpoint (SIMULATED from rounds 16/17/
+--     22/23: MIS_NEFCITY_01 left OBJ_NEFCITY_GO_TO_NEFCITY when the game loaded CHK_NEFCITY_START,
+--     never at CHK_NEFCITY_SHIP). S.chain[m] = { start = next mission, travel = planet } is the
+--     game's own next step when m completes (round 23: MIS_NEFCITY_01 -> MIS_SARG_01_FIRST_VISIT
+--     and the trip to Sargasso; MIS_INTRO -> MIS_NEFCITY_01 and Nefarious City). SIMULATED.
 SIM = {}
 local S = SIM
 
@@ -96,6 +104,7 @@ function S.reset()
   S.heroes = {}
   S.playing, S.swap_pending, S.swap_frames, S.swap_refuse = "ratchet", nil, 0, nil
   S.go_to, S.goto_on_start = {}, true
+  S.chain = {}                     -- 10.0: mission -> { start = mission, travel = planet event name }
   S.levels, S.levels_other, S.level_current = 0x6, 0x2, 2
   S.travel_flag = 0
   S.v6_bits = 7
@@ -106,7 +115,8 @@ function S.reset()
   -- DEFAULT checkpoint in your game; Cordelion's are named after Kedaro Station, not CORD)
   S.checkpoint_list = {
     "CHK_ZURK_00_DEFAULT", "CHK_ZURK_LANDING_SHIP", "CHK_ZURK_LANDING_ENTRANCE", "CHK_ZURK_01_LAND_RATCHET_VISIT_1",
-    "CHK_ZURK_05_ARENA_INTRO_CINE", "CHK_NEFCITY_SHIP", "CHK_SAV_01_LANDING",
+    "CHK_ZURK_05_ARENA_INTRO_CINE", "CHK_NEFCITY_SHIP", "CHK_NEFCITY_START", "CHK_SAV_01_LANDING",
+    "CHK_MALINON_INTRO_DEFAULT",
     "CHK_BLIZAR_A_LANDINGPAD", "CHK_BLIZAR_B_LANDINGPAD_DESTROYED",
     "CHK_SARG_GELFACTORY_LANDINGPAD", "CHK_SARG_02_MININGPLATFORM_LANDINGPAD",
     "CHK_ZORDOOM_POSTMISSION_LANDINGPAD", "CHK_MEGA_01_RIVET_START", "CHK_MEGA_FINALE_START",
@@ -317,6 +327,20 @@ function S.install_missions(list)       -- list = { { name, state }, ... }
   for i, m in ipairs(list) do S.missions[m[1]] = i; S.mstate[m[1]] = m[2] or 0 end
 end
 function S.get_mission(name) return S.mstate and S.mstate[name] end
+-- 10.0: a mission finishing in the game, with the game's own next step (S.chain)
+function S.complete_mission(name)
+  S.set_mission(name, 4)
+  local c = S.chain[name]
+  S.step(1)
+  if c then
+    if c.start and S.mstate[c.start] ~= nil and S.mstate[c.start] == 0 then S.set_mission(c.start, 2) end
+    if c.travel then S.step(30); S.last_cp = c.cp; S.travel(c.travel); if c.cp then S.checkpoint(c.cp) end end
+  end
+end
+function S.checkpoint(cp)
+  S.emit("CheckpointTriggeredEvent", { CheckpointHash = rivet.hash(cp), Loaded = true })
+  S.step(1)
+end
 -- a state change in the game; reported as an event only when `report` is not false
 function S.set_mission(name, state, report)
   if not (S.mstate and S.mstate[name] ~= nil) then error("no mission " .. name) end
@@ -433,6 +457,7 @@ S.goto_on_start = true
 function S.goto_check(name, why)
   local g = S.go_to[name]
   if not g or S.mstate == nil or S.mstate[name] ~= 2 or g.done then return end
+  if g.at and not (why == "load" and S.last_cp == g.at) then return end
   if S.planet == g.planet and S.playing == g.hero then
     g.done = true
     S.emit("ObjectiveStateChangedEvent", { MissionName = name, ObjectiveName = g.o, ObjectiveState = 2 })
@@ -770,7 +795,14 @@ function S.step(n)
           S.in_travel = true
           S.travel(t.planet)
           S.in_travel = false
+        elseif t.planet then
+          -- a warp on the same planet: the checkpoint loads (no planet change)
+          local gnames = {}
+          for name in pairs(S.go_to) do gnames[#gnames + 1] = name end
+          table.sort(gnames)
+          for _, name in ipairs(gnames) do S.goto_check(name, "load") end
         end
+        if t.cp then S.emit("CheckpointTriggeredEvent", { CheckpointHash = rivet.hash(t.cp), Loaded = true }) end
       end
     end
   end

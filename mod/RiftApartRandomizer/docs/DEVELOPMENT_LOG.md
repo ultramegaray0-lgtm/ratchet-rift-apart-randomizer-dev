@@ -833,3 +833,64 @@ Punk/Reaver owned from the start) and the 8.5 install and dev zips.
 - Nothing of 9.0 has run in the game. Round 23: the TESTING.md checklist.
 - The Punk/Reaver armor sources (6 filler-only locations from 8.5.2) probably never pay.
 
+## 2026-11-13: 10.0 (hub start, working planet shuffle, spread rewards, closed shop slots)
+
+### Asked for
+The update spec "Functional Planet Shuffle, Mission Selection & Improved Item Pool" (attachment.txt):
+- Planet shuffle on by default and actually working.
+- A hub start with three choices: the prologue at its real start, the Battle Arena, Nefarious City at its real beginning.
+- Meaningful early rewards, with weapons spread out.
+- Earnable weapons out of the shop.
+- No softlocks.
+- Offline and in-game results kept apart.
+
+Uploaded: the round 23 rivet.log and the 9.0 dev and install zips.
+
+### Round 23 findings
+- Planet shuffle never ran in 9.0. The director waits for capability lines ("verified") that no build ever wrote.
+- `CheckpointTriggeredEvent.CheckpointHash` is the engine's CRC-32: poly 0xEDB88320, start value 0xEDB88320, no final xor. It equals `rivet.hash`.
+- Hashing every catalog name showed the game loads Nefarious City's story at `CHK_NEFCITY_START` (2052464476), not at `CHK_NEFCITY_SHIP` (the 8.x landing that stuck at GO_TO in rounds 17 and 22).
+- Prologue end order (lines 695-729):
+  - Ratchet is on Ardolis when `MIS_INTRO` turns 4.
+  - Only then does the game start `MIS_NEFCITY_01` itself and rift to Nefarious City.
+  - The first checkpoint there is an unnamed one (3046787773), then `CHK_NEFCITY_START`.
+- The shop search overran its frame budget again.
+
+### Done
+- 15_rando_hub.lua (new):
+  - New Game warps to Zurkie's at the parade's wrench, with the prologue left active and the parade checkpoint remembered.
+  - Three start choices.
+  - A mission ladder using the DLL calls verified in round 17.
+  - Warps to real start checkpoints.
+  - A same-planet reload if a story stays at "go to".
+  - The planet menu and revisits.
+  - `[ORDER KEPT]`: the game's own follow-on travel is undone.
+  - After round 23's prologue order, the warp home waits for the new planet's first loaded checkpoint, or `ORDER_KEPT_WAIT`, before going. A launch cancels it.
+  - 14 now forwards unnamed checkpoints to the hub too.
+- 02/03, generator 10.0:
+  - Hub plan with fixpoint reach.
+  - Coordinates open planets.
+  - Spread fill: early weapons first, one sphere-1 Coordinates, progression, then a proportional fill.
+  - Shop split with closed slots.
+  - No ARSENAL_RESTORED weapon sold.
+  - RA10 share codes.
+  - Audit and spoiler sections.
+- 12:
+  - Closed vendor slots (Burst Pistol id); duplicate listings closed.
+  - Fast parsing; smaller chunks.
+  - A budget error halves the chunk instead of counting as a try.
+- 14: checkpoint names from hashes (`RANDO-CHECKPOINT`).
+- Tests:
+  - test_v100 (39 tests: an independent sphere-walk verifier, hub start, prologue end order, planet shuffle, campaigns, checkpoint names, shop, real-log replays).
+  - The older suites are pinned with `PRE10_SETTINGS`.
+  - 332 tests, 0 failures, 17 skipped.
+  - big_batch: 56,600 of 56,600 valid.
+
+### Open (needs the game: TESTING.md round 24)
+- Every hub step has run only in the simulator. The key test: Nefarious City from the hub at `CHK_NEFCITY_START`.
+- The warp home right after the prologue's rift (while the city's opening plays).
+- Closed shop slots on the real vendor screen, and the search within budget.
+- Not done:
+  - Spybots as locations (their pickup event was never seen).
+  - Real Gold Bolts as rewards or shop items (no verified grant).
+  - Shop weapon slots are closed rather than refilled with gadgets or armor.

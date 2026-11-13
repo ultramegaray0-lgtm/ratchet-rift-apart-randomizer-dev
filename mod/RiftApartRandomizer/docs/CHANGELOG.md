@@ -2,6 +2,87 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## 10.0 (2026-11-13): the hub, planet shuffle, spread rewards, shop split from rewards
+
+Asked for: working planet shuffle (on by default), a hub start with the prologue / Battle Arena /
+Nefarious City to choose from, better reward distribution, and no weapon both earnable and for sale.
+Built on 9.0 (your 8.5.2 values stay the baseline). **Nothing of 10.0 has run in the game.**
+
+### Round 23 (9.0, your log)
+- The 9.0 story start worked in game: the parade, then Nefarious City, then Sargasso, then the planet
+  menu to Zurkie's. Zurkie's first visit was played; it opened `MIS_BLIZAR` and `MIS_SAV_01`.
+- Planet shuffle never did anything: `campaign planet_shuffle: not available yet (missing
+  mission_control, travel)`. 9.0's director waits for the lab's "verified" lines, and those had never
+  been written, although round 17 had already shown the mission writes working. So the game's own
+  order ran.
+- The shop ran past the 8 ms frame budget again (`12_rando_shop.lua:98/182`), so the vendor was
+  never changed. With ARSENAL_RESTORED's vendor still selling its weapons, Fusion Grenade and
+  Combuster were bought **and** given by the randomizer.
+- Armor pods, Gold Bolts and missions paid mostly Bolts/Raritanium (`rewards 10/77`).
+- New finding: `CheckpointHash` is the engine's CRC-32 of the checkpoint's name (29 names your game
+  listed match hashes in rounds 13-23). Round 23 shows the game loading `CHK_NEFCITY_START`
+  (2052464476) for Nefarious City's story. 8.x warped to `CHK_NEFCITY_SHIP` instead, and the story
+  never left `OBJ_NEFCITY_GO_TO_NEFCITY` there.
+
+### The hub and planet shuffle (`hub = true`, the default)
+- `15_rando_hub.lua` (new, 10.0): New Game → Zurkie's at the parade's wrench (round 17's verified
+  warp). The prologue is left **active** and is one of three start choices, with the Battle Arena
+  (`MIS_ZURK_01_VISIT_01`) and Nefarious City. `]` / `Ctrl+]` choose and go.
+- A launch confirms the hero, then runs the mission ladder (active / start / write "available" then
+  start, as in round 17 / replay / explore). Then it warps to where the mission really starts:
+  `CHK_NEFCITY_START`, `CHK_ZURK_00_DEFAULT`, the parade's own checkpoint, or a start learned from an
+  earlier run. A story still at its "go to" step after 20 s is loaded once more **on the same planet**
+  (8.4 went out to Zurkie's and back, and round 22 crashed right after that).
+- Planet shuffle: every other destination opens with its planet's Coordinates (items of the seed,
+  anywhere) and its dependencies. The solver's reach is a fixpoint over the visits, so any order you
+  pick can be finished. A finished destination pays its locations and returns you to Zurkie's. The
+  game's own follow-on travel (Nefarious City → Sargasso, the prologue → Nefarious City) is undone
+  (`[ORDER KEPT]`; `hub_follow_story = true` plays along instead). Round 23 shows the prologue
+  turning complete on Ardolis *before* the game rifts to Nefarious City, so the warp home waits for
+  the new planet's first loaded checkpoint (or 15 s), not a fixed delay after the arrival event.
+- The planet menu: a locked planet sends you back to Zurkie's; an open planet starts its next
+  destination. Revisits are in the `]` list.
+- `14_rando_travel.lua`: every triggered checkpoint is named (`RANDO-CHECKPOINT`). The engine hash is
+  in Lua, and every catalog name is hashed.
+- The director (`11`) stays inert for hub seeds. `hub = false` gives 9.0's story start, unchanged.
+
+### Rewards spread (`distribution = "spread"`, the default)
+- Progression (Coordinates, gadgets) goes anywhere in logic, with no late bias. `early_weapons` (2)
+  weapons and one Coordinates go where the start can reach. Everything else is shared over Gold
+  Bolts, story missions, side activities and armor pods in proportion. Gold Bolts may now give
+  currency; the game's own Gold Bolt still counts. `"goldbolts_first"` is the 4.0-9.0 fill.
+- Over 200 default seeds, every kind of location holds items in more than 30% of its slots, and
+  armor pods hold weapons.
+
+### Shop vs rewards (`shop_weapons = 8`)
+- Each weapon has exactly one route. Ms. Zurkon sells `shop_weapons` different weapons; her other
+  normal slots are closed (they show the Burst Pistol, which every save owns). ARSENAL_RESTORED's
+  weapons are never sold. Any slot of the vendor (ARSENAL_RESTORED's, Challenge Mode's) that sells a
+  weapon the seed gives elsewhere, or that another slot already sells, is closed too.
+  `shop_close_slots = false` keeps those slots.
+- Frame budget: hex is parsed with one `gsub` and a lookup table plus `string.byte` (no Lua loop per
+  byte). Reads are 256 bytes, a slice yields after 2 ms, and a budget error halves the read size
+  instead of counting as a failed try.
+- With too few locations switched on, a leftover weapon starts with you instead of having no route
+  (found by the batch with random settings).
+
+### Seeds and files
+- Generator 10.0.0, format 10, share code `RA10` (RA4-RA9 refused with the reason). New settings:
+  `hub`, `distribution`, `shop_weapons`, `early_weapons`. A hub seed forces `planet_locks`,
+  `travel_lock` and `campaign_mode = planet_shuffle`, with a note.
+- The kit has 14 scripts again. `04_rando_settings.lua` is your file plus the 10.0 lines.
+  `rando_give.dll` v6 is unchanged.
+
+### Tests
+- `tests/test_v100.py` (39 tests): an independent hub-seed verifier (sphere walk, routes, early
+  rewards) over 600 preset seeds and 300 random-settings seeds; distribution and order statistics;
+  audit mutations. Simulated: the start menu, each of the three starts, planet shuffle, the planet
+  menu, learned starts, whole campaigns (with missing missions too), the shop's closed slots,
+  parse speed, budget errors, round 23's real event stream (the hub starts at the wrench), and
+  round 13 (it never starts).
+- The older suites run with `harness.PRE10_SETTINGS` (no hub, Gold-Bolts-first, 15 shop weapons).
+- `big_batch`: 56,600 / 56,600 seeds valid (BATCH_10.0.txt).
+
 ## 9.0 (2026-11-12): no hub; the story starts as in the game
 
 Asked for: a version without the Zurkie's hub, starting with the prologue, then Nefarious City.

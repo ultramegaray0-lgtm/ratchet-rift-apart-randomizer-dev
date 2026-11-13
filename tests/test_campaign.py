@@ -15,11 +15,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 sys.path.insert(0, os.path.dirname(__file__))
 import rando  # noqa: E402
+from harness import pre10_engine  # noqa: E402  (10.0: the 4.0-9.0 rules, see harness.py)
 from luajson import py  # noqa: E402
 from harness import Game, MOD, script_files  # noqa: E402
 from test_generator import DB, ALWAYS_START, honest_refusal, verify as verify_items  # noqa: E402
 
-ENG = rando.Engine()
+ENG = pre10_engine()
 SEGS = py(ENG.lua.globals().RANDO_CAMPAIGN.SEGMENTS)
 BY_ID = {s["id"]: s for s in SEGS}
 LOC_SEG = py(ENG.lua.globals().RANDO_CAMPAIGN.LOCATION_SEGMENT)
@@ -259,8 +260,8 @@ class CampaignSeedTests(unittest.TestCase):
         return py(s)
 
     def test_same_seed_same_campaign(self):
-        a = rando.Engine().generate("same", {}, "full_campaign")[0]
-        b = rando.Engine().generate("same", {}, "full_campaign")[0]
+        a = pre10_engine().generate("same", {}, "full_campaign")[0]
+        b = pre10_engine().generate("same", {}, "full_campaign")[0]
         self.assertEqual(py(a.campaign.order), py(b.campaign.order))
 
     def test_campaign_in_spoiler_and_seed(self):
@@ -313,6 +314,8 @@ class BatchTests(unittest.TestCase):
             preset = rnd.choice(["balanced", "chaos", "campaign", "everything", "planet_shuffle", "mission_shuffle",
                                  "full_campaign", "campaign_chaos"])
             user = rando.random_settings(rnd, d0)
+            for k10 in ("hub", "distribution", "shop_weapons", "early_weapons"):
+                user.pop(k10, None)        # 10.0 keys: this suite checks the pre-10.0 rules (harness.PRE10_SETTINGS)
             for i in range(4):
                 s, audit = ENG.generate(f"rc-{c}-{i}", user, preset)
                 # a reordered campaign also starts with its first visits' Coordinates and those of the

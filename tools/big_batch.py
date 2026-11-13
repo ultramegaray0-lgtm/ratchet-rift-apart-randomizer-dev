@@ -1,9 +1,16 @@
-"""9.0 release validation: tens of thousands of seeds through the generator's own audit and the
-independent verifiers written in Python from the documented rules (tests/test_generator.py verify,
-tests/test_campaign.py verify_campaign / verify_fallback). Run from the project root:
+"""10.0 release validation: tens of thousands of seeds through the generator's own audit and the
+independent verifiers written in Python from the documented rules. Run from the project root:
 
     python tools/big_batch.py [--scale 1.0]
 
+PART 1, 10.0 hub seeds (hub = true, the default): your own 04_rando_settings.lua, every preset, with
+and without ARSENAL_RESTORED, and random settings. Every seed must pass:
+  audit            the generator's own audit (02_rando_generator.lua G.audit)
+  verify_hub_seed  tests/test_v100.py: the three starting missions, a sphere walk that reaches every
+                   destination and every in-logic location, one route per weapon, no weapon both sold
+                   and given, no ARSENAL_RESTORED weapon sold, early weapons
+
+PART 2, the pre-10.0 modes (hub = false, Gold-Bolts-first fill, 15 shop weapons: harness.PRE10_SETTINGS).
 Every seed must pass ALL of:
   audit            the generator's own audit (02_rando_generator.lua G.audit)
   verify           items: one route per item, 25 Gold Bolts with grantable items, currency ranges and
@@ -25,6 +32,8 @@ from luajson import py  # noqa: E402
 from test_generator import verify, honest_refusal  # noqa: E402
 from test_campaign import verify_campaign, verify_fallback  # noqa: E402
 from test_v90 import verify_story_start, USER_SETTINGS  # noqa: E402
+from test_v100 import verify_hub_seed  # noqa: E402
+from harness import pre10_engine  # noqa: E402
 
 
 def check(d):
@@ -41,11 +50,64 @@ def main(argv=None):
     ap.add_argument("--scale", type=float, default=1.0)
     a = ap.parse_args(argv)
     n = lambda x: max(1, int(x * a.scale))  # noqa: E731
-    eng = rando.Engine()
-    d0 = eng.defaults()
     t = time.time()
     total = valid = refused = 0
     bad = []
+
+    # ---- PART 1: 10.0 hub seeds
+    heng = rando.Engine()
+
+    def run_hub(label, seed, user, preset):
+        nonlocal total, valid, refused
+        total += 1
+        s, audit = heng.generate(seed, user, preset)
+        if s is None:
+            bad.append((label, seed, preset, user, audit)); return
+        if audit:
+            bad.append((label, seed, preset, user, audit)); return
+        p = verify_hub_seed(py(s))
+        if p:
+            bad.append((label, seed, preset, user, p[:3])); return
+        valid += 1
+
+    user_preset, user_opts = USER_SETTINGS()
+    for ar in (False, True):
+        u = dict(user_opts, restored_weapons=ar)
+        for i in range(n(3000)):
+            run_hub("your-04 (hub)", f"big10-04-{ar}-{i}", u, user_preset)
+    for p in ("balanced", "chaos", "full", "campaign", "everything"):
+        for ar in (False, True):
+            for i in range(n(1000)):
+                run_hub("hub-preset", f"big10-{p}-{ar}-{i}", {"restored_weapons": ar}, p)
+    for p in ("hub", "hub_chaos"):
+        for i in range(n(300)):
+            run_hub("retired-hub-preset", f"big10-{p}-{i}", {}, p)
+    rnd10 = random.Random("big-random-10")
+    d10 = heng.defaults()
+    for c in range(n(1500)):
+        u = rando.random_settings(rnd10, d10)
+        u["hub"] = True
+        p = rnd10.choice(["balanced", "chaos", "full", "campaign", "everything"])
+        for i in range(2):
+            s, audit = heng.generate(f"big10r-{c}-{i}", u, p)
+            total += 1
+            if s is None:
+                # a Gold-Bolts-first fill may run out of items: honest only if it says so
+                if "too few items for one per Gold Bolt" in str(audit) and u.get("distribution") == "goldbolts_first":
+                    refused += 1
+                else:
+                    bad.append(("hub-random", c, p, u, audit))
+                continue
+            pr = list(py(audit) or []) + verify_hub_seed(py(s))
+            if pr:
+                bad.append(("hub-random", c, p, u, pr[:3]))
+            else:
+                valid += 1
+    print(f"10.0 hub seeds: {valid}/{total} valid, {refused} honestly refused, bad {len(bad)} ({time.time() - t:.0f}s)", flush=True)
+
+    # ---- PART 2: the pre-10.0 modes
+    eng = pre10_engine()
+    d0 = eng.defaults()
 
     def run(label, seed, user, preset):
         nonlocal total, valid, refused
@@ -64,17 +126,13 @@ def main(argv=None):
             bad.append((label, seed, preset, user, p[:3])); return
         valid += 1
 
-    # 9.0: the user's own 04_rando_settings.lua (restored_weapons "auto" is decided in the game:
-    # both answers), and the retired hub presets (they fall back to balanced / chaos)
-    user_preset, user_opts = USER_SETTINGS()
+    # 9.0: the user's own 04_rando_settings.lua with hub = false (restored_weapons "auto" is decided in
+    # the game: both answers)
     for ar in (False, True):
         u = dict(user_opts, restored_weapons=ar)
-        for i in range(n(3000)):
-            run("your-04", f"big9-04-{ar}-{i}", u, user_preset)
-    for p in ("hub", "hub_chaos"):
-        for i in range(n(500)):
-            run("retired-hub", f"big9-{p}-{i}", {}, p)
-    print(f"9.0 your settings and retired hub presets: {valid}/{total} valid, bad {len(bad)} ({time.time() - t:.0f}s)", flush=True)
+        for i in range(n(1500)):
+            run("your-04 (hub = false)", f"big9-04-{ar}-{i}", u, user_preset)
+    print(f"+ your settings with hub = false: {valid}/{total} valid, bad {len(bad)} ({time.time() - t:.0f}s)", flush=True)
     presets7 = ["balanced", "chaos", "full", "campaign", "everything"]
     for p in presets7:
         for i in range(n(2000)):
@@ -93,6 +151,8 @@ def main(argv=None):
     for c in range(n(2000)):
         p = rnd.choice(presets7 + ["standard", "coordinates"])
         u = rando.random_settings(rnd, d0)
+        for k10 in ("hub", "distribution", "shop_weapons", "early_weapons"):
+            u.pop(k10, None)
         u["campaign_mode"] = "vanilla"
         for i in range(4):
             run("random", f"big7r-{c}-{i}", u, p)

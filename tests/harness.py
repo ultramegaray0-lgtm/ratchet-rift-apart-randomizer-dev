@@ -20,7 +20,11 @@ SIM = ROOT / "tests" / "sim" / "rivet_sim.lua"
 # Raritanium 20-150); the user's defaults since 8.5.1 differ (02's G.DEFAULTS). Tests pin the
 # settings they were written for; tests/test_v90.py runs the user's real defaults and 04 file.
 # A pinned value never overrides what the test itself or its preset sets.
-CLASSIC_TEST_SETTINGS = {"planet_locks": False, "campaign_mode": "vanilla", "raritanium_min": 20, "raritanium_max": 150}
+CLASSIC_TEST_SETTINGS = {"planet_locks": False, "campaign_mode": "vanilla", "raritanium_min": 20, "raritanium_max": 150,
+                         # 10.0: the suites before 10.0 were written without the hub, with the Gold-Bolts-first
+                         # fill and all 15 vendor slots selling a weapon (tests/test_v100.py runs the 10.0 defaults)
+                         "hub": False, "distribution": "goldbolts_first", "shop_weapons": 15,
+                         "shop_close_slots": False}
 DEFAULT_SETTINGS = {"seed": "test-seed-2", "preset": "standard"}
 # settings that also set a pinned key (7.0 names)
 _SETS_TOO = {"levels": ("planet_locks",), "mission_order": ("campaign_mode",), "filler_raritanium": ("raritanium_min", "raritanium_max")}
@@ -271,3 +275,23 @@ class Game:
             if pred(lid, self.seed.locations[lid].item):
                 return lid
         return None
+
+
+# 10.0: the generator suites written before 10.0 (test_generator, test_campaign) check the
+# 4.0-9.0 rules: no hub, every Gold Bolt holds an item, all 15 vendor slots sell a weapon. They
+# run the real generator with those three settings pinned (anything a test sets wins).
+PRE10_SETTINGS = {"hub": False, "distribution": "goldbolts_first", "shop_weapons": 15}
+
+
+def pre10_engine():
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / "tools"))
+    import rando as _rando
+
+    class Pre10Engine(_rando.Engine):
+        def generate(self, seed, settings=None, preset="balanced"):
+            st = dict(PRE10_SETTINGS)
+            st.update(settings or {})
+            return super().generate(seed, st, preset)
+
+    return Pre10Engine()
