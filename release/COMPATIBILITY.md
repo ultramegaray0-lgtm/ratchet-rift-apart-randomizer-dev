@@ -1,11 +1,11 @@
-# Compatibility: Ratchet Rift Apart Randomizer v0.5
+# Compatibility: Ratchet Rift Apart Randomizer v0.51
 
 ## Supported
 
 | | Supported | How this was established |
 |---|---|---|
 | Game | **Ratchet & Clank: Rift Apart, Steam, v3.630.1.0** (`RiftApart.exe` file version 3.0630.1.0, the Steam patch of 9 July 2026) | `rando_give.dll` checks every byte of the game code it relies on, and does nothing on any difference. Those checks passed on the developer's install of this version |
-| Operating system | **Windows 10 / 11, 64-bit** | the target platform. The development builds ran on one Windows PC; **this release (v0.5) has not yet run on Windows** |
+| Operating system | **Windows 10 / 11, 64-bit** | the target platform. The development builds ran on one Windows PC; **this release (v0.51) has not yet run on Windows** |
 | Mod loader | **rivet_hook 2.0.1** (2.0.0 also works) | used in the developer's test rounds. The randomizer needs its Lua scripting, overlay, pipe bridge and `config_set`, all added in 2.0.0 |
 | PowerShell | Windows PowerShell 5.1 (built into Windows) or PowerShell 7 | the companion uses only commands available in 5.1 (checked statically); its automated tests ran under PowerShell 7.4 in earlier builds |
 | Game install location | any folder, any drive, paths with spaces or `&` | nothing in the package uses a fixed path; everything is found relative to `RiftApart.exe` or the companion's own folder |

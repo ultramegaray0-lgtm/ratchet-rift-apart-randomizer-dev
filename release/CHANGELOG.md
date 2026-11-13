@@ -1,5 +1,38 @@
 # Changelog: Ratchet Rift Apart Randomizer
 
+## Public Release v0.51 (beta), 2026-11-13. Randomizer build 10.0.2
+
+A small update. **It has not been run on Windows 11 or in the game yet** (see README).
+
+**The hub is Nefarious City**
+- A new game now goes to **Nefarious City** instead of Zurkie's Battleplex, and finishing a
+  destination brings you back there. Messages and the spoiler log name it.
+- **The city's story starts with that warp.** The story mission is made active first, then the city
+  loads at the checkpoint where the game itself starts the city's story (`CHK_NEFCITY_START`). That
+  is the order the game uses after the prologue. If the story still waits at its first step after 20
+  seconds, that spot is loaded once more.
+- The way home is that story start while the city's story is unfinished, and the ship's landing pad
+  (`CHK_NEFCITY_SHIP`) afterwards.
+- The Battle Arena (Zurkie's) is open from the start, as before, now as an ordinary destination.
+
+**Ratchet can walk right after the warp**
+- v0.5 warped at the moment Ratchet picked up his wrench. That moment starts a short scripted part
+  of the parade (`OBJ_INTRO_GOING_DOWN`), during which the game ignores the player. The warp cut it
+  off, and the prologue stayed active. v0.51 waits until that part is over and no parade cutscene
+  is running (a few seconds), then warps. If the parade never reports it as over, it warps 30
+  seconds after the wrench anyway.
+- Once you're in Nefarious City, the prologue is written as complete and its reward is paid, as
+  the game has it before the city. In-game option `hub_prologue = "keep"` leaves it open instead.
+- New in-game options, all optional: `hub_trigger` (`"parade"` default, `"wrench"` = v0.5's
+  timing), `hub_prologue` (`"end"` / `"keep"`), `hub_start_story` (`true`).
+
+**Unchanged**
+- Item placement is unchanged: apart from the hub's name and checkpoints, seeds are identical to
+  10.0's, field for field. Every Gold Bolt still gives exactly one item.
+- Build 10.0.2 is a new generator version, so v0.51 seeds are new seeds: start them with New Game.
+  `rivet.log` shows `RANDO-KIT all 14 scripts are 10.0.2`.
+- `rando_give.dll` and `rivet.toml` are byte-identical to v0.5.
+
 ## Public Release v0.5 (beta), 2026-11-13. Randomizer build 10.0.1
 
 The first public release. It is build 10.0, plus one gameplay correction and the packaging for
@@ -37,7 +70,7 @@ other PCs. **This release has not been run on Windows 11 or in the game yet** (s
 
 **What the randomizer does (build 10.0.1)**
 - Zurkie's Battleplex hub: after the parade's wrench, choose the Prologue, the Battle Arena or
-  Nefarious City.
+  Nefarious City. (v0.51: the hub is Nefarious City.)
 - Planet shuffle through Coordinates, on by default. Finishing a destination brings you back to
   the hub.
 - Every Gold Bolt gives exactly one item. Story missions, side activities and armor pods give one

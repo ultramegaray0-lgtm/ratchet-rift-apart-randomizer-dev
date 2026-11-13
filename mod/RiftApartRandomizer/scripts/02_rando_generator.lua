@@ -6,8 +6,9 @@
 -- on any machine. Nothing here depends on table iteration order: every key list is sorted.
 --
 -- 10.0 (the hub and planet shuffle; the user's 8.5.2 defaults stay the baseline):
---   * HUB (hub = true, the default): a new game goes to Zurkie's Battleplex after the parade's
---     wrench. You choose the prologue, the Battle Arena or Nefarious City there; every other visit
+--   * HUB (hub = true, the default): a new game goes to the hub after the parade's wrench
+--     (v0.51: Nefarious City, whose story starts there; 10.0-v0.5: Zurkie's Battleplex). The
+--     prologue, the Battle Arena and Nefarious City are open from the start; every other visit
 --     opens when you hold its planet's Coordinates (items of this seed) and the visits it depends
 --     on are done (03_rando_campaign.lua C.hub_*). The solver's campaign reach is a fixpoint over
 --     the visits, so the order planets open in is decided by where the Coordinates are. A hub seed
@@ -75,10 +76,10 @@
 --   * Abilities the story gives (Speetle, Trudi, ...) cannot be granted: locations needing
 --     them, and locations whose trigger is not proven (armor finds, collectibles), only ever
 --     hold non-progression rewards.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
 RANDO_GEN = {}
 local G = RANDO_GEN
-G.VERSION = "10.0.1"
+G.VERSION = "10.0.2"
 local DB = RANDO_DATA
 
 -- ------------------------------------------------------------------------------------------
@@ -177,8 +178,8 @@ G.DEFAULTS = {
                                   -- 10.0: a hub seed is always planet_shuffle (Coordinates decide the order)
   exclude = "",                   -- comma-separated item keys never randomized, e.g. "weapon:ryno_8"
   -- 10.0
-  hub = true,                     -- a new game goes to Zurkie's Battleplex; choose the prologue, the Battle
-                                  -- Arena or Nefarious City; Coordinates open every other destination
+  hub = true,                     -- a new game goes to the hub (v0.51: Nefarious City, its story starts);
+                                  -- the Battle Arena is open too; Coordinates open every other destination
   distribution = "spread",        -- spread: items over every kind of location | goldbolts_first (4.0-9.0)
   shop_weapons = 8,               -- different weapons Ms. Zurkon sells (0-15); her other slots are closed
                                   -- and those weapons become rewards
@@ -1753,10 +1754,10 @@ function G.spoiler(seed)
       local it = seed.locations[lid].item and DB.items[seed.locations[lid].item]
       if it and it.category == "coordinates" then coords_at[it.planet] = DB.locations[lid].name end
     end
-    w("HUB AND PLANET SHUFFLE (Zurkie's Battleplex)")
+    w("HUB AND PLANET SHUFFLE (" .. (RANDO_CAMPAIGN.HUB_NAME or "the hub") .. ")")
     w(RANDO_CAMPAIGN.hub_describe(seed.hub, function(pid) return DB.planets[planet_index(pid)].name end, coords_at))
-    w("  Without a planet's Coordinates the ship's planet menu sends you back to Zurkie's. Finishing a")
-    w("  destination brings you back to Zurkie's; the game's own next mission does not take over.")
+    w("  Without a planet's Coordinates the ship's planet menu sends you back to the hub. Finishing a")
+    w("  destination brings you back to the hub; the game's own next mission does not take over.")
   else
     w("STORY START: a new game plays the prologue (Corson V), then Nefarious City, then Sargasso, as in")
     w("  the game. The randomizer moves you nowhere; travel is the ship's planet menu.")
@@ -1775,7 +1776,7 @@ function G.spoiler(seed)
     end
     if seed.hub then
       w("  Each planet's destinations open with its Coordinates (the hub above). Without them, the ship's")
-      w("  planet menu sends you back to Zurkie's; a mission's own rifts and cutscene travel are never blocked.")
+      w("  planet menu sends you back to the hub; a mission's own rifts and cutscene travel are never blocked.")
     elseif lv.travel_lock then
       w("  The story keeps the game's mission order; the solver proves each planet the story needs next is")
       w("  open by then. Without its Coordinates, the randomizer flies you back to the planet you came from.")

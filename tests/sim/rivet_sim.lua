@@ -56,6 +56,7 @@ local S = SIM
 
 function S.reset()
   S.frame, S.clock = 0, 0
+  S.intro_sequence, S.hero_held = nil, nil      -- v0.51
   S.logs, S.notes, S.published = {}, {}, {}
   S.hud, S.scene, S.hero_handle, S.loading = true, true, 1234, false
   S.speed, S.has_time_scale = 1.0, true
@@ -420,6 +421,7 @@ function rivet.warp(cp)
     if S.warp_fails[cp] or not known_cp(cp) then raise("no checkpoint " .. tostring(cp)) end
   end
   S.warps[#S.warps + 1] = cp; S.travels[#S.travels + 1] = { how = "warp", to = cp }
+  if S.intro_sequence and S.mstate and S.mstate.MIS_INTRO == 2 then S.hero_held = S.intro_sequence end
   if S.auto_travel then S.travel_queue[#S.travel_queue + 1] = { planet = S.planet_of_cp(cp), at = S.frame + 1, cp = cp } end
   return true
 end
@@ -469,11 +471,30 @@ function S.parade_control()
   S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_START", ObjectiveState = 1 })
   S.step(1)
 end
-function S.parade_wrench()
+-- v0.51: the wrench pickup starts OBJ_INTRO_GOING_DOWN in the same frame (round 23 lines 475-476);
+-- S.parade_release() ends it and the parade goes on (lines 510-515). SIMULATED rule (round 23: the
+-- game answered nothing sent to the hero during GOING_DOWN; your report: after 10.0-v0.5's warp at
+-- the wrench Ratchet could not walk): a warp while GOING_DOWN runs and the prologue is active leaves
+-- the hero held (S.hero_held). Nothing in the simulator releases it except S.hero_free().
+function S.parade_wrench(no_going_down)
   S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_PICKUP_WRENCH", ObjectiveState = 1 })
   S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_PICKUP_WRENCH", ObjectiveState = 2 })
+  if not no_going_down then
+    S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_GOING_DOWN", ObjectiveState = 1 })
+    S.intro_sequence = "OBJ_INTRO_GOING_DOWN"
+  end
   S.step(1)
 end
+function S.parade_release()
+  S.intro_sequence = nil
+  S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_GOING_DOWN", ObjectiveState = 2 })
+  S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_VELDIN_START", ObjectiveState = 1 })
+  S.step(1)
+  S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_VELDIN_START", ObjectiveState = 2 })
+  S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_VELDIN_END", ObjectiveState = 1 })
+  S.step(1)
+end
+function S.hero_free() S.hero_held = nil end
 -- level script nodes (route 1): S.nodes[i] = { component, actor, uid, class, addr, outputs }
 function rivet.script_nodes(filter, limit)
   local out = {}

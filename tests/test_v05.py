@@ -119,10 +119,26 @@ class UnchangedFrom10Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.old = old_engine()
-        # v0.5 is generator 10.0.1, and the version is part of every seed's fingerprint (and so of its
-        # random stream). To prove the LOGIC is unchanged, this copy runs as 10.0.0.
+        # v0.5 is generator 10.0.1 (v0.51: 10.0.2), and the version is part of every seed's fingerprint
+        # (and so of its random stream). To prove the LOGIC is unchanged, this copy runs as 10.0.0.
         cls.new = rando.Engine(str(MOD / "scripts"))
         cls.new.lua.execute('RANDO_GEN.VERSION = "10.0.0"')
+
+    # v0.51 (10.0.2) moved the hub to Nefarious City: the hub plan's planet, checkpoints and each
+    # destination's kind and menu label changed on purpose (tests/test_v051.py checks exactly that).
+    # Everything else of a hub seed - placements, route, start, shop, spoiler data - must not.
+    HUB_FIELDS_V051 = ("planet", "checkpoints")
+    DEST_FIELDS_V051 = ("kind", "label")
+
+    @classmethod
+    def mask(cls, d):
+        if isinstance(d, dict) and isinstance(d.get("hub"), dict):
+            for k in cls.HUB_FIELDS_V051:
+                d["hub"].pop(k, None)
+            for dest in d["hub"].get("destinations") or []:
+                for k in cls.DEST_FIELDS_V051:
+                    dest.pop(k, None)
+        return d
 
     def same(self, user, preset, n, tag):
         if self.old is None:
@@ -130,7 +146,7 @@ class UnchangedFrom10Tests(unittest.TestCase):
         for i in range(n):
             a, aa = self.new.generate(f"v05-same-{tag}-{i}", user, preset)
             b, ba = self.old.generate(f"v05-same-{tag}-{i}", user, preset)
-            self.assertEqual(py(a) if a is not None else aa, py(b) if b is not None else ba, f"{tag} {i}")
+            self.assertEqual(self.mask(py(a)) if a is not None else aa, self.mask(py(b)) if b is not None else ba, f"{tag} {i}")
 
     def test_spread_hub_seeds_identical(self):
         for p in ("balanced", "chaos", "everything"):

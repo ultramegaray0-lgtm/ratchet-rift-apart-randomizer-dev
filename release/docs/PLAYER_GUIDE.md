@@ -1,4 +1,4 @@
-# Player guide: Ratchet Rift Apart Randomizer v0.5
+# Player guide: Ratchet Rift Apart Randomizer v0.51
 
 ## How a run goes
 
@@ -7,21 +7,22 @@
 2. **New Game.** The parade on Corson V starts as usual; every new save starts there. The screen
    shows your seed and your starting items, which arrive in your inventory over the next few
    seconds.
-3. **The hub.** When Ratchet picks up his wrench, you're taken to **Zurkie's Battleplex**. Choose
-   your first destination with `]` (next) and `Ctrl+]` (go):
-   - **Prologue:** the parade on Corson V, continued from where you left it.
+3. **The hub: Nefarious City.** When Ratchet has his wrench and the parade lets him walk again (a
+   few seconds later), you're taken to **Nefarious City**. Its story starts right there, from where
+   the game itself starts it. The prologue counts as done, and its reward is paid. `]` (next) and
+   `Ctrl+]` (go) list what is open:
+   - **Nefarious City:** the city's story (already running after the warp).
    - **Battle Arena:** Zurkie's first visit.
-   - **Nefarious City:** the city's story from its real start.
 4. **Planet shuffle.** Every other planet opens when you hold its **Coordinates**. Coordinates are
    rewards like any other, so they can be anywhere. A destination also waits for the visits it
    depends on in the story (Sargasso's second visit comes after its first, for example). The finale
    opens last.
 5. **Finishing a destination** pays its rewards and lists what's newly open. 12 seconds later
-   you're back at Zurkie's. Press `[` once to cancel that return and stay. If the game's own story
-   tries to carry you to the next planet, you're brought back to Zurkie's instead, so you always
-   choose.
+   you're back in Nefarious City. Press `[` once to cancel that return and stay. If the game's own
+   story tries to carry you to the next planet (to Sargasso after the city's story, for example),
+   you're brought back to Nefarious City instead, so you always choose.
 6. **The ship's planet menu works too.** Landing on a planet whose Coordinates you don't have sends
-   you back to Zurkie's. Landing on an open planet starts its next destination.
+   you back to Nefarious City. Landing on an open planet starts its next destination.
 7. **Revisits.** Once a planet's destinations are done, it appears in the `]` list as "revisit":
    go there for Gold Bolts, armor and side activities.
 8. **Saving and loading are normal.** The companion saves the randomizer's own progress separately
@@ -33,7 +34,7 @@
 |---|---|
 | `]` | Show the next destination |
 | `Ctrl+]` | Go to it |
-| `[` twice | Back to Zurkie's (once: cancel an automatic return) |
+| `[` twice | Back to Nefarious City (once: cancel an automatic return) |
 | `Ctrl+[` twice | Finish the current destination by hand, if its story will not start |
 | `/` | Start the story of the planet you're on |
 | `;` | Status: Gold Bolts, rewards, Coordinates, deliveries still on the way |
@@ -80,6 +81,9 @@ Keys and in-game options can change at any time. A wrong value is reported in `r
 | `restored_weapons` | `"auto"` | ARSENAL_RESTORED's weapons: `"auto"` when the mod is found; `false` never |
 | `exclude` | `""` | Items to leave out, for example `"weapon:ryno_8"` |
 | `test_travel` | `false` | A testing aid that lets you go anywhere. Leave it off for a real run |
+| `hub_trigger` | `"parade"` | When the new game goes to Nefarious City: once the parade lets Ratchet walk again after the wrench. `"wrench"`: at the wrench itself (v0.5's timing) |
+| `hub_prologue` | `"end"` | `"end"`: the prologue counts as done once you're in Nefarious City. `"keep"`: it stays open, to continue later from the `]` list |
+| `hub_start_story` | `true` | The first warp starts Nefarious City's story. `false`: just go there |
 
 ### Presets
 

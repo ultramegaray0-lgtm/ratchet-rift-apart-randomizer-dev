@@ -2,6 +2,29 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## 10.0.2 / Public Release v0.51 (2026-11-13): the hub is Nefarious City
+
+Asked for: the hub in Nefarious City; its story must work after the warp there; Ratchet must be
+able to walk right after the warp (he could not in 10.0 / v0.5). Versioning from now on: a small
+fix +0.01 (this one), a major update +0.5. **Nothing of v0.51 has run in the game.**
+
+- 03: `HUB_PLANET = "nefarious_city"`, `HUB_CHECKPOINTS = { CHK_NEFCITY_START, CHK_NEFCITY_SHIP }`,
+  `HUB_STORY = "nefcity_1"`, menu order `HUB_MENU`. `HUB_START` keeps 10.0's order, so placements
+  are unchanged (test_v05 compares hub seeds with 10.0 field by field, apart from the hub plan's
+  planet, checkpoints and each destination's kind and label).
+- 15, start: the story is made active (hero, available, start), then the warp to CHK_NEFCITY_START
+  (round 23's order). The prologue is written Complete Finished once on Nefarious City
+  (`hub_prologue = "end"`, as kit 8.0 did in round 17), quietly: it pays, with no return trip.
+- 15, when: `hub_trigger = "parade"` waits for OBJ_INTRO_GOING_DOWN to finish (round 23: the game
+  answered nothing sent to the hero during it, and 10.0 warped right at its start) and for no
+  *GOING_DOWN* / *CINE* / *CUTSCENE* objective for 120 frames; 1800 frames after the wrench it goes
+  anyway.
+- 15, home: START while the city's story is unfinished, SHIP after it. A warp home on the hub planet
+  itself no longer waits for an arrival that never comes. No return trip when the game's own travel
+  has already brought you to the hub.
+- Simulator: the wrench starts GOING_DOWN; `S.parade_release()`; SIMULATED rule `S.hero_held`.
+- Tests: `tests/test_v051.py` (15); test_v100 rewritten for the new hub. 356 run, 0 failures.
+
 ## 10.0 (2026-11-13): the hub, planet shuffle, spread rewards, shop split from rewards
 
 Asked for: working planet shuffle (on by default), a hub start with the prologue / Battle Arena /

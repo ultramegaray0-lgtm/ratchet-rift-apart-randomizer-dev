@@ -1,4 +1,4 @@
-# Credits and licenses: Ratchet Rift Apart Randomizer v0.5
+# Credits and licenses: Ratchet Rift Apart Randomizer v0.51
 
 ## This mod
 

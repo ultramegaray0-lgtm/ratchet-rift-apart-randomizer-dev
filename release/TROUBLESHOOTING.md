@@ -1,4 +1,4 @@
-# Troubleshooting: Ratchet Rift Apart Randomizer v0.5
+# Troubleshooting: Ratchet Rift Apart Randomizer v0.51
 
 Most answers are in `rivet.log`, in the game folder. Open it in Notepad and search for `RANDO-`.
 
@@ -11,7 +11,7 @@ Most answers are in `rivet.log`, in the game folder. Open it in Notepad and sear
 | `RANDO-SAVE` | The connection to the companion |
 | `RANDO-ERROR` | Anything that went wrong |
 
-## Nothing happens: no seed, no start items, no warp to Zurkie's
+## Nothing happens: no seed, no start items, no warp to Nefarious City
 
 1. **Is rivet_hook loading?** `rivet.log` should exist and be updated each time you start the game.
    If it isn't, rivet_hook isn't installed: check that `hid.dll` and `rivet_hook.dll` are next to
@@ -87,16 +87,31 @@ The hub logs each step as `RANDO-HUB`. In order, try:
 1. Wait 20 seconds. If the story is stuck at its first "go to ..." step, the hub reloads that spot
    once by itself.
 2. Press `/` to start the story of the planet you're on.
-3. Press `[` twice to go back to Zurkie's, then choose the destination again.
+3. Press `[` twice to go back to Nefarious City, then choose the destination again.
 4. Press `Ctrl+[` twice to finish the destination by hand. Its rewards are paid and the next
    planets open, so the run can always continue.
 
 If this happens, please report it on the mod page with your `rivet.log` (see below).
 
-## I was sent back to Zurkie's
+## I was sent back to Nefarious City
 
 You landed on a planet whose Coordinates you don't have yet, or the game's own story tried to move
 you on. That's intended: choose your next destination with `]`.
+
+## The warp to Nefarious City doesn't come right at the wrench
+
+That's intended (v0.51). Picking up the wrench starts a short scripted part of the parade. The
+randomizer waits until it is over and Ratchet can walk again (a few seconds), so the warp doesn't
+cut it off. In `rivet.log` the warp follows the line `the parade handed Ratchet back`. If the
+parade never reports that part as finished, the warp goes 30 seconds after the wrench anyway.
+
+## Ratchet can't move after the warp
+
+v0.51 is meant to prevent this. If it still happens:
+
+1. Press `/` to load the story of the planet you're on again.
+2. Send your `rivet.log` (see below). The lines with `RANDO-HUB` around the warp show when it went
+   and which part of the parade was running.
 
 ## A reward said it was given, but it's not in my inventory
 
@@ -127,7 +142,7 @@ put in the shop but she doesn't sell are then given to you directly, once (said 
 
 On the mod page, please include:
 
-- the release version (v0.5) and your game version (right-click `RiftApart.exe` → Properties →
+- the release version (v0.51) and your game version (right-click `RiftApart.exe` → Properties →
   Details → File version; v3.630.1.0 shows as 3.0630.1.0);
 - the `rivet.log` from the game folder, uploaded as a file;
 - the companion window's text, if it shows an error;

@@ -1,6 +1,6 @@
-Rift Apart Randomizer 10.0 - test run 2026-11-13 00:16 UTC
+Rift Apart Randomizer v0.51 (build 10.0.2) - test run 2026-11-13 12:22 UTC
 Python 3.13.18 on Linux
-ran 332, failures 0, errors 0, skipped 17
+ran 356, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -216,6 +216,29 @@ test_batch_command (tests.test_tools.CliTests.test_batch_command) ... ok
 test_generate_twice_in_separate_processes (tests.test_tools.CliTests.test_generate_twice_in_separate_processes) ... ok
 test_round13_log (tests.test_tools.SummarizeLogTests.test_round13_log) ... ok
 test_simulated_session (tests.test_tools.SummarizeLogTests.test_simulated_session) ... ok
+test_early_weapons_zero_places_none_on_purpose (tests.test_v05.KitSettingsTests.test_early_weapons_zero_places_none_on_purpose) ... ok
+test_every_gold_bolt_is_an_item_with_the_kit_settings (tests.test_v05.KitSettingsTests.test_every_gold_bolt_is_an_item_with_the_kit_settings) ... ok
+test_every_preset (tests.test_v05.KitSettingsTests.test_every_preset) ... ok
+test_kit_sets_goldbolts_first (tests.test_v05.KitSettingsTests.test_kit_sets_goldbolts_first) ... ok
+test_tight_settings_lower_early_weapons_instead_of_failing (tests.test_v05.KitSettingsTests.test_tight_settings_lower_early_weapons_instead_of_failing) ... ok
+test_hub_false_with_kit_settings_identical (tests.test_v05.UnchangedFrom10Tests.test_hub_false_with_kit_settings_identical) ... ok
+test_non_hub_goldbolts_first_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_non_hub_goldbolts_first_seeds_identical) ... ok
+test_spread_hub_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_spread_hub_seeds_identical) ... ok
+test_the_plan_names_nefarious_city (tests.test_v051.HubPlanTests.test_the_plan_names_nefarious_city) ... ok
+test_a_refused_prologue_write_keeps_it_as_a_destination (tests.test_v051.TheStoryTests.test_a_refused_prologue_write_keeps_it_as_a_destination) ... ok
+test_a_story_still_at_its_first_step_is_loaded_once_more_in_the_city (tests.test_v051.TheStoryTests.test_a_story_still_at_its_first_step_is_loaded_once_more_in_the_city) ... ok
+test_hub_start_story_off_only_travels (tests.test_v051.TheStoryTests.test_hub_start_story_off_only_travels) ... ok
+test_keep_leaves_the_prologue_to_choose (tests.test_v051.TheStoryTests.test_keep_leaves_the_prologue_to_choose) ... ok
+test_the_prologue_ends_only_on_nefarious_city (tests.test_v051.TheStoryTests.test_the_prologue_ends_only_on_nefarious_city) ... ok
+test_the_story_is_active_before_the_city_loads (tests.test_v051.TheStoryTests.test_the_story_is_active_before_the_city_loads) ... ok
+test_going_home_from_the_city_waits_for_no_arrival (tests.test_v051.WayHomeTests.test_going_home_from_the_city_waits_for_no_arrival) ... ok
+test_home_is_the_story_start_then_the_pad (tests.test_v051.WayHomeTests.test_home_is_the_story_start_then_the_pad) ... ok
+test_messages_name_nefarious_city (tests.test_v051.WayHomeTests.test_messages_name_nefarious_city) ... ok
+test_a_parade_cutscene_holds_the_warp_until_it_ends (tests.test_v051.WhenTheWarpGoesTests.test_a_parade_cutscene_holds_the_warp_until_it_ends) ... ok
+test_a_save_load_never_starts_it (tests.test_v051.WhenTheWarpGoesTests.test_a_save_load_never_starts_it) ... ok
+test_going_down_never_reported_goes_after_the_timeout (tests.test_v051.WhenTheWarpGoesTests.test_going_down_never_reported_goes_after_the_timeout) ... ok
+test_no_warp_while_going_down_runs (tests.test_v051.WhenTheWarpGoesTests.test_no_warp_while_going_down_runs) ... ok
+test_the_10_0_timing_is_what_held_ratchet (tests.test_v051.WhenTheWarpGoesTests.test_the_10_0_timing_is_what_held_ratchet) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -234,8 +257,8 @@ test_share_code_and_spoiler (tests.test_v100.HubGeneratorTests.test_share_code_a
 test_shop_and_rewards_are_separate (tests.test_v100.HubGeneratorTests.test_shop_and_rewards_are_separate) ... ok
 test_a_restarted_prologue_is_no_new_game (tests.test_v100.HubStartTests.test_a_restarted_prologue_is_no_new_game) ... ok
 test_battle_arena_starts_at_zurkies (tests.test_v100.HubStartTests.test_battle_arena_starts_at_zurkies) ... ok
-test_nefarious_city_starts_at_its_real_start (tests.test_v100.HubStartTests.test_nefarious_city_starts_at_its_real_start) ... ok
-test_new_game_goes_to_the_hub_and_offers_three_missions (tests.test_v100.HubStartTests.test_new_game_goes_to_the_hub_and_offers_three_missions) ... ok
+test_nefarious_city_story_finishes_and_home_is_the_pad (tests.test_v100.HubStartTests.test_nefarious_city_story_finishes_and_home_is_the_pad) ... ok
+test_new_game_goes_to_the_hub_and_its_story_starts (tests.test_v100.HubStartTests.test_new_game_goes_to_the_hub_and_its_story_starts) ... ok
 test_prologue_resumes_where_the_parade_was_left (tests.test_v100.HubStartTests.test_prologue_resumes_where_the_parade_was_left) ... ok
 test_prologue_without_a_parade_checkpoint_uses_the_intro_default (tests.test_v100.HubStartTests.test_prologue_without_a_parade_checkpoint_uses_the_intro_default) ... ok
 test_the_8x_landing_would_not_have_started_it (tests.test_v100.HubStartTests.test_the_8x_landing_would_not_have_started_it) ... ok
@@ -248,8 +271,9 @@ test_revisit_entries (tests.test_v100.PlanetShuffleTests.test_revisit_entries) .
 test_a_launch_cancels_the_pending_return (tests.test_v100.PrologueEndTests.test_a_launch_cancels_the_pending_return) ... ok
 test_home_after_a_timeout_without_a_checkpoint (tests.test_v100.PrologueEndTests.test_home_after_a_timeout_without_a_checkpoint) ... ok
 test_home_after_the_new_planet_loads (tests.test_v100.PrologueEndTests.test_home_after_the_new_planet_loads) ... ok
+test_the_prologues_rift_to_nefarious_city_is_the_way_home (tests.test_v100.PrologueEndTests.test_the_prologues_rift_to_nefarious_city_is_the_way_home) ... ok
 test_round13_save_loads_never_start_it (tests.test_v100.RealLogTests.test_round13_save_loads_never_start_it) ... ok
-test_round23_new_game_starts_the_hub_at_the_wrench (tests.test_v100.RealLogTests.test_round23_new_game_starts_the_hub_at_the_wrench) ... ok
+test_round23_new_game_starts_the_hub_after_the_parade_hands_ratchet_back (tests.test_v100.RealLogTests.test_round23_new_game_starts_the_hub_after_the_parade_hands_ratchet_back) ... ok
 test_your_settings_file_makes_a_hub_seed (tests.test_v100.SettingsFileTests.test_your_settings_file_makes_a_hub_seed) ... ok
 test_a_budget_error_halves_the_reads (tests.test_v100.ShopTests.test_a_budget_error_halves_the_reads) ... ok
 test_bytes_are_parsed_fast_and_right (tests.test_v100.ShopTests.test_bytes_are_parsed_fast_and_right) ... ok
@@ -355,6 +379,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 332 tests in 157.883s
+Ran 356 tests in 104.177s
 
 OK (skipped=17)

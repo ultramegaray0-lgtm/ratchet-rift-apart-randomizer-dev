@@ -90,7 +90,7 @@ class RegistryTests(unittest.TestCase):
         a.companion_restore()
         a.wait_seed()
         self.assertEqual(a.seed.fingerprint, a.g.RANDO_GEN.fingerprint("v84-fp", a.seed.settings))
-        self.assertEqual(a.g.RANDO_GEN.VERSION, "10.0.1")          # 10.0: new seeds (start them with NEW GAME)
+        self.assertEqual(a.g.RANDO_GEN.VERSION, "10.0.2")          # 10.0: new seeds (start them with NEW GAME)
 
 
 class LandingTests(unittest.TestCase):
@@ -256,8 +256,8 @@ class Round20LogTests(unittest.TestCase):
 
 class VersionTests(unittest.TestCase):
     def test_versions(self):
-        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.1"'), ("16_rando_testtravel.lua", 'TT.VERSION = "10.0.1"'),
-                           ("02_rando_generator.lua", 'G.VERSION = "10.0.1"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.1"')):
+        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.2"'), ("16_rando_testtravel.lua", 'TT.VERSION = "10.0.2"'),
+                           ("02_rando_generator.lua", 'G.VERSION = "10.0.2"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.2"')):
             with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
                 self.assertIn(want, f.read(), name)
 
@@ -270,7 +270,7 @@ class KitCheckTests(unittest.TestCase):
     def test_a_complete_kit_says_so(self):
         g = Game(settings_file=True)
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.1"))
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.2"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
     def test_a_missing_or_older_script_is_reported(self):

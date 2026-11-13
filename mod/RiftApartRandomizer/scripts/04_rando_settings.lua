@@ -1,4 +1,4 @@
--- Rift Apart Randomizer (Public Release v0.5, build 10.0.1): your seed and settings.
+-- Rift Apart Randomizer (Public Release v0.51, build 10.0.2): your seed and settings.
 -- Change, save, then restart the game (or press Pause to reload the scripts before you play).
 -- A different seed or different randomization options make a NEW seed with its own progress;
 -- start it with NEW GAME. Keys/logging can change any time.
@@ -6,9 +6,10 @@
 -- (RANDO-SETTINGS) and the preset's value is used instead.
 --
 -- Always true, whatever you set:
---   * 10.0 (hub = true): NEW GAME takes you to Zurkie's Battleplex once Ratchet has his wrench. Choose
---     the Prologue, the Battle Arena or Nefarious City there (] next, Ctrl+] go); every other planet
---     opens when you find its Coordinates. Finishing a destination brings you back to Zurkie's.
+--   * hub = true: NEW GAME takes you to the hub, NEFARIOUS CITY (v0.51), once Ratchet has his wrench
+--     and the parade has handed him back; the city's story starts there. The Battle Arena is open too
+--     (] next, Ctrl+] go); every other planet opens when you find its Coordinates. Finishing a
+--     destination brings you back to Nefarious City.
 --   * every Gold Bolt you pick up is a real Gold Bolt, and the randomizer adds a reward to it
 --     (v0.5: distribution = "goldbolts_first" below makes that reward always exactly one item)
 --   * you start with the Hoverboots and the Map-O-Matic
@@ -17,7 +18,7 @@
 --   * a mission, side activity or armor pod with no item gives Bolts or Raritanium
 --   * the solver proves every seed can be finished (in the game's own mission order too)
 --   * hub = false gives 9.0's start instead: the prologue, then Nefarious City, then Sargasso
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
 RANDO_SETTINGS = {
   seed = "random",            -- any text, e.g. "lombax-ryno-2026"; "random" = the companion picks one and remembers it
   preset = "balanced",        -- balanced | chaos | full | campaign | everything (docs\PLAYER_GUIDE.md)
@@ -32,7 +33,7 @@ RANDO_SETTINGS = {
                               --   9.0: every order starts with the prologue, Nefarious City, Sargasso)
 
   -- 10.0 (leave a line out to use the default shown)
-  -- hub = true,                       -- Zurkie's hub + planet shuffle (false: 9.0's story start)
+  -- hub = true,                       -- Nefarious City hub + planet shuffle (false: 9.0's story start)
   distribution = "goldbolts_first",    -- v0.5: every Gold Bolt gives exactly one item (never Bolts/Raritanium);
                                        -- "spread": items over Gold Bolts, missions, side activities and armor pods
                                        -- goldbolts_first: 4.0-9.0 (every Gold Bolt an item, the rest mostly currency)
@@ -85,9 +86,12 @@ RANDO_SETTINGS = {
   -- in-game options (change any time)
   -- 10.0 the hub (only with hub = true)
   key_hub = "]",                     -- ] next destination, Ctrl+] go
-  key_hub_return = "[",              -- [ twice back to Zurkie's, Ctrl+[ twice finish a destination by hand
+  key_hub_return = "[",              -- [ twice back to the hub, Ctrl+[ twice finish a destination by hand
   key_story = "/",                   -- / start the story of the planet you are on
-  hub_return_delay = 12,             -- seconds after a finished destination before you go back to Zurkie's
+  hub_return_delay = 12,             -- seconds after a finished destination before you go back to the hub
+  -- hub_trigger = "parade",         -- v0.51: go once the parade hands Ratchet back after his wrench | "wrench"
+  -- hub_prologue = "end",           -- v0.51: the prologue counts as done at the hub | "keep": choose it later
+  -- hub_start_story = true,         -- v0.51: the first warp starts Nefarious City's story there
   hub_follow_story = false,          -- true: when the game's own story takes you to an open destination, play it
   shop_close_slots = true,           -- closed shop slots show the Burst Pistol (false: their own weapon)
   -- 8.3 KEYS: ordinary keyboard keys. A key is one character ("]", "/", "K", "7"), NUMPAD0-NUMPAD9,

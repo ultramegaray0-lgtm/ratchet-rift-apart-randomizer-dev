@@ -36,7 +36,10 @@ CAMP = ENG.lua.globals().RANDO_CAMPAIGN
 LOCATION_SEGMENT = py(CAMP.LOCATION_SEGMENT)
 SEGMENTS = py(CAMP.SEGMENTS)
 START_PLANETS = {"corson_v", "nefarious_city", "scarstu"}     # written down here, not read from 03
-START_MISSIONS = ["corson_intro", "scarstu_1", "nefcity_1"]
+START_MISSIONS = ["corson_intro", "scarstu_1", "nefcity_1"]   # the generator's order (03 C.HUB_START)
+# v0.51: the hub is Nefarious City; what ] offers right after the start (the prologue ended there)
+START_MENU = ["nefcity_1", "scarstu_1", "revisit:corson_v"]
+KEEP = {"hub_prologue": "keep"}             # 10.0's prologue as a destination
 ALWAYS = {"hoverboots", "map_o_matic"}
 DATA = ROOT / "tests" / "data"
 
@@ -326,8 +329,9 @@ class HubGeneratorTests(unittest.TestCase):
         self.assertIn("10.0", why)
         s, _ = ENG.generate("v100-spoiler", {}, "balanced")
         text = ENG.spoiler(s)
-        for want in ("HUB AND PLANET SHUFFLE", "1. Prologue - the parade on Corson V", "2. Battle Arena - Zurkie's Battleplex",
-                     "3. Nefarious City", "CLOSED (shows the Burst Pistol", "No weapon is both sold and given",
+        for want in ("HUB AND PLANET SHUFFLE (Nefarious City)", "1. Nefarious City - the hub's story",
+                     "2. Battle Arena - Zurkie's Battleplex", "3. Prologue - the parade on Corson V",
+                     "the city's story starts there", "CLOSED (shows the Burst Pistol", "No weapon is both sold and given",
                      "each one you pick up is a real Gold Bolt"):
             self.assertIn(want, text)
 
@@ -394,19 +398,23 @@ def hub_game(seed="v100-rt", settings=None, missions=None, **kw):
 PARADE_CP = "CHK_MALINON_PARADE_START"       # a parade checkpoint the simulator lists (SIMULATED name)
 
 
-def to_hub(g, catalog=True):
+def to_hub(g, catalog=True, before=None):
     g.companion_restore()
+    if before:
+        before(g)
     g.sim.new_game()
     g.step(60)
     g.sim.parade_control()
     if catalog:
         g.step(1500)                           # the checkpoint catalog fills (it starts at frame 600)
     g.sim.checkpoint(PARADE_CP)
-    g.sim.parade_wrench()
+    g.sim.parade_wrench()                      # v0.51: also starts OBJ_INTRO_GOING_DOWN (round 23)
+    g.step(30)
+    g.sim.parade_release()                     # GOING_DOWN done, the parade goes on
     for _ in range(60):
         g.step(30)
         h = g.state.hub
-        if h is not None and h.started and g.sim.planet == "Zurkon":
+        if h is not None and h.started and g.sim.planet == "NefCity":
             break
     g.step(400)
     return g
@@ -434,20 +442,27 @@ def menu_ids(g):
 
 
 class HubStartTests(unittest.TestCase):
-    def test_new_game_goes_to_the_hub_and_offers_three_missions(self):
+    def test_new_game_goes_to_the_hub_and_its_story_starts(self):
         g = to_hub(hub_game())
         h = hub(g)
         self.assertTrue(h["started"])
-        self.assertEqual(g.sim.planet, "Zurkon")
-        self.assertEqual(list(g.sim.warps.values()), ["CHK_ZURK_00_DEFAULT"])
-        self.assertEqual(menu_ids(g), START_MISSIONS)
-        self.assertTrue(g.note_has("choose your first mission"))
-        self.assertTrue(g.log_has("start menu:\t1. Prologue - the parade on Corson V  |  2. Battle Arena - Zurkie's Battleplex  |  3. Nefarious City"))
-        # the prologue is left ACTIVE (8.0 wrote it complete), and where the parade was is remembered
-        self.assertEqual(g.sim.get_mission("MIS_INTRO"), 2)
-        self.assertEqual(len(g.sim.set_state_calls), 0)
+        # v0.51: the hub is Nefarious City, loaded where the game loads its story, with the story on
+        self.assertEqual(g.sim.planet, "NefCity")
+        self.assertEqual(list(g.sim.warps.values()), ["CHK_NEFCITY_START"])
+        self.assertEqual(g.sim.get_mission("MIS_NEFCITY_01"), 2)
+        self.assertTrue(py(g.sim.go_to["MIS_NEFCITY_01"])["done"])     # its first step finished
+        self.assertEqual(g.sim.started_as["MIS_NEFCITY_01"], "ratchet")
+        self.assertEqual(h["current"], "nefcity_1")
+        self.assertTrue(g.note_has("its story starts here"))
+        self.assertTrue(g.log_has("start menu:\t1. Nefarious City - the hub's story  |  2. Battle Arena - Zurkie's Battleplex"))
+        # the story made active first (as round 17), then the prologue written complete at the hub
+        self.assertEqual([(c.name, c.state) for c in g.sim.set_state_calls.values()], [("MIS_NEFCITY_01", 1), ("MIS_INTRO", 4)])
+        self.assertEqual(g.sim.get_mission("MIS_INTRO"), 4)
+        self.assertIn("corson_intro", h["done"])
+        self.assertTrue(g.state.collected["planet:corson_v"])
+        self.assertEqual(menu_ids(g), START_MENU)
+        self.assertIsNone(g.sim.hero_held)                            # the warp came after GOING_DOWN
         self.assertEqual(h["parade_cp"], PARADE_CP)
-        self.assertFalse(g.state.collected["planet:corson_v"])
         # only the three planets are open; the ship's travel on and every level bit set
         self.assertEqual({k for k, v in py(g.state.access).items() if v}, START_PLANETS)
         self.assertEqual(g.sim.travel_flag, 1)
@@ -455,57 +470,56 @@ class HubStartTests(unittest.TestCase):
         self.assertFalse(g.log_has("RANDO-ERROR"), [l for l in g.logs() if "RANDO-ERROR" in l][:3])
 
     def test_prologue_resumes_where_the_parade_was_left(self):
-        g = to_hub(hub_game())
+        g = to_hub(hub_game(settings=KEEP))
+        self.assertEqual(menu_ids(g), ["nefcity_1", "scarstu_1", "corson_intro"])
         choose(g, "corson_intro")
         self.assertEqual(g.sim.planet, "Malinon")
         self.assertEqual(list(g.sim.warps.values())[-1], PARADE_CP)
         self.assertEqual(g.sim.get_mission("MIS_INTRO"), 2)
-        self.assertEqual(len(g.sim.set_state_calls), 0)          # nothing written: it is still active
+        # nothing written for the prologue: it is still active (only the hub story's start)
+        self.assertEqual([(c.name, c.state) for c in g.sim.set_state_calls.values()], [("MIS_NEFCITY_01", 1)])
         self.assertEqual(hub(g)["current"], "corson_intro")
-        # the game finishes the prologue and takes you to Nefarious City by itself: undone
+        # the game finishes the prologue and rifts to Nefarious City by itself: that is the hub now,
+        # so nothing is undone and there is no second trip
         g.sim.complete_mission("MIS_INTRO")
         g.step(1500)
         self.assertIn("corson_intro", hub(g)["done"])
         self.assertTrue(g.state.collected["planet:corson_v"])
-        self.assertEqual(g.sim.planet, "Zurkon")
-        self.assertTrue(g.log_has("[ORDER KEPT] the game's own travel to nefarious_city undone"))
+        self.assertEqual(g.sim.planet, "NefCity")
+        self.assertEqual(list(g.sim.warps.values())[-1], PARADE_CP)
+        self.assertFalse(g.log_has("[ORDER KEPT]"))
+        self.assertTrue(g.log_has("already at the hub, no trip back"))
 
     def test_prologue_without_a_parade_checkpoint_uses_the_intro_default(self):
-        g = to_hub(hub_game(), catalog=False)
+        g = to_hub(hub_game(settings=KEEP), catalog=False)
         g.state.hub.parade_cp = None
         g.state.hub.parade_hash = None
         choose(g, "corson_intro")
         self.assertEqual(list(g.sim.warps.values())[-1], "CHK_MALINON_INTRO_DEFAULT")
 
-    def test_nefarious_city_starts_at_its_real_start(self):
+    def test_nefarious_city_story_finishes_and_home_is_the_pad(self):
         g = to_hub(hub_game())
-        choose(g, "nefcity_1")
-        self.assertEqual(g.sim.planet, "NefCity")
-        self.assertEqual(list(g.sim.warps.values())[-1], "CHK_NEFCITY_START")
-        self.assertEqual(g.sim.get_mission("MIS_NEFCITY_01"), 2)
-        # inactive -> available (record write) -> the game's start, as round 17 did
-        self.assertEqual([(c.name, c.state) for c in g.sim.set_state_calls.values()], [("MIS_NEFCITY_01", 1)])
-        self.assertTrue(py(g.sim.go_to["MIS_NEFCITY_01"])["done"])     # its first step finished
-        self.assertEqual(g.sim.started_as["MIS_NEFCITY_01"], "ratchet")
+        choose(g, "nefcity_1")                                  # the menu entry: it is already running
+        self.assertTrue(g.log_has("already active"))
         g.sim.complete_mission("MIS_NEFCITY_01")
+        g.sim.checkpoint("CHK_SARG_OPENING_SIMULATED")
         g.step(1500)
         self.assertIn("nefcity_1", hub(g)["done"])
-        self.assertEqual(g.sim.planet, "Zurkon")              # the game's own trip to Sargasso undone
+        self.assertEqual(g.sim.planet, "NefCity")             # the game's own trip to Sargasso undone
+        self.assertEqual(list(g.sim.warps.values())[-1], "CHK_NEFCITY_SHIP")   # story done: the pad
         for lid in ("planet:nefarious_city", "story2:nefarious_city"):
             self.assertTrue(g.state.collected[lid], lid)
 
     def test_the_8x_landing_would_not_have_started_it(self):
-        # control: with the registry's start removed, the hub lands at CHK_NEFCITY_SHIP (8.x) and
-        # the story waits; the watcher then loads the other point once (here: none better known)
-        g = hub_game()
-        g.lua.execute('for _, s in ipairs(RANDO_CAMPAIGN.SEGMENTS) do if s.id == "nefcity_1" then s.start_cp = nil end end')
-        g.lua.execute("RANDO_HUB.STUCK_WAIT = 300")
-        to_hub(g)
-        for d in g.seed.hub.destinations.values():
-            if d.id == "nefcity_1":
-                d.start_cp = None
-        choose(g, "nefcity_1", frames=600)
-        self.assertEqual(list(g.sim.warps.values())[1], "CHK_NEFCITY_SHIP")
+        # control: with the story's start and the hub's first checkpoint removed, the hub start
+        # lands at CHK_NEFCITY_SHIP (8.x) and the story waits at its first step
+        def strip(g):
+            g.seed.hub.checkpoints = g.lua.table_from(["CHK_NEFCITY_SHIP"])
+            for d in g.seed.hub.destinations.values():
+                if d.id == "nefcity_1":
+                    d.start_cp = None
+        g = to_hub(hub_game(), before=strip)
+        self.assertEqual(list(g.sim.warps.values())[0], "CHK_NEFCITY_SHIP")
         self.assertFalse(py(g.sim.go_to["MIS_NEFCITY_01"]).get("done"))
 
     def test_battle_arena_starts_at_zurkies(self):
@@ -518,17 +532,19 @@ class HubStartTests(unittest.TestCase):
         g.sim.complete_mission("MIS_ZURK_01_VISIT_01")
         g.step(900)
         self.assertIn("scarstu_1", hub(g)["done"])
-        self.assertEqual(g.sim.planet, "Zurkon")
+        # back to the hub: the city's story is not finished, so where it resumes
+        self.assertEqual(g.sim.planet, "NefCity")
+        self.assertEqual(list(g.sim.warps.values())[-1], "CHK_NEFCITY_START")
         self.assertTrue(g.state.collected["planet:scarstu"])
         # Zurkie's second visit opens after the first
         self.assertIn("scarstu_2", menu_ids(g))
 
     def test_a_restarted_prologue_is_no_new_game(self):
-        g = to_hub(hub_game())
+        g = to_hub(hub_game(settings=KEEP))
         g.sim.set_mission("MIS_INTRO", 0, False)
         run = g.state.run
         choose(g, "corson_intro", frames=60)
-        self.assertEqual([(c.name, c.state) for c in g.sim.set_state_calls.values()], [("MIS_INTRO", 1)])
+        self.assertEqual([(c.name, c.state) for c in g.sim.set_state_calls.values()][-1], ("MIS_INTRO", 1))
         g.fire("ObjectiveStateChangedEvent", MissionName="MIS_INTRO", ObjectiveName="OBJ_INTRO_PARADE_START_CINE", ObjectiveState=1)
         g.step(60)
         self.assertEqual(g.state.run, run)
@@ -538,7 +554,7 @@ class PlanetShuffleTests(unittest.TestCase):
     def test_only_open_destinations_are_offered_and_coordinates_open_more(self):
         g = to_hub(hub_game("v100-shuffle"))
         before = set(menu_ids(g))
-        self.assertEqual(before, set(START_MISSIONS))
+        self.assertEqual(before, set(START_MENU))
         locked = [p for p in ("savali", "blizar_prime", "torren_iv", "cordelion", "ardolis", "viceron", "sargasso")
                   if not g.state.access[p]]
         self.assertEqual(len(locked), 7)
@@ -552,8 +568,8 @@ class PlanetShuffleTests(unittest.TestCase):
         g.fire("PlanetMenuAcceptEvent", DestinationCheckpointName="CHK_BLIZAR_A_LANDINGPAD", InterplanetaryCheckpointName="CHK_TRANSITION_TO_BLIZAR")
         g.travel("Blizar")
         g.step(600)
-        self.assertEqual(g.sim.planet, "Zurkon")
-        self.assertTrue(g.note_has("no Coordinates for Blizar Prime yet"))
+        self.assertEqual(g.sim.planet, "NefCity")
+        self.assertTrue(g.note_has("no Coordinates for Blizar Prime yet - back to Nefarious City"))
 
     def test_menu_to_an_open_planet_starts_its_destination(self):
         g = to_hub(hub_game("v100-menu-open"))
@@ -566,12 +582,15 @@ class PlanetShuffleTests(unittest.TestCase):
         self.assertEqual(hub(g)["current"], "savali_1")
 
     def test_follow_story_option(self):
+        # v0.51: the city's story ends with the game's own trip to Sargasso; with Sargasso open and
+        # hub_follow_story, that destination is played instead of going home
         g = to_hub(hub_game("v100-follow", {"hub_follow_story": True}))
-        choose(g, "corson_intro")
-        g.sim.complete_mission("MIS_INTRO")
+        g.R.grant("access:sargasso")
+        g.step(30)
+        g.sim.complete_mission("MIS_NEFCITY_01")
         g.step(1500)
-        self.assertEqual(g.sim.planet, "NefCity")
-        self.assertEqual(hub(g)["current"], "nefcity_1")
+        self.assertEqual(g.sim.planet, "Sargasso")
+        self.assertEqual(hub(g)["current"], "sargasso_1")
 
     def test_a_start_is_learned_and_kept_over_a_new_game(self):
         g = to_hub(hub_game("v100-learn"))
@@ -589,10 +608,7 @@ class PlanetShuffleTests(unittest.TestCase):
 
     def test_revisit_entries(self):
         g = to_hub(hub_game("v100-revisit"))
-        choose(g, "corson_intro")
-        g.sim.complete_mission("MIS_INTRO")
-        g.step(1500)
-        self.assertIn("revisit:corson_v", menu_ids(g))
+        self.assertIn("revisit:corson_v", menu_ids(g))           # the prologue ended at the hub start
         choose(g, revisit="corson_v", frames=600)
         self.assertEqual(g.sim.planet, "Malinon")
         self.assertIsNone(hub(g).get("current"))
@@ -639,7 +655,7 @@ class CampaignTests(unittest.TestCase):
             g.step(60 * 3 + 900)
             if d["kind"] == "finale":
                 break
-            self.assertEqual(g.sim.planet, "Zurkon", (seed, target))
+            self.assertEqual(g.sim.planet, "NefCity", (seed, target))
         h = hub(g)
         self.assertEqual(h["n_done"], len(plan["destinations"]), (seed, sorted(h["done"])))
         self.assertTrue(g.state.campaign_complete)
@@ -659,11 +675,12 @@ class CampaignTests(unittest.TestCase):
 
 class PrologueEndTests(unittest.TestCase):
     """Round 23's order: MIS_INTRO turns complete on Ardolis, then the game rifts to Nefarious City
-    by itself and starts MIS_NEFCITY_01. The hub waits for that planet's first loaded checkpoint,
-    goes home, and a later Nefarious City launch reuses the mission the game already started."""
+    by itself and starts MIS_NEFCITY_01. v0.51: Nefarious City is the hub, so with the prologue kept
+    (hub_prologue = "keep") that rift is simply the way home. The game's own trip after the city's
+    story (to Sargasso) is undone once that planet has loaded, or after a timeout."""
 
     def prologue_on_ardolis(self):
-        g = to_hub(hub_game())
+        g = to_hub(hub_game(settings=KEEP))
         choose(g, "corson_intro")
         g.travel("Ardolis")                                      # the prologue's own rifts
         g.step(200)
@@ -673,40 +690,52 @@ class PrologueEndTests(unittest.TestCase):
         g.sim.complete_mission("MIS_INTRO")
         return g
 
-    def test_home_after_the_new_planet_loads(self):
+    def test_the_prologues_rift_to_nefarious_city_is_the_way_home(self):
         g = self.prologue_on_ardolis()
         self.assertEqual(g.sim.get_mission("MIS_NEFCITY_01"), 2)
-        g.step(400)
-        self.assertEqual(g.sim.planet, "NefCity")                # nothing before the planet loaded
-        self.assertIn("corson_intro", hub(g)["done"])
-        g.sim.checkpoint("CHK_NEFCITY_OPENING_SIMULATED")        # a checkpoint no list names
-        g.step(600)
-        self.assertEqual(g.sim.planet, "Zurkon")
-        self.assertTrue(g.log_has("[ORDER KEPT] the game's own travel to nefarious_city undone"))
-        self.assertTrue(g.log_has("the new planet loaded"))
-        # Nefarious City from the hub: the game's own active mission, no record write
-        choose(g, "nefcity_1")
+        g.step(1500)
         self.assertEqual(g.sim.planet, "NefCity")
+        self.assertIn("corson_intro", hub(g)["done"])
+        self.assertFalse(g.log_has("[ORDER KEPT]"))
+        self.assertEqual(list(g.sim.warps.values())[-1], PARADE_CP)       # no trip of ours after it
+        choose(g, "nefcity_1")
         self.assertEqual(list(g.sim.warps.values())[-1], "CHK_NEFCITY_START")
-        self.assertEqual([c.name for c in g.sim.set_state_calls.values()], [])
         self.assertTrue(g.log_has("already active"))
         self.assertFalse(g.log_has("RANDO-ERROR"), [l for l in g.logs() if "RANDO-ERROR" in l][:3])
 
-    def test_home_after_a_timeout_without_a_checkpoint(self):
-        g = self.prologue_on_ardolis()
+    def city_story_done(self):
+        g = to_hub(hub_game())
+        g.sim.complete_mission("MIS_NEFCITY_01")                   # the game then travels to Sargasso
+        g.step(200)
+        self.assertEqual(g.sim.planet, "Sargasso")
+        return g
+
+    def test_home_after_the_new_planet_loads(self):
+        g = self.city_story_done()
+        g.step(200)
+        self.assertEqual(g.sim.planet, "Sargasso")               # nothing before the planet loaded
+        g.sim.checkpoint("CHK_SARG_OPENING_SIMULATED")           # a checkpoint no list names
         g.step(600)
         self.assertEqual(g.sim.planet, "NefCity")
+        self.assertEqual(list(g.sim.warps.values())[-1], "CHK_NEFCITY_SHIP")
+        self.assertTrue(g.log_has("[ORDER KEPT] the game's own travel to sargasso undone"))
+        self.assertTrue(g.log_has("the new planet loaded"))
+
+    def test_home_after_a_timeout_without_a_checkpoint(self):
+        g = self.city_story_done()
+        g.step(400)
+        self.assertEqual(g.sim.planet, "Sargasso")
         g.step(900)
-        self.assertEqual(g.sim.planet, "Zurkon")
+        self.assertEqual(g.sim.planet, "NefCity")
         self.assertTrue(g.log_has("no loaded checkpoint on"))
 
     def test_a_launch_cancels_the_pending_return(self):
-        g = self.prologue_on_ardolis()
-        choose(g, "nefcity_1", frames=60)                        # chosen before the planet loaded
+        g = self.city_story_done()
+        choose(g, "scarstu_1", frames=60)                        # chosen before the planet loaded
         self.assertIsNone(g.g.RANDO_HUB.order_kept)
         g.step(2400)
-        self.assertEqual(g.sim.planet, "NefCity")
-        self.assertEqual(hub(g)["current"], "nefcity_1")
+        self.assertEqual(g.sim.planet, "Zurkon")
+        self.assertEqual(hub(g)["current"], "scarstu_1")
 
 
 class CheckpointNameTests(unittest.TestCase):
@@ -819,6 +848,8 @@ class RealLogTests(unittest.TestCase):
         for i, (cls, fields) in enumerate(RealLogReplayTests.events(name)):
             if cls == "PlanetChangedEvent" and fields.get("NewPlanetName"):
                 g.travel(fields["NewPlanetName"], 5)
+            elif any(isinstance(v, int) and not -2**63 <= v < 2**63 for v in fields.values()):
+                continue                       # a 64-bit handle the Lua bridge cannot carry (unused here)
             else:
                 g.fire(cls, **fields)
             g.step(2)
@@ -829,15 +860,23 @@ class RealLogTests(unittest.TestCase):
         g.step(900)
         return g, started_at
 
-    def test_round23_new_game_starts_the_hub_at_the_wrench(self):
+    def test_round23_new_game_starts_the_hub_after_the_parade_hands_ratchet_back(self):
         g, at = self.replay("round23_rivet.log")
         self.assertIsNotNone(at)
-        self.assertEqual(at[2].get("ObjectiveName"), "OBJ_INTRO_PARADE_PICKUP_WRENCH")
-        self.assertEqual(at[2].get("ObjectiveState"), 2)
+        # v0.51: not at the wrench (round 23 line 475) but after OBJ_INTRO_GOING_DOWN finished (510)
+        events = [e for e in __import__("test_runtime").RealLogReplayTests.events("round23_rivet.log")]
+        idx = {(c, f.get("ObjectiveName"), f.get("ObjectiveState")): i for i, (c, f) in reversed(list(enumerate(events)))}
+        going_down_done = idx[("ObjectiveStateChangedEvent", "OBJ_INTRO_GOING_DOWN", 2)]
+        self.assertGreater(at[0], going_down_done)
+        # ... and still during the parade: before the log's first trip off Corson V
+        first_trip = min(i for i, (c, f) in enumerate(events) if c == "PlanetChangedEvent" and f.get("NewPlanetName")
+                         and i > going_down_done)
+        self.assertLess(at[0], first_trip)
         self.assertTrue(hub(g)["started"])
-        self.assertEqual(g.sim.planet, "Zurkon")
-        # the parade checkpoint round 23 had reached before the wrench (hash 934271974) is kept
-        self.assertEqual(hub(g)["parade_hash"], 934271974)
+        self.assertEqual(g.sim.planet, "NefCity")
+        self.assertEqual(list(g.sim.warps.values())[0], "CHK_NEFCITY_START")
+        # the parade checkpoint reached by then is kept (for hub_prologue = "keep")
+        self.assertIsNotNone(hub(g).get("parade_hash"))
 
     def test_round13_save_loads_never_start_it(self):
         g, at = self.replay("round13_rivet.log")
@@ -858,7 +897,7 @@ class SettingsFileTests(unittest.TestCase):
         self.assertEqual(s["settings"]["campaign_mode"], "planet_shuffle")
         self.assertEqual((s["settings"]["raritanium_min"], s["settings"]["raritanium_max"]), (120, 1000))
         self.assertEqual(verify_hub_seed(s), [])
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.1"))
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.2"))
         self.assertFalse(g.log_has("is from an older kit"))
         c = g.R.config
         self.assertEqual((c.key_hub, c.key_hub_return, c.key_story), ("]", "[", "/"))

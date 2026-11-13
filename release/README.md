@@ -1,4 +1,4 @@
-# Ratchet Rift Apart Randomizer: Public Release v0.5 (beta)
+# Ratchet Rift Apart Randomizer: Public Release v0.51 (beta)
 
 A randomizer for **Ratchet & Clank: Rift Apart** on PC (Steam). Every playthrough is a new seed:
 weapons, gadgets, armor and planet Coordinates are shuffled over Gold Bolts, story missions, side
@@ -7,7 +7,7 @@ each run, and a solver checks that every seed can be finished.
 
 | | |
 |---|---|
-| Release | Public Release **v0.5** (randomizer build 10.0.1) |
+| Release | Public Release **v0.51** (randomizer build 10.0.2) |
 | Game | Ratchet & Clank: Rift Apart, **Steam**, game version **v3.630.1.0** |
 | OS | Windows 10 or 11, 64-bit |
 | Needs | **rivet_hook 2.0.1** (free, separate download) and Windows PowerShell (built into Windows) |
@@ -18,11 +18,12 @@ each run, and a solver checks that every seed can be finished.
 This is an early public release. Be clear about what that means:
 
 - The randomizer's systems were developed and tested over many rounds on one PC. Seed generation,
-  weapon and armor delivery, Gold Bolt rewards, the shop, the warp to Zurkie's and the mission-state
-  writes have each been seen working in the game.
-- **The current hub mode (start at Zurkie's, choose your first planet) has not yet finished a full
-  playthrough in the game.** Some parts of it have only been tested offline, against a simulator.
-- **This exact release (v0.5) has not been run on Windows 11 or in the game yet.** It was built
+  weapon and armor delivery, Gold Bolt rewards, the shop, the warp out of the parade and the
+  mission-state writes have each been seen working in the game.
+- **The current hub mode (start at Nefarious City, planets open with Coordinates) has not yet
+  finished a full playthrough in the game.** Some parts of it have only been tested offline, against
+  a simulator.
+- **This exact release (v0.51) has not been run on Windows 11 or in the game yet.** It was built
   and checked offline: automated tests, tens of thousands of generated seeds, and a simulated clean
   install. The in-game parts it uses are the same as in the tested development builds.
 - It has **not yet been tested on a second PC**. Everything that ties it to one computer has been
@@ -32,12 +33,12 @@ This is an early public release. Be clear about what that means:
 
 ## What it does
 
-- **Start at the hub.** Start a New Game. Once Ratchet picks up his wrench in the parade, you're
-  taken to **Zurkie's Battleplex**. Pick your first destination there: the Prologue, the Battle Arena
-  or Nefarious City.
+- **Start at the hub, Nefarious City.** Start a New Game. Once Ratchet has his wrench and the
+  parade lets him walk again, you're taken to **Nefarious City**, and the city's story starts right
+  there. The Battle Arena at Zurkie's is open from the start too.
 - **Planet shuffle.** Every other planet opens when you find its **Coordinates**. Coordinates can be
   behind any Gold Bolt, story mission, side activity or armor pod. Finish a destination and you're
-  brought back to Zurkie's to choose the next one.
+  brought back to Nefarious City to choose the next one.
 - **Randomized starting kit.** You always get the **Hoverboots** and the **Map-O-Matic**, plus
   random weapons and a random gadget (2 and 1 by default).
 - **Every Gold Bolt gives exactly one item:** a weapon, gadget, armor piece or Coordinates, never

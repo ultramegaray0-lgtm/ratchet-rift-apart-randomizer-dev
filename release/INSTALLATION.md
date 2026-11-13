@@ -1,4 +1,4 @@
-# Installation: Ratchet Rift Apart Randomizer v0.5
+# Installation: Ratchet Rift Apart Randomizer v0.51
 
 Time needed: about 10 minutes. You don't need any programming tools.
 
@@ -89,13 +89,14 @@ companion finds the mod.
 2. Start the game from Steam.
 3. Choose **New Game** on a spare slot. The parade starts as usual. The screen shows the seed,
    then your starting items.
-4. When Ratchet picks up his wrench, you're taken to **Zurkie's Battleplex**. Press `]` to cycle
-   through the destinations and `Ctrl+]` to go.
+4. When Ratchet has his wrench and can walk again (a few seconds later), you're taken to
+   **Nefarious City**, the hub, and its story starts. Press `]` to cycle through the destinations
+   and `Ctrl+]` to go.
 
 `docs/PLAYER_GUIDE.md` covers the rest of a run.
 
 **Check the install (optional).** Open `rivet.log` in the game folder and search for
-`RANDO-KIT all 14 scripts are 10.0.1`. If you see `RANDO-ERROR` instead, see TROUBLESHOOTING.md.
+`RANDO-KIT all 14 scripts are 10.0.2`. If you see `RANDO-ERROR` instead, see TROUBLESHOOTING.md.
 
 ### Your seed
 

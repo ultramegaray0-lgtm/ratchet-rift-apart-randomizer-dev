@@ -1,22 +1,36 @@
--- Randomizer 10.0: Zurkie's Battleplex as the hub, mission selection and planet shuffle
--- (rivet_hook, Lua 5.4). Loaded after 10_rando_runtime.lua, 11_rando_campaign.lua and
--- 14_rando_travel.lua. Active only for a seed made with hub = true (the 10.0 default).
+-- Randomizer 10.0 hub, mission selection and planet shuffle (rivet_hook, Lua 5.4). v0.51
+-- (10.0.2): the hub is NEFARIOUS CITY (10.0-v0.5: Zurkie's Battleplex). Loaded after
+-- 10_rando_runtime.lua, 11_rando_campaign.lua and 14_rando_travel.lua. Active only for a seed made
+-- with hub = true (the default).
 --
--- NOTHING OF 10.0 HAS RUN IN YOUR GAME YET. What each step rests on:
+-- NOTHING OF 10.0 OR v0.5x HAS RUN IN YOUR GAME YET. What each step rests on:
 --
---  1. NEW GAME -> ZURKIE'S. A new save always begins with the parade (the mission graph's
---     NewGameLoadInfo; a script cannot change it). Once Ratchet has his wrench
---     (OBJ_INTRO_PARADE_PICKUP_WRENCH done) rivet_hook's checkpoint warp takes him to
---     CHK_ZURK_00_DEFAULT. Round 17 did exactly this with kit 8.0 and landed on Zurkie's.
---     10.0 leaves the prologue ACTIVE (8.0 wrote it complete): it is one of the three missions you
---     choose from, and the checkpoint the parade had reached is remembered so it can resume there.
---  2. THE START MENU. At Zurkie's you choose with ] (next) and Ctrl+] (go):
---       Prologue      - back to the parade where you left it (MIS_INTRO is still active, so this is
---                       what loading a save there does)
---       Battle Arena  - Zurkie's first visit, MIS_ZURK_01_VISIT_01 (Ratchet), the arena intro and
---                       the first challenges; round 17 played it to the end after the same steps
---       Nefarious City - MIS_NEFCITY_01 (Ratchet), loaded at CHK_NEFCITY_START: the checkpoint the
---                       game itself loads the city's story at (rounds 16 and 23, by its CRC-32)
+--  1. NEW GAME -> NEFARIOUS CITY. A new save always begins with the parade (the mission graph's
+--     NewGameLoadInfo; a script cannot change it).
+--     WHEN (v0.51, hub_trigger = "parade"): not at the wrench itself. Picking the wrench up
+--     (OBJ_INTRO_PARADE_PICKUP_WRENCH done) starts OBJ_INTRO_GOING_DOWN at once, a scripted
+--     sequence: in round 23 the game answered nothing sent to the hero during it ("no reaction from
+--     the game", "the game is not answering right now") until GOING_DOWN finished and the parade
+--     went on (OBJ_INTRO_PARADE_VELDIN_START). 10.0-v0.5 warped at the wrench, i.e. in the middle of
+--     that sequence, with the prologue left active, and you report Ratchet could not walk after
+--     the warp. So the warp now waits until GOING_DOWN is done and no parade sequence (an objective
+--     named *GOING_DOWN*, *CINE* or *CUTSCENE*) has run for H.RELEASE_SETTLE frames (Ratchet walking
+--     the Veldin float). If GOING_DOWN is never reported done, it goes H.RELEASE_TIMEOUT frames after
+--     the wrench. hub_trigger = "wrench" keeps 10.0's timing.
+--     HOW: like the game after the prologue (round 23: MIS_NEFCITY_01 becomes active, then the city
+--     loads at CHK_NEFCITY_START), Ratchet is confirmed, MIS_NEFCITY_01 is made available and
+--     started (round 17: these calls made it active), and the warp goes to CHK_NEFCITY_START, where
+--     the game itself loads the city's story (rounds 16 and 23, by its CRC-32; the 8.x landing
+--     CHK_NEFCITY_SHIP left it at "go to Nefarious City", rounds 17 and 22). The story is watched
+--     (step 4d). Once you are there, the prologue is written complete (hub_prologue = "end"), as
+--     kit 8.0 did after its warp in round 17 (the Battle Arena then played to its end), so no
+--     parade state stays with Ratchet; its reward is paid. hub_prologue = "keep" leaves it active and
+--     offers it as a destination, as 10.0 did.
+--  2. THE START MENU. ] (next) and Ctrl+] (go) offer what is open:
+--       Nefarious City - the hub's own story, MIS_NEFCITY_01 (Ratchet); already running after step 1
+--       Battle Arena  - Zurkie's first visit, MIS_ZURK_01_VISIT_01 (Ratchet), loaded at
+--                       CHK_ZURK_00_DEFAULT; round 17 played it to the end after the same steps
+--       Prologue      - only with hub_prologue = "keep": back to the parade where you left it
 --  3. PLANET SHUFFLE. Every other destination opens when you hold its planet's Coordinates (items
 --     of the seed: Gold Bolts, missions, armor pods ... can hold them) and what it depends on is
 --     done (03_rando_campaign.lua C.hub_available). ] lists what you can play, Ctrl+] goes.
@@ -35,11 +49,12 @@
 --          20 s, the start checkpoint (or the landing) is loaded once more.
 --  5. FINISHING. A destination finishes when its last mission completes (MissionStateChangedEvent
 --     3/4). Its story-mission and side locations pay, newly playable destinations are announced,
---     and after hub_return_delay seconds you are taken back to Zurkie's. If the game's own story
---     takes you elsewhere first (Nefarious City -> Sargasso, the prologue -> Nefarious City), you
---     are brought back to Zurkie's from there: the game's linear order never takes over
---     (hub_follow_story = true lets you carry on when that destination is open anyway).
---  6. THE SHIP'S MENU. A landing on a planet without Coordinates sends you back to Zurkie's; on an
+--     and after hub_return_delay seconds you are taken back to the hub. If the game's own story
+--     takes you elsewhere first (Nefarious City -> Sargasso), you are brought back to the hub from
+--     there: the game's linear order never takes over (hub_follow_story = true lets you carry on
+--     when that destination is open anyway). The way home is CHK_NEFCITY_START while the city's
+--     story is not finished (it resumes there), then the ship's pad CHK_NEFCITY_SHIP.
+--  6. THE SHIP'S MENU. A landing on a planet without Coordinates sends you back to the hub; on an
 --     open planet it starts that planet's next playable destination. Travel inside a destination
 --     (a mission's own rifts) is never touched.
 --  7. LEARNING. Every checkpoint the game triggers is named (14_rando_travel.lua: the engine's
@@ -47,14 +62,14 @@
 --     triggers on its planet is kept as that destination's start for the next run.
 --
 -- Keys (8.3 defaults; legacy_f_keys keeps F6/F5): ] next destination, Ctrl+] go, [ twice back to
--- Zurkie's (cancels an automatic return), Ctrl+[ twice finish this destination by hand, / start the
+-- the hub (cancels an automatic return), Ctrl+[ twice finish this destination by hand, / start the
 -- story of the planet you are on.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "10.0.1"
+H.VERSION = "10.0.2"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -71,6 +86,13 @@ local function changed() if RANDO and RANDO.mark_changed then RANDO.mark_changed
 local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 local function now() return (rivet.time and rivet.time()) or 0 end
+-- the hub's name in messages ("Nefarious City"; the seed's plan names the planet)
+local function HUBN()
+  local p = H.plan()
+  if p and p.planet then return pname(p.planet) end
+  return (C and C.HUB_NAME) or "the hub"
+end
+H.hub_name = HUBN
 
 H.SETTLE = 180              -- after a landing, before acting (scene, hero, HUD)
 H.ARRIVE_TIMEOUT = 3600     -- a trip that has not landed after this is tried another way
@@ -79,6 +101,10 @@ H.NEXT_MISSION_WAIT = 600   -- after a visit's mission completes, before acting 
 H.ORDER_KEPT_WAIT = 900     -- an undone story trip waits this long for the new planet's first loaded checkpoint
 H.STARTUP_GUARD = 7200      -- after the hub starts, the game's own travel is undone
 H.TRIGGER_TIMEOUT = 5400    -- New Game seen but the wrench never came: go anyway
+H.RELEASE_SETTLE = 120      -- v0.51: frames with no parade sequence running (Ratchet walking) before the warp
+H.RELEASE_TIMEOUT = 1800    -- v0.51: frames after the wrench when the warp goes even without GOING_DOWN done
+-- v0.51: MIS_INTRO objectives during which Ratchet is in a scripted sequence (no warp then)
+H.BUSY_MARKS = { "GOING_DOWN", "CINE", "CUTSCENE" }
 H.CONFIRM = 4               -- seconds for the second press
 H.STUCK_WAIT = 1200         -- after a launch, frames before a story still at "go to" is loaded again
 H.HERO_EVERY = 60
@@ -90,6 +116,7 @@ H.frame = 0
 H.session = H.session or { new_game = nil, wrench = nil, started = {}, reloaded = {} }
 H.session.started = H.session.started or {}
 H.session.reloaded = H.session.reloaded or {}
+H.session.busy = H.session.busy or {}   -- v0.51: parade objectives running a scripted sequence
 H.expect = nil              -- our own trip in flight: { planet, dest, at, how, cp, why }
 H.menu = nil                -- the last planet-menu choice: { planet, dest, at }
 H.pending = nil             -- deferred actions: { at, fn, why }
@@ -123,11 +150,30 @@ local function dest_by_id(id)
   return nil
 end
 H.dest = dest_by_id
-function H.home_checkpoint()
-  local h = H.state()
-  if h and h.home_cp then return h.home_cp end
+-- v0.51: the hub planet's own story (nefcity_1): the plan's first "hub" destination
+function H.hub_story()
   local p = H.plan()
-  return p and p.checkpoints and p.checkpoints[1]
+  for _, d in ipairs((p and p.destinations) or {}) do
+    if d.kind == "hub" and d.visit == 1 then return d end
+  end
+  return nil
+end
+-- v0.51: the hub's checkpoints in the order to try: while its story is not finished the first
+-- (CHK_NEFCITY_START: the story resumes there), afterwards the plan's order reversed (the pad first)
+function H.home_order()
+  local p, h = H.plan(), H.state()
+  local cps = {}
+  for _, cp in ipairs((p and p.checkpoints) or {}) do cps[#cps + 1] = cp end
+  local story = H.hub_story()
+  if h and story and h.done[story.id] and #cps > 1 then
+    local rev = {}
+    for i = #cps, 1, -1 do rev[#rev + 1] = cps[i] end
+    cps = rev
+  end
+  return cps
+end
+function H.home_checkpoint()
+  return H.home_order()[1] or (H.state() and H.state().home_cp)
 end
 -- learned starts survive a New Game (they describe the game, not the run)
 local function learned_store()
@@ -170,10 +216,17 @@ function H.revisits()
   end
   return out
 end
--- the ] list: playable destinations, then "revisit" entries
+-- the ] list: playable destinations, then "revisit" entries. v0.51: with hub_prologue = "end" the
+-- prologue is not offered (it is written complete once you are at the hub; if that write is
+-- refused, h.prologue_kept brings it back as a destination)
 function H.menu_entries()
   local out = {}
-  for _, id in ipairs(H.available()) do out[#out + 1] = { dest = dest_by_id(id) } end
+  local h = H.state()
+  local hide_intro = cfg("hub_prologue", "end") == "end" and not (h and h.prologue_kept)
+  for _, id in ipairs(H.available()) do
+    local d = dest_by_id(id)
+    if not (hide_intro and d.kind == "intro") then out[#out + 1] = { dest = d } end
+  end
   for _, pid in ipairs(H.revisits()) do out[#out + 1] = { revisit = pid } end
   return out
 end
@@ -182,7 +235,7 @@ function H.status_text()
   if not H.plan() then return nil end
   local h = H.state()
   if not h then return nil end
-  if not h.started then return "hub: not started (" .. K("key_hub", true) .. " goes to Zurkie's)" end
+  if not h.started then return "hub: not started (" .. K("key_hub", true) .. " goes to " .. HUBN() .. ")" end
   local total = #H.plan().destinations
   local cur = h.current and dest_by_id(h.current)
   return string.format("hub %d/%d done, %d open%s%s", h.n_done, total, #H.available(), cur and (" | at " .. cur.id) or "",
@@ -232,15 +285,18 @@ function H.go(pid, cp, d, prefer_fly, why)
   return true
 end
 
--- the warp to Zurkie's (start, return). A ZURK checkpoint the game lists is the last resort.
-function H.zurk_candidates()
+-- the warp to the hub (start, return): H.home_order(), then the checkpoint last landed on there,
+-- then a checkpoint of the hub's code (NEFCITY) the game lists, as the last resort
+function H.home_candidates()
   local p = H.plan()
   local out, seen = {}, {}
   local function add(cp) if cp and not seen[cp] then seen[cp] = true; out[#out + 1] = cp end end
   local h = H.state()
+  for _, cp in ipairs(H.home_order()) do add(cp) end
   add(h and h.home_cp)
-  for _, cp in ipairs((p and p.checkpoints) or {}) do add(cp) end
-  local ok, list = pcall(rivet.checkpoints, "ZURK")
+  local code = p and p.checkpoints and p.checkpoints[1] and p.checkpoints[1]:match("^CHK_([A-Z]+)_")
+  local ok, list = false, nil
+  if code then ok, list = pcall(rivet.checkpoints, code) end
   if ok and type(list) == "table" then
     local names = {}
     for _, c in ipairs(list) do
@@ -248,22 +304,30 @@ function H.zurk_candidates()
       if type(n) == "string" and not n:find("TRANSITION", 1, true) then names[#names + 1] = n end
     end
     table.sort(names)
-    for _, want in ipairs({ "LANDING", "DEFAULT", "SHIP" }) do
+    for _, want in ipairs({ "LANDING", "DEFAULT", "SHIP", "START" }) do
       for _, n in ipairs(names) do if n:find(want, 1, true) then add(n) end end
     end
   end
   return out
 end
+H.zurk_candidates = H.home_candidates     -- the 10.0 name
 function H.go_home(why)
   local p, h = H.plan(), H.state()
   if not (p and h) then return false end
-  local cands = H.zurk_candidates()
+  local cands = H.home_candidates()
   local start = (H.expect and H.expect.planet == p.planet and H.expect.cand or 0) + 1
   for i = start, #cands do
     local ok, res = pcall(rivet.warp, cands[i])
     if ok and res ~= false then
+      log("warp to the hub (" .. HUBN() .. ") at", cands[i], "(" .. tostring(why) .. ")", tostring(res))
+      -- a warp on the hub planet itself reloads the checkpoint without a planet change: no arrival
+      -- will come to wait for (10.0 waited ARRIVE_TIMEOUT and tried the next checkpoint)
+      if h.started and S() and S().current_planet == p.planet then
+        H.expect = nil
+        h.phase = "hub"
+        return true
+      end
       H.expect = { planet = p.planet, at = H.frame, how = "warp", cp = cands[i], cand = i, why = why }
-      log("warp to Zurkie's at", cands[i], "(" .. tostring(why) .. ")", tostring(res))
       return true
     end
     log("warp to", cands[i], "failed:", tostring(res))
@@ -278,14 +342,20 @@ end
 function H.new_game()
   H.expect, H.menu, H.pending, H.ladder, H.sel, H.launch = nil, nil, nil, nil, 0, nil
   H.return_at, H.hero_job, H.watching, H.intro_restart, H.order_kept = nil, nil, nil, nil, nil
+  H.ending_prologue = nil
   H.session.started, H.session.reloaded, H.session.started_frame = {}, {}, nil
   local h = H.state()
   if h then h.phase = "pre" end
-  log("new game: the parade plays until Ratchet has his wrench, then Zurkie's")
+  log("new game: the parade plays until Ratchet has his wrench and the parade hands him back, then " .. HUBN())
 end
 
 -- a prologue the hub restarts must not count as a New Game (10_rando_runtime.lua asks)
 function H.intro_restarting() return H.intro_restart ~= nil and H.frame <= H.intro_restart end
+
+local function busy_objective(objective)
+  for _, mark in ipairs(H.BUSY_MARKS) do if objective:find(mark, 1, true) then return true end end
+  return false
+end
 
 -- every ObjectiveStateChangedEvent (also before the seed is ready)
 function H.on_objective(mission, objective, state)
@@ -293,21 +363,50 @@ function H.on_objective(mission, objective, state)
     local h = H.state()
     if h then h.obj[mission] = { o = objective, s = state, f = H.frame } end
   end
-  if mission ~= "MIS_INTRO" then return end
+  if mission ~= "MIS_INTRO" or type(objective) ~= "string" then return end
+  local ss = H.session
   if objective == "OBJ_INTRO_PARADE_START_CINE" and state == 1 and not H.intro_restarting() then
-    H.session.new_game, H.session.wrench = H.frame, nil
+    ss.new_game, ss.wrench, ss.released, ss.busy, ss.busy_changed = H.frame, nil, nil, {}, nil
   elseif objective == "OBJ_INTRO_PARADE_PICKUP_WRENCH" and state == 2 then
-    H.session.wrench = H.session.wrench or H.frame
+    ss.wrench = ss.wrench or H.frame
   end
+  -- v0.51: the parade's scripted sequences and when it hands Ratchet back
+  ss.busy = ss.busy or {}
+  if busy_objective(objective) then
+    ss.busy[objective] = (state == 1) or nil
+    ss.busy_changed = H.frame
+  end
+  if objective == "OBJ_INTRO_GOING_DOWN" and state == 2 and ss.wrench then ss.released = ss.released or H.frame end
+end
+
+-- is a parade sequence running? (and which one, for the log)
+local function parade_busy()
+  local names = {}
+  for o in pairs(H.session.busy or {}) do names[#names + 1] = o end
+  table.sort(names)
+  return #names > 0, table.concat(names, ", ")
 end
 
 local function trigger_met()
   local ss = H.session
   if not ss.new_game then return false end
-  if cfg("hub_trigger", "wrench") == "cinematic" then return true end
-  if ss.wrench then return true end
-  return H.frame - ss.new_game >= H.TRIGGER_TIMEOUT, "the wrench did not come"
+  local mode = cfg("hub_trigger", "parade")
+  if mode == "cinematic" then return true end
+  if not ss.wrench then return H.frame - ss.new_game >= H.TRIGGER_TIMEOUT, "the wrench did not come" end
+  if mode == "wrench" then return true end
+  -- "parade" (v0.51): after GOING_DOWN, no scripted sequence running, none started or ended for a
+  -- moment (the parade's ordinary steps, such as walking the Veldin float, do not hold it back)
+  if ss.released and not parade_busy() and H.frame - math.max(ss.busy_changed or 0, ss.released) >= H.RELEASE_SETTLE then
+    return true, "the parade handed Ratchet back after his wrench"
+  end
+  if H.frame - ss.wrench >= H.RELEASE_TIMEOUT then
+    local _, which = parade_busy()
+    return true, ss.released and ("the parade still runs " .. which .. " " .. H.RELEASE_TIMEOUT .. " frames after the wrench")
+                 or ("OBJ_INTRO_GOING_DOWN was not reported done " .. H.RELEASE_TIMEOUT .. " frames after the wrench")
+  end
+  return false
 end
+H.trigger_met = trigger_met
 
 -- the parade's checkpoint when we leave it: the prologue resumes there
 local function remember_parade()
@@ -325,21 +424,10 @@ local function remember_parade()
   changed()
 end
 
-function H.begin_hub(why)
-  local h = H.state()
-  if not h or h.started then return end
-  h.phase = "to_hub"
-  remember_parade()
-  changed()
-  log("going to Zurkie's:", why)
-  say("Randomizer: to Zurkie's Battleplex - choose your first mission there", { type = "center", duration = 6 })
-  if not H.go_home("hub start") then H.start_failed("no Zurkie's checkpoint could be warped to") end
-end
-
 function H.start_failed(why)
   local h = H.state()
-  log("could not reach Zurkie's:", why)
-  say("Randomizer: could not reach Zurkie's (" .. why .. ") - " .. K("key_hub") .. " / " .. K("key_hub", true) .. " work from anywhere",
+  log("could not reach the hub (" .. HUBN() .. "):", why)
+  say("Randomizer: could not reach " .. HUBN() .. " (" .. why .. ") - " .. K("key_hub") .. " / " .. K("key_hub", true) .. " work from anywhere",
       { type = "center", duration = 9 })
   H.hub_started("unreached")
   h.phase = "hub_unreached"
@@ -361,12 +449,22 @@ function H.hub_started(how)
   h.started, h.started_how = true, how
   h.phase = "hub"
   H.session.started_frame = H.frame
-  history("HUB: the campaign starts at Zurkie's (" .. tostring(how) .. ")")
+  history("HUB: the campaign starts at " .. HUBN() .. " (" .. tostring(how) .. ")")
   log("start menu:", H.menu_text())
-  say("Zurkie's Battleplex - choose your first mission: " .. K("key_hub") .. " next, " .. K("key_hub", true) .. " go",
-      { type = "planet", sub = H.menu_text(), duration = 12 })
+  local story = H.hub_story()
+  local running = story and h.current == story.id and not h.done[story.id]
+  say(HUBN() .. " - the hub" .. (running and ": its story starts here. " or ". ") .. K("key_hub") .. " lists what is open, "
+      .. K("key_hub", true) .. " goes", { type = "planet", sub = H.menu_text(), duration = 12 })
   changed()
   H.after(H.SETTLE, function() H.apply_world() end, "hub start")
+  H.after(H.SETTLE, function() H.prologue_check() end, "prologue")
+end
+
+-- v0.51: end the prologue once you are on the hub planet (never while still in the parade)
+function H.prologue_check()
+  local h, p, s = H.state(), H.plan(), S()
+  if not (h and p and s) or h.prologue_ended or s.current_planet ~= p.planet then return end
+  H.end_prologue()
 end
 
 function H.at_hub(how)
@@ -378,7 +476,7 @@ function H.at_hub(how)
   if not (cur and cur.kind == "hub" and not h.done[cur.id]) then
     H.after(60, function()
       if H.expect or H.launch then return end
-      H.ensure_hero("ratchet", nil, "back at Zurkie's")
+      H.ensure_hero("ratchet", nil, "back at the hub")
     end, "back to Ratchet")
   end
   local fresh = h.unannounced or {}
@@ -388,11 +486,12 @@ function H.at_hub(how)
     for _, id in ipairs(fresh) do local d = dest_by_id(id); names[#names + 1] = d and (pname(d.planet) .. " (" .. (d.title or id) .. ")") or id end
     say("Now open: " .. table.concat(names, ", "), { type = "planet", sub = H.menu_text(), duration = 10 })
   else
-    say(string.format("Zurkie's: %d destination(s) open - %s next, %s go", #H.available(), K("key_hub"), K("key_hub", true)),
+    say(string.format("%s: %d destination(s) open - %s next, %s go", HUBN(), #H.available(), K("key_hub"), K("key_hub", true)),
         { type = "corner", duration = 6 })
   end
   changed()
   H.after(H.SETTLE, function() H.apply_world() end, "at the hub")
+  if not h.prologue_ended then H.after(H.SETTLE, function() H.prologue_check() end, "prologue") end
 end
 
 -- ---------------------------------------------------------------------------------------------
@@ -657,6 +756,75 @@ function H.watch_story(d, name, cp)
 end
 
 -- ---------------------------------------------------------------------------------------------
+-- v0.51 the hub start (after the story functions it uses)
+-- ---------------------------------------------------------------------------------------------
+-- v0.51: the hub's first warp. Like the game after the prologue (round 23), the city's story is
+-- made active first (hero confirmed, available, start), then the city loads at the story's start.
+-- Whatever the ladder answers, the warp goes: CHK_NEFCITY_START is also the hub's first checkpoint.
+function H.begin_hub(why)
+  local h = H.state()
+  if not h or h.started then return end
+  h.phase = "to_hub"
+  remember_parade()
+  changed()
+  log("going to the hub (" .. HUBN() .. "):", why)
+  local story = H.hub_story()
+  if not (story and cfg("hub_start_story", true) and not h.done[story.id]) then
+    say("Randomizer: to " .. HUBN() .. " - the hub", { type = "center", duration = 6 })
+    if not H.go_home("hub start") then H.start_failed("no checkpoint of " .. HUBN() .. " could be warped to") end
+    return
+  end
+  say("Randomizer: to " .. HUBN() .. " - the hub; its story starts there", { type = "center", duration = 6 })
+  H.launch = { id = story.id, at = H.frame }
+  h.current = story.id
+  H.activate(story, function(result, how, mission)
+    H.launch = nil
+    log("hub start:", story.id, result, tostring(how), tostring(mission or ""))
+    if result == "explore" then set_attempt(story, "explore", how)
+    elseif result == "running" then set_attempt(story, "story", tostring(mission) .. " " .. tostring(how)) end
+    if result == "complete" then h.current = nil end
+    local cp = (result ~= "complete") and H.start_of(story) or nil
+    if cp and H.go(story.planet, cp, story, false, "hub start: " .. story.id) then
+      if result == "running" and mission then H.watch_story(story, mission, cp) end
+      return
+    end
+    if not H.go_home("hub start") then H.start_failed("no checkpoint of " .. HUBN() .. " could be warped to") end
+  end)
+end
+
+-- v0.51 (hub_prologue = "end"): once at the hub, the prologue is written "Complete Finished" (4)
+-- into its saved record (rando_give.dll v6), as kit 8.0 did after its warp in round 17, and its
+-- locations pay. The game itself has it complete before it loads Nefarious City (round 23).
+function H.end_prologue()
+  local h = H.state()
+  if not h or cfg("hub_prologue", "end") ~= "end" then return end
+  local d
+  for _, x in ipairs(H.plan().destinations) do if x.kind == "intro" then d = x end end
+  if not d or h.done[d.id] then return end
+  local name = (d.missions or {})[1]
+  local dd = D()
+  local ok, why = false, "11_rando_campaign.lua is missing"
+  if dd then ok, why = dd.native_ok("set_state") end
+  if not (name and ok) then
+    log("prologue: left active (" .. tostring(why) .. ") - it stays a destination")
+    h.prologue_kept = true
+    return
+  end
+  H.ending_prologue = true
+  call("set_state", name, function(w)
+    H.ending_prologue = nil
+    log("prologue:", name, "written Complete Finished:", describe(w))
+    if w.code == 11 and (w.after == 3 or w.after == 4) then
+      h.prologue_ended = true
+      H.finish(d, "ended at the hub start", true)
+    else
+      log("prologue: left active - it stays a destination")
+      h.prologue_kept = true
+    end
+  end, 4)
+end
+
+-- ---------------------------------------------------------------------------------------------
 -- finishing a destination
 -- ---------------------------------------------------------------------------------------------
 function H.locations_of(d)
@@ -671,7 +839,9 @@ function H.locations_of(d)
   return out
 end
 
-function H.finish(d, how)
+-- quiet (v0.51): a destination the hub itself closes (the prologue at the hub start): it pays,
+-- but there is no message and no trip back
+function H.finish(d, how, quiet)
   local h, p = H.state(), H.plan()
   if not (h and d) or h.done[d.id] then return false end
   local before = {}
@@ -694,14 +864,18 @@ function H.finish(d, how)
     if RANDO and RANDO.on_finale then RANDO.on_finale("hub finale (" .. how .. ")") end
     return true
   end
+  if h.current == d.id then h.current = nil end
+  if quiet then
+    log("destination", d.id, "closed by the hub:", how)
+    return true
+  end
   local msg = string.format("Destination complete (%d/%d)%s", h.n_done, #p.destinations,
                             #fresh > 0 and string.format(" - %d new destination(s) open", #fresh) or "")
   h.finished_at = H.frame
-  if h.current == d.id then h.current = nil end
   if d.kind ~= "hub" and cfg("hub_auto_return", true) then
     local delay = cfg("hub_return_delay", 12)
     H.return_at = H.frame + math.max(1, delay) * 60
-    say(msg, { type = "planet", sub = string.format("Back to Zurkie's in %d s (%s to stay)", delay, K("key_hub_return")), duration = 8 })
+    say(msg, { type = "planet", sub = string.format("Back to %s in %d s (%s to stay)", HUBN(), delay, K("key_hub_return")), duration = 8 })
   else
     say(msg, { type = "planet", sub = K("key_hub") .. " to choose the next destination", duration = 8 })
     if d.kind == "hub" then
@@ -711,7 +885,7 @@ function H.finish(d, how)
         local hh = H.state()
         local cur = hh and hh.current and dest_by_id(hh.current)
         if cur and not hh.done[cur.id] then return end
-        H.ensure_hero("ratchet", nil, "Zurkie's visit finished")
+        H.ensure_hero("ratchet", nil, "the hub's visit finished")
       end, "back to Ratchet")
     end
   end
@@ -733,7 +907,8 @@ function H.on_mission_state(name, state)
       for i, m in ipairs(d.missions or {}) do
         if m == name then
           if i == #d.missions then
-            H.finish(d, "story: " .. name)
+            -- the hub writing the prologue complete may be reported as an event too (v0.51)
+            H.finish(d, "story: " .. name, H.ending_prologue and d.kind == "intro")
           elseif d == cur and H.enabled() then
             log(name, "complete; the next mission of", d.id, "is looked at in", H.NEXT_MISSION_WAIT, "frames")
             H.after(H.NEXT_MISSION_WAIT, function()
@@ -758,7 +933,7 @@ function H.on_checkpoint(cp)
   local ok = H.order_kept
   if ok and cp.loaded ~= false and not ok.loaded then
     ok.loaded = true
-    log("the new planet loaded (checkpoint", tostring(cp.name or cp.hash) .. ") - back to Zurkie's in", H.SETTLE, "frames")
+    log("the new planet loaded (checkpoint", tostring(cp.name or cp.hash) .. ") - back to the hub in", H.SETTLE, "frames")
     H.after(H.SETTLE, function() H.order_kept_go(ok) end, "order kept")
   end
   if not cp.name then return end
@@ -807,10 +982,10 @@ function H.on_arrival(pid, from)
   end
   if pid == p.planet then
     if exp and exp.cp and exp.planet == pid and not exp.dest then h.home_cp = exp.cp end
-    -- a launch of one of Zurkie's own visits lands here too
+    -- a launch of one of the hub planet's own visits lands here too
     local d = exp and exp.dest and dest_by_id(exp.dest)
     if d and d.kind == "hub" then
-      log("arrived at Zurkie's for", d.id)
+      log("arrived at the hub (" .. HUBN() .. ") for", d.id)
       h.phase = "away"
       say(d.label or (d.title or d.id), { type = "planet", sub = "Randomized destination", duration = 6 })
       return true
@@ -848,8 +1023,8 @@ function H.on_arrival(pid, from)
       h.phase, h.current = "away", nil
       if RANDO_TEST_TRAVEL.stayed then RANDO_TEST_TRAVEL.stayed(pid, "planet menu") end
     else
-      log("no Coordinates for", pid, "- back to Zurkie's")
-      say(string.format("Randomizer: no Coordinates for %s yet - back to Zurkie's", pname(pid)), { type = "center", duration = 6 })
+      log("no Coordinates for", pid, "- back to the hub")
+      say(string.format("Randomizer: no Coordinates for %s yet - back to %s", pname(pid), HUBN()), { type = "center", duration = 6 })
       h.sent_back = (h.sent_back or 0) + 1
       H.after(H.SETTLE, function() H.go_home("no Coordinates for " .. pid) end, "sent back")
     end
@@ -863,7 +1038,7 @@ function H.on_arrival(pid, from)
     return true
   end
   -- the game's own travel right after the hub started, or after a destination finished: the
-  -- game would carry on with its own (linear) order - back to Zurkie's
+  -- game would carry on with its own (linear) order - back to the hub
   local guard = H.session.started_frame and (H.frame - H.session.started_frame) < H.STARTUP_GUARD
   local after_finish = h.finished_at and (H.frame - h.finished_at) < H.STARTUP_GUARD
   if guard or after_finish or H.return_at then
@@ -874,9 +1049,9 @@ function H.on_arrival(pid, from)
       H.after(H.SETTLE, function() H.launch_dest(d, "the game's own travel") end, "follow " .. d.id)
       return true
     end
-    log("the game's own story took you to", pid, "- back to Zurkie's (the hub decides the order)")
+    log("the game's own story took you to", pid, "- back to the hub (the hub decides the order)")
     history("[ORDER KEPT] the game's own travel to " .. pid .. " undone")
-    say(string.format("Randomizer: the game's story went on to %s - back to Zurkie's; choose your next mission there", pname(pid)),
+    say(string.format("Randomizer: the game's story went on to %s - back to %s; choose your next mission there", pname(pid), HUBN()),
         { type = "center", duration = 7 })
     H.return_at = nil
     H.order_kept = { pid = pid, at = H.frame }
@@ -922,7 +1097,7 @@ end
 function H.key_select()
   local h = H.state()
   if not h.started then
-    say("Randomizer: " .. K("key_hub", true) .. " goes to Zurkie's and starts the hub", { type = "center", duration = 6 })
+    say("Randomizer: " .. K("key_hub", true) .. " goes to " .. HUBN() .. " and starts the hub", { type = "center", duration = 6 })
     return
   end
   local list = H.menu_entries()
@@ -975,15 +1150,15 @@ function H.key_return()
   local h, p = H.state(), H.plan()
   if H.return_at then
     H.return_at = nil
-    say("Randomizer: staying here - " .. K("key_hub_return") .. " twice goes back to Zurkie's", { type = "corner", duration = 5 })
+    say("Randomizer: staying here - " .. K("key_hub_return") .. " twice goes back to " .. HUBN(), { type = "corner", duration = 5 })
     return
   end
-  if not h.started then return say("Randomizer: the hub has not started - " .. K("key_hub", true) .. " goes to Zurkie's", { type = "corner", duration = 5 }) end
+  if not h.started then return say("Randomizer: the hub has not started - " .. K("key_hub", true) .. " goes to " .. HUBN(), { type = "corner", duration = 5 }) end
   local t = now()
   if t - confirm["return"] > H.CONFIRM then
     confirm["return"] = t
     local cur = h.current and dest_by_id(h.current)
-    say("Randomizer: press " .. K("key_hub_return") .. " again to go back to Zurkie's" .. ((cur and not h.done[cur.id]) and " (this destination stays open)" or ""),
+    say("Randomizer: press " .. K("key_hub_return") .. " again to go back to " .. HUBN() .. ((cur and not h.done[cur.id]) and " (this destination stays open)" or ""),
         { type = "center", duration = 5 })
     return
   end
@@ -991,7 +1166,7 @@ function H.key_return()
   local cur = h.current and dest_by_id(h.current)
   if cur and not h.done[cur.id] then h.current = nil end
   H.ladder, H.launch = nil, nil
-  if not H.go_home(K("key_hub_return")) then say("Randomizer: the warp to Zurkie's failed (see rivet.log)", { type = "center", duration = 6 }) end
+  if not H.go_home(K("key_hub_return")) then say("Randomizer: the warp to " .. HUBN() .. " failed (see rivet.log)", { type = "center", duration = 6 }) end
 end
 
 function H.key_finish()
@@ -1031,7 +1206,7 @@ function H.tick(frame, ready)
       if not ok then log("RANDO-ERROR hub", tostring(a.why), tostring(err)) end
     end
   end
-  -- New Game -> Zurkie's
+  -- New Game -> the hub
   if not h.started and h.phase == "pre" and S().started and ready then
     local ok, why = trigger_met()
     if ok then H.begin_hub(why or "the parade's wrench") end
@@ -1040,8 +1215,10 @@ function H.tick(frame, ready)
   local e = H.expect
   if e and ready and frame - e.at > H.ARRIVE_TIMEOUT then
     local p = H.plan()
-    if e.planet == p.planet and not e.dest then
-      log("no arrival at Zurkie's after", H.ARRIVE_TIMEOUT, "frames from", e.cp)
+    if e.planet == p.planet and (not e.dest or not h.started) then
+      -- (v0.51: the hub start's trip carries the city's story; it is retried the same way)
+      if not e.cand then for i, cp in ipairs(H.home_candidates()) do if cp == e.cp then e.cand = i end end end
+      log("no arrival at the hub after", H.ARRIVE_TIMEOUT, "frames from", e.cp)
       if not H.go_home(e.why or "retry") then
         H.expect = nil
         if not h.started then H.start_failed("the warp did not land") end
@@ -1059,15 +1236,18 @@ function H.tick(frame, ready)
   -- an undone story trip whose planet never reported a loaded checkpoint
   local ok = H.order_kept
   if ok and not ok.loaded and ready and frame - ok.at > H.ORDER_KEPT_WAIT then
-    log("no loaded checkpoint on", ok.pid, "after", H.ORDER_KEPT_WAIT, "frames - back to Zurkie's now")
+    log("no loaded checkpoint on", ok.pid, "after", H.ORDER_KEPT_WAIT, "frames - back to the hub now")
     H.order_kept_go(ok)
   end
-  -- automatic return after a finished destination
+  -- automatic return after a finished destination (v0.51: not when the game's own travel has
+  -- already brought you to the hub planet, e.g. the prologue's rift to Nefarious City)
   if H.return_at and ready and frame >= H.return_at then
     H.return_at = nil
     h.current = nil
-    if not H.go_home("destination finished") then
-      say("Randomizer: the warp to Zurkie's failed - " .. K("key_hub_return") .. " twice to try again", { type = "center", duration = 6 })
+    if S().current_planet == H.plan().planet then
+      log("destination finished - already at the hub, no trip back")
+    elseif not H.go_home("destination finished") then
+      say("Randomizer: the warp to " .. HUBN() .. " failed - " .. K("key_hub_return") .. " twice to try again", { type = "center", duration = 6 })
     end
   end
 end

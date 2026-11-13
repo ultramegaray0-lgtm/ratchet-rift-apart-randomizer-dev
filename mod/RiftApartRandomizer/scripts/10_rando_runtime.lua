@@ -13,7 +13,7 @@
 --   12_rando_shop.lua       5.0 the weapon vendor's own weapons, shuffled over its slots
 --   13_rando_armor.lua      5.0 armor sources: the game's armor rewards become locations
 --   14_rando_travel.lua     7.0 locked levels: a planet's travel needs its Coordinates
---   15_rando_hub.lua        10.0 Zurkie's Battleplex hub: mission selection and planet shuffle
+--   15_rando_hub.lua        10.0 hub (v0.51: Nefarious City): mission selection and planet shuffle
 --   16_rando_testtravel.lua 8.2 test travel (off unless test_travel = true)
 --
 -- What happens in the game:
@@ -34,16 +34,17 @@
 --      rewards wait for its Coordinates instead (Gold Bolts never wait).
 --   6. The weapon vendor sells its own weapons shuffled over its slots (12_rando_shop.lua).
 --      Ammo and upgrades are not touched; 4.0's vendor lock is gone.
---   7. 10.0 (hub = true): NEW GAME goes to Zurkie's Battleplex after the parade's wrench; you
---      choose the prologue, the Battle Arena or Nefarious City there, and every other destination
---      opens with its planet's Coordinates (15_rando_hub.lua). hub = false: the 9.0 story start.
+--   7. 10.0 (hub = true): NEW GAME goes to the hub after the parade's wrench (v0.51: Nefarious
+--      City, once the parade has handed Ratchet back; the city's story starts there). The Battle
+--      Arena is open from the start too, and every other destination opens with its planet's
+--      Coordinates (15_rando_hub.lua). hub = false: the 9.0 story start.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.1"
+R.KIT_VERSION = "10.0.2"
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -116,29 +117,34 @@ R.config = {
   key_test_travel = ".",            -- . next planet, Ctrl+. warp there (8.3; was F7)
   key_test_point = ",",              -- , next landing point on that planet, Ctrl+, fly there with the ship (was F8)
   legacy_f_keys = true,              -- the old F5-F9 / F12 keys keep working as well
-  -- 10.0 Zurkie's hub (15_rando_hub.lua; only for a hub seed)
+  -- 10.0 hub (15_rando_hub.lua; only for a hub seed). v0.51: the hub is Nefarious City
   hub_runtime = true,                -- false: no hub actions at all (no warps, no mission calls)
-  hub_trigger = "wrench",            -- New Game: go to Zurkie's once Ratchet has the wrench | "cinematic"
+  hub_trigger = "parade",            -- New Game: go to the hub once the parade hands Ratchet back after his
+                                     -- wrench (v0.51) | "wrench": at the wrench (10.0-v0.5) | "cinematic"
+  hub_prologue = "end",              -- v0.51: "end" writes the prologue complete once you are at the hub (as
+                                     -- the game has it before Nefarious City) | "keep": leave it to choose
+  hub_start_story = true,            -- v0.51: the hub's first warp starts Nefarious City's story there
   hub_force_missions = true,         -- a destination's inactive story mission is made available, then started
   hub_replay = true,                 -- if starting fails, try the game's replay call
   hub_levels = "all",                -- "all": set every level bit UnlockLevelAction can set | "off"
   hub_travel_flag = true,            -- turn planetary travel on (the ship's planet menu)
   hub_fly = true,                    -- to a landing (not a mission's start), fly when a ship answers
-  hub_auto_return = true,            -- a finished destination takes you back to Zurkie's
+  hub_auto_return = true,            -- a finished destination takes you back to the hub
   hub_return_delay = 12,             -- seconds before that ([ cancels)
   hub_hero_swap = true,              -- a destination's hero is set before its story starts
   hub_follow_story = false,          -- true: when the game's own story takes you to an open destination, play it
   key_hub = "]",                     -- ] next destination, Ctrl+] go
-  key_hub_return = "[",              -- [ twice back to Zurkie's, Ctrl+[ twice finish a destination by hand
+  key_hub_return = "[",              -- [ twice back to the hub, Ctrl+[ twice finish a destination by hand
   key_story = "/",                   -- / start the story of the planet you are on
   shop_close_slots = true,           -- 10.0: closed vendor slots show the Burst Pistol (false: their own weapon)
 }
-R.CHOICES = { hub_trigger = { wrench = true, cinematic = true }, hub_levels = { all = true, off = true } }
+R.CHOICES = { hub_trigger = { parade = true, wrench = true, cinematic = true }, hub_levels = { all = true, off = true },
+              hub_prologue = { ["end"] = true, keep = true } }
 -- options that no longer exist
 local RETIRED_RUNTIME = { key_shop_next = "is not used since 4.0", key_shop_buy = "is not used since 4.0",
                           lock_vendor_weapons = "is not used since 5.0 (the vendor sells its own weapons, shuffled; ammo works)" }
 -- 10.0: options of the 8.x hub that the 10.0 hub does not have
-RETIRED_RUNTIME.hub_intro = "is not used in 10.0: the prologue stays active and is one of the hub's three starting missions"
+RETIRED_RUNTIME.hub_intro = "is not used since 10.0: v0.51's hub_prologue (\"end\" or \"keep\") decides what happens to the prologue"
 RETIRED_RUNTIME.story_on_arrival = "is not used in 10.0: a planet-menu landing on an open planet starts its next destination"
 RETIRED_RUNTIME.story_prime_before_travel = "is not used in 10.0: a destination's mission is always made active before the trip"
 RETIRED_RUNTIME.story_reload_stuck = "is not used in 10.0: a story waiting at its first step is loaded once more on the same planet"
@@ -637,7 +643,7 @@ function R.process_planet(name, old)
     if not okt then log("RANDO-ERROR test travel arrival", tostring(claimed)) end
     if okt and claimed then return pid end
   end
-  -- 10.0 hub seeds: Zurkie's, destinations, the menu and the game's own travel (15_rando_hub.lua)
+  -- 10.0 hub seeds: the hub, destinations, the menu and the game's own travel (15_rando_hub.lua)
   if SEED.hub and RANDO_HUB and RANDO_HUB.on_arrival then
     local okh, handled = pcall(RANDO_HUB.on_arrival, pid, from)
     if not okh then log("RANDO-ERROR hub arrival", tostring(handled)) end

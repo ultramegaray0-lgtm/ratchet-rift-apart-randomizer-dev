@@ -1,9 +1,10 @@
 -- Randomizer 3.0 campaign layer: the mission registry, campaign sequence generation for every
 -- mode, and the campaign constraints the progression solver (02_rando_generator.lua) uses.
 --
--- 10.0: THE HUB AND PLANET SHUFFLE (hub = true, the default). A new game is taken to Zurkie's
--- Battleplex after the parade's wrench (15_rando_hub.lua). From there you choose the prologue, the
--- Battle Arena (Zurkie's first visit) or Nefarious City; every other visit opens when you hold its
+-- 10.0: THE HUB AND PLANET SHUFFLE (hub = true, the default). v0.51 (10.0.2): the hub is Nefarious
+-- City. A new game is taken there once the parade has handed Ratchet back after his wrench
+-- (15_rando_hub.lua), and the city's story starts on arrival; the Battle Arena (Zurkie's first
+-- visit) is open from the start as well. Every other visit opens when you hold its
 -- planet's Coordinates (items of the seed, found anywhere) and the visits it depends on are done.
 -- So the order planets open in is decided by where the seed put their Coordinates. The hub's
 -- functions are at the end of this file (C.hub_*): which visits exist, which are playable, and the
@@ -43,10 +44,10 @@
 --   guide  public walkthrough (gamepressure mission list, vulkk gear guide); NOT verified in the
 --          game files. The research kit (companion/research/Research-Campaign.bat) replaces these
 --          with the real names; tools/build_campaign_registry.py merges them.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
 RANDO_CAMPAIGN = {}
 local C = RANDO_CAMPAIGN
-C.VERSION = "10.0.1"
+C.VERSION = "10.0.2"
 
 -- story abilities: no item config exists, so only the story itself hands them out
 C.STORY_ABILITIES = { phantom_dash = true, hurlshot = true, speetle = true, dragon_mount = true, wallrun = true }
@@ -343,19 +344,30 @@ function C.describe(order)
 end
 
 -- ---------------------------------------------------------------------------------------------
--- 10.0 THE HUB (hub = true): Zurkie's Battleplex, three starting missions, Coordinates open the rest
+-- 10.0 THE HUB (hub = true): three starting missions, Coordinates open the rest.
+-- v0.51 (10.0.2): the hub is NEFARIOUS CITY (10.0-v0.5: Zurkie's Battleplex). The new game's warp
+-- lands at CHK_NEFCITY_START with MIS_NEFCITY_01 already started - the state the game itself loads
+-- the city in after the prologue (rounds 16 and 23) - so the city's story plays at once.
 -- ---------------------------------------------------------------------------------------------
-C.HUB_PLANET = "scarstu"
--- where the hub warps to: the planet menu's Zurkie's destination (round 14 line 171, round 23
--- line 1096; round 17 landed there after the parade's wrench), then the ship's pad
-C.HUB_CHECKPOINTS = { "CHK_ZURK_00_DEFAULT", "CHK_ZURK_LANDING_SHIP" }
--- the missions you choose from at the hub when the campaign starts, in menu order
+C.HUB_PLANET = "nefarious_city"
+C.HUB_NAME = "Nefarious City"
+-- where the hub warps to. CHK_NEFCITY_START: where the game loads the city's story (rounds 16
+-- and 23, by its CRC-32); it is the way home while the city's story (nefcity_1) is not finished.
+-- CHK_NEFCITY_SHIP: the ship's landing pad (rounds 17 and 22 landed there; with the story still at
+-- its first step it never moved on there), the way home once the city's story is done.
+C.HUB_CHECKPOINTS = { "CHK_NEFCITY_START", "CHK_NEFCITY_SHIP" }
+C.HUB_STORY = "nefcity_1"            -- the hub planet's own story: started by the hub's first warp
+-- the starting missions. This order feeds the generator (the starting Coordinates), so it is
+-- 10.0's and placements stay the same; the menu shows them in C.HUB_MENU order.
 C.HUB_START = { "corson_intro", "scarstu_1", "nefcity_1" }
+C.HUB_MENU = { "nefcity_1", "scarstu_1", "corson_intro" }
 C.HUB_LABEL = { corson_intro = "Prologue - the parade on Corson V",
                 scarstu_1 = "Battle Arena - Zurkie's Battleplex",
-                nefcity_1 = "Nefarious City" }
+                nefcity_1 = "Nefarious City - the hub's story" }
 C.IN_HUB_START = {}
 for i, id in ipairs(C.HUB_START) do C.IN_HUB_START[id] = i end
+C.IN_HUB_MENU = {}
+for i, id in ipairs(C.HUB_MENU) do C.IN_HUB_MENU[id] = i end
 
 function C.hub_kind(seg)
   if seg.kind == "finale" then return "finale" end
@@ -458,7 +470,7 @@ function C.hub_available(plan, done, access, owned)
       if d.start then first[#first + 1] = d else rest[#rest + 1] = d end
     end
   end
-  table.sort(first, function(a, b) return C.IN_HUB_START[a.id] < C.IN_HUB_START[b.id] end)
+  table.sort(first, function(a, b) return (C.IN_HUB_MENU[a.id] or 99) < (C.IN_HUB_MENU[b.id] or 99) end)
   local out = {}
   for _, d in ipairs(first) do out[#out + 1] = d.id end
   for _, d in ipairs(rest) do out[#out + 1] = d.id end
@@ -469,9 +481,11 @@ end
 -- every reachable location is collected), with where each planet's Coordinates are
 function C.hub_describe(plan, planet_name, coords_at)
   local L = {}
-  L[#L + 1] = "  A new game plays the parade until Ratchet has his wrench, then the randomizer takes him to"
-  L[#L + 1] = "  Zurkie's Battleplex (the hub). Choose the first mission there:"
-  for i, id in ipairs(C.HUB_START) do L[#L + 1] = string.format("    %d. %s", i, C.HUB_LABEL[id]) end
+  L[#L + 1] = "  A new game plays the parade until Ratchet has his wrench and the parade hands him back, then"
+  L[#L + 1] = "  the randomizer takes him to " .. C.HUB_NAME .. " (the hub) and the city's story starts there."
+  L[#L + 1] = "  The prologue counts as done (in-game option hub_prologue = \"keep\" leaves it to choose)."
+  L[#L + 1] = "  Open from the start:"
+  for i, id in ipairs(C.HUB_MENU) do L[#L + 1] = string.format("    %d. %s", i, C.HUB_LABEL[id]) end
   L[#L + 1] = "  Every other destination opens when you hold its planet's Coordinates and what it depends on"
   L[#L + 1] = "  is done. One possible route (the solver's order):"
   for i, id in ipairs(plan.route or {}) do

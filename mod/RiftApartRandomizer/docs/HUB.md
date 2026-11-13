@@ -2,6 +2,12 @@
 
 This is the player guide for 10.0's default mode (`hub = true`). The technical notes are at the end.
 
+> **v0.51 (build 10.0.2): the hub is Nefarious City.** A new game goes there once the parade has
+> handed Ratchet back after his wrench, with the city's story started (loaded at
+> CHK_NEFCITY_START); the prologue is written complete there (`hub_prologue = "keep"` leaves it as
+> a destination). Where this guide says Zurkie's as the hub, read Nefarious City; the Battle Arena
+> is an ordinary destination now. See CHANGELOG.md, 10.0.2.
+
 **Nothing of 10.0 has run in your game yet.** `VERIFICATION_REPORT.md` separates what your logs have
 shown from what has only passed offline tests.
 

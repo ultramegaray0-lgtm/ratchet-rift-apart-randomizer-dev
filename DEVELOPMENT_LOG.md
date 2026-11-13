@@ -4,6 +4,18 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-13: Public Release v0.51 (build 10.0.2): the hub is Nefarious City
+
+- Request: hub = Nefarious City; its story must work after the warp; Ratchet could not walk right
+  after the warp to the hub.
+- Cause found for the walking problem (inferred, not seen in a log of v0.5): the warp fired at
+  OBJ_INTRO_PARADE_PICKUP_WRENCH = 2, the frame OBJ_INTRO_GOING_DOWN starts; round 23 shows the game
+  ignoring everything sent to the hero until GOING_DOWN finished. With the prologue left active,
+  nothing ended that sequence. Fix: wait for it (hub_trigger = "parade"), and end the prologue at
+  the hub (as round 17's kit 8.0 did).
+- Story: MIS_NEFCITY_01 started before the warp to CHK_NEFCITY_START (the game's own order).
+- Branch release-v0.51. Details: mod/RiftApartRandomizer/docs/CHANGELOG.md.
+
 ## 2026-11-10: round 13 log → kit 1.4
 
 ### Investigated
