@@ -2,6 +2,61 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## 10.0.3 / Public Release v0.52 (2026-11-13): Nefarious City's story starts at its opening scene
+
+Reported (round 24, v0.51's first run, tests/data/round24_rivet.log): the first Nefarious City
+mission did not start. Asked for: warp to the city's opening cutscene, so the cutscene then the
+gameplay play. **Nothing of v0.52 has run in the game.**
+
+Round 24, what the log shows:
+- The warp came after the parade handed Ratchet back, MIS_NEFCITY_01 went inactive -> available ->
+  active, the warp landed at CHK_NEFCITY_START, and OBJ_NEFCITY_GO_TO_NEFCITY went to 1. It never
+  went to 2: not after the 20 s reload, not after three presses of `/` (6 warps, all to
+  CHK_NEFCITY_START). Bolts and Raritanium were picked up after the warp, so Ratchet could move
+  (v0.51's walking fix held).
+- Round 23 (the game's own order, lines 703-729): MIS_INTRO 2 -> 4; MIS_NEFCITY_01 0 -> 2 and
+  MIS_NEFCITY_01_TRAINSTATION 0 -> 1 in the same frame; the rift to NefCity; checkpoint hash
+  **3046787773**; only then CHK_NEFCITY_START. In round 24 hash 3046787773 never triggered, the
+  train-station mission was never opened, and the prologue was written complete only after the
+  story started. CHK_NEFCITY_START is where gameplay picks up after the arrival scene, not where the
+  story begins.
+- The name of hash 3046787773 is in no log: round 23 had no catalog, and in round 24 nothing
+  triggered that checkpoint, so no RANDO-CHECKPOINT line names it. An offline search of 528 million
+  name candidates found no plausible name.
+
+Changes:
+- 03: `C.OPENINGS.nefcity_1 = { hash = 3046787773, codes = { "NEFCITY", "NEF_" }, with = {
+  "MIS_NEFCITY_01_TRAINSTATION" } }`. Not in the seed's hub plan: seeds and fingerprints are
+  unchanged (round 24's seed is still 2a5550ece053).
+- 14: `T.find_hash(hash, filters)` names a hash from `rivet.checkpoints()` lists; the checkpoint
+  catalog also runs for every hub seed.
+- 15, hub start (and `Ctrl+]` / `/` for the city's story): the prologue is written complete first
+  (`hub_prologue_timing = "before"`; `"after"` is v0.51's order); the story is made available and
+  started; inactive `with` missions are made available; then the warp goes to the opening, found by
+  its hash (known names, then the codes, then up to `H.OPENING_WAIT` = 900 frames for the catalog).
+  If the game does not list it, the warp goes to CHK_NEFCITY_START as in v0.51 and the city's
+  catalog is logged.
+- 15, watching: a story loaded at its opening gets `H.OPENING_STUCK_WAIT` = 3600 frames before one
+  reload, at the opening again (20 s could cut a cutscene short). The opening is used only while the
+  story's first mission has no step yet or waits at its GO_TO step; after that, `/` loads
+  CHK_NEFCITY_START as before.
+- 15, logging: `opening of nefcity_1: <name> (hash ...)`, `opening of nefcity_1 loaded: ...`,
+  `with nefcity_1: ...`, and every objective of the current destination's missions
+  (`RANDO-HUB objective ...`; RANDO-DISCOVER stops after `discovery_cap` lines of a kind).
+- 10: `hub_prologue_timing` (`"before"` | `"after"`) and `hub_opening` (`true` | `false`). 04: both
+  as commented lines; your values are unchanged.
+- Kit 10.0.3 (every RANDO_FILES tag, R.KIT_VERSION, C.VERSION, TT.VERSION); generator G.VERSION stays
+  10.0.2.
+- Tests: `tests/test_v052.py` (15): the round 23/24 evidence read from the logs, the opening path, a
+  control that reproduces round 24 with `hub_opening = false`, the fallbacks, the timings. The
+  simulator's opening name (`CHK_NEFCITY_OPENING_SIMULATED`) is a stand-in. test_v100's
+  `hub_game` keeps its old rule (the story moves on at CHK_NEFCITY_START) as the fallback model; the
+  intended order change is updated in test_v100 and test_v051.
+
+Not changed, still open from round 24: the shop (`only 0 vendor weapon(s) in the array at +0x48`,
+ARSENAL_RESTORED's vendor config, and a frame-budget overrun at 12_rando_shop.lua:210, so its
+weapons were given directly) and Glitch (never confirmed by the game).
+
 ## 10.0.2 / Public Release v0.51 (2026-11-13): the hub is Nefarious City
 
 Asked for: the hub in Nefarious City; its story must work after the warp there; Ratchet must be

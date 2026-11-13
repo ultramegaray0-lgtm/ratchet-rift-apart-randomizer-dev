@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.51 (build 10.0.2) - test run 2026-11-13 12:22 UTC
+Rift Apart Randomizer v0.52 (build 10.0.3) - test run 2026-11-13 13:03 UTC
 Python 3.13.18 on Linux
-ran 356, failures 0, errors 0, skipped 17
+ran 371, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -239,6 +239,21 @@ test_a_save_load_never_starts_it (tests.test_v051.WhenTheWarpGoesTests.test_a_sa
 test_going_down_never_reported_goes_after_the_timeout (tests.test_v051.WhenTheWarpGoesTests.test_going_down_never_reported_goes_after_the_timeout) ... ok
 test_no_warp_while_going_down_runs (tests.test_v051.WhenTheWarpGoesTests.test_no_warp_while_going_down_runs) ... ok
 test_the_10_0_timing_is_what_held_ratchet (tests.test_v051.WhenTheWarpGoesTests.test_the_10_0_timing_is_what_held_ratchet) ... ok
+test_round23_the_city_loads_at_the_opening_before_its_start (tests.test_v052.EvidenceTests.test_round23_the_city_loads_at_the_opening_before_its_start) ... ok
+test_round24_seed_is_unchanged (tests.test_v052.EvidenceTests.test_round24_seed_is_unchanged) ... ok
+test_round24_the_start_alone_never_finished_the_first_step (tests.test_v052.EvidenceTests.test_round24_the_start_alone_never_finished_the_first_step) ... ok
+test_the_kit_points_at_that_checkpoint (tests.test_v052.EvidenceTests.test_the_kit_points_at_that_checkpoint) ... ok
+test_a_game_without_the_train_station_mission_goes_on (tests.test_v052.OpeningTests.test_a_game_without_the_train_station_mission_goes_on) ... ok
+test_a_name_the_game_does_not_list_falls_back_to_the_start (tests.test_v052.OpeningTests.test_a_name_the_game_does_not_list_falls_back_to_the_start) ... ok
+test_an_open_train_station_is_left_alone (tests.test_v052.OpeningTests.test_an_open_train_station_is_left_alone) ... ok
+test_control_round24_the_start_checkpoint_leaves_the_story_waiting (tests.test_v052.OpeningTests.test_control_round24_the_start_checkpoint_leaves_the_story_waiting) ... ok
+test_keep_mode_and_story_off_are_unchanged (tests.test_v052.OpeningTests.test_keep_mode_and_story_off_are_unchanged) ... ok
+test_new_game_loads_the_city_at_its_opening_and_the_story_moves_on (tests.test_v052.OpeningTests.test_new_game_loads_the_city_at_its_opening_and_the_story_moves_on) ... ok
+test_the_name_is_found_under_its_code_before_the_catalog_is_complete (tests.test_v052.OpeningTests.test_the_name_is_found_under_its_code_before_the_catalog_is_complete) ... ok
+test_the_opening_is_given_time_then_loaded_once_more (tests.test_v052.OpeningTests.test_the_opening_is_given_time_then_loaded_once_more) ... ok
+test_the_story_key_loads_the_opening_only_while_the_first_step_waits (tests.test_v052.OpeningTests.test_the_story_key_loads_the_opening_only_while_the_first_step_waits) ... ok
+test_v051_prologue_timing_is_kept_by_a_setting (tests.test_v052.OpeningTests.test_v051_prologue_timing_is_kept_by_a_setting) ... ok
+test_without_a_catalog_the_wait_is_bounded (tests.test_v052.OpeningTests.test_without_a_catalog_the_wait_is_bounded) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -379,6 +394,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 356 tests in 104.177s
+Ran 371 tests in 169.608s
 
 OK (skipped=17)

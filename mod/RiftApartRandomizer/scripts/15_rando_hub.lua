@@ -61,15 +61,32 @@
 --     CRC-32 of every name rivet.checkpoints() lists). The first one a destination's mission
 --     triggers on its planet is kept as that destination's start for the next run.
 --
+-- v0.52 (10.0.3) THE CITY'S OPENING SCENE. Round 24 (v0.51's first run): the warp to
+-- CHK_NEFCITY_START with MIS_NEFCITY_01 active landed, but the story never left
+-- OBJ_NEFCITY_GO_TO_NEFCITY - not after the stuck-story reload, not after three presses of /. In
+-- round 23 the game's own rift loaded the city at checkpoint hash 3046787773 first (the arrival
+-- scene), then CHK_NEFCITY_START. So the hub start now copies the game's order more closely:
+--   1. the prologue is written complete first (hub_prologue_timing = "before"; round 23: MIS_INTRO
+--      turned 4 before the city's story started);
+--   2. MIS_NEFCITY_01 is made available and started, and MIS_NEFCITY_01_TRAINSTATION made available
+--      (round 23: the game opened it in the same frame);
+--   3. the warp goes to the city's OPENING checkpoint (03_rando_campaign.lua C.OPENINGS), whose name
+--      is found by its hash among the names your game lists. While that name is not found the hub
+--      waits for the checkpoint catalog (H.OPENING_WAIT); if your game does not list it, the warp
+--      goes to CHK_NEFCITY_START as before and rivet.log lists the city's checkpoints.
+--   The story is given H.OPENING_STUCK_WAIT (the scene must not be cut short) before one reload
+--   at the opening; / loads the opening again while the story waits at its first step.
+-- None of this has run in your game yet.
+--
 -- Keys (8.3 defaults; legacy_f_keys keeps F6/F5): ] next destination, Ctrl+] go, [ twice back to
 -- the hub (cancels an automatic return), Ctrl+[ twice finish this destination by hand, / start the
 -- story of the planet you are on.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "10.0.2"
+H.VERSION = "10.0.3"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -111,6 +128,9 @@ H.HERO_EVERY = 60
 H.HERO_TRIES = 15
 H.LEARN_WINDOW = 7200       -- frames after a launch in which a destination's start is learned
 H.INTRO_FALLBACK = { "CHK_MALINON_INTRO_DEFAULT" }   -- listed by your game (rounds 19-20 catalog)
+H.OPENING_WAIT = 900        -- v0.52: frames the hub waits for an opening checkpoint's name (the catalog)
+H.OPENING_POLL = 30         -- v0.52: how often it looks while waiting
+H.OPENING_STUCK_WAIT = 3600 -- v0.52: after a load at an opening, frames before a story still at "go to" is loaded again
 
 H.frame = 0
 H.session = H.session or { new_game = nil, wrench = nil, started = {}, reloaded = {} }
@@ -344,6 +364,7 @@ function H.new_game()
   H.return_at, H.hero_job, H.watching, H.intro_restart, H.order_kept = nil, nil, nil, nil, nil
   H.ending_prologue = nil
   H.session.started, H.session.reloaded, H.session.started_frame = {}, {}, nil
+  H.session.opening_loaded = {}
   local h = H.state()
   if h then h.phase = "pre" end
   log("new game: the parade plays until Ratchet has his wrench and the parade hands him back, then " .. HUBN())
@@ -361,7 +382,17 @@ end
 function H.on_objective(mission, objective, state)
   if type(mission) == "string" and type(objective) == "string" and H.plan() and S() then
     local h = H.state()
-    if h then h.obj[mission] = { o = objective, s = state, f = H.frame } end
+    if h then
+      h.obj[mission] = { o = objective, s = state, f = H.frame }
+      -- v0.52: the steps of the story being played always reach rivet.log (RANDO-DISCOVER stops
+      -- after discovery_cap lines of a kind; round 23's city steps were cut off that way)
+      local cur = h.current and dest_by_id(h.current)
+      local o = cur and C.OPENINGS and C.OPENINGS[cur.id]
+      local mine = false
+      for _, m in ipairs((cur and cur.missions) or {}) do if m == mission then mine = true end end
+      for _, m in ipairs((o and o.with) or {}) do if m == mission then mine = true end end
+      if mine then log("objective", mission, objective, tostring(state)) end
+    end
   end
   if mission ~= "MIS_INTRO" or type(objective) ~= "string" then return end
   local ss = H.session
@@ -667,6 +698,98 @@ function H.activate(d, cb)
   end, d.id)
 end
 
+-- ---------------------------------------------------------------------------------------------
+-- v0.52 a visit's opening scene (03_rando_campaign.lua C.OPENINGS)
+-- ---------------------------------------------------------------------------------------------
+function H.opening_of(d) return d and C.OPENINGS and C.OPENINGS[d.id] or nil end
+-- is checkpoint name cp one of the openings? (by its hash)
+function H.is_opening_cp(cp)
+  local T = RANDO_TRAVEL
+  if type(cp) ~= "string" or not (T and T.hash and C.OPENINGS) then return false end
+  local x = T.hash(cp)
+  for _, o in pairs(C.OPENINGS) do if o.hash == x then return true end end
+  return false
+end
+-- the opening is where to load while the story has not left its first step ("go to <planet>")
+function H.opening_wanted(d)
+  local o = H.opening_of(d)
+  if not (o and o.hash) or not cfg("hub_opening", true) then return false end
+  local h = H.state()
+  local m = (d.missions or {})[1]
+  local last = h and m and h.obj[m]
+  return last == nil or H.waiting_goto(m)
+end
+-- the opening checkpoint's name: known, or found under the visit's codes now. Returns name, how
+function H.opening_cp(d)
+  local o = H.opening_of(d)
+  local T = RANDO_TRAVEL
+  if not (o and o.hash and T and T.find_hash) then return nil end
+  local okf, name, how = pcall(T.find_hash, o.hash, o.codes)
+  if okf and name then return name, how end
+  return nil
+end
+-- the city's checkpoints for rivet.log (the next round names the opening if it is listed elsewhere)
+local function log_planet_checkpoints(pid)
+  local T = RANDO_TRAVEL
+  if not (T and T.describe_planet) then return end
+  local ok, text = pcall(T.describe_planet, pid, 120)
+  if ok then log("checkpoints listed for", pid .. ":", text) end
+end
+-- cb(cp, how, is_start): where to load d now. Waits up to H.OPENING_WAIT frames for an opening's
+-- name while the checkpoint catalog fills; then the destination's ordinary load point.
+function H.with_load_point(d, cb)
+  if not H.opening_wanted(d) then return cb(H.load_point(d)) end
+  local o = H.opening_of(d)
+  local t0 = H.frame
+  local function look()
+    local name, how = H.opening_cp(d)
+    if name then
+      log(string.format("opening of %s: %s (hash %d, %s)", d.id, name, o.hash, tostring(how)))
+      return cb(name, "its opening scene", true)
+    end
+    local T = RANDO_TRAVEL
+    local catalog_done = T and T.catalog and T.catalog.done
+    if not catalog_done and H.frame - t0 < H.OPENING_WAIT then
+      return H.after(H.OPENING_POLL, look, "opening " .. d.id)
+    end
+    local cp, cphow, is_start = H.load_point(d)
+    log(string.format("opening of %s: hash %d is not among the checkpoints your game lists%s - loading %s (%s) instead",
+                      d.id, o.hash, catalog_done and "" or (" (the catalog was not complete after " .. H.OPENING_WAIT .. " frames)"),
+                      tostring(cp), tostring(cphow)))
+    log_planet_checkpoints(d.planet)
+    cb(cp, cphow, is_start)
+  end
+  look()
+end
+-- the missions the game opens together with d's story (C.OPENINGS .with): inactive ones are made
+-- available (rando_give.dll v6), as the game itself did in round 23. cb() when done.
+function H.open_with(d, cb)
+  cb = cb or function() end
+  local o = H.opening_of(d)
+  local list = (o and o.with) or {}
+  local dd = D()
+  if #list == 0 or not dd then return cb() end
+  if not (dd.native_ok("query") and dd.native_ok("set_state")) then return cb() end
+  dd.refresh(list, function(answers)
+    local left = 0
+    local todo = {}
+    for _, m in ipairs(list) do
+      local r = answers[m]
+      if r and r.code == 11 and r.after == 0 then todo[#todo + 1] = m
+      elseif r then log("with", d.id .. ":", m, r.code == 11 and (dd.STATE_NAMES[r.after] or tostring(r.after)) or (dd.RESULT[r.code] or tostring(r.code))) end
+    end
+    left = #todo
+    if left == 0 then return cb() end
+    for _, m in ipairs(todo) do
+      call("set_state", m, function(w)
+        log("with", d.id .. ": made available", m, describe(w))
+        left = left - 1
+        if left == 0 then cb() end
+      end, 1)
+    end
+  end)
+end
+
 -- where to load a destination: its own start (registry or learned), the prologue's parade
 -- checkpoint, else its landing. Returns cp, how, is_start
 function H.load_point(d)
@@ -694,28 +817,37 @@ function H.launch_dest(d, why)
   say(string.format("Randomizer: %s - getting the story ready", d.label or (pname(d.planet) .. ": " .. (d.title or d.id))), { type = "corner", duration = 5 })
   log("launch", d.id, "(" .. tostring(why) .. ")")
   H.activate(d, function(result, how, mission)
-    H.launch = nil
     if result == "complete" then
+      H.launch = nil
       H.finish(d, how)
       return
     end
-    local cp, cphow, is_start = H.load_point(d)
     if result == "explore" then H.explore(d, how) else set_attempt(d, "story", tostring(mission) .. " " .. tostring(how)) end
-    if not cp then
-      log("no checkpoint for", d.id, "-", tostring(cphow))
-      say("Randomizer: no warp point known for " .. pname(d.planet) .. " yet - fly there from the ship's planet menu",
-          { type = "center", duration = 8 })
-      return
+    -- v0.52: the missions the game opens with the story, then where to load (an opening scene's
+    -- name may take the catalog a moment); H.launch stays set until the trip leaves
+    local function travel(cp, cphow, is_start)
+      H.launch = nil
+      if not cp then
+        log("no checkpoint for", d.id, "-", tostring(cphow))
+        say("Randomizer: no warp point known for " .. pname(d.planet) .. " yet - fly there from the ship's planet menu",
+            { type = "center", duration = 8 })
+        return
+      end
+      -- a start checkpoint is warped to (the game's own way of loading a mission's start); a mere
+      -- landing is flown to when a ship answers
+      local at_hub = S().current_planet == H.plan().planet
+      local okg, err = H.go(d.planet, cp, d, (not is_start) and at_hub, "launch " .. d.id .. " (" .. tostring(cphow) .. ")")
+      if not okg then
+        say("Randomizer: the trip to " .. pname(d.planet) .. " failed (" .. tostring(err) .. ")", { type = "center", duration = 6 })
+        return
+      end
+      if result == "running" and mission then H.watch_story(d, mission, cp) end
     end
-    -- a start checkpoint is warped to (the game's own way of loading a mission's start); a mere
-    -- landing is flown to when a ship answers
-    local at_hub = S().current_planet == H.plan().planet
-    local okg, err = H.go(d.planet, cp, d, (not is_start) and at_hub, "launch " .. d.id .. " (" .. tostring(cphow) .. ")")
-    if not okg then
-      say("Randomizer: the trip to " .. pname(d.planet) .. " failed (" .. tostring(err) .. ")", { type = "center", duration = 6 })
-      return
+    if result == "running" then
+      H.open_with(d, function() H.with_load_point(d, travel) end)
+    else
+      travel(H.load_point(d))
     end
-    if result == "running" and mission then H.watch_story(d, mission, cp) end
   end)
 end
 
@@ -726,7 +858,12 @@ function H.watch_story(d, name, cp)
   local token = {}
   H.watching = H.watching or {}
   H.watching[d.id] = token
-  H.after(H.STUCK_WAIT, function()
+  -- v0.52: an opening scene is given longer (a reload must not cut it short), and its reload is
+  -- the opening again
+  local opening = H.opening_of(d)
+  local at_opening = opening and opening.hash and type(cp) == "string" and RANDO_TRAVEL and RANDO_TRAVEL.hash
+                     and RANDO_TRAVEL.hash(cp) == opening.hash
+  H.after(at_opening and H.OPENING_STUCK_WAIT or H.STUCK_WAIT, function()
     if H.watching[d.id] ~= token then return end
     H.watching[d.id] = nil
     local h = H.state()
@@ -744,11 +881,12 @@ function H.watch_story(d, name, cp)
       return
     end
     H.session.reloaded[d.id] = H.frame
-    -- the other load point when there is one (start <-> landing)
+    -- the other load point when there is one (start <-> landing); v0.52: an opening is loaded again
     local alt = cp
     local land = H.landing_for(d)
     local start = H.start_of(d)
-    if cp == start and land then alt = land elseif start and cp ~= start then alt = start end
+    if at_opening then alt = cp
+    elseif cp == start and land then alt = land elseif start and cp ~= start then alt = start end
     log("story", name, "still at", last.o, "- loading", alt, "once more")
     history(string.format("[STORY RELOAD] %s at %s", d.id, tostring(alt)))
     H.ensure_hero(d.hero, function() H.go(d.planet, alt, d, false, "reload " .. d.id) end, "reload " .. d.id)
@@ -777,30 +915,48 @@ function H.begin_hub(why)
   say("Randomizer: to " .. HUBN() .. " - the hub; its story starts there", { type = "center", duration = 6 })
   H.launch = { id = story.id, at = H.frame }
   h.current = story.id
-  H.activate(story, function(result, how, mission)
+  local function travel(result, mission, cp, cphow)
     H.launch = nil
-    log("hub start:", story.id, result, tostring(how), tostring(mission or ""))
-    if result == "explore" then set_attempt(story, "explore", how)
-    elseif result == "running" then set_attempt(story, "story", tostring(mission) .. " " .. tostring(how)) end
-    if result == "complete" then h.current = nil end
-    local cp = (result ~= "complete") and H.start_of(story) or nil
-    if cp and H.go(story.planet, cp, story, false, "hub start: " .. story.id) then
+    if cp and H.go(story.planet, cp, story, false, "hub start: " .. story.id .. " (" .. tostring(cphow) .. ")") then
       if result == "running" and mission then H.watch_story(story, mission, cp) end
       return
     end
     if not H.go_home("hub start") then H.start_failed("no checkpoint of " .. HUBN() .. " could be warped to") end
-  end)
+  end
+  local function story_then_travel()
+    H.activate(story, function(result, how, mission)
+      log("hub start:", story.id, result, tostring(how), tostring(mission or ""))
+      if result == "explore" then set_attempt(story, "explore", how)
+      elseif result == "running" then set_attempt(story, "story", tostring(mission) .. " " .. tostring(how)) end
+      if result == "complete" then h.current = nil; return travel(result, mission, nil) end
+      if result ~= "running" then return travel(result, mission, H.start_of(story), "its start") end
+      -- v0.52: the missions the game opens with it, then the opening scene (or the start)
+      H.open_with(story, function()
+        H.with_load_point(story, function(cp, cphow) travel(result, mission, cp, cphow) end)
+      end)
+    end)
+  end
+  -- v0.52 (hub_prologue_timing = "before"): the prologue complete before the city's story starts,
+  -- as in the game (round 23); "after" is v0.51's order (written once on Nefarious City)
+  if cfg("hub_prologue", "end") == "end" and cfg("hub_prologue_timing", "before") == "before" then
+    H.end_prologue(story_then_travel)
+  else
+    story_then_travel()
+  end
 end
 
 -- v0.51 (hub_prologue = "end"): once at the hub, the prologue is written "Complete Finished" (4)
 -- into its saved record (rando_give.dll v6), as kit 8.0 did after its warp in round 17, and its
 -- locations pay. The game itself has it complete before it loads Nefarious City (round 23).
-function H.end_prologue()
+-- v0.52: cb() runs once the write has been answered (or at once when there is nothing to write);
+-- hub_prologue_timing = "before" calls this before the city's story is started
+function H.end_prologue(cb)
+  cb = cb or function() end
   local h = H.state()
-  if not h or cfg("hub_prologue", "end") ~= "end" then return end
+  if not h or cfg("hub_prologue", "end") ~= "end" then return cb() end
   local d
   for _, x in ipairs(H.plan().destinations) do if x.kind == "intro" then d = x end end
-  if not d or h.done[d.id] then return end
+  if not d or h.done[d.id] then return cb() end
   local name = (d.missions or {})[1]
   local dd = D()
   local ok, why = false, "11_rando_campaign.lua is missing"
@@ -808,7 +964,7 @@ function H.end_prologue()
   if not (name and ok) then
     log("prologue: left active (" .. tostring(why) .. ") - it stays a destination")
     h.prologue_kept = true
-    return
+    return cb()
   end
   H.ending_prologue = true
   call("set_state", name, function(w)
@@ -821,6 +977,7 @@ function H.end_prologue()
       log("prologue: left active - it stays a destination")
       h.prologue_kept = true
     end
+    cb()
   end, 4)
 end
 
@@ -928,6 +1085,16 @@ end
 function H.on_checkpoint(cp)
   local h = H.state()
   if not (h and cp) then return end
+  -- v0.52: an opening scene's checkpoint loaded (by the hub's warp or by the game itself)
+  local cur = h.current and dest_by_id(h.current)
+  local o = cur and H.opening_of(cur)
+  if o and o.hash == cp.hash then
+    H.session.opening_loaded = H.session.opening_loaded or {}
+    H.session.opening_loaded[cur.id] = H.frame
+    local m = (cur.missions or {})[1]
+    local last = m and h.obj[m]
+    log("opening of", cur.id, "loaded:", tostring(cp.name or cp.hash), "-", m and (m .. " at " .. tostring(last and last.o or "no step yet")) or "")
+  end
   -- the game's own travel being undone: go home once the new planet has loaded (round 23: the
   -- prologue ends on Ardolis, then the game rifts to Nefarious City and plays its opening)
   local ok = H.order_kept
@@ -973,7 +1140,8 @@ function H.on_arrival(pid, from)
   H.expect = nil
   if not h.started then
     if pid == p.planet and (h.phase == "to_hub" or (exp and exp.planet == pid)) then
-      if exp and exp.cp then h.home_cp = exp.cp end
+      -- (v0.52: never an opening scene: the way home must not play it again)
+      if exp and exp.cp and not H.is_opening_cp(exp.cp) then h.home_cp = exp.cp end
       H.hub_started(exp and exp.cp or "arrived")
       return true
     end

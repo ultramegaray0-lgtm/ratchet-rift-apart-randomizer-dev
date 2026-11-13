@@ -1,4 +1,4 @@
--- Rift Apart Randomizer (Public Release v0.51, build 10.0.2): your seed and settings.
+-- Rift Apart Randomizer (Public Release v0.52, build 10.0.3): your seed and settings.
 -- Change, save, then restart the game (or press Pause to reload the scripts before you play).
 -- A different seed or different randomization options make a NEW seed with its own progress;
 -- start it with NEW GAME. Keys/logging can change any time.
@@ -18,7 +18,7 @@
 --   * a mission, side activity or armor pod with no item gives Bolts or Raritanium
 --   * the solver proves every seed can be finished (in the game's own mission order too)
 --   * hub = false gives 9.0's start instead: the prologue, then Nefarious City, then Sargasso
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)
 RANDO_SETTINGS = {
   seed = "random",            -- any text, e.g. "lombax-ryno-2026"; "random" = the companion picks one and remembers it
   preset = "balanced",        -- balanced | chaos | full | campaign | everything (docs\PLAYER_GUIDE.md)
@@ -92,6 +92,8 @@ RANDO_SETTINGS = {
   -- hub_trigger = "parade",         -- v0.51: go once the parade hands Ratchet back after his wrench | "wrench"
   -- hub_prologue = "end",           -- v0.51: the prologue counts as done at the hub | "keep": choose it later
   -- hub_start_story = true,         -- v0.51: the first warp starts Nefarious City's story there
+  -- hub_prologue_timing = "before", -- v0.52: the prologue ends before the city's story starts | "after" (v0.51)
+  -- hub_opening = true,             -- v0.52: the city loads at its opening scene | false: at CHK_NEFCITY_START
   hub_follow_story = false,          -- true: when the game's own story takes you to an open destination, play it
   shop_close_slots = true,           -- closed shop slots show the Burst Pistol (false: their own weapon)
   -- 8.3 KEYS: ordinary keyboard keys. A key is one character ("]", "/", "K", "7"), NUMPAD0-NUMPAD9,

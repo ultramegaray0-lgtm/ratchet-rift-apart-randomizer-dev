@@ -29,7 +29,7 @@
 -- checkpoint is logged by name (RANDO-CHECKPOINT) and the hub knows where a mission really starts.
 -- In a hub seed (15_rando_hub.lua) the hub handles every arrival itself; this file's send-back is
 -- used by 7.0-9.0 style seeds.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["14_rando_travel"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TRAVEL = RANDO_TRAVEL or {}
 local T = RANDO_TRAVEL
@@ -226,6 +226,30 @@ end
 function T.name_of_hash(h)
   h = math.tointeger(tonumber(h)) or h
   return T.hash_names[h]
+end
+-- v0.52: the name of a checkpoint hash, asked of the game now: the names are known already, else
+-- each filter's list is hashed (stopping after `budget` seconds, 0.004 by default). Returns the
+-- name and the filter it was found under, or nil.
+function T.find_hash(h, filters, budget)
+  h = math.tointeger(tonumber(h)) or h
+  if T.hash_names[h] then return T.hash_names[h], "known" end
+  if type(rivet.checkpoints) ~= "function" then return nil end
+  local t0, limit = clock(), budget or 0.004
+  for _, f in ipairs(filters or {}) do
+    local ok, list = pcall(rivet.checkpoints, f)
+    if ok and type(list) == "table" then
+      for _, c in ipairs(list) do
+        local name = entry_of(c)
+        if type(name) == "string" then
+          local x = T.hash(name)
+          T.hash_names[x] = name
+          if x == h then return name, f end
+        end
+      end
+    end
+    if clock() - t0 >= limit then break end
+  end
+  return nil
 end
 -- every name we know already (the registry's starts, entries, the hub's checkpoints, the logs)
 do
@@ -493,6 +517,9 @@ function T.catalog_wanted()
   if T.catalog and T.catalog.done then return false end
   if type(rivet.checkpoints) ~= "function" then return false end
   local TT = RANDO_TEST_TRAVEL
+  -- v0.52: a hub seed needs the names too (a visit's opening scene is found by its hash)
+  local HB = RANDO_HUB
+  if HB and HB.plan and HB.plan() ~= nil then return true end
   return T.active() or (TT ~= nil and TT.on ~= nil and TT.on())
 end
 

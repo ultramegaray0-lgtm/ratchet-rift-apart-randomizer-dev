@@ -4,6 +4,19 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0b. Since v0.52 (10.0.3)
+
+- **The city's opening checkpoint has no name in any log.** It is found by its hash among the names
+  `rivet.checkpoints()` lists. If your game does not list it, the hub falls back to
+  CHK_NEFCITY_START (v0.51, where round 24's story never moved on) and logs the city's checkpoints.
+- **Whether a warp to the opening plays the arrival scene** is untested. Round 23 shows only that the
+  game loads it first after the prologue. If it does not, `objective MIS_NEFCITY_01 ...` lines and the
+  `opening of nefcity_1 loaded` line show how far it got.
+- **Writing the prologue complete on Corson V** (before the warp) is new. v0.51 and kit 8.0 wrote
+  it after the warp. `hub_prologue_timing = "after"` restores that.
+- From round 24, unchanged: the shop could not be changed (ARSENAL_RESTORED's vendor config, and a
+  frame-budget overrun), so its weapons were given directly; Glitch is never confirmed.
+
 ## 0a. Since 10.0
 
 - **Nothing of the 10.0 hub has run in the game.** The steps it uses were seen working in round 17

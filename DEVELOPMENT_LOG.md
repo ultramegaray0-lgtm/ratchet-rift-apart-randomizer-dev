@@ -4,6 +4,17 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-13: Public Release v0.52 (build 10.0.3): the city's story starts at its opening scene
+
+- Round 24 (v0.51's first run): the city's story stayed at OBJ_NEFCITY_GO_TO_NEFCITY through six
+  warps to CHK_NEFCITY_START. Ratchet could move (bolts picked up), so v0.51's walking fix held.
+- Round 23 shows the game's own order: MIS_INTRO complete, MIS_NEFCITY_01 started with
+  MIS_NEFCITY_01_TRAINSTATION opened, then the city loaded at checkpoint hash 3046787773 (the
+  arrival scene), then CHK_NEFCITY_START.
+- Fix (asked for: "teleport to the cutscene of the opening"): prologue first, story and train
+  station opened, warp to the opening found by its hash at run time. Seeds unchanged.
+- Branch release-v0.52. Details: mod/RiftApartRandomizer/docs/CHANGELOG.md.
+
 ## 2026-11-13: Public Release v0.51 (build 10.0.2): the hub is Nefarious City
 
 - Request: hub = Nefarious City; its story must work after the warp; Ratchet could not walk right

@@ -40,11 +40,11 @@
 --      Coordinates (15_rando_hub.lua). hub = false: the 9.0 story start.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.2"
+R.KIT_VERSION = "10.0.3"
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -124,6 +124,10 @@ R.config = {
   hub_prologue = "end",              -- v0.51: "end" writes the prologue complete once you are at the hub (as
                                      -- the game has it before Nefarious City) | "keep": leave it to choose
   hub_start_story = true,            -- v0.51: the hub's first warp starts Nefarious City's story there
+  hub_prologue_timing = "before",    -- v0.52: "before" writes the prologue complete before the city's story
+                                     -- starts (the game's order, round 23) | "after": once on the city (v0.51)
+  hub_opening = true,                -- v0.52: load a story at its opening scene (C.OPENINGS) while it waits at
+                                     -- its first step | false: at its start checkpoint (v0.51)
   hub_force_missions = true,         -- a destination's inactive story mission is made available, then started
   hub_replay = true,                 -- if starting fails, try the game's replay call
   hub_levels = "all",                -- "all": set every level bit UnlockLevelAction can set | "off"
@@ -139,7 +143,7 @@ R.config = {
   shop_close_slots = true,           -- 10.0: closed vendor slots show the Burst Pistol (false: their own weapon)
 }
 R.CHOICES = { hub_trigger = { parade = true, wrench = true, cinematic = true }, hub_levels = { all = true, off = true },
-              hub_prologue = { ["end"] = true, keep = true } }
+              hub_prologue = { ["end"] = true, keep = true }, hub_prologue_timing = { before = true, after = true } }
 -- options that no longer exist
 local RETIRED_RUNTIME = { key_shop_next = "is not used since 4.0", key_shop_buy = "is not used since 4.0",
                           lock_vendor_weapons = "is not used since 5.0 (the vendor sells its own weapons, shuffled; ammo works)" }

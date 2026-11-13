@@ -7,6 +7,11 @@ This is the player guide for 10.0's default mode (`hub = true`). The technical n
 > CHK_NEFCITY_START); the prologue is written complete there (`hub_prologue = "keep"` leaves it as
 > a destination). Where this guide says Zurkie's as the hub, read Nefarious City; the Battle Arena
 > is an ordinary destination now. See CHANGELOG.md, 10.0.2.
+>
+> **v0.52 (build 10.0.3): the city loads at its opening scene.** Round 24 showed the story never
+> leaving "go to Nefarious City" at CHK_NEFCITY_START. The hub now ends the prologue first, starts
+> the story with its train-station mission, and warps to the checkpoint the game itself loads after
+> the prologue (hash 3046787773, named at run time). See CHANGELOG.md, 10.0.3.
 
 **Nothing of 10.0 has run in your game yet.** `VERIFICATION_REPORT.md` separates what your logs have
 shown from what has only passed offline tests.

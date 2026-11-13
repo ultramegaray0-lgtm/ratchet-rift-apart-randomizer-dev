@@ -1,4 +1,4 @@
-# Player guide: Ratchet Rift Apart Randomizer v0.51
+# Player guide: Ratchet Rift Apart Randomizer v0.52
 
 ## How a run goes
 
@@ -8,9 +8,9 @@
    shows your seed and your starting items, which arrive in your inventory over the next few
    seconds.
 3. **The hub: Nefarious City.** When Ratchet has his wrench and the parade lets him walk again (a
-   few seconds later), you're taken to **Nefarious City**. Its story starts right there, from where
-   the game itself starts it. The prologue counts as done, and its reward is paid. `]` (next) and
-   `Ctrl+]` (go) list what is open:
+   few seconds later), you're taken to **Nefarious City**. The prologue counts as done (its reward
+   is paid), and the city's story starts with its opening scene, as the game itself starts it.
+   `]` (next) and `Ctrl+]` (go) list what is open:
    - **Nefarious City:** the city's story (already running after the warp).
    - **Battle Arena:** Zurkie's first visit.
 4. **Planet shuffle.** Every other planet opens when you hold its **Coordinates**. Coordinates are
@@ -83,6 +83,8 @@ Keys and in-game options can change at any time. A wrong value is reported in `r
 | `test_travel` | `false` | A testing aid that lets you go anywhere. Leave it off for a real run |
 | `hub_trigger` | `"parade"` | When the new game goes to Nefarious City: once the parade lets Ratchet walk again after the wrench. `"wrench"`: at the wrench itself (v0.5's timing) |
 | `hub_prologue` | `"end"` | `"end"`: the prologue counts as done once you're in Nefarious City. `"keep"`: it stays open, to continue later from the `]` list |
+| `hub_prologue_timing` | `"before"` | `"before"`: the prologue is marked done before the city's story starts, as in the game. `"after"`: once you're in the city (v0.51) |
+| `hub_opening` | `true` | Load the city at its opening scene while its story waits at "go to Nefarious City". `false`: at `CHK_NEFCITY_START` (v0.51) |
 | `hub_start_story` | `true` | The first warp starts Nefarious City's story. `false`: just go there |
 
 ### Presets

@@ -1,4 +1,4 @@
-# Testing (Randomizer 10.0)
+# Testing (Randomizer 10.0, Public Release v0.52)
 
 Results come in four kinds, and a pass in one is never evidence for another. VERIFICATION_REPORT.md
 sorts every feature into them. This page covers how the tests run and what to check in your
@@ -6,7 +6,7 @@ first full playthrough.
 
 ## 1. Automated tests (this build)
 
-`python run_tests.py`: **332 tests, 0 failures, 0 errors, 17 skipped** (TEST_RESULTS.txt).
+`python run_tests.py`: **371 tests, 0 failures, 0 errors, 17 skipped** (TEST_RESULTS.txt; v0.52 adds tests/test_v052.py, 15).
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
 - 8 need the 5.0 and 6.0 git commits, which are not in this repository.
@@ -27,38 +27,37 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
-## 2. Round 24: your first playthrough with v0.51 (build 10.0.2)
+## 2. Round 25: v0.52 (build 10.0.3)
 
-Use a spare save slot and the kit's settings (hub = true). Send the whole rivet.log afterwards. Each
-step names the log line that shows it worked.
+Use a spare save slot and the kit's settings (hub = true). Your round 24 seed carries over (same
+fingerprint), but start a **New Game**: the new start only runs from the parade. Send the whole
+rivet.log afterwards. Each step names the log line that shows it worked.
 
-1. **Install check.** `RANDO-KIT all 14 scripts are 10.0.2`.
-2. **New Game → Nefarious City.** Play the parade until Ratchet picks up the wrench, then keep
-   walking. The warp should come a few seconds later, not at the wrench. Look for:
-   - `RANDO-HUB	going to the hub (Nefarious City): the parade handed Ratchet back after his wrench`
-   - `made available MIS_NEFCITY_01`, then `start MIS_NEFCITY_01 done (available -> active)`
-   - `travel: warp to CHK_NEFCITY_START`, then `RANDO-CHECKPOINT CHK_NEFCITY_START`
-   - `prologue: MIS_INTRO written Complete Finished`
+1. **Install check.** `RANDO-KIT all 14 scripts are 10.0.3`.
+2. **New Game → Nefarious City (the key test).** Play the parade until the warp. In this order:
+   - `going to the hub (Nefarious City): the parade handed Ratchet back after his wrench`
+   - `prologue: MIS_INTRO written Complete Finished` (now **before** the story starts)
+   - `made available MIS_NEFCITY_01`, `start MIS_NEFCITY_01 done (available -> active)`
+   - `with nefcity_1: made available MIS_NEFCITY_01_TRAINSTATION`
+   - `opening of nefcity_1: <NAME> (hash 3046787773, ...)` **(note the name)**, or
+     `hash 3046787773 is not among the checkpoints your game lists` plus `checkpoints listed for
+     nefarious_city:` (send that line)
+   - `travel: warp to <NAME>`, then `RANDO-CHECKPOINT <NAME>` and `opening of nefcity_1 loaded`
 
-   **Most important:** can Ratchet walk right after the warp? Does the city's story play from its
-   beginning, and does the objective leave "go to Nefarious City"?
-3. **The city's story to its end.** Then the game flies you to Sargasso: is `[ORDER KEPT]` logged,
-   and are you back in Nefarious City (at `CHK_NEFCITY_SHIP`)?
-4. **Battle Arena.** `]` to "Battle Arena", `Ctrl+]`. Does Zurkon's arena intro play? Finish it:
+   **Most important:** does the arrival cutscene play, then gameplay? Look for
+   `objective MIS_NEFCITY_01 OBJ_NEFCITY_GO_TO_NEFCITY 2` and the next objective lines.
+3. **If it still waits at "go to Nefarious City":** don't press anything for a minute (the hub
+   reloads the opening once, `[STORY RELOAD]`). Then try `/` once. Note what each did.
+4. **The city's story to its end.** Does the train station part work? Then the game flies you to
+   Sargasso: is `[ORDER KEPT]` logged, and are you back in Nefarious City (at `CHK_NEFCITY_SHIP`)?
+5. **Battle Arena.** `]` to "Battle Arena", `Ctrl+]`. Does Zurkon's arena intro play? Finish it:
    are you brought back to Nefarious City?
-5. **A shuffled planet.** Once a "Coordinates" reward arrives, `]` shows that planet. Go there. Note
+6. **A shuffled planet.** Once a "Coordinates" reward arrives, `]` shows that planet. Go there. Note
    whether its story starts, and the `RANDO-CHECKPOINT` lines (`learned the start of ...`).
-6. **Planet menu.** From the ship, pick a planet you have no Coordinates for: are you sent back to
+7. **Planet menu.** From the ship, pick a planet you have no Coordinates for: are you sent back to
    Nefarious City?
-7. **Shop.** Open Ms. Zurkon's shop. `RANDO-SHOP ... search done` and no "frame budget" lines? Do
-   closed slots show the Burst Pistol? Does the list match the spoiler's SHOP section?
 8. **Rewards.** Every Gold Bolt gives an item (weapon, gadget, armor or Coordinates), matching the
    spoiler.
-9. **If a destination will not start:** wait 20 s (`STORY RELOAD`), then try `/`, then `Ctrl+[`
-   twice. Note which step got it going.
-10. **If Ratchet still cannot move after the warp:** note it, and try `/` (loads the city's story
-    start again). The `RANDO-HUB` and `RANDO-DISCOVER ... MIS_INTRO` lines around the warp show which
-    parade step was running.
 
 ## 3. Running the automated tests yourself
 

@@ -1,5 +1,31 @@
 # Changelog: Ratchet Rift Apart Randomizer
 
+## Public Release v0.52 (beta), 2026-11-13. Randomizer build 10.0.3
+
+A small fix. **It has not been run in the game yet** (see README).
+
+**Nefarious City's story starts again**
+- In v0.51 the city's story never got past "go to Nefarious City". The warp landed at
+  `CHK_NEFCITY_START`, but the game starts the city's story one step earlier, with the arrival scene
+  it loads straight after the prologue. v0.52 copies the game's order:
+  1. the prologue is marked complete first;
+  2. the city's story starts, and its train-station mission opens with it, as in the game;
+  3. the city loads at that **opening scene**, so the cutscene plays and then the gameplay.
+- The opening's name isn't known in advance. The randomizer finds it by its checkpoint number among
+  the names your game lists. If your game doesn't list it, the city loads at `CHK_NEFCITY_START` as
+  before, and `rivet.log` lists the city's checkpoints.
+- The opening scene gets about a minute before it is loaded once more, so the cutscene isn't cut
+  short. While the story waits at its first step, `/` loads the opening again.
+- `rivet.log` now logs every step of the city's story (`RANDO-HUB objective ...`).
+- New in-game options, both optional: `hub_opening` (`true`; `false` = v0.51's load point) and
+  `hub_prologue_timing` (`"before"`; `"after"` = v0.51's order).
+
+**Unchanged**
+- Seeds are the same as v0.51 (generator 10.0.2), so a v0.51 seed keeps its fingerprint and its
+  progress. Start a New Game to try the new start. `rivet.log` shows
+  `RANDO-KIT all 14 scripts are 10.0.3`.
+- `rando_give.dll`, `rivet.toml` and the companion are unchanged.
+
 ## Public Release v0.51 (beta), 2026-11-13. Randomizer build 10.0.2
 
 A small update. **It has not been run on Windows 11 or in the game yet** (see README).

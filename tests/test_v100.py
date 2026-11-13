@@ -387,7 +387,10 @@ def hub_game(seed="v100-rt", settings=None, missions=None, **kw):
     states.update(missions or {})
     g.sim.install_missions(g.lua.table_from([g.lua.table_from([n, s]) for n, s in states.items() if s is not None]))
     t = g.lua.table_from
-    # round 23 / 16 (SIMULATED rule): Nefarious City's first step finishes on a load at CHK_NEFCITY_START
+    # round 23 / 16 (SIMULATED rule): Nefarious City's first step finishes on a load at CHK_NEFCITY_START.
+    # v0.52: round 24 contradicts this (the story stayed at its first step there). These tests keep
+    # it as the FALLBACK model: the simulator lists no opening checkpoint (hash 3046787773), so the
+    # hub loads CHK_NEFCITY_START as v0.51 did. tests/test_v052.py models the opening scene.
     g.sim.go_to["MIS_NEFCITY_01"] = t({"o": "OBJ_NEFCITY_GO_TO_NEFCITY", "planet": "NefCity", "hero": "ratchet", "at": "CHK_NEFCITY_START"})
     # the game's own next step (round 23)
     g.sim.chain["MIS_INTRO"] = t({"start": "MIS_NEFCITY_01", "travel": "NefCity", "cp": "CHK_NEFCITY_START"})
@@ -455,8 +458,9 @@ class HubStartTests(unittest.TestCase):
         self.assertEqual(h["current"], "nefcity_1")
         self.assertTrue(g.note_has("its story starts here"))
         self.assertTrue(g.log_has("start menu:\t1. Nefarious City - the hub's story  |  2. Battle Arena - Zurkie's Battleplex"))
-        # the story made active first (as round 17), then the prologue written complete at the hub
-        self.assertEqual([(c.name, c.state) for c in g.sim.set_state_calls.values()], [("MIS_NEFCITY_01", 1), ("MIS_INTRO", 4)])
+        # v0.52: the prologue written complete first (round 23: MIS_INTRO 4, then MIS_NEFCITY_01),
+        # then the story made active (as round 17)
+        self.assertEqual([(c.name, c.state) for c in g.sim.set_state_calls.values()], [("MIS_INTRO", 4), ("MIS_NEFCITY_01", 1)])
         self.assertEqual(g.sim.get_mission("MIS_INTRO"), 4)
         self.assertIn("corson_intro", h["done"])
         self.assertTrue(g.state.collected["planet:corson_v"])
@@ -897,7 +901,7 @@ class SettingsFileTests(unittest.TestCase):
         self.assertEqual(s["settings"]["campaign_mode"], "planet_shuffle")
         self.assertEqual((s["settings"]["raritanium_min"], s["settings"]["raritanium_max"]), (120, 1000))
         self.assertEqual(verify_hub_seed(s), [])
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.2"))
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.3"))
         self.assertFalse(g.log_has("is from an older kit"))
         c = g.R.config
         self.assertEqual((c.key_hub, c.key_hub_return, c.key_story), ("]", "[", "/"))

@@ -1,4 +1,4 @@
-# Troubleshooting: Ratchet Rift Apart Randomizer v0.51
+# Troubleshooting: Ratchet Rift Apart Randomizer v0.52
 
 Most answers are in `rivet.log`, in the game folder. Open it in Notepad and search for `RANDO-`.
 
@@ -105,9 +105,24 @@ randomizer waits until it is over and Ratchet can walk again (a few seconds), so
 cut it off. In `rivet.log` the warp follows the line `the parade handed Ratchet back`. If the
 parade never reports that part as finished, the warp goes 30 seconds after the wrench anyway.
 
+## Nefarious City's story doesn't start (it stays at "go to Nefarious City")
+
+v0.52 is meant to fix this (v0.51 had it). The city is now loaded at its opening scene, the spot
+the game itself loads after the prologue, instead of `CHK_NEFCITY_START`. In `rivet.log`:
+
+- `opening of nefcity_1: <name> (hash 3046787773, ...)`: the opening was found and the warp went
+  there. `opening of nefcity_1 loaded` follows when the city loads.
+- `objective MIS_NEFCITY_01 OBJ_NEFCITY_GO_TO_NEFCITY 2`: the story left its first step.
+- `hash 3046787773 is not among the checkpoints your game lists`: the opening wasn't found, so the
+  city was loaded at `CHK_NEFCITY_START` as in v0.51. The next line lists the city's checkpoints.
+
+If the story still waits after about a minute, the opening is loaded once more. Press `/` to load
+it again yourself, or `Ctrl+[` twice to count the city's story as finished by hand. Either way,
+please send your `rivet.log`.
+
 ## Ratchet can't move after the warp
 
-v0.51 is meant to prevent this. If it still happens:
+v0.51 and later are meant to prevent this. If it still happens:
 
 1. Press `/` to load the story of the planet you're on again.
 2. Send your `rivet.log` (see below). The lines with `RANDO-HUB` around the warp show when it went
@@ -142,7 +157,7 @@ put in the shop but she doesn't sell are then given to you directly, once (said 
 
 On the mod page, please include:
 
-- the release version (v0.51) and your game version (right-click `RiftApart.exe` → Properties →
+- the release version (v0.52) and your game version (right-click `RiftApart.exe` → Properties →
   Details → File version; v3.630.1.0 shows as 3.0630.1.0);
 - the `rivet.log` from the game folder, uploaded as a file;
 - the companion window's text, if it shows an error;

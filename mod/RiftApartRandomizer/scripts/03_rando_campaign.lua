@@ -44,10 +44,10 @@
 --   guide  public walkthrough (gamepressure mission list, vulkk gear guide); NOT verified in the
 --          game files. The research kit (companion/research/Research-Campaign.bat) replaces these
 --          with the real names; tools/build_campaign_registry.py merges them.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "10.0.2"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)
 RANDO_CAMPAIGN = {}
 local C = RANDO_CAMPAIGN
-C.VERSION = "10.0.2"
+C.VERSION = "10.0.3"
 
 -- story abilities: no item config exists, so only the story itself hands them out
 C.STORY_ABILITIES = { phantom_dash = true, hurlshot = true, speetle = true, dragon_mount = true, wallrun = true }
@@ -364,6 +364,23 @@ C.HUB_MENU = { "nefcity_1", "scarstu_1", "corson_intro" }
 C.HUB_LABEL = { corson_intro = "Prologue - the parade on Corson V",
                 scarstu_1 = "Battle Arena - Zurkie's Battleplex",
                 nefcity_1 = "Nefarious City - the hub's story" }
+-- v0.52 (10.0.3): A VISIT'S OPENING SCENE. Round 24 (v0.51's first run): MIS_NEFCITY_01 was made
+-- available and started, the warp landed at CHK_NEFCITY_START, the city was loaded there three more
+-- times (the stuck-story reload and three presses of /), and the story never left
+-- OBJ_NEFCITY_GO_TO_NEFCITY. In round 23 the game's own rift after the prologue loaded the city at
+-- checkpoint hash 3046787773 FIRST (the city's arrival scene), and only then CHK_NEFCITY_START. So
+-- CHK_NEFCITY_START is where gameplay picks up after that scene, not where the story begins.
+--   hash   the checkpoint the game loads the visit at (its name is in no log yet: it is looked up at
+--          run time among the names rivet.checkpoints() lists, by the engine's CRC-32)
+--   codes  rivet.checkpoints() filters tried first for it (the whole list is the catalog's "CHK_")
+--   with   missions the game made available together with the story (round 23 line 711:
+--          MIS_NEFCITY_01_TRAINSTATION 0 -> 1 in the same frame as MIS_NEFCITY_01 0 -> 2)
+-- Round 23 also had MIS_INTRO complete (line 703) before the city's story started: the hub now ends
+-- the prologue before it starts the city's story (hub_prologue_timing = "before").
+-- Not part of the seed's hub plan: seeds, fingerprints and placements stay 10.0.2's.
+C.OPENINGS = {
+  nefcity_1 = { hash = 3046787773, codes = { "NEFCITY", "NEF_" }, with = { "MIS_NEFCITY_01_TRAINSTATION" } },
+}
 C.IN_HUB_START = {}
 for i, id in ipairs(C.HUB_START) do C.IN_HUB_START[id] = i end
 C.IN_HUB_MENU = {}

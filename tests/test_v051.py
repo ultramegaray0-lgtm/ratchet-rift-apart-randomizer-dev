@@ -76,7 +76,9 @@ class WhenTheWarpGoesTests(unittest.TestCase):
     def test_the_10_0_timing_is_what_held_ratchet(self):
         # control: hub_trigger = "wrench" (10.0-v0.5) warps in the middle of GOING_DOWN with the
         # prologue active, which the simulator (by its SIMULATED rule) leaves holding the hero
-        g = to_wrench(hub_game("v051-wrench", {"hub_trigger": "wrench"}))
+        # (v0.52: with v0.51's prologue timing; "before" ends the prologue before the warp, and the
+        # SIMULATED rule holds the hero only while the prologue is active)
+        g = to_wrench(hub_game("v051-wrench", {"hub_trigger": "wrench", "hub_prologue_timing": "after"}))
         g.step(400)
         self.assertEqual(list(g.sim.warps.values()), ["CHK_NEFCITY_START"])
         self.assertEqual(g.sim.hero_held, "OBJ_INTRO_GOING_DOWN")
@@ -127,7 +129,9 @@ class TheStoryTests(unittest.TestCase):
         self.assertFalse(g.log_has("RANDO-ERROR"), [l for l in g.logs() if "RANDO-ERROR" in l][:3])
 
     def test_the_prologue_ends_only_on_nefarious_city(self):
-        g = to_hub(hub_game("v051-prologue"))
+        # v0.51's order, kept by hub_prologue_timing = "after" (v0.52's default ends it before the
+        # city's story starts: tests/test_v052.py)
+        g = to_hub(hub_game("v051-prologue", {"hub_prologue_timing": "after"}))
         arrived = log_index(g, "RANDO-CHECKPOINT\tCHK_NEFCITY_START")
         ended = log_index(g, "prologue:\tMIS_INTRO\twritten Complete Finished")
         self.assertIsNotNone(ended)
