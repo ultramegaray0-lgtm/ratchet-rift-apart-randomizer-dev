@@ -49,12 +49,12 @@
 -- Keys (8.3 defaults; legacy_f_keys keeps F6/F5): ] next destination, Ctrl+] go, [ twice back to
 -- Zurkie's (cancels an automatic return), Ctrl+[ twice finish this destination by hand, / start the
 -- story of the planet you are on.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "10.0.0"
+H.VERSION = "10.0.1"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end

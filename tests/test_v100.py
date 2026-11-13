@@ -858,7 +858,7 @@ class SettingsFileTests(unittest.TestCase):
         self.assertEqual(s["settings"]["campaign_mode"], "planet_shuffle")
         self.assertEqual((s["settings"]["raritanium_min"], s["settings"]["raritanium_max"]), (120, 1000))
         self.assertEqual(verify_hub_seed(s), [])
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.0"))
+        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.1"))
         self.assertFalse(g.log_has("is from an older kit"))
         c = g.R.config
         self.assertEqual((c.key_hub, c.key_hub_return, c.key_story), ("]", "[", "/"))

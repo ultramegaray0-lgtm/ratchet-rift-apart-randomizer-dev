@@ -21,7 +21,7 @@
 -- the ones seen in your logs, then the checkpoint catalog (14_rando_travel.lua: every checkpoint
 -- rivet.checkpoints() lists, placed on its planet and scored, landing pads first).
 -- rivet.log lines start with RANDO-TEST.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_testtravel"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_testtravel"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TEST_TRAVEL = RANDO_TEST_TRAVEL or {}
 local TT = RANDO_TEST_TRAVEL
@@ -34,7 +34,7 @@ local function pname(pid) return (RANDO and RANDO.planet_name and RANDO.planet_n
 local function now() return (rivet.time and rivet.time()) or 0 end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 
-TT.VERSION = "10.0.0"
+TT.VERSION = "10.0.1"
 local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 TT.WINDOW = 180              -- seconds a trip waits for its landing
 TT.POINTS = 12               -- landing points offered per planet (catalog)

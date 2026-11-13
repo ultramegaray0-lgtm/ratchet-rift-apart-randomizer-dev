@@ -75,10 +75,10 @@
 --   * Abilities the story gives (Speetle, Trudi, ...) cannot be granted: locations needing
 --     them, and locations whose trigger is not proven (armor finds, collectibles), only ever
 --     hold non-progression rewards.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
 RANDO_GEN = {}
 local G = RANDO_GEN
-G.VERSION = "10.0.0"
+G.VERSION = "10.0.1"
 local DB = RANDO_DATA
 
 -- ------------------------------------------------------------------------------------------
@@ -1150,8 +1150,55 @@ local function attempt(seed_text, s, fp, n, yield)
       for _, lid in ipairs(bolts) do if not placement[lid] then c = c + 1 end end
       return c
     end
+    -- v0.5: hub seeds keep 10.0's early_weapons and early Coordinates with goldbolts_first too.
+    -- Gold Bolts the start reaches are used first (they need an item anyway); another location the
+    -- start reaches is used only while a spare grantable item is left, so every Gold Bolt still gets
+    -- an item. Non-hub seeds are unchanged.
+    local early_placed = 0
+    if s.hub then
+      local first = G.solve(s, pool, {}, start, nil).spheres[1] or {}
+      local gb_first, other_first = {}, {}
+      for _, lid in ipairs(first) do
+        if not placement[lid] and DB.locations[lid].holds ~= "filler" then
+          if DB.locations[lid].kind == "goldbolt" then gb_first[#gb_first + 1] = lid
+          else other_first[#other_first + 1] = lid end
+        end
+      end
+      rng.shuffle(gb_first); rng.shuffle(other_first)
+      local spare = worthy - #bolts
+      local function early_spot()
+        if #gb_first > 0 then return table.remove(gb_first) end
+        if spare > 0 and #other_first > 0 then spare = spare - 1; return table.remove(other_first) end
+        return nil
+      end
+      local ws = {}
+      for _, it in ipairs(items) do
+        if not registry[it.key] and category(it.key) == "weapon" and it.class ~= "progression" and G.bolt_worthy(it.key) then
+          ws[#ws + 1] = it.key
+        end
+      end
+      rng.shuffle(ws)
+      for j = 1, math.min(s.early_weapons, #ws) do
+        local lid = early_spot()
+        if not lid then break end
+        placement[lid] = ws[j]; registry[ws[j]] = "location"; early_placed = early_placed + 1
+      end
+      if s.planet_locks and s.early_weapons > 0 then
+        local cs = {}
+        for _, it in ipairs(items) do if not registry[it.key] and category(it.key) == "coordinates" then cs[#cs + 1] = it.key end end
+        if #cs > 0 then
+          local lid = early_spot()
+          if lid then
+            local key = cs[rng.below(#cs) + 1]
+            placement[lid] = key; registry[key] = "location"; early_placed = early_placed + 1
+            for j = #prog, 1, -1 do if prog[j] == key then table.remove(prog, j) end end
+          end
+        end
+      end
+    end
+
     local base = G.solve(s, pool, placement, start, nil).reachable
-    local worthy_left = worthy
+    local worthy_left = worthy - early_placed
     while #prog > 0 do
       local key = table.remove(prog)
       local assumed = {}
@@ -1336,7 +1383,13 @@ function G.generate(seed_text, user, preset, yield)
          or tostring(errors[i]):match("needs weapons") or tostring(errors[i]):match("not finishable")
          or tostring(errors[i]):match("cannot be finished") then room = room + 1 end
     end
-    if room > 0 and eff.weapon_logic ~= "none" then
+    if room > 0 and eff.hub and eff.distribution ~= "spread" and eff.early_weapons > 0 then
+      -- v0.5: the Gold Bolts the start reaches cannot hold the early items and still leave room for
+      -- the progression (few items, e.g. armor off): fewer early weapons (at 0, no early Coordinates)
+      local was = eff.early_weapons
+      eff.early_weapons = was - 1
+      warnings[#warnings + 1] = "early_weapons lowered from " .. was .. " to " .. eff.early_weapons .. ": every Gold Bolt needs an item and too few are left with these settings"
+    elseif room > 0 and eff.weapon_logic ~= "none" then
       -- too few locations for the weapons the logic asks for: ask for fewer
       local was = eff.weapon_logic
       eff.weapon_logic = (was == "standard") and "light" or "none"
@@ -1767,7 +1820,7 @@ function G.spoiler(seed)
     w("  Shatterbomb and RYNO 8 (after all 10 Spybots) stay in their own slots; ammo and upgrades as usual")
     w("  No weapon is both sold and given: a weapon at the start or at a location is never in a shop slot,")
     w("  and a slot of another vendor (ARSENAL_RESTORED's) selling such a weapon is closed by the runtime")
-    if seed.shop.prices then w("  New prices apply only once the runtime finds the game's own prices in memory (docs/SHOP.md)") end
+    if seed.shop.prices then w("  New prices apply only once the runtime finds the game's own prices in memory (TROUBLESHOOTING.md)") end
   end
   w("")
   w("ARMOR: " .. (seed.armor and "the armor pieces you can find are rewards above and below; each armor source (pocket dimension, Zurkie's challenge, the Lorb monk) gives the item listed for it instead of its own piece"

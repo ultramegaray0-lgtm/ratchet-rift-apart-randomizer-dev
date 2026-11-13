@@ -1,9 +1,24 @@
 # Changelog: Ratchet Rift Apart Randomizer
 
-## Public Release v0.5 (beta), 2026-11-13. Randomizer build 10.0.0
+## Public Release v0.5 (beta), 2026-11-13. Randomizer build 10.0.1
 
-The first public release. Gameplay is the same as the private build 10.0: same scripts, same
-generator, same seeds.
+The first public release. It is build 10.0, plus one gameplay correction and the packaging for
+other PCs. **This release has not been run on Windows 11 or in the game yet** (see README).
+
+**Gameplay: every Gold Bolt gives exactly one item**
+- The shipped settings now use `distribution = "goldbolts_first"`. Every one of the 25 Gold Bolts
+  holds exactly one item (weapon, gadget, armor piece or Coordinates), never Bolts or Raritanium.
+  In 10.0's `spread` fill, about a third of Gold Bolts gave currency.
+- 10.0's early game is kept. Hub seeds still get `early_weapons` (2) weapon rewards and one
+  Coordinates where the starting kit can reach. Gold Bolts there are used first, so they still
+  hold items. If settings are too tight for that (for example armor off with `early_weapons = 6`),
+  `early_weapons` is lowered automatically, with a note in the spoiler, instead of the seed failing.
+- Nothing else changes. Seeds with `distribution = "spread"`, and all non-hub seeds, are
+  identical to 10.0, apart from the new version number in their fingerprint.
+- Generator and kit version 10.0.1. v0.5 seeds are new seeds, so start them with New Game.
+  `rivet.log` shows `RANDO-KIT all 14 scripts are 10.0.1`.
+- The settings file, one log message and two spoiler-log lines pointed to development documents
+  that aren't in this package. They now point to `docs\PLAYER_GUIDE.md` and TROUBLESHOOTING.md.
 
 **Packaging for other PCs**
 - New player documentation: README, INSTALLATION (install, update, uninstall, save backup),
@@ -20,13 +35,13 @@ generator, same seeds.
 - `rando_give.dll` is unchanged. It is rebuilt from the included source as part of the release check,
   and the result is byte for byte the shipped file.
 
-**What the randomizer does (build 10.0)**
+**What the randomizer does (build 10.0.1)**
 - Zurkie's Battleplex hub: after the parade's wrench, choose the Prologue, the Battle Arena or
   Nefarious City.
 - Planet shuffle through Coordinates, on by default. Finishing a destination brings you back to
   the hub.
-- Rewards spread over Gold Bolts, story missions, side activities and armor pods. One reward per
-  location.
+- Every Gold Bolt gives exactly one item. Story missions, side activities and armor pods give one
+  reward each.
 - Randomized starting kit, always with the Hoverboots and the Map-O-Matic.
 - Armor in the reward pool.
 - One route per weapon: sold, in the starting kit or a reward, never two of these.

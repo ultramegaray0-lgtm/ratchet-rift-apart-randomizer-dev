@@ -7,11 +7,11 @@ each run, and a solver checks that every seed can be finished.
 
 | | |
 |---|---|
-| Release | Public Release **v0.5** (randomizer build 10.0.0) |
+| Release | Public Release **v0.5** (randomizer build 10.0.1) |
 | Game | Ratchet & Clank: Rift Apart, **Steam**, game version **v3.630.1.0** |
 | OS | Windows 10 or 11, 64-bit |
 | Needs | **rivet_hook 2.0.1** (free, separate download) and Windows PowerShell (built into Windows) |
-| Status | **Beta.** See "Before you play" below |
+| Status | **Beta, not fully tested.** See "Before you play" below |
 
 ## Before you play
 
@@ -22,6 +22,9 @@ This is an early public release. Be clear about what that means:
   writes have each been seen working in the game.
 - **The current hub mode (start at Zurkie's, choose your first planet) has not yet finished a full
   playthrough in the game.** Some parts of it have only been tested offline, against a simulator.
+- **This exact release (v0.5) has not been run on Windows 11 or in the game yet.** It was built
+  and checked offline: automated tests, tens of thousands of generated seeds, and a simulated clean
+  install. The in-game parts it uses are the same as in the tested development builds.
 - It has **not yet been tested on a second PC**. Everything that ties it to one computer has been
   removed, and the package was checked as a clean install, but other-PC reports are what this beta
   is for.
@@ -37,10 +40,11 @@ This is an early public release. Be clear about what that means:
   brought back to Zurkie's to choose the next one.
 - **Randomized starting kit.** You always get the **Hoverboots** and the **Map-O-Matic**, plus
   random weapons and a random gadget (2 and 1 by default).
-- **One location, one reward.** Each Gold Bolt, story mission, side activity and armor pod gives
-  exactly one reward: an item (weapon, gadget, armor piece or Coordinates) or, when the seed has no
-  item left for it, Bolts or Raritanium. Gold Bolts are still real Gold Bolts. The randomizer
-  never charges several Gold Bolts for one item.
+- **Every Gold Bolt gives exactly one item:** a weapon, gadget, armor piece or Coordinates, never
+  Bolts or Raritanium. Gold Bolts are still real Gold Bolts, and the randomizer never charges
+  several Gold Bolts for one item.
+- **One location, one reward.** Story missions, side activities and armor pods also give exactly
+  one reward each: an item, or Bolts or Raritanium once the seed's items are used up.
 - **Armor is in the pool.** 21 findable armor pieces are rewards.
 - **One route per weapon.** Each weapon is either for sale, in your starting kit or a reward,
   never two of these. By default Ms. Zurkon sells 8 different weapons, and her other slots are

@@ -48,9 +48,9 @@ The old F keys also work (`F6` = `]`, `F5` = `[`, `F4` = `/`). To change any key
 | | |
 |---|---|
 | **Starting kit** | Always the Hoverboots and the Map-O-Matic. Plus 2 random weapons and 1 random gadget by default; a seed short of items may start with fewer. Plus Coordinates for the three start planets (Corson V, Nefarious City and Zurkie's). You also keep the game's own fixed start (Burst Pistol). |
-| **Reward locations** | 25 Gold Bolts, the story missions, side activities (Zurkie's cups, Trudi, the Blizar chef, Ardolis) and armor pods. Each gives exactly **one** reward. |
+| **Reward locations** | 25 Gold Bolts, the story missions, side activities (Zurkie's cups, Trudi, the Blizar chef, Ardolis) and armor pods. Each gives exactly **one** reward. **Every Gold Bolt gives an item**, never currency. |
 | **Items** | Weapons, gadgets (Box Breaker, Omniglove, Glitch), 21 armor pieces, planet Coordinates. With ARSENAL_RESTORED, also its 9 weapons. |
-| **Currency** | A location the seed has no item for gives Bolts (1,000-10,000) or Raritanium (120-1,000). |
+| **Currency** | A story mission, side activity or armor pod the seed has no item left for gives Bolts (1,000-10,000) or Raritanium (120-1,000). Gold Bolts never do. |
 | **Shop** | Ms. Zurkon sells 8 different weapons from the pool, at that weapon's normal price. Her other slots are closed: they show the Burst Pistol, which you already own. |
 | **Weapons** | Each weapon has exactly one route: the shop, your start or a reward location, never two. |
 
@@ -72,9 +72,9 @@ Keys and in-game options can change at any time. A wrong value is reported in `r
 | `seed` | `"random"` | Any text, for example `"lombax-ryno-2026"`. `"random"` lets the companion pick one and remember it |
 | `preset` | `"balanced"` | `balanced`, `chaos`, `full`, `campaign` or `everything` (below) |
 | `hub` | `true` | `false`: no hub; the story starts the game's own way (prologue → Nefarious City → Sargasso) with randomized rewards |
-| `distribution` | `"spread"` | `"goldbolts_first"`: every Gold Bolt holds an item before other locations get any |
+| `distribution` | `"goldbolts_first"` | Every Gold Bolt holds exactly one item. `"spread"` (10.0's default) shares items over all kinds of location instead, so some Gold Bolts give currency |
 | `shop_weapons` | `8` | 0-15 weapons for sale. The rest become rewards |
-| `early_weapons` | `2` | 0-6 weapons placed where your starting kit can reach |
+| `early_weapons` | `2` | 0-6 weapons placed where your starting kit can reach (Gold Bolts there first), plus one Coordinates. With very tight settings it is lowered automatically, with a note in the spoiler |
 | `start_weapons` / `start_gadgets` | `2` / `1` | Random starting weapons (0-4) and gadgets (0-2) |
 | `armor` | `true` | Armor pieces as rewards |
 | `restored_weapons` | `"auto"` | ARSENAL_RESTORED's weapons: `"auto"` when the mod is found; `false` never |

@@ -14,7 +14,7 @@ import sys
 import zipfile
 
 VERSION = "0.5"
-BUILD = "10.0.0"
+BUILD = "10.0.1"
 NAME = f"Ratchet_Rift_Apart_Randomizer_v{VERSION}"
 ZIP_NAME = f"Ratchet_Rift_Apart_Randomizer_Public_Release_v{VERSION}.zip"
 DATE = (2026, 11, 13, 0, 0, 0)

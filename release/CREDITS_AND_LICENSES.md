@@ -2,7 +2,8 @@
 
 ## This mod
 
-The randomizer's own files are released under the **MIT License** (`LICENSE.txt`):
+**Author: MegaRay.** The randomizer's own files are released under the **MIT License**
+(`LICENSE.txt`, Copyright (c) 2026 MegaRay):
 
 - the 14 Lua scripts;
 - the companion and installer scripts (`.ps1`, `.bat`);
@@ -10,36 +11,48 @@ The randomizer's own files are released under the **MIT License** (`LICENSE.txt`
 - `rando_give.dll` and its source;
 - the documentation.
 
-Development was AI-assisted: most of the code and documentation was written with Anthropic's Claude,
-directed, reviewed and tested in the game by the mod author. NEXUS_PAGE_DESCRIPTION.md has the
-NexusMods disclosure.
+The MIT License lets anyone use, change and redistribute these files, as long as they keep the
+copyright and license notice.
+
+**AI disclosure.** Most of the code (Lua scripts, companion scripts, `rando_give.dll` source) and
+the documentation were generated with Anthropic's Claude, under MegaRay's direction. The research,
+design decisions and in-game testing were done by MegaRay. No AI-generated game assets, images,
+voices or audio are included.
 
 ## Required, not included
 
-| Project | Author | License | Used for |
+| Project | Author | License | Relationship |
 |---|---|---|---|
-| **rivet_hook**: https://codeberg.org/neptuwunium/rivet_hook (releases: https://github.com/neptuwunium/rivet_hook/releases) | neptuwunium | EUPL-1.2 | Runs the randomizer's Lua scripts, loads `rando_give.dll`, and provides the pipe bridge the companion uses. Not bundled: download it from its official page |
+| **rivet_hook**: https://codeberg.org/neptuwunium/rivet_hook (releases: https://github.com/neptuwunium/rivet_hook/releases) | neptuwunium | EUPL-1.2 | The mod loader the randomizer runs on. It runs the randomizer's Lua scripts through its scripting API, loads `rando_give.dll`, and provides the pipe bridge the companion uses. **Not bundled:** players download it from its official page, under its own license. No rivet_hook code is included in this package |
 
-`rando_give.dll` contains no rivet_hook code. To find the game's config asset manager, it uses the
-same byte pattern that rivet_hook uses for that purpose; that pattern is credited here.
+About `rando_give.dll` and rivet_hook: the DLL doesn't link to or contain rivet_hook code. To find the
+game's config asset manager, it searches for the same 26-byte pattern of the game's own machine code
+that rivet_hook searches for, and reads the manager's layout as rivet_hook's source documents it
+(rivet_hook `src/signature.hpp`, `src/configs.cpp`). Credit for that finding goes to neptuwunium.
 
 ## Optional, not included
 
 | Project | Notes |
 |---|---|
-| **ARSENAL_RESTORED** | A separate mod by its own author. The randomizer only detects it and adds its weapons to the pool; none of its files are included. Get it from its own page and follow its permissions |
+| **ARSENAL_RESTORED** | A separate mod by its own author. The randomizer only detects it (by one asset id) and adds its weapons to the pool. None of its files are included. Get it from its own page and follow its permissions |
 | **Overstrike**, by Tkachov | Mod manager for `.stage` mods. Only needed for the Overstrike version of ARSENAL_RESTORED |
 
-## Research and data sources
+## Research and data sources (no code or files included)
 
-- **rivet** (neptuwunium, EUPL-1.2, https://codeberg.org/neptuwunium/rivet): the engine type
-  definitions and format documentation, used during research. No rivet code is included.
-- **Overstrike** and **Ripped Apart** (chaoticgd): the archive format, the asset-id hashing and the
-  asset lists, used during research. No code from them is included.
-- Normal weapon prices, used for the default `shop_prices = "weapon"`, were taken from the
-  gamepressure.com Rift Apart guide (as factual price data).
-- Item, mission and checkpoint identifiers come from the game's own asset list. They are
-  identifiers only: no game files, models, textures, audio or text are included.
+- **rivet** (neptuwunium, EUPL-1.2, https://codeberg.org/neptuwunium/rivet): engine type
+  definitions and format documentation, used during research.
+- **Overstrike** (Tkachov) and **Ripped Apart** (chaoticgd): archive format, asset-id hashing and
+  asset lists, used during research.
+- **Factual game data from public guides:**
+  - normal weapon prices, from the gamepressure.com Rift Apart guide (used for the default
+    `shop_prices = "weapon"`);
+  - the mission order, from public walkthroughs (gamepressure, thegamer) and a public gear guide
+    (vulkk).
+  These sources were used as factual references only. No text from them is included.
+- **Identifiers from the game:** item, mission and checkpoint names and asset ids come from the
+  game's own asset list. Short byte sequences of `RiftApart.exe`'s machine code are embedded in
+  `rando_give.dll`, only so it can confirm the exact game version before it does anything. No
+  game files, models, textures, audio or text are included.
 
 ## Game
 
@@ -49,6 +62,7 @@ endorsed by any of them. You need your own copy of the game.
 
 ## Permissions for this mod
 
-- You may use it and change it for yourself, and share your changes, under the MIT License.
-- When you share it, please link to the official mod page rather than re-uploading the package.
-  That way players get updates and the bug-report thread.
+- Under the MIT License you may use, change and share this mod, including modified versions,
+  as long as you keep the copyright and license notice.
+- A request, not a condition: please link to the official mod page rather than re-uploading the
+  unchanged package. That way players get updates and the bug-report thread.

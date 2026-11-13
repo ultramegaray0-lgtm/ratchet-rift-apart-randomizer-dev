@@ -1,8 +1,8 @@
--- Rift Apart Randomizer 10.0: your seed and settings.
+-- Rift Apart Randomizer (Public Release v0.5, build 10.0.1): your seed and settings.
 -- Change, save, then restart the game (or press Pause to reload the scripts before you play).
 -- A different seed or different randomization options make a NEW seed with its own progress;
 -- start it with NEW GAME. Keys/logging can change any time.
--- Every option is explained in docs\CONFIGURATION.md. Wrong values are reported in rivet.log
+-- The main options are explained in the download's docs\PLAYER_GUIDE.md. Wrong values are reported in rivet.log
 -- (RANDO-SETTINGS) and the preset's value is used instead.
 --
 -- Always true, whatever you set:
@@ -10,29 +10,31 @@
 --     the Prologue, the Battle Arena or Nefarious City there (] next, Ctrl+] go); every other planet
 --     opens when you find its Coordinates. Finishing a destination brings you back to Zurkie's.
 --   * every Gold Bolt you pick up is a real Gold Bolt, and the randomizer adds a reward to it
+--     (v0.5: distribution = "goldbolts_first" below makes that reward always exactly one item)
 --   * you start with the Hoverboots and the Map-O-Matic
 --   * every weapon has exactly one route: a slot of Ms. Zurkon's shop, the start, or a reward
---     (docs\WEAPONS.md). A weapon you can find is never also for sale. Ammo and upgrades as usual
+--     (docs\PLAYER_GUIDE.md). A weapon you can find is never also for sale. Ammo and upgrades as usual
 --   * a mission, side activity or armor pod with no item gives Bolts or Raritanium
 --   * the solver proves every seed can be finished (in the game's own mission order too)
 --   * hub = false gives 9.0's start instead: the prologue, then Nefarious City, then Sargasso
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
 RANDO_SETTINGS = {
   seed = "random",            -- any text, e.g. "lombax-ryno-2026"; "random" = the companion picks one and remembers it
-  preset = "balanced",        -- balanced | chaos | full | campaign | everything (docs\CONFIGURATION.md)
+  preset = "balanced",        -- balanced | chaos | full | campaign | everything (docs\PLAYER_GUIDE.md)
                               --   balanced    every item system with your defaults (02's G.DEFAULTS: Coordinates
                               --               as items, planet_shuffle, weapon prices); travel is free
                               --   chaos       wide currency swings, random prices, locked levels (fewest open)
                               --   full        every item system + Coordinates as items (rewards wait for them)
                               --   campaign    LOCKED LEVELS: flying to a planet needs its Coordinates
                               --   everything  locked levels + random prices + start currency + more currency
-                              -- experimental mission order (docs\CAMPAIGN.md): planet_shuffle | mission_shuffle |
+                              -- experimental mission order: planet_shuffle | mission_shuffle |
                               --   full_campaign | campaign_chaos (played in the game's own order until verified;
                               --   9.0: every order starts with the prologue, Nefarious City, Sargasso)
 
   -- 10.0 (leave a line out to use the default shown)
   -- hub = true,                       -- Zurkie's hub + planet shuffle (false: 9.0's story start)
-  -- distribution = "spread",          -- spread: items over Gold Bolts, missions, side activities and armor pods
+  distribution = "goldbolts_first",    -- v0.5: every Gold Bolt gives exactly one item (never Bolts/Raritanium);
+                                       -- "spread": items over Gold Bolts, missions, side activities and armor pods
                                        -- goldbolts_first: 4.0-9.0 (every Gold Bolt an item, the rest mostly currency)
   -- shop_weapons = 8,                 -- 0-15 different weapons Ms. Zurkon sells; her other slots are closed and
                                        -- those weapons become rewards instead
@@ -101,7 +103,7 @@ RANDO_SETTINGS = {
                                      -- the seed's other shop weapons are then given to you directly)
   levels_runtime = true,             -- levels: send you back from a locked planet (false: its rewards wait instead)
   new_game_reset = true,             -- New Game starts the seed's randomizer progress over
-  -- 8.2 TEST TRAVEL (docs\TEST_TRAVEL.md): go to any planet, whatever Coordinates you hold. A testing aid,
+  -- 8.2 TEST TRAVEL: go to any planet, whatever Coordinates you hold. A testing aid,
   -- OFF for a real playthrough (8.4); set it to true to use it (written into the history as [TEST TRAVEL]).
   test_travel = false,               -- true: the keys below work, and nothing sends you back from a planet
                                      -- (9.0: a test trip only moves you; it starts no story)

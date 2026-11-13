@@ -43,10 +43,10 @@
 --   guide  public walkthrough (gamepressure mission list, vulkk gear guide); NOT verified in the
 --          game files. The research kit (companion/research/Research-Campaign.bat) replaces these
 --          with the real names; tools/build_campaign_registry.py merges them.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["03_rando_campaign"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
 RANDO_CAMPAIGN = {}
 local C = RANDO_CAMPAIGN
-C.VERSION = "10.0.0"
+C.VERSION = "10.0.1"
 
 -- story abilities: no item config exists, so only the story itself hands them out
 C.STORY_ABILITIES = { phantom_dash = true, hurlshot = true, speetle = true, dragon_mount = true, wallrun = true }
@@ -336,7 +336,7 @@ function C.describe(order)
   for i, id in ipairs(order) do if C.SEGMENTS[i].id ~= id then vanilla = false end end
   if not vanilla then
     L[#L + 1] = "  The order is followed only when the runtime's mission control is verified in your game"
-    L[#L + 1] = "  (docs/CAMPAIGN.md). Until then you play the game's own order with these rewards; the seed"
+    L[#L + 1] = "  (experimental). Until then you play the game's own order with these rewards; the seed"
     L[#L + 1] = "  is checked to be finishable in that order too."
   end
   return table.concat(L, "\n")

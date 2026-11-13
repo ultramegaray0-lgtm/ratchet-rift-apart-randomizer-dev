@@ -1,6 +1,6 @@
-Rift Apart Randomizer 10.0 - test run 2026-11-13 09:43 UTC
+Rift Apart Randomizer 10.0 - test run 2026-11-13 11:00 UTC
 Python 3.13.18 on Linux
-ran 332, failures 0, errors 0, skipped 17
+ran 340, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -216,6 +216,14 @@ test_batch_command (tests.test_tools.CliTests.test_batch_command) ... ok
 test_generate_twice_in_separate_processes (tests.test_tools.CliTests.test_generate_twice_in_separate_processes) ... ok
 test_round13_log (tests.test_tools.SummarizeLogTests.test_round13_log) ... ok
 test_simulated_session (tests.test_tools.SummarizeLogTests.test_simulated_session) ... ok
+test_early_weapons_zero_places_none_on_purpose (tests.test_v05.KitSettingsTests.test_early_weapons_zero_places_none_on_purpose) ... ok
+test_every_gold_bolt_is_an_item_with_the_kit_settings (tests.test_v05.KitSettingsTests.test_every_gold_bolt_is_an_item_with_the_kit_settings) ... ok
+test_every_preset (tests.test_v05.KitSettingsTests.test_every_preset) ... ok
+test_kit_sets_goldbolts_first (tests.test_v05.KitSettingsTests.test_kit_sets_goldbolts_first) ... ok
+test_tight_settings_lower_early_weapons_instead_of_failing (tests.test_v05.KitSettingsTests.test_tight_settings_lower_early_weapons_instead_of_failing) ... ok
+test_hub_false_with_kit_settings_identical (tests.test_v05.UnchangedFrom10Tests.test_hub_false_with_kit_settings_identical) ... ok
+test_non_hub_goldbolts_first_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_non_hub_goldbolts_first_seeds_identical) ... ok
+test_spread_hub_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_spread_hub_seeds_identical) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -355,6 +363,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 332 tests in 111.659s
+Ran 340 tests in 225.093s
 
 OK (skipped=17)

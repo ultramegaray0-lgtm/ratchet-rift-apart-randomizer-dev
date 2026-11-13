@@ -39,11 +39,11 @@
 --      opens with its planet's Coordinates (15_rando_hub.lua). hub = false: the 9.0 story start.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.0"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.1"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.0"
+R.KIT_VERSION = "10.0.1"
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -1131,7 +1131,7 @@ function R.kit_check()
     if f == "04_rando_settings" then
       if v ~= R.KIT_VERSION then
         log("RANDO-KIT 04_rando_settings.lua is from an older kit (" .. tostring(v or "before 8.4") ..
-            "): options it does not list use their defaults (docs\\CONFIGURATION.md)")
+            "): options it does not list use their defaults (docs\\PLAYER_GUIDE.md)")
       end
     elseif v == nil then missing[#missing + 1] = f
     elseif v ~= R.KIT_VERSION then other[#other + 1] = f .. " " .. tostring(v) end
