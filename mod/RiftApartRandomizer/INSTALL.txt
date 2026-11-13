@@ -16,7 +16,7 @@ and how.
 Play on a SPARE save slot and back up your saves first.
 
 BEFORE YOU START
-  1. Back up your saves: Documents\Ratchet & Clank Rift Apart (copy the folder somewhere safe).
+  1. Back up your saves: Documents\Ratchet & Clank - Rift Apart (copy the folder somewhere safe).
   2. rivet_hook 2.0.x must be installed (hid.dll + rivet_hook.dll next to RiftApart.exe).
   3. ARSENAL_RESTORED (optional), either version:
        - Overstrike version: keep it installed through Overstrike.

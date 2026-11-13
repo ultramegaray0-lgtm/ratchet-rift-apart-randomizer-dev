@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Rift Apart Randomizer 9.0 companion: saves and restores randomizer progress, remembers a
+  Rift Apart Randomizer companion (10.0): saves and restores randomizer progress, remembers a
   random seed, writes the spoiler log, and tells the game whether ARSENAL_RESTORED is installed.
 
 .DESCRIPTION
@@ -98,7 +98,7 @@ function Invoke-Lua([string]$chunk) {
 function Get-Status {
     $s = Invoke-Lua "return rando_bridge_status()"
     $p = $s.Split("|")
-    if ($p.Length -eq 6) { throw "the game runs randomizer 1.x scripts - install the 9.0 scripts" }
+    if ($p.Length -eq 6) { throw "the game runs randomizer 1.x scripts - install this kit's scripts (scripts\*_rando_*.lua)" }
     if ($p.Length -ne 8) { throw "unexpected status '$s'" }
     return [pscustomobject]@{ Fingerprint = $p[0]; Boot = $p[1]; Version = [int]$p[2]
                               Restored = ($p[3] -eq "1"); Length = [int]$p[4]; Chunks = [int]$p[5]
@@ -330,7 +330,7 @@ function Restore-State($st) {
     }
 }
 
-Write-Line "Rift Apart randomizer 9.0 companion - saves to $SaveDir"
+Write-Line "Rift Apart randomizer companion (10.0) - saves to $SaveDir"
 $lastBoot = ""; $lastVersion = -1; $waiting = $false; $count = 0
 while ($true) {
     try {

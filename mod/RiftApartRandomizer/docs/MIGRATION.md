@@ -189,7 +189,7 @@ Your 2.0 run is not lost:
 
 ## Steps
 
-1. Back up `Documents\Ratchet & Clank Rift Apart`.
+1. Back up `Documents\Ratchet & Clank - Rift Apart`.
 2. In `<game>\scripts`, delete all randomizer `.lua` files (`00_` to `11_` `*rando*`).
 3. Copy the 3.0 `scripts` folder contents (9 files: `01`-`06` and `09`-`11`, see INSTALL.txt). `rando_give.dll` is unchanged. The 3.0 companion replaces the 2.0 one, and its save format is the same.
 4. Choose a seed and preset in `04_rando_settings.lua`, start the companion, then **New Game** in a free slot.
@@ -221,7 +221,7 @@ Your 1.4 run is not lost:
 
 ## Steps
 
-1. Back up `Documents\Ratchet & Clank Rift Apart`.
+1. Back up `Documents\Ratchet & Clank - Rift Apart`.
 2. In `<game>\scripts`, delete all randomizer `.lua` files (`00_`, `04_`-`10_` from 1.x).
 3. Install 2.0 (INSTALL.txt). Copy the 2.0 companion to its own folder. It refuses 1.x scripts with a clear message.
 4. In the game, start a **New Game** in a free save slot, then play.

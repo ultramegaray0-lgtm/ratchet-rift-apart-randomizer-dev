@@ -13,7 +13,7 @@ earlier progress files stay in `companion\randomizer_saves` and are never touche
 
 ## Once
 
-1. Back up `Documents\Ratchet & Clank Rift Apart`.
+1. Back up `Documents\Ratchet & Clank - Rift Apart`.
 2. Install the kit (INSTALL.txt): 13 scripts, `rivet.toml`, `rando_give.dll` (v6), the
    `companion` folder.
 3. In `<game>\scripts\04_rando_settings.lua` choose:

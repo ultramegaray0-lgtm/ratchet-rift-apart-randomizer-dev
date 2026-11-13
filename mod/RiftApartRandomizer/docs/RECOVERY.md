@@ -27,7 +27,7 @@ ARSENAL_RESTORED is installed through Overstrike and is separate: uninstall it t
 
 Weapons and gadgets the randomizer added are now part of that save, like items bought from a vendor. To go
 back to the state before the randomizer, restore the copy of
-`Documents\Ratchet & Clank Rift Apart` you made before installing (INSTALL.txt, "BEFORE YOU
+`Documents\Ratchet & Clank - Rift Apart` you made before installing (INSTALL.txt, "BEFORE YOU
 START"). Close the game first.
 
 ## Randomizer progress only

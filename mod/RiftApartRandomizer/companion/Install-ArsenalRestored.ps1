@@ -19,7 +19,7 @@
   seed's pool: the companion finds the mod through rivet.toml.
 
 .EXAMPLE
-  Install-ArsenalRestored.bat "C:\Downloads\ARSENAL RESTORED 5.7 Beta (RIVET HOOK VERSION).zip"
+  Install-ArsenalRestored.bat "<your downloads folder>\ARSENAL RESTORED 5.7 Beta (RIVET HOOK VERSION).zip"
 #>
 param(
     [string]$Source = "",
