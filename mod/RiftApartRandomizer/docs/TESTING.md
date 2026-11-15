@@ -1,4 +1,4 @@
-# Testing (Randomizer 10.0, Public Release v0.52)
+# Testing (Randomizer 10.0, Public Release v0.52; dev 10.11)
 
 Results come in four kinds, and a pass in one is never evidence for another. VERIFICATION_REPORT.md
 sorts every feature into them. This page covers how the tests run and what to check in your
@@ -6,13 +6,14 @@ first full playthrough.
 
 ## 1. Automated tests (this build)
 
-`python run_tests.py`: **371 tests, 0 failures, 0 errors, 17 skipped** (TEST_RESULTS.txt; v0.52 adds tests/test_v052.py, 15).
+`python run_tests.py`: **449 tests, 0 failures, 0 errors, 21 skipped** (TEST_RESULTS.txt; dev 10.11 adds tests/test_v1011.py, 20).
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
 - 8 need the 5.0 and 6.0 git commits, which are not in this repository.
 
 | Suite | Tests | What it covers |
 |---|---|---|
+| **test_v1011** | 20 | dev 10.11: Coordinates never on revisits and always opening a playable first visit (an independent Python check of the rules, both fills, your settings, fewer locations), the audit catching both, the switch; open planets' visits made active between stories (never while a story runs, never on your planet); a primed landing loads nothing; a landing started there loads the intro (Blizar's destroyed pad); a stuck first step reloaded at the intro; Viceron before Torren IV sent back with the reason; first visits listed first; the game's trip to an open Sargasso played |
 | **test_v90** | 20 | 9.0: no hub; retired presets and settings; every mode starts prologue > Nefarious City > Sargasso; your 9.0 and 8.5.2 settings files; a New Game played to Sargasso with no warp, flight, mission write or hero swap; a leftover hub script reported and inert; locked levels still send you back |
 | test_generator, test_registry | 39 | seeds, items, prices, currency, the weapon registry, mutation tests (the checkers catch broken seeds) |
 | test_campaign, test_levels | 48 | campaign and level-lock replays (9.0's fixed start), mission control, the director |
@@ -26,6 +27,29 @@ The skipped tests:
 The older suites pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
+
+## 2-dev. Dev 10.11 (kit 10.0.7): new planets start at their intro
+
+A new seed (generator 10.11.0): start with **New Game**, planet shuffle on (`0`).
+
+1. **Install check.** `RANDO-KIT all 12 required scripts are 10.0.7`; the banner reads
+   `Randomizer dev 10.11 (kit 10.0.7)`.
+2. **After Nefarious City's story** (or at the hub when it is done): `making the next visit of N
+   open planet(s) active` and `prime <visit>: start MIS_... (Available -> Active)` lines. No warp,
+   no hero swap.
+3. **Coordinates found (the key test).** "X is open: ..." on screen. Fly there with the ship's
+   planet menu. Does the planet's **intro** play and the first mission start? Logged: `planet menu:
+   landed on X at <checkpoint>` and either `... was active before the landing - its arrival is the
+   game's own; nothing loaded` or a warp `travel: warp to <intro> ... (its intro)`. Then the story's
+   `objective MIS_... OBJ_..._GO_TO_...` should turn 2 (done). Please note which checkpoint the
+   game landed at (`RANDO-CHECKPOINT` right after the landing).
+4. **A planet whose first visit is not open yet.** A planet shown as "its first visit needs ...
+   first" sends you back from the planet menu with that reason. (Viceron's Coordinates now come from
+   Torren IV's story, so this should be rare.)
+5. **The `]` list** (dev keys only): first visits before revisits; no "revisit" entry for a planet
+   whose first visit is still to come.
+6. **Nefarious City's end** with Sargasso's Coordinates held: the game's own trip to Sargasso is
+   played (`its first visit is open: hub_follow_new`); without them it is undone as before.
 
 ## 2. Round 27: v0.54 (build 10.0.5)
 

@@ -156,7 +156,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertIsNone(G.PRESETS["hub"])
         self.assertIsNone(G.PRESETS["hub_chaos"])
         self.assertIsNone(self.eng.lua.globals().RANDO_CAMPAIGN.hub_plan)   # the 8.x plan builder is gone
-        self.assertEqual(G.VERSION, "10.1.0")
+        self.assertEqual(G.VERSION, "10.11.0")
         s = self.gen("v90-nohub")
         self.assertIsNone(s.get("hub"))
         self.assertEqual(s["campaign"]["order"][:3], STORY_START)
@@ -264,13 +264,13 @@ class KitTests(unittest.TestCase):
         self.assertIn("15_rando_hub.lua", names)           # optional, but part of the release
         self.assertEqual(len(names), 13, names)
         for p in SCRIPTS.glob("*.lua"):
-            self.assertIn('"] = "10.0.6"', p.read_text(encoding="utf-8"), p.name)   # every RANDO_FILES tag, dev files too
+            self.assertIn('"] = "10.0.7"', p.read_text(encoding="utf-8"), p.name)   # every RANDO_FILES tag, dev files too
 
     def test_kit_check_passes(self):
         g = Game()
         self.assertEqual(g.load_errors, [])
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.6"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.7"), [l for l in g.logs() if "KIT" in l])
 
     def test_hub_keys_do_nothing_without_a_hub(self):
         g = Game()

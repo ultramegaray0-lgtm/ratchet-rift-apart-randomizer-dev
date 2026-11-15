@@ -25,6 +25,18 @@ This is the player guide for 10.0's default mode (`hub = true`). The technical n
 > inventory is sent again; `Ctrl+0` twice does it by hand. A load on another planet is no longer
 > taken for the game's own story travel in a later session (round 26). See CHANGELOG.md, 10.0.5.
 
+> **Dev 10.11 (kit 10.0.7, generator 10.11.0): a new planet starts at its intro.** When Coordinates
+> arrive (and whenever no story runs: at the hub, after a finish), the next visit of every open
+> planet is made active, as the game does when a visit ends; the ship's flight then lands the way the
+> game's own arrival does and the first mission starts there, with nothing loaded again. A landing
+> whose story was not active yet starts it and loads the visit's **intro** (Savali:
+> CHK_SAV_01_LANDING, Blizar: the destroyed pad, Sargasso: its arrival scene by hash, ...). A planet
+> whose first visit still waits for another visit (Viceron before Torren IV's Hurlshot) sends you
+> back with the reason and is never offered as a revisit; `]` lists first visits before revisits.
+> The game's own trip to a planet whose first visit is open (Nefarious City's end → Sargasso) is
+> played there. Seeds: Coordinates are never on a revisit or the finale, and always where their
+> planet's first visit can be played at once (Viceron's at Torren IV's story). See CHANGELOG.md.
+
 **Nothing of 10.0 has run in your game yet.** `VERIFICATION_REPORT.md` separates what your logs have
 shown from what has only passed offline tests.
 

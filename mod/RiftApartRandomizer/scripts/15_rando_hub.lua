@@ -33,14 +33,25 @@
 --     that destination's start for the next run (14_rando_travel.lua names the checkpoints).
 --  7. INVENTORY. After the hub's own trips, if the load reports fewer than half of your weapons,
 --     every item the randomizer knows you own is sent again (restore_inventory).
+--  8. dev 10.11 NEW PLANETS START AT THEIR INTRO. Between stories (at the hub, after a finish, when
+--     Coordinates arrive) the next visit of every open planet you are not on is made active, as the
+--     game itself does when a visit ends (round 17: MIS_SAV_01 and MIS_BLIZAR 0 -> 2 at the end of
+--     Zurkie's first visit, before the planet menu was used): the ship's flight then lands the way the
+--     game's own arrival does, at the visit's intro, and nothing is loaded again. A landing whose
+--     story was not active yet starts it and loads the visit's intro on that planet (03 C.SEGMENTS
+--     intros, C.OPENINGS). A first visit is always loaded at its intro while its story has not left
+--     its first step. A planet whose first visit cannot be played yet (it waits for another visit:
+--     Viceron for Torren IV's Hurlshot) is never a "revisit": the planet menu sends you back with the
+--     reason. The ] list offers first visits before revisits. The game's own story travel to a planet
+--     whose first visit is open is played there (hub_follow_new), not undone.
 -- Frame guards (after a finish, after the hub start) count frames of this session only.
 -- The developer keys (] [ /) are bound by dev(keys).lua; this file only provides their actions.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.6"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.7"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "10.0.6"
+H.VERSION = "10.0.7"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -88,12 +99,15 @@ H.INTRO_FALLBACK = { "CHK_MALINON_INTRO_DEFAULT" }   -- listed by your game (rou
 H.OPENING_WAIT = 900        -- v0.52: frames the hub waits for an opening checkpoint's name (the catalog)
 H.OPENING_POLL = 30         -- v0.52: how often it looks while waiting
 H.OPENING_STUCK_WAIT = 3600 -- v0.52: after a load at an opening, frames before a story still at "go to" is loaded again
+H.INTRO_STUCK_WAIT = 3600   -- dev 10.11: the same after a load at a visit's intro or a planet-menu landing
+H.PRIME_DELAY = 30          -- dev 10.11: frames after a scene settles before open planets are made active
 
 H.frame = 0
 H.session = H.session or { new_game = nil, wrench = nil, started = {}, reloaded = {} }
 H.session.started = H.session.started or {}
 H.session.reloaded = H.session.reloaded or {}
 H.session.busy = H.session.busy or {}   -- v0.51: parade objectives running a scripted sequence
+H.session.primed = H.session.primed or {}   -- dev 10.11: destination id -> frame its mission was made active
 H.expect = nil              -- our own trip in flight: { planet, dest, at, how, cp, why }
 H.menu = nil                -- the last planet-menu choice: { planet, dest, at }
 H.pending = nil             -- deferred actions: { at, fn, why }
@@ -180,7 +194,42 @@ function H.available()
   if not (p and h and s) then return {} end
   return C.hub_available(p, h.done, s.access or {}, owns)
 end
+-- dev 10.11: a planet's first visit when it is not done and cannot be played now: d, why. Such a
+-- planet is never offered as a revisit (its Coordinates came before what its first visit waits for).
+function H.first_visit_block(pid)
+  local p, h, s = H.plan(), H.state(), S()
+  if not (p and h and s) then return nil end
+  local first
+  for _, d in ipairs(p.destinations) do
+    if d.planet == pid and d.kind ~= "intro" and d.kind ~= "finale" and (not first or (d.visit or 1) < (first.visit or 1)) then first = d end
+  end
+  if not first or h.done[first.id] then return nil end
+  for _, id in ipairs(H.available()) do if id == first.id then return nil end end
+  local why = C.hub_why and C.hub_why(p, first, h.done, s.access or {}, owns) or nil
+  return first, why or "it is not open"
+end
+-- a reason from C.hub_playable in words ("needs hurlshot" -> "the Hurlshot from the story on Torren IV")
+function H.reason_text(why)
+  why = tostring(why or "")
+  local ab = why:match("^needs ([%w_]+)$")
+  if ab and C.granters then
+    local g = C.granters(ab)[1]
+    local seg = g and C.BY_ID[g]
+    local nice = ab:gsub("_", " "):gsub("(%a)([%w]*)", function(a, b) return a:upper() .. b end)
+    if seg then return "the " .. nice .. " from the story on " .. pname(seg.planet) end
+    return "the " .. nice
+  end
+  local after = why:match("^after ([%w_]+)$")
+  if after then
+    local d = dest_by_id(after)
+    return d and (pname(d.planet) .. ": " .. (d.title or d.id)) .. " done" or after
+  end
+  local it = why:match("^needs (.+)$")
+  if it and RANDO and RANDO.item_name then return RANDO.item_name(it) end
+  return why
+end
 -- open planets whose destinations are all done or not open yet: offered to look around
+-- (dev 10.11: never a planet whose first visit is still to come)
 function H.revisits()
   local p, h, s = H.plan(), H.state(), S()
   local out, seen = {}, {}
@@ -189,7 +238,7 @@ function H.revisits()
   for _, id in ipairs(H.available()) do playable[dest_by_id(id).planet] = true end
   for _, pl in ipairs(DB.planets) do
     local pid = pl.id
-    if s.access[pid] and not playable[pid] and pid ~= p.planet and not seen[pid] then
+    if s.access[pid] and not playable[pid] and pid ~= p.planet and not seen[pid] and not H.first_visit_block(pid) then
       seen[pid] = true
       out[#out + 1] = pid
     end
@@ -330,6 +379,7 @@ function H.new_game()
   H.session.started, H.session.reloaded, H.session.started_frame = {}, {}, nil
   H.session.finished_frame = nil                       -- v0.54: this session's last finish
   H.session.opening_loaded = {}
+  H.session.primed = {}                               -- dev 10.11
   H.session.world = { travel = false, levels = {} }   -- a new game clears both (v0.53)
   local h = H.state()
   if h then h.phase = "pre" end
@@ -490,6 +540,7 @@ function H.at_hub(how)
   changed()
   H.after(H.SETTLE, function() H.apply_world("at the hub") end, "at the hub")
   if not h.prologue_ended then H.after(H.SETTLE, function() H.prologue_check() end, "prologue") end
+  H.prime_later("at the hub")
 end
 
 -- ---------------------------------------------------------------------------------------------
@@ -716,6 +767,93 @@ function H.activate(d, cb)
 end
 
 -- ---------------------------------------------------------------------------------------------
+-- dev 10.11 open planets' next visits made active between stories
+-- ---------------------------------------------------------------------------------------------
+-- The game itself makes the next visits active when a visit ends, before you choose one in the
+-- ship's planet menu (round 17 lines 1019-1028: MIS_SAV_01 and MIS_BLIZAR 0 -> 2 at the end of
+-- Zurkie's first visit; round 16: MIS_ZURK_01_VISIT_01 0 -> 2 at the end of Sargasso's). The planet
+-- menu then lands at the visit's own arrival (round 17: CHK_SAV_01_LANDING,
+-- CHK_BLIZAR_B_LANDINGPAD_DESTROYED). The hub does the same for every planet whose Coordinates you
+-- hold: no hero swap, no travel, never a visit of the planet you are on, never while a story runs.
+function H.prime_candidates()
+  local p, s = H.plan(), S()
+  local out = {}
+  if not (p and s) then return out end
+  for _, pl in ipairs(DB.planets) do
+    local pid = pl.id
+    if pid ~= p.planet and pid ~= s.current_planet and s.access and s.access[pid] then
+      local d = H.playable_on(pid)
+      if d and d.kind ~= "intro" then out[#out + 1] = d end
+    end
+  end
+  return out
+end
+-- make d's next mission active: inactive -> available -> start; available -> start; cb(ok, how)
+function H.prime_one(d, why, cb)
+  cb = cb or function() end
+  local dd = D()
+  if not (dd and dd.native_ok and dd.native_ok("query") and dd.native_ok("set_state")) then return cb(false, "mission calls are not available") end
+  H.session.primed[d.id] = H.frame
+  dd.refresh(d.missions or {}, function(answers)
+    local m = next_mission(d, answers)
+    if not m then log("prime", d.id .. ": nothing to make active (" .. tostring(why) .. ")"); return cb(false, "nothing to start") end
+    if m.state == 2 then log("prime", d.id .. ":", m.name, "already active (" .. tostring(why) .. ")"); return cb(true, "already active") end
+    local function start()
+      call("start", m.name, function(r)
+        log("prime", d.id .. ": start", m.name, describe(r), "(" .. tostring(why) .. ")")
+        cb(r.code == 11 and r.after == 2, describe(r))
+      end)
+    end
+    if m.state == 1 then return start() end
+    if m.state == 0 and cfg("hub_force_missions", true) then
+      return call("set_state", m.name, function(w)
+        log("prime", d.id .. ": made available", m.name, describe(w))
+        if w.code == 11 and w.after == 1 then return start() end
+        cb(false, describe(w))
+      end, 1)
+    end
+    log("prime", d.id .. ":", m.name, "is", dd.STATE_NAMES[m.state] or tostring(m.state), "- left as it is")
+    cb(false, "it is " .. tostring(m.state))
+  end)
+end
+-- every open planet's next visit, once per session; returns how many were asked
+function H.prime_open(why)
+  if not (cfg("hub_prime_open", true) and H.enabled()) then return 0 end
+  local h = H.state()
+  if not (h and h.started) or H.running() or H.launch or H.ladder or H.expect then return 0 end
+  local n, ids = 0, {}
+  for _, d in ipairs(H.prime_candidates()) do
+    if not H.session.primed[d.id] then
+      n = n + 1
+      ids[#ids + 1] = d.id
+      H.prime_one(d, why)
+    end
+  end
+  if n > 0 then log("making the next visit of", n, "open planet(s) active (" .. tostring(why) .. "):", table.concat(ids, ", "),
+                    "- the ship's flight lands at their intro") end
+  return n
+end
+function H.prime_later(why) H.after(H.SETTLE + H.PRIME_DELAY, function() H.prime_open(why) end, "prime: " .. tostring(why)) end
+
+-- Coordinates received (10_rando_runtime.lua grant): say what opens, and make it active between stories
+function H.on_access(pid)
+  local p, h = H.plan(), H.state()
+  if not (p and h and h.started and H.enabled()) then return end
+  local d = H.playable_on(pid)
+  local fv, why = nil, nil
+  if not d then fv, why = H.first_visit_block(pid) end
+  H.after(240, function()
+    if d then
+      say(string.format("%s is open: %s", pname(pid), d.label or d.title or d.id),
+          { type = "planet", sub = "Fly there with the ship's planet menu - its story starts at the planet's intro", duration = 8 })
+    elseif fv then
+      say(string.format("%s: its first visit needs %s first", pname(pid), H.reason_text(why)), { type = "planet", duration = 8 })
+    end
+  end, "announce " .. pid)
+  if d then H.prime_later("Coordinates for " .. pid) end
+end
+
+-- ---------------------------------------------------------------------------------------------
 -- v0.52 a visit's opening scene (03_rando_campaign.lua C.OPENINGS)
 -- ---------------------------------------------------------------------------------------------
 function H.opening_of(d) return d and C.OPENINGS and C.OPENINGS[d.id] or nil end
@@ -807,8 +945,22 @@ function H.open_with(d, cb)
   end)
 end
 
--- where to load a destination: its own start (registry or learned), the prologue's parade
--- checkpoint, else its landing. Returns cp, how, is_start
+-- dev 10.11: a visit's intro checkpoints (the seed's plan, else the registry; 03 C.SEGMENTS intros)
+function H.intros_of(d)
+  if d and type(d.intros) == "table" and #d.intros > 0 then return d.intros end
+  local seg = d and C.BY_ID and C.BY_ID[d.id]
+  return (seg and seg.intros) or {}
+end
+-- has d's story not left its first step? (no step reported yet, or a "go to <planet>" step)
+function H.at_first_step(d)
+  local h = H.state()
+  local m = (d.missions or {})[1]
+  if not (h and m) then return true end
+  return h.obj[m] == nil or H.waiting_goto(m)
+end
+-- where to load a destination: (dev 10.11) a visit's intro while its story has not left its first
+-- step, its own start (registry or learned), the prologue's parade checkpoint, else its landing.
+-- Returns cp, how, is_start
 function H.load_point(d)
   local h = H.state()
   if d.kind == "intro" then
@@ -817,14 +969,21 @@ function H.load_point(d)
     if cp then return cp, "where the parade was left", true end
     return H.INTRO_FALLBACK[1], "the prologue's default (no parade checkpoint seen)", true
   end
+  if cfg("hub_planet_intro", true) and d.kind ~= "hub" and H.at_first_step(d) then
+    local intro = H.intros_of(d)[1]
+    if intro then return intro, "its intro", true end
+  end
   local cp, how = H.start_of(d)
   if cp then return cp, how, true end
   cp, how = H.landing_for(d)
   return cp, how, false
 end
 
--- Ctrl+]: launch destination d (from anywhere)
-function H.launch_dest(d, why)
+-- Ctrl+]: launch destination d (from anywhere). dev 10.11: opts.landed = you are already on d's
+-- planet (the ship's planet menu, the game's own travel): a story that was active before the landing
+-- is left to play the game's own arrival; one started now loads the visit's intro on this planet.
+function H.launch_dest(d, why, opts)
+  opts = opts or {}
   local h = H.state()
   if H.launch then return say("Randomizer: getting " .. tostring(H.launch.id) .. " ready...", { type = "corner", duration = 3 }) end
   H.return_at, H.order_kept = nil, nil
@@ -863,6 +1022,15 @@ function H.launch_dest(d, why)
       end
       if result == "running" and mission then H.watch_story(d, mission, cp) end
     end
+    if result == "running" and opts.landed and S().current_planet == d.planet and how == "already active" then
+      -- the mission was active before the flight (made active between stories, or by the game):
+      -- the landing was the game's own arrival, so nothing is loaded again
+      H.launch = nil
+      log(d.id .. ":", mission, "was active before the landing - its arrival is the game's own; nothing loaded")
+      say(string.format("%s: %s", pname(d.planet), d.label or d.title or d.id), { type = "planet", sub = "Randomized destination - its story starts here", duration = 6 })
+      H.watch_story(d, mission, nil)
+      return
+    end
     if result == "running" then
       H.open_with(d, function() H.with_load_point(d, travel) end)
     else
@@ -883,7 +1051,11 @@ function H.watch_story(d, name, cp)
   local opening = H.opening_of(d)
   local at_opening = opening and opening.hash and type(cp) == "string" and RANDO_TRAVEL and RANDO_TRAVEL.hash
                      and RANDO_TRAVEL.hash(cp) == opening.hash
-  H.after(at_opening and H.OPENING_STUCK_WAIT or H.STUCK_WAIT, function()
+  -- dev 10.11: an intro, or the game's own arrival (cp = nil: a planet-menu landing), is given as long
+  local intros = H.intros_of(d)
+  local at_intro = cp == nil or (cp ~= nil and cp == intros[1])
+  local wait = (at_opening and H.OPENING_STUCK_WAIT) or (at_intro and H.INTRO_STUCK_WAIT) or H.STUCK_WAIT
+  H.after(wait, function()
     if H.watching[d.id] ~= token then return end
     H.watching[d.id] = nil
     local h = H.state()
@@ -902,12 +1074,19 @@ function H.watch_story(d, name, cp)
       return
     end
     H.session.reloaded[d.id] = H.frame
-    -- the other load point when there is one (start <-> landing); v0.52: an opening is loaded again
+    -- the other load point when there is one (start <-> landing); v0.52: an opening is loaded again;
+    -- dev 10.11: after the game's own arrival the visit's intro (or its opening), after the intro the
+    -- other intro point
     local alt = cp
     local land = H.landing_for(d)
     local start = H.start_of(d)
     if at_opening then alt = cp
+    elseif cp == nil then
+      local ocp = H.opening_wanted(d) and H.opening_cp(d)
+      alt = ocp or H.load_point(d)
+    elseif at_intro then alt = intros[2] or intros[1]
     elseif cp == start and land then alt = land elseif start and cp ~= start then alt = start end
+    if not alt then log("story", name, "still at", last.o, "- no checkpoint known to load it again"); return end
     log("story", name, "still at", last.o, "- loading", alt, "once more")
     history(string.format("[STORY RELOAD] %s at %s", d.id, tostring(alt)))
     H.ensure_hero(d.hero, function() H.go(d.planet, alt, d, false, "reload " .. d.id) end, "reload " .. d.id)
@@ -1047,6 +1226,8 @@ function H.finish(d, how, quiet)
     log("destination", d.id, "closed by the hub:", how)
     return true
   end
+  -- dev 10.11: what is open now is made active for the ship's flight (as the game does at a visit's end)
+  if H.enabled() then H.prime_later(d.id .. " finished") end
   local msg = string.format("Destination complete (%d/%d)%s", h.n_done, #p.destinations,
                             #fresh > 0 and string.format(" - %d new destination(s) open", #fresh) or "")
   -- v0.54: a frame of THIS session (h.finished_at was saved, and a later session's frames start at
@@ -1158,11 +1339,12 @@ local function test_travel_on()
 end
 -- the next playable destination on a planet
 function H.playable_on(pid)
+  local best
   for _, id in ipairs(H.available()) do
     local d = dest_by_id(id)
-    if d.planet == pid and d.kind ~= "hub" then return d end
+    if d.planet == pid and d.kind ~= "hub" and (not best or (d.visit or 1) < (best.visit or 1)) then best = d end
   end
-  return nil
+  return best
 end
 
 -- v0.54: the inventory is looked at after every trip of the hub's own (09_rando_real.lua)
@@ -1233,12 +1415,25 @@ function H.on_arrival(pid, from)
     if s.access[pid] then
       if RANDO_TRAVEL and RANDO_TRAVEL.remember then RANDO_TRAVEL.remember(pid, m.dest) end
       local d = H.playable_on(pid)
+      local fv, why
+      if not d then fv, why = H.first_visit_block(pid) end
       if d then
-        log("planet menu: landed on", pid, "- launching", d.id)
-        H.after(H.SETTLE, function() H.launch_dest(d, "planet menu") end, "menu launch " .. d.id)
+        -- dev 10.11: its story starts here (left to the game's own arrival when it was active before)
+        log("planet menu: landed on", pid, "at", tostring(m.dest), "- starting", d.id)
+        h.phase, h.current = "away", d.id
+        changed()
+        H.after(H.SETTLE, function() H.launch_dest(d, "planet menu", { landed = true }) end, "menu launch " .. d.id)
+      elseif fv and cfg("hub_blocked_home", true) then
+        -- dev 10.11: a first visit still to come is never played as a revisit
+        log("planet menu: landed on", pid, "-", fv.id, "cannot be played yet (" .. tostring(why) .. ") - back to the hub")
+        say(string.format("Randomizer: %s's first visit needs %s first - back to %s", pname(pid), H.reason_text(why), HUBN()),
+            { type = "center", duration = 8 })
+        h.phase, h.current = "away", nil
+        h.sent_back = (h.sent_back or 0) + 1
+        H.after(H.SETTLE, function() H.go_home(fv.id .. " waits for " .. tostring(why)) end, "sent back")
       else
         h.phase, h.current = "away", nil
-        say(pname(pid) .. ": nothing to play here yet - explore" .. dev_hint(", or choose a destination with " .. K("key_hub") .. " / " .. K("key_hub", true)),
+        say(pname(pid) .. ": revisit - no story left to play here yet; explore" .. dev_hint(", or choose a destination with " .. K("key_hub") .. " / " .. K("key_hub", true)),
             { type = "corner", duration = 6 })
       end
     elseif test_travel_on() then
@@ -1266,10 +1461,15 @@ function H.on_arrival(pid, from)
   local after_finish = H.session.finished_frame and (H.frame - H.session.finished_frame) < H.STARTUP_GUARD
   if guard or after_finish or H.return_at then
     local d = H.playable_on(pid)
-    if d and cfg("hub_follow_story", false) then
-      log("the game's own story took you to", pid, "- carrying on with", d.id, "(hub_follow_story)")
+    -- dev 10.11 (hub_follow_new): the game's own travel to a planet whose first visit is open is its
+    -- intro (round 16: MIS_SARG_01_FIRST_VISIT started, then the tunnel to Sargasso): play it there
+    local new = d and cfg("hub_follow_new", true) and d.kind == "planet" and (d.visit or 1) == 1
+    if d and (cfg("hub_follow_story", false) or new) then
+      log("the game's own story took you to", pid, "- carrying on with", d.id, new and "(its first visit is open: hub_follow_new)" or "(hub_follow_story)")
       H.return_at = nil
-      H.after(H.SETTLE, function() H.launch_dest(d, "the game's own travel") end, "follow " .. d.id)
+      h.phase, h.current = "away", d.id
+      changed()
+      H.after(H.SETTLE, function() H.launch_dest(d, "the game's own travel", { landed = true }) end, "follow " .. d.id)
       return true
     end
     log("the game's own story took you to", pid, "- back to the hub (the hub decides the order)")
@@ -1303,6 +1503,14 @@ function H.on_menu_accept(f)
               (RANDO_TRAVEL.planet_of_checkpoint(dest) or RANDO_TRAVEL.planet_of_checkpoint(f.InterplanetaryCheckpointName))
   H.menu = { planet = pid, dest = dest, at = now() }
   log("planet menu:", tostring(dest), "->", tostring(pid))
+  -- dev 10.11: a visit not made active yet is made active now, while the ship is in the tunnel
+  local s = S()
+  if pid and H.enabled() and H.started() and s and s.access and s.access[pid] and pid ~= H.plan().planet then
+    local d = H.playable_on(pid)
+    if d and d.kind ~= "intro" and not H.session.primed[d.id] and cfg("hub_prime_open", true) then
+      H.prime_one(d, "planet menu to " .. pid)
+    end
+  end
 end
 
 -- ---------------------------------------------------------------------------------------------
@@ -1441,6 +1649,7 @@ function H.set_shuffle(on, why)
   end
   if p and h and s.current_planet == p.planet and not H.running() then
     H.after(H.SETTLE, function() H.apply_world("planet shuffle on") end, "planet shuffle on")
+    H.prime_later("planet shuffle on")
   end
   say("Randomizer: planet shuffle ON", { type = "center",
       sub = RANDO_DEV_KEYS and (K("key_hub") .. " lists the destinations, " .. K("key_hub", true) .. " goes")
@@ -1548,7 +1757,10 @@ function H.on_restore(live)
   end
   local h = s.hub
   if not (H.plan() and h and h.started and H.enabled()) then return end
-  if s.current_planet == H.plan().planet then H.after(H.SETTLE, function() H.apply_world("restored at the hub") end, "restored at the hub") end
+  if s.current_planet == H.plan().planet then
+    H.after(H.SETTLE, function() H.apply_world("restored at the hub") end, "restored at the hub")
+    H.prime_later("restored at the hub")
+  end
 end
 
 -- ---------------------------------------------------------------------------------------------

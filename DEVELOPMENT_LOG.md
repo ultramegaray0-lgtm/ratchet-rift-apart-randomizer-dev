@@ -4,6 +4,45 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-15: dev 10.11 (kit 10.0.7, generator 10.11.0): planet shuffle starts new planets at their intro
+
+- Asked: make planet shuffle really work: new Coordinates -> fly to the new planet -> its intro plays
+  and its first mission starts; players reach Coordinates and first visits first, not revisits. Dev
+  repo only (the public release repo is untouched). From now on every dev update adds 0.01 to the
+  file names (this one: 10.11).
+- Cause found in the code (no new log): the hub started a planet's story only after the planet-menu
+  landing, then warped on the planet to a pad or a learned checkpoint; the game had played its arrival
+  without the story. Blizar's entry was the intact pad, but round 17 shows the game's own menu landing
+  for MIS_BLIZAR on the destroyed one. A planet whose Coordinates came before its first visit's
+  needs (Viceron before the Hurlshot) was listed as a "revisit" with nothing to play.
+- Log evidence used (tests/data): the game makes the next visits active at a visit's end, before the
+  menu is used (round 17 lines 1019-1028: MIS_SAV_01, MIS_BLIZAR 0 -> 2; round 16 line 384:
+  MIS_ZURK_01_VISIT_01), and its menu then lands at CHK_SAV_01_LANDING / CHK_BLIZAR_B_LANDINGPAD_DESTROYED
+  (round 17 lines 1065, 1113). Sargasso's arrival: the first checkpoint after CHK_TRANSITION_TO_SARG is
+  hash 2498464355 in rounds 16 and 23 (name not found by a 3-token brute force over the known name
+  parts; 2999919277 = CHK_SARG_01_CAVE_ENTRANCE, 100598178 = CHK_SAV_01_START,
+  1343868918 = CHK_MALINON_INTRO_NEFCITY, 696621431 = CHK_NEFCITY_BAZAAR were found on the way).
+- 15 (kit 10.0.7): H.prime_open / prime_one (between stories, every open planet's next visit made
+  active, not the planet you are on); H.on_access (grant hook in 10); planet-menu landings
+  (`launch_dest(d, why, { landed = true })`: an active story is left to the game's arrival, a story
+  started there loads the intro); H.load_point puts a first visit's intro first while its story is at
+  its first step; watch_story reloads at the intro (H.INTRO_STUCK_WAIT); H.first_visit_block keeps
+  blocked first visits out of the revisits and sends you back from the menu with H.reason_text;
+  hub_follow_new plays the game's own trip to an open first visit. New options hub_prime_open,
+  hub_planet_intro, hub_follow_new, hub_blocked_home (all true).
+- 03: `intros` per visit, C.OPENINGS.sargasso_1, C.hub_available orders first visits before revisits,
+  C.hub_why; the placement rules C.progression_spot_ok / C.coords_spot_ok / C.done_at.
+- 02 (generator 10.11.0): coords_first_visit = true: G.spot_ok / G.filter_spots in both fills and the
+  early Coordinates; constrained Coordinates placed first (G.constrained_last); exceptions recorded in
+  the hub plan; audit check. Every seed changes.
+- Verified only offline and in the simulator: tests/test_v1011.py (20); 449 run, 0 failures, 21
+  skipped; big_batch 56,600/56,600 valid (with the independent first-visit check on every hub seed).
+  The simulator now also lists CHK_SAV_01_START and CHK_MOL_START (your game's names, rounds 24-26).
+- Open (needs the game): does a visit the hub made active before the flight land at its intro (the
+  game's per-planet landing override is set by its own story scripts; whether a DLL start does it is
+  unknown)? If not, the stuck-step reload loads the intro after a minute. Sargasso's arrival scene
+  name. The intros only listed by the game (Torren IV, Cordelion, Viceron, the finale).
+
 ## 2026-11-15: dev 10.1 (generator 10.1.0, data 5.1.0): Spybots and Lorbs hold items; three weapons are items
 
 - Asked: Spybots and Lorbs were defined as locations but the generator never used them; make them hold

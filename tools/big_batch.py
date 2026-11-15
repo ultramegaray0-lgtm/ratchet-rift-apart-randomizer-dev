@@ -9,6 +9,9 @@ and without ARSENAL_RESTORED, and random settings. Every seed must pass:
   verify_hub_seed  tests/test_v100.py: the three starting missions, a sphere walk that reaches every
                    destination and every in-logic location, one route per weapon, no weapon both sold
                    and given, no ARSENAL_RESTORED weapon sold, early weapons
+  check_seed       dev 10.11, tests/test_v1011.py (with coords_first_visit on): no Coordinates or gadget a
+                   location needs on a revisit or the finale, and a planet's Coordinates only where its
+                   first visit can be played once they are found
 
 PART 2, the pre-10.0 modes (hub = false, Gold-Bolts-first fill, 15 shop weapons: harness.PRE10_SETTINGS).
 Every seed must pass ALL of:
@@ -33,6 +36,15 @@ from test_generator import verify, honest_refusal  # noqa: E402
 from test_campaign import verify_campaign, verify_fallback  # noqa: E402
 from test_v90 import verify_story_start, USER_SETTINGS  # noqa: E402
 from test_v100 import verify_hub_seed  # noqa: E402
+from test_v1011 import check_seed  # noqa: E402
+
+
+def hub_checks(d):
+    """the independent hub verifiers (dev 10.11: the first-visit rule when it is on)"""
+    p = verify_hub_seed(d)
+    if (d.get("settings") or {}).get("coords_first_visit"):
+        p = p + check_seed(d)
+    return p
 from harness import pre10_engine  # noqa: E402
 
 
@@ -65,7 +77,7 @@ def main(argv=None):
             bad.append((label, seed, preset, user, audit)); return
         if audit:
             bad.append((label, seed, preset, user, audit)); return
-        p = verify_hub_seed(py(s))
+        p = hub_checks(py(s))
         if p:
             bad.append((label, seed, preset, user, p[:3])); return
         valid += 1
@@ -98,7 +110,7 @@ def main(argv=None):
                 else:
                     bad.append(("hub-random", c, p, u, audit))
                 continue
-            pr = list(py(audit) or []) + verify_hub_seed(py(s))
+            pr = list(py(audit) or []) + hub_checks(py(s))
             if pr:
                 bad.append(("hub-random", c, p, u, pr[:3]))
             else:

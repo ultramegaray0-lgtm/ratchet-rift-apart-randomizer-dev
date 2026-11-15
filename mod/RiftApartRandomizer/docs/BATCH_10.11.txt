@@ -1,0 +1,9 @@
+Randomizer dev 10.11 batch (tools/big_batch.py --scale 1.0), 2026-11-15
+
+10.0 hub seeds: 19600/19600 valid, 0 honestly refused, bad 0 (126s)
++ your settings with hub = false: 22600/22600 valid, bad 0 (141s)
+7.0 presets: 32600/32600 valid, bad 0 (191s)
++ legacy presets and variants: 38600/38600 valid, bad 0 (222s)
++ random settings: 46600/46600 valid, 0 honestly refused, bad 0 (267s)
++ experimental mission orders: 56600/56600 valid, 0 honestly refused, bad 0 (320s)
+TOTAL 56600 VALID 56600 REFUSED (honest) 0 BAD 0

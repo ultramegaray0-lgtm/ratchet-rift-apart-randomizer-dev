@@ -40,9 +40,9 @@ def all_at(lines, pattern):
     return [i for i, l in enumerate(lines) if re.search(pattern, l)]
 
 
-def finished_city(seed):
+def finished_city(seed, settings=None):
     """a hub game whose city story is finished in this session (h.finished_at was set in v0.53)"""
-    g = to_hub(hub_game(seed))
+    g = to_hub(hub_game(seed, settings))
     g.sim.complete_mission("MIS_NEFCITY_01")
     g.step(3000)
     assert "nefcity_1" in hub(g)["done"]
@@ -136,7 +136,9 @@ class GuardTests(unittest.TestCase):
 
     def test_the_guard_still_keeps_the_order_right_after_a_finish(self):
         # the city's story ends with the game's own rift to Sargasso (round 16): undone, as before
-        g = finished_city("v054-order")
+        # (dev 10.11: when Sargasso's first visit is open that trip is played instead, hub_follow_new;
+        # tests/test_v1011.py covers it)
+        g = finished_city("v054-order", {"hub_follow_new": False})
         self.assertEqual(g.sim.planet, "NefCity")
         self.assertTrue(g.log_has("[ORDER KEPT] the game's own travel to sargasso undone"))
 
@@ -377,7 +379,7 @@ class RestoreTests(unittest.TestCase):
 class BannerTests(unittest.TestCase):
     def test_the_banner_names_the_release_and_the_kit(self):
         g = to_hub(hub_game("v054-banner"))
-        self.assertTrue(g.note_has("Randomizer v0.55 - seed"))
+        self.assertTrue(g.note_has("Randomizer dev 10.11 - seed"))
         self.assertTrue(g.log_has("planet shuffle 0"))       # RANDO-KEYS lists the new key
 
 

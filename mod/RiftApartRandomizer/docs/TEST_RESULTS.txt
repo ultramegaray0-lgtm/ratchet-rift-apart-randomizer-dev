@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.54 (build 10.0.5) - test run 2026-11-13 15:25 UTC
+Rift Apart Randomizer dev 10.11 (build 10.0.7) - test run 2026-11-15 14:29 UTC
 Python 3.13.18 on Linux
-ran 401, failures 0, errors 0, skipped 17
+ran 449, failures 0, errors 0, skipped 21
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -221,9 +221,9 @@ test_every_gold_bolt_is_an_item_with_the_kit_settings (tests.test_v05.KitSetting
 test_every_preset (tests.test_v05.KitSettingsTests.test_every_preset) ... ok
 test_kit_sets_goldbolts_first (tests.test_v05.KitSettingsTests.test_kit_sets_goldbolts_first) ... ok
 test_tight_settings_lower_early_weapons_instead_of_failing (tests.test_v05.KitSettingsTests.test_tight_settings_lower_early_weapons_instead_of_failing) ... ok
-test_hub_false_with_kit_settings_identical (tests.test_v05.UnchangedFrom10Tests.test_hub_false_with_kit_settings_identical) ... ok
-test_non_hub_goldbolts_first_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_non_hub_goldbolts_first_seeds_identical) ... ok
-test_spread_hub_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_spread_hub_seeds_identical) ... ok
+test_hub_false_with_kit_settings_identical (tests.test_v05.UnchangedFrom10Tests.test_hub_false_with_kit_settings_identical) ... skipped 'the 10.0 commit is not in this repository (git history needed)'
+test_non_hub_goldbolts_first_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_non_hub_goldbolts_first_seeds_identical) ... skipped 'the 10.0 commit is not in this repository (git history needed)'
+test_spread_hub_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_spread_hub_seeds_identical) ... skipped 'the 10.0 commit is not in this repository (git history needed)'
 test_the_plan_names_nefarious_city (tests.test_v051.HubPlanTests.test_the_plan_names_nefarious_city) ... ok
 test_a_refused_prologue_write_keeps_it_as_a_destination (tests.test_v051.TheStoryTests.test_a_refused_prologue_write_keeps_it_as_a_destination) ... ok
 test_a_story_still_at_its_first_step_is_loaded_once_more_in_the_city (tests.test_v051.TheStoryTests.test_a_story_still_at_its_first_step_is_loaded_once_more_in_the_city) ... ok
@@ -284,6 +284,25 @@ test_off_the_games_own_travel_is_never_undone (tests.test_v054.ShuffleKeyTests.t
 test_the_choice_is_saved_restored_and_kept_over_a_new_game (tests.test_v054.ShuffleKeyTests.test_the_choice_is_saved_restored_and_kept_over_a_new_game) ... ok
 test_the_travel_byte_the_game_had_on_is_not_turned_off (tests.test_v054.ShuffleKeyTests.test_the_travel_byte_the_game_had_on_is_not_turned_off) ... ok
 test_zero_turns_planet_shuffle_off_and_on (tests.test_v054.ShuffleKeyTests.test_zero_turns_planet_shuffle_off_and_on) ... ok
+test_with_the_hub_and_planet_shuffle_off_the_same_run_pays_the_same (tests.test_v055.HubAbsentTests.test_with_the_hub_and_planet_shuffle_off_the_same_run_pays_the_same) ... ok
+test_without_the_hub_every_location_pays_in_the_games_order (tests.test_v055.HubAbsentTests.test_without_the_hub_every_location_pays_in_the_games_order) ... ok
+test_without_the_hub_everything_loads_and_the_story_is_the_games (tests.test_v055.HubAbsentTests.test_without_the_hub_everything_loads_and_the_story_is_the_games) ... ok
+test_the_package_has_no_developer_file_and_every_required_script (tests.test_v055.PackageTests.test_the_package_has_no_developer_file_and_every_required_script) ... ok
+test_off_by_default_the_story_is_the_games_own (tests.test_v055.PlanetShuffleDefaultTests.test_off_by_default_the_story_is_the_games_own) ... ok
+test_on_after_the_parade_waits_for_the_next_new_game (tests.test_v055.PlanetShuffleDefaultTests.test_on_after_the_parade_waits_for_the_next_new_game) ... ok
+test_on_during_the_parade_the_hub_starts_after_it (tests.test_v055.PlanetShuffleDefaultTests.test_on_during_the_parade_the_hub_starts_after_it) ... ok
+test_a_planet_shuffle_run_never_hints_at_developer_keys (tests.test_v055.PlayerKeyTests.test_a_planet_shuffle_run_never_hints_at_developer_keys) ... ok
+test_ctrl_zero_twice_gives_items_back (tests.test_v055.PlayerKeyTests.test_ctrl_zero_twice_gives_items_back) ... ok
+test_only_zero_answers_and_nothing_hints_at_other_keys (tests.test_v055.PlayerKeyTests.test_only_zero_answers_and_nothing_hints_at_other_keys) ... ok
+test_the_keys_log_line_names_only_the_player_key (tests.test_v055.PlayerKeyTests.test_the_keys_log_line_names_only_the_player_key) ... ok
+test_with_the_developer_keys_the_hints_come_back (tests.test_v055.PlayerKeyTests.test_with_the_developer_keys_the_hints_come_back) ... ok
+test_an_old_test_travel_file_left_behind_is_reported (tests.test_v055.ReleaseFilesTests.test_an_old_test_travel_file_left_behind_is_reported) ... skipped 'git history with the v0.54 file is needed'
+test_every_developer_file_follows_the_naming_and_is_listed (tests.test_v055.ReleaseFilesTests.test_every_developer_file_follows_the_naming_and_is_listed) ... ok
+test_no_release_script_names_a_developer_file_it_needs (tests.test_v055.ReleaseFilesTests.test_no_release_script_names_a_developer_file_it_needs) ... ok
+test_the_probe_finds_its_data_whatever_the_load_order (tests.test_v055.ReleaseFilesTests.test_the_probe_finds_its_data_whatever_the_load_order) ... ok
+test_the_release_loads_without_any_developer_file (tests.test_v055.ReleaseFilesTests.test_the_release_loads_without_any_developer_file) ... ok
+test_coordinates_still_open_planets_without_test_travel (tests.test_v055.TestTravelAbsentTests.test_coordinates_still_open_planets_without_test_travel) ... ok
+test_locked_travel_works_without_test_travel (tests.test_v055.TestTravelAbsentTests.test_locked_travel_works_without_test_travel) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -324,6 +343,36 @@ test_a_budget_error_halves_the_reads (tests.test_v100.ShopTests.test_a_budget_er
 test_bytes_are_parsed_fast_and_right (tests.test_v100.ShopTests.test_bytes_are_parsed_fast_and_right) ... ok
 test_close_slots_off_keeps_them (tests.test_v100.ShopTests.test_close_slots_off_keeps_them) ... ok
 test_closed_slots_and_no_duplicates (tests.test_v100.ShopTests.test_closed_slots_and_no_duplicates) ... ok
+test_collectibles_false_turns_them_off (tests.test_v101.CollectibleLocationTests.test_collectibles_false_turns_them_off) ... ok
+test_spybots_and_lorbs_hold_items_and_nothing_the_seed_needs (tests.test_v101.CollectibleLocationTests.test_spybots_and_lorbs_hold_items_and_nothing_the_seed_needs) ... ok
+test_the_spoiler_says_they_pay_once_bound (tests.test_v101.CollectibleLocationTests.test_the_spoiler_says_they_pay_once_bound) ... ok
+test_ten_spybots_and_twelve_lorbs (tests.test_v101.DataTests.test_ten_spybots_and_twelve_lorbs) ... ok
+test_three_weapons_are_rewards (tests.test_v101.DataTests.test_three_weapons_are_rewards) ... ok
+test_always_at_a_location_never_sold_never_a_random_start (tests.test_v101.RewardWeaponTests.test_always_at_a_location_never_sold_never_a_random_start) ... ok
+test_spoiler_shop_line (tests.test_v101.RewardWeaponTests.test_spoiler_shop_line) ... ok
+test_start_items_and_exclude_still_decide (tests.test_v101.RewardWeaponTests.test_start_items_and_exclude_still_decide) ... ok
+test_a_spybot_and_a_lorb_complete_their_locations (tests.test_v101.RuntimeTests.test_a_spybot_and_a_lorb_complete_their_locations) ... ok
+test_shatterbomb_and_ryno_slots_are_closed (tests.test_v101.RuntimeTests.test_shatterbomb_and_ryno_slots_are_closed) ... ok
+test_a_primed_visit_plays_the_games_own_arrival (tests.test_v1011.ArrivalTests.test_a_primed_visit_plays_the_games_own_arrival) ... ok
+test_a_stuck_first_step_is_loaded_at_the_intro (tests.test_v1011.ArrivalTests.test_a_stuck_first_step_is_loaded_at_the_intro) ... ok
+test_a_visit_started_on_landing_loads_its_intro (tests.test_v1011.ArrivalTests.test_a_visit_started_on_landing_loads_its_intro) ... ok
+test_first_visits_are_listed_before_revisits (tests.test_v1011.ArrivalTests.test_first_visits_are_listed_before_revisits) ... ok
+test_hub_launch_goes_to_the_intro (tests.test_v1011.ArrivalTests.test_hub_launch_goes_to_the_intro) ... ok
+test_the_games_own_trip_to_a_closed_planet_is_still_undone (tests.test_v1011.ArrivalTests.test_the_games_own_trip_to_a_closed_planet_is_still_undone) ... ok
+test_the_games_own_trip_to_an_open_first_visit_is_played (tests.test_v1011.ArrivalTests.test_the_games_own_trip_to_an_open_first_visit_is_played) ... ok
+test_viceron_before_torren_sends_you_back_with_the_reason (tests.test_v1011.ArrivalTests.test_viceron_before_torren_sends_you_back_with_the_reason) ... ok
+test_audit_catches_both_rules (tests.test_v1011.GeneratorRuleTests.test_audit_catches_both_rules) ... ok
+test_coordinates_open_a_first_visit_spread (tests.test_v1011.GeneratorRuleTests.test_coordinates_open_a_first_visit_spread) ... ok
+test_coordinates_open_a_first_visit_with_your_settings (tests.test_v1011.GeneratorRuleTests.test_coordinates_open_a_first_visit_with_your_settings) ... ok
+test_fewer_locations_still_keep_the_rule (tests.test_v1011.GeneratorRuleTests.test_fewer_locations_still_keep_the_rule) ... ok
+test_registry_intros (tests.test_v1011.GeneratorRuleTests.test_registry_intros) ... ok
+test_revisits_hold_no_progression_but_still_rewards (tests.test_v1011.GeneratorRuleTests.test_revisits_hold_no_progression_but_still_rewards) ... ok
+test_spoiler_says_so (tests.test_v1011.GeneratorRuleTests.test_spoiler_says_so) ... ok
+test_the_rule_can_be_switched_off (tests.test_v1011.GeneratorRuleTests.test_the_rule_can_be_switched_off) ... ok
+test_coordinates_make_the_next_visit_active_without_travel (tests.test_v1011.PrimeTests.test_coordinates_make_the_next_visit_active_without_travel) ... ok
+test_never_a_visit_of_the_planet_you_are_on (tests.test_v1011.PrimeTests.test_never_a_visit_of_the_planet_you_are_on) ... ok
+test_nothing_is_made_active_while_a_story_runs (tests.test_v1011.PrimeTests.test_nothing_is_made_active_while_a_story_runs) ... ok
+test_switch_off (tests.test_v1011.PrimeTests.test_switch_off) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -361,7 +410,6 @@ test_settings_file_uses_keyboard_keys (tests.test_v83.KeyTests.test_settings_fil
 test_a_fixed_seed_still_times_out (tests.test_v84.ArsenalTests.test_a_fixed_seed_still_times_out) ... ok
 test_a_random_seed_waits_for_the_companion_not_a_timer (tests.test_v84.ArsenalTests.test_a_random_seed_waits_for_the_companion_not_a_timer) ... ok
 test_the_game_itself_says_the_mod_is_installed (tests.test_v84.ArsenalTests.test_the_game_itself_says_the_mod_is_installed) ... ok
-test_docs (tests.test_v84.InstallTests.test_docs) ... ok
 test_scripts (tests.test_v84.InstallTests.test_scripts) ... ok
 test_top_level (tests.test_v84.InstallTests.test_top_level) ... ok
 test_campaign_key_says_nothing_in_the_games_own_order (tests.test_v84.KeyTests.test_campaign_key_says_nothing_in_the_games_own_order) ... ok
@@ -424,6 +472,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 401 tests in 166.606s
+Ran 449 tests in 143.023s
 
-OK (skipped=17)
+OK (skipped=21)

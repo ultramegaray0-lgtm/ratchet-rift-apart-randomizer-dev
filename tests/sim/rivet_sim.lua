@@ -132,6 +132,8 @@ function S.reset()
     "CHK_TRANSITION_TO_MOL", "CHK_TRANSITION_TO_SARG", "CHK_TRANSITION_TO_KEDARO", "CHK_TRANSITION_TO_ARDOLIS",
     "CHK_TRANSITION_TO_BLIZAR", "CHK_TRANSITION_TO_NEFARIOUS_CITY", "CHK_TRANSITION_TO_SAVALI",
     "CHK_TRANSITION_TO_ZORDOOM", "CHK_TRANSITION_TO_ZURKIES",
+    -- dev 10.11: listed by your game in rounds 24-26 (the catalog's best checkpoint of Savali, Torren IV)
+    "CHK_SAV_01_START", "CHK_MOL_START",
   }
   S.mgr_ready, S.alt_path = true, true   -- alt_path = system 2, as in your game
   S.can_start = true

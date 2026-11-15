@@ -4,7 +4,7 @@
 -- NEW seed with its own progress: start it with New Game. Lines starting with -- are notes; to
 -- change an option, remove the -- in front of it and edit the value. A wrong value is reported in
 -- rivet.log (search RANDO-SETTINGS) and the default is used instead.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.6"   -- version check (do not edit)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.7"   -- version check (do not edit)
 RANDO_SETTINGS = {
   -- THE SEED: "random" = the companion picks one and remembers it. Any other text is a fixed seed
   -- (the same text and settings give the same seed on every PC), e.g. "lombax-ryno-2026".
@@ -59,6 +59,8 @@ RANDO_SETTINGS = {
   -- LOGIC
   -- weapon_logic = "none",            -- "none" | "light" | "standard": weapons expected before later planets
   -- accessibility = "full",           -- "full": every location reachable | "beatable": only what finishing needs
+  -- coords_first_visit = true,        -- planet shuffle: Coordinates always open a planet's first visit
+                                       -- (never on a revisit; Viceron's come from Torren IV's story)
 }
 -- In the game, the 0 key turns PLANET SHUFFLE on or off (off by default; it is remembered).
 -- Ctrl+0 pressed twice sends your randomizer items again if some went missing.

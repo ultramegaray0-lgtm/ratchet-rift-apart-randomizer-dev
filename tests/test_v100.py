@@ -294,8 +294,10 @@ class HubGeneratorTests(unittest.TestCase):
             self.assertGreaterEqual(kinds.count("weapon"), 2, (i, kinds))
             self.assertGreaterEqual(kinds.count("coordinates"), 1, (i, kinds))
             # 10.1: 22 Spybot/Lorb locations share the same items, so the start's reach holds a little
-            # less (1 of these 200 seeds has 4 items there); the 2 weapons and 1 Coordinates stay guaranteed
-            self.assertGreaterEqual(len(kinds), 4, (i, kinds))
+            # less (1 of these 200 seeds has 4 items there); the 2 weapons and 1 Coordinates stay guaranteed.
+            # dev 10.11: the start's reach includes Zurkie's revisit, which no longer takes progression
+            # (coords_first_visit), so 1 of these 200 seeds has just the guaranteed 3 there
+            self.assertGreaterEqual(len(kinds), 3, (i, kinds))
 
     def test_shop_and_rewards_are_separate(self):
         for ar in (False, True):
@@ -640,8 +642,8 @@ class CampaignTests(unittest.TestCase):
     """Whole campaigns in the simulated game: each open destination in turn, its missions finished
     by events; missing missions are finished by hand."""
 
-    def play(self, seed, pick_last=False, broken=None):
-        g = hub_game(seed, missions=broken)
+    def play(self, seed, pick_last=False, broken=None, settings=None):
+        g = hub_game(seed, settings=settings, missions=broken)
         g.sim.ship_near = True
         to_hub(g)
         H = g.g.RANDO_HUB
@@ -671,7 +673,14 @@ class CampaignTests(unittest.TestCase):
             g.step(60 * 3 + 900)
             if d["kind"] == "finale":
                 break
-            self.assertEqual(g.sim.planet, "NefCity", (seed, target))
+            cur = hub(g).get("current")
+            if cur:
+                # dev 10.11 (hub_follow_new): the game's own travel to a planet whose first visit is
+                # open (the city's story ends with the trip to Sargasso) is played there
+                self.assertEqual(g.state.current_planet, py(H.dest(cur))["planet"], (seed, target, cur))
+                self.assertTrue(g.log_has("its first visit is open: hub_follow_new"))
+            else:
+                self.assertEqual(g.sim.planet, "NefCity", (seed, target))
         h = hub(g)
         self.assertEqual(h["n_done"], len(plan["destinations"]), (seed, sorted(h["done"])))
         self.assertTrue(g.state.campaign_complete)
@@ -684,6 +693,8 @@ class CampaignTests(unittest.TestCase):
     def test_campaigns_to_the_finale(self):
         for i in range(3):
             self.play(f"v100-camp-{i}", pick_last=(i % 2 == 1))
+        # 10.0's way: the game's own trip is always undone
+        self.play("v100-camp-0", settings={"hub_follow_new": False})
 
     def test_campaign_with_missing_missions(self):
         self.play("v100-camp-broken", broken={"MIS_BLIZAR": None, "MIS_ZORD_01": None, "MIS_MEGA_FINALE": None})
@@ -913,7 +924,7 @@ class SettingsFileTests(unittest.TestCase):
         self.assertEqual(s["settings"]["campaign_mode"], "planet_shuffle")
         self.assertEqual((s["settings"]["raritanium_min"], s["settings"]["raritanium_max"]), (120, 1000))
         self.assertEqual(verify_hub_seed(s), [])
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.6"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.7"))
         self.assertFalse(g.log_has("is from another version"))
         c = g.R.config
         self.assertEqual((c.key_hub, c.key_hub_return, c.key_story), ("]", "[", "/"))

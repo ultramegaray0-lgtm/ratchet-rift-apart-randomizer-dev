@@ -106,11 +106,12 @@ class EvidenceTests(unittest.TestCase):
 
     def test_round24_seed_is_unchanged(self):
         # v0.52 kept generator 10.0.2 so round 24's progress carried over. Dev 10.1 (generator 10.1.0, data
-        # 5.1.0) changes every seed on purpose: the same share code gives a new, stable fingerprint
+        # 5.1.0) changes every seed on purpose: the same share code gives a new, stable fingerprint.
+        # Dev 10.11 (generator 10.11.0, coords_first_visit) changes every seed again
         seed, preset, user = ENG.G.parse_share_code(
             "RA10|kit-bolt-kit-198|balanced|distribution=goldbolts_first,include_arsenal_restored=true,travel_lock=true")
         s, audit = ENG.generate(seed, py(user), preset)
-        self.assertEqual(s.fingerprint, "6735e9b07c04")
+        self.assertEqual(s.fingerprint, "8869cc994ae4")
         self.assertEqual(audit, [])
         for d in py(s)["hub"]["destinations"]:
             self.assertNotIn("hash", d)                          # openings stay out of the seed

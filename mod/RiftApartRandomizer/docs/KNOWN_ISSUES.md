@@ -4,6 +4,29 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0e. Since dev 10.11 (kit 10.0.7)
+
+- **Making a visit active before you fly there is new for the hub.** The game does it itself at the
+  end of a visit (round 17: Savali and Blizar together, round 16: Zurkie's), but never for as many
+  planets at once as a late run has open. If the ship's menu or a planet behaves oddly with several
+  stories active, `hub_prime_open = false` in 04 turns it off (a landing then starts the story and
+  loads the visit's intro, which is the other path). `RANDO-HUB prime ...` lines show every call.
+- **Intro checkpoints are partly inferred.** Seen in your logs as the game's own landing with the
+  visit active: Zurkie's (CHK_ZURK_00_DEFAULT), Savali (CHK_SAV_01_LANDING), Blizar
+  (CHK_BLIZAR_B_LANDINGPAD_DESTROYED, the destroyed pad: 10.0 used the intact one). Ran from a
+  warp: Ardolis (CHK_ARD_START). Only listed by your game: Torren IV (CHK_MOL_START), Cordelion
+  (CHK_CORD_A_START), Viceron (CHK_ZORDOOM_START), the finale. Sargasso's arrival scene is a hash
+  (2498464355) looked up at run time; without its name the gel factory pad is used. A first step
+  still waiting a minute after the landing is loaded once more at the visit's intro (or its second
+  point).
+- **A primed visit may still land at a plain pad.** Whether the mission start the hub makes sets the
+  game's per-planet landing (as its own story scripts do) is unknown; if it does not, the stuck-step
+  reload above loads the intro.
+- **Following the game's own trip to Sargasso** (after Nefarious City's story, when you hold its
+  Coordinates) is new; `hub_follow_new = false` restores the trip back.
+- **Viceron's Coordinates are always a reward of Torren IV's story** (the only place where its first
+  visit can be played at once). `coords_first_visit = false` gives 10.1's placement back.
+
 ## 0d. Since v0.54 (10.0.5)
 
 - **What empties the inventory is not known.** Round 26 shows the result (a save on Viceron with no

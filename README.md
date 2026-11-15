@@ -1,5 +1,10 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.11 (kit 10.0.7, generator 10.11.0):** planet shuffle starts every new planet at its intro
+(open planets' next visits are made active between stories, as the game does; a landing that starts
+the story loads the visit's intro), and Coordinates always open a first visit (never on a revisit;
+Viceron's come from Torren IV's story). See `mod/RiftApartRandomizer/docs/CHANGELOG.md`.
+
 10.0 = the Zurkie's hub with mission selection (the prologue, the Battle Arena, Nefarious City),
 planet shuffle through Coordinates (on by default), rewards spread over every kind of location, and
 the shop split from the rewards. `hub = false` keeps 9.0's story start. Player guide:

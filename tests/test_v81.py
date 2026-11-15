@@ -100,7 +100,9 @@ class CatalogTests(unittest.TestCase):
         T = self.catalog(g)
         # 8.4: a planet's story start (CHK_<code>_START / _A_ / _01_) ranks first; Cordelion's and
         # Ardolis' are names your game listed in rounds 19-20
-        want = {"torren_iv": "CHK_MOL_01_START", "cordelion": "CHK_CORD_A_START", "ardolis": "CHK_ARD_START",
+        # (dev 10.11: the simulator also lists CHK_MOL_START, the name your game's catalog chose in
+        # rounds 24-26, and it ranks first as it did there)
+        want = {"torren_iv": "CHK_MOL_START", "cordelion": "CHK_CORD_A_START", "ardolis": "CHK_ARD_START",
                 "sargasso": "CHK_SARG_GELFACTORY_LANDINGPAD", "blizar_prime": "CHK_BLIZAR_A_LANDINGPAD"}
         for pid, cp in want.items():
             self.assertEqual(T.best_in_catalog(pid), cp, pid)

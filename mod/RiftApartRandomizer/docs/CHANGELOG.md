@@ -2,6 +2,61 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.11 (kit 10.0.7, generator 10.11.0; not released): planet shuffle that starts each new planet at its intro
+
+Asked: make planet shuffle actually work: when the player gets new Coordinates and goes to the new
+planet, take them to that planet's intro so the first mission there starts; make sure players get
+to Coordinates and first visits first, not revisits. **Nothing of this has run in the game.** Every
+seed changes (generator 10.11.0, a new setting): start with New Game.
+
+Why it did not work: the hub started a planet's story only AFTER the ship's planet-menu landing,
+then warped on that planet to a landing pad or a learned checkpoint. The game had already played its
+arrival without the story, and a pad is not where a first visit begins (Blizar's even sat on the
+intact side, round 17 shows the game landing on the destroyed one). A planet whose Coordinates came
+before what its first visit waits for (Viceron before Torren IV's Hurlshot) was offered as a
+"revisit" with nothing to play, and revisits sat in the `]` list between first visits.
+
+Runtime (15_rando_hub.lua, 03, 10):
+- **Next visits made active between stories** (`hub_prime_open`): at the hub, after a finish, when
+  Coordinates arrive and on the planet menu's accept, the next visit of every open planet you are not
+  on is made active (available, then start; no hero swap, no travel), as the game itself does when a
+  visit ends (round 17: MIS_SAV_01 and MIS_BLIZAR together at the end of Zurkie's first visit). Never
+  while a story runs (v0.53's rule), never the hub planet or the prologue.
+- **Planet-menu landing**: a story already active before the flight is left to the game's own arrival
+  (nothing loaded); one started on landing loads the visit's **intro** on that planet. A first visit
+  is always loaded at its intro while its story has not left its first step (`hub_planet_intro`).
+  A first step still waiting a minute later is loaded once more at the intro (or its second point).
+- **Intros** (03 `intros`, from the logs): Zurkie's CHK_ZURK_00_DEFAULT, Savali CHK_SAV_01_LANDING
+  (then CHK_SAV_01_START), Blizar CHK_BLIZAR_B_LANDINGPAD_DESTROYED (then the intact pad), Torren IV
+  CHK_MOL_START, Cordelion CHK_CORD_A_START, Ardolis CHK_ARD_START, Viceron CHK_ZORDOOM_START,
+  Sargasso 2 CHK_SARG_02_MININGPLATFORM_LANDINGPAD, the finale CHK_MEGA_FINALE_START; Sargasso's first
+  visit by its arrival scene's hash (C.OPENINGS, 2498464355), else the gel factory pad.
+- **No revisit before a first visit** (`hub_blocked_home`): a planet whose first visit cannot be
+  played yet is never a "revisit"; the planet menu sends you back with the reason ("needs the Hurlshot
+  from the story on Torren IV"). Coordinates say what they open. `]` lists the start missions, then
+  first visits, then revisits, then the finale.
+- **The game's own trip to an open first visit is played** (`hub_follow_new`): Nefarious City's end
+  takes you to Sargasso; with its Coordinates held that is its intro, so the hub carries on there
+  instead of going back.
+- Kit 10.0.7; banner `Randomizer dev 10.11 (kit 10.0.7)`.
+
+Generator 10.11.0 (`coords_first_visit = true`, a new seed setting):
+- No Coordinates and no gadget a location needs on a revisit (Zurkie's 2, Sargasso 2, Savali 2) or the
+  finale: the way to the next planet never runs through a revisit.
+- A planet's Coordinates only where its first visit can be played the moment they are found: every
+  visit it waits for is done there (a story mission, its milestone and a side activity pay when their
+  visit finishes; a Gold Bolt or armor pod is found during it). Nefarious City's story counts as done
+  elsewhere (the ship's travel is off while it runs). So Viceron's are a reward of Torren IV's story.
+  Those Coordinates are placed first. If a seed's settings leave no such place, the nearest fit is
+  used and the seed says so (`coords_exceptions`, spoiler, warnings).
+- Audit and spoiler updated.
+
+Tests: tests/test_v1011.py (20). Changed where the rules changed: version strings, round 24's
+fingerprint, the guard test (now with `hub_follow_new = false`), whole campaigns (also played with
+the game's trip followed), the start's reach floor 4 -> 3 items (Zurkie's revisit holds no
+progression any more), the catalog's Torren IV name (the simulator lists your game's CHK_MOL_START).
+449 run, 0 failures, 21 skipped; big_batch 56,600 of 56,600 valid.
+
 ## Dev 10.1 (generator 10.1.0, data 5.1.0; kit stays 10.0.6, not released): Spybots, Lorbs, three weapons as items
 
 Asked: Spybots and Lorbs were defined as locations but the generator never used them, so make them

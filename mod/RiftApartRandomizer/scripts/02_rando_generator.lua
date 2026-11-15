@@ -88,10 +88,10 @@
 --   * Abilities the story gives (Speetle, Trudi, ...) cannot be granted: locations needing
 --     them, and locations whose trigger is not proven (armor finds, collectibles), only ever
 --     hold non-progression rewards.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.6"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.7"   -- the kit check (10_rando_runtime.lua)
 RANDO_GEN = {}
 local G = RANDO_GEN
-G.VERSION = "10.1.0"
+G.VERSION = "10.11.0"
 local DB = RANDO_DATA
 
 -- ------------------------------------------------------------------------------------------
@@ -198,6 +198,9 @@ G.DEFAULTS = {
   shop_weapons = 8,               -- different weapons Ms. Zurkon sells (0-15); her other slots are closed
                                   -- and those weapons become rewards
   early_weapons = 2,              -- weapons placed at locations open from the start (0-6)
+  -- dev 10.11
+  coords_first_visit = true,      -- hub: progression never on a revisit or the finale, and a planet's
+                                  -- Coordinates only where its first visit can be played once found
 }
 -- items every seed starts with, whatever the settings say
 G.ALWAYS_START = { "hoverboots", "map_o_matic" }
@@ -804,6 +807,56 @@ local function gating_gadgets(s)
   return g
 end
 
+-- dev 10.11 COORDINATES OPEN A FIRST VISIT (hub seeds, coords_first_visit = true; the rules are
+-- 03_rando_campaign.lua C.progression_spot_ok / C.coords_spot_ok): may progression item `key` go to
+-- location lid? Returns ok, why.
+function G.spot_ok(s, key, lid)
+  local camp = s._campaign
+  if not (s.hub and s.coords_first_visit and camp and camp.hub and RANDO_CAMPAIGN.coords_spot_ok) then return true end
+  local seg = camp.loc_seg[lid]
+  local it = DB.items[key]
+  if it and it.category == "coordinates" then
+    return RANDO_CAMPAIGN.coords_spot_ok(it.planet, seg, DB.locations[lid].kind)
+  end
+  return RANDO_CAMPAIGN.progression_spot_ok(seg)
+end
+-- the spots of `spots` progression item `key` may take. When the rules leave none, rule 1 alone,
+-- then every spot (said in the seed's notes, so the audit and the spoiler know).
+function G.filter_spots(s, key, spots, notes)
+  if not (s.hub and s.coords_first_visit) then return spots end
+  local strict, loose = {}, {}
+  local camp = s._campaign
+  for _, lid in ipairs(spots) do
+    if G.spot_ok(s, key, lid) then strict[#strict + 1] = lid end
+    if RANDO_CAMPAIGN.progression_spot_ok(camp and camp.loc_seg[lid]) then loose[#loose + 1] = lid end
+  end
+  if #strict > 0 then return strict end
+  if #spots > 0 and notes then
+    notes[#notes + 1] = "coords_first_visit: no location fits " .. key .. " - " ..
+      ((#loose > 0) and "placed on a first visit anyway" or "placed where it fits") .. " (exception)"
+    s._coords_exceptions = s._coords_exceptions or {}
+    s._coords_exceptions[key] = true
+  end
+  if #loose > 0 then return loose end
+  return spots
+end
+
+-- dev 10.11: Coordinates whose first visit waits for other visits (Viceron) have the fewest places
+-- they may go: they move to the end of the list, which the fill takes from first
+function G.constrained_last(s, prog)
+  if not (s.hub and s.coords_first_visit) then return prog end
+  local keep, tight = {}, {}
+  for _, key in ipairs(prog) do
+    local it = DB.items[key]
+    local first = it and it.category == "coordinates" and RANDO_CAMPAIGN.first_visit(it.planet)
+    if first and next(RANDO_CAMPAIGN.prereqs(first)) ~= nil then tight[#tight + 1] = key else keep[#keep + 1] = key end
+  end
+  for i = 1, #prog do prog[i] = nil end
+  for _, key in ipairs(keep) do prog[#prog + 1] = key end
+  for _, key in ipairs(tight) do prog[#prog + 1] = key end
+  return prog
+end
+
 -- reward order of the leftover (non-Gold-Bolt) locations: story missions first
 -- (10.1: Spybots and Lorbs share rank 2, so goldbolts_first gives them items too)
 local KIND_RANK = { goldbolt = 0, planet = 1, story = 2, side = 2, armor_source = 2, collectible = 2 }
@@ -1081,7 +1134,10 @@ local function attempt(seed_text, s, fp, n, yield)
     -- may go to a location the start reaches: it needs nothing)
     if s.planet_locks and early[used + 1] then
       local cs = {}
-      for _, it in ipairs(items) do if not registry[it.key] and category(it.key) == "coordinates" then cs[#cs + 1] = it.key end end
+      -- (dev 10.11: only Coordinates whose first visit can be played once found there)
+      for _, it in ipairs(items) do
+        if not registry[it.key] and category(it.key) == "coordinates" and G.spot_ok(s, it.key, early[used + 1]) then cs[#cs + 1] = it.key end
+      end
       if #cs > 0 then
         local key = cs[rng.below(#cs) + 1]
         placement[early[used + 1]] = key; registry[key] = "location"
@@ -1098,6 +1154,7 @@ local function attempt(seed_text, s, fp, n, yield)
       if ca ~= cb then return ca end
       return false
     end)
+    G.constrained_last(s, prog)
     while #prog > 0 do
       local key = table.remove(prog)
       local res = G.solve(s, pool, placement, start, prog)
@@ -1106,6 +1163,7 @@ local function attempt(seed_text, s, fp, n, yield)
         if DB.locations[lid].holds ~= "filler" then spots[#spots + 1] = lid end
       end
       if #spots == 0 then return nil, "no reachable location left for " .. key end
+      spots = G.filter_spots(s, key, spots, notes)
       local lid = rng.pick(spots)
       placement[lid] = key; registry[key] = "location"
       if yield then yield() end
@@ -1182,6 +1240,7 @@ local function attempt(seed_text, s, fp, n, yield)
       if ca ~= cb then return ca end
       return false
     end)
+    G.constrained_last(s, prog)
     local function free_locations(reach, logic_only)
       local out = {}
       for _, loc in ipairs(pool) do
@@ -1233,9 +1292,12 @@ local function attempt(seed_text, s, fp, n, yield)
       end
       if s.planet_locks and s.early_weapons > 0 then
         local cs = {}
-        for _, it in ipairs(items) do if not registry[it.key] and category(it.key) == "coordinates" then cs[#cs + 1] = it.key end end
+        local lid = early_spot()
+        -- (dev 10.11: only Coordinates whose first visit can be played once found there)
+        for _, it in ipairs(items) do
+          if lid and not registry[it.key] and category(it.key) == "coordinates" and G.spot_ok(s, it.key, lid) then cs[#cs + 1] = it.key end
+        end
         if #cs > 0 then
-          local lid = early_spot()
           if lid then
             local key = cs[rng.below(#cs) + 1]
             placement[lid] = key; registry[key] = "location"; early_placed = early_placed + 1
@@ -1265,6 +1327,7 @@ local function attempt(seed_text, s, fp, n, yield)
         spots = keep
       end
       if #spots == 0 then return nil, "no reachable location left for " .. key end
+      spots = G.filter_spots(s, key, spots, notes)
       local deep = {}
       for _, lid in ipairs(spots) do if not base[lid] then deep[#deep + 1] = lid end end
       if #deep > 0 and #spots - #deep <= #prog then spots = deep end
@@ -1373,6 +1436,7 @@ local function attempt(seed_text, s, fp, n, yield)
     shop_prices = s._shop_prices, currency_totals = totals, notes = notes,
     start_coords = start_coords, shop_closed = s._shop_closed,
     hub_route = res.hub_route, hub_first = res.hub_first,
+    coords_exceptions = s._coords_exceptions,
   }
 end
 
@@ -1506,7 +1570,8 @@ function G.package(seed_text, s, preset, fp, r, warnings, requested)
     for _, id in ipairs(r.hub_route or {}) do route[#route + 1] = id end
     hub = { planet = RANDO_CAMPAIGN.HUB_PLANET, checkpoints = RANDO_CAMPAIGN.HUB_CHECKPOINTS,
             start = RANDO_CAMPAIGN.HUB_START, destinations = RANDO_CAMPAIGN.hub_destinations(),
-            route = route, finale_planet = RANDO_CAMPAIGN.BY_ID.finale.planet }
+            route = route, finale_planet = RANDO_CAMPAIGN.BY_ID.finale.planet,
+            coords_first_visit = s.coords_first_visit == true, coords_exceptions = sorted_keys(r.coords_exceptions or {}) }
   end
   return {
     format = 10, generator = G.VERSION, data = DB.version, hub = hub,
@@ -1649,6 +1714,24 @@ function G.audit(seed)
       end)())
       for _, id in ipairs(RANDO_CAMPAIGN.HUB_START) do
         if not reach[id] then bad("hub: the starting mission " .. id .. " cannot be played with the start") end
+      end
+      -- dev 10.11: Coordinates (and gadgets a location needs) never on a revisit or the finale, and
+      -- a planet's Coordinates only where its first visit can be played once they are found
+      if s.coords_first_visit then
+        local exc = {}
+        for _, k in ipairs(h.coords_exceptions or {}) do exc[k] = true end
+        local gating = gating_gadgets(s)
+        for _, lid in ipairs(sorted_keys(seed.locations)) do
+          local key = seed.locations[lid].item
+          local it = key and DB.items[key]
+          local seg = RANDO_CAMPAIGN.location_segment(lid, DB.locations[lid].planet)
+          if it and not exc[key] and (it.category == "coordinates" or gating[key]) then
+            local ok, why
+            if it.category == "coordinates" then ok, why = RANDO_CAMPAIGN.coords_spot_ok(it.planet, seg, DB.locations[lid].kind)
+            else ok, why = RANDO_CAMPAIGN.progression_spot_ok(seg) end
+            if not ok then bad("coords_first_visit: " .. key .. " at " .. lid .. ": " .. tostring(why)) end
+          end
+        end
       end
     end
   elseif seed.hub then

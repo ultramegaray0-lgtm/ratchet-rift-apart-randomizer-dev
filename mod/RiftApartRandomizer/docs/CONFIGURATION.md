@@ -20,6 +20,7 @@ solver proves every seed can be finished.
 | `distribution` | `"spread"` | items over Gold Bolts, story missions, side activities and armor pods; `"goldbolts_first"`: every Gold Bolt an item first (4.0-9.0) |
 | `shop_weapons` | `8` | 0-15 different weapons Ms. Zurkon sells; her other normal slots are closed and those weapons are rewards |
 | `early_weapons` | `2` | 0-6 weapons where the start alone can reach (with `weapon_logic = "none"`) |
+| `coords_first_visit` | `true` | dev 10.11: Coordinates (and gadgets a location needs) are never on a revisit or the finale, and a planet's Coordinates are only where its first visit can be played the moment you find them (Viceron's: a reward of Torren IV's story). `false`: 10.1's placement |
 
 A hub seed always has `planet_locks = true`, `travel_lock = true` and `campaign_mode = "planet_shuffle"`;
 other values are noted in rivet.log and ignored. `start_coordinates` does not apply.
@@ -35,6 +36,10 @@ other values are noted in rivet.log and ignored. `start_coordinates` does not ap
 | `hub_auto_return` / `hub_return_delay` | `true` / `12` | back to Zurkie's after a finished destination |
 | `hub_hero_swap` | `true` | the destination's hero is set first |
 | `hub_follow_story` | `false` | `true`: when the game's own story takes you to an open destination, play it |
+| `hub_follow_new` | `true` | dev 10.11: when the game's own story takes you to a planet whose **first visit** is open (its Coordinates held), play it there (the game just played its arrival) instead of going back |
+| `hub_prime_open` | `true` | dev 10.11: between stories, the next visit of every open planet you are not on is made active (as the game does when a visit ends), so the ship's flight lands at its intro |
+| `hub_planet_intro` | `true` | dev 10.11: a first visit is loaded at its intro (03 `intros`, `C.OPENINGS`) while its story has not left its first step. `false`: 10.0's start / landing order |
+| `hub_blocked_home` | `true` | dev 10.11: landing on a planet whose first visit waits for another visit sends you back with the reason (never a revisit). `false`: you stay and explore |
 | `key_hub` / `key_hub_return` / `key_story` | `]` / `[` / `/` | legacy F6 / F5 / F4; v0.54: `[` only cancels the automatic return |
 | `key_shuffle` | `0` | v0.54: planet shuffle off / on (saved in the randomizer state); Ctrl+0 twice gives your items back |
 | `restore_inventory` | `true` | v0.54: give your items back when a hub trip or a load reports fewer than half of your weapons |

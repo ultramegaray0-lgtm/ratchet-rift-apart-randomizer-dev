@@ -30,12 +30,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.6"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.7"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.6"
-R.RELEASE = "v0.55"                 -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.7"
+R.RELEASE = "dev 10.11"               -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -124,6 +124,15 @@ R.config = {
   hub_return_delay = 12,             -- seconds before that
   hub_hero_swap = true,              -- a destination's hero is set before its story starts
   hub_follow_story = false,          -- true: when the game's own story takes you to an open destination, play it
+  -- dev 10.11 (planet shuffle: a new planet starts its first mission at its intro)
+  hub_prime_open = true,             -- between stories, the next visit of every open planet is made active,
+                                     -- as the game does at the end of a visit: the ship's flight lands at its intro
+  hub_planet_intro = true,           -- a first visit loads at its intro (C.SEGMENTS intros) while its story
+                                     -- has not left its first step | false: 10.0's start/landing order
+  hub_follow_new = true,             -- the game's own story travel to a planet whose first visit is open
+                                     -- (Coordinates held) is played there instead of undone
+  hub_blocked_home = true,           -- landing on a planet whose first visit cannot be played yet (it waits
+                                     -- for another visit) sends you back with the reason, never a revisit
   -- developer keys and test travel: only used by the dev(*).lua files
   key_status = ";", key_campaign = "'", key_hub = "]", key_hub_return = "[", key_story = "/",
   key_test_travel = ".", key_test_point = ",", legacy_f_keys = true, test_travel = false,
@@ -288,6 +297,11 @@ local function grant(key, quiet, prefix)
       say(prefix .. it.name .. " - mission rewards on " .. planet_name(it.planet) .. " are yours now")
     end
     pay_banked(it.planet)
+    -- dev 10.11: the hub says what opens and makes it active for the ship's flight
+    if SEED.hub and RANDO_HUB and RANDO_HUB.on_access then
+      local okh, eh = pcall(RANDO_HUB.on_access, it.planet)
+      if not okh then log("RANDO-ERROR hub access", tostring(eh)) end
+    end
     return
   end
   if it.category == "weapon" or it.category == "gadget" or it.category == "pickup" then

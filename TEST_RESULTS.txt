@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.55 (build 10.0.6) - test run 2026-11-15 09:13 UTC
+Rift Apart Randomizer dev 10.11 (build 10.0.7) - test run 2026-11-15 14:29 UTC
 Python 3.13.18 on Linux
-ran 429, failures 0, errors 0, skipped 21
+ran 449, failures 0, errors 0, skipped 21
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -353,6 +353,26 @@ test_spoiler_shop_line (tests.test_v101.RewardWeaponTests.test_spoiler_shop_line
 test_start_items_and_exclude_still_decide (tests.test_v101.RewardWeaponTests.test_start_items_and_exclude_still_decide) ... ok
 test_a_spybot_and_a_lorb_complete_their_locations (tests.test_v101.RuntimeTests.test_a_spybot_and_a_lorb_complete_their_locations) ... ok
 test_shatterbomb_and_ryno_slots_are_closed (tests.test_v101.RuntimeTests.test_shatterbomb_and_ryno_slots_are_closed) ... ok
+test_a_primed_visit_plays_the_games_own_arrival (tests.test_v1011.ArrivalTests.test_a_primed_visit_plays_the_games_own_arrival) ... ok
+test_a_stuck_first_step_is_loaded_at_the_intro (tests.test_v1011.ArrivalTests.test_a_stuck_first_step_is_loaded_at_the_intro) ... ok
+test_a_visit_started_on_landing_loads_its_intro (tests.test_v1011.ArrivalTests.test_a_visit_started_on_landing_loads_its_intro) ... ok
+test_first_visits_are_listed_before_revisits (tests.test_v1011.ArrivalTests.test_first_visits_are_listed_before_revisits) ... ok
+test_hub_launch_goes_to_the_intro (tests.test_v1011.ArrivalTests.test_hub_launch_goes_to_the_intro) ... ok
+test_the_games_own_trip_to_a_closed_planet_is_still_undone (tests.test_v1011.ArrivalTests.test_the_games_own_trip_to_a_closed_planet_is_still_undone) ... ok
+test_the_games_own_trip_to_an_open_first_visit_is_played (tests.test_v1011.ArrivalTests.test_the_games_own_trip_to_an_open_first_visit_is_played) ... ok
+test_viceron_before_torren_sends_you_back_with_the_reason (tests.test_v1011.ArrivalTests.test_viceron_before_torren_sends_you_back_with_the_reason) ... ok
+test_audit_catches_both_rules (tests.test_v1011.GeneratorRuleTests.test_audit_catches_both_rules) ... ok
+test_coordinates_open_a_first_visit_spread (tests.test_v1011.GeneratorRuleTests.test_coordinates_open_a_first_visit_spread) ... ok
+test_coordinates_open_a_first_visit_with_your_settings (tests.test_v1011.GeneratorRuleTests.test_coordinates_open_a_first_visit_with_your_settings) ... ok
+test_fewer_locations_still_keep_the_rule (tests.test_v1011.GeneratorRuleTests.test_fewer_locations_still_keep_the_rule) ... ok
+test_registry_intros (tests.test_v1011.GeneratorRuleTests.test_registry_intros) ... ok
+test_revisits_hold_no_progression_but_still_rewards (tests.test_v1011.GeneratorRuleTests.test_revisits_hold_no_progression_but_still_rewards) ... ok
+test_spoiler_says_so (tests.test_v1011.GeneratorRuleTests.test_spoiler_says_so) ... ok
+test_the_rule_can_be_switched_off (tests.test_v1011.GeneratorRuleTests.test_the_rule_can_be_switched_off) ... ok
+test_coordinates_make_the_next_visit_active_without_travel (tests.test_v1011.PrimeTests.test_coordinates_make_the_next_visit_active_without_travel) ... ok
+test_never_a_visit_of_the_planet_you_are_on (tests.test_v1011.PrimeTests.test_never_a_visit_of_the_planet_you_are_on) ... ok
+test_nothing_is_made_active_while_a_story_runs (tests.test_v1011.PrimeTests.test_nothing_is_made_active_while_a_story_runs) ... ok
+test_switch_off (tests.test_v1011.PrimeTests.test_switch_off) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -452,6 +472,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 429 tests in 111.243s
+Ran 449 tests in 143.023s
 
 OK (skipped=21)

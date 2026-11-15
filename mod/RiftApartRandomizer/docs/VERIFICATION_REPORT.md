@@ -140,3 +140,17 @@ feature is only listed under "actual game execution" when a round showed it with
   show up when something goes wrong. A clean playthrough will not exercise them. The simulator does.
 - **PowerShell companion tests**: PowerShell 7 can't run on the build machine (downloading and
   running it was not allowed). The companion's one logic change in 8.5 is checked by reading only.
+
+## Dev 10.11 (kit 10.0.7, generator 10.11.0): new planets start at their intro
+
+Nothing of dev 10.11 has run in the game.
+
+| Feature | | Evidence |
+|---|---|---|
+| Coordinates never on a revisit / the finale; a planet's Coordinates only where its first visit is playable at once | A | tests/test_v1011.py (independent Python rule check), G.audit, big_batch (check_seed on every hub seed with the rule on) |
+| Open planets' next visits made active between stories | A, S | simulator tests; the game does the same at a visit's end (round 17 lines 1019-1028, round 16 line 384) |
+| A primed visit's planet-menu landing is left to the game | A | simulator only: whether the game then lands at the intro is untested |
+| A landing started on the planet loads the visit's intro | A, S | intros from the game's own menu landings (rounds 14, 16, 17, 23), a warp that ran (round 20, Ardolis), catalog names (rounds 24-26) |
+| Sargasso's arrival scene (hash 2498464355) | S | rounds 16 and 23: first checkpoint after CHK_TRANSITION_TO_SARG with MIS_SARG_01_FIRST_VISIT active; name unknown |
+| A blocked first visit sends you back, never a revisit; ] lists first visits first | A | simulator tests |
+| The game's own trip to an open first visit is played | A | simulator (round 16's chain: MIS_SARG_01_FIRST_VISIT started, then Sargasso) |
