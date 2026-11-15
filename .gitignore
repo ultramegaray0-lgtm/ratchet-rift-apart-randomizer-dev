@@ -1,2 +1,9 @@
 __pycache__/
 *.pyc
+
+# local outputs
+out/
+validation.json
+*.tmp
+.DS_Store
+Thumbs.db

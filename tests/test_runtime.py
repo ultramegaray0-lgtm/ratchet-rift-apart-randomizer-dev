@@ -6,7 +6,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
-from harness import Game, MOD, script_files, CLASSIC_TEST_SETTINGS  # noqa: E402
+from harness import DEV_DIR, is_dev, Game, MOD, script_files, CLASSIC_TEST_SETTINGS  # noqa: E402
 import rando  # noqa: E402
 
 ENGINE = rando.Engine()
@@ -43,12 +43,15 @@ class LoadingTests(unittest.TestCase):
             self.assertFalse(any("RANDO-ERROR" in l or "[sim]" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_play_folder(self):
-        names = {p.name for p in (MOD / "scripts").glob("*.lua")}
+        names = {p.name for p in (MOD / "scripts").glob("*.lua") if not is_dev(p.name)}
         self.assertEqual(names, {"01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua",
                                  "04_rando_settings.lua", "05_rando_bindings.lua", "06_rando_capabilities.lua",
                                  "09_rando_real.lua", "10_rando_runtime.lua", "11_rando_campaign.lua",
                                  "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua",
-                                 "15_rando_hub.lua", "16_rando_testtravel.lua"})
+                                 "15_rando_hub.lua"})
+        dev = {p.name for p in DEV_DIR.glob("*.lua") if is_dev(p.name)}
+        self.assertEqual(dev, {"dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua",
+                               "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"})
         g = Game(settings_file=True)
         self.assertEqual(g.load_errors, [])
         self.assertIsNone(g.g.RANDO_TEST_MODE)

@@ -378,6 +378,7 @@ def hub_game(seed="v100-rt", settings=None, missions=None, **kw):
     st = {"seed": seed, "preset": "balanced", "hub": True, "distribution": "spread", "shop_weapons": 8,
           "planet_locks": True, "campaign_mode": "planet_shuffle", "hub_return_delay": 2, "shop_close_slots": True}
     st.update(settings or {})
+    kw.setdefault("planet_shuffle", True)       # the hub runs only with planet shuffle on (OFF by default)
     g = Game(settings=st, dll_version=6, before_scripts=lambda game: setattr(game.sim, "auto_travel", True), **kw)
     assert not g.load_errors, g.load_errors
     states = {n: 0 for n in all_missions(g)}
@@ -904,8 +905,8 @@ class SettingsFileTests(unittest.TestCase):
         self.assertEqual(s["settings"]["campaign_mode"], "planet_shuffle")
         self.assertEqual((s["settings"]["raritanium_min"], s["settings"]["raritanium_max"]), (120, 1000))
         self.assertEqual(verify_hub_seed(s), [])
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.5"))
-        self.assertFalse(g.log_has("is from an older kit"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.6"))
+        self.assertFalse(g.log_has("is from another version"))
         c = g.R.config
         self.assertEqual((c.key_hub, c.key_hub_return, c.key_story), ("]", "[", "/"))
 

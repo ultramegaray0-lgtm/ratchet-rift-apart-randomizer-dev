@@ -1,19 +1,17 @@
--- Randomizer 8.2: test travel - go to any planet, whatever Coordinates you hold (rivet_hook, Lua 5.4).
--- Loaded after 14_rando_travel.lua. Off unless test_travel = true in 04_rando_settings.lua (a
--- runtime option: it never changes the seed or its fingerprint). 9.0: a test trip only moves you;
--- it starts no story (the hub's story starter is gone with the hub).
+-- DEVELOPER TOOL - not part of a release. TEST TRAVEL: go to any planet, whatever Coordinates
+-- you hold (rivet_hook, Lua 5.4). The randomizer never needs this file. Its keys work only with
+-- test_travel = true in 04_rando_settings.lua (a runtime option: it never changes the seed).
+-- A test trip only moves you; it starts no story.
 --
--- Keys (test_travel = true; 8.3 defaults, see key_test_travel / key_test_point):
+-- Keys (key_test_travel / key_test_point; legacy_f_keys = true: F7 / F8 as well):
 --   .           next planet (all 10, in story order, starting after the one you are on)
 --   ,           next landing point on that planet
 --   Ctrl+.      warp there (rivet_hook's checkpoint warp, the one level scripts use)
---   Ctrl+,      fly there with the ship (rivet.fly; needs the ship's planet menu nearby, e.g. at
---               a landing pad - round 17: Zurkie's -> CHK_NEFCITY_SHIP worked)
---   (legacy_f_keys = true: F7 / F8 as well)
+--   Ctrl+,      fly there with the ship (rivet.fly; needs the ship's planet menu nearby)
 --
 -- While it is on:
 --   * a test trip's landing is remembered as that planet's test landing point
---   * the ship's planet menu takes you anywhere: locked levels do not send you back
+--   * the ship's planet menu takes you anywhere: locked travel does not send you back
 --   * rewards follow the usual rules: test travel opens no Coordinates and pays nothing by itself
 -- Every trip is written to the randomizer history as [TEST TRAVEL], so a run that used it shows it.
 --
@@ -21,7 +19,7 @@
 -- the ones seen in your logs, then the checkpoint catalog (14_rando_travel.lua: every checkpoint
 -- rivet.checkpoints() lists, placed on its planet and scored, landing pads first).
 -- rivet.log lines start with RANDO-TEST.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_testtravel"] = "10.0.5"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(testtravel)"] = "10.0.6"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TEST_TRAVEL = RANDO_TEST_TRAVEL or {}
 local TT = RANDO_TEST_TRAVEL
@@ -34,7 +32,7 @@ local function pname(pid) return (RANDO and RANDO.planet_name and RANDO.planet_n
 local function now() return (rivet.time and rivet.time()) or 0 end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 
-TT.VERSION = "10.0.5"
+TT.VERSION = "10.0.6"
 local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 TT.WINDOW = 180              -- seconds a trip waits for its landing
 TT.POINTS = 12               -- landing points offered per planet (catalog)
@@ -123,7 +121,7 @@ local function off_message()
       { type = "center", duration = 6 })
 end
 
--- F7: next planet
+-- next planet
 function TT.key_next()
   if not TT.on() then return off_message() end
   if TT.sel < 1 then
@@ -134,7 +132,7 @@ function TT.key_next()
   show(TT.selected())
 end
 
--- F8: next landing point of the selected planet
+-- next landing point of the selected planet
 function TT.key_point()
   if not TT.on() then return off_message() end
   local pid = TT.selected()
@@ -144,7 +142,7 @@ function TT.key_point()
   show(pid)
 end
 
--- Ctrl+F7 (warp) / Ctrl+F8 (fly)
+-- go: warp or fly
 function TT.go(how)
   if not TT.on() then return off_message() end
   local pid = TT.selected()

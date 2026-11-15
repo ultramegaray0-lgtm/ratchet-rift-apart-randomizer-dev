@@ -260,17 +260,17 @@ class GeneratorTests(unittest.TestCase):
 
 class KitTests(unittest.TestCase):
     def test_the_kit_is_one_version(self):
-        names = sorted(p.name for p in SCRIPTS.glob("*.lua"))
-        self.assertIn("15_rando_hub.lua", names)           # 10.0: the hub is back
-        self.assertEqual(len(names), 14, names)
+        names = sorted(p.name for p in SCRIPTS.glob("*.lua") if not p.name.startswith("dev("))
+        self.assertIn("15_rando_hub.lua", names)           # optional, but part of the release
+        self.assertEqual(len(names), 13, names)
         for p in SCRIPTS.glob("*.lua"):
-            self.assertIn('"] = "10.0.5"', p.read_text(encoding="utf-8"), p.name)   # v0.54: every RANDO_FILES tag
+            self.assertIn('"] = "10.0.6"', p.read_text(encoding="utf-8"), p.name)   # every RANDO_FILES tag, dev files too
 
     def test_kit_check_passes(self):
         g = Game()
         self.assertEqual(g.load_errors, [])
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.5"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.6"), [l for l in g.logs() if "KIT" in l])
 
     def test_hub_keys_do_nothing_without_a_hub(self):
         g = Game()
@@ -308,7 +308,7 @@ class SettingsFileTests(unittest.TestCase):
         for p in SCRIPTS.glob("*.lua"):
             shutil.copy(p, d / p.name)
         text = (SCRIPTS / "04_rando_settings.lua").read_text(encoding="utf-8")
-        (d / "04_rando_settings.lua").write_text(text.replace("  -- hub = true,", "  hub = false,", 1), encoding="utf-8")
+        (d / "04_rando_settings.lua").write_text(text.replace('  seed = "random",', '  seed = "random", hub = false,', 1), encoding="utf-8")
         g = story_game(settings_file=True, scripts_dir=d)
         self.start(g, "v90-your-04")
         self.assertEqual(g.seed.preset, "balanced")
@@ -323,7 +323,7 @@ class SettingsFileTests(unittest.TestCase):
         g = story_game(settings_file=True, scripts_dir=self.scripts_with(DATA / "user_04_rando_settings_8.5.2.lua"))
         self.start(g, "v90-old-04")
         self.assertTrue(g.log_has("preset hub is gone"))
-        self.assertTrue(g.log_has("story_on_arrival\tis not used in 10.0"))
+        self.assertTrue(g.log_has("story_on_arrival\tis not used since 10.0"))
         self.assertFalse(g.log_has("key_hub\tis gone"))
         self.assertEqual(g.seed.settings.campaign_mode, "planet_shuffle")
         self.assertTrue(g.seed.settings.hub)

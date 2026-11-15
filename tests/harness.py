@@ -57,13 +57,35 @@ def classic_settings(settings=None):
     return st
 
 
-def script_files(test_mode=False, dev_tools=False, scripts_dir=None):
+# developer files (scripts/dev(name).lua). The development setup the tests were written for has the
+# developer keys and test travel installed; test mode and the probe tools only when a test asks.
+DEV_ALWAYS = ("dev(keys).lua", "dev(testtravel).lua")
+DEV_TEST_MODE = ("dev(testmode).lua",)
+DEV_TOOLS = ("dev(item_ids).lua", "dev(probe).lua", "dev(vtables).lua")
+
+
+def is_dev(name):
+    return name.startswith("dev(") and name.endswith(").lua")
+
+
+# where developer files come from when the release scripts are an installed copy (the release
+# validator points RANDO_MOD_DIR at a game folder that has no developer file)
+DEV_DIR = pathlib.Path(os.environ.get("RANDO_DEV_SCRIPTS", MOD / "scripts"))
+
+
+def script_files(test_mode=False, dev_tools=False, scripts_dir=None, release=False, without=()):
+    """release=True: only what a release ships (no dev(name).lua file). without: file names left out."""
     d = pathlib.Path(scripts_dir) if scripts_dir else MOD / "scripts"
-    files = sorted(d.glob("*.lua"))
-    if test_mode:
-        files += sorted((MOD / "extras" / "test_mode").glob("*.lua"))
-    if dev_tools:
-        files += sorted((MOD / "extras" / "dev_tools").glob("*.lua"))
+    dev_dir = d if scripts_dir else DEV_DIR
+    want = set()
+    if not release:
+        want |= set(DEV_ALWAYS)
+        if test_mode:
+            want |= set(DEV_TEST_MODE)
+        if dev_tools:
+            want |= set(DEV_TOOLS)
+    files = [f for f in d.glob("*.lua") if not is_dev(f.name) and f.name not in without]
+    files += [dev_dir / n for n in sorted(want) if (dev_dir / n).exists() and n not in without]
     return sorted(files, key=lambda p: p.name)        # rivet_hook loads in file name order
 
 
@@ -80,7 +102,7 @@ class Game:
 
     def __init__(self, test_mode=False, dev_tools=False, dll_status=1, dll_version=5, dll=True,
                  scripts_dir=None, before_scripts=None, files=None, settings=None, settings_file=False,
-                 extra_lua=None):
+                 extra_lua=None, release=False, without=(), planet_shuffle=False):
         self.lua = lua54.LuaRuntime(unpack_returned_tuples=True)
         self.lua.execute(SIM.read_text(encoding="utf-8"))
         self.g = self.lua.globals()
@@ -90,7 +112,10 @@ class Game:
         if before_scripts:
             before_scripts(self)
         self.load_errors = []
-        self.files = files or script_files(test_mode, dev_tools, scripts_dir)
+        self.files = files or script_files(test_mode, dev_tools, scripts_dir, release, without)
+        # planet_shuffle=True: the player turns planet shuffle on (the 0 key's action) right after
+        # the companion's first restore - the hub tests were written with it on
+        self.planet_shuffle = planet_shuffle
         if not settings_file:
             self.files = [f for f in self.files if not f.name.startswith("04_")]
             st = classic_settings(settings)
@@ -112,7 +137,8 @@ class Game:
             self.lua.execute(r"""
               local out = io.open(os.getenv("RANDO_STRICT_GLOBALS"), "a")
               local allowed = { RANDO_TEST_MODE = true, RANDO_PROBE = true, RANDO_VTABLES = true, RANDO_DONOR_ROUTE = true,
-                                RANDO_EXE = true }
+                                RANDO_EXE = true, RANDO_DEV_KEYS = true, RANDO_TEST_TRAVEL = true, RANDO_HUB = true,
+                                RANDO_ITEM_IDS = true }
               setmetatable(_G, {
                 __newindex = function(t, k, v)
                   local info = debug.getinfo(2, "Sl")
@@ -225,8 +251,12 @@ class Game:
         """What RandoCompanion.ps1 does on connect (after the seed is ready)."""
         assert self.wait_seed(), "seed not ready: " + str(self.logs()[-5:])
         if saved_text is None:
-            return self.bridge("return rando_mark_restored()")
-        return self.bridge("return tostring(rando_import_state((function() " + saved_text + " end)()))")
+            r = self.bridge("return rando_mark_restored()")
+        else:
+            r = self.bridge("return tostring(rando_import_state((function() " + saved_text + " end)()))")
+        if self.planet_shuffle and self.g.RANDO_HUB is not None and not self.g.RANDO.planet_shuffle_on():
+            self.g.RANDO_HUB.set_shuffle(True, "test setup")
+        return r
 
     def companion_export(self):
         status = self.bridge("return rando_bridge_status()")

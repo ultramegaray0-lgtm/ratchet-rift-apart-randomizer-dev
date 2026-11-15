@@ -1,95 +1,77 @@
-# Ratchet Rift Apart Randomizer: Public Release v0.54 (beta)
+# Ratchet & Clank: Rift Apart Randomizer v0.55
 
-A randomizer for **Ratchet & Clank: Rift Apart** on PC (Steam). Every playthrough is a new seed:
-weapons, gadgets, armor and planet Coordinates are shuffled over Gold Bolts, story missions, side
-activities, armor pods, your starting kit and Ms. Zurkon's shop. Planets open in a different order
-each run, and a solver checks that every seed can be finished.
+A randomizer for the PC version of Ratchet & Clank: Rift Apart. Weapons, gadgets, armor and
+planet Coordinates are shuffled across Gold Bolts, story missions, side activities, armor pods
+and Ms. Zurkon's shop. Every seed is checked by a solver before you play, so it can always be
+finished.
 
-| | |
+This is an unofficial fan mod. It is a beta: please report problems.
+
+## What you need
+
+- Ratchet & Clank: Rift Apart on Steam, version 3.630.1.0, on Windows 10 or 11 (64-bit).
+- rivet_hook 2.0.1 (2.0.0 also works). It is **required** and **not included**: download it from
+  https://github.com/neptuwunium/rivet_hook/releases.
+- Windows PowerShell (already part of Windows).
+
+Install steps: **INSTALLATION.md**.
+
+## Playing
+
+1. Start `rando_companion\Start-Companion.bat` and keep its window open. It saves your randomizer
+   progress and picks your random seed.
+2. Start the game and choose **New Game** on a spare save slot.
+3. The screen shows your seed, then your starting items. Play the game: Gold Bolts, story
+   missions, side activities and armor pods now give the seed's items.
+4. **Coordinates** are items too. Rewards on a planet you don't hold Coordinates for are kept
+   until you find them.
+
+### Planet shuffle (off by default)
+
+Press **0** in the game to turn planet shuffle on or off. Your choice is saved.
+
+- **Off:** the game's normal story order, with randomized items.
+- **On:** Nefarious City becomes your hub. Planets open when you find their Coordinates, and you
+  play them in any order with the ship's planet menu. When a planet's story is done, you are
+  taken back to Nefarious City. Turn it on during the opening parade of a New Game. If you turn it
+  on later, it starts with your next New Game.
+
+**Ctrl+0 twice** sends your randomizer items again if some went missing.
+
+The randomizer uses no other keys.
+
+## Settings
+
+Open `scripts\04_rando_settings.lua` in the game folder with Notepad. Each option has a short note.
+The main ones:
+
+| Setting | What it does |
 |---|---|
-| Release | Public Release **v0.54** (randomizer build 10.0.5; seed generator 10.0.2) |
-| Game | Ratchet & Clank: Rift Apart, **Steam**, game version **v3.630.1.0** |
-| OS | Windows 10 or 11, 64-bit |
-| Needs | **rivet_hook 2.0.1** (free, separate download) and Windows PowerShell (built into Windows) |
-| Status | **Beta, not fully tested.** See "Before you play" below |
+| `seed` | `"random"` (default) or any text for a fixed seed you can share |
+| `preset` | `balanced` (default), `full`, `chaos` or `everything` |
+| `distribution` | `"goldbolts_first"`: every Gold Bolt gives an item. `"spread"`: items go anywhere |
+| `shop_weapons` | how many weapons Ms. Zurkon sells (0-15) |
+| `start_weapons`, `start_gadgets` | what you start with |
+| `exclude` | items to leave out |
 
-## Before you play
+Changing the seed or an option makes a new seed: start it with New Game.
 
-This is an early public release. Be clear about what that means:
+## Your progress and spoilers
 
-- The randomizer's systems were developed and tested over many rounds on one PC. Seed generation,
-  weapon and armor delivery, Gold Bolt rewards, the shop, the warp out of the parade and the
-  mission-state writes have each been seen working in the game.
-- **The current hub mode (start at Nefarious City, planets open with Coordinates) has not yet
-  finished a full playthrough in the game.** Some parts of it have only been tested offline, against
-  a simulator.
-- **This exact release (v0.54) has not been run on Windows 11 or in the game yet.** It was built
-  and checked offline: automated tests, tens of thousands of generated seeds, and a simulated clean
-  install. The in-game parts it uses are the same as in the tested development builds.
-- It has **not yet been tested on a second PC**. Everything that ties it to one computer has been
-  removed, and the package was checked as a clean install, but other-PC reports are what this beta
-  is for.
-- **Back up your saves and play on a spare save slot.** See INSTALLATION.md, step 1.
+- Progress: `rando_companion\randomizer_saves\`.
+- Your random seed: `rando_companion\randomizer_saves\random_seed.txt`. Delete it for a new one.
+- Spoiler log: `rando_companion\randomizer_saves\spoilers\` (only open it if you want spoilers).
+- New Game starts the seed over.
 
-## What it does
+## Optional: ARSENAL_RESTORED
 
-- **Start at the hub, Nefarious City.** Start a New Game. Once Ratchet has his wrench and the
-  parade lets him walk again, you're taken to **Nefarious City**, and the city's story starts right
-  there. The Battle Arena at Zurkie's is open from the start too.
-- **Planet shuffle.** Every other planet opens when you find its **Coordinates**. Coordinates can be
-  behind any Gold Bolt, story mission, side activity or armor pod. Finish a destination and you're
-  brought back to Nefarious City to choose the next one.
-- **Randomized starting kit.** You always get the **Hoverboots** and the **Map-O-Matic**, plus
-  random weapons and a random gadget (2 and 1 by default).
-- **Every Gold Bolt gives exactly one item:** a weapon, gadget, armor piece or Coordinates, never
-  Bolts or Raritanium. Gold Bolts are still real Gold Bolts, and the randomizer never charges
-  several Gold Bolts for one item.
-- **One location, one reward.** Story missions, side activities and armor pods also give exactly
-  one reward each: an item, or Bolts or Raritanium once the seed's items are used up.
-- **Armor is in the pool.** 21 findable armor pieces are rewards.
-- **One route per weapon.** Each weapon is either for sale, in your starting kit or a reward,
-  never two of these. By default Ms. Zurkon sells 8 different weapons, and her other slots are
-  closed.
-- **Spoiler log** for every seed (optional reading), and a **companion window** that saves
-  randomizer progress.
-- **Optional:** if you have the ARSENAL_RESTORED mod installed, its 9 weapons join the pool
-  automatically.
+If the ARSENAL_RESTORED mod is installed, its 9 weapons join the item pool automatically.
+It is not needed.
 
-The full player guide, with keys, settings and presets, is in `docs/PLAYER_GUIDE.md`.
+## Help
 
-## Quick install
+See **TROUBLESHOOTING.md**. When you report a problem, include the mod version (v0.55), your game
+version and `rivet.log` from the game folder. Remove your Windows user name from any path in it
+first.
 
-1. Back up `Documents\Ratchet & Clank - Rift Apart`.
-2. Install **rivet_hook 2.0.1** in the game folder and run the game once.
-3. Copy **everything inside this package's `GAME_FOLDER`** into the game folder, the one that holds
-   `RiftApart.exe`.
-4. Start `rando_companion\Start-Companion.bat`, then the game, then **New Game** on a spare slot.
-
-The step-by-step version, with updating and uninstalling, is in **INSTALLATION.md**.
-
-## Files in this package
-
-| Path | What it is |
-|---|---|
-| `GAME_FOLDER\` | Everything that goes into the game folder (see INSTALLATION.md) |
-| `GAME_FOLDER\scripts\` | The randomizer: 14 Lua scripts that rivet_hook runs |
-| `GAME_FOLDER\rando_give.dll` | Small native helper that puts rewards into your inventory (source in `source\`) |
-| `GAME_FOLDER\rivet.toml` | rivet_hook settings the randomizer needs |
-| `GAME_FOLDER\rando_companion\` | The companion (PowerShell) and the optional ARSENAL_RESTORED installer |
-| `docs\PLAYER_GUIDE.md` | How a run works, keys, settings, presets |
-| `source\rando_give\` | Complete source of `rando_give.dll`, which builds to the same bytes |
-| `INSTALLATION.md`, `TROUBLESHOOTING.md`, `COMPATIBILITY.md`, `CHANGELOG.md`, `CREDITS_AND_LICENSES.md`, `LICENSE.txt` | What they say |
-| `SHA256SUMS.txt` | Checksums of every file in this package |
-
-## Safety and privacy
-
-- No network access, telemetry, ads or background processes. The companion runs only while its
-  window is open.
-- No administrator rights needed. The game's own files and your game saves are not modified.
-- `rando_give.dll` changes the running game's memory, and only while the game runs. Before it
-  changes anything, it checks every byte it relies on. On any other game version it does nothing.
-  COMPATIBILITY.md lists exactly what each part reads and writes.
-
-Not affiliated with or endorsed by Sony Interactive Entertainment, Insomniac Games or Nixxes
-Software. "Ratchet & Clank" and "Ratchet & Clank: Rift Apart" are trademarks of Sony Interactive
-Entertainment LLC. No game assets are included.
+Credits and licenses: **CREDITS_AND_LICENSES.md**.

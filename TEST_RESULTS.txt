@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.54 (build 10.0.5) - test run 2026-11-13 15:25 UTC
+Rift Apart Randomizer v0.55 (build 10.0.6) - test run 2026-11-14 21:19 UTC
 Python 3.13.18 on Linux
-ran 401, failures 0, errors 0, skipped 17
+ran 419, failures 0, errors 0, skipped 17
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -284,6 +284,25 @@ test_off_the_games_own_travel_is_never_undone (tests.test_v054.ShuffleKeyTests.t
 test_the_choice_is_saved_restored_and_kept_over_a_new_game (tests.test_v054.ShuffleKeyTests.test_the_choice_is_saved_restored_and_kept_over_a_new_game) ... ok
 test_the_travel_byte_the_game_had_on_is_not_turned_off (tests.test_v054.ShuffleKeyTests.test_the_travel_byte_the_game_had_on_is_not_turned_off) ... ok
 test_zero_turns_planet_shuffle_off_and_on (tests.test_v054.ShuffleKeyTests.test_zero_turns_planet_shuffle_off_and_on) ... ok
+test_with_the_hub_and_planet_shuffle_off_the_same_run_pays_the_same (tests.test_v055.HubAbsentTests.test_with_the_hub_and_planet_shuffle_off_the_same_run_pays_the_same) ... ok
+test_without_the_hub_every_location_pays_in_the_games_order (tests.test_v055.HubAbsentTests.test_without_the_hub_every_location_pays_in_the_games_order) ... ok
+test_without_the_hub_everything_loads_and_the_story_is_the_games (tests.test_v055.HubAbsentTests.test_without_the_hub_everything_loads_and_the_story_is_the_games) ... ok
+test_the_package_has_no_developer_file_and_every_required_script (tests.test_v055.PackageTests.test_the_package_has_no_developer_file_and_every_required_script) ... ok
+test_off_by_default_the_story_is_the_games_own (tests.test_v055.PlanetShuffleDefaultTests.test_off_by_default_the_story_is_the_games_own) ... ok
+test_on_after_the_parade_waits_for_the_next_new_game (tests.test_v055.PlanetShuffleDefaultTests.test_on_after_the_parade_waits_for_the_next_new_game) ... ok
+test_on_during_the_parade_the_hub_starts_after_it (tests.test_v055.PlanetShuffleDefaultTests.test_on_during_the_parade_the_hub_starts_after_it) ... ok
+test_a_planet_shuffle_run_never_hints_at_developer_keys (tests.test_v055.PlayerKeyTests.test_a_planet_shuffle_run_never_hints_at_developer_keys) ... ok
+test_ctrl_zero_twice_gives_items_back (tests.test_v055.PlayerKeyTests.test_ctrl_zero_twice_gives_items_back) ... ok
+test_only_zero_answers_and_nothing_hints_at_other_keys (tests.test_v055.PlayerKeyTests.test_only_zero_answers_and_nothing_hints_at_other_keys) ... ok
+test_the_keys_log_line_names_only_the_player_key (tests.test_v055.PlayerKeyTests.test_the_keys_log_line_names_only_the_player_key) ... ok
+test_with_the_developer_keys_the_hints_come_back (tests.test_v055.PlayerKeyTests.test_with_the_developer_keys_the_hints_come_back) ... ok
+test_an_old_test_travel_file_left_behind_is_reported (tests.test_v055.ReleaseFilesTests.test_an_old_test_travel_file_left_behind_is_reported) ... ok
+test_every_developer_file_follows_the_naming_and_is_listed (tests.test_v055.ReleaseFilesTests.test_every_developer_file_follows_the_naming_and_is_listed) ... ok
+test_no_release_script_names_a_developer_file_it_needs (tests.test_v055.ReleaseFilesTests.test_no_release_script_names_a_developer_file_it_needs) ... ok
+test_the_probe_finds_its_data_whatever_the_load_order (tests.test_v055.ReleaseFilesTests.test_the_probe_finds_its_data_whatever_the_load_order) ... ok
+test_the_release_loads_without_any_developer_file (tests.test_v055.ReleaseFilesTests.test_the_release_loads_without_any_developer_file) ... ok
+test_coordinates_still_open_planets_without_test_travel (tests.test_v055.TestTravelAbsentTests.test_coordinates_still_open_planets_without_test_travel) ... ok
+test_locked_travel_works_without_test_travel (tests.test_v055.TestTravelAbsentTests.test_locked_travel_works_without_test_travel) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -361,7 +380,6 @@ test_settings_file_uses_keyboard_keys (tests.test_v83.KeyTests.test_settings_fil
 test_a_fixed_seed_still_times_out (tests.test_v84.ArsenalTests.test_a_fixed_seed_still_times_out) ... ok
 test_a_random_seed_waits_for_the_companion_not_a_timer (tests.test_v84.ArsenalTests.test_a_random_seed_waits_for_the_companion_not_a_timer) ... ok
 test_the_game_itself_says_the_mod_is_installed (tests.test_v84.ArsenalTests.test_the_game_itself_says_the_mod_is_installed) ... ok
-test_docs (tests.test_v84.InstallTests.test_docs) ... ok
 test_scripts (tests.test_v84.InstallTests.test_scripts) ... ok
 test_top_level (tests.test_v84.InstallTests.test_top_level) ... ok
 test_campaign_key_says_nothing_in_the_games_own_order (tests.test_v84.KeyTests.test_campaign_key_says_nothing_in_the_games_own_order) ... ok
@@ -424,6 +442,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 401 tests in 166.606s
+Ran 419 tests in 160.343s
 
 OK (skipped=17)

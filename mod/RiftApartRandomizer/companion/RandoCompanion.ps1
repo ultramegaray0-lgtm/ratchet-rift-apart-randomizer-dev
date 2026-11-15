@@ -204,7 +204,7 @@ function Test-ArsenalRestored {
     try {
         $unlisted = Find-UnlistedArsenal $dir
         if ($unlisted -ne "") {
-            Write-Line "ARSENAL_RESTORED found in $unlisted but rivet.toml does not load it: add `"$unlisted`" to paths under [assets] (or run Install-ArsenalRestored.bat), then restart the game"
+            Write-Line "ARSENAL_RESTORED found in $unlisted but rivet.toml does not load it: add `"$unlisted`" to paths under [assets] in rivet.toml, then restart the game"
         }
     } catch { }
     $toc = Join-Path $dir "toc"

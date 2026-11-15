@@ -256,9 +256,9 @@ class Round20LogTests(unittest.TestCase):
 
 class VersionTests(unittest.TestCase):
     def test_versions(self):
-        # v0.54: kit 10.0.5, the generator stays 10.0.2 (same seeds and fingerprints)
-        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.5"'), ("16_rando_testtravel.lua", 'TT.VERSION = "10.0.5"'),
-                           ("02_rando_generator.lua", 'G.VERSION = "10.0.2"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.5"')):
+        # v0.55: kit 10.0.6, the generator stays 10.0.2 (same seeds and fingerprints)
+        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.6"'), ("dev(testtravel).lua", 'TT.VERSION = "10.0.6"'),
+                           ("02_rando_generator.lua", 'G.VERSION = "10.0.2"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.6"')):
             with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
                 self.assertIn(want, f.read(), name)
 
@@ -271,18 +271,18 @@ class KitCheckTests(unittest.TestCase):
     def test_a_complete_kit_says_so(self):
         g = Game(settings_file=True)
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 14 scripts are 10.0.5"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.6"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
     def test_a_missing_or_older_script_is_reported(self):
         from harness import script_files
-        files = [f for f in script_files() if not f.name.startswith("16_")]
+        files = [f for f in script_files() if not f.name.startswith("12_")]
         g = Game(files=files)
         g.lua.execute('RANDO_FILES["13_rando_armor"] = "8.3.0"')      # a file left from the 8.3 kit
         g.step(3)
-        self.assertTrue(g.log_has("missing 16_rando_testtravel"))
+        self.assertTrue(g.log_has("missing 12_rando_shop"))
         self.assertTrue(g.log_has("other versions: 13_rando_armor 8.3.0"))
-        self.assertTrue(g.note_has("mixes kits"))
+        self.assertTrue(g.note_has("mixes versions"))
 
 
 class InstallTests(unittest.TestCase):
@@ -296,22 +296,18 @@ class InstallTests(unittest.TestCase):
     def test_scripts(self):
         import re
         text = self.install_text()
-        listed = set(re.findall(r"\b(\d\d_rando_[a-z]+)\b", text.split("Copy the 14 files")[1].split("Use this kit")[0]))
-        shipped = {f[:-4] for f in os.listdir(os.path.join(self.KIT, "scripts")) if f.endswith(".lua")}
+        block = text.split("LAYOUT")[1].split("rivet.toml")[0]
+        listed = set(re.findall(r"\b(\d\d_rando_[a-z]+)\b", block))
+        listed_dev = set(re.findall(r"\b(dev\([a-z_]+\))", block)) - {"dev(name)"}
+        names = [f[:-4] for f in os.listdir(os.path.join(self.KIT, "scripts")) if f.endswith(".lua")]
+        shipped = {n for n in names if not n.startswith("dev(")}
         self.assertEqual(listed, shipped)
-        self.assertEqual(len(shipped), 14)
+        self.assertEqual(listed_dev, {n for n in names if n.startswith("dev(")})
+        self.assertEqual(len(shipped), 13)
         g = Game()
-        self.assertEqual(set(g.R.KIT_FILES.values()), shipped)
-
-    def test_docs(self):
-        import re
-        text = self.install_text()
-        block = text.split("docs\\")[-1]
-        listed = set(re.findall(r"([A-Z_0-9.]+\.(?:md|txt))", block))
-        shipped = {f for f in os.listdir(os.path.join(self.KIT, "docs")) if f.endswith((".md", ".txt"))}
-        self.assertEqual(listed, shipped)
+        self.assertEqual(set(g.R.KIT_FILES.values()) | set(g.R.OPTIONAL_FILES.values()), shipped)
 
     def test_top_level(self):
         shipped = set(os.listdir(self.KIT))
         self.assertEqual(shipped, {"INSTALL.txt", "rivet.toml", "rando_give.dll", "rando_give_source", "scripts",
-                                   "companion", "extras", "docs"})
+                                   "companion", "docs"})

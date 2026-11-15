@@ -189,7 +189,7 @@ class ShuffleKeyTests(unittest.TestCase):
         g.step(60)
         self.assertTrue(H.shuffle_off())
         self.assertFalse(H.enabled())
-        self.assertTrue(g.state.planet_shuffle_off)
+        self.assertIsNone(g.state.planet_shuffle)
         self.assertTrue(g.note_has("planet shuffle OFF"))
         # the travel byte and the level bits this session set are the game's again
         self.assertEqual(g.sim.travel_flag, 0)
@@ -204,7 +204,7 @@ class ShuffleKeyTests(unittest.TestCase):
         g.press("0")
         g.step(400)
         self.assertFalse(H.shuffle_off())
-        self.assertIsNone(g.state.planet_shuffle_off)
+        self.assertTrue(g.state.planet_shuffle)
         self.assertTrue(g.note_has("planet shuffle ON"))
         self.assertEqual(g.sim.travel_flag, 1)                # back on at the hub
         self.assertEqual(g.sim.levels & ALL_LEVELS, ALL_LEVELS)
@@ -246,8 +246,8 @@ class ShuffleKeyTests(unittest.TestCase):
         g.press("0")
         g.step(30)
         saved = g.companion_export()
-        self.assertIn('["planet_shuffle_off"]=true', saved)
-        g2 = hub_game("v054-save")
+        self.assertNotIn('["planet_shuffle"]', saved)
+        g2 = hub_game("v054-save", planet_shuffle=False)
         g2.companion_restore(saved)
         g2.sim.load_save("NefCity")
         g2.step(400)
@@ -257,15 +257,17 @@ class ShuffleKeyTests(unittest.TestCase):
         # a New Game starts the seed over, but not your choice
         g2.sim.new_game()
         g2.step(120)
-        self.assertTrue(g2.state.planet_shuffle_off)
+        self.assertIsNone(g2.state.planet_shuffle)
         self.assertTrue(g2.g.RANDO_HUB.shuffle_off())
 
     def test_a_choice_made_before_the_restore_wins(self):
         g = to_hub(hub_game("v054-early"))
         saved = g.companion_export()                          # saved with shuffle ON
-        g2 = hub_game("v054-early")
+        self.assertIn('["planet_shuffle"]=true', saved)
+        g2 = hub_game("v054-early", planet_shuffle=False)
         g2.wait_seed()
-        g2.press("0")                                         # pressed before the companion connected
+        g2.press("0")                                         # pressed before the companion connected:
+        g2.press("0")                                         # on, then off again
         g2.companion_restore(saved)
         self.assertTrue(g2.g.RANDO_HUB.shuffle_off())
 
@@ -375,7 +377,7 @@ class RestoreTests(unittest.TestCase):
 class BannerTests(unittest.TestCase):
     def test_the_banner_names_the_release_and_the_kit(self):
         g = to_hub(hub_game("v054-banner"))
-        self.assertTrue(g.note_has("Randomizer v0.54 (kit 10.0.5) - seed"))
+        self.assertTrue(g.note_has("Randomizer v0.55 - seed"))
         self.assertTrue(g.log_has("planet shuffle 0"))       # RANDO-KEYS lists the new key
 
 

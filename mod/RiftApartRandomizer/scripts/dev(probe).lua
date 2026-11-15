@@ -1,4 +1,4 @@
--- Randomizer PROBE v7 (developer tools, optional). Lets you inspect and test the game's own
+-- DEVELOPER TOOL - not part of a release. Randomizer PROBE v7. Lets you inspect and test the game's own
 -- level-script "give item" nodes by hand. Nothing happens unless you press one of these keys
 -- (Num Lock on). The randomizer itself does not need this file; 09_rando_real.lua delivers
 -- rewards automatically.
@@ -14,6 +14,7 @@
 -- Removed in v7: the bolt-counter scan (the count is not stored where it searched), the
 -- AmmoCost weapon lock (no effect) and the component-index search (exceeded the frame budget).
 
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(probe)"] = "10.0.6"   -- the kit check (10_rando_runtime.lua)
 RANDO_PROBE = RANDO_PROBE or {}
 local P = RANDO_PROBE
 P.version = 7
@@ -195,32 +196,37 @@ function P.fire(t, what)
   return ok
 end
 
--- test items: every weapon and gadget item config in your dag, reachable through the id table
-P.test_items, P.test_i = {}, 0
-P.item_id = {}
-for hex, path in pairs(RANDO_ITEM_IDS or {}) do P.item_id[path] = hex end
--- the player's weapons and gadgets (from the seed export), weapons first; without a seed,
--- every weapon/gadget item in the dag
-if RANDO_DATA and RANDO_DATA.real_items then
-  for _, info in pairs(RANDO_DATA.real_items) do
-    P.item_id[info.config] = info.id
-    P.test_items[#P.test_items + 1] = info.config
-  end
-else
-  for path in pairs(P.item_id) do
-    if path:match("^configs/equipment/wpn_.+_item%.config$") or path:match("^configs/equipment/gdgt_.+_item%.config$") then
-      P.test_items[#P.test_items + 1] = path
+-- test items: every weapon and gadget item config in your dag, reachable through the id table.
+-- Built on first use, so dev(item_ids).lua may load before or after this file.
+P.test_items, P.test_i, P.item_id = {}, 0, {}
+function P.build_test_items()
+  if P.built then return end
+  P.built = true
+  for hex, path in pairs(RANDO_ITEM_IDS or {}) do P.item_id[path] = hex end
+  -- the player's weapons and gadgets (from the seed export), weapons first; without a seed,
+  -- every weapon/gadget item in the dag
+  if RANDO_DATA and RANDO_DATA.real_items then
+    for _, info in pairs(RANDO_DATA.real_items) do
+      P.item_id[info.config] = info.id
+      P.test_items[#P.test_items + 1] = info.config
+    end
+  else
+    for path in pairs(P.item_id) do
+      if path:match("^configs/equipment/wpn_.+_item%.config$") or path:match("^configs/equipment/gdgt_.+_item%.config$") then
+        P.test_items[#P.test_items + 1] = path
+      end
     end
   end
+  table.sort(P.test_items, function(a, b)
+    local wa, wb = a:find("/wpn_") ~= nil, b:find("/wpn_") ~= nil
+    if wa ~= wb then return wa end
+    return a < b
+  end)
 end
-table.sort(P.test_items, function(a, b)
-  local wa, wb = a:find("/wpn_") ~= nil, b:find("/wpn_") ~= nil
-  if wa ~= wb then return wa end
-  return a < b
-end)
 
 function P.next_test_item()
-  if #P.test_items == 0 then say("no test items: 06_rando_item_ids.lua and the seed file are missing"); return nil end
+  P.build_test_items()
+  if #P.test_items == 0 then say("no test items: dev(item_ids).lua and the seed file are missing"); return nil end
   P.test_i = P.test_i % #P.test_items + 1
   local path = P.test_items[P.test_i]
   local label = path:match("([^/]+)_item%.config$")
@@ -236,6 +242,7 @@ end
 -- point an AddToInventoryAction node at another item, fire it, then put the node back.
 -- Refused unless the node's own +0x60 was recognised as an item id: that proves the layout.
 function P.grant_via_node(path, amount)
+  P.build_test_items()
   path = path or P.test_items[P.test_i]
   local t = P.targets[P.sel]
   if not path then say("choose a test item with NUMPAD7"); return false end
@@ -254,7 +261,7 @@ function P.grant_via_node(path, amount)
   local bytes = qword_hex_to_le(hex) .. " " .. bin_to_hex(string.pack("<i4", amount or 1))
   local okw, err = pcall(rivet.write, at, bytes)
   if not okw then log("grant write failed", tostring(err)); say("write failed: " .. tostring(err)); return false end
-  local okv, now = pcall(rivet.read, at, 12)
+  local _, now = pcall(rivet.read, at, 12)
   log("grant: node now holds", tostring(now), "(wanted " .. bytes .. ")")
   local fired = P.fire(t, "giving " .. path)
   later(90, function()
@@ -267,6 +274,7 @@ function P.grant_via_node(path, amount)
 end
 
 function P.donor_grant(path)
+  P.build_test_items()
   path = path or P.test_items[P.test_i]
   if not path then say("choose a test item with NUMPAD7"); return false end
   if not RANDO_REAL then say("09_rando_real.lua is missing"); return false end
@@ -312,7 +320,7 @@ key("NUMPAD6", function() P.grant_via_node() end)
 key("NUMPAD7", function() P.next_test_item() end)
 key("NUMPAD9", function()
   if not RANDO_REAL or not RANDO_REAL.start_donor_search then say("09_rando_real.lua is missing"); return end
-  if not RANDO_VTABLES then say("06_rando_vtables.lua is missing"); return end
+  if not RANDO_VTABLES then say("dev(vtables).lua is missing"); return end
   say("census of this planet's script nodes...")
   RANDO_REAL.start_donor_search(true)
 end)
@@ -330,4 +338,4 @@ function P.on_frame()
   end
 end
 pcall(rivet.on_frame, P.on_frame)
-log("v7 loaded:", #P.test_items, "test items; NUMPAD3 survey, NUMPAD4 select, NUMPAD5 fire, NUMPAD7 item, NUMPAD6 give item, NUMPAD9 census, NUMPAD8 give via borrowed node")
+log("v7 loaded: NUMPAD3 survey, NUMPAD4 select, NUMPAD5 fire, NUMPAD7 item, NUMPAD6 give item, NUMPAD9 census, NUMPAD8 give via borrowed node")

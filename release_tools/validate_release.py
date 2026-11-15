@@ -88,31 +88,28 @@ check("SHA256SUMS.txt matches every file", not mism, ", ".join(mism))
 check("every file is in SHA256SUMS.txt", not unlisted, ", ".join(unlisted))
 
 # ---- 4. contents: required present, nothing unwanted
-required = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "COMPATIBILITY.md", "CHANGELOG.md",
-            "CREDITS_AND_LICENSES.md", "LICENSE.txt", "VERSION.txt", "SHA256SUMS.txt", "docs/PLAYER_GUIDE.md",
-            "GAME_FOLDER/rivet.toml", "GAME_FOLDER/rando_give.dll",
-            "GAME_FOLDER/rando_companion/Start-Companion.bat", "GAME_FOLDER/rando_companion/RandoCompanion.ps1",
-            "GAME_FOLDER/rando_companion/Install-ArsenalRestored.bat", "GAME_FOLDER/rando_companion/Install-ArsenalRestored.ps1"]
-kit_scripts = sorted(f for f in os.listdir(os.path.join(KIT, "scripts")) if f.endswith(".lua"))
+required = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "CREDITS_AND_LICENSES.md", "LICENSE.txt",
+            "VERSION.txt", "SHA256SUMS.txt", "GAME_FOLDER/rivet.toml", "GAME_FOLDER/rando_give.dll",
+            "GAME_FOLDER/rando_companion/Start-Companion.bat", "GAME_FOLDER/rando_companion/RandoCompanion.ps1"]
+# every script of the kit except developer files (dev(name).lua)
+kit_scripts = sorted(f for f in os.listdir(os.path.join(KIT, "scripts")) if f.endswith(".lua") and not re.match(r"dev\(.+\)\.lua$", f))
 required += ["GAME_FOLDER/scripts/" + s for s in kit_scripts]
 missing = [p for p in required if p not in actual]
 check("all required files present", not missing, ", ".join(missing))
-check("14 scripts", len([p for p in actual if p.startswith("GAME_FOLDER/scripts/")]) == 14)
-unwanted = [p for p in actual if re.search(r"(^|/)(\.git|__pycache__|extras|research|tests?)(/|$)|\.(log|pyc|bak|tmp|sav|save|zip|exe)$|_dev|DEVELOPMENT_LOG|TEST_RESULTS|BATCH_|07_rando_testmode|08_rando_probe|06_rando_vtables|06_rando_item_ids|randomizer_saves|spoiler", p, re.I)]
+check("13 scripts", len([p for p in actual if p.startswith("GAME_FOLDER/scripts/")]) == 13)
+check("exactly the files listed above, nothing more", sorted(actual) == sorted(required), ", ".join(sorted(set(actual) ^ set(required))))
+unwanted = [p for p in actual if re.search(r"(^|/)(\.git|__pycache__|extras|research|source|tests?)(/|$)|\.(log|pyc|bak|tmp|sav|save|zip|exe|c|h|def|sh|py)$|_dev|dev\(|DEVELOPMENT_LOG|TEST_RESULTS|BATCH_|07_rando_testmode|08_rando_probe|06_rando_vtables|06_rando_item_ids|16_rando_testtravel|Install-Arsenal|randomizer_saves|spoiler", p, re.I)]
 check("no development, debug, log, save or test files", not unwanted, ", ".join(unwanted))
 
 # ---- 5. packaged files == the final build in the repo
 pairs = {"GAME_FOLDER/rivet.toml": "rivet.toml", "GAME_FOLDER/rando_give.dll": "rando_give.dll"}
 pairs.update({f"GAME_FOLDER/scripts/{s}": f"scripts/{s}" for s in kit_scripts})
-pairs.update({f"GAME_FOLDER/rando_companion/{c}": f"companion/{c}" for c in
-              ["Start-Companion.bat", "RandoCompanion.ps1", "Install-ArsenalRestored.bat", "Install-ArsenalRestored.ps1"]})
-pairs.update({f"source/rando_give/{c}": f"rando_give_source/{c}" for c in
-              ["rando_give.c", "rando_give_core.h", "kernel32.def", "ntdll.def", "build.sh"]})
+pairs.update({f"GAME_FOLDER/rando_companion/{c}": f"companion/{c}" for c in ["Start-Companion.bat", "RandoCompanion.ps1"]})
 diff = [p for p, k in pairs.items() if actual[p] != sha(os.path.join(KIT, k))]
 check("packaged files byte-identical to the final build (repo)", not diff, ", ".join(diff))
 tags = {s: re.search(r'RANDO_FILES\["[^"]+"\]\s*=\s*"([^"]+)"', open(os.path.join(pkg, "GAME_FOLDER", "scripts", s)).read()) for s in kit_scripts}
 vers = {s: (m.group(1) if m else None) for s, m in tags.items()}
-check("all 14 scripts carry the same kit tag", len(set(vers.values())) == 1 and None not in vers.values(), str(set(vers.values())))
+check("all 13 scripts carry the same kit tag", len(set(vers.values())) == 1 and None not in vers.values(), str(set(vers.values())))
 check("rando_give.dll is the verified v6 binary", actual["GAME_FOLDER/rando_give.dll"] == "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12")
 
 # ---- 6. no personal data or machine-specific paths
@@ -167,31 +164,25 @@ need = (cfg["scripts"]["enabled"] is True and cfg["scripts"]["path"] == "scripts
 check("installed rivet.toml parses (TOML) and has every required setting", need)
 check("rivet.toml's dll_path and scripts path are relative and resolve in the game folder",
       os.path.isfile(os.path.join(game, cfg["renderdoc"]["dll_path"])) and os.path.isdir(os.path.join(game, cfg["scripts"]["path"])))
-check("rando_companion sits next to RiftApart.exe (where Install-ArsenalRestored.ps1 looks)",
+check("rando_companion sits next to RiftApart.exe (where the companion looks for rivet.toml and mods)",
       os.path.isfile(os.path.join(os.path.dirname(os.path.join(game, "rando_companion", "x")), "..", "RiftApart.exe")))
 
 # ---- 9. run the INSTALLED scripts: simulator suites + seed generation, fresh HOME, cwd elsewhere
+# the release's scripts are the INSTALLED copy; tests that also load developer tooling (dev(name).lua,
+# never shipped) take it from the repo
 env = {"PATH": "/usr/bin:/bin", "HOME": user_home, "RANDO_MOD_DIR": game,
-       "RANDO_SCRIPTS": os.path.join(game, "scripts"), "LANG": "C.UTF-8", "PYTHONDONTWRITEBYTECODE": "1"}
-mods = ["tests.test_v100", "tests.test_v90", "tests.test_runtime", "tests.test_levels", "tests.test_generator",
-        "tests.test_campaign", "tests.test_v85", "tests.test_v84", "tests.test_registry"]
+       "RANDO_SCRIPTS": os.path.join(game, "scripts"), "RANDO_DEV_SCRIPTS": os.path.join(KIT, "scripts"),
+       "LANG": "C.UTF-8", "PYTHONDONTWRITEBYTECODE": "1"}
+mods = ["tests.test_v055", "tests.test_v100", "tests.test_v054", "tests.test_v90", "tests.test_runtime", "tests.test_levels",
+        "tests.test_generator", "tests.test_campaign", "tests.test_v85", "tests.test_registry"]
 r = subprocess.run([sys.executable, "-m", "unittest", "-q"] + mods, cwd=REPO, env=env, capture_output=True, text=True, timeout=3000)
 tail = r.stderr.strip().splitlines()
 summary = " / ".join(l for l in tail[-3:] if l.strip())
-import ast
 failed_ids = re.findall(r"^(?:FAIL|ERROR): (\w+) \(tests\.(\w+)\.", r.stderr, re.M)
-def uses_test_mode(fn, module):
-    src = open(os.path.join(REPO, "tests", module + ".py")).read()
-    for node in ast.walk(ast.parse(src)):
-        if isinstance(node, ast.FunctionDef) and node.name == fn:
-            return "test_mode=True" in ast.get_source_segment(src, node)
-    return False
-other = [f"{m}.{f}" for f, m in failed_ids if not uses_test_mode(f, m)]
 ran = re.search(r"Ran (\d+) tests", r.stderr)
 check("simulator suites pass against the installed copy (" + ", ".join(m.split(".")[1] for m in mods) + ")",
-      not other and ran is not None,
-      f"{ran.group(1) if ran else '?'} ran; {len(failed_ids)} fail only because they load the developer test mode, which is not shipped"
-      + (f"; OTHER FAILURES: {other}" if other else ""))
+      not failed_ids and ran is not None and r.returncode == 0,
+      f"{ran.group(1) if ran else '?'} ran" + (f"; FAILURES: {failed_ids[:8]}" if failed_ids else ""))
 open(os.path.join(WORK, "installed_suites.txt"), "w").write(r.stderr)
 r2 = subprocess.run([sys.executable, "-I", os.path.join(os.path.dirname(os.path.abspath(__file__)), "check_reqs.py"), REPO, "500"], cwd=user_home, env=env,
                     capture_output=True, text=True, timeout=3000)
