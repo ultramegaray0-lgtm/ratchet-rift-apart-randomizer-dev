@@ -2,6 +2,34 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.13 (kit 10.0.9, generator 10.11.0; not released): Chaos Randomizer
+
+Asked: a third, independent randomizer: **anything can become anything**, with no compatibility
+rules and no progression protection. OFF by default, its own key, saved, priority over the Enemy and
+Boss Randomizers while ON. **Nothing of this has run in the game.** Seeds unchanged.
+
+- `scripts/chaos.lua` (new, optional, **never in a player package**): **`BACKSPACE`** turns it on /
+  off (`Ctrl+BACKSPACE`: what it changed here). Every spawner slot can become any enemy template seen
+  on any planet of the save (`state.chaos_seen`) or learned by 10.12: regular, elite, flyer, turret,
+  large, boss tier, story boss and unclassified, in both directions. Each slot gets its own seeded
+  pick. Repeats are avoided until the pool is used up, and a slot never keeps its own template.
+  No guards: no family / tier / planet rule, no timeouts, no retry limit, no story boss areas, no
+  "not started" rule, no put-back, nothing that forces progression. Only learned friendly bots and
+  mounts are left out (they are not enemies). Code integrity stays: live-instance check, read-back,
+  game-used ids only, shared lists not written. `docs/CHAOS.md` explains the risks.
+- Priority: while Chaos is ON the Enemy and Boss Randomizers change nothing and keep their own
+  settings. Chaos OFF puts its slots back and they plan again (exactly their own picks).
+- `16_rando_spawners.lua` (shared integration): priority clients with their own `assign`, clients
+  with `guards = false` (their slots skip every safety net), census and restore hooks for clients,
+  the record of writes pruned when nodes are gone. Enemy / Boss behaviour unchanged (tests/test_v1012.py
+  passes unchanged).
+- 10: settings `chaos_randomizer = false`, `key_chaos = "BACKSPACE"`, `chaos_cross_planet = true`; the
+  status line; chaos is an optional kit file. Kit 10.0.9, banner `Randomizer dev 10.13`.
+- `tools/build_public_release.py` holds `chaos.lua` back (`HELD_BACK`), and
+  `release_tools/validate_release.py` rejects a package that contains it.
+- Tests: tests/test_v1013.py (23), simulator only (nodes can belong to one planet now). 504 run,
+  0 failures, 21 skipped. `TEST_REPORT_10.13.md`.
+
 ## Dev 10.12 (kit 10.0.8, generator 10.11.0; not released): Enemy Randomizer and Boss Randomizer
 
 Asked: an Enemy Randomizer and a Boss Randomizer as two separate, independently switchable

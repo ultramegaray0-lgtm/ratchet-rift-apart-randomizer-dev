@@ -142,7 +142,7 @@ class OffByDefaultTests(unittest.TestCase):
     def test_the_kit_check_lists_them_as_optional(self):
         g = Game()
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.8"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.9"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("RANDO-ENEMY\tinstalled (OFF"))
         self.assertTrue(g.log_has("RANDO-BOSS\tinstalled (OFF"))
 
@@ -503,7 +503,7 @@ class RemovalTests(unittest.TestCase):
         g.press("=")
         g.step(300)
         self.assertEqual(changed(g), set())
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.8"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.9"))
         self.assertFalse(any("RANDO-ERROR" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_without_enemy_lua_bosses_still_work(self):

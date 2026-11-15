@@ -1,4 +1,4 @@
-# Testing (Randomizer 10.0, Public Release v0.52; dev 10.12)
+# Testing (Randomizer 10.0, Public Release v0.52; dev 10.13)
 
 Results come in four kinds, and a pass in one is never evidence for another. VERIFICATION_REPORT.md
 sorts every feature into them. This page covers how the tests run and what to check in your
@@ -6,14 +6,16 @@ first full playthrough.
 
 ## 1. Automated tests (this build)
 
-`python run_tests.py`: **481 tests, 0 failures, 0 errors, 21 skipped** (TEST_RESULTS.txt; dev 10.11 adds tests/test_v1011.py, 20;
-dev 10.12 adds tests/test_v1012.py, 32 - see TEST_REPORT_10.12.md).
+`python run_tests.py`: **504 tests, 0 failures, 0 errors, 21 skipped** (TEST_RESULTS.txt; dev 10.11 adds tests/test_v1011.py, 20;
+dev 10.12 adds tests/test_v1012.py, 32 - see TEST_REPORT_10.12.md; dev 10.13 adds tests/test_v1013.py, 23 - TEST_REPORT_10.13.md).
+All of these are SIMULATOR tests: none of them is a result from the real game.
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
 - 8 need the 5.0 and 6.0 git commits, which are not in this repository.
 
 | Suite | Tests | What it covers |
 |---|---|---|
+| **test_v1013** | 23 | dev 10.13: Chaos Randomizer: loads OFF, BACKSPACE toggles and says so, saved and kept over New Game; every category replaced and used both ways (bosses <-> regular, story bosses, unclassified); other planets' templates; few repeats; seeded; priority over Enemy/Boss and their exact picks back when OFF; no guard of any kind; integrity (unmatched nodes never written); removal; never in a player package |
 | **test_v1012** | 32 | dev 10.12: Enemy / Boss Randomizer against the simulated encounter model: off = nothing read or written; only template ids change and the node completes the encounter once, after the last enemy; tiers and families never mix; story bosses and friendlies never touched; bosses permuted; each switch only its own, saved and kept over New Game; safety nets (no spawn, stuck, retries, wrong family, story boss areas); layout by signature; frame budget; any of the three files removed |
 | **test_v1011** | 20 | dev 10.11: Coordinates never on revisits and always opening a playable first visit (an independent Python check of the rules, both fills, your settings, fewer locations), the audit catching both, the switch; open planets' visits made active between stories (never while a story runs, never on your planet); a primed landing loads nothing; a landing started there loads the intro (Blizar's destroyed pad); a stuck first step reloaded at the intro; Viceron before Torren IV sent back with the reason; first visits listed first; the game's trip to an open Sargasso played |
 | **test_v90** | 20 | 9.0: no hub; retired presets and settings; every mode starts prologue > Nefarious City > Sargasso; your 9.0 and 8.5.2 settings files; a New Game played to Sargasso with no warp, flight, mission write or hero swap; a leftover hub script reported and inert; locked levels still send you back |
@@ -29,6 +31,30 @@ The skipped tests:
 The older suites pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
+
+## 2-dev3. Dev 10.13 (kit 10.0.9): Chaos Randomizer (gameplay test plan)
+
+Read CHAOS.md first: Chaos has no protection, so a stuck run is an expected result, not a failure.
+Use a spare save. What is tested here is that Chaos does what it says, not that the game stays beatable.
+
+0. **Install.** `RANDO-KIT all 12 required scripts are 10.0.9`; `RANDO-CHAOS installed (OFF ...)`;
+   banner `Randomizer dev 10.13`.
+1. **The key.** Does `BACKSPACE` reach the game (`RANDO-KEY BACKSPACE` in rivet.log) without a game
+   action of its own? "CHAOS RANDOMIZER: ON" on screen; `Ctrl+BACKSPACE` shows the status.
+2. **Everything changes.** `RANDO-SPAWNERS plan (...): N slot(s) changed ... chaos (priority, P
+   template(s))`. Play encounters: what spawns? Note whether each replacement spawns, moves, fights,
+   dies, and whether the encounter completes (no outcome is required).
+3. **Bosses <-> regular.** A large enemy encounter that now spawns small ones and the other way round.
+4. **Cross-planet.** Play a planet with Chaos on, travel to another: `RANDO-CHAOS pool: N new
+   template(s) from <planet>`, and `Ctrl+BACKSPACE` "N from elsewhere here". **Do other planets'
+   templates spawn, spawn wrong, or make the game misbehave or crash?** If it crashes, try
+   `chaos_cross_planet = false`.
+5. **Priority.** With `-` and `=` ON, switch Chaos on: their changes are replaced; switch it off:
+   their own picks come back (Ctrl+- / Ctrl+= counts as before Chaos).
+6. **Persistence.** Restart the game (companion running) and start a New Game: Chaos still ON.
+7. **Getting unstuck.** In a broken encounter: BACKSPACE, then load the last checkpoint: the
+   original encounter.
+8. **Frame time.** Any `ran past the 8 ms frame budget` line naming 16_rando_spawners or chaos.lua?
 
 ## 2-dev2. Dev 10.12 (kit 10.0.8): Enemy Randomizer and Boss Randomizer (gameplay test plan)
 

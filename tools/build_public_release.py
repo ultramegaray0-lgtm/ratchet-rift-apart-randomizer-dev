@@ -17,7 +17,7 @@ import sys
 import zipfile
 
 VERSION = "0.55"
-BUILD = "10.0.8"                 # dev 10.11: the kit in this repo (VERSION is set when a public release is made)
+BUILD = "10.0.9"                 # dev 10.11: the kit in this repo (VERSION is set when a public release is made)
 NAME = f"Ratchet_Rift_Apart_Randomizer_v{VERSION}_Player_Release"
 ZIP_NAME = NAME + ".zip"
 DATE = (2026, 11, 15, 0, 0, 0)
@@ -32,6 +32,8 @@ REQUIRED = ["01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lu
             "11_rando_campaign.lua", "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua"]
 OPTIONAL = ["15_rando_hub.lua",          # shipped; players may delete it (no planet shuffle then)
             "16_rando_spawners.lua", "enemy.lua", "boss.lua"]   # dev 10.12: Enemy / Boss Randomizer, off by default
+# dev 10.13: in the kit for development, NEVER in a player package until it has been played (no guards by design)
+HELD_BACK = ["chaos.lua"]
 COMPANION = ["Start-Companion.bat", "RandoCompanion.ps1"]
 DOCS = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "CREDITS_AND_LICENSES.md", "LICENSE.txt"]
 DLL_SHA256 = "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12"
@@ -40,7 +42,7 @@ DLL_SHA256 = "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12"
 def release_scripts():
     """every .lua in scripts/ that is not a developer file, in name order"""
     names = sorted(f for f in os.listdir(os.path.join(KIT, "scripts")) if f.endswith(".lua"))
-    return [n for n in names if not DEV_FILE.match(n)]
+    return [n for n in names if not DEV_FILE.match(n) and n not in HELD_BACK]
 
 
 def plan(scripts):

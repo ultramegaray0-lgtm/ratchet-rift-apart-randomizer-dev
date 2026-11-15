@@ -91,8 +91,13 @@ seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_
 | `key_bosses` | `"="` | Boss Randomizer on/off in the game |
 | `spawner_runtime` | true | false: neither changes anything |
 
+| `chaos_randomizer` | false | dev 10.13: the Chaos Randomizer's start for a save that never used its key (NO protection, CHAOS.md) |
+| `key_chaos` | `"BACKSPACE"` | Chaos Randomizer on/off (Ctrl: what it changed here) |
+| `chaos_cross_planet` | true | Chaos's pool includes templates seen on every planet (false: this planet's only) |
+
 The keys are the normal way: the save remembers the choice, a New Game keeps it. No preset turns them
-on. ENEMIES_AND_BOSSES.md explains both.
+on. ENEMIES_AND_BOSSES.md explains the first two, CHAOS.md the third. While Chaos is ON the Enemy and
+Boss Randomizers change nothing (their settings stay as you set them).
 
 ## Currency
 

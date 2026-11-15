@@ -36,7 +36,16 @@
 --   * story boss areas (checkpoints named in SP.BOSS_ZONES): every change is put back while you are there.
 --   Such a spawner is put back at once and kept original for this seed (state.spawn_blocked).
 --   Spawners already running are never changed; switching a feature off puts its spawners back at once.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.8"   -- the kit check (10_rando_runtime.lua)
+--
+-- dev 10.13 CHAOS (chaos.lua) is a PRIORITY client without guards: while it is ON it owns every slot
+-- (the Enemy and Boss Randomizers keep their own ON/OFF but change nothing), it chooses its own
+-- replacements (client.assign), and none of the safety nets above apply to the slots it changed:
+-- no story boss area put-back, no timeouts, no retries limit, no family check, no "not started yet"
+-- rule. What stays for every client is code integrity: the node must still be the same live instance,
+-- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
+-- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
+-- originals and the Enemy / Boss Randomizers plan again from their own settings.
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.9"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -195,9 +204,25 @@ function SP.register(client)
   SP.clients[client.name] = client
   SP.client_order[#SP.client_order + 1] = client.name
   table.sort(SP.client_order)
-  log(client.label, "is installed (", (client.role == "boss") and "boss-tier enemies" or "regular enemies", ")")
+  local what = (client.role == "boss") and "boss-tier enemies" or (client.role == "any") and
+               "every enemy and boss, priority, no guards" or "regular enemies"
+  log(client.label, "is installed (", what, ")")
   return client
 end
+-- dev 10.13: the priority client (Chaos) when it is ON, else nil
+function SP.priority_client()
+  for _, name in ipairs(SP.client_order) do
+    local c = SP.clients[name]
+    if c.priority and SP.enabled(c) then return c end
+  end
+  return nil
+end
+-- does this client's work get the safety nets? (Chaos: guards = false)
+local function guarded_name(name)
+  local c = name and SP.clients[name]
+  return c == nil or c.guards ~= false
+end
+SP.guarded_name = guarded_name
 function SP.client_for_role(role)
   for _, name in ipairs(SP.client_order) do
     local c = SP.clients[name]
@@ -239,7 +264,7 @@ function SP.set(client, on, why)
     local n = SP.continue_reverts()
     log(client.label, "OFF (" .. tostring(why) .. "):", n, "spawner slot(s) put back to their original enemies" ..
         (next(SP.revert_pending) and " (the rest over the next frames)" or ""))
-    if not SP.any_enabled() then SP.job = nil end
+    if not SP.any_enabled() then SP.job = nil else SP.replan = true end   -- the others plan again (dev 10.13)
   end
   return true
 end
@@ -265,6 +290,10 @@ function SP.after_restore(live)
         for key, v in pairs(live[k]) do if s[k][key] == nil then s[k][key] = v end end
       end
     end
+  end
+  for _, name in ipairs(SP.client_order) do
+    local c = SP.clients[name]
+    if c.after_restore then pcall(c.after_restore, live) end
   end
   -- a feature the restored save has off: whatever this session changed for it goes back
   for _, name in ipairs(SP.client_order) do
@@ -486,7 +515,24 @@ local function census(job)
   log(string.format("census %d (%s): %d spawner node(s) read, %d template(s), %d skipped%s", lvl.id, tostring(job.why),
       #lvl.order, count(tids), #lvl.skipped, #lay > 0 and (" - layout " .. table.concat(lay, ", ")) or ""))
   for i = 1, math.min(5, #lvl.skipped) do log("  skipped", lvl.skipped[i]) end
+  for _, name in ipairs(SP.client_order) do
+    local c = SP.clients[name]
+    if c.on_census then
+      local ok, err = pcall(c.on_census, lvl)
+      if not ok then log("RANDO-ERROR", name, "census hook:", tostring(err)) end
+    end
+  end
   SP.plan("census " .. lvl.id)
+  -- dev 10.13: forget writes in nodes that are gone (another planet's), so the record never grows
+  local n_in, t1 = 0, clock()
+  for _, a in ipairs(sorted_keys(SP.written)) do
+    if not lvl.slots_by_addr[a] then
+      local w = SP.written[a]
+      if w and not SP.still_valid({ actor = w.actor, component = w.component, addr = w.node }) then SP.written[a] = nil end
+      n_in = n_in + 1
+      if n_in >= 8 or clock() - t1 > SP.SLICE_SECONDS then coroutine.yield(); n_in, t1 = 0, clock() end
+    end
+  end
 end
 
 function SP.start_scan(why)
@@ -575,6 +621,15 @@ function SP.revert_written(owner, why, deadline)
   if n > 0 then SP.stats.reverted = SP.stats.reverted + n; log(n, "slot(s) of an earlier census put back:", tostring(why)) end
   return n, true
 end
+-- the guarded clients' slots only (a story boss area does not touch Chaos)
+function SP.revert_guarded(why)
+  local n = 0
+  for _, name in ipairs(SP.client_order) do
+    if guarded_name(name) then n = n + (SP.revert_client(SP.clients[name], why)) end
+  end
+  if n > 0 then log(n, "slot(s) put back:", why) end
+  return n
+end
 function SP.revert_all(why)
   local lvl = SP.level
   local n = 0
@@ -630,15 +685,37 @@ function SP.plan(why)
   local perms = {}
   local applied, kept, wrong, writes = 0, 0, 0, 0
   local deadline = clock() + SP.BUDGET_SECONDS
+  -- dev 10.13: a priority client (Chaos) chooses every slot itself; the others wait
+  local prio = SP.priority_client()
+  local prio_picks
+  if prio then
+    local list = {}
+    for _, uid in ipairs(lvl.order) do
+      for i, sl in ipairs(lvl.nodes[uid].slots) do
+        if not sl.shared and not sl.failed then list[#list + 1] = { uid = uid, i = i, orig = sl.orig } end
+      end
+    end
+    local ok, picks = pcall(prio.assign, lvl, list)
+    if not ok then log("RANDO-ERROR", prio.name, "assign:", tostring(picks)); picks = {} end
+    prio_picks = picks or {}
+  end
   for _, uid in ipairs(lvl.order) do
     -- after the first write, the budget decides; the rest next frame (the plan is the same, so a
     -- slot already done is passed over without a write)
     if writes > 0 and clock() > deadline then SP.replan = true; break end
     local rec = lvl.nodes[uid]
     for i, sl in ipairs(rec.slots) do
-      local key, role = SP.pool_key(sl.orig)
-      local owner = role and SP.client_for_role(role)
-      -- a slot changed by a client that is off now, or that belongs to the other tier now: back
+      local key, role, owner, pick
+      if prio then
+        pick = prio_picks[uid .. "#" .. i]
+        if pick == sl.orig then pick = nil end
+        owner = pick and prio or nil
+        key = pick and "chaos" or nil
+      else
+        key, role = SP.pool_key(sl.orig)
+        owner = role and SP.client_for_role(role)
+      end
+      -- a slot changed by a client that is off now, or that belongs to another client now: back
       if sl.cur ~= sl.orig and not sl.failed and (not owner or sl.owner ~= owner.name or not SP.enabled(owner)) then
         writes = writes + 1
         local ok, err = SP.write_slot(rec, sl, sl.orig, "owner changed")
@@ -649,9 +726,8 @@ function SP.plan(why)
           SP.schedule_scan("a node changed under the randomizer", 30)
         end
       end
-      if owner and SP.enabled(owner) and not sl.shared and not sl.failed and SP.idle(rec) and not SP.zone then
+      if not prio and owner and SP.enabled(owner) and not sl.shared and not sl.failed and SP.idle(rec) and not SP.zone then
         local pool = pools[key] or {}
-        local pick
         if #pool >= 2 then
           if owner.unique then
             perms[key] = perms[key] or SP.permutation(key, pool)
@@ -662,6 +738,10 @@ function SP.plan(why)
             pick = SP.rank(seed_key() .. "|" .. tostring(uid) .. "|" .. i, others)[1]
           end
         end
+      elseif not prio then
+        owner = nil
+      end
+      if owner and not sl.failed then
         if pick and pick ~= sl.cur then
           writes = writes + 1
           local ok, err = SP.write_slot(rec, sl, pick, owner.name)
@@ -682,12 +762,15 @@ function SP.plan(why)
   SP.stats.applied = SP.stats.applied + applied
   if applied > 0 or wrong > 0 then
     local parts = {}
-    for _, k in ipairs(sorted_keys(pools)) do parts[#parts + 1] = k .. "=" .. #pools[k] end
+    if prio then parts[1] = prio.name .. " (priority, " .. tostring(prio.pool_size or "?") .. " template(s))"
+    else for _, k in ipairs(sorted_keys(pools)) do parts[#parts + 1] = k .. "=" .. #pools[k] end end
     log(string.format("plan (%s): %d slot(s) changed, %d put back, %d left original | pools %s", tostring(why), applied,
         wrong, kept, #parts > 0 and table.concat(parts, " ") or "none learned yet"))
   end
   return applied
 end
+SP.seed_key = seed_key
+SP.sorted_keys = sorted_keys
 
 -- what a client changed in the loaded level (for its status line)
 function SP.client_status(client)
@@ -724,6 +807,13 @@ local function changed_rec(rec)
   return false
 end
 SP.changed_rec = changed_rec
+-- every changed slot of this node belongs to a client with safety nets (not Chaos)
+function SP.guarded_rec(rec)
+  for _, sl in ipairs(rec.slots) do
+    if sl.cur ~= sl.orig and not guarded_name(sl.owner) then return false end
+  end
+  return true
+end
 local function distinct_cur(rec)
   local one
   for _, sl in ipairs(rec.slots) do
@@ -771,7 +861,11 @@ function SP.on_spawn(f)
   elseif SP.family_of(tid) then return end
   local fam = SP.classify_actor(h)
   if not fam then return end
-  if is_changed then
+  local unguarded = false
+  for _, sl in ipairs(rec.slots) do if sl.owner and not guarded_name(sl.owner) then unguarded = true end end
+  if is_changed and unguarded then
+    SP.learn(tid, fam, "spawned by " .. tostring(rec.uid) .. " (chaos)")     -- learned, never put back
+  elseif is_changed then
     -- a replacement: it must be what the plan expected
     local expect
     for _, sl in ipairs(rec.slots) do if sl.expect then expect = sl.expect end end
@@ -814,7 +908,7 @@ function SP.on_checkpoint(cp)
   SP.cp_hash = cp.hash
   if not SP.any_enabled() then return end
   if SP.zone and not was then
-    local n = SP.revert_all("story boss area " .. tostring(SP.zone))
+    local n = SP.revert_guarded("story boss area " .. tostring(SP.zone))
     log("story boss area", tostring(SP.zone), "- every change put back (" .. n .. " slot(s)) while you are there")
   end
   if cp.loaded then
@@ -824,7 +918,7 @@ function SP.on_checkpoint(cp)
     if lvl then
       for _, uid in ipairs(lvl.order) do
         local rec = lvl.nodes[uid]
-        if rec.started and not rec.stopped and changed_rec(rec) then
+        if rec.started and not rec.stopped and changed_rec(rec) and SP.guarded_rec(rec) then
           SP.retries[uid] = (SP.retries[uid] or 0) + 1
           if SP.retries[uid] >= SP.DEATH_LIMIT then
             SP.block(rec, "the checkpoint was loaded " .. SP.retries[uid] .. " times while it ran")
@@ -870,7 +964,7 @@ function SP.tick(frame, ready)
   local lvl = SP.level
   for _, uid in ipairs(lvl.order) do
     local rec = lvl.nodes[uid]
-    if changed_rec(rec) and rec.started and not SP.is_blocked(rec) then
+    if changed_rec(rec) and rec.started and not SP.is_blocked(rec) and SP.guarded_rec(rec) then
       if rec.spawned == 0 and not rec.stopped and frame - rec.started > SP.SPAWN_TIMEOUT * 60 then
         SP.block(rec, "it started and spawned nothing for " .. SP.SPAWN_TIMEOUT .. " s")
       elseif rec.alive_n > 0 and frame - (rec.last_activity or rec.started) > SP.STUCK_SECONDS * 60 then

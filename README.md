@@ -1,6 +1,12 @@
 # Rift Apart Randomizer 10.0 (development project)
 
-**Dev 10.12 (kit 10.0.8, generator 10.11.0):** an **Enemy Randomizer** (`scripts/enemy.lua`, `-` key)
+**Dev 10.13 (kit 10.0.9):** the **Chaos Randomizer** (`scripts/chaos.lua`, `BACKSPACE` key, OFF by
+default): any enemy or boss can become any other, from any planet, with **no protection** (a run may
+become impossible). While ON it takes priority over the Enemy and Boss Randomizers, which keep their own
+settings and resume when it is OFF. Never in a player package. `mod/RiftApartRandomizer/docs/CHAOS.md`,
+`docs/TEST_REPORT_10.13.md`. Not run in the game yet.
+
+Dev 10.12 (kit 10.0.8): an **Enemy Randomizer** (`scripts/enemy.lua`, `-` key)
 and a **Boss Randomizer** (`scripts/boss.lua`, `=` key), separate, OFF by default, saved per save. They
 change only the enemy templates of the game's own encounter spawners, so the encounter itself still
 completes, opens its doors and advances the story; story bosses are never changed. Shared layer:

@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.12 (build 10.0.8) - test run 2026-11-15 20:13 UTC
+Rift Apart Randomizer dev 10.13 (build 10.0.9) - test run 2026-11-15 21:09 UTC
 Python 3.13.18 on Linux
-ran 481, failures 0, errors 0, skipped 21
+ran 504, failures 0, errors 0, skipped 21
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -406,6 +406,29 @@ test_story_boss_area_puts_everything_back (tests.test_v1012.SafetyNetTests.test_
 test_a_choice_made_before_the_restore_wins (tests.test_v1012.SaveTests.test_a_choice_made_before_the_restore_wins) ... ok
 test_reading_never_changes_the_save (tests.test_v1012.SaveTests.test_reading_never_changes_the_save) ... ok
 test_switches_and_learning_survive_save_and_new_game (tests.test_v1012.SaveTests.test_switches_and_learning_survive_save_and_new_game) ... ok
+test_bosses_become_regular_and_regular_become_bosses (tests.test_v1013.AnythingBecomesAnythingTests.test_bosses_become_regular_and_regular_become_bosses) ... ok
+test_every_category_is_replaced_and_used (tests.test_v1013.AnythingBecomesAnythingTests.test_every_category_is_replaced_and_used) ... ok
+test_no_learning_needed (tests.test_v1013.AnythingBecomesAnythingTests.test_no_learning_needed) ... ok
+test_seed_decides (tests.test_v1013.AnythingBecomesAnythingTests.test_seed_decides) ... ok
+test_the_same_replacement_repeats_as_little_as_possible (tests.test_v1013.AnythingBecomesAnythingTests.test_the_same_replacement_repeats_as_little_as_possible) ... ok
+test_enemies_of_another_planet_appear (tests.test_v1013.CrossPlanetTests.test_enemies_of_another_planet_appear) ... ok
+test_this_planet_only_when_switched_off (tests.test_v1013.CrossPlanetTests.test_this_planet_only_when_switched_off) ... ok
+test_garbage_and_shared_lists_are_never_written (tests.test_v1013.IntegrityTests.test_garbage_and_shared_lists_are_never_written) ... ok
+test_backspace_toggles_and_says_so (tests.test_v1013.LoadAndToggleTests.test_backspace_toggles_and_says_so) ... ok
+test_its_own_key (tests.test_v1013.LoadAndToggleTests.test_its_own_key) ... ok
+test_loads_off_by_default (tests.test_v1013.LoadAndToggleTests.test_loads_off_by_default) ... ok
+test_setting_persists_and_survives_new_game (tests.test_v1013.LoadAndToggleTests.test_setting_persists_and_survives_new_game) ... ok
+test_the_setting_decides_the_start (tests.test_v1013.LoadAndToggleTests.test_the_setting_decides_the_start) ... ok
+test_a_replacement_of_any_kind_is_learned_not_blocked (tests.test_v1013.NoGuardsTests.test_a_replacement_of_any_kind_is_learned_not_blocked) ... ok
+test_nothing_is_put_back_by_itself (tests.test_v1013.NoGuardsTests.test_nothing_is_put_back_by_itself) ... ok
+test_running_encounters_are_changed_too (tests.test_v1013.NoGuardsTests.test_running_encounters_are_changed_too) ... ok
+test_the_randomizer_never_forces_progression (tests.test_v1013.NoGuardsTests.test_the_randomizer_never_forces_progression) ... ok
+test_chaos_overrides_and_off_gives_the_normal_randomizers_back (tests.test_v1013.PriorityTests.test_chaos_overrides_and_off_gives_the_normal_randomizers_back) ... ok
+test_off_with_the_others_off_is_the_original_game (tests.test_v1013.PriorityTests.test_off_with_the_others_off_is_the_original_game) ... ok
+test_others_resume_by_their_own_rules (tests.test_v1013.PriorityTests.test_others_resume_by_their_own_rules) ... ok
+test_other_features_intact (tests.test_v1013.RemovalTests.test_other_features_intact) ... ok
+test_without_chaos_lua (tests.test_v1013.RemovalTests.test_without_chaos_lua) ... ok
+test_without_the_shared_layer (tests.test_v1013.RemovalTests.test_without_the_shared_layer) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -505,6 +528,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 481 tests in 118.752s
+Ran 504 tests in 116.719s
 
 OK (skipped=21)

@@ -4,7 +4,7 @@
 -- NEW seed with its own progress: start it with New Game. Lines starting with -- are notes; to
 -- change an option, remove the -- in front of it and edit the value. A wrong value is reported in
 -- rivet.log (search RANDO-SETTINGS) and the default is used instead.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.8"   -- version check (do not edit)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.9"   -- version check (do not edit)
 RANDO_SETTINGS = {
   -- THE SEED: "random" = the companion picks one and remembers it. Any other text is a fixed seed
   -- (the same text and settings give the same seed on every PC), e.g. "lombax-ryno-2026".
@@ -69,7 +69,14 @@ RANDO_SETTINGS = {
   -- boss_randomizer = false,          -- boss-tier enemies are shuffled among themselves (story bosses never)
   -- key_enemies = "-",                -- the Enemy Randomizer's key (Ctrl+key: what it changed here)
   -- key_bosses = "=",                 -- the Boss Randomizer's key
+  -- CHAOS (chaos.lua, OFF by default): ANY enemy or boss can become ANY other, from any planet, with NO
+  -- protection: doors may never open, bosses may be unbeatable, a run may become impossible. While it is
+  -- ON the two above change nothing. Its key turns it off again (docs/CHAOS.md).
+  -- chaos_randomizer = false,
+  -- key_chaos = "BACKSPACE",          -- the Chaos Randomizer's key
+  -- chaos_cross_planet = true,        -- false: only this planet's enemies
 }
 -- In the game, the 0 key turns PLANET SHUFFLE on or off (off by default; it is remembered).
 -- The - key turns the ENEMY RANDOMIZER on or off, the = key the BOSS RANDOMIZER (off by default; remembered).
+-- BACKSPACE turns the CHAOS RANDOMIZER on or off (off by default; remembered; no protection at all).
 -- Ctrl+0 pressed twice sends your randomizer items again if some went missing.

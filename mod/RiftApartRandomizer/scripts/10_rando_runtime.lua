@@ -16,6 +16,8 @@
 --   15_rando_hub.lua           OPTIONAL: planet shuffle (the Nefarious City hub)
 --   16_rando_spawners.lua      OPTIONAL: the spawner layer enemy.lua and boss.lua share (dev 10.12)
 --   boss.lua                   OPTIONAL: the Boss Randomizer (boss-tier enemies; = key, off by default)
+--   chaos.lua                  OPTIONAL: the Chaos Randomizer (anything becomes anything, NO guards;
+--                              BACKSPACE key, off by default; priority over enemy.lua / boss.lua) (dev 10.13)
 --   enemy.lua                  OPTIONAL: the Enemy Randomizer (regular enemies; - key, off by default)
 --   dev(*).lua                 developer tools only; never part of a release (see R.kit_check)
 --
@@ -33,12 +35,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.8"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.9"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.8"
-R.RELEASE = "dev 10.12"               -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.9"
+R.RELEASE = "dev 10.13"               -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -143,6 +145,10 @@ R.config = {
   key_enemies = "-",                 -- Enemy Randomizer on/off (Ctrl: what it changed here)
   key_bosses = "=",                  -- Boss Randomizer on/off (Ctrl: what it changed here)
   spawner_runtime = true,            -- false: neither changes anything, whatever the keys say
+  -- dev 10.13: chaos.lua. OFF by default; NO safety guards (docs/CHAOS.md); while ON the two above pause
+  chaos_randomizer = false,          -- anything can become anything (the start of a save that never used its key)
+  key_chaos = "BACKSPACE",           -- Chaos Randomizer on/off (Ctrl: what it changed here)
+  chaos_cross_planet = true,         -- the pool includes templates seen on every planet (false: this planet's only)
   -- developer keys and test travel: only used by the dev(*).lua files
   key_status = ";", key_campaign = "'", key_hub = "]", key_hub_return = "[", key_story = "/",
   key_test_travel = ".", key_test_point = ",", legacy_f_keys = true, test_travel = false,
@@ -162,7 +168,7 @@ local RETIRED_RUNTIME = {
 local SETTINGS = RANDO_SETTINGS or {}
 local KEY_SETTINGS = { key_status = true, key_campaign = true, key_test_travel = true, key_test_point = true,
                        key_hub = true, key_hub_return = true, key_story = true, key_shuffle = true,
-                       key_enemies = true, key_bosses = true }
+                       key_enemies = true, key_bosses = true, key_chaos = true }
 local GEN_OPTIONS = {}
 for k, v in pairs(SETTINGS) do
   if R.config[k] ~= nil then
@@ -707,7 +713,7 @@ function R.status_text()
   if armor then real = real and (real .. " | " .. armor) or armor end
   local shop = RANDO_SHOP and RANDO_SHOP.status_text and RANDO_SHOP.status_text()
   if shop then real = real and (real .. " | " .. shop) or shop end
-  for _, m in ipairs({ RANDO_ENEMY, RANDO_BOSS }) do
+  for _, m in ipairs({ RANDO_CHAOS, RANDO_ENEMY, RANDO_BOSS }) do
     local t = m and m.status_text and m.status_text()
     if t then real = real and (real .. " | " .. t) or t end
   end
@@ -1180,7 +1186,7 @@ end
 R.KIT_FILES = { "01_rando_data", "02_rando_generator", "03_rando_campaign", "04_rando_settings", "05_rando_bindings",
                 "06_rando_capabilities", "09_rando_real", "10_rando_runtime", "11_rando_campaign", "12_rando_shop",
                 "13_rando_armor", "14_rando_travel" }
-R.OPTIONAL_FILES = { "15_rando_hub", "16_rando_spawners", "enemy", "boss" }
+R.OPTIONAL_FILES = { "15_rando_hub", "16_rando_spawners", "enemy", "boss", "chaos" }
 -- scripts of older versions that must not be in the folder any more
 R.GONE_FILES = { ["16_rando_testtravel"] = "a developer tool, now dev(testtravel).lua" }
 function R.kit_check()

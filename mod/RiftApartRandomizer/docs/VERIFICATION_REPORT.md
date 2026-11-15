@@ -141,6 +141,19 @@ feature is only listed under "actual game execution" when a round showed it with
 - **PowerShell companion tests**: PowerShell 7 can't run on the build machine (downloading and
   running it was not allowed). The companion's one logic change in 8.5 is checked by reading only.
 
+## Dev 10.13 (kit 10.0.9): Chaos Randomizer
+
+Nothing of dev 10.13 has run in the game (A = automated simulator tests, G = game: none).
+
+| Feature | | Evidence |
+|---|---|---|
+| chaos.lua loads, OFF by default, BACKSPACE toggles, saved, kept over New Game | A | tests/test_v1013.py LoadAndToggleTests |
+| Any template -> any template (both tiers, story bosses, unclassified), few repeats, seeded | A | AnythingBecomesAnythingTests |
+| Cross-planet pool | A | CrossPlanetTests (simulated per-planet node lists); in the game: unknown whether such templates spawn |
+| Priority over Enemy/Boss; their picks back when OFF | A | PriorityTests |
+| No guards; never forces progression | A | NoGuardsTests |
+| Never in a player package | A | test_v055 PackageTests (builder) |
+
 ## Dev 10.12 (kit 10.0.8): Enemy Randomizer and Boss Randomizer
 
 Nothing of dev 10.12 has run in the game. A = automated (simulator), S = static inspection of the

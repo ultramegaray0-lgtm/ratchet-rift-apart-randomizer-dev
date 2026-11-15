@@ -92,11 +92,15 @@ required = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "CREDITS_AND_L
             "VERSION.txt", "SHA256SUMS.txt", "GAME_FOLDER/rivet.toml", "GAME_FOLDER/rando_give.dll",
             "GAME_FOLDER/rando_companion/Start-Companion.bat", "GAME_FOLDER/rando_companion/RandoCompanion.ps1"]
 # every script of the kit except developer files (dev(name).lua)
-kit_scripts = sorted(f for f in os.listdir(os.path.join(KIT, "scripts")) if f.endswith(".lua") and not re.match(r"dev\(.+\)\.lua$", f))
+# (dev 10.13: chaos.lua is held back from player packages, tools/build_public_release.py HELD_BACK)
+HELD_BACK = ["chaos.lua"]
+kit_scripts = sorted(f for f in os.listdir(os.path.join(KIT, "scripts")) if f.endswith(".lua") and not re.match(r"dev\(.+\)\.lua$", f)
+                     and f not in HELD_BACK)
 required += ["GAME_FOLDER/scripts/" + s for s in kit_scripts]
 missing = [p for p in required if p not in actual]
 check("all required files present", not missing, ", ".join(missing))
-check("13 scripts", len([p for p in actual if p.startswith("GAME_FOLDER/scripts/")]) == 13)
+check(f"{len(kit_scripts)} scripts", len([p for p in actual if p.startswith("GAME_FOLDER/scripts/")]) == len(kit_scripts))
+check("no held-back script", not [p for p in actual if p.rsplit("/", 1)[-1] in HELD_BACK])
 check("exactly the files listed above, nothing more", sorted(actual) == sorted(required), ", ".join(sorted(set(actual) ^ set(required))))
 unwanted = [p for p in actual if re.search(r"(^|/)(\.git|__pycache__|extras|research|source|tests?)(/|$)|\.(log|pyc|bak|tmp|sav|save|zip|exe|c|h|def|sh|py)$|_dev|dev\(|DEVELOPMENT_LOG|TEST_RESULTS|BATCH_|07_rando_testmode|08_rando_probe|06_rando_vtables|06_rando_item_ids|16_rando_testtravel|Install-Arsenal|randomizer_saves|spoiler", p, re.I)]
 check("no development, debug, log, save or test files", not unwanted, ", ".join(unwanted))

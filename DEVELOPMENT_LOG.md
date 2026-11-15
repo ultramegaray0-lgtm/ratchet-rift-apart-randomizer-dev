@@ -4,6 +4,37 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-16: dev 10.13 (kit 10.0.9, generator 10.11.0): Chaos Randomizer
+
+- Asked: a third, independent randomizer (`chaos.lua`): anything can become anything (any enemy or
+  boss, any planet, any encounter), no compatibility rules, no progression protection, no
+  put-backs. OFF by default, its own key (asked again in chat: "give chaos a shortcut like enemy's /
+  bosses"), saved, priority over the Enemy / Boss Randomizers while ON, their behaviour back when
+  OFF, their settings untouched. Code integrity kept. Dev repo only; seeds unchanged.
+- chaos.lua: key `BACKSPACE` (after 0 - = on the number row; Ctrl: status). It registers with
+  16_rando_spawners as a priority client (`role = "any"`, `guards = false`) with its own
+  `assign(lvl, slots)`. The pool is this level's templates plus every template seen with Chaos on, on
+  any planet (`state.chaos_seen`, cap 1000, kept over New Game), plus 10.12's `spawn_learned`; minus
+  learned friendly / mount (not enemies). The seed ranks the pool for each slot, picks avoid
+  repeats until the pool is used up, and a slot never keeps its own template.
+  `chaos_cross_planet = false` keeps one planet.
+- 16_rando_spawners: `SP.priority_client`, `guarded_name` / `SP.guarded_rec` (the watchdogs, the
+  retry limit, the wrong-family block and the story boss area put-back skip unguarded slots;
+  `SP.revert_guarded` for boss areas), the plan's priority branch (no idle / zone / blocked rule),
+  `SP.set(off)` re-plans the others, client hooks `on_census` / `after_restore`, the written record
+  pruned of gone nodes after each census (no growth over planets). With Chaos off, behaviour is
+  identical: tests/test_v1012.py is unchanged and passes.
+- 10: `chaos_randomizer`, `key_chaos`, `chaos_cross_planet`; the status line; chaos optional in the kit
+  check. Kit 10.0.9, banner "Randomizer dev 10.13". build_public_release HELD_BACK = chaos.lua;
+  validate_release rejects it and counts the kit's scripts instead of a fixed 13.
+- Simulator: nodes may belong to one planet (listed only while it is loaded); BACKSPACE key.
+- Verified only in the simulator: tests/test_v1013.py (23); 504 run, 0 failures, 21 skipped.
+  docs: CHAOS.md (the risks), TEST_REPORT_10.13.md, CHANGELOG, TESTING "2-dev3", KNOWN_ISSUES 0g,
+  VERIFICATION_REPORT, CONFIGURATION, INSTALL.txt, 04.
+- Open (needs the game): everything of 10.12's list, plus: do other planets' templates spawn (or
+  crash)? Do story boss templates spawn from ordinary spawners? Does the game pass BACKSPACE to
+  rivet_hook without using it itself? Frame time with every slot written.
+
 ## 2026-11-15: dev 10.12 (kit 10.0.8, generator 10.11.0): Enemy Randomizer and Boss Randomizer
 
 - Asked: an Enemy Randomizer (`enemy.lua`) and a Boss Randomizer (`boss.lua`), separate and

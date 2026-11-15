@@ -502,7 +502,8 @@ function S.hero_free() S.hero_held = nil end
 function rivet.script_nodes(filter, limit)
   local out = {}
   for _, n in ipairs(S.nodes) do
-    if (not filter or n.class:find(filter, 1, true)) and #out < (limit or 64) then
+    -- dev 10.13: a node with a planet is listed only while that planet is loaded (SIMULATED)
+    if (not filter or n.class:find(filter, 1, true)) and #out < (limit or 64) and (n.planet == nil or n.planet == S.planet) then
       out[#out + 1] = { component = n.component, actor = n.actor, uid = n.uid, class = n.class }
     end
   end
@@ -838,7 +839,7 @@ function S.step(n)
 end
 -- 8.3: keyboard keys the randomizer maps itself (Windows virtual-key codes; rivet.key() above
 -- knows only rivet_hook-style names, as the real one may)
-S.KEYS = { [";"] = 0xBA, ["="] = 0xBB, [","] = 0xBC, ["-"] = 0xBD, ["."] = 0xBE, ["/"] = 0xBF, ["`"] = 0xC0,
+S.KEYS = { BACKSPACE = 0x08, [";"] = 0xBA, ["="] = 0xBB, [","] = 0xBC, ["-"] = 0xBD, ["."] = 0xBE, ["/"] = 0xBF, ["`"] = 0xC0,
            ["["] = 0xDB, ["\\"] = 0xDC, ["]"] = 0xDD, ["'"] = 0xDE }
 for c = string.byte("A"), string.byte("Z") do S.KEYS[string.char(c)] = c end
 for i = 0, 9 do S.KEYS[tostring(i)] = 0x30 + i end
@@ -956,7 +957,7 @@ function S.add_encounter(spec)
               spawned = 0, dead = 0, alive = {}, running = false, done = false }
   S.encounters[spec.uid] = e
   S.nodes[#S.nodes + 1] = { component = e.component, actor = e.actor, uid = spec.uid, class = "SpawnerScriptAction",
-                            addr = base, size = 0x100, outputs = {} }
+                            addr = base, size = 0x100, outputs = {}, planet = spec.planet }
   return e
 end
 function S.encounter_template(uid, k) return S.get_hex_id(S.encounters[uid].tptr + (k - 1) * 8) end

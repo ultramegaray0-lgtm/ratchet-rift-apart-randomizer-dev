@@ -4,6 +4,19 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0g. Since dev 10.13 (kit 10.0.9): Chaos Randomizer
+
+OFF by default. **By design it can make a run impossible** (CHAOS.md): encounters that never finish,
+unbeatable bosses and broken story steps are expected while it is on, not bugs. To recover:
+BACKSPACE (Chaos OFF), then load the last checkpoint.
+- **Templates from other planets** (`chaos_cross_planet`, on by default) may not be loaded where they
+  are used. What the game does then has never been seen: nothing, a wrong spawn, or a crash.
+- **BACKSPACE** has not been tried in the game as a rivet_hook key. If the game uses it or never
+  passes it on, set another `key_chaos` in 04.
+- Spawner-driven non-combat scripts (Clank puzzles) can break until their templates are learned as
+  friendly.
+- Not in a player package (held back by the release builder).
+
 ## 0f. Since dev 10.12 (kit 10.0.8): Enemy and Boss Randomizer
 
 Both are OFF by default; nothing below matters while they are off. Nothing of them has run in your

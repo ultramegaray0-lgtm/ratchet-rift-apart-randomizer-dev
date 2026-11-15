@@ -23,7 +23,7 @@
 --
 -- Needs 16_rando_spawners.lua. Removing this file only removes the boss randomizer; regular enemies
 -- (enemy.lua) never become bosses and bosses never become regular enemies.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["boss"] = "10.0.8"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["boss"] = "10.0.9"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_BOSS = RANDO_BOSS or {}
 local B = RANDO_BOSS

@@ -12,6 +12,8 @@ LAYOUT
                      15_rando_hub (optional: planet shuffle; without it the game's own story plays)
                      16_rando_spawners  enemy  boss  (optional, dev 10.12: the Enemy and Boss
                        Randomizers, both OFF until their key; enemy and boss need 16_rando_spawners)
+                     chaos  (optional, dev 10.13: the Chaos Randomizer, OFF until BACKSPACE; NO
+                       safety guards; needs 16_rando_spawners; never in a player package)
                    Developer files, never in a release (named dev(name).lua):
                      dev(keys)        the developer keys ; ] [ / ' and the old F keys
                      dev(testtravel)  test travel (keys . and , with test_travel = true)
@@ -32,13 +34,15 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT all 12 required scripts are 10.0.8
+       RANDO-KIT all 12 required scripts are 10.0.9
        RANDO-KIT developer files loaded (not part of a release): ...
 
 KEYS
   Players: 0 planet shuffle on/off (off by default), Ctrl+0 twice gives randomizer items back.
            - Enemy Randomizer on/off, = Boss Randomizer on/off (both off by default; the save
            remembers them). Ctrl+- / Ctrl+= show what each changed on this planet.
+           BACKSPACE Chaos Randomizer on/off (off by default; no protection; while on, the
+           Enemy and Boss Randomizers pause). Ctrl+BACKSPACE shows what it changed.
   Everything else needs dev(keys).lua (see the top of that file).
 
 TESTS AND RELEASE

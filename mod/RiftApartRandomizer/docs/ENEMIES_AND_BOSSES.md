@@ -1,5 +1,9 @@
 # Enemy Randomizer and Boss Randomizer (dev 10.12, kit 10.0.8)
 
+> dev 10.13: a third, separate feature, the **Chaos Randomizer** (`chaos.lua`, BACKSPACE), has none of the
+> rules and safety nets below and **takes priority over both while ON** (their settings are kept, they
+> resume when it is OFF). See CHAOS.md.
+
 **Nothing on this page has run in the game yet.** The code, the layout it searches for and the
 simulator's encounter model come from the game's type data (neptuwunium/rivet's DDL dump,
 `SpawnerScriptActionPrius` and the bot components). Section 7 lists what the first real round has to
