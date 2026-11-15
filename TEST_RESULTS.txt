@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.11 (build 10.0.7) - test run 2026-11-15 14:29 UTC
+Rift Apart Randomizer dev 10.12 (build 10.0.8) - test run 2026-11-15 20:13 UTC
 Python 3.13.18 on Linux
-ran 449, failures 0, errors 0, skipped 21
+ran 481, failures 0, errors 0, skipped 21
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -373,6 +373,39 @@ test_coordinates_make_the_next_visit_active_without_travel (tests.test_v1011.Pri
 test_never_a_visit_of_the_planet_you_are_on (tests.test_v1011.PrimeTests.test_never_a_visit_of_the_planet_you_are_on) ... ok
 test_nothing_is_made_active_while_a_story_runs (tests.test_v1011.PrimeTests.test_nothing_is_made_active_while_a_story_runs) ... ok
 test_switch_off (tests.test_v1011.PrimeTests.test_switch_off) ... ok
+test_a_health_bar_makes_a_regular_bot_boss_tier (tests.test_v1012.BossTests.test_a_health_bar_makes_a_regular_bot_boss_tier) ... ok
+test_boss_defeat_completes_the_encounter_once (tests.test_v1012.BossTests.test_boss_defeat_completes_the_encounter_once) ... ok
+test_bosses_are_permuted_and_never_regular_enemies (tests.test_v1012.BossTests.test_bosses_are_permuted_and_never_regular_enemies) ... ok
+test_story_bosses_and_friendlies_are_never_touched (tests.test_v1012.BossTests.test_story_bosses_and_friendlies_are_never_touched) ... ok
+test_big_levels_are_changed_and_put_back_over_several_frames (tests.test_v1012.BudgetTests.test_big_levels_are_changed_and_put_back_over_several_frames) ... ok
+test_every_encounter_completes (tests.test_v1012.EnemyTests.test_every_encounter_completes) ... ok
+test_key_turns_it_on_and_only_regular_enemies_change (tests.test_v1012.EnemyTests.test_key_turns_it_on_and_only_regular_enemies_change) ... ok
+test_learning_while_playing (tests.test_v1012.EnemyTests.test_learning_while_playing) ... ok
+test_off_in_the_middle_of_an_encounter (tests.test_v1012.EnemyTests.test_off_in_the_middle_of_an_encounter) ... ok
+test_off_puts_everything_back_at_once (tests.test_v1012.EnemyTests.test_off_puts_everything_back_at_once) ... ok
+test_picks_are_the_same_after_a_reload (tests.test_v1012.EnemyTests.test_picks_are_the_same_after_a_reload) ... ok
+test_progression_multi_enemy_encounter (tests.test_v1012.EnemyTests.test_progression_multi_enemy_encounter) ... ok
+test_running_encounters_are_never_changed (tests.test_v1012.EnemyTests.test_running_encounters_are_never_changed) ... ok
+test_ctrl_key_shows_status (tests.test_v1012.IndependenceTests.test_ctrl_key_shows_status) ... ok
+test_each_switch_changes_only_its_own (tests.test_v1012.IndependenceTests.test_each_switch_changes_only_its_own) ... ok
+test_four_combinations (tests.test_v1012.IndependenceTests.test_four_combinations) ... ok
+test_signature_finds_another_offset_and_skips_garbage (tests.test_v1012.LayoutTests.test_signature_finds_another_offset_and_skips_garbage) ... ok
+test_both_off_nothing_read_or_written (tests.test_v1012.OffByDefaultTests.test_both_off_nothing_read_or_written) ... ok
+test_the_kit_check_lists_them_as_optional (tests.test_v1012.OffByDefaultTests.test_the_kit_check_lists_them_as_optional) ... ok
+test_the_settings_only_decide_the_start (tests.test_v1012.OffByDefaultTests.test_the_settings_only_decide_the_start) ... ok
+test_other_features_unchanged (tests.test_v1012.RemovalTests.test_other_features_unchanged)
+items, the shop and the kit run as before with both randomizers on ... ok
+test_without_boss_lua_enemies_still_work (tests.test_v1012.RemovalTests.test_without_boss_lua_enemies_still_work) ... ok
+test_without_enemy_lua_bosses_still_work (tests.test_v1012.RemovalTests.test_without_enemy_lua_bosses_still_work) ... ok
+test_without_the_shared_layer (tests.test_v1012.RemovalTests.test_without_the_shared_layer) ... ok
+test_a_replacement_of_another_family_is_put_back (tests.test_v1012.SafetyNetTests.test_a_replacement_of_another_family_is_put_back) ... ok
+test_a_replacement_that_cannot_spawn_is_put_back (tests.test_v1012.SafetyNetTests.test_a_replacement_that_cannot_spawn_is_put_back) ... ok
+test_enemies_that_stay_alive_too_long (tests.test_v1012.SafetyNetTests.test_enemies_that_stay_alive_too_long) ... ok
+test_retries_put_an_encounter_back (tests.test_v1012.SafetyNetTests.test_retries_put_an_encounter_back) ... ok
+test_story_boss_area_puts_everything_back (tests.test_v1012.SafetyNetTests.test_story_boss_area_puts_everything_back) ... ok
+test_a_choice_made_before_the_restore_wins (tests.test_v1012.SaveTests.test_a_choice_made_before_the_restore_wins) ... ok
+test_reading_never_changes_the_save (tests.test_v1012.SaveTests.test_reading_never_changes_the_save) ... ok
+test_switches_and_learning_survive_save_and_new_game (tests.test_v1012.SaveTests.test_switches_and_learning_survive_save_and_new_game) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -472,6 +505,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 449 tests in 143.023s
+Ran 481 tests in 118.752s
 
 OK (skipped=21)

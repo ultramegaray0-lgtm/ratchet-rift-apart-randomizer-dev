@@ -141,6 +141,23 @@ feature is only listed under "actual game execution" when a round showed it with
 - **PowerShell companion tests**: PowerShell 7 can't run on the build machine (downloading and
   running it was not allowed). The companion's one logic change in 8.5 is checked by reading only.
 
+## Dev 10.12 (kit 10.0.8): Enemy Randomizer and Boss Randomizer
+
+Nothing of dev 10.12 has run in the game. A = automated (simulator), S = static inspection of the
+game's type data (neptuwunium/rivet DDL dump), G = game execution (none).
+
+| Feature | | Evidence |
+|---|---|---|
+| Both OFF by default; off = no spawner read or written | A | tests/test_v1012.py OffByDefaultTests |
+| In-game keys `-` / `=`, saved, kept over New Game, independent | A | IndependenceTests, SaveTests |
+| Templates found by the DDL layout's signature | A, S | SpawnerScriptActionPrius field offsets (rcra_ddl.json); LayoutTests. Real memory layout: not seen |
+| Only template ids change; the node completes the encounter itself, once, after the last enemy | A, S | the DDL's spawner fields (NumSpawns, OnNumDeadTrigger, spawned actor group); simulated node model; EnemyTests, BossTests |
+| Family classification from bot components | A, S | GameBot* / BossBot* component classes in the DDL; whether rivet.component answers for spawned actors: not seen |
+| Boss tier permuted; story bosses never touched | A, S | BossTests; BossBot* components and boss-specific script actions in the DDL |
+| Safety nets (spawn timeout, stuck, retries, wrong family, story boss areas) | A | SafetyNetTests |
+| Frame budget (sliced census, 3 ms write budget) | A | BudgetTests; real timing not measured |
+| Events SpawnerSpawnEvent / SpawnerStartedEvent / BotDeathCompleteEvent / HealthBarShowEvent fields | S | DDL event types; never seen in a rivet.log yet |
+
 ## Dev 10.11 (kit 10.0.7, generator 10.11.0): new planets start at their intro
 
 Nothing of dev 10.11 has run in the game.

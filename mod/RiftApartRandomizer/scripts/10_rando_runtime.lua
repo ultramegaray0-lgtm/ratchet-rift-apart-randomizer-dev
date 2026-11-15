@@ -14,6 +14,9 @@
 --   13_rando_armor.lua         armor sources become reward locations
 --   14_rando_travel.lua        locked travel and checkpoint names
 --   15_rando_hub.lua           OPTIONAL: planet shuffle (the Nefarious City hub)
+--   16_rando_spawners.lua      OPTIONAL: the spawner layer enemy.lua and boss.lua share (dev 10.12)
+--   boss.lua                   OPTIONAL: the Boss Randomizer (boss-tier enemies; = key, off by default)
+--   enemy.lua                  OPTIONAL: the Enemy Randomizer (regular enemies; - key, off by default)
 --   dev(*).lua                 developer tools only; never part of a release (see R.kit_check)
 --
 -- How a run works:
@@ -30,12 +33,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.7"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.8"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.7"
-R.RELEASE = "dev 10.11"               -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.8"
+R.RELEASE = "dev 10.12"               -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -133,6 +136,13 @@ R.config = {
                                      -- (Coordinates held) is played there instead of undone
   hub_blocked_home = true,           -- landing on a planet whose first visit cannot be played yet (it waits
                                      -- for another visit) sends you back with the reason, never a revisit
+  -- dev 10.12: enemy.lua / boss.lua (16_rando_spawners.lua). Both OFF by default; their keys switch them in
+  -- the game (the save remembers it); these two settings only decide the start of a save that never did
+  enemy_randomizer = false,          -- regular enemies of combat encounters are replaced (same family, same planet)
+  boss_randomizer = false,           -- boss-tier enemies of combat encounters are shuffled (story bosses never)
+  key_enemies = "-",                 -- Enemy Randomizer on/off (Ctrl: what it changed here)
+  key_bosses = "=",                  -- Boss Randomizer on/off (Ctrl: what it changed here)
+  spawner_runtime = true,            -- false: neither changes anything, whatever the keys say
   -- developer keys and test travel: only used by the dev(*).lua files
   key_status = ";", key_campaign = "'", key_hub = "]", key_hub_return = "[", key_story = "/",
   key_test_travel = ".", key_test_point = ",", legacy_f_keys = true, test_travel = false,
@@ -151,7 +161,8 @@ local RETIRED_RUNTIME = {
 }
 local SETTINGS = RANDO_SETTINGS or {}
 local KEY_SETTINGS = { key_status = true, key_campaign = true, key_test_travel = true, key_test_point = true,
-                       key_hub = true, key_hub_return = true, key_story = true, key_shuffle = true }
+                       key_hub = true, key_hub_return = true, key_story = true, key_shuffle = true,
+                       key_enemies = true, key_bosses = true }
 local GEN_OPTIONS = {}
 for k, v in pairs(SETTINGS) do
   if R.config[k] ~= nil then
@@ -609,6 +620,8 @@ function R.reset_for_new_game(why)
   -- kept: what was learned about the game (not the run), and the player's planet shuffle choice
   local keep = { real_mode = old.real_mode, weapon_types = old.weapon_types, hub_learned = old.hub_learned,
                  planet_shuffle = old.planet_shuffle }
+  -- dev 10.12: the Enemy / Boss Randomizer switches and what was learned about the game's enemies
+  for _, k in ipairs((RANDO_SPAWNERS and RANDO_SPAWNERS.KEEP_OVER_NEW_GAME) or {}) do keep[k] = old[k] end
   S = fresh_state((old.run or 1) + 1); R.state = S
   for k, v in pairs(keep) do S[k] = v end
   S.previous_run = { run = old.run or 1, collected = count(old.collected), bolts = 0, complete = old.campaign_complete or nil }
@@ -694,6 +707,10 @@ function R.status_text()
   if armor then real = real and (real .. " | " .. armor) or armor end
   local shop = RANDO_SHOP and RANDO_SHOP.status_text and RANDO_SHOP.status_text()
   if shop then real = real and (real .. " | " .. shop) or shop end
+  for _, m in ipairs({ RANDO_ENEMY, RANDO_BOSS }) do
+    local t = m and m.status_text and m.status_text()
+    if t then real = real and (real .. " | " .. t) or t end
+  end
   local test = RANDO_TEST_TRAVEL and RANDO_TEST_TRAVEL.status_text and RANDO_TEST_TRAVEL.status_text()
   if test then real = real and (real .. " | " .. test) or test end
   return string.format("%sGold Bolts %d/%d | rewards %d/%d%s%s | planets %d%s%s%s",
@@ -887,6 +904,8 @@ function rando_import_state(tbl)
   if live and live.started then R.merge_live(live, S) end
   -- v0.54: planet shuffle on/off (the 0 key) as this session or the save has it
   if RANDO_HUB and RANDO_HUB.after_restore then pcall(RANDO_HUB.after_restore) end
+  -- dev 10.12: the Enemy / Boss Randomizer switches likewise; what this session learned is kept
+  if RANDO_SPAWNERS and RANDO_SPAWNERS.after_restore then pcall(RANDO_SPAWNERS.after_restore, live) end
   R.restored = true
   if R.new_game_pending then
     R.new_game_pending = nil
@@ -1021,6 +1040,7 @@ local function on(class, fn)
   local sub = { class = class, fn = fn }
   if not try_subscribe(sub) and not sub.dead then pending[#pending + 1] = sub end
 end
+R.subscribe = on                      -- dev 10.12: for the optional files loaded after this one
 function R.retry_subscriptions()
   if #pending == 0 then return 0 end
   local still = {}
@@ -1160,7 +1180,7 @@ end
 R.KIT_FILES = { "01_rando_data", "02_rando_generator", "03_rando_campaign", "04_rando_settings", "05_rando_bindings",
                 "06_rando_capabilities", "09_rando_real", "10_rando_runtime", "11_rando_campaign", "12_rando_shop",
                 "13_rando_armor", "14_rando_travel" }
-R.OPTIONAL_FILES = { "15_rando_hub" }
+R.OPTIONAL_FILES = { "15_rando_hub", "16_rando_spawners", "enemy", "boss" }
 -- scripts of older versions that must not be in the folder any more
 R.GONE_FILES = { ["16_rando_testtravel"] = "a developer tool, now dev(testtravel).lua" }
 function R.kit_check()
@@ -1286,6 +1306,10 @@ local function frame(dt)
   if ready and RANDO_SHOP then
     local okv, ev = pcall(RANDO_SHOP.tick, frames)
     if not okv then log("RANDO-ERROR shop:", tostring(ev)) end
+  end
+  if RANDO_SPAWNERS and RANDO_SPAWNERS.tick then
+    local oks, es = pcall(RANDO_SPAWNERS.tick, frames, ready)
+    if not oks then log("RANDO-ERROR spawners:", tostring(es)) end
   end
   if not announced and ready then
     announced = true

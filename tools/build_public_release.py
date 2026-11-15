@@ -17,7 +17,7 @@ import sys
 import zipfile
 
 VERSION = "0.55"
-BUILD = "10.0.7"                 # dev 10.11: the kit in this repo (VERSION is set when a public release is made)
+BUILD = "10.0.8"                 # dev 10.11: the kit in this repo (VERSION is set when a public release is made)
 NAME = f"Ratchet_Rift_Apart_Randomizer_v{VERSION}_Player_Release"
 ZIP_NAME = NAME + ".zip"
 DATE = (2026, 11, 15, 0, 0, 0)
@@ -30,7 +30,8 @@ DEV_FILE = re.compile(r"^dev\(.+\)\.lua$")
 REQUIRED = ["01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua", "04_rando_settings.lua",
             "05_rando_bindings.lua", "06_rando_capabilities.lua", "09_rando_real.lua", "10_rando_runtime.lua",
             "11_rando_campaign.lua", "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua"]
-OPTIONAL = ["15_rando_hub.lua"]          # shipped; players may delete it (no planet shuffle then)
+OPTIONAL = ["15_rando_hub.lua",          # shipped; players may delete it (no planet shuffle then)
+            "16_rando_spawners.lua", "enemy.lua", "boss.lua"]   # dev 10.12: Enemy / Boss Randomizer, off by default
 COMPANION = ["Start-Companion.bat", "RandoCompanion.ps1"]
 DOCS = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "CREDITS_AND_LICENSES.md", "LICENSE.txt"]
 DLL_SHA256 = "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12"

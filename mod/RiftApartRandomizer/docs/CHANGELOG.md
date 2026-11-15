@@ -2,6 +2,46 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.12 (kit 10.0.8, generator 10.11.0; not released): Enemy Randomizer and Boss Randomizer
+
+Asked: an Enemy Randomizer and a Boss Randomizer as two separate, independently switchable
+features (`enemy.lua`, `boss.lua`), both OFF by default and switched in the game; randomized enemies
+and bosses must still open doors, finish objectives and advance the story. **Nothing of this has run
+in the game.** Seeds are unchanged (the generator is not touched): a 10.11 save continues.
+
+New files (all optional, ENEMIES_AND_BOSSES.md):
+- `scripts/16_rando_spawners.lua`: the layer both share. Reads the level's SpawnerScriptAction
+  nodes (the game's combat encounter spawners), finds their Templates list by the DDL layout's
+  signature (never a fixed offset), learns what each template is from the bot component of an actor
+  the game spawned, and changes **only template ids**. The encounter's own node spawns, counts and
+  completes the new enemies, so its doors, objectives, waves and story steps follow from the game's
+  own logic, once, after the last enemy. Safety nets put an encounter back (and keep it original for
+  the seed) when a replacement spawns nothing for 20 s, stays alive 180 s without a death, is another
+  family than planned, or the checkpoint is loaded 3 times during it; story boss areas put every
+  change back while you are there.
+- `scripts/enemy.lua`: the **Enemy Randomizer** (`-` key; `Ctrl+-` shows what it changed here).
+  Regular enemies (turret, flyer, swarmer, ground) become other regular enemies of the same family
+  from the same planet's own encounters.
+- `scripts/boss.lua`: the **Boss Randomizer** (`=` key; `Ctrl+=`). Boss-tier spawns (large bots and
+  any spawned enemy with its own boss health bar) are permuted among the planet's boss-tier enemies
+  of the same family: none is added or doubled. The eight story boss fights are left unchanged
+  (boss-specific scripts and arenas; `RANDO_BOSS.STORY` lists them and why).
+
+Settings (runtime only, 04 documents them): `enemy_randomizer = false`, `boss_randomizer = false`
+(the start of a save that never used the keys), `key_enemies = "-"`, `key_bosses = "="`,
+`spawner_runtime = true`. The switches are saved like planet shuffle's (`state.enemy_rando`,
+`state.boss_rando`), kept over New Game, a choice before the companion's restore wins. No preset
+turns them on.
+
+Runtime changes elsewhere: 10 (`R.subscribe`, the frame call, the status line, New Game keeps the
+switches and what was learned, the restore hook, the kit's optional files), 14 (each checkpoint is
+passed on). Kit 10.0.8, banner `Randomizer dev 10.12`.
+
+Tests: tests/test_v1012.py (32) against a new simulated encounter model (tests/sim/rivet_sim.lua:
+spawner nodes laid out as the DDL says, reading their Templates at each spawn, counting their dead,
+firing "all dead"). 481 run, 0 failures, 21 skipped. TEST_REPORT_10.12.md lists passed, failed and
+untested cases.
+
 ## Dev 10.11 (kit 10.0.7, generator 10.11.0; not released): planet shuffle that starts each new planet at its intro
 
 Asked: make planet shuffle actually work: when the player gets new Coordinates and goes to the new

@@ -28,7 +28,7 @@ This is the **private development source of truth**. The public player repositor
 
 ## Layout in brief
 
-- `mod/RiftApartRandomizer/` — the install-ready kit: `scripts/` (13 release Lua scripts plus
+- `mod/RiftApartRandomizer/` — the install-ready kit: `scripts/` (16 release Lua scripts: 12 required, 4 optional - 15_rando_hub, 16_rando_spawners, enemy, boss - plus
   `dev(name).lua` developer scripts, which never ship), `rando_give.dll` + `rando_give_source/`,
   `companion/` (PowerShell companion and research tools), `rivet.toml`, `docs/`.
 - `release/` — player-facing docs for the public ZIP; `tools/build_public_release.py` builds it;

@@ -81,6 +81,19 @@ seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_
 | `planet_locks` | false | Coordinates are items. With `travel_lock = false` (6.0's behaviour) a planet's mission rewards wait for them; travel is free |
 | `travel_lock` | false | with `planet_locks`: flying to a planet without its Coordinates sends you back |
 
+## Enemies and bosses (dev 10.12; runtime only, the seed does not change)
+
+| Setting | Default | |
+|---|---|---|
+| `enemy_randomizer` | false | the Enemy Randomizer's start for a save that never used its key |
+| `boss_randomizer` | false | the Boss Randomizer's start for a save that never used its key |
+| `key_enemies` | `"-"` | Enemy Randomizer on/off in the game (Ctrl: what it changed here) |
+| `key_bosses` | `"="` | Boss Randomizer on/off in the game |
+| `spawner_runtime` | true | false: neither changes anything |
+
+The keys are the normal way: the save remembers the choice, a New Game keeps it. No preset turns them
+on. ENEMIES_AND_BOSSES.md explains both.
+
 ## Currency
 
 Every location that isn't a Gold Bolt and holds no item gives Bolts or Raritanium. Each location

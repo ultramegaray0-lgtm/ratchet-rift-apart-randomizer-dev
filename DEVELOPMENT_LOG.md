@@ -4,6 +4,49 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-15: dev 10.12 (kit 10.0.8, generator 10.11.0): Enemy Randomizer and Boss Randomizer
+
+- Asked: an Enemy Randomizer (`enemy.lua`) and a Boss Randomizer (`boss.lua`), separate and
+  independently switchable in the game, both OFF by default and saved; the top priority is that
+  randomized enemies and bosses never stall progression (doors, objectives, arena exits, cutscenes,
+  multi-enemy encounters, boss phases). Implement, not only investigate. Dev repo only (the public
+  release repo is untouched). Seeds unchanged (generator not touched).
+- Research (static, no game): neptuwunium/rivet's DDL dump (docs/ddl/rcra_ddl.json, Types/*.cs).
+  Combat encounters spawn through `SpawnerScriptAction` nodes (vtable in dev(vtables).lua):
+  `SpawnerScriptActionPrius` = FactoryGroup +8, Templates +32 (List of 8-byte actor refs),
+  SpawnLocations +56, 8 flags +76..83, NumSpawns +108, MaxSimultaneousSpawns +112, MaxActivations +128,
+  OnNumDeadTrigger +132. The node counts its spawns and dead and fires its outputs; encounter
+  completion is the node's, not the enemy type's. Events: SpawnerStartedEvent/StoppedEvent
+  {SpawnerComponentHandle}, SpawnerSpawnEvent {SpawnedHandle, SpawnIndex}, BotDeathCompleteEvent,
+  HealthBarShowEvent {IsFriendly}, BossPhaseChangeEvent. Bot components GameBot* (turret, flyers,
+  swarmers, shooters, large) and story bosses BossBot* / GameBotSargassoCentipedeBoss with their own
+  script actions (BossChaseController, BossCentipedeGetPilotActor, FinaleBoss*). Calibration: round 13's
+  probe shows AddToInventoryAction's ItemConfig at +0x58 (Prius +16), so script-node fields start near
+  +0x48..0x50: SpawnerScriptAction's FactoryGroup is expected at +0x50 (preferred, not trusted).
+- Design: change only the Templates ids of nodes that have not started; the node itself spawns,
+  counts and completes (no deletion, no own spawning, no output fired, no mission write). Templates
+  are learned (rivet.component on the spawned actor) before they are used or replaced; same planet,
+  same tier, same family; story bosses / friendlies / unclear classes never. Boss tier is permuted.
+  Safety nets only put back (spawn timeout 20 s, stuck 180 s, 3 loads, wrong family, story boss
+  areas). Layout found per node by signature (ambiguous -> skipped).
+- New: scripts/16_rando_spawners.lua (shared layer), scripts/enemy.lua (`-`), scripts/boss.lua (`=`);
+  all optional in the kit check. 10: settings enemy_randomizer / boss_randomizer (false), key_enemies,
+  key_bosses, spawner_runtime; R.subscribe; frame call; status line; New Game keeps the switches and
+  state.spawn_learned / spawn_blocked; restore hook (a choice before the restore wins). 14: checkpoints
+  passed on. 04 documents them. Kit 10.0.8 (every RANDO_FILES tag, C/H/TT versions, build_data,
+  build_public_release BUILD and OPTIONAL list), banner "Randomizer dev 10.12".
+- Simulator: tests/sim/rivet_sim.lua models spawner nodes (DDL layout, Templates read at each spawn,
+  dead count, "all dead" -> objective + door), spawned bots' components, health bars, checkpoint
+  reloads that keep or renew nodes. ALL SIMULATED.
+- Verified only offline: tests/test_v1012.py (32); 481 run, 0 failures, 21 skipped (as before). Older
+  tests changed only where the file list (16 release scripts), the kit version or the banner changed.
+  big_batch not re-run (generator unchanged). docs: ENEMIES_AND_BOSSES.md, TEST_REPORT_10.12.md,
+  CHANGELOG, TESTING (gameplay plan "2-dev2"), KNOWN_ISSUES 0f, VERIFICATION_REPORT, CONFIGURATION.
+- Open (needs the game, TESTING.md 2-dev2 / ENEMIES_AND_BOSSES.md section 7): does the signature find
+  Templates (census line)? Do spawned actors answer rivet.component with GameBot* classes (learning)?
+  The events' real field names (SenderHandle of a spawn = node component or actor?). Does a write
+  before the node starts change what it spawns? Encounter completion with replacements; frame time.
+
 ## 2026-11-15: dev 10.11 (kit 10.0.7, generator 10.11.0): planet shuffle starts new planets at their intro
 
 - Asked: make planet shuffle really work: new Coordinates -> fly to the new planet -> its intro plays

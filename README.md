@@ -1,6 +1,13 @@
 # Rift Apart Randomizer 10.0 (development project)
 
-**Dev 10.11 (kit 10.0.7, generator 10.11.0):** planet shuffle starts every new planet at its intro
+**Dev 10.12 (kit 10.0.8, generator 10.11.0):** an **Enemy Randomizer** (`scripts/enemy.lua`, `-` key)
+and a **Boss Randomizer** (`scripts/boss.lua`, `=` key), separate, OFF by default, saved per save. They
+change only the enemy templates of the game's own encounter spawners, so the encounter itself still
+completes, opens its doors and advances the story; story bosses are never changed. Shared layer:
+`scripts/16_rando_spawners.lua`. Not run in the game yet: `mod/RiftApartRandomizer/docs/ENEMIES_AND_BOSSES.md`,
+`docs/TEST_REPORT_10.12.md`.
+
+Dev 10.11 (kit 10.0.7): planet shuffle starts every new planet at its intro
 (open planets' next visits are made active between stories, as the game does; a landing that starts
 the story loads the visit's intro), and Coordinates always open a first visit (never on a revisit;
 Viceron's come from Torren IV's story). See `mod/RiftApartRandomizer/docs/CHANGELOG.md`.

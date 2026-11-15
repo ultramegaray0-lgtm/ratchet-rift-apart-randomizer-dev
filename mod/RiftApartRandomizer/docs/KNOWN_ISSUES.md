@@ -4,6 +4,28 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0f. Since dev 10.12 (kit 10.0.8): Enemy and Boss Randomizer
+
+Both are OFF by default; nothing below matters while they are off. Nothing of them has run in your
+game (ENEMIES_AND_BOSSES.md, TEST_REPORT_10.12.md).
+
+- **The Templates list's place in memory comes from the DDL**, checked by a signature at run time. If
+  your game lays it out differently, every node is `skipped` in rivet.log and nothing is changed.
+- **Learning needs `rivet.component` to answer for spawned actors** with the DDL's bot classes
+  (`GameBotShooter`, `GameBotMeleeFlier`, ...). If it does not, nothing is learned and nothing changes.
+- **A fresh save changes nothing on a planet until its enemy types were seen once.** Learned types
+  are saved and kept over New Game.
+- **Story bosses are never randomized** (their fights are scripted for that boss); their areas put
+  every change back while you are there (checkpoint names with BOSS / FINALE / HEAVY_FIGHT / CHASE;
+  a boss area named otherwise is not recognised, the other safety nets still apply).
+- **Only spawner-node encounters change.** Enemies placed in the level, actor spawners, proximity and
+  crowd spawners keep theirs.
+- **Difficulty can rise or fall** within a family (a weak ground bot can become a strong one).
+- **Enemies stuck in geometry** are not detected directly: an encounter whose enemies live 180 s
+  without a death is put back (load the last checkpoint to get its original enemies).
+- **Classes the DDL does not explain** (`PoolShark`, `MrFunGuy`, `Telepathipus`, mounts, hazards) are
+  never used or replaced.
+
 ## 0e. Since dev 10.11 (kit 10.0.7)
 
 - **Making a visit active before you fly there is new for the hub.** The game does it itself at the

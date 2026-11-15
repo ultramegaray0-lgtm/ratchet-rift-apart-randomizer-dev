@@ -1,4 +1,4 @@
-# Testing (Randomizer 10.0, Public Release v0.52; dev 10.11)
+# Testing (Randomizer 10.0, Public Release v0.52; dev 10.12)
 
 Results come in four kinds, and a pass in one is never evidence for another. VERIFICATION_REPORT.md
 sorts every feature into them. This page covers how the tests run and what to check in your
@@ -6,13 +6,15 @@ first full playthrough.
 
 ## 1. Automated tests (this build)
 
-`python run_tests.py`: **449 tests, 0 failures, 0 errors, 21 skipped** (TEST_RESULTS.txt; dev 10.11 adds tests/test_v1011.py, 20).
+`python run_tests.py`: **481 tests, 0 failures, 0 errors, 21 skipped** (TEST_RESULTS.txt; dev 10.11 adds tests/test_v1011.py, 20;
+dev 10.12 adds tests/test_v1012.py, 32 - see TEST_REPORT_10.12.md).
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
 - 8 need the 5.0 and 6.0 git commits, which are not in this repository.
 
 | Suite | Tests | What it covers |
 |---|---|---|
+| **test_v1012** | 32 | dev 10.12: Enemy / Boss Randomizer against the simulated encounter model: off = nothing read or written; only template ids change and the node completes the encounter once, after the last enemy; tiers and families never mix; story bosses and friendlies never touched; bosses permuted; each switch only its own, saved and kept over New Game; safety nets (no spawn, stuck, retries, wrong family, story boss areas); layout by signature; frame budget; any of the three files removed |
 | **test_v1011** | 20 | dev 10.11: Coordinates never on revisits and always opening a playable first visit (an independent Python check of the rules, both fills, your settings, fewer locations), the audit catching both, the switch; open planets' visits made active between stories (never while a story runs, never on your planet); a primed landing loads nothing; a landing started there loads the intro (Blizar's destroyed pad); a stuck first step reloaded at the intro; Viceron before Torren IV sent back with the reason; first visits listed first; the game's trip to an open Sargasso played |
 | **test_v90** | 20 | 9.0: no hub; retired presets and settings; every mode starts prologue > Nefarious City > Sargasso; your 9.0 and 8.5.2 settings files; a New Game played to Sargasso with no warp, flight, mission write or hero swap; a leftover hub script reported and inert; locked levels still send you back |
 | test_generator, test_registry | 39 | seeds, items, prices, currency, the weapon registry, mutation tests (the checkers catch broken seeds) |
@@ -27,6 +29,36 @@ The skipped tests:
 The older suites pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
+
+## 2-dev2. Dev 10.12 (kit 10.0.8): Enemy Randomizer and Boss Randomizer (gameplay test plan)
+
+Seeds are unchanged: a 10.11 save continues. Copy `16_rando_spawners.lua`, `enemy.lua`, `boss.lua`
+with the rest of `scripts\`. Both features start OFF. Test whole encounters from start to finish,
+not only whether enemies look different. Note for every case: PASS / FAIL / not reached, and keep
+rivet.log. ENEMIES_AND_BOSSES.md section 7 says which lines to look for.
+
+0. **Install.** `RANDO-KIT all 12 required scripts are 10.0.8`; `RANDO-ENEMY installed (OFF ...)`,
+   `RANDO-BOSS installed (OFF ...)`; banner `Randomizer dev 10.12`.
+1. **Both OFF (play 2-3 encounters).** No `RANDO-SPAWNERS census` line at all. Enemies as usual.
+2. **Enemy ON (`-`).** "Enemy Randomizer: ON". `census 1 (...): N spawner node(s) read ... layout ...`
+   (send the line). Play a few encounters: `learned <id> = <family>` lines, then `plan (...): N slot(s)
+   changed`. Later encounters on the planet: different regular enemies?
+3. **Encounter completion (the key test).** In a changed encounter (`Ctrl+-` shows the count): kill
+   all but one: the door / wave / objective must NOT advance; kill the last: it must advance once.
+   Arena doors, "defeat the enemies" objectives, wave spawners.
+4. **Death and reload.** Die in a changed encounter, retry, finish it. Load the last checkpoint once.
+   A third death there puts it back (`kept original`): is that encounter then normal?
+5. **Planet change and hub return.** Fly away and back (planet shuffle on and off): census again,
+   nothing wrong in other features (weapons given, shop, Gold Bolts, collectibles).
+6. **Enemy OFF in the middle of an encounter.** The remaining spawns are the originals; it completes.
+7. **Boss ON (`=`), enemy OFF.** On a planet with large enemies (Grunthors, tanks, Manglers): are they
+   other large enemies (none added, none doubled)? Health bar, death, arena exit.
+8. **A story boss** (e.g. Sargasso's Seekerpede, Cordelion, Viceron's warden, the finale) with both
+   ON: the boss and its adds are the game's own; `story boss area ... every change put back` if the
+   checkpoint name contains BOSS/FINALE/HEAVY_FIGHT/CHASE. Cutscene, health bar, next area as usual.
+9. **Both ON, enemy ON + boss OFF, enemy OFF + boss ON, both OFF**: one encounter of each kind per
+   combination; the switches survive a game restart (the companion) and a New Game.
+10. **Frame time.** Any `ran past the 8 ms frame budget` line naming 16_rando_spawners?
 
 ## 2-dev. Dev 10.11 (kit 10.0.7): new planets start at their intro
 

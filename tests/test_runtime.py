@@ -48,7 +48,7 @@ class LoadingTests(unittest.TestCase):
                                  "04_rando_settings.lua", "05_rando_bindings.lua", "06_rando_capabilities.lua",
                                  "09_rando_real.lua", "10_rando_runtime.lua", "11_rando_campaign.lua",
                                  "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua",
-                                 "15_rando_hub.lua"})
+                                 "15_rando_hub.lua", "16_rando_spawners.lua", "enemy.lua", "boss.lua"})
         dev = {p.name for p in DEV_DIR.glob("*.lua") if is_dev(p.name)}
         self.assertEqual(dev, {"dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua",
                                "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"})
@@ -62,7 +62,7 @@ class LoadingTests(unittest.TestCase):
         self.assertTrue(g.log_has("will be retried"))
         g.sim.events_unavailable = False
         g.step(31)
-        self.assertTrue(g.log_has("events subscribed 20/20"), g.logs()[-5:])
+        self.assertTrue(g.log_has("events subscribed 28/28"), g.logs()[-5:])
         g.ready()
         g.fire("MissionStateChangedEvent", MissionName="MIS_NEFCITY_01_X", MissionState=4)
         self.assertTrue(g.state.collected["planet:nefarious_city"])

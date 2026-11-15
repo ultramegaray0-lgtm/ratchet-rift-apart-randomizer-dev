@@ -144,6 +144,7 @@ function S.reset()
   S.config_api = true
   S.add_vendor("A1B2C3D4E5F60718", "Weapons")
   S.purchases = {}
+  S.reset_spawners()
 end
 local VENDOR_DEFAULTS = { PurchaseWeaponHoldTime = 1.0, UpgradeCellHoldTime = 0.5, TabChangeDelayDuration = 0.25,
                           IdleVOTriggerTime = 20.0, UpgradeCellYOffset = 31.0 }
@@ -511,8 +512,13 @@ local function node_by_comp(c) for _, n in ipairs(S.nodes) do if n.component == 
 function rivet.component(actor, class)
   for _, n in ipairs(S.nodes) do
     if n.actor == actor and n.class == class then
-      return { address = string.format("%X", n.addr), size = 0x80, handle = n.component }
+      return { address = string.format("%X", n.addr), size = n.size or 0x80, handle = n.component }
     end
+  end
+  -- dev 10.12: a spawned bot's component (S.actor_class), by its DDL class name without "Prius"
+  local cls = S.actor_class and S.actor_class[actor]
+  if cls and cls == class then
+    return { address = string.format("%X", 0x30000000 + actor * 0x100), size = 0x400, handle = actor * 10 }
   end
   return nil
 end
@@ -887,6 +893,156 @@ function S.count_logs(pattern)
   local c = 0
   for _, l in ipairs(S.logs) do if l:find(pattern, 1, true) then c = c + 1 end end
   return c
+end
+
+-- ---------------------------------------------------------------------------------------------
+-- dev 10.12: combat encounters (ALL SIMULATED; the layout and the node's behaviour follow the DDL of
+-- neptuwunium/rivet, SpawnerScriptActionPrius, where its fields are; nothing of this has run in your game)
+--   * a SpawnerScriptAction node in S.nodes with its Prius fields at instance + x (default 0x50, as
+--     AddToInventoryAction's are in your game): FactoryGroup, Templates, SpawnLocations as
+--     { pointer, count, capacity }, the eight flags, NumSpawns, MaxSimultaneousSpawns, MaxActivations
+--   * the node reads its Templates list from memory AT EACH SPAWN (the randomizer's write takes effect
+--     for spawns after it), spawns in order, counts its dead and, when all it spawned are dead, fires
+--     its "all dead" output: the encounter's objective completes (ObjectiveStateChangedEvent state 2)
+--     and its door opens (S.doors). Events: SpawnerStartedEvent / SpawnerSpawnEvent /
+--     SpawnerStoppedEvent { SpawnerComponentHandle / SenderHandle = the node's component },
+--     BotDeathCompleteEvent { SenderHandle = the bot }, HealthBarShowEvent for boss-tier templates
+--   * S.template_class[tid] = the bot component a template spawns; S.unspawnable[tid] = the template
+--     cannot spawn there (the node waits and tries again every second)
+--   * S.reload_encounters(cp, renew): a checkpoint load; renew = the level makes its nodes anew with
+--     their authored templates (new instances), otherwise the nodes and their memory stay
+-- ---------------------------------------------------------------------------------------------
+function S.reset_spawners()
+  S.encounters = {}                -- uid -> encounter
+  S.actor_class = {}               -- bot handle -> component class
+  S.template_class = {}
+  S.unspawnable = {}
+  S.hb_templates = {}              -- template -> shows a boss health bar
+  S.doors = {}
+  S.completions = {}               -- uid -> times its "all dead" output fired
+  S.next_bot = 5000
+  S.spawner_count = 0
+end
+local function put_array(addr, ptr, n) S.put_u64(addr, ptr); S.put_u32(addr + 8, n); S.put_u32(addr + 12, n) end
+-- spec = { uid, templates = { ids }, num = spawns (0 = each template once), mission, objective,
+--          x = layout offset, garbage = true (a node whose bytes match nothing) }
+function S.add_encounter(spec)
+  S.spawner_count = S.spawner_count + 1
+  local i = S.spawner_count
+  local base = 0x24000000 + i * 0x1000
+  local x = spec.x or 0x50
+  S.map(base, 0x400)
+  for a = base, base + 0x3FF do S.mem[a] = 0 end
+  S.put_u64(base, 0x7FF6C4B00000)
+  local tptr, lptr = base + 0x800, base + 0x900
+  S.map(tptr, 0x100); S.map(lptr, 0x100)
+  if not spec.garbage then
+    put_array(base + x, 0, 0)
+    put_array(base + x + 24, tptr, #spec.templates)
+    put_array(base + x + 48, lptr, 2)
+    S.mem[base + x + 70] = 1                                    -- SnapToNav
+    S.put_u32(base + x + 84, 0x3D23D70A)                        -- SpawnIntervalMin 0.04 (the DDL default)
+    S.put_u32(base + x + 88, 0x3D23D70A)                        -- SpawnIntervalMax 0.04
+    S.put_u32(base + x + 100, spec.num or 0)                    -- NumSpawns
+    S.put_u32(base + x + 104, 0xFFFFFFFF)                       -- MaxSimultaneousSpawns -1
+    S.put_u32(base + x + 120, 1)                                -- MaxActivations
+  else
+    for a = base + 8, base + 0xFF do S.mem[a] = (a * 7) % 251 end
+  end
+  for k, t in ipairs(spec.templates) do S.put_hex_id(tptr + (k - 1) * 8, t) end
+  S.put_u64(lptr, 0x0123456789AB); S.put_u64(lptr + 8, 0x0123456789AC)
+  local e = { uid = spec.uid, templates = spec.templates, num = spec.num or 0, base = base, tptr = tptr, x = x,
+              component = 3000000 + i, actor = 4000000 + i, mission = spec.mission, objective = spec.objective,
+              spawned = 0, dead = 0, alive = {}, running = false, done = false }
+  S.encounters[spec.uid] = e
+  S.nodes[#S.nodes + 1] = { component = e.component, actor = e.actor, uid = spec.uid, class = "SpawnerScriptAction",
+                            addr = base, size = 0x100, outputs = {} }
+  return e
+end
+function S.encounter_template(uid, k) return S.get_hex_id(S.encounters[uid].tptr + (k - 1) * 8) end
+local function to_spawn(e) return (e.num > 0) and e.num or #e.templates end
+-- one spawn attempt; false when the template cannot spawn
+local function spawn_one(e)
+  local n = #e.templates
+  local k = (e.spawned % n) + 1
+  local tid = S.encounter_template(e.uid, k)
+  if S.unspawnable[tid] then return false end
+  S.next_bot = S.next_bot + 1
+  local h = S.next_bot
+  S.actor_class[h] = S.template_class[tid]
+  e.spawned = e.spawned + 1
+  e.alive[h] = tid
+  S.emit("SpawnerSpawnEvent", { SenderHandle = e.component, SpawnedHandle = h, SpawnIndex = k - 1, SpawnLocation = 0 })
+  if S.hb_templates[tid] then S.emit("HealthBarShowEvent", { SenderHandle = h, IsFriendly = false }) end
+  return true
+end
+function S.start_encounter(uid)
+  local e = S.encounters[uid]
+  e.running = true
+  S.emit("SpawnerStartedEvent", { SpawnerComponentHandle = e.component })
+  S.step(1)
+  local tries = 0
+  while e.spawned < to_spawn(e) and tries < 3 do
+    if not spawn_one(e) then tries = tries + 1 end
+  end
+  S.step(1)
+end
+-- the node keeps trying to spawn what it still owes (once a second while the game runs)
+function S.encounter_tick(seconds)
+  for _ = 1, seconds do
+    for _, uid in ipairs(S.encounter_order()) do
+      local e = S.encounters[uid]
+      if e.running and not e.done and e.spawned < to_spawn(e) then spawn_one(e) end
+    end
+    S.step(60)
+  end
+end
+function S.encounter_order()
+  local u = {}
+  for uid in pairs(S.encounters) do u[#u + 1] = uid end
+  table.sort(u)
+  return u
+end
+function S.kill(uid, h)
+  local e = S.encounters[uid]
+  if not e.alive[h] then error("bot " .. tostring(h) .. " is not alive in " .. uid) end
+  e.alive[h] = nil
+  e.dead = e.dead + 1
+  S.emit("BotDeathStartEvent", { SenderHandle = h })
+  S.emit("BotDeathCompleteEvent", { SenderHandle = h })
+  if e.dead >= to_spawn(e) and next(e.alive) == nil and not e.done then
+    e.done, e.running = true, false
+    S.completions[uid] = (S.completions[uid] or 0) + 1
+    S.doors[uid] = true
+    S.emit("SpawnerStoppedEvent", { SpawnerComponentHandle = e.component })
+    if e.mission then
+      S.emit("ObjectiveStateChangedEvent", { MissionName = e.mission, ObjectiveName = e.objective, ObjectiveState = 2 })
+    end
+  end
+  S.step(1)
+end
+function S.alive_of(uid)
+  local out = {}
+  for h in pairs(S.encounters[uid].alive) do out[#out + 1] = h end
+  table.sort(out)
+  return out
+end
+function S.kill_all(uid) for _, h in ipairs(S.alive_of(uid)) do S.kill(uid, h) end end
+function S.reload_encounters(cp, renew)
+  for _, uid in ipairs(S.encounter_order()) do
+    local e = S.encounters[uid]
+    if not e.done then
+      e.spawned, e.dead, e.alive, e.running = 0, 0, {}, false
+      if renew then
+        for k, t in ipairs(e.templates) do S.put_hex_id(e.tptr + (k - 1) * 8, t) end
+        e.component = e.component + 100000
+        for _, n in ipairs(S.nodes) do if n.uid == uid then n.component = e.component end end
+      end
+    end
+  end
+  S.last_cp = cp
+  S.emit("CheckpointTriggeredEvent", { CheckpointHash = rivet.hash(cp), Loaded = true })
+  S.step(1)
 end
 
 S.reset()

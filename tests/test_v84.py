@@ -257,8 +257,8 @@ class Round20LogTests(unittest.TestCase):
 class VersionTests(unittest.TestCase):
     def test_versions(self):
         # v0.55: kit 10.0.6; dev 10.1: generator 10.1.0 (Spybots/Lorbs hold items, reward-only weapons: new seeds)
-        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.7"'), ("dev(testtravel).lua", 'TT.VERSION = "10.0.7"'),
-                           ("02_rando_generator.lua", 'G.VERSION = "10.11.0"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.7"')):
+        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.8"'), ("dev(testtravel).lua", 'TT.VERSION = "10.0.8"'),
+                           ("02_rando_generator.lua", 'G.VERSION = "10.11.0"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.8"')):
             with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
                 self.assertIn(want, f.read(), name)
 
@@ -271,7 +271,7 @@ class KitCheckTests(unittest.TestCase):
     def test_a_complete_kit_says_so(self):
         g = Game(settings_file=True)
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.7"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.8"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
     def test_a_missing_or_older_script_is_reported(self):
@@ -297,13 +297,13 @@ class InstallTests(unittest.TestCase):
         import re
         text = self.install_text()
         block = text.split("LAYOUT")[1].split("rivet.toml")[0]
-        listed = set(re.findall(r"\b(\d\d_rando_[a-z]+)\b", block))
+        listed = set(re.findall(r"\b(\d\d_rando_[a-z]+)\b", block)) | set(re.findall(r"\b(enemy|boss)\b", block))
         listed_dev = set(re.findall(r"\b(dev\([a-z_]+\))", block)) - {"dev(name)"}
         names = [f[:-4] for f in os.listdir(os.path.join(self.KIT, "scripts")) if f.endswith(".lua")]
         shipped = {n for n in names if not n.startswith("dev(")}
         self.assertEqual(listed, shipped)
         self.assertEqual(listed_dev, {n for n in names if n.startswith("dev(")})
-        self.assertEqual(len(shipped), 13)
+        self.assertEqual(len(shipped), 16)                   # dev 10.12: 16_rando_spawners, enemy, boss
         g = Game()
         self.assertEqual(set(g.R.KIT_FILES.values()) | set(g.R.OPTIONAL_FILES.values()), shipped)
 
