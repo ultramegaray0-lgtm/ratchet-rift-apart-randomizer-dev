@@ -1,0 +1,41 @@
+# Ratchet & Clank: Rift Apart Randomizer — development repository
+
+This is the **private development source of truth**. The public player repository
+(`RatchetRA`) only receives release builds made from here.
+
+## Rules (always)
+
+- This repository must stay **private**. Never change its visibility, never create releases,
+  forks, mirrors or public links for it, and never copy developer files into the public repo.
+- Never commit personal data: Windows user folders (`X:\Users\<name>\...`), real names, emails,
+  tokens or keys. Before every push run `bash tools/privacy_scan.sh` and check every hit.
+  New `rivet.log` files from the player's PC must have the `game = ...` path replaced with
+  `<GAME_FOLDER>\RiftApart.exe` before they go into `tests/data/`.
+- No original game files or assets. The two `tests/data/*_game_code_dump.json` files are short
+  byte excerpts used by one test; do not add more game data than a test needs.
+- Do not rewrite or force-push history. Commit meaningful changes with descriptive messages.
+
+## Session workflow
+
+1. `git pull` (or clone) and read `DEVELOPMENT_LOG.md` (history, findings, handoff) and
+   `README.md` (layout).
+2. Work on `main`. Old version branches (`v8.3` … `release-v0.54`) are kept for history.
+3. `pip install lupa capstone` then `python run_tests.py` (writes `TEST_RESULTS.txt`;
+   PowerShell 7 tests skip without `pwsh`).
+4. Update `DEVELOPMENT_LOG.md` with what changed and what is verified in the real game vs only in
+   the simulator.
+5. Commit, run the privacy scan, push to `main`.
+
+## Layout in brief
+
+- `mod/RiftApartRandomizer/` — the install-ready kit: `scripts/` (13 release Lua scripts plus
+  `dev(name).lua` developer scripts, which never ship), `rando_give.dll` + `rando_give_source/`,
+  `companion/` (PowerShell companion and research tools), `rivet.toml`, `docs/`.
+- `release/` — player-facing docs for the public ZIP; `tools/build_public_release.py` builds it;
+  `release_tools/validate_release.py` validates it.
+- `data/`, `tools/` — game database, generators and analysis tools.
+- `tests/` — simulator-based test suite (`tests/sim/rivet_sim.lua`), real-log replays.
+
+Current version: v0.55 (kit 10.0.6), the public beta (player ZIP SHA-256
+`0f262a9e2a5227732d03764c54ca21c2e62d2b00949f2557ebd6eab955418e1c`). Not yet verified in the real
+game: see `mod/RiftApartRandomizer/docs/KNOWN_ISSUES.md` and the public repo's KNOWN_ISSUES.
