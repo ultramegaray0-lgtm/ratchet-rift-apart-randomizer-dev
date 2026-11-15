@@ -58,10 +58,10 @@ What can't be done, and why: RESEARCH_8.0.md and KNOWN_ISSUES.md.
 | **A separate hub level** | The game is one level of regions; there is nothing to load as a hub | The ship's planet menu, with locked destinations |
 | **Stopping a flight before it happens** | rivet_hook events cannot be vetoed | The warp back after landing (3 s) |
 | **ARSENAL_RESTORED bundled inside the mod** | Its assets were not available, and re-shipping them needs the author's permission | Auto-detected when installed (ARSENAL_RESTORED.md) |
-| **Removing items the story gives** (Burst Pistol, story gadgets) | No hook removes items | Never rewards, so nothing is wasted on them |
+| **Removing items the story gives** (Burst Pistol, story gadgets) | No hook removes items | Story gadgets are never rewards; dev 10.1: the Burst Pistol is a reward (asked for) but adds nothing new, so it is kept off Gold Bolts and early spots |
 | **Story abilities as rewards** (Phantom Dash, Hurlshot, Speetle, Trudi, MagBoots, Wallrun) | No item config | The logic treats them as the story's |
 | **Weapon upgrades / other pickups as rewards** | Their effect when given by config is untested | Not placed |
-| **Spybots, Lorbs, CraiggerBears as locations** | Their pickup events are not bound yet | Not locations (no phantom rewards) |
+| **Spybots and Lorbs paying in the game** | Their pickup events are not bound yet | Dev 10.1: they are reward locations (out of logic, `collectibles`); they pay once the event is bound. CraiggerBears are not locations |
 
 ## Known limits
 

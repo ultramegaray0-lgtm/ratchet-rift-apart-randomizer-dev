@@ -6,7 +6,9 @@
 -- slot keeps its price and the point in the story it unlocks; only its Item changes, to the
 -- weapon the seed puts there (seed.shop.slots: the slot named by the weapon it sells in the normal
 -- game -> the weapon it sells now). Slots not in that map (Shatterbomb, RYNO 8, the Challenge Mode
--- Pixelizer/Bouncer slots, ammo) are never touched. Nothing is saved: configs reload with their level, so
+-- Pixelizer/Bouncer slots, ammo) keep their item, unless the seed gives that weapon at the start or
+-- at a location: then the slot is closed (below). 10.1: Shatterbomb and RYNO 8 are always rewards,
+-- so their own slots are always closed (unless excluded or weapons = false). Nothing is saved: configs reload with their level, so
 -- this runs again after every load. Ammo, upgrades and prices are never touched.
 --
 -- How the array is found, without trusting any offset that was not seen in your game:

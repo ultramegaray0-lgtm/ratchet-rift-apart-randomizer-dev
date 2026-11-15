@@ -100,7 +100,8 @@ class KitSettingsTests(unittest.TestCase):
         # start reaches for the progression; v0.5 lowers early_weapons (with a note) and the seed works
         u = {"distribution": "goldbolts_first", "armor": False, "hub": True, "early_weapons": 6,
              "include_arsenal_restored": True, "start_weapons": 5, "start_gadgets": 0, "shop_weapons": 16,
-             "start_coordinates": "start_only", "weapon_logic": "standard", "campaign_mode": "full"}
+             "start_coordinates": "start_only", "weapon_logic": "standard", "campaign_mode": "full",
+             "exclude": "weapon:shatterbomb,weapon:ryno_8"}     # 10.1: as few items as before (they are rewards now)
         s, audit = ENG.generate("big10r-756-0", u, "campaign")
         self.assertIsNotNone(s, audit)
         self.assertEqual(audit, [])

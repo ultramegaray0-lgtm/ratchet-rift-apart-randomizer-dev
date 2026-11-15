@@ -176,6 +176,8 @@ def verify_hub_seed(d):
         routes[w] += 1
         if DB["items"][w]["acquisition"] == "arsenal_restored":
             probs.append("ARSENAL_RESTORED weapon %s in the shop" % w)
+        if DB["items"][w]["acquisition"] == "reward":
+            probs.append("reward-only weapon %s in the shop" % w)
     moved = len([k for k in vendor if k not in closed and d["shop"]["mode"] == "shuffle"])
     if moved > s["shop_weapons"]:
         probs.append("%d slots sell, shop_weapons %d" % (moved, s["shop_weapons"]))
@@ -184,7 +186,7 @@ def verify_hub_seed(d):
     for k, it in DB["items"].items():
         if it["category"] != "weapon":
             continue
-        pool = it["acquisition"] == "pool" or (it["acquisition"] == "arsenal_restored" and s["include_arsenal_restored"])
+        pool = it["acquisition"] in ("pool", "reward") or (it["acquisition"] == "arsenal_restored" and s["include_arsenal_restored"])
         if pool and s["weapons"] and k not in (s["exclude"] or "") and routes[k] != 1:
             probs.append("%s has %d routes" % (k, routes[k]))
         if not pool and k != "weapon:burst_pistol" and routes[k] and k not in sold:
@@ -192,8 +194,11 @@ def verify_hub_seed(d):
     # early weapons
     if s["distribution"] == "spread" and s["weapon_logic"] == "none" and spheres:
         first = [lid for lid in spheres[0] if DB["locations"][lid].get("holds") != "filler"]
-        early = sum(1 for lid in first if DB["items"].get(d["locations"][lid].get("item"), {}).get("category") == "weapon")
-        reward_w = sum(1 for l in d["locations"].values() if DB["items"].get(l.get("item"), {}).get("category") == "weapon")
+        # 10.1: the Burst Pistol (the game hands one out anyway) is no early weapon and is not counted
+        def real_weapon(it):
+            return DB["items"].get(it, {}).get("category") == "weapon" and it != "weapon:burst_pistol"
+        early = sum(1 for lid in first if real_weapon(d["locations"][lid].get("item")))
+        reward_w = sum(1 for l in d["locations"].values() if real_weapon(l.get("item")))
         if early < min(s["early_weapons"], reward_w, len(first)):
             probs.append("early weapons %d" % early)
     return probs
@@ -288,7 +293,9 @@ class HubGeneratorTests(unittest.TestCase):
             kinds = [DB["items"][d["locations"][lid]["item"]]["category"] for lid in first if d["locations"][lid].get("item") in DB["items"]]
             self.assertGreaterEqual(kinds.count("weapon"), 2, (i, kinds))
             self.assertGreaterEqual(kinds.count("coordinates"), 1, (i, kinds))
-            self.assertGreaterEqual(len(kinds), 5, (i, kinds))
+            # 10.1: 22 Spybot/Lorb locations share the same items, so the start's reach holds a little
+            # less (1 of these 200 seeds has 4 items there); the 2 weapons and 1 Coordinates stay guaranteed
+            self.assertGreaterEqual(len(kinds), 4, (i, kinds))
 
     def test_shop_and_rewards_are_separate(self):
         for ar in (False, True):
@@ -560,7 +567,8 @@ class HubStartTests(unittest.TestCase):
 
 class PlanetShuffleTests(unittest.TestCase):
     def test_only_open_destinations_are_offered_and_coordinates_open_more(self):
-        g = to_hub(hub_game("v100-shuffle"))
+        # 10.1: a seed whose prologue reward is not Coordinates (v100-shuffle's prologue now gives Sargasso's)
+        g = to_hub(hub_game("v101-shuffle-1"))
         before = set(menu_ids(g))
         self.assertEqual(before, set(START_MENU))
         locked = [p for p in ("savali", "blizar_prime", "torren_iv", "cordelion", "ardolis", "viceron", "sargasso")

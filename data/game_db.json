@@ -1134,7 +1134,7 @@
    "verified_in_game": false
   },
   "weapon:burst_pistol": {
-   "acquisition": "start_fixed",
+   "acquisition": "reward",
    "category": "weapon",
    "config": "configs/equipment/wpn_burstpistol_item.config",
    "evidence": "owned from the start on every logged new game (rounds 14-16)",
@@ -1145,7 +1145,7 @@
    "name_confidence": "high",
    "price": 0,
    "source": "vanilla",
-   "vanilla_route": "the starting weapon (owned on a fresh save, round 14)",
+   "vanilla_route": "the starting weapon (owned on a fresh save, round 14); the game still hands it out in the prologue, so its reward adds nothing new until that copy can be taken away",
    "verified_in_game": false
   },
   "weapon:buzz_blades": {
@@ -1501,7 +1501,7 @@
    "verified_in_game": false
   },
   "weapon:ryno_8": {
-   "acquisition": "shop_fixed",
+   "acquisition": "reward",
    "category": "weapon",
    "config": "configs/equipment/wpn_ryno_item.config",
    "evidence": "confirmed round 16",
@@ -1512,7 +1512,7 @@
    "name_confidence": "high",
    "price": 0,
    "source": "vanilla",
-   "vanilla_route": "Ms. Zurkon for 0 bolts after all 10 Spybots (the game's own route, unchanged)",
+   "vanilla_route": "Ms. Zurkon for 0 bolts after all 10 Spybots; now a reward (its vendor slot is closed)",
    "verified_in_game": false
   },
   "weapon:schrodinger": {
@@ -1545,7 +1545,7 @@
    "verified_in_game": false
   },
   "weapon:shatterbomb": {
-   "acquisition": "shop_fixed",
+   "acquisition": "reward",
    "category": "weapon",
    "config": "configs/equipment/wpn_protogrenade_item.config",
    "evidence": "not delivered in a logged round yet",
@@ -1556,7 +1556,7 @@
    "name_confidence": "high",
    "price": 1250,
    "source": "vanilla",
-   "vanilla_route": "Ms. Zurkon, 1,250 bolts, unlocked by the prologue; kept in its own slot so the prologue is never changed",
+   "vanilla_route": "Ms. Zurkon, 1,250 bolts, unlocked by the prologue; now a reward (its vendor slot is closed)",
    "verified_in_game": false
   },
   "weapon:sheepinator": {
@@ -1959,37 +1959,157 @@
    "collectible": "lorb",
    "count": 1,
    "experimental": true,
+   "holds": "any",
    "kind": "collectible",
    "name": "Lorb found #1",
-   "planet": null,
+   "planet": "savali",
    "progression": false,
    "requires": [],
    "trigger": "collectible",
-   "verified": "no event bound yet (experimental)"
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:10": {
+   "collectible": "lorb",
+   "count": 10,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #10",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:11": {
+   "collectible": "lorb",
+   "count": 11,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #11",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:12": {
+   "collectible": "lorb",
+   "count": 12,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #12",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
   },
   "lorb:2": {
    "collectible": "lorb",
    "count": 2,
    "experimental": true,
+   "holds": "any",
    "kind": "collectible",
    "name": "Lorb found #2",
-   "planet": null,
+   "planet": "savali",
    "progression": false,
    "requires": [],
    "trigger": "collectible",
-   "verified": "no event bound yet (experimental)"
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
   },
   "lorb:3": {
    "collectible": "lorb",
    "count": 3,
    "experimental": true,
+   "holds": "any",
    "kind": "collectible",
    "name": "Lorb found #3",
-   "planet": null,
+   "planet": "savali",
    "progression": false,
    "requires": [],
    "trigger": "collectible",
-   "verified": "no event bound yet (experimental)"
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:4": {
+   "collectible": "lorb",
+   "count": 4,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #4",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:5": {
+   "collectible": "lorb",
+   "count": 5,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #5",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:6": {
+   "collectible": "lorb",
+   "count": 6,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #6",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:7": {
+   "collectible": "lorb",
+   "count": 7,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #7",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:8": {
+   "collectible": "lorb",
+   "count": 8,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #8",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "lorb:9": {
+   "collectible": "lorb",
+   "count": 9,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Lorb found #9",
+   "planet": "savali",
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
   },
   "planet:ardolis": {
    "count": 1,
@@ -2452,37 +2572,131 @@
    "collectible": "spybot",
    "count": 1,
    "experimental": true,
+   "holds": "any",
    "kind": "collectible",
    "name": "Spybot found #1",
    "planet": null,
    "progression": false,
    "requires": [],
    "trigger": "collectible",
-   "verified": "no event bound yet (experimental)"
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "spybot:10": {
+   "collectible": "spybot",
+   "count": 10,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Spybot found #10",
+   "planet": null,
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
   },
   "spybot:2": {
    "collectible": "spybot",
    "count": 2,
    "experimental": true,
+   "holds": "any",
    "kind": "collectible",
    "name": "Spybot found #2",
    "planet": null,
    "progression": false,
    "requires": [],
    "trigger": "collectible",
-   "verified": "no event bound yet (experimental)"
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
   },
   "spybot:3": {
    "collectible": "spybot",
    "count": 3,
    "experimental": true,
+   "holds": "any",
    "kind": "collectible",
    "name": "Spybot found #3",
    "planet": null,
    "progression": false,
    "requires": [],
    "trigger": "collectible",
-   "verified": "no event bound yet (experimental)"
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "spybot:4": {
+   "collectible": "spybot",
+   "count": 4,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Spybot found #4",
+   "planet": null,
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "spybot:5": {
+   "collectible": "spybot",
+   "count": 5,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Spybot found #5",
+   "planet": null,
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "spybot:6": {
+   "collectible": "spybot",
+   "count": 6,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Spybot found #6",
+   "planet": null,
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "spybot:7": {
+   "collectible": "spybot",
+   "count": 7,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Spybot found #7",
+   "planet": null,
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "spybot:8": {
+   "collectible": "spybot",
+   "count": 8,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Spybot found #8",
+   "planet": null,
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+  },
+  "spybot:9": {
+   "collectible": "spybot",
+   "count": 9,
+   "experimental": true,
+   "holds": "any",
+   "kind": "collectible",
+   "name": "Spybot found #9",
+   "planet": null,
+   "progression": false,
+   "requires": [],
+   "trigger": "collectible",
+   "verified": "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
   },
   "story2:ardolis": {
    "count": 2,
@@ -3472,5 +3686,5 @@
   "magboots",
   "rift_tether"
  ],
- "version": "5.0.0"
+ "version": "5.1.0"
 }

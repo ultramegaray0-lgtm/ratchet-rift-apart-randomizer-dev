@@ -51,7 +51,7 @@ class HubPlanTests(unittest.TestCase):
         self.assertEqual(kinds["scarstu_1"], "planet")
         self.assertEqual(kinds["scarstu_2"], "planet")
         self.assertEqual(kinds["corson_intro"], "intro")
-        self.assertEqual(py(s)["generator"], "10.0.2")
+        self.assertEqual(py(s)["generator"], "10.1.0")         # 10.1: Spybots/Lorbs, reward-only weapons
         # the generator's start list (and so the starting Coordinates) is 10.0's
         self.assertEqual(h["start"], ["corson_intro", "scarstu_1", "nefcity_1"])
         self.assertEqual(py(ENG.G.audit(s)) or [], [])

@@ -33,7 +33,8 @@ listed under G unless a round showed exactly that code path working.
 | Shop search within the frame budget | A (parse 512 bytes well under 2 ms here) | S | | **N: rounds 17-23 all overran** |
 | 9.0 story start with `hub = false` | A | | G (23) | |
 | rando_give.dll v6 (unchanged) | A | S | G (17-23) | |
-| Spybots as reward locations | | | | **not done**: their pickup event has never been seen |
+| Spybots (10) and Lorbs (12) as reward locations (dev 10.1) | A (test_v101, 56,600 seeds) | | | **N: their pickup event has never been seen, so they do not pay in game yet** |
+| Burst Pistol, Shatterbomb, RYNO 8 as rewards; Shatterbomb/RYNO slots closed (dev 10.1) | A (test_v101, simulated vendor) | | | **N: never run in game** |
 | Real Gold Bolts as rewards or shop items | | | | **not done**: no verified way to grant one |
 
 ## What was done for 10.0

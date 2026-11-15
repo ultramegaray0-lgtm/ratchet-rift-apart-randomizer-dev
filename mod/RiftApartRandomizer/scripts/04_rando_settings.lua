@@ -24,6 +24,7 @@ RANDO_SETTINGS = {
   -- early_weapons = 2,                -- 0-6: weapons placed where you can reach them right at the start
   -- story_milestones = true,          -- each planet's second story mission gives a reward
   -- side_locations = true,            -- Zurkie's cups, Trudi, the Blizar chef and Ardolis give rewards
+  -- collectibles = true,              -- the 10 Spybots and 12 Lorbs give rewards (they pay once their pickup is bound)
 
   -- WHAT IS RANDOMIZED
   -- weapons = true,                   -- weapons are shuffled over the shop, your start and the rewards

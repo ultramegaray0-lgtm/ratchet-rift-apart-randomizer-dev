@@ -54,9 +54,15 @@ Use this page to tell a known issue from a new one.
   it is loaded once more; after that, `/` or `Ctrl+[` twice.
 - **Heroes.** Round 20 showed every hero swap failing under 8.3; 8.4's confirmation check has never
   appeared in a log. A destination started as the wrong hero may stall at its first step.
-- **Spybots are not reward locations.** Their pickup event has never appeared in any log, and a
-  location that never triggers would lose its reward. The randomizer will add them once one log
-  shows the event.
+- **Spybots and Lorbs hold rewards that do not pay yet (dev 10.1).** The 10 Spybots and 12 Lorbs
+  are reward locations (`collectibles = true`, the default), but their pickup event has never appeared
+  in any log, so nothing completes them in the game until `05_rando_bindings.lua`
+  `collectible_events` binds it. They are never in logic, so a seed never needs them, but the weapons,
+  gadgets and armor placed there are not handed over until then. `collectibles = false` keeps them
+  out.
+- **The Burst Pistol reward adds nothing new (dev 10.1).** It is an item of the pool now, but the game
+  still hands one out in the prologue and no hook removes items. The generator keeps it off Gold Bolts
+  and early-weapon spots when it can.
 - **The randomizer gives no Gold Bolts.** There is no verified way to add a real one, and a fake one
   is exactly what you asked to avoid. So Gold Bolts are neither rewards nor shop replacements.
   `configs/pickup/pup_gold_bolt_item.config` exists in your game's files; whether granting it counts

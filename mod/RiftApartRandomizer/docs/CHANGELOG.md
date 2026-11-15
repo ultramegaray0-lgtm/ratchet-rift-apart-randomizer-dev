@@ -2,6 +2,31 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.1 (generator 10.1.0, data 5.1.0; kit stays 10.0.6, not released): Spybots, Lorbs, three weapons as items
+
+Asked: Spybots and Lorbs were defined as locations but the generator never used them, so make them
+hold items; put the Burst Pistol, Shatterbomb and RYNO 8 into the item pool. **Nothing of this has run
+in the game.** Every seed changes (new generator and data versions): start with New Game.
+
+- Data: 10 Spybots (`spybot:1`-`spybot:10`, any planet: counted in pickup order) and 12 Lorbs
+  (`lorb:1`-`lorb:12`, Savali), `holds = "any"`. CraiggerBears stay unused.
+- Generator: `collectibles = true` (new setting) puts them in the location pool. They are never in
+  logic (no pickup event is bound), so they hold weapons, gadgets nothing needs, armor or currency,
+  never Coordinates or a gadget a location needs. With `goldbolts_first` they share the leftover items
+  with missions, side activities and armor sources (rank 2).
+- Weapons: acquisition `reward` for the Burst Pistol, Shatterbomb and RYNO 8: always at a location,
+  never in the 15 normal shop slots, never a random start weapon (`start_items` and `exclude` still
+  apply). `12_rando_shop.lua` already closes any vendor slot whose weapon the seed gives at a
+  location, so Shatterbomb's and RYNO 8's own slots now show the Burst Pistol.
+- The Burst Pistol is still handed out by the game in the prologue, so its reward adds nothing new;
+  it is kept off Gold Bolts and early-weapon spots when another place exists, and never counts as a
+  weapon `weapon_logic` waits for.
+- Audit: no reward-only weapon sold or started at random; no Coordinates at a Spybot or Lorb.
+- Until `05_rando_bindings.lua` `collectible_events` binds the Spybot and Lorb pickup events, what
+  those 22 locations hold is not handed over in the game (KNOWN_ISSUES.md).
+- tests/test_v101.py (10); older tests updated where the rules changed. 429 run, 0 failures, 21
+  skipped; big_batch 56,600 of 56,600 valid.
+
 ## 10.0.5 / Public Release v0.54 (2026-11-13): planet shuffle on 0, items given back, no stale guard
 
 Reported (round 26, v0.53, tests/data/round26_rivet.log, seed pocket-pocket-zurkie-839, a restored

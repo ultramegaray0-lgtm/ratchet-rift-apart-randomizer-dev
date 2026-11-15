@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 REG = json.load(open(os.path.join(ROOT, "data", "weapon_registry.json"), encoding="utf-8"))["weapons"]
 DB = json.load(open(os.path.join(ROOT, "data", "game_db.json"), encoding="utf-8"))
 DAG = json.load(open(os.path.join(ROOT, "data", "sources", "dag_item_ids.json"), encoding="utf-8"))
-ACQ = {"pool", "shop_fixed", "start_fixed", "arsenal_restored", "disabled"}
+ACQ = {"pool", "reward", "shop_fixed", "start_fixed", "arsenal_restored", "disabled"}
 
 
 class RegistryTests(unittest.TestCase):
@@ -42,15 +42,16 @@ class RegistryTests(unittest.TestCase):
         acq = {k: w["acquisition"] for k, w in REG.items()}
         self.assertTrue(set(acq.values()) <= ACQ)
         count = {a: sum(1 for v in acq.values() if v == a) for a in ACQ}
-        self.assertEqual(count, {"pool": 17, "shop_fixed": 2, "start_fixed": 1, "arsenal_restored": 9, "disabled": 11})
+        # 10.1 (data 5.1.0): Burst Pistol, Shatterbomb and RYNO 8 are rewards
+        self.assertEqual(count, {"pool": 17, "reward": 3, "shop_fixed": 0, "start_fixed": 0, "arsenal_restored": 9, "disabled": 11})
         vendor = sorted(k for k, w in REG.items() if w["vendor"])
         self.assertEqual(len(vendor), 15)
         self.assertTrue(all(acq[k] == "pool" for k in vendor))
         self.assertEqual({k for k, a in acq.items() if a == "pool"} - set(vendor), {"weapon:pixelizer", "weapon:bouncer"})
-        self.assertEqual({k for k, a in acq.items() if a == "shop_fixed"}, {"weapon:shatterbomb", "weapon:ryno_8"})
-        self.assertEqual(acq["weapon:burst_pistol"], "start_fixed")
+        self.assertEqual({k for k, a in acq.items() if a == "reward"}, {"weapon:shatterbomb", "weapon:ryno_8", "weapon:burst_pistol"})
+        self.assertFalse(any(REG[k]["vendor"] for k, a in acq.items() if a == "reward"))
         # 20 weapons in the normal game (PowerPyx: 20, all bought from Ms. Zurkon)
-        self.assertEqual(sum(1 for k, w in REG.items() if w["acquisition"] in ("pool", "shop_fixed", "start_fixed")), 20)
+        self.assertEqual(sum(1 for k, w in REG.items() if w["acquisition"] in ("pool", "reward")), 20)
 
     def test_weapon_files_not_display_names(self):
         # the game's type data: warprifle spins up and heats (minigun), fossilizer slows time when

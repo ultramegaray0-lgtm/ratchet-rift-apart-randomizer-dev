@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.55 (build 10.0.6) - test run 2026-11-14 21:19 UTC
+Rift Apart Randomizer v0.55 (build 10.0.6) - test run 2026-11-15 09:13 UTC
 Python 3.13.18 on Linux
-ran 419, failures 0, errors 0, skipped 17
+ran 429, failures 0, errors 0, skipped 21
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -221,9 +221,9 @@ test_every_gold_bolt_is_an_item_with_the_kit_settings (tests.test_v05.KitSetting
 test_every_preset (tests.test_v05.KitSettingsTests.test_every_preset) ... ok
 test_kit_sets_goldbolts_first (tests.test_v05.KitSettingsTests.test_kit_sets_goldbolts_first) ... ok
 test_tight_settings_lower_early_weapons_instead_of_failing (tests.test_v05.KitSettingsTests.test_tight_settings_lower_early_weapons_instead_of_failing) ... ok
-test_hub_false_with_kit_settings_identical (tests.test_v05.UnchangedFrom10Tests.test_hub_false_with_kit_settings_identical) ... ok
-test_non_hub_goldbolts_first_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_non_hub_goldbolts_first_seeds_identical) ... ok
-test_spread_hub_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_spread_hub_seeds_identical) ... ok
+test_hub_false_with_kit_settings_identical (tests.test_v05.UnchangedFrom10Tests.test_hub_false_with_kit_settings_identical) ... skipped 'the 10.0 commit is not in this repository (git history needed)'
+test_non_hub_goldbolts_first_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_non_hub_goldbolts_first_seeds_identical) ... skipped 'the 10.0 commit is not in this repository (git history needed)'
+test_spread_hub_seeds_identical (tests.test_v05.UnchangedFrom10Tests.test_spread_hub_seeds_identical) ... skipped 'the 10.0 commit is not in this repository (git history needed)'
 test_the_plan_names_nefarious_city (tests.test_v051.HubPlanTests.test_the_plan_names_nefarious_city) ... ok
 test_a_refused_prologue_write_keeps_it_as_a_destination (tests.test_v051.TheStoryTests.test_a_refused_prologue_write_keeps_it_as_a_destination) ... ok
 test_a_story_still_at_its_first_step_is_loaded_once_more_in_the_city (tests.test_v051.TheStoryTests.test_a_story_still_at_its_first_step_is_loaded_once_more_in_the_city) ... ok
@@ -296,7 +296,7 @@ test_ctrl_zero_twice_gives_items_back (tests.test_v055.PlayerKeyTests.test_ctrl_
 test_only_zero_answers_and_nothing_hints_at_other_keys (tests.test_v055.PlayerKeyTests.test_only_zero_answers_and_nothing_hints_at_other_keys) ... ok
 test_the_keys_log_line_names_only_the_player_key (tests.test_v055.PlayerKeyTests.test_the_keys_log_line_names_only_the_player_key) ... ok
 test_with_the_developer_keys_the_hints_come_back (tests.test_v055.PlayerKeyTests.test_with_the_developer_keys_the_hints_come_back) ... ok
-test_an_old_test_travel_file_left_behind_is_reported (tests.test_v055.ReleaseFilesTests.test_an_old_test_travel_file_left_behind_is_reported) ... ok
+test_an_old_test_travel_file_left_behind_is_reported (tests.test_v055.ReleaseFilesTests.test_an_old_test_travel_file_left_behind_is_reported) ... skipped 'git history with the v0.54 file is needed'
 test_every_developer_file_follows_the_naming_and_is_listed (tests.test_v055.ReleaseFilesTests.test_every_developer_file_follows_the_naming_and_is_listed) ... ok
 test_no_release_script_names_a_developer_file_it_needs (tests.test_v055.ReleaseFilesTests.test_no_release_script_names_a_developer_file_it_needs) ... ok
 test_the_probe_finds_its_data_whatever_the_load_order (tests.test_v055.ReleaseFilesTests.test_the_probe_finds_its_data_whatever_the_load_order) ... ok
@@ -343,6 +343,16 @@ test_a_budget_error_halves_the_reads (tests.test_v100.ShopTests.test_a_budget_er
 test_bytes_are_parsed_fast_and_right (tests.test_v100.ShopTests.test_bytes_are_parsed_fast_and_right) ... ok
 test_close_slots_off_keeps_them (tests.test_v100.ShopTests.test_close_slots_off_keeps_them) ... ok
 test_closed_slots_and_no_duplicates (tests.test_v100.ShopTests.test_closed_slots_and_no_duplicates) ... ok
+test_collectibles_false_turns_them_off (tests.test_v101.CollectibleLocationTests.test_collectibles_false_turns_them_off) ... ok
+test_spybots_and_lorbs_hold_items_and_nothing_the_seed_needs (tests.test_v101.CollectibleLocationTests.test_spybots_and_lorbs_hold_items_and_nothing_the_seed_needs) ... ok
+test_the_spoiler_says_they_pay_once_bound (tests.test_v101.CollectibleLocationTests.test_the_spoiler_says_they_pay_once_bound) ... ok
+test_ten_spybots_and_twelve_lorbs (tests.test_v101.DataTests.test_ten_spybots_and_twelve_lorbs) ... ok
+test_three_weapons_are_rewards (tests.test_v101.DataTests.test_three_weapons_are_rewards) ... ok
+test_always_at_a_location_never_sold_never_a_random_start (tests.test_v101.RewardWeaponTests.test_always_at_a_location_never_sold_never_a_random_start) ... ok
+test_spoiler_shop_line (tests.test_v101.RewardWeaponTests.test_spoiler_shop_line) ... ok
+test_start_items_and_exclude_still_decide (tests.test_v101.RewardWeaponTests.test_start_items_and_exclude_still_decide) ... ok
+test_a_spybot_and_a_lorb_complete_their_locations (tests.test_v101.RuntimeTests.test_a_spybot_and_a_lorb_complete_their_locations) ... ok
+test_shatterbomb_and_ryno_slots_are_closed (tests.test_v101.RuntimeTests.test_shatterbomb_and_ryno_slots_are_closed) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -442,6 +452,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 419 tests in 160.343s
+Ran 429 tests in 111.243s
 
-OK (skipped=17)
+OK (skipped=21)

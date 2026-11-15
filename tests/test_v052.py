@@ -105,11 +105,12 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(g.g.RANDO_TRAVEL.hash("CHK_NEFCITY_START"), START_HASH)
 
     def test_round24_seed_is_unchanged(self):
-        # the generator stays 10.0.2: the seed of round 24 has the same fingerprint, so its progress carries over
+        # v0.52 kept generator 10.0.2 so round 24's progress carried over. Dev 10.1 (generator 10.1.0, data
+        # 5.1.0) changes every seed on purpose: the same share code gives a new, stable fingerprint
         seed, preset, user = ENG.G.parse_share_code(
             "RA10|kit-bolt-kit-198|balanced|distribution=goldbolts_first,include_arsenal_restored=true,travel_lock=true")
         s, audit = ENG.generate(seed, py(user), preset)
-        self.assertEqual(s.fingerprint, "2a5550ece053")
+        self.assertEqual(s.fingerprint, "6735e9b07c04")
         self.assertEqual(audit, [])
         for d in py(s)["hub"]["destinations"]:
             self.assertNotIn("hash", d)                          # openings stay out of the seed

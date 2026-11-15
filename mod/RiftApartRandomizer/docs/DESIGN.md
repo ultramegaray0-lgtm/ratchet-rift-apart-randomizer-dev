@@ -88,7 +88,8 @@ that is still not enough it refuses the settings and says why.
 | Side activities | 6 | a bound mission name, otherwise paid with the planet | on |
 | Second story mission | 9 | counting distinct missions | on (`story_milestones`) |
 | Armor sources | 27 (9 take filler only, ARMOR.md) | the helper's armor-action ring; `rivet.vanity_owns` polling as fallback | on (`armor`) |
-| Spybot / Lorb / CraiggerBear | 9 | an event class you bind | off |
+| Spybots / Lorbs (dev 10.1) | 10 + 12 | an event class you bind (none bound yet: out of logic) | on (`collectibles`) |
+| CraiggerBears | 3 | an event class you bind | off |
 
 There are more locations than items. Gold Bolts are filled first, then every planet's first
 story mission, then the other missions, side activities and armor sources at random; what is

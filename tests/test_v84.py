@@ -90,7 +90,7 @@ class RegistryTests(unittest.TestCase):
         a.companion_restore()
         a.wait_seed()
         self.assertEqual(a.seed.fingerprint, a.g.RANDO_GEN.fingerprint("v84-fp", a.seed.settings))
-        self.assertEqual(a.g.RANDO_GEN.VERSION, "10.0.2")          # 10.0: new seeds (start them with NEW GAME)
+        self.assertEqual(a.g.RANDO_GEN.VERSION, "10.1.0")          # 10.1: new seeds (start them with NEW GAME)
 
 
 class LandingTests(unittest.TestCase):
@@ -256,9 +256,9 @@ class Round20LogTests(unittest.TestCase):
 
 class VersionTests(unittest.TestCase):
     def test_versions(self):
-        # v0.55: kit 10.0.6, the generator stays 10.0.2 (same seeds and fingerprints)
+        # v0.55: kit 10.0.6; dev 10.1: generator 10.1.0 (Spybots/Lorbs hold items, reward-only weapons: new seeds)
         for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.6"'), ("dev(testtravel).lua", 'TT.VERSION = "10.0.6"'),
-                           ("02_rando_generator.lua", 'G.VERSION = "10.0.2"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.6"')):
+                           ("02_rando_generator.lua", 'G.VERSION = "10.1.0"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.6"')):
             with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
                 self.assertIn(want, f.read(), name)
 

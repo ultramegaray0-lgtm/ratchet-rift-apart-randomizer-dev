@@ -121,6 +121,7 @@ always are.
 |---|---|---|
 | `story_milestones` | true | the second story mission of each planet |
 | `side_locations` | true | Zurkie's cups, Trudi, Blizar chef, Ardolis |
+| `collectibles` | true | dev 10.1: the 10 Spybots and 12 Lorbs give rewards (never in logic; they pay once their pickup event is bound) |
 
 ## Start
 

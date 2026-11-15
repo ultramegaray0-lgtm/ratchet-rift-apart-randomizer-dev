@@ -22,7 +22,7 @@ SRC = os.path.join(ROOT, "data", "sources")
 OUT_JSON = os.path.join(ROOT, "data", "game_db.json")
 OUT_LUA = os.path.join(ROOT, "mod", "RiftApartRandomizer", "scripts", "01_rando_data.lua")
 
-DATA_VERSION = "5.0.0"
+DATA_VERSION = "5.1.0"
 
 # ---------------------------------------------------------------------------------------------
 # curated: what each entry is, and how sure we are
@@ -38,16 +38,20 @@ GADGETS_VERIFIED_IN_GAME = {"box_breaker", "hoverboots"}
 # 6.0 the weapon registry: how each weapon is obtained in a randomized game
 #   pool         shop-or-reward: one of the 15 normal vendor slots, the start, or a location
 #   shop_fixed   sold by the vendor in its own slot, never moved, never a reward
-#   start_fixed  the game gives it at the start (Burst Pistol)
+#   start_fixed  the game gives it at the start (no weapon since data 5.1.0)
+#   reward       5.1.0: an item of the pool that is always a reward at a location (never sold in one
+#                of the 15 normal slots, never a random start weapon); the vendor slot it has in the
+#                normal game is closed by 12_rando_shop.lua, so the reward is its only route
 #   arsenal_restored  needs the separate ARSENAL_RESTORED mod: off unless include_arsenal_restored
 #   disabled     a cut weapon (empty type data, or never answered when given): never placed
 # Vanilla routes from the guides (PowerPyx "All Weapons": every weapon is bought from Ms. Zurkon;
 # Shatterbomb 1,250 bolts; RYNO after all 10 Spybots for 0 bolts; Bouncer and Pixelizer only in
 # Challenge Mode).
 WEAPON_ACQUISITION = {
-    "burst_pistol": ("start_fixed", "the starting weapon (owned on a fresh save, round 14)"),
-    "shatterbomb": ("shop_fixed", "Ms. Zurkon, 1,250 bolts, unlocked by the prologue; kept in its own slot so the prologue is never changed"),
-    "ryno_8": ("shop_fixed", "Ms. Zurkon for 0 bolts after all 10 Spybots (the game's own route, unchanged)"),
+    # 5.1.0 (asked for): Burst Pistol, Shatterbomb and RYNO 8 are items of the pool, found at locations
+    "burst_pistol": ("reward", "the starting weapon (owned on a fresh save, round 14); the game still hands it out in the prologue, so its reward adds nothing new until that copy can be taken away"),
+    "shatterbomb": ("reward", "Ms. Zurkon, 1,250 bolts, unlocked by the prologue; now a reward (its vendor slot is closed)"),
+    "ryno_8": ("reward", "Ms. Zurkon for 0 bolts after all 10 Spybots; now a reward (its vendor slot is closed)"),
     "pixelizer": ("pool", "vanilla: Challenge Mode vendor only, so a normal game never sells it: the randomizer gives it a route"),
     "bouncer": ("pool", "vanilla: Challenge Mode vendor only, so a normal game never sells it: the randomizer gives it a route"),
 }
@@ -179,12 +183,16 @@ PICKUPS = {
     "major_weapon_upgrade": ("configs/hpz/pup_hpz_majorweaponupgrade.config", "Major weapon upgrade"),
 }
 
-# collectibles whose pickup is not bound to a game event yet (counts are a floor, not the
-# game's total: "the first N found")
+# collectibles: key -> (name, count, pickup config, planet, item location). Their pickup is not bound
+# to a game event yet (05_rando_bindings.lua collectible_events): a location is "the n-th one found",
+# counted in pickup order, so a Spybot location has no planet of its own.
+# 5.1.0 (asked for): Spybots and Lorbs hold items. The game has 10 Spybots (all 10 for RYNO 8) and
+# 12 Lorbs, all on Savali (guides: PowerPyx, Push Square). They are never in logic (the trigger is
+# unproven), so only non-progression rewards go there. CraiggerBears stay unused (3 = a floor).
 COLLECTIBLES = {
-    "spybot": ("Spybot", 3, "configs/pickup/pup_ryno_plan_item.config"),
-    "lorb": ("Lorb", 3, None),
-    "craiggerbear": ("CraiggerBear", 3, None),
+    "spybot": ("Spybot", 10, "configs/pickup/pup_ryno_plan_item.config", None, True),
+    "lorb": ("Lorb", 12, None, "savali", True),
+    "craiggerbear": ("CraiggerBear", 3, None, None, False),
 }
 
 STORY_HERO = {}   # not used by logic
@@ -355,12 +363,16 @@ def build():
                                  "requires": [], "progression": False,
                                  "holds": "any" if it["findable"] == "yes" else "filler",
                                  "verified": "VanityGiveBundleAction intercept (rando_give.dll v5, not run in game yet)"}
-    for key, (name, count, _cfg) in sorted(COLLECTIBLES.items()):
+    for key, (name, count, _cfg, planet, holds) in sorted(COLLECTIBLES.items()):
         for n in range(1, count + 1):
-            locs[f"{key}:{n}"] = {"kind": "collectible", "collectible": key, "planet": None,
-                                  "name": f"{name} found #{n}", "trigger": "collectible", "count": n,
-                                  "requires": [], "verified": "no event bound yet (experimental)",
-                                  "progression": False, "experimental": True}
+            loc = {"kind": "collectible", "collectible": key, "planet": planet,
+                   "name": f"{name} found #{n}", "trigger": "collectible", "count": n,
+                   "requires": [], "verified": "no event bound yet (experimental)",
+                   "progression": False, "experimental": True}
+            if holds:
+                loc["holds"] = "any"
+                loc["verified"] = "item location (5.1.0); pays once its pickup event is bound in 05_rando_bindings.lua (never seen in a rivet.log yet)"
+            locs[f"{key}:{n}"] = loc            # "spybot:7": the key R.on_collectible completes
 
     # 6.0 acquisition and evidence for every weapon (the registry)
     for key, it in items.items():
@@ -456,7 +468,7 @@ def main():
     with open(OUT_LUA, "w", encoding="utf-8", newline="\n") as f:
         f.write("-- Randomizer 7.0 game database (data " + DATA_VERSION + "). Generated by tools/build_data.py from your game's dag and\n"
                 "-- the 1.x model - do not edit by hand (see data/game_db.json for provenance).\n")
-        f.write('RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["01_rando_data"] = "10.0.3"   -- the kit check (10_rando_runtime.lua)\n')
+        f.write('RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["01_rando_data"] = "10.0.6"   -- the kit check (10_rando_runtime.lua)\n')
         f.write("-- 8.5.2: Punk and Reaver are owned from the start in your game (round 22: the game refused all three\n"
                 "-- pieces it was sent, and a new game already owns 6 pieces), so they are never rewards.\n")
         f.write("RANDO_DATA = " + lua(db) + "\n")
@@ -476,9 +488,10 @@ def main():
     # docs/WEAPONS.md, the readable registry
     acq_text = {"pool": "pool: shop slot, start or reward (decided by the seed)",
                 "shop_fixed": "shop, own slot (never moved)", "start_fixed": "start (the game's)",
+                "reward": "reward at a location (its own vendor slot closed)",
                 "arsenal_restored": "pool, only with ARSENAL_RESTORED installed (restored_weapons)",
                 "disabled": "never placed (cut weapon)"}
-    order = ["start_fixed", "shop_fixed", "pool", "arsenal_restored", "disabled"]
+    order = ["reward", "start_fixed", "shop_fixed", "pool", "arsenal_restored", "disabled"]
     lines = ["# Weapon registry (data " + DATA_VERSION + ")", "",
              "Generated by `tools/build_data.py` from your game's dag (item ids) and `data/weapon_registry.json`.",
              "Every weapon has exactly one route in a seed. Ids are the game's 64-bit asset ids of the item configs.",

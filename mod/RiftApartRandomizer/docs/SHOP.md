@@ -20,8 +20,9 @@ locations. So:
 - every weapon in the pool has **exactly one** route: one slot, the start, or one location;
 - no weapon is sold and also a reward; no slot sells the same weapon as another;
 - usually no slot sells its own weapon (the order is reshuffled until it is a derangement);
-- Shatterbomb (1,250 bolts) and RYNO 8 (free after all 10 Spybots) stay in their own slots;
-  the Burst Pistol is the game's starting weapon; ammo and upgrades are never touched.
+- dev 10.1: Shatterbomb, RYNO 8 and the Burst Pistol are rewards at locations; the vendor slots
+  Shatterbomb and RYNO 8 have in the normal game are closed (they show the Burst Pistol you own);
+  ammo and upgrades are never touched.
 
 Because every slot keeps its unlock point, you can buy as many weapons at each point of the
 story as in the normal game, whatever the order.

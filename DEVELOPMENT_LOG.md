@@ -4,6 +4,30 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-15: dev 10.1 (generator 10.1.0, data 5.1.0): Spybots and Lorbs hold items; three weapons are items
+
+- Asked: Spybots and Lorbs were defined as locations but the generator never used them; make them hold
+  items. Put the Burst Pistol, Shatterbomb and RYNO 8 into the item pool. Dev repo only (the public
+  release repo is untouched); kit stays 10.0.6.
+- Data (tools/build_data.py): 10 Spybots, 12 Lorbs on Savali (counts from the guides), `holds = "any"`;
+  acquisition `reward` for the three weapons. build_data's kit stamp fixed to 10.0.6 (it wrote 10.0.3).
+- 02: `collectibles = true` puts them in the location pool; they stay out of logic (no pickup event
+  bound), so only non-progression items or currency go there. Reward-only weapons: always at a
+  location, never in the 15 shop slots, never a random start weapon. G.GAME_GIVEN is empty;
+  G.DUD_REWARDS keeps the Burst Pistol (the game hands one out anyway) off Gold Bolts, early weapons
+  and weapon_logic. Audit and spoiler updated.
+- 12 (comment only): Shatterbomb's and RYNO 8's own slots are closed by the existing rule (a slot whose
+  weapon the seed gives at a location is closed).
+- Verified only offline and in the simulator: tests/test_v101.py (10), 429 run, 0 failures,
+  21 skipped; big_batch 56,600/56,600 valid. Test changes where the rules changed: registry counts,
+  the independent verifiers (reward-only weapons, collectibles), version strings, round 24's
+  fingerprint (every seed changes), two seed-dependent picks, the sphere-1 item floor 5 -> 4 (one of
+  200 seeds: 22 more locations share the items).
+- Open (needs the game): bind the Spybot and Lorb pickup events (05 `collectible_events`) from a
+  rivet.log with discovery on; until then those 22 locations do not pay. Closed Shatterbomb/RYNO
+  slots on the real vendor screen. The Burst Pistol reward stays a dud until a starting copy can be
+  removed.
+
 ## 2026-11-13: Public Release v0.54 (build 10.0.5): planet shuffle on 0, items given back, no stale guard
 
 - Round 26 (v0.53, a restored save continuing on Viceron): no key, no planet menu, yet `the game's

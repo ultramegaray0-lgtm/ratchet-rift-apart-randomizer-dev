@@ -1,5 +1,5 @@
 {
- "data_version": "5.0.0",
+ "data_version": "5.1.0",
  "weapons": {
   "weapon:blackhole_storm": {
    "acquisition": "pool",
@@ -50,14 +50,14 @@
    "verified_in_game": false
   },
   "weapon:burst_pistol": {
-   "acquisition": "start_fixed",
+   "acquisition": "reward",
    "config": "configs/equipment/wpn_burstpistol_item.config",
    "evidence": "owned from the start on every logged new game (rounds 14-16)",
    "id": "B33FB3994F5E7EC3",
    "name": "Burst Pistol",
    "price": 0,
    "source": "vanilla",
-   "vanilla_route": "the starting weapon (owned on a fresh save, round 14)",
+   "vanilla_route": "the starting weapon (owned on a fresh save, round 14); the game still hands it out in the prologue, so its reward adds nothing new until that copy can be taken away",
    "vendor": null,
    "verified_in_game": false
   },
@@ -338,14 +338,14 @@
    "verified_in_game": false
   },
   "weapon:ryno_8": {
-   "acquisition": "shop_fixed",
+   "acquisition": "reward",
    "config": "configs/equipment/wpn_ryno_item.config",
    "evidence": "confirmed round 16",
    "id": "B1740E5EC0A2BF83",
    "name": "RYNO 8",
    "price": 0,
    "source": "vanilla",
-   "vanilla_route": "Ms. Zurkon for 0 bolts after all 10 Spybots (the game's own route, unchanged)",
+   "vanilla_route": "Ms. Zurkon for 0 bolts after all 10 Spybots; now a reward (its vendor slot is closed)",
    "vendor": null,
    "verified_in_game": false
   },
@@ -374,14 +374,14 @@
    "verified_in_game": false
   },
   "weapon:shatterbomb": {
-   "acquisition": "shop_fixed",
+   "acquisition": "reward",
    "config": "configs/equipment/wpn_protogrenade_item.config",
    "evidence": "not delivered in a logged round yet",
    "id": "AC67940BC647D31D",
    "name": "Shatterbomb",
    "price": 1250,
    "source": "vanilla",
-   "vanilla_route": "Ms. Zurkon, 1,250 bolts, unlocked by the prologue; kept in its own slot so the prologue is never changed",
+   "vanilla_route": "Ms. Zurkon, 1,250 bolts, unlocked by the prologue; now a reward (its vendor slot is closed)",
    "vendor": null,
    "verified_in_game": false
   },

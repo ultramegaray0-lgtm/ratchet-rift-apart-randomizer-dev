@@ -156,7 +156,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertIsNone(G.PRESETS["hub"])
         self.assertIsNone(G.PRESETS["hub_chaos"])
         self.assertIsNone(self.eng.lua.globals().RANDO_CAMPAIGN.hub_plan)   # the 8.x plan builder is gone
-        self.assertEqual(G.VERSION, "10.0.2")
+        self.assertEqual(G.VERSION, "10.1.0")
         s = self.gen("v90-nohub")
         self.assertIsNone(s.get("hub"))
         self.assertEqual(s["campaign"]["order"][:3], STORY_START)

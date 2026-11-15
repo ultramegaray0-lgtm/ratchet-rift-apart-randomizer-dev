@@ -26,13 +26,18 @@ with open(os.path.join(ROOT, "data", "weapon_registry.json"), encoding="utf-8") 
 # from the Lua code)
 ALWAYS_START = {"hoverboots", "map_o_matic"}
 VENDOR = sorted(k for k, w in REG.items() if w["vendor"])          # the 15 normal vendor slots
-GAME_GIVEN = {"weapon:burst_pistol"}
+# 10.1: no weapon is handed out by the game and kept out of the seed any more (the Burst Pistol is a
+# reward); "reward" weapons (Burst Pistol, Shatterbomb, RYNO 8) are always rewards at a location
+GAME_GIVEN = set()
+REWARD_ONLY = {k for k, w in REG.items() if w["acquisition"] == "reward"}
+# 10.1: Spybots and Lorbs are reward locations, never in logic
+COLLECTIBLE_REWARDS = {"spybot", "lorb"}
 
 
 def weapon_pool(s):
     """6.0: weapons the seed splits over the shop's slots, the start and reward locations"""
     return {k for k, w in REG.items()
-            if w["acquisition"] == "pool" or (w["acquisition"] == "arsenal_restored" and s["include_arsenal_restored"])}
+            if w["acquisition"] in ("pool", "reward") or (w["acquisition"] == "arsenal_restored" and s["include_arsenal_restored"])}
 
 
 def reward_weapons(s):
@@ -42,10 +47,11 @@ def reward_weapons(s):
     ex = {k for k in s["exclude"].replace(" ", "").split(",") if k}
     shuffle = s["shop"] == "shuffle"
     fixed = {k for k in VENDOR if not shuffle or k in ex}
-    avail = len([k for k in weapon_pool(s) if k not in ex and k not in fixed])
+    avail = len([k for k in weapon_pool(s) if k not in ex and k not in fixed and k not in REWARD_ONLY])
+    rewards_only = len([k for k in REWARD_ONLY if k not in ex])
     free = len(VENDOR) - len(fixed)
     start = max(0, min(s["start_weapons"], avail - free))
-    return avail - free - start, start
+    return avail - free - start + rewards_only, start
 GAME_KIT = set(DB["start_kit"])
 
 
@@ -166,7 +172,7 @@ def verify(seed):
                 probs.append(f"the slot of {k} must sell {k} (shop {want_mode}, exclude), sells {w}")
         elif w not in pool:
             probs.append(f"the slot of {k} sells {w}, which is not in the weapon pool")
-        if REG.get(w, {}).get("acquisition") in ("disabled", "shop_fixed", "start_fixed"):
+        if REG.get(w, {}).get("acquisition") in ("disabled", "shop_fixed", "start_fixed", "reward"):
             probs.append(f"{w} ({REG[w]['acquisition']}) is sold in a shuffled slot")
     if want_mode == "shuffle" and sum(1 for k, w in slots.items() if k == w and k not in ex) > 1:
         probs.append("more than one slot sells its own weapon")
@@ -260,9 +266,21 @@ def verify(seed):
             probs.append(f"{k} has {len(w)} routes: {w}")
         if k in GAME_GIVEN:
             probs.append(f"{k} is handed out by the game itself but placed at {w}")
+        if k in REWARD_ONLY and "start" in w and seed["registry"].get(k) not in ("start (chosen)", "start (no location left)"):
+            probs.append(f"{k} is a reward-only weapon but starts ({seed['registry'].get(k)})")
         campaign_kit = ((seed.get("campaign") or {}).get("mode", "vanilla") != "vanilla" or s.get("travel_lock")) and k in CAMPAIGN_GADGETS
         if k in ex and not k.startswith("access:") and k not in ALWAYS_START and not (campaign_kit and w == ["start"]):
             probs.append(f"excluded {k} placed at {w}")
+    # 10.1: Spybots and Lorbs are locations only with collectibles = true, and never hold progression
+    for lid, l in seed["locations"].items():
+        loc = DB["locations"].get(lid, {})
+        if loc.get("kind") != "collectible":
+            continue
+        if not s.get("collectibles") or loc.get("collectible") not in COLLECTIBLE_REWARDS:
+            probs.append(f"{lid} is a location although it should not be")
+        it = l.get("item")
+        if it and (DB["items"].get(it, {}).get("category") == "coordinates" or it in gating_gadgets()):
+            probs.append(f"{lid} (never in logic) holds the progression item {it}")
     # one item per Gold Bolt
     bolts = [lid for lid, l in DB["locations"].items() if l["kind"] == "goldbolt"]
     if len(bolts) != 25:
@@ -347,7 +365,7 @@ def verify(seed):
         if k not in pool and where.get(k):
             probs.append(f"{k} ({w['acquisition']}) is placed at {where[k]}")
     n_rw, n_start = reward_weapons(s)
-    got_start = sum(1 for k in start if k in pool)
+    got_start = sum(1 for k in start if k in pool and k not in REWARD_ONLY)
     chosen = sum(1 for k in start if k in pool and seed["registry"].get(k) == "start (chosen)")
     if got_start - chosen != n_start and not (chosen and got_start - chosen < n_start):
         probs.append(f"{got_start} pool weapons start, expected {n_start}")
@@ -489,7 +507,9 @@ class GeneratorTests(unittest.TestCase):
     def test_too_few_items_is_refused_or_repaired(self):
         # 5.0: armor fills Gold Bolts too; armor = false with too few items turns it back on.
         # 8.5.2: without Coordinates the start gives up items first; Coordinates stay off
-        v = self.gen("vanilla-only", {"include_arsenal_restored": False, "planet_locks": False})
+        # (10.1: Shatterbomb and RYNO 8 are items now; excluding them keeps this case as tight as before)
+        v = self.gen("vanilla-only", {"include_arsenal_restored": False, "planet_locks": False,
+                                      "exclude": "weapon:shatterbomb,weapon:ryno_8"})
         self.assertFalse(v["settings"]["planet_locks"])
         self.assertTrue(any(w.startswith("start_gadgets lowered") for w in v["warnings"]), v["warnings"])
         a = self.gen("vanilla-only", {"include_arsenal_restored": False, "armor": False, "planet_locks": False})
@@ -631,9 +651,13 @@ class GeneratorTests(unittest.TestCase):
             self.assertEqual(a["registry"][k], "start (chosen)")
         self.assertNotIn("weapon:headhunter", a["shop"]["slots"].values())
         self.assertEqual(verify(a), [])
-        b = self.gen("chosen-bad", {"start_items": "weapon:shatterbomb,nonsense"})
+        b = self.gen("chosen-bad", {"start_items": "weapon:nailgun,nonsense"})       # a cut weapon, a typo
         self.assertEqual(sum("start_items" in w for w in b["warnings"]), 2)
         self.assertEqual(verify(b), [])
+        # 10.1: a reward-only weapon starts only when start_items names it
+        c = self.gen("chosen-reward", {"start_items": "weapon:shatterbomb"})
+        self.assertEqual(c["registry"]["weapon:shatterbomb"], "start (chosen)")
+        self.assertEqual(verify(c), [])
 
     def test_presets_7(self):
         """the five 7.0 presets: each valid, each different, aliases accepted"""
@@ -665,11 +689,15 @@ class GeneratorTests(unittest.TestCase):
                 if "weapon:" + k in slots.values():
                     sold_elsewhere[k] += 1
             starts.add(tuple(sorted(x for x in a["start"]["items"] if x.startswith("weapon:"))))
-            # Shatterbomb and RYNO 8 keep their own routes, cut weapons appear nowhere
+            # 10.1: Burst Pistol, Shatterbomb and RYNO 8 are rewards at a location; cut weapons appear nowhere
             placed = set(slots.values()) | set(a["start"]["items"]) | {l.get("item") for l in a["locations"].values()}
+            at_location = {l.get("item") for l in a["locations"].values()}
             for k, w in REG.items():
                 if w["acquisition"] in ("shop_fixed", "start_fixed", "disabled", "arsenal_restored"):
                     self.assertNotIn(k, placed - {k} if w["acquisition"] == "start_fixed" else placed, (i, k))
+                if w["acquisition"] == "reward":
+                    self.assertIn(k, at_location, (i, k))
+                    self.assertEqual(a["registry"][k], "location", (i, k))
         self.assertGreater(sold_elsewhere["pixelizer"], 150)          # the shop sells them in most seeds
         self.assertGreater(sold_elsewhere["bouncer"], 150)
         self.assertGreater(len(starts), 50)                            # random starting weapons
@@ -718,7 +746,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn("Hoverboots", text)
         self.assertIn("Map-O-Matic", text)
         self.assertIn("SHOP (Ms. Zurkon's 15 weapon slots", text)
-        self.assertIn("Shatterbomb and RYNO 8 (after all 10 Spybots) stay in their own slots", text)
+        self.assertIn("Shatterbomb and RYNO 8 are rewards (listed below): their own vendor slots are closed", text)
         self.assertIn("ARMOR: the armor pieces you can find are rewards", text)
         self.assertIn("CURRENCY:", text)
         self.assertIn("prices: what the weapon sold costs", text)
