@@ -51,6 +51,13 @@
 --     never at CHK_NEFCITY_SHIP). S.chain[m] = { start = next mission, travel = planet } is the
 --     game's own next step when m completes (round 23: MIS_NEFCITY_01 -> MIS_SARG_01_FIRST_VISIT
 --     and the trip to Sargasso; MIS_INTRO -> MIS_NEFCITY_01 and Nefarious City). SIMULATED.
+--   * dev 10.15 (ALL SIMULATED, the layout is INVENTED for the test): the hero's inventory component
+--     (S.INV_CLASS on the hero, an array { pointer, count, capacity } at +0x40 of pointers to item
+--     objects, the weapon's item config id at +0x10 of each object as in ItemPrius, and the Omega bool
+--     at S.OMEGA_AT bytes after that id, as WeaponItemPrius.Omega). S.buy_omega(id) is the vendor's
+--     Omega purchase in Challenge Mode (EnteredVendorEvent, the flag 0 -> 1, PurchaseWeaponEvent with the
+--     weapon's name); S.give_resets_omega makes a give of an owned weapon clear its flag (the worst case,
+--     not seen in your game). A load moves the objects (S.inv_move_on_load).
 SIM = {}
 local S = SIM
 
@@ -90,6 +97,15 @@ function S.reset()
   S.config_objects = {}            -- config id -> object address (5.0, kind 7)
   S.vendor_mem = {}                -- config id -> { obj, data, authored = { id... } }
   S.armor_hook = true              -- v5 hook installed (MB_ARMOR_HOOK = 1)
+  -- dev 10.15: the inventory records (INVENTED layout, see the top of this file)
+  S.INV_CLASS, S.OMEGA_AT, S.MOD_AT = "ItemInventory", 0x5B, 0x38
+  S.inv_records = {}               -- weapon id -> object address
+  S.inv_order = {}
+  S.inv_base = 0x45000000
+  S.inv_gen = 0
+  S.give_resets_omega = false
+  S.inv_move_on_load = true
+  S.inventory_component = true
   -- the game's mission manager, laid out in memory the way the game's code reads it (research
   -- zip 2026-11-11, see rando_give_core.h). What START does to the state (-> 3) is SIMULATED:
   -- the real effect is what lab test 2 shows.
@@ -205,6 +221,7 @@ function S.vendor_buy(weapon_id, seconds)
       if (seconds or 1.0) >= c.fields.PurchaseWeaponHoldTime then
         S.purchases[#S.purchases + 1] = weapon_id
         S.weapons_owned[weapon_id] = true
+        S.inv_add(weapon_id)
         return true
       end
       return false
@@ -381,6 +398,8 @@ end
 -- a new game started from the main menu (what rounds 14 and 15 logged)
 function S.new_game()
   S.weapons_owned, S.gadgets_owned = {}, {}
+  S.inv_records, S.inv_order = {}, {}
+  S.inv_gen = S.inv_gen + 1
   S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PROLOGUE", ObjectiveState = 2 })
   S.emit("ObjectiveStateChangedEvent", { MissionName = "MIS_INTRO", ObjectiveName = "OBJ_INTRO_PARADE_START_CINE", ObjectiveState = 1 })
   S.step(1)
@@ -521,7 +540,78 @@ function rivet.component(actor, class)
   if cls and cls == class then
     return { address = string.format("%X", 0x30000000 + actor * 0x100), size = 0x400, handle = actor * 10 }
   end
+  -- dev 10.15: the hero's inventory component
+  if S.inventory_component and actor == S.hero_handle and class == S.INV_CLASS then
+    S.inv_layout()
+    return { address = string.format("%X", S.inv_comp), size = 0x200, handle = 4242 }
+  end
   return nil
+end
+-- dev 10.15: lay the records out (again): the component, its pointer array, one object per owned weapon
+function S.inv_layout()
+  local base = S.inv_base + S.inv_gen * 0x100000
+  S.inv_comp = base
+  S.map(base, 0x200)
+  S.put_u64(base, 0x7FF6C4B00000)                       -- a vtable
+  S.put_u64(base + 0x20, 0x1111)                        -- other fields
+  local arr = base + 0x1000
+  local n = #S.inv_order
+  S.map(arr, math.max(8, n * 8) + 0x40)
+  S.put_u64(base + 0x40, arr)
+  S.put_u32(base + 0x48, n)
+  S.put_u32(base + 0x4C, n + 8)
+  for i, id in ipairs(S.inv_order) do
+    local obj = S.inv_records[id]
+    S.put_u64(arr + (i - 1) * 8, obj)
+  end
+end
+function S.inv_add(id)
+  if S.inv_records[id] then return end
+  local obj = S.inv_base + S.inv_gen * 0x100000 + 0x8000 + #S.inv_order * 0x200
+  S.map(obj, 0x200)
+  S.put_u64(obj, 0x7FF6C4B10000)                        -- vtable
+  S.put_u64(obj + 0x08, 0xABC00000 + #S.inv_order)      -- ItemGuid
+  S.put_hex_id(obj + 0x10, id)                          -- ItemConfigHash
+  S.put_u32(obj + 0x18, 1)                              -- ItemCount
+  S.mem[obj + 0x10 + 0x20] = 3                          -- some non-bool byte (a level)
+  S.inv_records[id] = obj
+  S.inv_order[#S.inv_order + 1] = id
+  S.inv_layout()
+end
+function S.inv_move()
+  local old = S.inv_records
+  local order = S.inv_order
+  S.inv_gen = S.inv_gen + 1
+  S.inv_records, S.inv_order = {}, {}
+  for _, id in ipairs(order) do
+    local flag, mod = S.mem[old[id] + 0x10 + S.OMEGA_AT], S.mem[old[id] + 0x10 + S.MOD_AT]
+    S.inv_add(id)
+    S.mem[S.inv_records[id] + 0x10 + S.OMEGA_AT] = flag
+    S.mem[S.inv_records[id] + 0x10 + S.MOD_AT] = mod
+  end
+  S.inv_layout()
+end
+function S.omega_of(id)
+  local obj = S.inv_records[id]
+  return obj and S.mem[obj + 0x10 + S.OMEGA_AT] or nil
+end
+function S.set_omega(id, v) S.mem[S.inv_records[id] + 0x10 + S.OMEGA_AT] = v end
+-- a Raritanium upgrade (a byte of the weapon's mods goes 0 -> 1): noise for the learning
+function S.upgrade(id) S.mem[S.inv_records[id] + 0x10 + S.MOD_AT] = 1 end
+function S.weapon_name(id)
+  for _, n in ipairs(S.weapon_configs or {}) do if n.id == id then return n.name end end
+  return nil
+end
+-- the vendor's Omega purchase in Challenge Mode (SIMULATED): enter, (upgrade), buy, leave
+function S.enter_vendor() S.emit("EnteredVendorEvent", {}); S.step(1) end
+function S.leave_vendor() S.emit("ExitedVendorEvent", {}); S.step(1) end
+function S.buy_omega(id, name, upgrade_too)
+  if not S.weapons_owned[id] then return false end
+  if upgrade_too then S.upgrade(id) end
+  S.set_omega(id, 1)
+  S.emit("PurchaseWeaponEvent", { WeaponName = name })
+  S.step(1)
+  return true
 end
 function rivet.script_node(component)
   local n = node_by_comp(component)
@@ -570,10 +660,12 @@ function S.apply_give(id)
   local kind = S.item_kind[id]
   if kind == "weapon" then
     if S.weapons_owned[id] then
+      if S.give_resets_omega and S.inv_records[id] then S.set_omega(id, 0) end   -- dev 10.15: worst case (SIMULATED)
       if S.inv_changed_on_owned then S.emit("InventoryChangedEvent", {}) end
       return "owned"
     end
     S.weapons_owned[id] = true
+    S.inv_add(id)
     S.emit("WeaponAddedEvent", { WeaponType = S.weapon_type_of(id) })
     S.emit("InventoryChangedEvent", {})
     return "added"
@@ -860,6 +952,7 @@ function S.fire(class, fields) S.emit(class, fields); S.step(1) end
 function S.travel(new_name, loading_frames)
   if S.planet then S.emit("PlanetChangedEvent", { OldPlanetName = S.planet }) end
   S.scene, S.hud, S.loading = false, false, true
+  if S.inv_move_on_load and #S.inv_order > 0 then S.inv_move() end   -- dev 10.15: a load moves the objects
   S.reload_configs()
   S.step(1)
   S.emit("PlanetChangedEvent", { NewPlanetName = new_name })

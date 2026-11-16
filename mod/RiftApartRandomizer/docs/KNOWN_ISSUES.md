@@ -4,6 +4,20 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0h. Since dev 10.15 (kit 10.0.11): Omega weapons
+
+`omega_weapons` is off by default; nothing below matters while it is off. Nothing has run in the game
+(OMEGA.md section 5).
+- **The game's Omega flag is only written by `17_rando_omega.lua`, and only after it has learned its
+  place** from two Omega purchases at Ms. Zurkon (Challenge Mode) or `omega_flag_offset`. Until then an
+  Omega reward gives its weapon and is recorded as pending.
+- **The inventory component's class name is a guess** (`ItemInventory`, then three others). If none
+  answers, rivet.log says `RANDO-OMEGA inventory not found` and nothing is written.
+- **If an Omega purchase reports no `PurchaseWeaponEvent`**, nothing is learned.
+- Ms. Zurkon's own Omega upgrades stay for sale in Challenge Mode (their price fields are not located).
+- 6 of the 20 Omega names are assumed (no guide lists them by name).
+- Not in a player package (held back by the release builder).
+
 ## 0g. Since dev 10.13 (kit 10.0.9): Chaos Randomizer
 
 OFF by default. **By design it can make a run impossible** (CHAOS.md): encounters that never finish,

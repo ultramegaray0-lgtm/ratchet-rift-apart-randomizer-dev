@@ -14,6 +14,8 @@ LAYOUT
                        Randomizers, both OFF until their key; enemy and boss need 16_rando_spawners)
                      chaos  (optional, dev 10.13: the Chaos Randomizer, OFF until BACKSPACE; NO
                        safety guards; needs 16_rando_spawners; never in a player package)
+                     17_rando_omega  (optional, dev 10.15: sets the game's Omega flag for an Omega
+                       reward, docs/OMEGA.md; never in a player package until it has run in the game)
                    Developer files, never in a release (named dev(name).lua):
                      dev(keys)        the developer keys ; ] [ / ' and the old F keys
                      dev(testtravel)  test travel (keys . and , with test_travel = true)
@@ -34,7 +36,7 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT all 12 required scripts are 10.0.9
+       RANDO-KIT all 12 required scripts are 10.0.11
        RANDO-KIT developer files loaded (not part of a release): ...
 
 KEYS

@@ -141,6 +141,19 @@ feature is only listed under "actual game execution" when a round showed it with
 - **PowerShell companion tests**: PowerShell 7 can't run on the build machine (downloading and
   running it was not allowed). The companion's one logic change in 8.5 is checked by reading only.
 
+## Dev 10.15 (kit 10.0.11): Omega weapons
+
+Nothing of dev 10.15 has run in the game (A = automated, S = static inspection, G = game: none).
+
+| Feature | | Evidence |
+|---|---|---|
+| An Omega is the flag `WeaponItemPrius.Omega` of the owned weapon, not an item id | S | the game's type data (rivet DDL), your dag (no Omega config) - OMEGA.md section 1 |
+| omega_weapons off: every seed is the 10.13 seed | A | test_v1015 GeneratorTests (git commit 376a887) |
+| omega_weapons on: each Omega once, never Gold Bolt / shop / random start, rest of the seed unchanged | A | GeneratorTests (90 seeds, audit) |
+| Tier logic: prerequisite, no downgrade, no duplicate send, repeats, save/load, merge, New Game | A | OwnershipTests, PersistenceTests (simulator) |
+| Setting the game's flag (record search, learning from two Omega purchases, guarded write, keeping it) | A | LearningTests, PersistenceTests - **simulated layout only; N: everything of it in the game** |
+| Never in a player package | A | test_v055 PackageTests, test_v1015 ReleaseTests |
+
 ## Dev 10.13 (kit 10.0.9): Chaos Randomizer
 
 Nothing of dev 10.13 has run in the game (A = automated simulator tests, G = game: none).

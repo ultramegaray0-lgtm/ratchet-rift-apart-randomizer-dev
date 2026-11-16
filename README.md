@@ -1,6 +1,12 @@
 # Rift Apart Randomizer 10.0 (development project)
 
-**Dev 10.13 (kit 10.0.9):** the **Chaos Randomizer** (`scripts/chaos.lua`, `BACKSPACE` key, OFF by
+**Dev 10.15 (kit 10.0.11):** **Omega weapons** (Challenge Mode): `omega_weapons = true` adds the 20 Omega
+versions as rewards of their own; an Omega found first also gives its weapon, the weapon found later never
+undoes it. The game's Omega flag is set by `scripts/17_rando_omega.lua` (developer kit only) once it has
+learned where your game keeps it. `mod/RiftApartRandomizer/docs/OMEGA.md`, `docs/TEST_REPORT_10.15.md`. Not run
+in the game yet. Built on 10.13: the 10.14 patch is not in this repository.
+
+Dev 10.13 (kit 10.0.9): the **Chaos Randomizer** (`scripts/chaos.lua`, `BACKSPACE` key, OFF by
 default): any enemy or boss can become any other, from any planet, with **no protection** (a run may
 become impossible). While ON it takes priority over the Enemy and Boss Randomizers, which keep their own
 settings and resume when it is OFF. Never in a player package. `mod/RiftApartRandomizer/docs/CHAOS.md`,

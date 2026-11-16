@@ -25,8 +25,13 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual(len(configs), len(set(configs)), "duplicate weapon config")
         self.assertEqual(len(names), len(set(names)), "duplicate weapon name")
         # no weapon id is also any other item's id (armor, gadgets, currency)
-        others = {it["id"].upper() for k, it in DB["items"].items() if it.get("id") and it["category"] != "weapon"}
+        # (dev 10.15: an Omega version is the same item as its weapon - the game has no Omega item id - so
+        #  omega:<weapon> carries its own weapon's id and no other)
+        others = {it["id"].upper() for k, it in DB["items"].items() if it.get("id") and it["category"] not in ("weapon", "omega")}
         self.assertFalse(set(ids) & others)
+        for k, it in DB["items"].items():
+            if it["category"] == "omega":
+                self.assertEqual(it["id"].upper(), DB["items"][it["weapon"]]["id"].upper(), k)
 
     def test_ids_are_the_games(self):
         by_path = {v: k for k, v in DAG.items()}

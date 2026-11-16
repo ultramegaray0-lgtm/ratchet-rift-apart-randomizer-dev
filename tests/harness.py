@@ -138,7 +138,7 @@ class Game:
               local out = io.open(os.getenv("RANDO_STRICT_GLOBALS"), "a")
               local allowed = { RANDO_TEST_MODE = true, RANDO_PROBE = true, RANDO_VTABLES = true, RANDO_DONOR_ROUTE = true,
                                 RANDO_EXE = true, RANDO_DEV_KEYS = true, RANDO_TEST_TRAVEL = true, RANDO_HUB = true,
-                                RANDO_ITEM_IDS = true }
+                                RANDO_ITEM_IDS = true, RANDO_OMEGA = true }
               setmetatable(_G, {
                 __newindex = function(t, k, v)
                   local info = debug.getinfo(2, "Sl")

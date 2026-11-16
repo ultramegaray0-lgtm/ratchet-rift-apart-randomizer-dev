@@ -4,6 +4,43 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-16: dev 10.15 (kit 10.0.11, generator 10.11.0): Omega weapons
+
+- Asked: Omega weapons (New Game+) in the randomized item pool as separate items, with smart
+  ownership: an Omega first gives the weapon as its prerequisite; the weapon after its Omega never
+  downgrades it; never duplicate; never overwrite a higher tier; for every weapon that has an Omega.
+  Investigate how the game does it first. Dev repo only; public repo and release untouched.
+- BASE: this repository's main was dev 10.13 (376a887). The 10.14 optimization pass (project doc
+  RiftApart_Randomizer_10.14.md) was delivered as a patch and never pushed, so it is NOT in here; this
+  work is on top of 10.13. Kit 10.0.11 (10.0.10 was 10.14's number) so the two never share a version.
+  Applying the 10.14 patch on top of this will conflict at least on the RANDO_FILES version tags.
+- Research (static, neptuwunium/rivet's DDL + your dag): no Omega item config exists (919 dag item
+  ids, none "omega"); `WeaponItemPrius.Omega` (bool, 0x534A51FB) is the Omega state of the owned
+  weapon, next to XP / ammo / Mods; `ItemPrius.ItemConfigHash` is the weapon's 64-bit id;
+  `VendorItemData.OmegaPrice / OmegaRequiredCardBonus / OmegaOnly` are the vendor's Omega purchase;
+  `GameCampaignSave.IsChallengeMode / FirstOmegaWeaponPurchased`; no script action sets Omega. So
+  AddToInventory can never give an Omega, and giving the weapon never makes it one.
+- Data (tools/build_data.py OMEGA_NAMES): 20 `omega:<weapon>` items, category `omega`, the weapon's
+  id, in-game names from the guides (14 listed by name, 6 assumed). Data version kept 5.1.0.
+- Generator: `omega_weapons = false`; left out of the fingerprint while false
+  (G.FINGERPRINT_SINCE_10_15), and the placement streams use G.placement_fingerprint (without it), so
+  ON = the same seed + Omegas on currency spots (own stream). Audit and spoiler know them.
+- Runtime 10: R.grant_omega / R.omega_tier / R.omega_applied; state `omega`, `omega_prereq` (saved,
+  merged with the furthest status, reset by New Game; `omega_cal` kept over New Game).
+- New scripts/17_rando_omega.lua (optional, HELD_BACK from player packages): inventory records by item
+  id in `rivet.component(hero, "ItemInventory"...)`; the flag's byte learned from two Omega purchases
+  (bytes 0 -> 1, bool in all other records, 0 in at least one; intersection must leave exactly one)
+  or `omega_flag_offset`; one-byte write with id re-check and read-back, only for weapons the game
+  confirmed; keep pass after loads / resends / every 10 s. Nothing written before the byte is known.
+- Simulator: an invented inventory layout, Omega purchases, the worst case "a resend clears the flag".
+- Verified only offline: tests/test_v1015.py (32); 536 run, 0 failures, 21 skipped. Older tests changed
+  only for the kit version / banner / script list / subscription count. Seeds with omega off checked
+  identical to 10.13 against git. docs: OMEGA.md, TEST_REPORT_10.15.md, CHANGELOG, KNOWN_ISSUES 0h,
+  TESTING 2-dev5, CONFIGURATION, VERIFICATION_REPORT, INSTALL.txt, 04.
+- Open (needs the game, TESTING.md 2-dev5): the inventory component's class name and record layout;
+  does an Omega purchase report PurchaseWeaponEvent; does the game honour and save a flag written from
+  outside; Omega outside Challenge Mode. Ms. Zurkon's own Omega upgrades are left for sale.
+
 ## 2026-11-16: dev 10.13 (kit 10.0.9, generator 10.11.0): Chaos Randomizer
 
 - Asked: a third, independent randomizer (`chaos.lua`): anything can become anything (any enemy or

@@ -17,7 +17,7 @@ import sys
 import zipfile
 
 VERSION = "0.55"
-BUILD = "10.0.9"                 # dev 10.11: the kit in this repo (VERSION is set when a public release is made)
+BUILD = "10.0.11"                # dev 10.15: the kit in this repo (VERSION is set when a public release is made)
 NAME = f"Ratchet_Rift_Apart_Randomizer_v{VERSION}_Player_Release"
 ZIP_NAME = NAME + ".zip"
 DATE = (2026, 11, 15, 0, 0, 0)
@@ -33,7 +33,9 @@ REQUIRED = ["01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lu
 OPTIONAL = ["15_rando_hub.lua",          # shipped; players may delete it (no planet shuffle then)
             "16_rando_spawners.lua", "enemy.lua", "boss.lua"]   # dev 10.12: Enemy / Boss Randomizer, off by default
 # dev 10.13: in the kit for development, NEVER in a player package until it has been played (no guards by design)
-HELD_BACK = ["chaos.lua"]
+# dev 10.15: 17_rando_omega.lua writes one byte of the game's weapon state (the Omega flag) at an offset it learns
+# in the game; held back until that has been seen working in your game (docs/OMEGA.md)
+HELD_BACK = ["chaos.lua", "17_rando_omega.lua"]
 COMPANION = ["Start-Companion.bat", "RandoCompanion.ps1"]
 DOCS = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "CREDITS_AND_LICENSES.md", "LICENSE.txt"]
 DLL_SHA256 = "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12"

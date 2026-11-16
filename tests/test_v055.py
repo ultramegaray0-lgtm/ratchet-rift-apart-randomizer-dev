@@ -72,7 +72,7 @@ class ReleaseFilesTests(unittest.TestCase):
         g = Game(release=True, settings={"seed": "v055-release"}, dll_version=6)
         self.assertEqual(g.load_errors, [])
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.9"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.11"), [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.log_has("developer files loaded"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
         for name in ("RANDO_DEV_KEYS", "RANDO_TEST_TRAVEL", "RANDO_TEST_MODE", "RANDO_PROBE", "RANDO_VTABLES"):
@@ -311,7 +311,7 @@ class HubAbsentTests(unittest.TestCase):
         self.assertIsNone(g.g.RANDO_HUB)
         g.companion_restore()
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.9 (15_rando_hub not installed)"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.11 (15_rando_hub not installed)"))
         self.assertTrue(g.seed.hub)                           # the seed is the same seed
         self.assertFalse(g.R.planet_shuffle_on())
         parade(g)
@@ -381,10 +381,11 @@ class PackageTests(unittest.TestCase):
         names = zipfile.ZipFile(zips[0]).namelist()
         self.assertEqual([n for n in names if "dev(" in n or "extras" in n or "research" in n or "Install-Arsenal" in n], [])
         scripts = sorted(n.rsplit("/", 1)[1] for n in names if "/GAME_FOLDER/scripts/" in n and n.endswith(".lua"))
-        want = sorted(p.name for p in SCRIPTS.glob("*.lua") if not is_dev(p.name) and p.name != "chaos.lua")
+        want = sorted(p.name for p in SCRIPTS.glob("*.lua") if not is_dev(p.name) and p.name not in ("chaos.lua", "17_rando_omega.lua"))
         self.assertEqual(scripts, want)
         self.assertEqual(len(scripts), 16)                      # dev 10.12: + 16_rando_spawners, enemy, boss
         self.assertNotIn("chaos.lua", scripts)                  # dev 10.13: held back from player packages
+        self.assertNotIn("17_rando_omega.lua", scripts)         # dev 10.15: likewise, until it has run in the game
         # the same inputs give the same bytes
         out2 = pathlib.Path(tempfile.mkdtemp(prefix="rando055-pkg2-"))
         self.addCleanup(shutil.rmtree, out2, True)

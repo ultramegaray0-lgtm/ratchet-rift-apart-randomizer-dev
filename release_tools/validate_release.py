@@ -92,8 +92,9 @@ required = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "CREDITS_AND_L
             "VERSION.txt", "SHA256SUMS.txt", "GAME_FOLDER/rivet.toml", "GAME_FOLDER/rando_give.dll",
             "GAME_FOLDER/rando_companion/Start-Companion.bat", "GAME_FOLDER/rando_companion/RandoCompanion.ps1"]
 # every script of the kit except developer files (dev(name).lua)
-# (dev 10.13: chaos.lua is held back from player packages, tools/build_public_release.py HELD_BACK)
-HELD_BACK = ["chaos.lua"]
+# (dev 10.13: chaos.lua is held back from player packages, tools/build_public_release.py HELD_BACK;
+#  dev 10.15: 17_rando_omega.lua too, until its Omega flag write has run in the game)
+HELD_BACK = ["chaos.lua", "17_rando_omega.lua"]
 kit_scripts = sorted(f for f in os.listdir(os.path.join(KIT, "scripts")) if f.endswith(".lua") and not re.match(r"dev\(.+\)\.lua$", f)
                      and f not in HELD_BACK)
 required += ["GAME_FOLDER/scripts/" + s for s in kit_scripts]

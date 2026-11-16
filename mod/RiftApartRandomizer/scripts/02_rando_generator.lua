@@ -88,7 +88,7 @@
 --   * Abilities the story gives (Speetle, Trudi, ...) cannot be granted: locations needing
 --     them, and locations whose trigger is not proven (armor finds, collectibles), only ever
 --     hold non-progression rewards.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.9"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.11"   -- the kit check (10_rando_runtime.lua)
 RANDO_GEN = {}
 local G = RANDO_GEN
 G.VERSION = "10.11.0"
@@ -201,7 +201,13 @@ G.DEFAULTS = {
   -- dev 10.11
   coords_first_visit = true,      -- hub: progression never on a revisit or the finale, and a planet's
                                   -- Coordinates only where its first visit can be played once found
+  -- dev 10.15
+  omega_weapons = false,          -- the 20 vanilla weapons' Omega versions (Challenge Mode / New Game+) join
+                                  -- the item pool as rewards of their own (omega:<weapon>); off: seeds as 10.13
 }
+-- dev 10.15: settings added after 10.13 that are left out of the fingerprint while they have their
+-- default value, so every seed made without them is the same seed as before (same placements)
+G.FINGERPRINT_SINCE_10_15 = { omega_weapons = false }
 -- items every seed starts with, whatever the settings say
 G.ALWAYS_START = { "hoverboots", "map_o_matic" }
 -- weapons the game itself hands out whatever happens and that are never rewards. 10.1: none (the
@@ -414,7 +420,10 @@ end
 
 function G.canonical(s)
   local parts = {}
-  for _, k in ipairs(sorted_keys(G.DEFAULTS)) do parts[#parts + 1] = k .. "=" .. tostring(s[k]) end
+  for _, k in ipairs(sorted_keys(G.DEFAULTS)) do
+    local d = G.FINGERPRINT_SINCE_10_15[k]
+    if d == nil or s[k] ~= d then parts[#parts + 1] = k .. "=" .. tostring(s[k]) end
+  end
   return table.concat(parts, ";")
 end
 -- settings that differ from the defaults, as a short shareable text
@@ -447,6 +456,15 @@ end
 
 function G.fingerprint(seed_text, s)
   return G.hex(G.fnv1a(table.concat({ "RA10", G.VERSION, DB.version, seed_text, G.canonical(s) }, "\n"))):sub(1, 12)
+end
+-- dev 10.15: the random streams of the placements use the fingerprint WITHOUT the 10.15 settings, so
+-- turning omega_weapons on keeps the seed: the same items in the same places, plus the Omega versions on
+-- locations that gave Bolts or Raritanium. The seed's own fingerprint (saves, share code) still differs.
+function G.placement_fingerprint(seed_text, s)
+  local base = {}
+  for k, v in pairs(s) do base[k] = v end
+  for k, d in pairs(G.FINGERPRINT_SINCE_10_15) do base[k] = d end
+  return G.fingerprint(seed_text, base)
 end
 
 -- ------------------------------------------------------------------------------------------
@@ -648,6 +666,32 @@ end
 -- 10.0: a weapon Ms. Zurkon may sell in one of her 15 normal slots. ARSENAL_RESTORED's weapons are
 -- never shop weapons (that mod's vendor sells them in slots of its own, which the runtime closes
 -- when the seed gives them elsewhere), so they are always rewards.
+-- dev 10.15 OMEGA VERSIONS (data: omega:<weapon>, category "omega"). In your game an Omega weapon is the
+-- weapon you own with its WeaponItemPrius.Omega flag set (no item id of its own; tools/build_data.py
+-- has the evidence). With omega_weapons each of the 20 Omega versions is one reward of its own: placed
+-- once, at a location (or at the start through start_items), never in the shop, never as a random start
+-- weapon, never needed by the logic (useful, not progression), and never on a Gold Bolt (they are all
+-- filled first, as before). They are placed AFTER every other item, from their own random stream, on
+-- locations that would otherwise give currency: the other placements of the seed do not move.
+function G.omega_keys(s)
+  local out = {}
+  if not (s and s.omega_weapons) then return out end
+  local ex = excluded_set(s)
+  for _, key in ipairs(sorted_keys(DB.items)) do
+    if DB.items[key].category == "omega" and not ex[key] then out[#out + 1] = key end
+  end
+  return out
+end
+function G.omega_weapon(key)
+  local it = DB.items[key]
+  return it and it.category == "omega" and it.weapon or nil
+end
+-- the Omega item of a weapon key ("weapon:burst_pistol" -> "omega:burst_pistol"), nil if none
+function G.omega_of(weapon_key)
+  local k = type(weapon_key) == "string" and weapon_key:gsub("^weapon:", "omega:", 1)
+  return k and DB.items[k] and DB.items[k].category == "omega" and k or nil
+end
+
 function G.shop_eligible(key, s)
   local it = DB.items[key]
   return G.in_weapon_pool(key, s) and it.acquisition == "pool"
@@ -1004,10 +1048,14 @@ local function attempt(seed_text, s, fp, n, yield)
   end
   -- 7.0 start_items: items you always start with (from this seed's pool)
   local notes = {}
+  local omega_set = {}
+  for _, k in ipairs(G.omega_keys(s)) do omega_set[k] = true end
   for key in s.start_items:gmatch("[^,%s]+") do
     local found
     for _, it in ipairs(items) do if it.key == key then found = it end end
-    if registry[key] and registry[key]:sub(1, 5) == "start" then
+    if omega_set[key] then
+      -- dev 10.15: an Omega version starts after the fill (below), so nothing else moves
+    elseif registry[key] and registry[key]:sub(1, 5) == "start" then
       -- already there (Hoverboots, Map-O-Matic)
     elseif not found then
       notes[#notes + 1] = "start_items: " .. key .. " is not an item this seed randomizes - ignored"
@@ -1382,6 +1430,35 @@ local function attempt(seed_text, s, fp, n, yield)
       end
     end
   end
+  -- dev 10.15 Omega versions: after everything else, on locations currency would take (above)
+  local okeys = G.omega_keys(s)
+  if #okeys > 0 then
+    local orng = G.rng(G.fnv1a(fp .. "#omega#" .. n))
+    local chosen = {}
+    for key in s.start_items:gmatch("[^,%s]+") do chosen[key] = true end
+    local list = {}
+    for _, key in ipairs(okeys) do
+      if chosen[key] then start[#start + 1] = key; registry[key] = "start (chosen)"
+      else list[#list + 1] = key end
+    end
+    local spots = {}
+    for _, loc in ipairs(pool) do
+      if not placement[loc.id] and loc.kind ~= "goldbolt" and DB.locations[loc.id].holds ~= "filler" then spots[#spots + 1] = loc.id end
+    end
+    orng.shuffle(spots)
+    G.stable_sort(spots, function(a, b)
+      return (KIND_RANK[DB.locations[a].kind] or 9) < (KIND_RANK[DB.locations[b].kind] or 9)
+    end)
+    orng.shuffle(list)
+    local placed = 0
+    for i, key in ipairs(list) do
+      if spots[i] then placement[spots[i]] = key; registry[key] = "location"; placed = placed + 1
+      else registry[key] = "excluded (no location left)" end
+    end
+    if placed < #list then
+      notes[#notes + 1] = string.format("omega_weapons: only %d of %d Omega versions found a location (the rest are not in this seed)", placed, #list)
+    end
+  end
   -- 7.0 currency: every other location gives Bolts or Raritanium, each its own amount (none
   -- with bolts = false and raritanium = false). Its own random stream: currency never moves items.
   local cur_lids = {}
@@ -1456,7 +1533,7 @@ function G.generate(seed_text, user, preset, yield)
   while true do
     for _ = 1, 30 do
       n = n + 1
-      local r, err = attempt(seed_text, eff, fp, n, yield)
+      local r, err = attempt(seed_text, eff, G.placement_fingerprint(seed_text, s), n, yield)
       if r then
         if r.start_short then
           warnings[#warnings + 1] = string.format("start_weapons lowered to %d: no other weapon is left once the shop has its shop_weapons", r.start_short)
@@ -1788,6 +1865,23 @@ function G.audit(seed)
     end
   end
   if seed.shop.mode == "shuffle" and moved > s.shop_weapons then bad(moved .. " vendor slots sell a seed weapon, above shop_weapons " .. s.shop_weapons) end
+  -- dev 10.15: Omega versions only with omega_weapons; at most one route each (a location or a
+  -- chosen start), never a Gold Bolt, never sold
+  local omega_on = {}
+  for _, k in ipairs(G.omega_keys(s)) do omega_on[k] = true end
+  for _, key in ipairs(sorted_keys(DB.items)) do
+    if DB.items[key].category == "omega" then
+      local where = seen[key]
+      if where and not omega_on[key] then bad(key .. " is placed although omega_weapons is off (or it is excluded)") end
+      if where and where ~= "start" and DB.locations[where] and DB.locations[where].kind == "goldbolt" then bad(key .. " is on a Gold Bolt") end
+      if where == "start" and seed.registry[key] ~= "start (chosen)" then bad(key .. " starts without being chosen in start_items") end
+      if sold[key] then bad(key .. " is sold in the shop") end
+      if omega_on[key] and not where and not (seed.registry[key] or ""):find("^excluded") then bad(key .. " has no route and is not excluded") end
+    end
+  end
+  for _, w in pairs(seed.shop.slots or {}) do
+    if DB.items[w] and DB.items[w].category == "omega" then bad("a vendor slot sells " .. w) end
+  end
   for _, key in ipairs(sorted_keys(seed.registry)) do
     local route = seed.registry[key]
     if route == "location" and not (seen[key] and seen[key] ~= "start") then bad(key .. " registered at a location but not placed") end
@@ -1878,7 +1972,10 @@ function G.spoiler(seed)
   w("Data ", seed.data, ", generated in attempt ", seed.attempt)
   w("")
   w("SETTINGS")
-  for _, k in ipairs(sorted_keys(seed.settings)) do w("  ", k, " = ", tostring(seed.settings[k])) end
+  for _, k in ipairs(sorted_keys(seed.settings)) do
+    local d = G.FINGERPRINT_SINCE_10_15[k]
+    if d == nil or seed.settings[k] ~= d then w("  ", k, " = ", tostring(seed.settings[k])) end
+  end
   w("")
   if seed.warnings and #seed.warnings > 0 then
     w("NOTES (settings adjusted or capped for this seed)")
@@ -1968,6 +2065,22 @@ function G.spoiler(seed)
   w("")
   w("ARMOR: " .. (seed.armor and "the armor pieces you can find are rewards above and below; each armor source (pocket dimension, Zurkie's challenge, the Lorb monk) gives the item listed for it instead of its own piece"
                   or "not randomized (armor = false)"))
+  if seed.settings.omega_weapons then
+    w("OMEGA VERSIONS (omega_weapons = true; Challenge Mode / New Game+). Each is a reward of its own,")
+    w("  separate from the weapon. Found first, it also gives the normal weapon (its prerequisite);")
+    w("  the normal weapon found later never takes the Omega away. Where each one is:")
+    local where = {}
+    for lid, l in pairs(seed.locations) do if l.item and DB.items[l.item] and DB.items[l.item].category == "omega" then where[l.item] = lid end end
+    local started = {}
+    for _, k in ipairs(seed.start.items) do started[k] = true end
+    for _, key in ipairs(sorted_keys(DB.items)) do
+      local it = DB.items[key]
+      if it.category == "omega" then
+        local at = (started[key] and "the start") or (where[key] and DB.locations[where[key]].name) or (seed.registry[key] or "not in this seed")
+        w(string.format("  %-28s %-34s %s", it.name, "(" .. it.game_name .. ")", at))
+      end
+    end
+  end
   if seed.filler and #seed.filler.kinds > 0 then
     local f = seed.filler
     w("CURRENCY: a location without an item gives " .. table.concat(f.kinds, " or ") .. " (amounts listed below)")

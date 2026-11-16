@@ -1,4 +1,4 @@
-# Testing (Randomizer 10.0, Public Release v0.52; dev 10.13)
+# Testing (Randomizer 10.0, Public Release v0.52; dev 10.15)
 
 Results come in four kinds, and a pass in one is never evidence for another. VERIFICATION_REPORT.md
 sorts every feature into them. This page covers how the tests run and what to check in your
@@ -6,8 +6,9 @@ first full playthrough.
 
 ## 1. Automated tests (this build)
 
-`python run_tests.py`: **504 tests, 0 failures, 0 errors, 21 skipped** (TEST_RESULTS.txt; dev 10.11 adds tests/test_v1011.py, 20;
-dev 10.12 adds tests/test_v1012.py, 32 - see TEST_REPORT_10.12.md; dev 10.13 adds tests/test_v1013.py, 23 - TEST_REPORT_10.13.md).
+`python run_tests.py`: **536 tests, 0 failures, 0 errors, 21 skipped** (TEST_RESULTS.txt; dev 10.11 adds tests/test_v1011.py, 20;
+dev 10.12 adds tests/test_v1012.py, 32 - see TEST_REPORT_10.12.md; dev 10.13 adds tests/test_v1013.py, 23 - TEST_REPORT_10.13.md;
+dev 10.15 adds tests/test_v1015.py, 32 - TEST_REPORT_10.15.md).
 All of these are SIMULATOR tests: none of them is a result from the real game.
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
@@ -15,6 +16,7 @@ The skipped tests:
 
 | Suite | Tests | What it covers |
 |---|---|---|
+| **test_v1015** | 32 | dev 10.15: Omega weapons: the 20 items (the weapon's own id, never a real item); omega off = every seed is the 10.13 seed (git); on = the same seed plus each Omega once, never Gold Bolt / shop / random start, start_items and exclude, the audit; weapon -> Omega, Omega -> weapon, Omega with neither owned, both at once, repeats, all 20 weapons; a non-flag byte never written; omega_runtime off; without 17; learning the byte from two purchases, never from one with an upgrade, never from a byte every record holds as 1, never from a new weapon; kept over New Game; save/load, a save that lost the flag, the late-restore merge, loads moving the records, the inventory restore and a New Game+ Omega never downgraded; a seed's locations paying Omegas; held back from player packages |
 | **test_v1013** | 23 | dev 10.13: Chaos Randomizer: loads OFF, BACKSPACE toggles and says so, saved and kept over New Game; every category replaced and used both ways (bosses <-> regular, story bosses, unclassified); other planets' templates; few repeats; seeded; priority over Enemy/Boss and their exact picks back when OFF; no guard of any kind; integrity (unmatched nodes never written); removal; never in a player package |
 | **test_v1012** | 32 | dev 10.12: Enemy / Boss Randomizer against the simulated encounter model: off = nothing read or written; only template ids change and the node completes the encounter once, after the last enemy; tiers and families never mix; story bosses and friendlies never touched; bosses permuted; each switch only its own, saved and kept over New Game; safety nets (no spawn, stuck, retries, wrong family, story boss areas); layout by signature; frame budget; any of the three files removed |
 | **test_v1011** | 20 | dev 10.11: Coordinates never on revisits and always opening a playable first visit (an independent Python check of the rules, both fills, your settings, fewer locations), the audit catching both, the switch; open planets' visits made active between stories (never while a story runs, never on your planet); a primed landing loads nothing; a landing started there loads the intro (Blizar's destroyed pad); a stuck first step reloaded at the intro; Viceron before Torren IV sent back with the reason; first visits listed first; the game's trip to an open Sargasso played |
@@ -31,6 +33,28 @@ The skipped tests:
 The older suites pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
+
+## 2-dev5. Dev 10.15 (kit 10.0.11): Omega weapons (gameplay test plan)
+
+Needs a Challenge Mode save (finish the story once) and the developer kit (`17_rando_omega.lua`).
+Read OMEGA.md first. Use a spare save slot.
+
+0. **Install.** `RANDO-KIT all 12 required scripts are 10.0.11`; `RANDO-OMEGA loaded (Omega flag not learned yet)`.
+1. **The records.** On any planet: `RANDO-OMEGA inventory: N weapon record(s) in <class> (array at +0x..)`,
+   N = the weapons you own. If it says `inventory not found`, send rivet.log (it has the component's bytes).
+2. **Learning.** At Ms. Zurkon buy the Omega of one weapon: `Omega purchase 1 of 2 (...): candidate byte(s) ...`.
+   Leave, come back, buy a second weapon's Omega: `LEARNED: the Omega flag is the byte at +0x..` and the HUD
+   message. If no line appears after a purchase, the game reports no `PurchaseWeaponEvent` for Omegas: send rivet.log.
+3. **A seed with Omegas.** `omega_weapons = true` in 04 (a new seed: New Game in Challenge Mode). The spoiler's
+   OMEGA VERSIONS section lists where each is.
+4. **Omega first.** Find an Omega whose weapon you do not have: the weapon arrives first, then `... is yours`.
+   Check in the weapon menu: Omega name, level cap 10, the Omega upgrade nodes. Save, quit, load: still Omega.
+5. **Weapon after its Omega.** Find that weapon's own reward: `you have its Omega version already (kept)`;
+   the weapon stays Omega.
+6. **Weapon first, then its Omega**: the weapon you have becomes Omega; nothing is added twice.
+7. **Restore.** Ctrl+0 twice (items sent again): every Omega stays Omega (`RANDO-OMEGA kept ...` if the game
+   had cleared one).
+8. **Status.** `;` / F9: `Omega n/m`.
 
 ## 2-dev3. Dev 10.13 (kit 10.0.9): Chaos Randomizer (gameplay test plan)
 

@@ -80,6 +80,9 @@ seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_
 | `raritanium` | true | Raritanium rewards at locations without an item |
 | `planet_locks` | false | Coordinates are items. With `travel_lock = false` (6.0's behaviour) a planet's mission rewards wait for them; travel is free |
 | `travel_lock` | false | with `planet_locks`: flying to a planet without its Coordinates sends you back |
+| `omega_weapons` | false | dev 10.15, Challenge Mode: the 20 Omega versions are rewards of their own (`omega:<weapon>`), on locations that would give currency; the rest of the seed stays the same. An Omega found first also gives its weapon; the weapon found later never undoes it (OMEGA.md) |
+| `omega_runtime` | true | dev 10.15 (17_rando_omega.lua): false = Omega rewards are only recorded, the game's flag is never written |
+| `omega_flag_offset` | -1 | dev 10.15, developers: the Omega flag's byte offset from the weapon's item id in its record; -1 = learned from two Omega purchases (OMEGA.md) |
 
 ## Enemies and bosses (dev 10.12; runtime only, the seed does not change)
 

@@ -2,6 +2,35 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.15 (kit 10.0.11, generator 10.11.0; not released): Omega weapons
+
+Asked: Omega weapons (Challenge Mode / New Game+) in the randomized item pool as items of their own,
+with weapon and Omega ownership kept apart and never downgraded. **Nothing of this has run in the
+game.** Built on dev 10.13 (the repository's latest; the 10.14 patch was never pushed, so it is not in
+here). Seeds unchanged unless `omega_weapons` is turned on. OMEGA.md has everything.
+
+- Research: an Omega weapon is not an item id; it is the bool `WeaponItemPrius.Omega` of the weapon you
+  own, set only by Ms. Zurkon's Omega purchase (the game's type data; no Omega config in your dag).
+- Data: 20 items `omega:<weapon>` (one per vanilla weapon; category `omega`, the weapon's own id,
+  in-game names from the guides). Data version stays 5.1.0.
+- Generator: `omega_weapons = false`. On: the same seed plus the 20 Omega versions on locations that
+  would give currency (own stream; the placement random streams ignore the new setting); never Gold
+  Bolts, shop or random start; `start_items` / `exclude` take `omega:` keys; the audit checks them; the
+  spoiler lists them. Off: same fingerprint and spoiler as 10.13 (tested against git).
+- Runtime (10): a tier per weapon (`state.weapons`, `state.omega`, `state.omega_prereq`). An Omega
+  first gives its weapon first; a weapon after its Omega sends nothing and keeps the Omega; repeated
+  rewards are recorded once; saved, merged (furthest status), reset by a New Game.
+- `scripts/17_rando_omega.lua` (new, optional, **never in a player package** until it has run in the
+  game): finds the weapon records in the hero's inventory component by the item ids, learns the flag's
+  byte from two Omega purchases at Ms. Zurkon (or `omega_flag_offset`), writes one byte with read-back
+  for weapons the game has confirmed, and sets a cleared flag again after loads and resends.
+- 10: `omega_runtime = true`, `omega_flag_offset = -1`; status `Omega n/m`; 17 is an optional kit file.
+  Kit 10.0.11, banner `Randomizer dev 10.15`.
+- Release tools: `17_rando_omega.lua` is in `HELD_BACK` (builder) and rejected by `validate_release.py`.
+  The public release and `release/` are untouched.
+- Tests: tests/test_v1015.py (32); 536 run, 0 failures, 21 skipped. Older tests changed only where the
+  kit version, the banner, the script list or the subscription count changed.
+
 ## Dev 10.13 (kit 10.0.9, generator 10.11.0; not released): Chaos Randomizer
 
 Asked: a third, independent randomizer: **anything can become anything**, with no compatibility

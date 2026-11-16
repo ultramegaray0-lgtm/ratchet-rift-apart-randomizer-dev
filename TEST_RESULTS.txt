@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.13 (build 10.0.9) - test run 2026-11-15 21:09 UTC
+Rift Apart Randomizer dev 10.15 (build 10.0.11) - test run 2026-11-16 18:50 UTC
 Python 3.13.18 on Linux
-ran 504, failures 0, errors 0, skipped 21
+ran 536, failures 0, errors 0, skipped 21
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -429,6 +429,38 @@ test_others_resume_by_their_own_rules (tests.test_v1013.PriorityTests.test_other
 test_other_features_intact (tests.test_v1013.RemovalTests.test_other_features_intact) ... ok
 test_without_chaos_lua (tests.test_v1013.RemovalTests.test_without_chaos_lua) ... ok
 test_without_the_shared_layer (tests.test_v1013.RemovalTests.test_without_the_shared_layer) ... ok
+test_build_data_reproduces_the_data (tests.test_v1015.DataTests.test_build_data_reproduces_the_data) ... ok
+test_twenty_omega_items_one_per_vanilla_weapon (tests.test_v1015.DataTests.test_twenty_omega_items_one_per_vanilla_weapon) ... ok
+test_audit_rejects_misplaced_omegas (tests.test_v1015.GeneratorTests.test_audit_rejects_misplaced_omegas) ... ok
+test_off_by_default_every_seed_is_the_1013_seed (tests.test_v1015.GeneratorTests.test_off_by_default_every_seed_is_the_1013_seed) ... ok
+test_on_keeps_the_seed_and_adds_the_omegas_where_currency_was (tests.test_v1015.GeneratorTests.test_on_keeps_the_seed_and_adds_the_omegas_where_currency_was) ... ok
+test_on_places_each_omega_once_and_passes_the_audit (tests.test_v1015.GeneratorTests.test_on_places_each_omega_once_and_passes_the_audit) ... ok
+test_start_items_and_exclude (tests.test_v1015.GeneratorTests.test_start_items_and_exclude) ... ok
+test_a_byte_every_weapon_holds_as_1_is_never_a_candidate (tests.test_v1015.LearningTests.test_a_byte_every_weapon_holds_as_1_is_never_a_candidate) ... ok
+test_buying_a_new_weapon_teaches_nothing (tests.test_v1015.LearningTests.test_buying_a_new_weapon_teaches_nothing) ... ok
+test_learned_byte_survives_a_new_game (tests.test_v1015.LearningTests.test_learned_byte_survives_a_new_game) ... ok
+test_one_purchase_with_an_upgrade_never_teaches_a_wrong_byte (tests.test_v1015.LearningTests.test_one_purchase_with_an_upgrade_never_teaches_a_wrong_byte) ... ok
+test_two_omega_purchases_teach_the_byte_then_pending_rewards_are_set (tests.test_v1015.LearningTests.test_two_omega_purchases_teach_the_byte_then_pending_rewards_are_set) ... ok
+test_byte_that_is_not_a_flag_is_never_written (tests.test_v1015.OwnershipTests.test_byte_that_is_not_a_flag_is_never_written) ... ok
+test_every_weapon_with_an_omega_works_the_same (tests.test_v1015.OwnershipTests.test_every_weapon_with_an_omega_works_the_same) ... ok
+test_kit_check_and_status (tests.test_v1015.OwnershipTests.test_kit_check_and_status) ... ok
+test_normal_reward_while_the_prerequisite_is_still_in_flight (tests.test_v1015.OwnershipTests.test_normal_reward_while_the_prerequisite_is_still_in_flight) ... ok
+test_normal_then_omega_upgrades_without_a_second_send (tests.test_v1015.OwnershipTests.test_normal_then_omega_upgrades_without_a_second_send) ... ok
+test_omega_first_gives_the_weapon_then_the_flag (tests.test_v1015.OwnershipTests.test_omega_first_gives_the_weapon_then_the_flag) ... ok
+test_omega_then_normal_never_downgrades (tests.test_v1015.OwnershipTests.test_omega_then_normal_never_downgrades) ... ok
+test_repeated_rewards_are_recorded_once_and_send_nothing_more (tests.test_v1015.OwnershipTests.test_repeated_rewards_are_recorded_once_and_send_nothing_more) ... ok
+test_runtime_off_writes_nothing (tests.test_v1015.OwnershipTests.test_runtime_off_writes_nothing) ... ok
+test_without_17_the_tier_is_still_kept (tests.test_v1015.OwnershipTests.test_without_17_the_tier_is_still_kept) ... ok
+test_a_save_without_the_flag_gets_it_set_again (tests.test_v1015.PersistenceTests.test_a_save_without_the_flag_gets_it_set_again) ... ok
+test_loads_move_the_records_and_the_flag_is_found_again (tests.test_v1015.PersistenceTests.test_loads_move_the_records_and_the_flag_is_found_again) ... ok
+test_merge_keeps_the_furthest_omega_status (tests.test_v1015.PersistenceTests.test_merge_keeps_the_furthest_omega_status) ... ok
+test_new_game_plus_keeps_the_games_own_omegas (tests.test_v1015.PersistenceTests.test_new_game_plus_keeps_the_games_own_omegas) ... ok
+test_restore_inventory_sends_cannot_downgrade (tests.test_v1015.PersistenceTests.test_restore_inventory_sends_cannot_downgrade) ... ok
+test_save_and_load_keep_the_tiers (tests.test_v1015.PersistenceTests.test_save_and_load_keep_the_tiers) ... ok
+test_17_is_held_back_from_player_packages (tests.test_v1015.ReleaseTests.test_17_is_held_back_from_player_packages) ... ok
+test_player_docs_untouched (tests.test_v1015.ReleaseTests.test_player_docs_untouched) ... ok
+test_omega_seed_locations_pay_their_omega (tests.test_v1015.SeedTests.test_omega_seed_locations_pay_their_omega) ... ok
+test_an_omega_in_start_items_comes_with_its_weapon (tests.test_v1015.StartTests.test_an_omega_in_start_items_comes_with_its_weapon) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -528,6 +560,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 504 tests in 116.719s
+Ran 536 tests in 175.626s
 
 OK (skipped=21)

@@ -132,6 +132,37 @@ WEAPON_FIXES = {
 }
 HEADHUNTER = ("weapon:headhunter", "configs/equipment/wpn_fossilizer_item.config", "Headhunter",
               "WeaponFossilizerPrius (aiming slows time, zoom levels)")
+# dev 10.15 OMEGA VERSIONS. What the game's own type data says (neptuwunium/rivet's DDL dump):
+#   * an Omega weapon is NOT an item of its own: there is no wpn_*_omega item config in your dag
+#     (919 item ids, none with "omega"), and AddToInventoryAction can only give an item config;
+#   * it is the bool WeaponItemPrius.Omega (DDL hash 0x534A51FB) of the weapon you already own
+#     (WeaponItemPrius: XP, ammo, Mods, ModGrid, ModCount, SelectedCell, Test, Omega; its base
+#     ItemPrius holds ItemGuid, ItemConfigHash = the item config's 64-bit id, ItemCount, ItemId);
+#   * the game sets it only through Ms. Zurkon in Challenge Mode: VendorItemData.OmegaPrice,
+#     OmegaRequiredCardBonus (a Holocard set), OmegaOnly; WeaponItemConfig has Omega names and
+#     descriptions; GameCampaignSave.FirstOmegaWeaponPurchased / IsChallengeMode;
+#   * no script action sets it (no GiveOmega / SetOmega node exists in the type data).
+# So an Omega reward is "this weapon, with its Omega flag set", and granting the normal weapon
+# never makes it Omega. The randomizer keeps the two as separate items (omega:<weapon>).
+# Names: the weapon's level-5 name as the guides give it (vulkk gear guide, ludo.guide weapons,
+# geekculture); None = no guide line found, so the item is named after the weapon itself.
+# Every one of the 20 vanilla weapons gets an Omega item: Challenge Mode raises every weapon's level
+# cap to 10 through its Omega version (guides). The 9 ARSENAL_RESTORED weapons and the cut weapons do
+# not (their Omega data in your game is unknown).
+OMEGA_NAMES = {
+    "burst_pistol": "Blast Pistol", "shatterbomb": "Shatterblast", "topiary_sprinkler": "Toxiary Sprinkler",
+    "enforcer": "Executor", "negatron_collider": "Large Negatron Collider", "ricochet": "Wreckochet",
+    "mr_fungi": "Ms. Fungal", "lightning_rod": "Lightning Strike", "drillhound": "Drillpack",
+    "void_repulser": None, "cold_snap": "Cold Front", "glove_of_doom": "Apocalypse Glove",
+    "bombardier": "Bomb Voyage", "buzz_blades": "Doom Blades", "warmonger": None,
+    "blackhole_storm": "Blackhole Vortex", "headhunter": "Migraine", "ryno_8": "RYNO Infinite",
+    "bouncer": "Heavy Bouncer", "pixelizer": "Pixelizer HD",
+}
+# the guides that list the weapon's Omega version by name (the rest are assumed from "every weapon")
+OMEGA_LISTED = {"blackhole_storm", "bombardier", "bouncer", "burst_pistol", "buzz_blades", "cold_snap", "drillhound",
+                "glove_of_doom", "headhunter", "lightning_rod", "mr_fungi", "negatron_collider", "ricochet", "ryno_8"}
+WEAPON_ITEM_PRIUS_OMEGA_HASH = "534A51FB"
+
 # the vanilla vendor's weapons (Ms. Zurkon): the shop can sell these. Burst Pistol and Shatterbomb
 # are owned from the prologue, RYNO 8 comes from Spybots, Pixelizer and Bouncer are Challenge Mode.
 VENDOR_WEAPONS = {"topiary_sprinkler", "enforcer", "lightning_rod", "mr_fungi", "ricochet", "drillhound",
@@ -394,6 +425,19 @@ def build():
         it["evidence"] = WEAPON_EVIDENCE.get(short, "verified_in_game" if it.get("verified_in_game") else "not delivered in a logged round yet")
         it.pop("experimental", None) if acq != "disabled" else it.update({"experimental": True})
     assert sum(1 for it in items.values() if it.get("acquisition") == "pool") == 17
+    # dev 10.15: one Omega item per vanilla weapon (see OMEGA_NAMES)
+    for short, upgraded in sorted(OMEGA_NAMES.items()):
+        w = items["weapon:" + short]
+        assert w["source"] == "vanilla" and w["acquisition"] in ("pool", "reward"), short
+        items["omega:" + short] = {
+            "category": "omega", "weapon": "weapon:" + short, "id": w["id"], "config": w["config"],
+            "name": "Omega " + w["name"], "game_name": "Omega " + (upgraded or w["name"]),
+            "grant": "omega flag", "omega_field": "WeaponItemPrius.Omega (0x" + WEAPON_ITEM_PRIUS_OMEGA_HASH + ")",
+            "evidence": ("Omega version listed by name in the guides" if short in OMEGA_LISTED
+                         else "assumed: the guides say every weapon has one, none lists this one by name"),
+            "verified_in_game": False,
+        }
+    assert sum(1 for it in items.values() if it["category"] == "omega") == 20
     assert all(items["weapon:" + k].get("price") for k in VENDOR_WEAPONS)
     for p in planets:
         p["checkpoints"] = PLANET_CHECKPOINTS[p["id"]]
@@ -419,6 +463,7 @@ def build():
             "weapon names (5.0)": "Weapon*Prius types in the game's type data (neptuwunium/rivet): warprifle = Blackhole Storm, fossilizer = Headhunter",
             "start_kit": "1.x model assumption (the gadgets the game gives at the start)",
             "weapon prices (7.0)": "gamepressure 'List of all weapons' (15 vendor weapons + Shatterbomb); used only after the runtime finds the same numbers in your game's vendor config",
+            "omega versions (dev 10.15)": "WeaponItemPrius.Omega in the game's type data (neptuwunium/rivet); names from the guides; no separate item id exists",
             "planet checkpoints (7.0)": "PlanetMenuAcceptEvent / level-script variables in your rivet.logs (rounds 13-16); name fragments for rivet.checkpoints()",
         },
     }
@@ -468,7 +513,7 @@ def main():
     with open(OUT_LUA, "w", encoding="utf-8", newline="\n") as f:
         f.write("-- Randomizer 7.0 game database (data " + DATA_VERSION + "). Generated by tools/build_data.py from your game's dag and\n"
                 "-- the 1.x model - do not edit by hand (see data/game_db.json for provenance).\n")
-        f.write('RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["01_rando_data"] = "10.0.9"   -- the kit check (10_rando_runtime.lua)\n')
+        f.write('RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["01_rando_data"] = "10.0.11"   -- the kit check (10_rando_runtime.lua)\n')
         f.write("-- 8.5.2: Punk and Reaver are owned from the start in your game (round 22: the game refused all three\n"
                 "-- pieces it was sent, and a new game already owns 6 pieces), so they are never rewards.\n")
         f.write("RANDO_DATA = " + lua(db) + "\n")
