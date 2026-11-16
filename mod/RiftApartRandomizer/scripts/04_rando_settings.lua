@@ -34,10 +34,9 @@ RANDO_SETTINGS = {
   -- armor = true,                     -- armor pieces are rewards; armor pods give random items
   -- shop = "shuffle",                 -- "shuffle": Ms. Zurkon sells the seed's weapons | "vanilla": her usual ones
   -- exclude = "",                     -- items never randomized, e.g. "weapon:ryno_8,armor:pirate_head"
-  -- omega_weapons = false,            -- CHALLENGE MODE (New Game+): the 20 weapons' Omega versions are rewards of
-                                       -- their own ("omega:burst_pistol" ...). Found before its weapon, an Omega also
-                                       -- gives the weapon; the weapon found later never undoes the Omega.
-                                       -- Makes a new seed. Developer kit only for now (docs/OMEGA.md)
+  omega_weapons = true,                -- DEV DEFAULT ON: CHALLENGE MODE (New Game+), 20 Omega versions are rewards
+                                       -- of their own ("omega:burst_pistol" ...). An Omega found first also gives
+                                       -- its weapon; the weapon found later never undoes the Omega (docs/OMEGA.md)
 
   -- YOUR START (Hoverboots and Map-O-Matic are always included)
   -- start_weapons = 2,                -- 0-4 random weapons
@@ -66,11 +65,10 @@ RANDO_SETTINGS = {
   -- coords_first_visit = true,        -- planet shuffle: Coordinates always open a planet's first visit
                                        -- (never on a revisit; Viceron's come from Torren IV's story)
 
-  -- ENEMIES AND BOSSES (enemy.lua, boss.lua; both OFF by default, no preset turns them on). Use the keys
-  -- in the game instead of editing this: the save remembers your choice. These only decide the start
-  -- of a save that never used the keys. They do not change the seed.
-  -- enemy_randomizer = false,         -- regular enemies of combat encounters become other regular enemies
-  -- boss_randomizer = false,          -- boss-tier enemies are shuffled among themselves (story bosses never)
+  -- ENEMIES AND BOSSES (DEV DEFAULTS ON; the save remembers changes made with the in-game keys).
+  -- These only decide the start of a save that has never used the keys; they do not change the seed.
+  enemy_randomizer = true,            -- regular enemies of combat encounters become other regular enemies
+  boss_randomizer = true,              -- boss-tier enemies are shuffled among themselves (story bosses never)
   -- key_enemies = "-",                -- the Enemy Randomizer's key (Ctrl+key: what it changed here)
   -- key_bosses = "=",                 -- the Boss Randomizer's key
   -- CHAOS (chaos.lua, OFF by default): ANY enemy or boss can become ANY other, from any planet, with NO
@@ -81,6 +79,6 @@ RANDO_SETTINGS = {
   -- chaos_cross_planet = true,        -- false: only this planet's enemies
 }
 -- In the game, the 0 key turns PLANET SHUFFLE on or off (off by default; it is remembered).
--- The - key turns the ENEMY RANDOMIZER on or off, the = key the BOSS RANDOMIZER (off by default; remembered).
+-- The - key turns the ENEMY RANDOMIZER on or off, the = key the BOSS RANDOMIZER (both ON by default in this dev kit; remembered).
 -- BACKSPACE turns the CHAOS RANDOMIZER on or off (off by default; remembered; no protection at all).
 -- Ctrl+0 pressed twice sends your randomizer items again if some went missing.

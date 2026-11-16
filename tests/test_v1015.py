@@ -109,12 +109,16 @@ def old_engine():
 
 
 class GeneratorTests(unittest.TestCase):
-    def test_off_by_default_every_seed_is_the_1013_seed(self):
+    def test_private_dev_settings_enable_omega_by_default(self):
+        settings = (ROOT / "mod" / "RiftApartRandomizer" / "scripts" / "04_rando_settings.lua").read_text(encoding="utf-8")
+        self.assertIn("omega_weapons = true", settings)
+
+    def test_explicit_off_every_seed_is_the_1013_seed(self):
         old = old_engine()
         if old is None:
             self.skipTest("git history with dev 10.13 not available")
         new = engine()
-        self.assertFalse(new.defaults()["omega_weapons"])
+        self.assertFalse(new.defaults()["omega_weapons"])  # fallback remains backward-compatible; dev 04 file opts in
         n = 0
         for preset in ("balanced", "chaos", "full", "campaign", "everything"):
             for i in range(4):

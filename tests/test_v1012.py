@@ -1,12 +1,12 @@
 """Dev 10.12 (kit 10.0.8), asked for: an Enemy Randomizer (enemy.lua) and a Boss Randomizer (boss.lua),
-separate and independently switchable in the game (both OFF by default, remembered by the save), and
+separate and independently switchable in the game (ON by default in the dev kit, remembered by the save), and
 above all: randomized enemies and bosses must still open doors, finish objectives and advance the story.
 
 These tests run the real scripts against tests/sim/rivet_sim.lua. The encounter model there (a
 SpawnerScriptAction node that reads its Templates list from memory at each spawn, counts its dead and
 fires its "all dead" output) is SIMULATED from the rivet DDL: none of it has been seen in the real game.
 What they show is that the randomizer's own decisions are right under that model:
-  * off by default; off = not one byte of a spawner read or written;
+  * when explicitly OFF; off = not one byte of a spawner read or written;
   * only template ids change; the encounter node still spawns, counts and completes it once, after the
     last enemy, never earlier (multi-enemy encounters);
   * enemy and boss tiers never mix; story bosses, friendlies and unknown templates are never touched;
@@ -80,6 +80,7 @@ def build_level(g, level=None, extra=None):
 def game(learned=True, enemy=None, boss=None, level=None, extra=None, **kw):
     """a game with the test level, the companion's restore and a planet loaded; learned=True: the save
     already knows the templates (as after playing them once)"""
+    kw["settings"] = {"enemy_randomizer": False, "boss_randomizer": False, **(kw.get("settings") or {})}
     g = Game(**kw)
     assert not g.load_errors, g.load_errors
     build_level(g, level, extra)
@@ -124,8 +125,14 @@ def play(g, uid):
     return classes
 
 
-class OffByDefaultTests(unittest.TestCase):
-    def test_both_off_nothing_read_or_written(self):
+class ExplicitlyOffTests(unittest.TestCase):
+    def test_dev_settings_enable_enemy_boss_and_omega_by_default(self):
+        settings = (ROOT / "mod" / "RiftApartRandomizer" / "scripts" / "04_rando_settings.lua").read_text(encoding="utf-8")
+        self.assertIn("omega_weapons = true", settings)
+        self.assertIn("enemy_randomizer = true", settings)
+        self.assertIn("boss_randomizer = true", settings)
+
+    def test_explicitly_off_nothing_read_or_written(self):
         g = game(learned=True)
         self.assertFalse(g.g.RANDO.config.enemy_randomizer)
         self.assertFalse(g.g.RANDO.config.boss_randomizer)
@@ -143,8 +150,8 @@ class OffByDefaultTests(unittest.TestCase):
         g = Game()
         g.step(2)
         self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.11"), [l for l in g.logs() if "KIT" in l])
-        self.assertTrue(g.log_has("RANDO-ENEMY\tinstalled (OFF"))
-        self.assertTrue(g.log_has("RANDO-BOSS\tinstalled (OFF"))
+        self.assertTrue(g.log_has("RANDO-ENEMY\tinstalled (ON"))
+        self.assertTrue(g.log_has("RANDO-BOSS\tinstalled (ON"))
 
     def test_the_settings_only_decide_the_start(self):
         g = game(settings={"enemy_randomizer": True})

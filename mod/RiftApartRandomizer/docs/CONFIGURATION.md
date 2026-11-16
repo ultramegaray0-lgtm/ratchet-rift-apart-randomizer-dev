@@ -80,7 +80,7 @@ seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_
 | `raritanium` | true | Raritanium rewards at locations without an item |
 | `planet_locks` | false | Coordinates are items. With `travel_lock = false` (6.0's behaviour) a planet's mission rewards wait for them; travel is free |
 | `travel_lock` | false | with `planet_locks`: flying to a planet without its Coordinates sends you back |
-| `omega_weapons` | false | dev 10.15, Challenge Mode: the 20 Omega versions are rewards of their own (`omega:<weapon>`), on locations that would give currency; the rest of the seed stays the same. An Omega found first also gives its weapon; the weapon found later never undoes it (OMEGA.md) |
+| `omega_weapons` | true (dev kit) | dev 10.15, Challenge Mode: the 20 Omega versions are rewards of their own (`omega:<weapon>`), on locations that would give currency; the rest of the seed stays the same. An Omega found first also gives its weapon; the weapon found later never undoes it (OMEGA.md) |
 | `omega_runtime` | true | dev 10.15 (17_rando_omega.lua): false = Omega rewards are only recorded, the game's flag is never written |
 | `omega_flag_offset` | -1 | dev 10.15, developers: the Omega flag's byte offset from the weapon's item id in its record; -1 = learned from two Omega purchases (OMEGA.md) |
 
@@ -88,8 +88,8 @@ seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_
 
 | Setting | Default | |
 |---|---|---|
-| `enemy_randomizer` | false | the Enemy Randomizer's start for a save that never used its key |
-| `boss_randomizer` | false | the Boss Randomizer's start for a save that never used its key |
+| `enemy_randomizer` | true (dev kit) | the Enemy Randomizer's start for a save that never used its key |
+| `boss_randomizer` | true (dev kit) | the Boss Randomizer's start for a save that never used its key |
 | `key_enemies` | `"-"` | Enemy Randomizer on/off in the game (Ctrl: what it changed here) |
 | `key_bosses` | `"="` | Boss Randomizer on/off in the game |
 | `spawner_runtime` | true | false: neither changes anything |
@@ -98,9 +98,10 @@ seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_
 | `key_chaos` | `"BACKSPACE"` | Chaos Randomizer on/off (Ctrl: what it changed here) |
 | `chaos_cross_planet` | true | Chaos's pool includes templates seen on every planet (false: this planet's only) |
 
-The keys are the normal way: the save remembers the choice, a New Game keeps it. No preset turns them
-on. ENEMIES_AND_BOSSES.md explains the first two, CHAOS.md the third. While Chaos is ON the Enemy and
-Boss Randomizers change nothing (their settings stay as you set them).
+The dev kit's 04_rando_settings.lua starts Omega, Enemy and Boss Randomizers ON. The in-game keys
+still switch Enemy and Boss independently, and the save remembers your choice across New Game.
+Omega is a seed option: changing it makes a new seed. CHAOS remains OFF and is separate; while Chaos
+is ON the Enemy and Boss Randomizers pause. See ENEMIES_AND_BOSSES.md, OMEGA.md and CHAOS.md.
 
 ## Currency
 

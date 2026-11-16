@@ -33,7 +33,7 @@ status line, New Game keeps the switches, the restore hook, the kit's optional f
 | `=` | Boss Randomizer ON / OFF |
 | `Ctrl+-` / `Ctrl+=` | what that feature changed on this planet, how many enemy types it knows, how many encounters it put back |
 
-- Both are **OFF by default**. Each key changes only its own feature.
+- Both are **ON by default in the private dev kit**. Each key changes only its own feature.
 - The choice is saved in the randomizer's save (`state.enemy_rando`, `state.boss_rando`, through the
   companion, like planet shuffle's `0`), and kept over a New Game. A choice made before the
   companion's restore wins over the save's.
@@ -47,16 +47,15 @@ status line, New Game keeps the switches, the restore hook, the kit's optional f
 
 | Setting | Default | |
 |---|---|---|
-| `enemy_randomizer` | `false` | the Enemy Randomizer's start for a save without a choice |
-| `boss_randomizer` | `false` | the Boss Randomizer's start for a save without a choice |
+| `enemy_randomizer` | `true` in the dev kit | the Enemy Randomizer's start for a save without a choice |
+| `boss_randomizer` | `true` in the dev kit | the Boss Randomizer's start for a save without a choice |
 | `key_enemies` | `"-"` | its key (any key name the other key settings accept) |
 | `key_bosses` | `"="` | its key |
 | `spawner_runtime` | `true` | `false`: neither feature changes anything, whatever the keys say |
 
 **Presets.** The presets (`balanced`, `full`, `chaos`, `everything`, ...) are seed settings; these
-two are per-save switches that do not change the seed. No preset turns them on: both stay OFF by
-default until they have been seen working in the game. A preset could set them later through
-`enemy_randomizer` / `boss_randomizer` without changing any seed.
+two are per-save switches that do not change the seed. The private dev kit starts both ON so they can be tested immediately. The in-game keys can turn either
+one OFF, and that choice is saved. The public player release is not changed by this dev-only default.
 
 ## 4. How an enemy is replaced, and why progression keeps working
 

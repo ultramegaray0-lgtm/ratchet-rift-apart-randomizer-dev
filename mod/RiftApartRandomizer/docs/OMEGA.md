@@ -1,7 +1,7 @@
 # Omega weapons (dev 10.15, kit 10.0.11)
 
 Challenge Mode (New Game+) sells an **Omega** version of every weapon: it raises the weapon's level
-cap from 5 to 10 and opens new upgrade nodes. With `omega_weapons = true` the seed has the 20 Omega
+cap from 5 to 10 and opens new upgrade nodes. The private dev kit now sets `omega_weapons = true` by default, so the seed has the 20 Omega
 versions as **rewards of their own** (`omega:<weapon>`), next to the weapons themselves.
 
 **Nothing of this has run in the game.** The generator, the ownership logic and the save are tested
@@ -35,8 +35,8 @@ one". The 9 ARSENAL_RESTORED weapons and the cut weapons get no Omega item.
 
 ## 2. The item pool (generator, `omega_weapons`)
 
-- Off (the default): **every seed is exactly the 10.13 seed** (same fingerprint, same spoiler).
-- On: the same seed - the same items in the same places, the same shop and start - plus the 20 Omega
+- Off (set `omega_weapons = false`): **every seed is exactly the 10.13 seed** (same fingerprint, same spoiler).
+- On (the dev-kit default): the same seed - the same items in the same places, the same shop and start - plus the 20 Omega
   versions on locations that would otherwise give Bolts or Raritanium (their own random stream). The
   seed's fingerprint changes (its saves and share code are its own).
 - Each Omega is placed once: never on a Gold Bolt, never in the shop, never as a random start weapon,
