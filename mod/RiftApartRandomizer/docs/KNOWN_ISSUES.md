@@ -4,6 +4,13 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0q. Since dev 10.25 (kit 10.0.17): still NO enemy is randomized in the game
+
+- NOT FIXED. Your dev 10.24 log (round35) is the first run of the experiment: it read everything (v7 helper, 197
+  nodes, 970 spawns tied) but swapped nothing: the arena's enemy is decided by each SunsetSpawnerFactory node's
+  "Templates" variable, which v3 did not touch. v5 swaps exactly that (TESTING.md 2-dev12). Unproven in the game.
+- Also seen: the scripts in the game folder were still dev 10.23 (only the DLL was updated). Copy the whole folder.
+
 ## 0p. Since dev 10.24 (kit 10.0.17): still NO enemy is randomized in the game
 
 - NOT FIXED, and the experiment has STILL NOT RUN. Your dev 10.23 log (round34): the planet fix worked, but the game

@@ -4,6 +4,34 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.25 (kit 10.0.17): the factory's Templates variable
+
+- Asked: "still nothing". Log: tests/data/round35_rivet.log (v7 helper in the game; scripts still dev 10.23 -
+  spawnproof v3, banner "Randomizer dev 10.23"; NefCity, Zurkon arena challenge A1 replayed and completed).
+- CONFIRMED (real game): FIRST real run of the experiment. SceneManager 7FF7A5857580 (1x), scans of 183-197 nodes
+  (106 Template, 79-91 Factories), 970 spawns tied to nodes in A1 (LastSpawn / Spawner slot), 11 budget retries and no
+  job lost. No ARMED: v3 only swaps SpawnerScriptAction variables; the arena factories the events name tie to no node
+  (most factory spawns "no node"), and the Template nodes spawned portals only.
+- FOUND (real game): every arena enemy came with SpawnFactory = a SunsetSpawnerFactory node, and that node's own
+  variables are "Templates" (3990217346), "Locations" (2501629366), "InitialCount" (2429945776, pub factories) and one
+  holding the factory itself (3368780241) - names = rivet.hash. A1's factories 1097946..1097957 held 3 Templates
+  values: 1097446 -> enm_pirate_robot_sh (factories 948/949/953/957), 1097451 -> enm_pirate_robot_me (946/954/956),
+  1097452 -> enm_pirate_bladeball (947/951/952/955); every factory spawned only its kind (up to 13 spawns each). The
+  spawn location is the factory's Locations value (1097957 -> 1097478). The pub's factories 1087087..1087101 follow the
+  same pattern (Templates 1086734..1086754, ambient NPCs).
+- Other spawn routes seen: wave enemies with SpawnFactory 0 from SpawnerScriptAction nodes whose Template variable is
+  an actor GROUP (80C006D9: robomutt / thugs / robot / bladeball from one node) - not handled yet.
+- dev(spawnproof).lua v5 (factory Templates route): P.scan_factories lists SunsetSpawnerFactoryScriptAction nodes
+  (rivet.script_nodes) and reads each Templates variable plug (same ScriptPlugs layout); learn() reads the spawning
+  factory's Templates value and learns value -> enemy; P.try_arm_factory swaps ONE factory's Templates (another
+  learned enemy, same role, other kind; a factory that already spawned first, a fresh one after an ORIGINAL verdict;
+  one experiment at a time; variable users counted); VERIFY on the next spawn of any factory using the variable, the
+  next 6 logged "[ARMED factory variable ...]"; put back on the next checkpoint / level, or at once when not replaced.
+  learned names / roles are no longer overwritten with nil by actors already gone (v3's 9/10/11 oscillation).
+- Banner dev 10.25 (kit scripts still 10.0.17). Tests: tests/test_v1025.py (11): 6 on the real log (incl. "one
+  Templates value, one kind" parsed from the log), 5 simulator. Full suite: 671 run, 0 failures, 23 skipped (9 pwsh, 14 old git history).
+- Verified in the game: nothing of 10.25. Enemy / Boss / Chaos: NOT working. Next: TESTING.md 2-dev12.
+
 ## 2026-11-18: dev 10.24 (kit 10.0.17, rando_give.dll v7 in the kit): the helper that was never copied
 
 - Asked: "Nothing changed". Log: tests/data/round34_rivet.log (dev 10.23, kit 10.0.17; companion on from the start;

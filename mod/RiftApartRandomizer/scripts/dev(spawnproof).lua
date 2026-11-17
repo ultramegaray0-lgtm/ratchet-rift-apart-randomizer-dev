@@ -1,5 +1,20 @@
--- DEVELOPER TOOL - not part of a release. SPAWN PROOF v4 (dev 10.24): controlled enemy replacements on Zurkon,
+-- DEVELOPER TOOL - not part of a release. SPAWN PROOF v5 (dev 10.25): controlled enemy replacements on Zurkon,
 -- to prove (or disprove) in your game the mechanism the Enemy / Boss / Chaos Randomizers will use.
+--
+-- WHAT YOUR DEV 10.24 LOG SHOWED (tests/data/round35_rivet.log, real game, v7 helper, SceneManager found):
+--   * The arena's enemies are spawned by SunsetSpawnerFactory nodes (the SpawnerSpawnEvent's SpawnFactory). Each
+--     factory node has its own script variables: "Templates" (3990217346 = rivet.hash "Templates"), "Locations"
+--     (2501629366), sometimes "InitialCount" (2429945776), and itself (3368780241).
+--   * Templates IS the enemy: the 11 arena factories of challenge A1 held 3 Templates values, and every factory
+--     always spawned the same kind - Templates 1097446 -> enm_pirate_robot_sh (factories 1097948/49/53/57),
+--     1097451 -> enm_pirate_robot_me (1097946/54/56), 1097452 -> enm_pirate_bladeball (1097947/51/52/55). The spawn's
+--     SpawnLocation equals the factory's Locations value (1097957: 1097478 both).
+--   * v4 never armed because it only swapped SpawnerScriptAction variables (Template / Factories); the factories
+--     the Factories variables point at are not the ones the events name, and most factory spawns tie to no node.
+-- v5 adds the FACTORY TEMPLATES ROUTE: it lists the level's SunsetSpawnerFactory nodes, reads each one's Templates
+-- variable, learns from every factory spawn which enemy each Templates value makes, then writes ANOTHER learned
+-- enemy Templates value (same role, another kind) into ONE factory's Templates variable (checked, read back), and
+-- verifies the next spawn of every factory that uses that variable. Put back on the next level / checkpoint load.
 --
 -- WHY v3 DID NOTHING (your dev 10.23 log, tests/data/round34_rivet.log, real game): the planet fix worked ("level
 -- reset (planet Zurkon): ON ZURKON - active", and the randomizer itself said scarstu), but the game folder still had
@@ -53,7 +68,7 @@
 RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.17"   -- the kit check (10_rando_runtime.lua)
 RANDO_SPAWNPROOF = RANDO_SPAWNPROOF or {}
 local P = RANDO_SPAWNPROOF
-P.version = 4
+P.version = 5
 P.frame = P.frame or 0
 P.ENABLED = true
 P.PLANET = "scarstu"            -- Zurkon (Zurkie's Battleplex): replayable fights, nothing of the story
@@ -98,8 +113,13 @@ P.PLUG_TEMPLATE = P.hash("Template")      -- 1835115251
 P.PLUG_LASTSPAWN = P.hash("LastSpawn")    -- 406637480
 P.PLUG_LOCATION = P.hash("Location")      -- 2761897147
 P.PLUG_FACTORIES = P.hash("Factories")    -- 838143302 (your dev 10.21 log: the arena's enemy nodes)
+P.PLUG_TEMPLATES = P.hash("Templates")    -- 3990217346 (your dev 10.24 log: a SunsetSpawnerFactory's enemy)
+P.PLUG_LOCATIONS = P.hash("Locations")    -- 2501629366
+P.FACTORY_CLASS = "SunsetSpawnerFactoryScriptAction"
+P.AFTER_LOG = 6                 -- spawns of an armed factory logged after its VERIFY
 P.PLUG_NAMES = {}
-for _, n in ipairs({ "Template", "LastSpawn", "Location", "Factories", "MaxAlive", "NumSpawns", "OnSpawned", "OnAllSpawned" }) do
+for _, n in ipairs({ "Template", "LastSpawn", "Location", "Factories", "MaxAlive", "NumSpawns", "OnSpawned", "OnAllSpawned",
+                    "Templates", "Locations", "InitialCount" }) do
   P.PLUG_NAMES[P.hash(n)] = n
 end
 local function plug_name(h) return P.PLUG_NAMES[h] or tostring(h) end
@@ -308,7 +328,8 @@ function P.reset(why)
   end
   if P.lvl and P.lvl.scans > 0 then P.summary() end
   P.armed = {}
-  P.lvl = { nodes = {}, order = {}, scans = 0, learned = { template = {}, factory = {} }, logged = 0, other = 0,
+  P.lvl = { nodes = {}, order = {}, scans = 0, learned = { template = {}, factory = {}, ftemplate = {} }, logged = 0, other = 0,
+            factories = {}, forder = {}, fvar_users = {},
             described = {}, ndescribed = 0, stopped = {}, why = why, untied = 0, ties = 0, ignored = 0 }
   log(string.format("level reset (%s): %s (%s)", tostring(why), planet() == P.PLANET and "ON ZURKON - active" or "not Zurkon - inactive", P.where()))
   P.spawn_queue = {}
@@ -393,6 +414,39 @@ function P.scan()
     log(string.format("scan %d on %s: %d node(s) (%d new): %d Template, %d Factories, %d neither; slots holding one actor %d, groups %d, shared %d; %d with LastSpawn, %d Spawner(s) read",
         lvl.scans, tostring(planet()), #lvl.order, new, kinds.template, kinds.factory, kinds.none, single, groups, shared, last, sp))
   end
+  P.scan_factories(sc)
+end
+
+-- v5: every SunsetSpawnerFactory node of the level and its Templates variable (also the ones not spawned yet)
+function P.scan_factories(sc)
+  local lvl = P.lvl
+  local list = guard(function()
+    local ok, l = pcall(rivet.script_nodes, P.FACTORY_CLASS, P.NODE_LIMIT)
+    if ok and type(l) == "table" then return l end
+    if not ok then error(l, 0) end
+  end)
+  if type(list) ~= "table" then return end
+  local before, t0 = #lvl.forder, clock()
+  for _, node in ipairs(list) do
+    if node.actor and lvl.factories[node.actor] == nil then guard(P.factory_rec, lvl, node.actor) end
+    t0 = pace(t0)
+  end
+  if #lvl.forder > before then
+    local values, nvals = {}, 0
+    for _, fac in ipairs(lvl.forder) do
+      local fr = lvl.factories[fac]
+      local v = fr and guard(P.var, sc, fr.slot.var.idx, fr.slot.var.gen)
+      if v and v.single then
+        if not values[v.actors] then nvals = nvals + 1; values[v.actors] = 0 end
+        values[v.actors] = values[v.actors] + 1
+      end
+    end
+    local parts = {}
+    for val, n in pairs(values) do parts[#parts + 1] = string.format("%d x%d", val, n) end
+    table.sort(parts)
+    log(string.format("factories on %s: %d with a Templates variable (%d new); %d Templates value(s): %s", tostring(planet()), #lvl.forder,
+        #lvl.forder - before, nvals, table.concat(parts, ", ", 1, math.min(#parts, 12))))
+  end
 end
 
 -- the node that made each spawn: its LastSpawn variable (one 64-byte read a node) first; the Spawner's slot list
@@ -421,6 +475,43 @@ function P.tie(sc, wanted)
     end
   end
   return found
+end
+
+-- what a value made: never overwritten with nil (an actor already gone answers nil); two kinds = MIXED
+local function note(x, a)
+  if a.name then
+    if x.name and x.name ~= a.name then x.mixed = true end
+    x.name = a.name
+  end
+  if a.role then x.role, x.family, x.class = a.role, a.family, a.class end
+  x.count = (x.count or 0) + 1
+end
+P.note = note
+
+-- one SunsetSpawnerFactory node (the actor the SpawnerSpawnEvent's SpawnFactory names): its Templates variable
+function P.factory_rec(lvl, fac)
+  if not fac or fac == 0 then return nil end
+  local fr = lvl.factories[fac]
+  if fr ~= nil then return fr or nil end
+  local okc, c = pcall(rivet.component, fac, P.FACTORY_CLASS)
+  local addr = okc and type(c) == "table" and c.address and tonumber(c.address, 16)
+  local pl = addr and P.plugs_of(addr)
+  local tv = pl and pl.vars[P.PLUG_TEMPLATES]
+  if not tv then lvl.factories[fac] = false; return nil end
+  fr = { uid = "factory " .. tostring(fac), fac = fac, addr = addr, plugs = pl, component = c.handle,
+         slot = { kind = "ftemplate", var = tv, plug = P.PLUG_TEMPLATES, cache = 0 } }
+  lvl.factories[fac] = fr
+  lvl.forder[#lvl.forder + 1] = fac
+  lvl.fvar_users[tv.idx] = (lvl.fvar_users[tv.idx] or 0) + 1
+  return fr
+end
+
+-- the armed record whose variable this factory uses (factories can share one Templates variable)
+function P.armed_of_factory(fr)
+  for _, A in ipairs(P.armed) do
+    if not A.restored and A.slot.kind == "ftemplate" and A.slot.var.idx == fr.slot.var.idx then return A end
+  end
+  return nil
 end
 
 function P.learn(batch)
@@ -454,23 +545,45 @@ function P.learn(batch)
         local x = L[value] or { handle = value, kind = kind, count = 0 }
         if v and v.single and v.actors == value then x.uid = v.uid end
         if not x.uid and kind == "factory" then local oku, u = pcall(rivet.uid, value); x.uid = oku and norm_uid(u) or nil end
-        if x.name and x.name ~= a.name then x.mixed = true end          -- spawned more than one kind: never used
-        x.name, x.family, x.role, x.class = a.name, a.family, a.role, a.class
-        x.count = x.count + 1
+        note(x, a)
         L[value] = x
       end
       if kind == "factory" then P.describe_factory(lvl, value) end
+      -- v5: the factory's own Templates variable
+      local fnote, fA = "", nil
+      local fr = e.fac and e.fac ~= 0 and P.factory_rec(lvl, e.fac)
+      if fr then
+        fr.spawned = (fr.spawned or 0) + 1
+        local fv = P.var(sc, fr.slot.var.idx, fr.slot.var.gen)
+        fA = P.armed_of_factory(fr)
+        if fv and fv.single then
+          fnote = string.format("; factory Templates = %d", fv.actors)
+          if a and not fA then
+            local x = lvl.learned.ftemplate[fv.actors] or { handle = fv.actors, kind = "ftemplate", count = 0 }
+            x.uid = fv.uid
+            note(x, a)
+            lvl.learned.ftemplate[fv.actors] = x
+          end
+        elseif fv then
+          fnote = string.format("; factory Templates variable %08X (not one actor)", fv.actors or 0)
+        end
+      end
       local say = (interesting and lvl.logged < P.LEARN_LOG) or (not interesting and lvl.other < P.OTHER_LOG)
       if mine then say = true end
+      if fA then
+        fA.after = (fA.after or 0) + 1
+        say = say or fA.after <= P.AFTER_LOG
+      end
       if say then
         if interesting then lvl.logged = lvl.logged + 1 else lvl.other = lvl.other + 1 end
-        log(string.format("spawn %s (SpawnFactory %s, location %s): %s; slot %s = %s%s; spawned %s",
+        log(string.format("spawn %s (SpawnFactory %s, location %s): %s; slot %s = %s%s%s; spawned %s%s",
             tostring(e.h), tostring(e.fac), tostring(e.loc),
             r and string.format("node %s via %s", tostring(r.uid), t.via) or "no node",
             kind or "none", tostring(value), v and (v.single and "" or string.format(" (variable %08X)", v.actors or 0)) or "",
-            who(a)))
+            fnote, who(a), fA and string.format(" [ARMED factory variable, spawn %d since]", fA.after) or ""))
       end
       if mine and not mine.verified then P.verify(mine, a, e) end
+      if fA and not fA.verified then P.verify(fA, a, e) end
     end)
     t0 = pace(t0)
   end
@@ -490,7 +603,7 @@ function P.try_arm()
   if active >= P.MAX_ACTIVE then return end
   local sc = P.scene()
   if not sc then return end
-  local pool = { template = {}, factory = {} }
+  local pool = { template = {}, factory = {}, ftemplate = {} }
   local counts = {}
   for kind, L in pairs(lvl.learned) do
     for _, x in pairs(L) do
@@ -501,9 +614,11 @@ function P.try_arm()
     end
     table.sort(pool[kind], function(a, b) return a.handle < b.handle end)
   end
-  local why = string.format("%d template(s), %d factory(ies) learned spawning an enemy or boss on this level%s",
-      #pool.template, #pool.factory, #counts > 0 and (" (" .. table.concat(counts, ", ", 1, math.min(#counts, 8)) .. ")") or "")
+  local why = string.format("%d template(s), %d factory(ies), %d factory Templates value(s) learned spawning an enemy or boss on this level%s",
+      #pool.template, #pool.factory, #pool.ftemplate, #counts > 0 and (" (" .. table.concat(counts, ", ", 1, math.min(#counts, 8)) .. ")") or "")
   if why ~= lvl.waiting_said then lvl.waiting_said = why; log("learned: " .. why) end
+  -- v5: the factory Templates route first (the one your dev 10.24 log points at)
+  if P.try_arm_factory(sc, pool.ftemplate) then return end
   if #pool.template < 2 and #pool.factory < 2 then return end
   local best
   local t0 = clock()
@@ -526,6 +641,46 @@ function P.try_arm()
     t0 = pace(t0)
   end
   if best then P.arm(sc, best.r, best.v, best.orig, best.rep) end
+end
+
+-- one factory whose Templates variable holds a learned enemy gets another learned enemy's Templates value.
+-- First choice: a factory that already spawned on this level (arena factories spawn again in later waves); after
+-- an ORIGINAL SPAWNED verdict, a factory that has not spawned yet (in case the factory copies its template once).
+function P.try_arm_factory(sc, pool)
+  local lvl = P.lvl
+  for _, A in ipairs(P.armed) do
+    if not A.restored and A.slot.kind == "ftemplate" then return true end     -- one factory experiment at a time
+  end
+  if #pool < 2 then return false end
+  local fresh_first = false
+  for _, v in ipairs(P.verdicts or {}) do if v:find("ORIGINAL", 1, true) then fresh_first = true end end
+  local best, best_rank
+  for _, fac in ipairs(lvl.forder) do
+    local fr = lvl.factories[fac]
+    if fr and not fr.tried and not P.armed_of_factory(fr) then
+      local v = guard(P.var, sc, fr.slot.var.idx, fr.slot.var.gen)
+      local orig = v and v.single and lvl.learned.ftemplate[v.actors]
+      if orig and P.ROLES[orig.role or ""] and not orig.mixed then
+        local rep
+        for _, x in ipairs(pool) do
+          if x.handle ~= v.actors and x.name ~= orig.name and x.role == orig.role and (x.uid or v.uid == "0000000000000000") then rep = x; break end
+        end
+        if rep then
+          local spawned = (fr.spawned or 0) > 0
+          local rank = (spawned ~= fresh_first) and 0 or 1
+          if not best_rank or rank < best_rank then best, best_rank = { fr = fr, v = v, orig = orig, rep = rep }, rank end
+          if rank == 0 then break end
+        end
+      end
+    end
+  end
+  if not best then return false end
+  local users = lvl.fvar_users[best.fr.slot.var.idx] or 1
+  log(string.format("factory %d chosen (%s; spawned %d time(s) on this level; its Templates variable %d is used by %d factory node(s) seen so far)",
+      best.fr.fac, fresh_first and "a fresh factory first, after an ORIGINAL verdict" or "a factory that already spawned first",
+      best.fr.spawned or 0, best.fr.slot.var.idx, users))
+  P.arm(sc, best.fr, best.v, best.orig, best.rep)
+  return true
 end
 
 function P.arm(sc, r, v, orig, rep)
@@ -577,6 +732,8 @@ function P.verify(A, a, e)
   say("SPAWNPROOF: " .. verdict:match("^[A-Z ]+"):gsub("%s+$", "") .. " (" .. (tostring(a and a.name):match("([^\\]+)%.actor$") or "?") .. ")")
   P.verdicts = P.verdicts or {}
   P.verdicts[#P.verdicts + 1] = verdict
+  -- a factory that ignored the write is put back at once, so another (fresh) factory can be tried in this fight
+  if A.slot.kind == "ftemplate" and not verdict:find("REPLACEMENT", 1, true) then P.put_back(A, "not replaced: trying another factory") end
 end
 
 function P.put_back(A, why)
@@ -603,6 +760,7 @@ function P.put_back(A, why)
     end
   end
   log(string.format("put back (%s): node %s %s = %s: %s", tostring(why), tostring(A.rec.uid), A.slot.kind, tostring(A.orig_handle), table.concat(parts, "; ")))
+  if A.slot.kind == "ftemplate" then say("SPAWNPROOF: put back (" .. tostring(why) .. ")") end
 end
 
 function P.summary()
@@ -719,6 +877,6 @@ if not P.subscribed then
 end
 P.reset("scripts loaded")
 local hash_ok = (not rivet.hash) or (pcall(rivet.hash, "Factories") and rivet.hash("Factories") == P.PLUG_FACTORIES)
-log(string.format("v4 loaded: Template and Factories replacements on Zurkon (%s, at most %d); plugs Template %d Factories %d LastSpawn %d%s; own events: planet %s, spawns %s",
+log(string.format("v5 loaded (factory Templates route): Template and Factories replacements on Zurkon (%s, at most %d); plugs Template %d Factories %d LastSpawn %d%s; own events: planet %s, spawns %s",
     P.ENABLED and "on" or "off", P.MAX_SWAPS, P.PLUG_TEMPLATE, P.PLUG_FACTORIES, P.PLUG_LASTSPAWN, hash_ok and "" or " - rivet.hash DISAGREES, nothing will match",
     P.direct and P.direct.planet and "yes" or "NO", P.direct and P.direct.spawn and "yes" or "NO"))

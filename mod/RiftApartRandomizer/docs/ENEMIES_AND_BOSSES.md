@@ -1,8 +1,8 @@
 # Enemy Randomizer and Boss Randomizer (dev 10.12, kit 10.0.8)
 
-> **STATUS (dev 10.24, kit 10.0.17): NOT WORKING IN THE GAME.** No enemy or boss has ever been replaced in your game.
-> The switches below load and toggle, but the spawner layer has never read an encounter (see KNOWN_ISSUES 0p).
-> A developer experiment, `dev(spawnproof).lua`, is trying to prove one replacement first (TESTING.md 2-dev11).
+> **STATUS (dev 10.25, kit 10.0.17): NOT WORKING IN THE GAME.** No enemy or boss has ever been replaced in your game.
+> The switches below load and toggle, but the spawner layer has never read an encounter (see KNOWN_ISSUES 0q).
+> A developer experiment, `dev(spawnproof).lua`, is trying to prove one replacement first (TESTING.md 2-dev12).
 
 > dev 10.13: a third, separate feature, the **Chaos Randomizer** (`chaos.lua`, BACKSPACE), has none of the
 > rules and safety nets below and **takes priority over both while ON** (their settings are kept, they

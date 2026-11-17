@@ -2,6 +2,23 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.25 (kit 10.0.17; not released): the factory's Templates variable
+
+Asked: "still nothing" with the rivet.log of 2026-11-18 (dev 10.24 helper, spawnproof v3 scripts,
+tests/data/round35_rivet.log). Seeds unchanged. **Still nothing randomized in the game.**
+
+- Found in the log (first run of the experiment): SceneManager found, 197 nodes, 970 spawns tied - but no swap:
+  v3 only changed SpawnerScriptAction variables. The arena's enemies come from SunsetSpawnerFactory nodes whose own
+  "Templates" variable (3990217346 = hash "Templates"; also "Locations", "InitialCount") holds the enemy: A1's 11
+  factories held 3 Templates values, each always spawning one kind (robot shooter, robot melee, bladeball); the spawn
+  location is the factory's Locations value.
+- dev(spawnproof).lua v5: lists the level's SunsetSpawnerFactory nodes and their Templates variable; learns Templates
+  value -> enemy from every factory spawn; swaps ONE factory's Templates value for another learned enemy's (same role,
+  another kind; checked, read back; one experiment at a time, a factory that already spawned first); verifies the next
+  spawn of every factory using that variable and logs its next 6; puts it back on the next checkpoint / level, or at
+  once if it was not replaced (then a fresh factory is tried). Learned names / roles are no longer overwritten by nil.
+- Banner dev 10.25. Tests: tests/test_v1025.py (11). 671 run, 0 failures, 23 skipped.
+
 ## Dev 10.24 (kit 10.0.17, rando_give.dll v7 IN THE KIT; not released): the helper that was never copied
 
 Asked: "Nothing changed" with the rivet.log of 2026-11-18 (dev 10.23, tests/data/round34_rivet.log). Seeds unchanged.

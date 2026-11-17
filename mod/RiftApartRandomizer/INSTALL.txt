@@ -24,7 +24,7 @@ LAYOUT
                      dev(vtables)     data for dev(probe)
                      dev(item_ids)    data for dev(probe)
                      dev(spawnprobe)  read-only spawner evidence (RANDO-SPAWNPROBE lines; dev 10.20)
-                     dev(spawnproof)  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF lines; v4, dev 10.24)
+                     dev(spawnproof)  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF lines; v5, dev 10.25)
   rivet.toml       rivet_hook settings (copy next to RiftApart.exe)
   rando_give.dll   the native helper (copy next to RiftApart.exe); rando_give_source\ rebuilds it
                    dev 10.24: this IS v7 (it publishes the SceneManager dev(spawnproof) needs; it ran in your game

@@ -34,6 +34,21 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
+## 2-dev12. Dev 10.25 (kit 10.0.17): one factory's Templates swap (Zurkon)
+
+Build: commit of dev 10.25 on main. Copy, from `mod/RiftApartRandomizer/`: `rando_give.dll` next to RiftApart.exe AND
+the WHOLE `scripts` folder into <game>\scripts (your last log still ran dev 10.23 scripts: the on-screen banner must
+say "Randomizer dev 10.25"; spawnproof must log "v5 loaded (factory Templates route)"). No dev(spawnprobe).lua.
+1. Zurkon, challenge A1, play it to the end.
+2. After the first wave the screen should say `SPAWNPROOF ARMED: next <enemy> here should be <other enemy>`, e.g.
+   a robot shooter's spot now bringing a bladeball. Then `SPAWNPROOF: REPLACEMENT SPAWNED (...)` or `ORIGINAL
+   SPAWNED` (then it tries another factory by itself).
+3. LOOK at the wave: do you see the other enemy where the old one used to come? Does the challenge finish?
+4. Send rivet.log and what you saw.
+Lines: `factories on scarstu: N with a Templates variable ...`, `spawn ... factory Templates = T`, `learned: ...
+factory Templates value(s)`, `factory F chosen (...)`, `ARMED ... ftemplate ... read back OK`, `VERIFY ...`, the
+next spawns marked `[ARMED factory variable, spawn k since]`, `put back ...`.
+
 ## 2-dev11. Dev 10.24 (kit 10.0.17): the Factories experiment with the right helper (Zurkon)
 
 Build: commit of dev 10.24 on main. Copy, from `mod/RiftApartRandomizer/`:

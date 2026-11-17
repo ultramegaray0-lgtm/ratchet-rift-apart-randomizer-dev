@@ -1,5 +1,11 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.25 (kit 10.0.17):** Enemy / Boss / Chaos randomization is still NOT working in the game. The dev 10.24 test
+ran the experiment for the first time (v7 helper, 197 nodes, 970 spawns tied) and found where an arena enemy is
+decided: each SunsetSpawnerFactory node's own "Templates" variable (3 values for the 11 factories of challenge A1, one
+enemy kind each). spawnproof v5 swaps ONE factory's Templates value for another learned enemy's and verifies the
+next spawn. `docs/TESTING.md` 2-dev12.
+
 **Dev 10.24 (kit 10.0.17):** Enemy / Boss / Chaos randomization is still NOT working in the game, and the experiment
 has still not run: in the dev 10.23 test the planet fix worked, but the game folder had rando_give.dll v6 and spawnproof
 needs v7. The kit's `rando_give.dll` is now v7 itself (it ran in your game in round32); v6 is kept in
