@@ -47,7 +47,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.14"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.15"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -460,6 +460,10 @@ function SP.layout_at(b, x, short)
     action, maxact = s32(b, i + 112), s32(b, i + 120)
     if not maxact or maxact < -1 or maxact > 10000 then return nil, "MaxActivations out of range" end
   end
+  -- dev 10.20: three empty lists are what zero-filled memory looks like (your dev 10.19 log: the unused
+  -- tail of a Spawner component read as "factory-only spawner"). A real spawner without Templates has
+  -- factories or spawn points; only then is it called factory-only.
+  if tpl.count < 1 and fac.count < 1 and loc.count < 1 then return nil, "all three lists empty (zeroed memory, not a Prius)" end
   if tpl.count < 1 then return nil, "no Templates (" .. fac.count .. " factories)", "empty" end
   if tpl.count > SP.MAX_TEMPLATES then return nil, tpl.count .. " Templates (more than " .. SP.MAX_TEMPLATES .. ")" end
   return { x = x, templates = tpl, locations = loc, factories = fac.count, num_spawns = num, max_alive = maxsim,
@@ -541,6 +545,16 @@ local function hexdump(b, from, n)
   local t = {}
   for k = from, math.min(#b, from + n - 1) do t[#t + 1] = string.format("%02x", b[k]) end
   return table.concat(t, " ")
+end
+-- dev 10.20: rivet_hook's rivet.log keeps 1024 characters of a line (l_log, a 0x400 buffer): your dev 10.19
+-- log lost the last 126 bytes of every 432-byte Spawner dump. Dumps are written SP.DUMP_CHUNK bytes a line.
+SP.DUMP_CHUNK = 96
+function SP.log_dump(head, b)
+  if not b then return end
+  if #b == 0 then log(head .. " (0 bytes)"); return end
+  for from = 1, #b, SP.DUMP_CHUNK do
+    log(string.format("%s +0x%03X: %s", head, from - 1, hexdump(b, from, SP.DUMP_CHUNK)))
+  end
 end
 
 -- a Prius candidate at `p`: its layout and how sure we are, or nil and why
@@ -795,8 +809,8 @@ function SP.read_node(node)
           if e2 then return nil, "factory-only spawner (no Templates)" end
           if SP.spawner_diag < SP.DUMP_LIMIT and i2 then
             SP.spawner_diag = SP.spawner_diag + 1
-            log(string.format("dump %s Spawner component %s size %s at %X prius %s: %s", tostring(node.uid), tostring(name),
-                tostring(c2.size), addr2, tostring(c2.prius), hexdump(i2, 1, #i2)))
+            SP.log_dump(string.format("dump %s Spawner component %s size %s at %X prius %s", tostring(node.uid), tostring(name),
+                tostring(c2.size), addr2, tostring(c2.prius)), i2)
           end
         end
       end
@@ -827,19 +841,19 @@ function SP.read_node(node)
     if empty then return nil, "factory-only spawner (no Templates)" end
     if inst and SP.dumps < SP.DUMP_LIMIT then
       SP.dumps = SP.dumps + 1
-      log(string.format("dump %s %s size %s instance at %X: %s", tostring(node.uid), class, tostring(c.size), addr, hexdump(inst, 1, #inst)))
+      SP.log_dump(string.format("dump %s %s size %s instance at %X", tostring(node.uid), class, tostring(c.size), addr), inst)
       local holder = ptr64(inst, 9)
       local hb = valid_ptr(holder) and read_bytes(holder, 0x18)
       if hb then
-        log(string.format("dump %s holder at %X: %s", tostring(node.uid), holder, hexdump(hb, 1, #hb)))
+        SP.log_dump(string.format("dump %s holder at %X", tostring(node.uid), holder), hb)
         local data = ptr64(hb, 17)
         local db = valid_ptr(data) and read_bytes(data, SP.PRIUS_READ)
-        if db then log(string.format("dump %s holder data at %X: %s", tostring(node.uid), data, hexdump(db, 1, #db))) end
+        if db then SP.log_dump(string.format("dump %s holder data at %X", tostring(node.uid), data), db) end
       end
       for off = 0x60, #inst - 8, 8 do
         local p = ptr64(inst, off + 1)
         local pb = valid_ptr(p) and read_bytes(p, SP.PRIUS_READ)
-        if pb then log(string.format("dump %s +0x%X -> %X: %s", tostring(node.uid), off, p, hexdump(pb, 1, #pb))) end
+        if pb then SP.log_dump(string.format("dump %s +0x%X -> %X", tostring(node.uid), off, p), pb) end
       end
     end
     return nil, route

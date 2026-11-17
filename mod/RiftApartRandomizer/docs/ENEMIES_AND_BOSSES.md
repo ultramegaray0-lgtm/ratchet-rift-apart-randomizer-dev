@@ -118,6 +118,11 @@ Kept-original encounters are saved in `state.spawn_blocked` (at most 300) and li
 
 ## 6. Finding the Templates list without trusting an offset
 
+**Dev 10.20 (your fourth log of 2026-11-17, dev 10.19):** the +0x60 link below is CONFIRMED (6 of 6 pairs;
+the SpawnerStoppedEvent carries the same handle), but the Spawner component has no Prius either
+(`ddlPriusData` 0) and no list pointer in the bytes the log kept: 10.19 read 0 nodes. Where the Templates are
+at runtime is open; `dev(spawnprobe).lua` (developer file, read-only) looks for them (TESTING.md 2-dev7).
+
 **Dev 10.19 (your third log of 2026-11-17, its `dump` lines):** a SpawnerScriptAction keeps no Prius
 (`ddlPriusData` +0x08 is 0). At +0x60 it keeps the handle of a **Spawner** component made right after it
 (own handle 0x406E8E -> 0x406E8F in every dump); +0x64 is an actor group. `Spawner` is the component of

@@ -264,13 +264,13 @@ class KitTests(unittest.TestCase):
         self.assertIn("15_rando_hub.lua", names)           # optional, but part of the release
         self.assertEqual(len(names), 18, names)            # dev 10.12: + 16_rando_spawners, enemy, boss; 10.13: chaos; 10.15: 17_rando_omega
         for p in SCRIPTS.glob("*.lua"):
-            self.assertIn('"] = "10.0.14"', p.read_text(encoding="utf-8"), p.name)   # every RANDO_FILES tag, dev files too
+            self.assertIn('"] = "10.0.15"', p.read_text(encoding="utf-8"), p.name)   # every RANDO_FILES tag, dev files too
 
     def test_kit_check_passes(self):
         g = Game()
         self.assertEqual(g.load_errors, [])
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.14"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.15"), [l for l in g.logs() if "KIT" in l])
 
     def test_hub_keys_do_nothing_without_a_hub(self):
         g = Game()

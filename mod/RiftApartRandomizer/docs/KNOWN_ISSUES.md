@@ -4,9 +4,24 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0l. Since dev 10.20 (kit 10.0.15): Enemy / Boss / Chaos Randomizers DO NOT WORK in the game
+
+- NOT FIXED. Your rivet.log of 2026-11-17 with dev 10.19 (tests/data/round30_rivet.log): 17 censuses, every
+  one "0 spawner node(s) read, 0 template(s)". Nothing was ever changed; the three switches have nothing to
+  act on. This is true of every version since 10.12 (no census has read a node in any of your logs).
+- PROVED by that log: node +0x60 is the handle of the node's Spawner component (6 of 6 dumped pairs; the
+  SpawnerStoppedEvent carries the same handle). Neither the node nor its Spawner component keeps a Prius
+  (ddlPriusData 0 in both). So 0k below was wrong to call 10.19 a fix: the Spawner component does not carry
+  the Templates list where 10.19 looked.
+- UNKNOWN: where a running encounter's Templates list is in memory. Not guessed again: dev(spawnprobe).lua
+  (developer file, read-only) collects it in one play session. TESTING.md "2-dev7".
+- FIXED (diagnostics only): dumps were cut at 1024 characters a line (rivet_hook's log buffer); zero-filled
+  memory was reported as "factory-only spawner (no Templates)".
+
 ## 0k. Since dev 10.19 (kit 10.0.14): the node's Spawner component
 
-- FIXED (your rivet.log of 2026-11-17, dev 10.18): still nothing randomized. Its dumps show the node keeps
+- WRONG (see 0l): 10.19's premise was refuted by the next log; nothing was fixed.
+- "FIXED" as written then (your rivet.log of 2026-11-17, dev 10.18): still nothing randomized. Its dumps show the node keeps
   no Prius; it keeps the handle of its Spawner component at +0x60. 10.19 reads that component's Prius.
   ENEMIES_AND_BOSSES.md section 6. Simulator only (modelled on the dumps).
 - FIXED: a node stopped by the frame budget is read again (the census was restarted from scratch).

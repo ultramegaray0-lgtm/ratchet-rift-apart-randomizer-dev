@@ -23,6 +23,7 @@ LAYOUT
                      dev(probe)       script-node probe (NUMPAD keys)
                      dev(vtables)     data for dev(probe)
                      dev(item_ids)    data for dev(probe)
+                     dev(spawnprobe)  read-only spawner evidence (RANDO-SPAWNPROBE lines; dev 10.20)
   rivet.toml       rivet_hook settings (copy next to RiftApart.exe)
   rando_give.dll   the native helper (copy next to RiftApart.exe); rando_give_source\ rebuilds it
   companion\       the companion (saving, random seeds, spoilers); companion\research\ is dev-only
@@ -36,7 +37,7 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT all 12 required scripts are 10.0.14
+       RANDO-KIT all 12 required scripts are 10.0.15
        RANDO-KIT developer files loaded (not part of a release): ...
 
 KEYS

@@ -51,7 +51,7 @@ class LoadingTests(unittest.TestCase):
                                  "15_rando_hub.lua", "16_rando_spawners.lua", "enemy.lua", "boss.lua", "chaos.lua",
                                  "17_rando_omega.lua"})
         dev = {p.name for p in DEV_DIR.glob("*.lua") if is_dev(p.name)}
-        self.assertEqual(dev, {"dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua",
+        self.assertEqual(dev, {"dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua", "dev(spawnprobe).lua",
                                "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"})
         g = Game(settings_file=True)
         self.assertEqual(g.load_errors, [])

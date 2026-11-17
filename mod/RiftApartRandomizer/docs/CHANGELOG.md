@@ -2,6 +2,23 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.20 (kit 10.0.15, generator 10.11.0; not released): evidence, not another guess
+
+Asked: "Dev 10.19 still does NOT work in the actual game" (rivet.log of 2026-11-17 with dev 10.19,
+tests/data/round30_rivet.log). Seeds unchanged. **The Enemy / Boss / Chaos Randomizers still change nothing
+in the game**; this version does not claim otherwise.
+
+- Root cause of 10.19's failure (the log): the Spawner component found through node +0x60 has no Prius
+  either (ddlPriusData 0) and no list pointer in the bytes the log kept; no census has ever read a node.
+- 16_rando_spawners: dumps in lines of 96 bytes (rivet.log keeps 1024 characters of a line; 10.19's
+  432-byte dumps lost 126 bytes); three empty lists (zeroed memory) are no longer a "factory-only spawner".
+- New developer file dev(spawnprobe).lua (read-only, never in a release): per level an index of every
+  spawner node and its Spawner component (handle checked), the spawned actors, the Spawners that change
+  while you fight, deep probes (component type data, bytes, pointers, a rivet.find_uid search for template
+  uids).
+- Tests: tests/test_v1020.py (17; the 3 on the spawner layer fail against 10.19, the probe tests need the
+  new file). 595 run, 0 failures, 23 skipped.
+
 ## Dev 10.19 (kit 10.0.14, generator 10.11.0; not released): the node's Spawner component
 
 Asked: "no enemy/boss randomized" (rivet.log of 2026-11-17 with dev 10.18, tests/data/round29_rivet.log).

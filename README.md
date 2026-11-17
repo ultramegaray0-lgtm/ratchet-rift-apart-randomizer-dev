@@ -1,6 +1,11 @@
 # Rift Apart Randomizer 10.0 (development project)
 
-**Dev 10.19 (kit 10.0.14):** a spawner node keeps its enemy list in a separate Spawner component (handle at
+**Dev 10.20 (kit 10.0.15):** the Enemy / Boss / Chaos Randomizers DO NOT WORK in the game yet (no census has
+ever read a spawner node). 10.19's premise was refuted by the next log; 10.20 fixes two diagnostics and adds
+the read-only `dev(spawnprobe).lua` to find where an encounter's Templates live. `docs/KNOWN_ISSUES.md` 0l,
+`docs/TESTING.md` 2-dev7.
+
+**Dev 10.19 (kit 10.0.14; refuted in the game):** a spawner node keeps its enemy list in a separate Spawner component (handle at
 node +0x60, seen in your log's dumps); the randomizers now read and change that component's list.
 Simulator-tested only; `docs/KNOWN_ISSUES.md` 0k.
 

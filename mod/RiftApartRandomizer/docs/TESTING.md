@@ -34,6 +34,25 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
+## 2-dev7. Dev 10.20 (kit 10.0.15): ONE focused test - where the encounter's Templates live
+
+Nothing is randomized by this test and nothing is written to the game: dev(spawnprobe).lua only reads.
+1. Install the whole dev kit's `scripts` folder, `dev(spawnprobe).lua` included (delete the old *_rando_*,
+   enemy/boss/chaos and dev(*) files first). The Enemy / Boss / Chaos switches do not matter.
+2. Load your save and go to Zurkon (Zurkie's Battleplex). Start one arena challenge you can replay and fight
+   until at least two waves have spawned (finishing it is better). Then go back to the table once
+   (a checkpoint load) and quit the game normally.
+3. Send rivet.log. Needed: every `RANDO-SPAWNPROBE` line. Expected kinds:
+   `index N (...)` (one per load: how many nodes, whether every Spawner matched +0x60, where Spawners hold
+   pointers), `spawn N:` (what the game actually created: uid, actor asset, classes, Template flag),
+   `sweep N:` / `stopped:` (which Spawner bytes change while an encounter runs), `probe ...` (type data,
+   bytes, pointer targets) and, most important, `UID HIT` lines (a loaded actor's uid found in or one / two
+   pointers from the node or its Spawner: a template bot there marks the Templates list).
+What decides the next step: a `UID HIT` naming a TEMPLATE bot whose actor asset matches a `spawn` line is the
+list; then ONE slot of ONE encounter is changed (with read-back and a `verify` of the next spawn) before
+anything else is enabled. If there is no such hit, the list is not reachable from the node, and the next
+step is the spawn function itself (rando_give.dll), not more offsets.
+
 ## 2-dev5. Dev 10.15 (kit 10.0.11): Omega weapons (gameplay test plan)
 
 Needs a Challenge Mode save (finish the story once) and the developer kit (`17_rando_omega.lua`).

@@ -4,7 +4,60 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-17: dev 10.20 (kit 10.0.15, generator 10.11.0): evidence instead of another offset
+
+- Asked: "Dev 10.19 still does NOT work in the actual game ... a serious engineering investigation, not
+  another cycle of guessed offsets". Log: tests/data/round30_rivet.log (dev 10.19, kit 10.0.14; save with
+  Chaos ON; NefCity, Zurkon arena challenges A2 / B3, Ardolis, Cordelion; game path replaced).
+- CONFIRMED in the game (the log): kit 10.0.14 and banner dev 10.19 loaded; 24/24 scripts; no Lua error;
+  "all 12 required scripts are 10.0.14". 17 censuses logged (1-18, number 5 never reached the log), all
+  "0 spawner node(s) read, 0 template(s)", 2-197 nodes skipped each. Toggles: "0 spawner slot(s) put back".
+  Nothing was written; Enemy, Boss and Chaos behaved identically (nothing to act on). Since 10.12 no census
+  in any of your logs has read a node.
+- CONFIRMED: node +0x60 (u32) == its Spawner component's own handle (+0x1C) in 6 of 6 dumped pairs; both
+  components' +0x10 point at the same Actor; Spawner handle = node handle + 1. The SpawnerStoppedEvent's
+  SpawnerComponentHandle is that handle (2182844 = 0x214EBC = node b38522d499c03015's Spawner). So the
+  node <-> Spawner <-> stop-event route is real.
+- REFUTED: 10.19's premise that the Spawner component carries the Templates list. Spawner (432 bytes):
+  ddlPriusData +0x08 = 0, and the 306 bytes that reached the log hold no heap pointer but the actor (+0x10);
+  module pointer +0xD0 in one node. Values seen: +0xA8 two floats 0.035, +0xC0 -1.0f, +0x20..+0x3F -1 (the
+  update list slots), +0xC8.. small u16 + hash-like bytes in some nodes. The census reasons show readable
+  pointers in some Spawners at +0x198 (a target that is readable and has a readable pointer at +16) - in
+  the 126 bytes the log never showed.
+- Two diagnostic bugs found: (1) rivet_hook's l_log formats a line into a 0x400 buffer: every 432-byte
+  Spawner dump was cut at 306 bytes. (2) SP.layout_at accepted three empty lists, so zero-filled memory (the
+  unused tail of a Spawner, through the 10.19 `inline` route) was reported as "factory-only spawner (no
+  Templates)" and stopped that node's other routes.
+- Research (no game): rivet_hook develop @0bdb394: script.hpp says +0x58 is the plug block (ScriptPlugs,
+  0x28: zone +0x1C, owner +0x24), not a Prius; actor.hpp gives Actor (0xC0: actorAsset +0x30, components
+  +0x68, count +0x70) and ComponentInfo (name +0x60, size +0x78, prius +0xC8, prius_behavior +0xE7);
+  rivet.read is capped at 512 bytes; rivet.find_uid is the engine's own uid lookup (cheap); script_signal's
+  properties() also only follows ddlPriusData. Nothing in rivet / rivet_hook says where a script node's
+  Prius lives after creation.
+- Unknown (needs the game): where the running encounter's Templates are; whether the game copies them
+  before a write could matter; which component class a spawned bot reports.
+- 16: SP.log_dump (96-byte lines) for every dump; SP.layout_at: three empty lists -> "all three lists empty
+  (zeroed memory, not a Prius)", factory-only only with a factory or a spawn point. Behaviour otherwise
+  unchanged (it still reads 0 nodes in your game - expected).
+- New dev(spawnprobe).lua (read-only; HELD out of every release as a dev file): index per load (node,
+  Spawner by handle == +0x60, snapshot, histogram of readable-pointer offsets), spawn descriptions (uid,
+  actor asset id / name, Template flag, classes; SpawnFactory too), sweeps after spawns (Spawner bytes that
+  changed), stop/start events matched by handle (diff since the index), deep probes (ComponentInfo of every
+  component on the node's actor, node / Spawner / plug bytes, every block one pointer away dumped, two away
+  searched, rivet.find_uid on each 8-byte value: `UID HIT` names the actor). Frame-budget stops are retried.
+- Kit 10.0.15, banner dev 10.20 (every RANDO_FILES tag, C/H/TT versions, build_data, build_public_release
+  BUILD, the tests that assert the kit). INSTALL.txt lists dev(spawnprobe); harness `spawnprobe=True`.
+- Tests: tests/test_v1020.py (17). TheLogTests (5) assert the facts above on the real log. Spawner-layer
+  tests (3) use the REAL node / Spawner bytes of b38522d4 (unseen tail zero-filled) and all 3 fail against
+  10.19 (it says "factory-only", dumps nothing, lines too long). Probe tests (9) use the same real bytes;
+  pointers / uids / changes in them are SYNTHETIC and labelled. 595 run, 0 failures, 23 skipped.
+- Verified in the game: nothing of 10.20 yet. Enemy / Boss / Chaos randomization: NOT working (KNOWN_ISSUES
+  0l). Next: TESTING.md 2-dev7 (one Battleplex challenge, send rivet.log).
+
 ## 2026-11-17: dev 10.19 (kit 10.0.14, generator 10.11.0): the node's Spawner component
+
+- POST-MORTEM (10.20): refuted in the game by round30_rivet.log - the Spawner component has no Prius
+  either; nothing below "Conclusion" held. Kept as written.
 
 - Asked: "no enemy/boss randomized", with tests/data/round29_rivet.log (dev 10.18; Zurkon, NefCity,
   Sargasso, Ardolis; save with Chaos ON).

@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.19 (build 10.0.14) - test run 2026-11-17 10:05 UTC
+Rift Apart Randomizer dev 10.20 (build 10.0.15) - test run 2026-11-17 10:46 UTC
 Python 3.13.18 on Linux
-ran 578, failures 0, errors 0, skipped 21
+ran 595, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -434,7 +434,7 @@ test_without_the_shared_layer (tests.test_v1013.RemovalTests.test_without_the_sh
 test_build_data_reproduces_the_data (tests.test_v1015.DataTests.test_build_data_reproduces_the_data) ... ok
 test_twenty_omega_items_one_per_vanilla_weapon (tests.test_v1015.DataTests.test_twenty_omega_items_one_per_vanilla_weapon) ... ok
 test_audit_rejects_misplaced_omegas (tests.test_v1015.GeneratorTests.test_audit_rejects_misplaced_omegas) ... ok
-test_explicit_off_every_seed_is_the_1013_seed (tests.test_v1015.GeneratorTests.test_explicit_off_every_seed_is_the_1013_seed) ... ok
+test_explicit_off_every_seed_is_the_1013_seed (tests.test_v1015.GeneratorTests.test_explicit_off_every_seed_is_the_1013_seed) ... skipped 'git history with dev 10.13 not available'
 test_on_keeps_the_seed_and_adds_the_omegas_where_currency_was (tests.test_v1015.GeneratorTests.test_on_keeps_the_seed_and_adds_the_omegas_where_currency_was) ... ok
 test_on_places_each_omega_once_and_passes_the_audit (tests.test_v1015.GeneratorTests.test_on_places_each_omega_once_and_passes_the_audit) ... ok
 test_private_dev_settings_enable_omega_by_default (tests.test_v1015.GeneratorTests.test_private_dev_settings_enable_omega_by_default) ... ok
@@ -461,7 +461,7 @@ test_new_game_plus_keeps_the_games_own_omegas (tests.test_v1015.PersistenceTests
 test_restore_inventory_sends_cannot_downgrade (tests.test_v1015.PersistenceTests.test_restore_inventory_sends_cannot_downgrade) ... ok
 test_save_and_load_keep_the_tiers (tests.test_v1015.PersistenceTests.test_save_and_load_keep_the_tiers) ... ok
 test_17_is_held_back_from_player_packages (tests.test_v1015.ReleaseTests.test_17_is_held_back_from_player_packages) ... ok
-test_player_docs_untouched (tests.test_v1015.ReleaseTests.test_player_docs_untouched) ... ok
+test_player_docs_untouched (tests.test_v1015.ReleaseTests.test_player_docs_untouched) ... skipped 'git history not available'
 test_omega_seed_locations_pay_their_omega (tests.test_v1015.SeedTests.test_omega_seed_locations_pay_their_omega) ... ok
 test_an_omega_in_start_items_comes_with_its_weapon (tests.test_v1015.StartTests.test_an_omega_in_start_items_comes_with_its_weapon) ... ok
 test_a_census_stopped_by_the_budget_starts_again (tests.test_v1017.FrameBudgetTests.test_a_census_stopped_by_the_budget_starts_again) ... ok
@@ -503,6 +503,23 @@ test_rivet_gives_the_spawner_components_prius (tests.test_v1019.SpawnerComponent
 test_spawns_are_matched_by_their_spawn_point (tests.test_v1019.SpawnerComponentTests.test_spawns_are_matched_by_their_spawn_point) ... ok
 test_stop_events_name_the_spawner_component (tests.test_v1019.SpawnerComponentTests.test_stop_events_name_the_spawner_component) ... ok
 test_the_dumped_node_is_what_the_simulator_builds (tests.test_v1019.TheLogTests.test_the_dumped_node_is_what_the_simulator_builds) ... ok
+test_a_frame_budget_stop_is_retried_not_fatal (tests.test_v1020.SpawnProbeTests.test_a_frame_budget_stop_is_retried_not_fatal) ... ok
+test_a_spawned_bot_is_described_and_a_changed_spawner_is_reported (tests.test_v1020.SpawnProbeTests.test_a_spawned_bot_is_described_and_a_changed_spawner_is_reported) ... ok
+test_a_spawner_with_another_handle_is_not_used (tests.test_v1020.SpawnProbeTests.test_a_spawner_with_another_handle_is_not_used) ... ok
+test_a_template_uid_one_pointer_away_is_found (tests.test_v1020.SpawnProbeTests.test_a_template_uid_one_pointer_away_is_found) ... ok
+test_index_matches_the_spawner_by_the_handle_at_0x60 (tests.test_v1020.SpawnProbeTests.test_index_matches_the_spawner_by_the_handle_at_0x60) ... ok
+test_it_is_a_developer_file_and_never_in_a_release (tests.test_v1020.SpawnProbeTests.test_it_is_a_developer_file_and_never_in_a_release) ... ok
+test_the_probe_writes_nothing_and_every_line_fits (tests.test_v1020.SpawnProbeTests.test_the_probe_writes_nothing_and_every_line_fits) ... ok
+test_the_stopped_event_finds_the_node_through_its_handle (tests.test_v1020.SpawnProbeTests.test_the_stopped_event_finds_the_node_through_its_handle) ... ok
+test_the_whole_spawner_is_dumped (tests.test_v1020.SpawnProbeTests.test_the_whole_spawner_is_dumped) ... ok
+test_dumps_fit_the_log_line_and_keep_every_byte (tests.test_v1020.SpawnerLayerFixTests.test_dumps_fit_the_log_line_and_keep_every_byte) ... ok
+test_three_empty_lists_are_rejected_but_a_real_factory_only_prius_is_not (tests.test_v1020.SpawnerLayerFixTests.test_three_empty_lists_are_rejected_but_a_real_factory_only_prius_is_not) ... ok
+test_zeroed_memory_is_not_a_factory_only_spawner (tests.test_v1020.SpawnerLayerFixTests.test_zeroed_memory_is_not_a_factory_only_spawner) ... ok
+test_dev_1019_loaded_cleanly_and_read_no_node (tests.test_v1020.TheLogTests.test_dev_1019_loaded_cleanly_and_read_no_node) ... ok
+test_node_0x60_is_its_spawner_components_handle (tests.test_v1020.TheLogTests.test_node_0x60_is_its_spawner_components_handle) ... ok
+test_the_spawner_dumps_were_cut_by_the_log_line_limit (tests.test_v1020.TheLogTests.test_the_spawner_dumps_were_cut_by_the_log_line_limit) ... ok
+test_the_spawner_holds_no_pointer_in_the_bytes_the_log_kept (tests.test_v1020.TheLogTests.test_the_spawner_holds_no_pointer_in_the_bytes_the_log_kept) ... ok
+test_the_stopped_event_names_the_spawner_handle (tests.test_v1020.TheLogTests.test_the_stopped_event_names_the_spawner_handle) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -602,6 +619,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 578 tests in 139.702s
+Ran 595 tests in 207.981s
 
-OK (skipped=21)
+OK (skipped=23)

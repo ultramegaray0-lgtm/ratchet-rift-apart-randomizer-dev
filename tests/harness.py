@@ -62,6 +62,7 @@ def classic_settings(settings=None):
 DEV_ALWAYS = ("dev(keys).lua", "dev(testtravel).lua")
 DEV_TEST_MODE = ("dev(testmode).lua",)
 DEV_TOOLS = ("dev(item_ids).lua", "dev(probe).lua", "dev(vtables).lua")
+DEV_SPAWNPROBE = ("dev(spawnprobe).lua",)     # dev 10.20: the read-only spawner evidence collector
 
 
 def is_dev(name):
@@ -73,7 +74,7 @@ def is_dev(name):
 DEV_DIR = pathlib.Path(os.environ.get("RANDO_DEV_SCRIPTS", MOD / "scripts"))
 
 
-def script_files(test_mode=False, dev_tools=False, scripts_dir=None, release=False, without=()):
+def script_files(test_mode=False, dev_tools=False, scripts_dir=None, release=False, without=(), spawnprobe=False):
     """release=True: only what a release ships (no dev(name).lua file). without: file names left out."""
     d = pathlib.Path(scripts_dir) if scripts_dir else MOD / "scripts"
     dev_dir = d if scripts_dir else DEV_DIR
@@ -84,6 +85,8 @@ def script_files(test_mode=False, dev_tools=False, scripts_dir=None, release=Fal
             want |= set(DEV_TEST_MODE)
         if dev_tools:
             want |= set(DEV_TOOLS)
+        if spawnprobe:
+            want |= set(DEV_SPAWNPROBE)
     files = [f for f in d.glob("*.lua") if not is_dev(f.name) and f.name not in without]
     files += [dev_dir / n for n in sorted(want) if (dev_dir / n).exists() and n not in without]
     return sorted(files, key=lambda p: p.name)        # rivet_hook loads in file name order
@@ -102,7 +105,7 @@ class Game:
 
     def __init__(self, test_mode=False, dev_tools=False, dll_status=1, dll_version=5, dll=True,
                  scripts_dir=None, before_scripts=None, files=None, settings=None, settings_file=False,
-                 extra_lua=None, release=False, without=(), planet_shuffle=False):
+                 extra_lua=None, release=False, without=(), planet_shuffle=False, spawnprobe=False):
         self.lua = lua54.LuaRuntime(unpack_returned_tuples=True)
         self.lua.execute(SIM.read_text(encoding="utf-8"))
         self.g = self.lua.globals()
@@ -112,7 +115,7 @@ class Game:
         if before_scripts:
             before_scripts(self)
         self.load_errors = []
-        self.files = files or script_files(test_mode, dev_tools, scripts_dir, release, without)
+        self.files = files or script_files(test_mode, dev_tools, scripts_dir, release, without, spawnprobe)
         # planet_shuffle=True: the player turns planet shuffle on (the 0 key's action) right after
         # the companion's first restore - the hub tests were written with it on
         self.planet_shuffle = planet_shuffle
