@@ -34,6 +34,18 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
+## 2-dev13. Dev 10.26 (kit 10.0.17): one enemy kind -> another on the factories still to come (Zurkon)
+
+Build: commit of dev 10.26 on main. Copy `rando_give.dll` (v7) next to RiftApart.exe and the WHOLE `scripts` folder
+(banner "Randomizer dev 10.26", log "v6 loaded (factory Templates route, fresh factories)").
+1. Zurkon, challenge A1, to the end.
+2. After the first enemies, the screen says e.g. `SPAWNPROOF ARMED: enm_pirate_robot_me should now come as
+   enm_pirate_robot_sh`. In the next waves, where melee robots would come, shooter robots should come instead.
+3. The screen then says `SPAWNPROOF: REPLACEMENT SPAWNED (...)` or `ORIGINAL SPAWNED (...)`.
+4. LOOK: do the waves bring the other kind? Does the challenge finish? Send rivet.log and what you saw.
+Lines: `EXPERIMENT n: X -> Y on k factory(ies) that have not spawned yet: ...`, `ARMED ... read back OK`, `VERIFY node
+factory F ...`, `[ARMED factory variable ...]` spawns, `put back ...`; `factory route waiting: ...` if nothing fits.
+
 ## 2-dev12. Dev 10.25 (kit 10.0.17): one factory's Templates swap (Zurkon)
 
 Build: commit of dev 10.25 on main. Copy, from `mod/RiftApartRandomizer/`: `rando_give.dll` next to RiftApart.exe AND

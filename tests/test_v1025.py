@@ -179,54 +179,55 @@ class FactoryTemplatesSimulatorTests(unittest.TestCase):
         self.assertIn("3 with a Templates variable (3 new); 2 Templates value(s): 9001 x2, 9002 x1", line[0])
 
     def test_a_factory_templates_replacement_is_armed_verified_and_put_back(self):
+        # dev 10.26: only a factory that has NOT spawned yet is armed (C), never the spent one (A)
         g = self.game()
         self.spawn(g, 8001, 7001, GRUNT)
         self.spawn(g, 8002, 7002, FLYER)
-        chosen = [l for l in self.lines(g) if "factory 8001 chosen" in l]
-        self.assertTrue(chosen, self.lines(g)[-5:])                            # it already spawned: first choice
+        exp = [l for l in self.lines(g) if "EXPERIMENT 1:" in l]
+        self.assertTrue(exp, self.lines(g)[-5:])
+        self.assertIn("grunt.actor -> characters\\enemy\\flyer.actor on 1 factory(ies) that have not spawned yet: 8003", exp[0])
         armed = [l for l in self.lines(g) if "\tARMED " in l]
         self.assertEqual(len(armed), 1)
-        self.assertIn("ftemplate", armed[0])
-        self.assertIn("Templates variable 1", armed[0])
+        self.assertIn("node factory 8003", armed[0])
         self.assertIn("read back OK", armed[0])
-        self.assertEqual(g.lua.eval("PF.var_actors(1)"), 9002)
-        self.assertTrue(g.note_has("SPAWNPROOF ARMED: next grunt here should be flyer"), g.notes()[-3:])
-        self.spawn(g, 8001, 7003, FLYER)                                         # SYNTHETIC: the game used it
-        self.assertTrue(any("VERIFY node factory 8001" in l and "REPLACEMENT SPAWNED" in l for l in self.lines(g)), self.lines(g)[-4:])
+        self.assertEqual(g.lua.eval("PF.var_actors(3)"), 9002)
+        self.assertEqual(g.lua.eval("PF.var_actors(1)"), 9001)                   # the spent factory A untouched
+        self.assertTrue(g.note_has("SPAWNPROOF ARMED: grunt should now come as flyer"), g.notes()[-3:])
+        self.spawn(g, 8003, 7003, FLYER)                                         # SYNTHETIC: the game used it
+        self.assertTrue(any("VERIFY node factory 8003" in l and "REPLACEMENT SPAWNED" in l for l in self.lines(g)), self.lines(g)[-4:])
+        self.assertTrue(g.note_has("SPAWNPROOF: REPLACEMENT SPAWNED (flyer)"), g.notes()[-3:])
         self.assertTrue(any("spawn 7003 " in l and "[ARMED factory variable, spawn 1 since]" in l for l in self.lines(g)))
         g.fire("CheckpointTriggeredEvent", CheckpointHash=1, Loaded=True)
         g.step(5)
-        self.assertTrue(any("put back" in l and "factory 8001" in l and "variable OK" in l for l in self.lines(g)), self.lines(g)[-4:])
-        self.assertEqual(g.lua.eval("PF.var_actors(1)"), 9001)
-        self.assertEqual(g.lua.eval("PF.var_actors(3)"), 9001)                   # factory C untouched
+        self.assertTrue(any("put back" in l and "factory 8003" in l and "variable OK" in l for l in self.lines(g)), self.lines(g)[-4:])
+        self.assertEqual(g.lua.eval("PF.var_actors(3)"), 9001)
 
-    def test_a_shared_variable_is_verified_on_any_of_its_factories(self):
-        g = self.game(shared=True)
+    def test_a_spent_factory_is_never_armed(self):
+        g = self.game()
+        self.spawn(g, 8003, 7000, GRUNT)                                         # C spawns too: no fresh grunt factory
         self.spawn(g, 8001, 7001, GRUNT)
         self.spawn(g, 8002, 7002, FLYER)
-        self.assertTrue(any("is used by 2 factory node(s)" in l for l in self.lines(g)), self.lines(g)[-4:])
+        self.assertFalse([l for l in self.lines(g) if "\tARMED " in l], self.lines(g)[-4:])
+        self.assertTrue(any("factory route waiting: no factory that has not spawned yet holds a learned enemy" in l for l in self.lines(g)))
+        self.assertEqual(len(g.lua.eval("PF.writes")), 0)
+
+    def test_every_fresh_factory_of_the_kind_is_armed(self):
+        g = self.game(shared=True)                                               # D 8004 (fresh) shares A's variable 1
+        self.spawn(g, 8001, 7001, GRUNT)
+        self.spawn(g, 8002, 7002, FLYER)
+        armed = [l for l in self.lines(g) if "\tARMED " in l]
+        self.assertEqual(len(armed), 2, armed)                                   # C and D
         self.spawn(g, 8004, 7004, FLYER)                                         # SYNTHETIC
         self.assertTrue(any("VERIFY" in l and "SpawnFactory 8004" in l and "REPLACEMENT SPAWNED" in l for l in self.lines(g)), self.lines(g)[-4:])
 
-    def test_after_an_original_verdict_a_fresh_factory_is_next(self):
+    def test_an_ignored_write_is_put_back_at_once(self):
         g = self.game()
         self.spawn(g, 8001, 7001, GRUNT)
         self.spawn(g, 8002, 7002, FLYER)
-        self.spawn(g, 8001, 7003, GRUNT)                                         # SYNTHETIC: no effect
+        self.spawn(g, 8003, 7003, GRUNT)                                         # SYNTHETIC: no effect
         self.assertTrue(any("ORIGINAL SPAWNED" in l for l in self.lines(g)))
-        self.assertTrue(any("put back (not replaced: trying another factory)" in l and "variable OK" in l for l in self.lines(g)))
-        self.assertEqual(g.lua.eval("PF.var_actors(1)"), 9001)
-        chosen = [l for l in self.lines(g) if " chosen (" in l]
-        self.assertEqual(len(chosen), 2, chosen)                                  # in the same fight
-        self.assertIn("factory 8003 chosen (a fresh factory first, after an ORIGINAL verdict", chosen[1])
-        self.assertEqual(g.lua.eval("PF.var_actors(3)"), 9002)
-
-    def test_one_factory_experiment_at_a_time(self):
-        g = self.game()
-        self.spawn(g, 8001, 7001, GRUNT)
-        self.spawn(g, 8002, 7002, FLYER)
-        self.spawn(g, 8002, 7005, FLYER)
-        self.assertEqual(len([l for l in self.lines(g) if "\tARMED " in l]), 1)
+        self.assertTrue(any("put back (not replaced)" in l and "variable OK" in l for l in self.lines(g)))
+        self.assertEqual(g.lua.eval("PF.var_actors(3)"), 9001)
 
     def test_nothing_is_written_off_zurkon(self):
         g = Game(settings={"enemy_randomizer": False, "boss_randomizer": False}, spawnproof=True, dll_version=7)

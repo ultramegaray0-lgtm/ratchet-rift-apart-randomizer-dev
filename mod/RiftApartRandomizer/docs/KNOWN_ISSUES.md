@@ -4,6 +4,12 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0r. Since dev 10.26 (kit 10.0.17): still NO enemy replacement seen in the game
+
+- NOT FIXED. Your dev 10.25 log (round36): the first enemy Templates write in the game (factory 1109878, read back OK,
+  put back OK, challenge completed) was on a factory that never spawned again, so it proves nothing about spawning.
+- v6 arms only factories that have not spawned yet (TESTING.md 2-dev13). Unproven in the game.
+
 ## 0q. Since dev 10.25 (kit 10.0.17): still NO enemy is randomized in the game
 
 - NOT FIXED. Your dev 10.24 log (round35) is the first run of the experiment: it read everything (v7 helper, 197

@@ -4,6 +4,29 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.26 (kit 10.0.17): fresh factories only
+
+- Log: tests/data/round36_rivet.log (dev 10.25 scripts, v7 helper; Zurkon arena challenge A1 replayed and completed,
+  then two more A1 starts).
+- CONFIRMED (real game): FIRST WRITE of an enemy Templates value. "factory 1109878 chosen (a factory that already
+  spawned first; spawned 4 time(s))", "ARMED ... Templates variable 25747 ... enm_pirate_robot_me (handle 1109383) ->
+  enm_pirate_robot_sh (handle 1109378); read back OK", later "put back (level changed: checkpoint loaded) ... variable
+  OK". The game kept running and A1 completed.
+- NOT VERIFIED: factory 1109878 spawned 4 times before the write and 0 times after it (the fight went on with other
+  factories: 1109879..1109889). Each arena wave has its own factories, each spawning once per wave - v5's "a factory
+  that already spawned first" was the wrong choice (round35's repeat spawns were within one wave).
+- Same rule as round35 with new handles: 3 Templates values (1109378 robot_sh, 1109383 robot_me, 1109384 bladeball),
+  every factory one kind. Factory variables now print with names (Templates / Locations / InitialCount).
+- dev(spawnproof).lua v6: P.try_arm_factory builds, from factories not yet spawned on this level, a list per Templates
+  value; picks the learned enemy kind with the most fresh factories and a replacement of the same role and another
+  kind; arms them all (up to 8) as one EXPERIMENT (at most 3 a session; factory arms no longer use the node route's
+  swap budget); each verifies on its own first spawn; "factory route waiting: ..." when nothing fits. On-screen names
+  use the last path segment (round36 showed "next enemy here should be another enemy": names are cut at 64 chars).
+- Banner dev 10.26. Tests: tests/test_v1026.py (6, real log); test_v1025's 5 simulator tests rewritten for v6 (spent
+  factory never armed, every fresh factory of the kind armed, put back at once when ignored). Full suite: 677 run, 0 failures, 23 skipped.
+- Verified in the game: one write + put back of an enemy Templates value, harmless. No replacement seen yet. Next:
+  TESTING.md 2-dev13.
+
 ## 2026-11-18: dev 10.25 (kit 10.0.17): the factory's Templates variable
 
 - Asked: "still nothing". Log: tests/data/round35_rivet.log (v7 helper in the game; scripts still dev 10.23 -

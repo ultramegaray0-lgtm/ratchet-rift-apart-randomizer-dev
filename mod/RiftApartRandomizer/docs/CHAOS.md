@@ -1,8 +1,8 @@
 # Chaos Randomizer (dev 10.13, kit 10.0.9): EVERYTHING CAN BECOME ANYTHING
 
-> **STATUS (dev 10.25, kit 10.0.17): NOT WORKING IN THE GAME.** No enemy or boss has ever been replaced in your game.
-> The switches below load and toggle, but the spawner layer has never read an encounter (see KNOWN_ISSUES 0q).
-> A developer experiment, `dev(spawnproof).lua`, is trying to prove one replacement first (TESTING.md 2-dev12).
+> **STATUS (dev 10.26, kit 10.0.17): NOT WORKING IN THE GAME.** No enemy or boss has ever been replaced in your game.
+> The switches below load and toggle, but the spawner layer has never read an encounter (see KNOWN_ISSUES 0r).
+> A developer experiment, `dev(spawnproof).lua`, is trying to prove one replacement first (TESTING.md 2-dev13).
 
 > **READ THIS BEFORE SWITCHING IT ON.** Chaos has **no protection of any kind**. A door may never
 > open, an objective may never finish, a boss may be impossible to beat, an enemy may spawn inside a

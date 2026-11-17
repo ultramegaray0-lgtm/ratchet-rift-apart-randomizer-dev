@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.25 (build 10.0.17) - test run 2026-11-17 22:03 UTC
+Rift Apart Randomizer dev 10.26 (build 10.0.17) - test run 2026-11-17 22:24 UTC
 Python 3.13.18 on Linux
-ran 671, failures 0, errors 0, skipped 23
+ran 677, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -585,17 +585,23 @@ test_the_experiment_was_blocked_by_the_v6_helper (tests.test_v1024.RoundThirtyFo
 test_the_game_path_was_replaced (tests.test_v1024.RoundThirtyFourLogTests.test_the_game_path_was_replaced) ... ok
 test_the_planet_fix_worked (tests.test_v1024.RoundThirtyFourLogTests.test_the_planet_fix_worked) ... ok
 test_a_factory_templates_replacement_is_armed_verified_and_put_back (tests.test_v1025.FactoryTemplatesSimulatorTests.test_a_factory_templates_replacement_is_armed_verified_and_put_back) ... ok
-test_a_shared_variable_is_verified_on_any_of_its_factories (tests.test_v1025.FactoryTemplatesSimulatorTests.test_a_shared_variable_is_verified_on_any_of_its_factories) ... ok
-test_after_an_original_verdict_a_fresh_factory_is_next (tests.test_v1025.FactoryTemplatesSimulatorTests.test_after_an_original_verdict_a_fresh_factory_is_next) ... ok
+test_a_spent_factory_is_never_armed (tests.test_v1025.FactoryTemplatesSimulatorTests.test_a_spent_factory_is_never_armed) ... ok
+test_an_ignored_write_is_put_back_at_once (tests.test_v1025.FactoryTemplatesSimulatorTests.test_an_ignored_write_is_put_back_at_once) ... ok
+test_every_fresh_factory_of_the_kind_is_armed (tests.test_v1025.FactoryTemplatesSimulatorTests.test_every_fresh_factory_of_the_kind_is_armed) ... ok
 test_factories_are_listed_with_their_templates (tests.test_v1025.FactoryTemplatesSimulatorTests.test_factories_are_listed_with_their_templates) ... ok
 test_nothing_is_written_off_zurkon (tests.test_v1025.FactoryTemplatesSimulatorTests.test_nothing_is_written_off_zurkon) ... ok
-test_one_factory_experiment_at_a_time (tests.test_v1025.FactoryTemplatesSimulatorTests.test_one_factory_experiment_at_a_time) ... ok
 test_a_factory_templates_value_decides_the_enemy (tests.test_v1025.RoundThirtyFiveLogTests.test_a_factory_templates_value_decides_the_enemy) ... ok
 test_the_experiment_ran_with_the_v7_helper (tests.test_v1025.RoundThirtyFiveLogTests.test_the_experiment_ran_with_the_v7_helper) ... ok
 test_the_factory_variable_names (tests.test_v1025.RoundThirtyFiveLogTests.test_the_factory_variable_names) ... ok
 test_the_game_path_was_replaced (tests.test_v1025.RoundThirtyFiveLogTests.test_the_game_path_was_replaced) ... ok
 test_the_spawn_location_is_the_factorys_locations_value (tests.test_v1025.RoundThirtyFiveLogTests.test_the_spawn_location_is_the_factorys_locations_value) ... ok
 test_why_v3_never_armed (tests.test_v1025.RoundThirtyFiveLogTests.test_why_v3_never_armed) ... ok
+test_dev_10_25_ran (tests.test_v1026.RoundThirtySixLogTests.test_dev_10_25_ran) ... ok
+test_same_templates_rule_as_round35 (tests.test_v1026.RoundThirtySixLogTests.test_same_templates_rule_as_round35) ... ok
+test_the_armed_factory_never_spawned_again (tests.test_v1026.RoundThirtySixLogTests.test_the_armed_factory_never_spawned_again) ... ok
+test_the_challenge_still_completed (tests.test_v1026.RoundThirtySixLogTests.test_the_challenge_still_completed) ... ok
+test_the_first_enemy_templates_write_read_back_ok (tests.test_v1026.RoundThirtySixLogTests.test_the_first_enemy_templates_write_read_back_ok) ... ok
+test_the_game_path_was_replaced (tests.test_v1026.RoundThirtySixLogTests.test_the_game_path_was_replaced) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -695,6 +701,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 671 tests in 166.614s
+Ran 677 tests in 166.534s
 
 OK (skipped=23)

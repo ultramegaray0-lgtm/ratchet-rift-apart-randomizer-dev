@@ -112,7 +112,7 @@ class SpawnProofThreeSimulatorTests(unittest.TestCase):
         self.spawn(g, 0, 7001, GRUNT, 8001)
         self.spawn(g, 1, 7002, FLYER, 8002)
         self.spawn(g, 2, 7003, FLYER, 8002)
-        self.assertTrue(g.note_has("SPAWNPROOF ARMED: next grunt here should be flyer"), g.notes()[-4:])
+        self.assertTrue(g.note_has("SPAWNPROOF ARMED: grunt should now come as flyer"), g.notes()[-4:])
         self.assertTrue(g.note_has("SPAWNPROOF: REPLACEMENT SPAWNED (flyer)"), g.notes()[-4:])
 
     def test_loaded_line_reports_its_own_subscriptions(self):

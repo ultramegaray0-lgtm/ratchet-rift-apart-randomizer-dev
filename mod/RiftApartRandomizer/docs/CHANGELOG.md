@@ -2,6 +2,19 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.26 (kit 10.0.17; not released): fresh factories only
+
+Asked: (the rivet.log of 2026-11-18, dev 10.25, tests/data/round36_rivet.log). Seeds unchanged. **Still no replacement
+seen in the game.**
+
+- Found in the log: v5 armed factory 1109878 (Templates 1109383 robot melee -> 1109378 robot shooter): the write read
+  back OK and was put back OK at the next checkpoint; challenge A1 completed. But that factory had already spawned its 4
+  enemies and never spawned again (each arena wave has its own factories), so there was nothing to verify.
+- dev(spawnproof).lua v6: one EXPERIMENT = one enemy kind -> one other kind on every factory that has NOT spawned yet
+  and holds the original (up to 8); each verifies on its own first spawn; a spent factory is never chosen; at most 3
+  experiments a session; on-screen names fixed ("SPAWNPROOF ARMED: robot_me should now come as robot_sh").
+- Banner dev 10.26. Tests: tests/test_v1026.py (6, real log); test_v1025's simulator tests follow v6. 677 run, 0 failures, 23 skipped.
+
 ## Dev 10.25 (kit 10.0.17; not released): the factory's Templates variable
 
 Asked: "still nothing" with the rivet.log of 2026-11-18 (dev 10.24 helper, spawnproof v3 scripts,

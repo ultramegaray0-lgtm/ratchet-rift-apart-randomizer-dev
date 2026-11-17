@@ -1,5 +1,10 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.26 (kit 10.0.17):** still no enemy replacement SEEN in the game, but the dev 10.25 test made the first real
+write of an enemy Templates value (factory 1109878, robot melee -> robot shooter, read back OK, put back OK, challenge
+completed). That factory had already spawned and never spawned again. spawnproof v6 arms only factories that have not
+spawned yet (all of one enemy kind). `docs/TESTING.md` 2-dev13.
+
 **Dev 10.25 (kit 10.0.17):** Enemy / Boss / Chaos randomization is still NOT working in the game. The dev 10.24 test
 ran the experiment for the first time (v7 helper, 197 nodes, 970 spawns tied) and found where an arena enemy is
 decided: each SunsetSpawnerFactory node's own "Templates" variable (3 values for the 11 factories of challenge A1, one
