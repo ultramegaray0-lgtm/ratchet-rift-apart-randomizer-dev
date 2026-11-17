@@ -1,0 +1,774 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[rivet] game version mismatch, invalidating pointers
+[loader] mod path mods/default does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED.stage does not exist! skipping.
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF79826A8C0, QueueEvent at 00007FF793066A60
+[time] time scale system at 00007FF7974B02E0
+[camera] fov scale at 00007FF7972EEEC8
+[camera] camera system at 00007FF7972EEDE0
+[hud] ShowMessage at 00007FF79262D160
+[vanity] EquipBundle at 00007FF79288A8E0
+[hero_look] HandleTransformationEvent at 00007FF792538D40, OnTransformationPostActivate at 00007FF7927463F0
+[configs] config asset manager at 00007FF7972FBFE0
+[script] signal queue at 00007FF79875FB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF792753900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[overlay] loading dxgi and d3d12...
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	RANDO-KEYS	keyboard keys on	| planet shuffle 0, give items back Ctrl+0 twice
+[script] [rando]	Randomizer 10.0.15 loaded (data 5.1.0, generator 10.11.0)
+[script] [rando]	RANDO-STATUS events subscribed 20/20
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] [rando]	RANDO-SHOP	loaded (15 vendor weapons)
+[script] [rando]	RANDO-ARMOR	loaded (21 armor pieces, interception needs rando_give.dll v5)
+[script] [rando]	RANDO-TRAVEL	loaded
+[script] [rando]	RANDO-HUB	loaded (10.0.15)
+[script] [rando]	RANDO-SPAWNERS	spawner layer loaded (SpawnerScriptAction Templates; families 48 bot classes)
+[script] [rando]	RANDO-OMEGA	loaded (Omega flag not learned yet)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	is installed (	boss-tier enemies	)
+[script] [rando]	RANDO-BOSS	installed (ON until the save says otherwise) - = turns it on / off, Ctrl+= shows what it changed; 8 story boss fights are kept as they are
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	is installed (	every enemy and boss, priority, no guards	)
+[script] [rando]	RANDO-CHAOS	installed (OFF until the save says otherwise) - BACKSPACE turns it on / off, Ctrl+BACKSPACE shows what it changed. NO safety guards; priority over the Enemy and Boss Randomizers while ON
+[script] [rando]	RANDO-KEYS developer keys:	status ; | hub ] | stay [ | story / | campaign ' | old F keys too
+[script] [rando]	RANDO-PROBE	v7 loaded: NUMPAD3 survey, NUMPAD4 select, NUMPAD5 fire, NUMPAD7 item, NUMPAD6 give item, NUMPAD9 census, NUMPAD8 give via borrowed node
+[script] [rando]	RANDO-SPAWNPROBE	cannot subscribe	PlanetChangedEvent	too many callbacks registered, the limit is 64
+[script] [rando]	RANDO-SPAWNPROBE	cannot subscribe	CheckpointTriggeredEvent	too many callbacks registered, the limit is 64
+[script] [rando]	RANDO-SPAWNPROBE	v1 loaded: read-only spawner evidence (index after each load, spawned actors, changed Spawners, deep probes); remove the file to turn it off
+[script] [rando]	RANDO-STATUS TEST MODE on: F10 story mission, F11 Gold Bolt, Ctrl+F10 twice resets, Ctrl+' lab read, Ctrl+F11 lab try
+[script] [rando]	RANDO-TEST	loaded (10.0.15) - off
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	is installed (	regular enemies	)
+[script] [rando]	RANDO-ENEMY	installed (ON until the save says otherwise) - - turns it on / off, Ctrl+- shows what it changed
+[script] loaded 25 of 25 scripts, 5 frame and 29 key callbacks
+[script] [rando]	RANDO-KIT developer files loaded (not part of a release): dev(item_ids), dev(keys), dev(probe), dev(spawnprobe), dev(testmode), dev(testtravel), dev(vtables)
+[script] [rando]	RANDO-KIT all 12 required scripts are 10.0.15
+[script] [rando]	RANDO-SPAWNPROBE	index 1 (scripts loaded): 0 node(s); Spawner handle == node +0x60 for 0, another handle 0, no Spawner 0; Spawner sizes -; readable pointers at no offset
+[script] [rando]	RANDO-SEED seed = "random" needs the companion to remember the seed - start the companion
+[script] [rando]	notify failed:	the player hud is not loaded
+[DDL] indexed 8211 types for struct walking
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=813750 TotalBolts=813750
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=132.0 TotalRaritanium=132.0
+[script] [rando]	RANDO-SEED ARSENAL_RESTORED is not installed: its weapons stay out (the companion checked rivet.toml and the game's toc)
+[script] [rando]	RANDO-SEED generating seed	torren-qwark-blizar-217	(random seed from the companion)
+[script] [rando]	RANDO-SETTINGS	raritanium rewards scaled down to the raritanium_budget of 2000 (they would have given 6160)
+[script] [rando]	RANDO-SEED ready	torren-qwark-blizar-217	fc77380ad773	preset balanced	attempt 1
+[script] [rando]	RANDO-SEED share code	RA10|torren-qwark-blizar-217|balanced|distribution=goldbolts_first,omega_weapons=true,travel_lock=true
+[script] [rando]	RANDO-SAVE restored:	Gold Bolts 1/25 | rewards 16/99 | planets open 3/10 (warp off) | hub: starts after the parade of a New Game | planets 1 | in inventory 22 | armor sources 13/27 | Omega 0/3 (flag not learned) | CHAOS ON (0 changed here, pool 0; enemy/boss randomizers paused) | enemies ON (0 changed here, 0 known) | bosses ON (0 changed here, 0 known)
+[script] [rando]	notify failed:	the player hud is not loaded
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=6CE42D51A884F3687A03A8B4505AE454
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=D8CD5BB62234095689D7EFDEDAB464F6
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-SPAWNPROBE	index 1 (level loaded): 0 node(s); Spawner handle == node +0x60 for 0, another handle 0, no Spawner 0; Spawner sizes -; readable pointers at no offset
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072360 Component=2129941
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072362 Component=2129965
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-ARMOR	helper: armor give verified, armor sources on
+[script] [rando]	RANDO-NOTIFY	Randomizer dev 10.20 - seed torren-qwark-blizar-217 (fc77380ad773)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	dump a74767e9d45e5361 Spawner component Spawner size 432 at 2BC9D1C7D00 prius nil +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 80 5e df 3c bc 02 00 00 00 00 80 3f e7 1f 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump a74767e9d45e5361 Spawner component Spawner size 432 at 2BC9D1C7D00 prius nil +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump a74767e9d45e5361 Spawner component Spawner size 432 at 2BC9D1C7D00 prius nil +0x0C0: 00 00 80 bf 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump a74767e9d45e5361 Spawner component Spawner size 432 at 2BC9D1C7D00 prius nil +0x120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump a74767e9d45e5361 Spawner component Spawner size 432 at 2BC9D1C7D00 prius nil +0x180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 3f
+[script] [rando]	RANDO-SPAWNERS	dump a74767e9d45e5361 SpawnerScriptAction size 128 instance at 2BC9D1E3700 +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 80 5e df 3c bc 02 00 00 00 00 80 3f e6 1f 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 61 53 5e d4 e9 67 47 a7 20 aa 5b 97 d0 88 45 2a 60 e4 d4 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNERS	dump a74767e9d45e5361 SpawnerScriptAction size 128 instance at 2BC9D1E3700 +0x060: e7 1f 20 00 c0 00 10 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump d4f89629ddc51e5d Spawner component Spawner size 432 at 2BC9D1C7F00 prius nil +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 40 5f df 3c bc 02 00 00 00 00 80 3f e9 1f 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump d4f89629ddc51e5d Spawner component Spawner size 432 at 2BC9D1C7F00 prius nil +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump d4f89629ddc51e5d Spawner component Spawner size 432 at 2BC9D1C7F00 prius nil +0x0C0: 00 00 80 bf 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump d4f89629ddc51e5d Spawner component Spawner size 432 at 2BC9D1C7F00 prius nil +0x120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump d4f89629ddc51e5d Spawner component Spawner size 432 at 2BC9D1C7F00 prius nil +0x180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 3f
+[script] [rando]	RANDO-SPAWNERS	dump d4f89629ddc51e5d SpawnerScriptAction size 128 instance at 2BC9D1E3780 +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 40 5f df 3c bc 02 00 00 00 00 80 3f e8 1f 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 5d 1e c5 dd 29 96 f8 d4 20 aa 5b 97 d0 88 45 2a c0 e4 d4 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNERS	dump d4f89629ddc51e5d SpawnerScriptAction size 128 instance at 2BC9D1E3780 +0x060: e9 1f 20 00 c1 00 10 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 8d95ab8d6bcb6544 Spawner component Spawner size 432 at 2BC9D1EA100 prius nil +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 40 3a e0 3c bc 02 00 00 00 00 80 3f 30 20 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 8d95ab8d6bcb6544 Spawner component Spawner size 432 at 2BC9D1EA100 prius nil +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 8d95ab8d6bcb6544 Spawner component Spawner size 432 at 2BC9D1EA100 prius nil +0x0C0: 00 00 80 bf 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 8d95ab8d6bcb6544 Spawner component Spawner size 432 at 2BC9D1EA100 prius nil +0x120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 8d95ab8d6bcb6544 Spawner component Spawner size 432 at 2BC9D1EA100 prius nil +0x180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 3f
+[script] [rando]	RANDO-SPAWNERS	dump 8d95ab8d6bcb6544 SpawnerScriptAction size 128 instance at 2BC9D1E6680 +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 40 3a e0 3c bc 02 00 00 00 00 80 3f 2f 20 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 44 65 cb 6b 8d ab 95 8d d3 4c 31 37 41 57 54 ae 00 61 d5 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 8d95ab8d6bcb6544 SpawnerScriptAction size 128 instance at 2BC9D1E6680 +0x060: 30 20 20 00 d0 00 10 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 01 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 90040122662db42c Spawner component Spawner size 432 at 2BC9D1EA300 prius nil +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 00 3b e0 3c bc 02 00 00 00 00 80 3f 32 20 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 90040122662db42c Spawner component Spawner size 432 at 2BC9D1EA300 prius nil +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 90040122662db42c Spawner component Spawner size 432 at 2BC9D1EA300 prius nil +0x0C0: 00 00 80 bf 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 90040122662db42c Spawner component Spawner size 432 at 2BC9D1EA300 prius nil +0x120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 90040122662db42c Spawner component Spawner size 432 at 2BC9D1EA300 prius nil +0x180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 3f
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129999
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129937 ItemHandle=2130314
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129937
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129997 ItemHandle=2130315
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129997
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129937 ItemHandle=2130316
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129997 ItemHandle=2130317
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129937 ItemHandle=2130321
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129951
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129975
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072360 Component=2129942
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072362 Component=2129966
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123493
+[script] [rando]	RANDO-SPAWNERS	dump 90040122662db42c SpawnerScriptAction size 128 instance at 2BC9D1E6700 +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 00 3b e0 3c bc 02 00 00 00 00 80 3f 31 20 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 2c b4 2d 66 22 01 04 90 d3 4c 31 37 41 57 54 ae 60 61 d5 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 90040122662db42c SpawnerScriptAction size 128 instance at 2BC9D1E6700 +0x060: 32 20 20 00 d1 00 10 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 01 00 00
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060937 SpawnIndex=0 SpawnLocation=1060891 SpawnedHandle=1073499
+[script] [rando]	RANDO-SPAWNPROBE	spawn 1: index 0 location 1060891 (uid 94230b2c32cac916); spawned handle 1073499 uid 00010000000020fe name characters\npc\npc_civ_robot_04\npc_civ_robot_04.actor asset 839F7538AFD05590 npc_civ_robot_04.actor classes AmbientCurveFollower,TargetData,CommonComponentStash,SoundSourceComponent,Dialog,BotPartialAnimsManager,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot,SyncStaticStateMachine,StaticStateEventHelper,StaticStateUpdateHelper
+[script] [rando]	RANDO-SPAWNPROBE	RANDO-ERROR	SpawnerSpawnEvent	scripts\dev(spawnprobe).lua:154: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1061482 SpawnedHandle=1073500
+[script] [rando]	RANDO-SPAWNPROBE	spawn 2: index 0 location 1061482 (uid a7c29a050398606a); spawned handle 1073500 uid 00010000000020ff name environment\neonefarious\architecture\nnc_arch_cargo_sorting_are asset 92537EF1FFFFCD80 nnc_ar classes MovingSurface,AmbientCurveFollower,ConduitComponent,PhysicsComponent
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067842 SpawnIndex=0 SpawnLocation=1063397 SpawnedHandle=1073501
+[script] [rando]	RANDO-SPAWNPROBE	spawn 3: index 0 location 1063397 (uid e050b5af8b786694); spawned handle 1073501 uid 0001000000002100 name characters\npc\npc_civ_robot_06\npc_nefcity_factory_robot.actor asset 8A0574CE02F9ABFE npc_nefcity_factory_robot.actor classes TargetData,CommonComponentStash,SoundSourceComponent,AnimControllerComponent,ConduitComponent,SoundEmitterComponent,Dialog,BotPartialAnimsManager,NavObstacle,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot
+[script] [rando]	RANDO-SPAWNPROBE	spawn 3: SpawnFactory handle 1067842 uid a7b18a762e717697 name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067832 SpawnIndex=0 SpawnLocation=1063399 SpawnedHandle=1073502
+[script] [rando]	RANDO-SPAWNPROBE	spawn 4: index 0 location 1063399 (uid e6a9ff119d82b840); spawned handle 1073502 uid 0001000000002101 name characters\npc\npc_civ_robot_06\npc_nefcity_factory_robot.actor asset 8A0574CE02F9ABFE npc_nefcity_factory_robot.actor classes TargetData,CommonComponentStash,SoundSourceComponent,AnimControllerComponent,ConduitComponent,SoundEmitterComponent,Dialog,BotPartialAnimsManager,NavObstacle,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot
+[script] [rando]	RANDO-SPAWNPROBE	spawn 4: SpawnFactory handle 1067832 uid 85aab84cf398249a name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=0 SpawnLocation=1060733 SpawnedHandle=1073503
+[script] [rando]	RANDO-SPAWNPROBE	spawn 5: index 0 location 1060733 (uid 93917fa915033bfd); spawned handle 1073503 uid 0001000000002102 name characters\npc\npc_civ_robot_01\npc_civ_robot_01.actor asset 9CD47C7C1A0EACC2 npc_civ_robot_01.actor classes AmbientCurveFollower,TargetData,CommonComponentStash,SoundSourceComponent,Dialog,AnimMaterialComponent,BotPartialAnimsManager,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot,SyncStaticStateMachine,StaticStateEventHelper
+[script] [rando]	RANDO-SPAWNPROBE	spawn 5: SpawnFactory handle 1060927 uid acd43ba4a47524db name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=0 SpawnLocation=1060727 SpawnedHandle=1073504
+[script] [rando]	RANDO-SPAWNPROBE	spawn 6: index 0 location 1060727 (uid a0e9cd2b465b417a); spawned handle 1073504 uid 0001000000002103 name characters\npc\npc_civ_robot_01\npc_civ_robot_01.actor asset 9CD47C7C1A0EACC2 npc_civ_robot_01.actor classes AmbientCurveFollower,TargetData,CommonComponentStash,SoundSourceComponent,Dialog,AnimMaterialComponent,BotPartialAnimsManager,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot,SyncStaticStateMachine,StaticStateEventHelper
+[script] [rando]	RANDO-SPAWNPROBE	spawn 6: SpawnFactory handle 1060923 uid 9fac8926f72d5e5c name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=0 SpawnLocation=1060715 SpawnedHandle=1073505
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=0 SpawnLocation=1060739 SpawnedHandle=1073506
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=0 SpawnLocation=1060721 SpawnedHandle=1073507
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=0 SpawnLocation=1060745 SpawnedHandle=1073508
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1062096 SpawnIndex=0 SpawnLocation=1061079 SpawnedHandle=1073509
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1062095 SpawnIndex=0 SpawnLocation=1061088 SpawnedHandle=1073510
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1061483 SpawnedHandle=1073511
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067845 SpawnIndex=0 SpawnLocation=1063400 SpawnedHandle=1073512
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067840 SpawnIndex=0 SpawnLocation=1063398 SpawnedHandle=1073513
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070667 SpawnIndex=0 SpawnLocation=1070543 SpawnedHandle=1073514
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070671 SpawnIndex=0 SpawnLocation=1070538 SpawnedHandle=1073515
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070671 SpawnIndex=1 SpawnLocation=1070536 SpawnedHandle=1073516
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070670 SpawnIndex=0 SpawnLocation=1070531 SpawnedHandle=1073517
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070662 SpawnIndex=0 SpawnLocation=1070602 SpawnedHandle=1073518
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070674 SpawnIndex=0 SpawnLocation=1070524 SpawnedHandle=1073519
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1070627 SpawnedHandle=1073520
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=0 SpawnLocation=1070606 SpawnedHandle=1073521
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1070588 SpawnedHandle=1073522
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071159 SpawnIndex=0 SpawnLocation=1071057 SpawnedHandle=1073523
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071162 SpawnIndex=0 SpawnLocation=1071037 SpawnedHandle=1073524
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071163 SpawnIndex=0 SpawnLocation=1071034 SpawnedHandle=1073525
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2124800
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123487
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123465
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116222
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116212
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106699
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106689
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116240
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116220
+[script] [rando]	RANDO-SPAWNERS	dump 9339970b08eb7574 Spawner component Spawner size 432 at 2BC9D1EA500 prius nil +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 c0 3b e0 3c bc 02 00 00 00 00 80 3f 34 20 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 9339970b08eb7574 Spawner component Spawner size 432 at 2BC9D1EA500 prius nil +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 9339970b08eb7574 Spawner component Spawner size 432 at 2BC9D1EA500 prius nil +0x0C0: 00 00 80 bf 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 9339970b08eb7574 Spawner component Spawner size 432 at 2BC9D1EA500 prius nil +0x120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 9339970b08eb7574 Spawner component Spawner size 432 at 2BC9D1EA500 prius nil +0x180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 3f
+[script] [rando]	RANDO-SPAWNERS	dump 9339970b08eb7574 SpawnerScriptAction size 128 instance at 2BC9D1E6780 +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 c0 3b e0 3c bc 02 00 00 00 00 80 3f 33 20 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 74 75 eb 08 0b 97 39 93 d3 4c 31 37 41 57 54 ae c0 61 d5 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 9339970b08eb7574 SpawnerScriptAction size 128 instance at 2BC9D1E6780 +0x060: 34 20 20 00 d2 00 10 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 01 00 00
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1070597 SpawnedHandle=1073526
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=1 SpawnLocation=1070565 SpawnedHandle=1073527
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1070623 SpawnedHandle=1073528
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070674 SpawnIndex=1 SpawnLocation=1070523 SpawnedHandle=1073529
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070670 SpawnIndex=1 SpawnLocation=1070530 SpawnedHandle=1073530
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1061481 SpawnedHandle=1073531
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071162 SpawnIndex=1 SpawnLocation=1071039 SpawnedHandle=1073532
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071163 SpawnIndex=1 SpawnLocation=1071033 SpawnedHandle=1073533
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=1 SpawnLocation=1060750 SpawnedHandle=1073534
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=1 SpawnLocation=1060726 SpawnedHandle=1073535
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=1 SpawnLocation=1060744 SpawnedHandle=1073536
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=1 SpawnLocation=1060720 SpawnedHandle=1073537
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=1 SpawnLocation=1060732 SpawnedHandle=1073538
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=1 SpawnLocation=1060738 SpawnedHandle=1073539
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070269 SpawnIndex=0 SpawnLocation=1070257 SpawnedHandle=1073540
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070270 SpawnIndex=0 SpawnLocation=1070221 SpawnedHandle=1073541
+[script] [rando]	RANDO-SPAWNERS	dump 975e30eb1a90d93e Spawner component Spawner size 432 at 2BC9D1EA700 prius nil +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 80 3c e0 3c bc 02 00 00 00 00 80 3f 36 20 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 975e30eb1a90d93e Spawner component Spawner size 432 at 2BC9D1EA700 prius nil +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 975e30eb1a90d93e Spawner component Spawner size 432 at 2BC9D1EA700 prius nil +0x0C0: 00 00 80 bf 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 975e30eb1a90d93e Spawner component Spawner size 432 at 2BC9D1EA700 prius nil +0x120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 975e30eb1a90d93e Spawner component Spawner size 432 at 2BC9D1EA700 prius nil +0x180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 3f
+[script] [rando]	RANDO-SPAWNERS	dump 975e30eb1a90d93e SpawnerScriptAction size 128 instance at 2BC9D1E6800 +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 80 3c e0 3c bc 02 00 00 00 00 80 3f 35 20 20 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 3e d9 90 1a eb 30 5e 97 d3 4c 31 37 41 57 54 ae 20 62 d5 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 975e30eb1a90d93e SpawnerScriptAction size 128 instance at 2BC9D1E6800 +0x060: 36 20 20 00 d3 00 10 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 01 00 00
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=2 SpawnLocation=1070549 SpawnedHandle=1073756
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=2 SpawnLocation=1070598 SpawnedHandle=1073757
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=2 SpawnLocation=1070633 SpawnedHandle=1073758
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=2 SpawnLocation=1061488 SpawnedHandle=1073759
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=2 SpawnLocation=1060746 SpawnedHandle=1073760
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=2 SpawnLocation=1060722 SpawnedHandle=1073761
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=2 SpawnLocation=1060740 SpawnedHandle=1073762
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=2 SpawnLocation=1060716 SpawnedHandle=1073763
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=2 SpawnLocation=1060728 SpawnedHandle=1073764
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=2 SpawnLocation=1060734 SpawnedHandle=1073765
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070269 SpawnIndex=1 SpawnLocation=1070256 SpawnedHandle=1073766
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070270 SpawnIndex=1 SpawnLocation=1070221 SpawnedHandle=1073767
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071166 SpawnIndex=0 SpawnLocation=1071065 SpawnedHandle=1073768
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071154 SpawnIndex=0 SpawnLocation=1071126 SpawnedHandle=1073769
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060932 SpawnIndex=0 SpawnLocation=1060779 SpawnedHandle=1073770
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071160 SpawnIndex=0 SpawnLocation=1071095 SpawnedHandle=1073771
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071157 SpawnIndex=0 SpawnLocation=1071050 SpawnedHandle=1073772
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105396
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105408
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105392
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106717
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105426
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105440
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105436
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105430
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105444
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105422
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122716
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122720
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105404
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105432
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105428
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105416
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105414
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105402
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105400
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105412
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123473
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105406
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105418
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105410
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105442
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105398
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105394
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105434
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122718
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123477
+[script] [rando]	RANDO-NOTIFY	Randomizer: start the companion (seed = random)
+[script] [rando]	RANDO-NOTIFY	Randomizer progress restored: Gold Bolts 1/25 | rewards 16/99 | planets open 3/10 (warp off) | hub: starts after the parade of a New Game | planets 1 | in inventory 22 | armor sources 13/27 | Omega 0/3 (flag not learned) | CHAOS ON (0 changed here, pool 0; enemy/boss randomizers paused) | enemies ON (0 changed here, 0 known) | bosses ON (0 changed here, 0 known)
+[script] [rando]	RANDO-ARMOR	intercepting 8 armor source(s)
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105438
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123491
+[script] [rando]	RANDO-SPAWNPROBE	sweep 1: 0 of 0 Spawner(s) changed since the last read
+[script] [rando]	RANDO-SPAWNERS	census 1 (planet NefCity): 0 spawner node(s) read, 0 template(s), 47 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	3x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0x48: unreadable; +0x70: unreadable; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	3x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x88: unreadable; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	15x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	1x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0x80: unreadable; +0xC0: unreadable; +0xC8: no three lists; +0xC8->+16: not a pointer; +0xD0: all three lists empty (zeroed memory, not a Prius); +0xD0->+16: not a pointer; +0x198: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	2x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x10->+0x58: all three lists empty (zeroed memory, not a Prius); +0x10->+0x60: no three lists; +0x10->+0x68: no three lists; node: rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; +0x10->+0x58: MaxActivations out of range; +0x10->+0x68: no three lists; +0x58->+0x0: no three lists; +0x58->+0x60: no three lists; +0x58->+0xC0: no three lists
+[script] [rando]	RANDO-SPAWNERS	  skipped	4x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	9x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	1x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	1x	Spawner component Spawner: rivet: no prius; holder: ddlPriusData is #; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: Spawner component Spawner: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x10->+0x58: all three lists empty (zeroed memory, not a Prius); +0x10->+0x60: no three lists; +0x10->+0x68: no three lists; node: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; +0x10->+0x58: MaxActivations out of range; +0x10->+0x68: no three lists; +0x58->+0x0: no three lists; +0x58->+0x60: no three lists; +0x58->+0xC0: no three lists
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: Spawner component Spawner: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x10->+0x58: all three lists empty (zeroed memory, not a Prius); +0x10->+0x60: no three lists; +0x10->+0x68: no three lists; node: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; +0x10->+0x58: MaxActivations out of range; +0x10->+0x68: no three lists; +0x58->+0x0: no three lists; +0x58->+0x60: no three lists; +0x58->+0xC0: no three lists
+[script] [rando]	RANDO-SPAWNERS	  skipped	8d95ab8d6bcb6544: Spawner component Spawner: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0xC0: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; deep search not run (4 nodes tried this session); node: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1073944 (field 1073944), location 1060842 uid e728cd1432ee0f71, spawned 1073944 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1073945 (field 1073945), location 1060815 uid f70ea40666379b35, spawned 1073945 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1073946 (field 1073946), location 1060803 uid fd0802181f5576b2, spawned 1073946 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1073947 (field 1073947), location 1060852 uid ff1fe9140a76b160, spawned 1073947 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1073948 (field 1073948), location 1060868 uid ff299eb9c1b81458, spawned 1073948 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105424
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2105424, sender 1060959 -> no node of the census
+[script] [rando]	RANDO-SHOP	helper: config manager at 00007FF7972FBFE0 (exe +0x52EBFE0, rivet_hook's signature matched 1x)
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=23.066070556641 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=43757410AE65DE8FFA86A3FBF752E33E
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_B3 MissionState=4 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=18.595222473145 MissionName=MIS_ZURK_ARENA_CHALLENGE_B3 MissionSegmentId=7097142E6B46D0DA121C34F596989F68
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=23.066070556641 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=7F803816E38B5F71DFBD45D0ABA58DFB
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon
+[script] [rando]	RANDO-SPAWNPROBE	index 1 (level loaded): 2 node(s); Spawner handle == node +0x60 for 2, another handle 0, no Spawner 0; Spawner sizes 432 x2; readable pointers at +0xC8 x2
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: node component 2180290 at 2BC9D601F00, Spawner handle 2144C3 at 2BC9D605100 (432 bytes read)
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: actor 2BC3D290C40 flags 8715 asset nil nil name nil, 2 component(s)
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: component SpawnerScriptAction handle 2144C2 inst 2BC9D601F00 ddlPriusData 0000000000000000 | class size 128 id 31B870E3 prius type 7FF797D25D70 prius size 0 ReadWrite
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: component Spawner handle 2144C3 inst 2BC9D605100 ddlPriusData 0000000000000000 | class size 432 id FC56D431 prius type 7FF797C9E480 prius size 0 ReadWrite
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: script_node graph_uid=2a4588d0975baa20 zone=b334f538fd12d71a connections_in=1; outputs 2046202852->nil; vars 2761897147:actors=table: 000002C09957A7E0, 1835115251:actors=table: 000002C09957A860, 161848772:float=1.0, 406637480:actors=table: 000002C09957A9A0, 1830449615:float=1.0
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 node +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 40 0c 29 3d bc 02 00 00 00 00 80 3f c2 44 21 00 ff ff ff ff 00 01 80 3f ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 61 53 5e d4 e9 67 47 a7 20 aa 5b 97 d0 88 45 2a e0 0d b9 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 node +0x060: c3 44 21 00 fe 0c 20 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 40 0c 29 3d bc 02 00 00 00 00 80 3f c3 44 21 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: node component 2180290 at 2BC9D601F00, Spawner handle 2144C3 at 2BC9D605100 (432 bytes read)
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: actor 2BC3D290C40 flags 8715 asset nil nil name nil, 2 component(s)
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: component SpawnerScriptAction handle 2144C2 inst 2BC9D601F00 ddlPriusData 0000000000000000 | class size 128 id 31B870E3 prius type 7FF797D25D70 prius size 0 ReadWrite
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: component Spawner handle 2144C3 inst 2BC9D605100 ddlPriusData 0000000000000000 | class size 432 id FC56D431 prius type 7FF797C9E480 prius size 0 ReadWrite
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: script_node graph_uid=2a4588d0975baa20 zone=b334f538fd12d71a connections_in=1; outputs 2046202852->nil; vars 2761897147:actors=table: 000002C05E766C60, 1835115251:actors=table: 000002C05E7667A0, 161848772:float=1.0, 406637480:actors=table: 000002C05E766B20, 1830449615:float=1.0
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 node +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 40 0c 29 3d bc 02 00 00 00 00 80 3f c2 44 21 00 ff ff ff ff 00 01 80 3f ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 61 53 5e d4 e9 67 47 a7 20 aa 5b 97 d0 88 45 2a e0 0d b9 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 node +0x060: c3 44 21 00 fe 0c 20 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 40 0c 29 3d bc 02 00 00 00 00 80 3f c3 44 21 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner +0x0C0: 00 00 80 bf 00 00 00 00 50 00 ba 99 bc 02 00 00 e8 d5 12 bf 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner +0x120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner +0x180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4c e1 20 00 00 00 00 00 00 02 00 00 00 00 00 00 00 00 80 3f
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 plugs at 2BC95B90DE0 +0x000: 08 0e b9 95 bc 02 00 00 14 0e b9 95 bc 02 00 00 00 00 00 00 00 00 00 00 01 01 05 00 1a d7 12 fd 38 f5 34 b3 c2 44 21 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner+0xC8->2BC99BA0050 +0x000: 40 ac d6 99 bc 02 00 00 30 97 d8 99 bc 02 00 00 00 2d bd 99 bc 02 00 00 00 00 00 00 00 00 00 00 e0 61 e7 99 bc 02 00 00 00 00 00 00 00 00 00 00 70 bc e3 99 bc 02 00 00 f0 83 e0 99 bc 02 00 00 20 ca cc 99 bc 02 00 00 40 50 c0 99 bc 02 00 00 10 89 a9 98 bc 02 00 00 a2 d1 20 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner+0xC8->2BC99BA0050 +0x060: 01 a6 b9 99 00 00 00 00 c0 67 60 9d bc 02 00 00 00 00 00 00 00 00 00 00 80 0b 60 9d bc 02 00 00 00 67 60 9d bc 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4a 60 9d bc 02 00 00 00 4b 60 9d bc 02 00 00 80 4a 60 9d bc 02 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361 Spawner+0xC8->2BC99BA0050 +0x0C0: e0 2a b1 99 bc 02 00 00 00 00 00 00 00 00 00 00 a0 ee be 99 bc 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4d 60 9d bc 02 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node a74767e9d45e5361: 19 block(s) searched (1 one pointer away, 16 two away), 57 value(s) asked rivet.find_uid, 0 loaded actor(s) found
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d: node component 2180292 at 2BC9D601F80, Spawner handle 2144C5 at 2BC9D605300 (432 bytes read)
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d: actor 2BC3D290D00 flags 8715 asset nil nil name nil, 2 component(s)
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d: component SpawnerScriptAction handle 2144C4 inst 2BC9D601F80 ddlPriusData 0000000000000000 | class size 128 id 31B870E3 prius type 7FF797D25D70 prius size 0 ReadWrite
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d: component Spawner handle 2144C5 inst 2BC9D605300 ddlPriusData 0000000000000000 | class size 432 id FC56D431 prius type 7FF797C9E480 prius size 0 ReadWrite
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d: script_node graph_uid=2a4588d0975baa20 zone=b334f538fd12d71a connections_in=1; outputs 2046202852->nil; vars 2761897147:actors=table: 000002C05E7644A0, 1835115251:actors=table: 000002C05E7647A0, 161848772:float=1.0, 406637480:actors=table: 000002C05E7644E0, 1830449615:float=1.0
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d node +0x000: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 00 0d 29 3d bc 02 00 00 00 00 80 3f c4 44 21 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 5d 1e c5 dd 29 96 f8 d4 20 aa 5b 97 d0 88 45 2a 40 0e b9 95 bc 02 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d node +0x060: c5 44 21 00 ff 0c 20 80 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d Spawner +0x000: e8 83 ff 94 f7 7f 00 00 00 00 00 00 00 00 00 00 00 0d 29 3d bc 02 00 00 00 00 80 3f c5 44 21 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d Spawner +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 29 5c 0f 3d 29 5c 0f 3d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d Spawner +0x0C0: 00 00 80 bf 00 00 00 00 e0 00 6a 85 bc 02 00 00 57 6a 88 10 4c c0 fb 9d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d Spawner +0x120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d Spawner +0x180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 67 e1 20 00 00 00 00 00 00 02 00 00 00 00 00 00 00 00 80 3f
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d plugs at 2BC95B90E40 +0x000: 68 0e b9 95 bc 02 00 00 74 0e b9 95 bc 02 00 00 00 00 00 00 00 00 00 00 01 01 05 00 1a d7 12 fd 38 f5 34 b3 c4 44 21 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d Spawner+0xC8->2BC856A00E0 +0x000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 e0 ff ff 3f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f0 ff ff 1f 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d Spawner+0xC8->2BC856A00E0 +0x060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 fc ff ff 07 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 fe ff ff 03 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d Spawner+0xC8->2BC856A00E0 +0x0C0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNPROBE	probe index node d4f89629ddc51e5d: 3 block(s) searched (1 one pointer away, 0 two away), 9 value(s) asked rivet.find_uid, 0 loaded actor(s) found
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195533
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195534
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195535
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195683
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195684
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195685
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195686
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195687
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195688
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195689
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195690
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195691
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195533 ItemHandle=2195692
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2195533 ItemHandle=2195693
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2195533 ItemHandle=2195694
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2195533 ItemHandle=2195695
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3067984382 InventoryHandle=2195533 ItemHandle=2195699
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1010
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1011
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1012
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1013
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1014
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1015
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1016
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1017
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1018
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1019
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1020
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1021
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1022
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1023
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1024
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1025
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195473
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195474
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094410 Component=2195475
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195476
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094410 Component=2195477
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094410 Component=2195478
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=2195473 ItemHandle=2196062
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2195473 ItemHandle=2196063
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2195473 ItemHandle=2196064
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2195473 ItemHandle=2196065
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2195473 ItemHandle=2196066
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2195473 ItemHandle=2196067
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094412 Component=2195497
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094412 Component=2195498
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094412 Component=2195499
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094412 Component=2195500
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094412 Component=2195501
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094412 Component=2195502
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094411 Component=2195485
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094411 Component=2195486
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094411 Component=2195487
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094411 Component=2195488
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094411 Component=2195489
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094411 Component=2195490
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195509
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195510
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195511
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195512
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195513
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195514
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards unlocked
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 2 (planet Zurkon): 0 spawner node(s) read, 0 template(s), 0 skipped
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=A04D7A6815DDB25126FD7071378216F4
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=9D5D7059356D232015457CB931B6AFE0
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194252
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2194252, sender 1093627 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194236
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2194236, sender 1093619 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194258
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2194258, sender 1093630 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194254
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194250
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194264
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194230
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194260
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194244
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194238
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194234
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194256
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194240
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194262
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194228
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194246
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194248
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097119 (field 1097119), location 1092680 uid db1a1555d5f3fe6a, spawned 1097119 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 1: index 0 location 1092680 (uid db1a1555d5f3fe6a); spawned handle 1097119 uid 0001010000002075 name characters\npc\npc_civ_robot_01\npc_civ_robot_01.actor asset 9CD47C7C1A0EACC2 npc_civ_robot_01.actor classes TargetData,CommonComponentStash,SoundSourceComponent,Dialog,AnimMaterialComponent,BotPartialAnimsManager,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot,SyncStaticStateMachine,StaticStateEventHelper,StaticStateUpdateHelper
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097120 (field 1097120), location 1090637 uid f21dff719980a7b0, spawned 1097120 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 2: index 0 location 1090637 (uid f21dff719980a7b0); spawned handle 1097120 uid 0001010000002074 name characters\npc\test\gparker\test_npc_zurkon_jr\test_npc_zurkon_j asset 8166B976E2B82E49 test_npc_zurkon_jr.actor classes TargetData,CommonComponentStash,SoundSourceComponent,AnimControllerComponent,SimpleMover,BobAndSpin,Dialog,SimplePropManager,BotCommandQueue,SimpleAttachHelper,TargetEventListener,TargetEventListener
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097121 (field 1097121), location 1091972 uid 9708f43625ceba81, spawned 1097121 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 3: index 0 location 1091972 (uid 9708f43625ceba81); spawned handle 1097121 uid 0001010000002073 name vehicle\veh_nnc_amb_sedan_03\veh_nnc_amb_sedan_03_anim_bank.acto asset A4E55C8E601376BD veh_nnc_amb_sedan_03_anim_bank.actor classes ConduitComponent,CurveFollowerBanking,SoundEmitterComponent,FlewByComponent,AmbientCurveFollower,SoundSourceComponent
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097122 (field 1097122), location 1091963 uid a4b7309120037ee0, spawned 1097122 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 4: index 0 location 1091963 (uid a4b7309120037ee0); spawned handle 1097122 uid 0001010000002072 name vehicle\veh_nnc_amb_sedan_03_curvefollower_fade\veh_nnc_amb_seda asset B0082F2E4879E8A0 veh_nnc_amb_sedan_03_curvefollower_fade.actor classes AmbientCurveFader,ConduitComponent,CurveFollowerBanking,SoundEmitterComponent,FlewByComponent,AmbientCurveFollower,SoundSourceComponent
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097123 (field 1097123), location 1086776 uid 8ecaf44663293520, spawned 1097123 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 5: index 0 location 1086776 (uid 8ecaf44663293520); spawned handle 1097123 uid 0001010000002071 name characters\ambient\amb_scanner_bot_ps4\amb_scanner_bot_ps4.actor asset 94F68C032B950701 amb_scanner_bot_ps4.actor classes OverrideColorIDConstants,AmbientCurveFollower,SoundSourceComponent,AnimControllerComponent,ConduitComponent,SimpleMover,SimpleHitReact,SoundEmitterComponent,Dialog,ActorAttachment,PhysicsComponent,GenericSpeed3dUpdater,TargetEventListener,TargetEventListener
+[script] [rando]	RANDO-SPAWNPROBE	spawn 5: SpawnFactory handle 1087090 uid a59e7827e97137af name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-SPAWNPROBE	spawn 6: index 0 location 1086785 (uid a2691596b0923ecd); spawned handle 1097124 uid 0001010000002070 name characters\npc\npc_civ_average\npc_civ_average_bot.actor asset 882781F2BDE21B15 npc_civ_average_bot.actor classes NPCBot,BotVariant,GameBehaviorHostCache,CommonComponentStash,BotIdleObjectManagerGame,StateMapBot,SyncStaticStateMachine,StaticStateEventHelper,StaticStateUpdateHelper,BehaviorHost,GameBotHealth,HitReactGame,PartialReactGame,GameBotMoverManager
+[script] [rando]	RANDO-SPAWNPROBE	spawn 6: SpawnFactory handle 1087100 uid f5a98c3aa1c6ad8d name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP ObjectiveName=OBJ_ZURK_ARENA_COMPLETE_GOLD_CUP ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP ObjectiveName=OBJ_ZURK_ARENA_COMPLETE_BRONZE_CUP ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1026
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1027
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1028
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1029
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1030
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1031
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1032
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1033
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1034
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1035
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1036
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1037
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1038
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1039
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1040
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1041
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1042
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1043
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1044
+[script] [rando]	RANDO-TRAVEL	checkpoint catalog:	corson_v 116=CHK_DEMO_START, nefarious_city 90=CHK_NEFCITY_START, sargasso 112=CHK_SARG_GELFACTORY_LANDINGPAD, scarstu 56=CHK_ZURK_LANDING_SHIP, savali 60=CHK_SAV_01_START, blizar_prime 109=CHK_BLIZAR_A_LANDINGPAD, torren_iv 55=CHK_MOL_START, cordelion 45=CHK_CORD_A_START, ardolis 46=CHK_ARD_START, viceron 52=CHK_ZORDOOM_START
+[script] [rando]	RANDO-SPAWNPROBE	sweep 1: 0 of 2 Spawner(s) changed since the last read
+[script] [rando]	RANDO-CAMPAIGN mission helper:	ready (rando_give.dll v4, mission code matches this exe)
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:225: ran past the 8 ms frame budget	- reading 0x80 bytes at a time from now on (not counted as a try)
+[script] [rando]	RANDO-CAMPAIGN mission system 2: MIS_INTRO is complete (done)
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=98524 TotalBolts=1139659
+[script] [rando]	RANDO-REAL	weapon replay with	36	types new to this session - none taken as a late answer
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2627579503 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_ZURK_ARENA_PUB_RETURN_TABLE	hash 2627579503	on	scarstu
+[script] [rando]	RANDO-SPAWNPROBE	sweep 2: 0 of 2 Spawner(s) changed since the last read
+[script] [rando]	RANDO-DISCOVER	BotDeathCompleteEvent	
+[script] [rando]	RANDO-SPAWNERS	census 3 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 0 skipped
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097492 (field 1097492), location 1091965 uid 9cdad01d6a878c36, spawned 1097492 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097494 (field 1097494), location 1090894 uid a5c534c7ae994c47, spawned 1097494 -> no node of the census
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097495 (field 1097495), location 1086759 uid c067407838990a0e, spawned 1097495 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2182788, sender 1087056 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097496 (field 1097496), location 1087206 uid edb89db8b55284b8, spawned 1097496 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2183096, sender 1087355 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1097497 (field 1097497), location 1090921 uid c1f81e23f6a2734a, spawned 1097497 -> no node of the census
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000002BC958B7680	-	only 0 vendor weapon(s) in the array at +0x48	(try 1)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 197 frames
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2183086, sender 1087350 -> no node of the census
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER OFF] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	OFF (=):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: OFF
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-SPAWNPROBE	sweep 3: 0 of 2 Spawner(s) changed since the last read
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER ON] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	ON (=)
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: ON
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER OFF] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	OFF (BACKSPACE):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: OFF
+[script] [rando]	RANDO-CHAOS	OFF (BACKSPACE) - Enemy Randomizer ON, Boss Randomizer ON (resume)
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER ON] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	ON (BACKSPACE)
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: ON
+[script] [rando]	RANDO-CHAOS	ON (BACKSPACE) - Enemy Randomizer ON, Boss Randomizer ON (paused while Chaos is ON)
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000002BC958B7680	-	only 0 vendor weapon(s) in the array at +0x48	(try 2)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 197 frames
+[script] [rando]	RANDO-SPAWNPROBE	sweep 4: 0 of 2 Spawner(s) changed since the last read
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionState=2 PreviousState=4
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=true MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionSegmentId=E5271F483363CF75D9FA9691FF44B57B
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 ObjectiveName=OBJ_ZURK_06_ARENA_CHALLENGE_A1 ObjectiveState=1
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000002BC958B7680	-	only 0 vendor weapon(s) in the array at +0x48	(try 3)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 197 frames
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=2195473 ItemHandle=4219068
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2195473 ItemHandle=4219069
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2195473 ItemHandle=4219070
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2195473 ItemHandle=4219073
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2195473 ItemHandle=4219074
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2195473 ItemHandle=4219075
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1045
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1046
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1047
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1048
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1049
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1050
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2195533 ItemHandle=4219167
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2195533 ItemHandle=4219168
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2195533 ItemHandle=4219169
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3067984382 InventoryHandle=2195533 ItemHandle=4219173
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=947897175 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_ZURK_ARENA_PUB_RETURN	hash 947897175	on	scarstu
+[script] [rando]	RANDO-SPAWNERS	census 4 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 0 skipped
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000002BC958B7680	-	only 0 vendor weapon(s) in the array at +0x48	(try 4)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 197 frames
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1098917 (field 1098917), location 1086755 uid e83f5f80714d4927, spawned 1098917 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2182798, sender 1087061 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1098918 (field 1098918), location 1087217 uid ae8e34ccd157f208, spawned 1098918 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2183002, sender 1087308 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1098919 (field 1098919), location 1086765 uid a7c0f6466d060654, spawned 1098919 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2182802, sender 1087063 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1098920 (field 1098920), location 1091953 uid 9d767de61f3b98be, spawned 1098920 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1098921 (field 1098921), location 1087217 uid ae8e34ccd157f208, spawned 1098921 -> no node of the census
+[script] [rando]	RANDO-SHOP	apply:	scripts\12_rando_shop.lua:127: ran past the 8 ms frame budget	- reading 0x40 bytes at a time from now on (not counted as a try)
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000002BC958B7680	-	only 0 vendor weapon(s) in the array at +0x48	(try 5)
+[script] [rando]	RANDO-NOTIFY	Randomizer: Ms. Zurkon could not be changed - she sells her usual weapons (some are also rewards in this seed); the seed's other shop weapons were given to you (see rivet.log)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 328 frames
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=272 TotalBolts=1139931
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=104 TotalBolts=1140035
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=130 TotalBolts=1140165
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=91 TotalBolts=1140256
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=7 TotalBolts=1140263
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=55 TotalBolts=1140318
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=99 TotalBolts=1140417
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=109 TotalBolts=1140526
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=7 TotalBolts=1140533
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=307 TotalBolts=1140840
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=161 TotalBolts=1141001
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=14 TotalBolts=1141015
+[script] [rando]	RANDO-REAL	already in the game:	weapon:bombardier	(equipped)
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=48 TotalBolts=1141063
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=252 TotalBolts=1141315
+[script] [rando]	RANDO-REAL	already in the game:	weapon:topiary_sprinkler	(equipped)
+[script] [rando]	RANDO-REAL	already in the game:	weapon:combuster	(equipped)
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=52 TotalBolts=1141367
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=184 TotalBolts=1141551
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 ObjectiveName=OBJ_ZURK_06_ARENA_CHALLENGE_A1 ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionState=4 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=true MissionDuration=253.63543701172 MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionSegmentId=E5271F483363CF75D9FA9691FF44B57B
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=517514259 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_ZURK_AREA_WEAP_CHECK	hash 517514259	on	scarstu
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1052
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1053
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1054
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1055
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1056
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1057
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1058
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1059
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1060
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1061
+[script] [rando]	RANDO-SPAWNERS	census 5 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 0 skipped
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=621 TotalBolts=1142172
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103657 (field 1103657), location 1087156 uid 974dbd299784fa2e, spawned 1103657 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2183072, sender 1087343 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103659 (field 1103659), location 1087180 uid 8f0d7be62454e14a, spawned 1103659 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2183052, sender 1087333 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103660 (field 1103660), location 1091955 uid ab11748ce1021a79, spawned 1103660 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103661 (field 1103661), location 1087180 uid 8f0d7be62454e14a, spawned 1103661 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2183052, sender 1087333 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103663 (field 1103663), location 1087217 uid ae8e34ccd157f208, spawned 1103663 -> no node of the census
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-SPAWNERS	census 6 (switched on): 0 spawner node(s) read, 0 template(s), 0 skipped
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103767 (field 1103767), location 1087174 uid 936a71b7d761a1c8, spawned 1103767 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2183070, sender 1087342 -> no node of the census
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103769 (field 1103769), location 1087202 uid f90e3b991417b425, spawned 1103769 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103770 (field 1103770), location 1091969 uid cdc366194b64b77b, spawned 1103770 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2183088, sender 1087351 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103774 (field 1103774), location 1086768 uid c93064fec4767673, spawned 1103774 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 2182822, sender 1087073 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1103776 (field 1103776), location 1086759 uid c067407838990a0e, spawned 1103776 -> no node of the census
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER OFF] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	OFF (=):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: OFF
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER ON] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	ON (=)
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: ON
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER OFF] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	OFF (BACKSPACE):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: OFF
+[script] [rando]	RANDO-CHAOS	OFF (BACKSPACE) - Enemy Randomizer ON, Boss Randomizer ON (resume)
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER ON] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	ON (BACKSPACE)
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: ON
+[script] [rando]	RANDO-CHAOS	ON (BACKSPACE) - Enemy Randomizer ON, Boss Randomizer ON (paused while Chaos is ON)
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=2761.9189453125 MissionName=MIS_ARD_POST_MISSION MissionSegmentId=91B06927572E814F14272B5776BDE03B
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=7570.728515625 MissionName=MIS_CORD_01_FIRST_VISIT MissionSegmentId=D903D44B687B98B01533BCD1F83F664D
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=4330.5317382812 MissionName=MIS_MOL_01_POST_MISSION MissionSegmentId=69AE5067411C3F5D4F6BED3DDB9CD7C9
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=13647.227539062 MissionName=MIS_RYNO_PLANS MissionSegmentId=6EDCBA79871D6C0EC5424D9050D2D491
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=10301.849609375 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=446240611A872246E02FAFCF847514D0
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=9651.2333984375 MissionName=MIS_SARG_GEMQUEST MissionSegmentId=89207EAD5950D17329543C205E64990E
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=9637.6904296875 MissionName=MIS_SAV_01_ENCOUNTERS MissionSegmentId=6081EB34FEA98C46E2238E84835837B1
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=7570.728515625 MissionName=MIS_SAV_01_POST_MISSION MissionSegmentId=1C289575949EA3DB80CC96CF6EF9AE6C
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=311.43798828125 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=9D5D7059356D232015457CB931B6AFE0
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=311.43798828125 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=A04D7A6815DDB25126FD7071378216F4
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=58FD6568CB67AC41AAFD78CF0EE0271C
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=4AAED032193C5CA09048A0EC0586AAA7
+[script] [rando]	RANDO-SPAWNPROBE	index 1 (level loaded): 0 node(s); Spawner handle == node +0x60 for 0, another handle 0, no Spawner 0; Spawner sizes -; readable pointers at no offset
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 7 (planet NefCity): 0 spawner node(s) read, 0 template(s), 0 skipped
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117033 Component=4301798
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4301735 ItemHandle=4302074
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117033 Component=4301735
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4301796 ItemHandle=4302075
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117033 Component=4301796
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4301735 ItemHandle=4302076
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4301796 ItemHandle=4302077
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4301735 ItemHandle=4302081
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117033 Component=4301749
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117033 Component=4301774
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117027 Component=4301740
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117029 Component=4301765
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 4315976, sender 1115328 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1118167 (field 1118167), location 1105558 uid 94230b2c32cac916, spawned 1118167 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 1: index 0 location 1105558 (uid 94230b2c32cac916); spawned handle 1118167 uid 000102000000208f name characters\npc\npc_civ_robot_04\npc_civ_robot_04.actor asset 839F7538AFD05590 npc_civ_robot_04.actor classes AmbientCurveFollower,TargetData,CommonComponentStash,SoundSourceComponent,Dialog,BotPartialAnimsManager,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot,SyncStaticStateMachine,StaticStateEventHelper,StaticStateUpdateHelper
+[script] [rando]	RANDO-SPAWNPROBE	RANDO-ERROR	SpawnerSpawnEvent	scripts\dev(spawnprobe).lua:154: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1118168 (field 1118168), location 1106149 uid a7c29a050398606a, spawned 1118168 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 2: index 0 location 1106149 (uid a7c29a050398606a); spawned handle 1118168 uid 0001020000002090 name environment\neonefarious\architecture\nnc_arch_cargo_sorting_are asset 92537EF1FFFFCD80 nnc_ar classes MovingSurface,AmbientCurveFollower,ConduitComponent,PhysicsComponent
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1118169 (field 1118169), location 1108064 uid e050b5af8b786694, spawned 1118169 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 3: index 0 location 1108064 (uid e050b5af8b786694); spawned handle 1118169 uid 0001020000002091 name characters\npc\npc_civ_robot_06\npc_nefcity_factory_robot.actor asset 8A0574CE02F9ABFE npc_nefcity_factory_robot.actor classes TargetData,CommonComponentStash,SoundSourceComponent,AnimControllerComponent,ConduitComponent,SoundEmitterComponent,Dialog,BotPartialAnimsManager,NavObstacle,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot
+[script] [rando]	RANDO-SPAWNPROBE	spawn 3: SpawnFactory handle 1112509 uid a7b18a762e717697 name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1118170 (field 1118170), location 1108066 uid e6a9ff119d82b840, spawned 1118170 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 4: index 0 location 1108066 (uid e6a9ff119d82b840); spawned handle 1118170 uid 0001020000002092 name characters\npc\npc_civ_robot_06\npc_nefcity_factory_robot.actor asset 8A0574CE02F9ABFE npc_nefcity_factory_robot.actor classes TargetData,CommonComponentStash,SoundSourceComponent,AnimControllerComponent,ConduitComponent,SoundEmitterComponent,Dialog,BotPartialAnimsManager,NavObstacle,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot
+[script] [rando]	RANDO-SPAWNPROBE	spawn 4: SpawnFactory handle 1112499 uid 85aab84cf398249a name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1118171 (field 1118171), location 1105400 uid 93917fa915033bfd, spawned 1118171 -> no node of the census
+[script] [rando]	RANDO-SPAWNPROBE	spawn 5: index 0 location 1105400 (uid 93917fa915033bfd); spawned handle 1118171 uid 0001020000002093 name characters\npc\npc_civ_robot_01\npc_civ_robot_01.actor asset 9CD47C7C1A0EACC2 npc_civ_robot_01.actor classes AmbientCurveFollower,TargetData,CommonComponentStash,SoundSourceComponent,Dialog,AnimMaterialComponent,BotPartialAnimsManager,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot,SyncStaticStateMachine,StaticStateEventHelper
+[script] [rando]	RANDO-SPAWNPROBE	spawn 5: SpawnFactory handle 1105594 uid acd43ba4a47524db name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-SPAWNPROBE	spawn 6: index 0 location 1105394 (uid a0e9cd2b465b417a); spawned handle 1118172 uid 0001020000002094 name characters\npc\npc_civ_robot_01\npc_civ_robot_01.actor asset 9CD47C7C1A0EACC2 npc_civ_robot_01.actor classes AmbientCurveFollower,TargetData,CommonComponentStash,SoundSourceComponent,Dialog,AnimMaterialComponent,BotPartialAnimsManager,NPCBot,BotVariant,GameBehaviorHostCache,BotIdleObjectManagerGame,StateMapBot,SyncStaticStateMachine,StaticStateEventHelper
+[script] [rando]	RANDO-SPAWNPROBE	spawn 6: SpawnFactory handle 1105590 uid 9fac8926f72d5e5c name nil asset nil nil classes SunsetSpawnerFactoryScriptAction,SunsetSpawnerFactory
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 4295844, sender 1115837 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	stopped: SpawnerComponentHandle 4315933, sender 1115325 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117027 Component=4301739
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1117029 Component=4301764
+[script] [rando]	RANDO-SPAWNPROBE	sweep 1: 0 of 0 Spawner(s) changed since the last read
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing ui/loaded/exported/hud/mm_6.json
+[loader] closing ui/loaded/exported/hud/mm_5.json
+[loader] closing ui/loaded/exported/hud/mm_3.json
+[loader] closing ui/loaded/exported/hud/mm_0.json
+[loader] closing ui/loaded/exported/hud/mm_2.json
+[loader] closing ui/loaded/exported/hud/mm_1.json
+[loader] closing ui/loaded/exported/hud/mm_7.json
+[loader] closing ui/loaded/exported/hud/mm_4.json
+[rivet] fini complete

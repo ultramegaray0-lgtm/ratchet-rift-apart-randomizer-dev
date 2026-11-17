@@ -2,6 +2,23 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.21 (kit 10.0.16, generator 10.11.0, rando_give.dll v7 developer build; not released): the Template variable
+
+Asked: make the Enemy / Boss / Chaos Randomizers work, starting with one proven replacement (rivet.log of
+2026-11-17 with dev 10.20, tests/data/round31_rivet.log). Seeds unchanged. **Still nothing randomized in the
+game**; nothing of 10.21 has run there.
+
+- Found in the log: a SpawnerScriptAction node's variable plugs "Template" / "Location" / "LastSpawn"
+  (actors), "NumSpawns" / "MaxAlive" (floats); neither component has Prius data. The probe lost two
+  subscriptions to rivet_hook's 64-callback limit, so no arena encounter was observed.
+- rando_give.dll v7 (developer build in rando_give_source/dev_build): publishes the SceneManager found with
+  rivet_hook's own signature. The kit's rando_give.dll stays the verified v6.
+- 16_rando_spawners: SP.listen for developer files (no rivet callback of their own).
+- dev(spawnprobe): uses SP.listen; prints actors variables; fewer component lookups per spawn.
+- New dev(spawnproof).lua: one controlled Template-variable replacement on Zurkon, verified on the next
+  spawn and put back when the encounter's Spawner stops.
+- Tests: tests/test_v1021.py (14). 609 run, 0 failures, 23 skipped.
+
 ## Dev 10.20 (kit 10.0.15, generator 10.11.0; not released): evidence, not another guess
 
 Asked: "Dev 10.19 still does NOT work in the actual game" (rivet.log of 2026-11-17 with dev 10.19,

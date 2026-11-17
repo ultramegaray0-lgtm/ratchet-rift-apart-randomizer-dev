@@ -108,7 +108,7 @@ class RegressionV5Tests(unittest.TestCase):
                 self.assertEqual(nd.get(name), value, name)
         for name, value in enums(old).items():
             self.assertEqual(ne.get(name), value, name)
-        self.assertIn("#define RG_VERSION 6u", new)
+        self.assertIn("#define RG_VERSION 7u", new)
 
 
 if __name__ == "__main__":

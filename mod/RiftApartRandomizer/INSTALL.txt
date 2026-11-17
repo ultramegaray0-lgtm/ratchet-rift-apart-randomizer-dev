@@ -24,8 +24,11 @@ LAYOUT
                      dev(vtables)     data for dev(probe)
                      dev(item_ids)    data for dev(probe)
                      dev(spawnprobe)  read-only spawner evidence (RANDO-SPAWNPROBE lines; dev 10.20)
+                     dev(spawnproof)  ONE controlled enemy replacement on Zurkon (RANDO-SPAWNPROOF lines; dev 10.21)
   rivet.toml       rivet_hook settings (copy next to RiftApart.exe)
   rando_give.dll   the native helper (copy next to RiftApart.exe); rando_give_source\ rebuilds it
+                   dev 10.21: rando_give_source\dev_build\rando_give.dll is the v7 DEVELOPER build that
+                   dev(spawnproof) needs (copy it over the game folder's rando_give.dll for that test only)
   companion\       the companion (saving, random seeds, spoilers); companion\research\ is dev-only
   docs\            development notes and research (not shipped)
 
@@ -37,7 +40,7 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT all 12 required scripts are 10.0.15
+       RANDO-KIT all 12 required scripts are 10.0.16
        RANDO-KIT developer files loaded (not part of a release): ...
 
 KEYS

@@ -25,7 +25,7 @@
 --      list of template-actor uids, so a hit that is a template bot (or matches a spawned bot's actor
 --      asset) shows exactly where the list is.
 -- Output lines start with "RANDO-SPAWNPROBE". Remove this file to turn it off; the randomizer does not need it.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnprobe)"] = "10.0.15"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnprobe)"] = "10.0.16"   -- the kit check (10_rando_runtime.lua)
 RANDO_SPAWNPROBE = RANDO_SPAWNPROBE or {}
 local P = RANDO_SPAWNPROBE
 P.version = 1
@@ -198,7 +198,8 @@ end
 function P.actor_ptr(handle)
   local okn, names = pcall(rivet.components, handle)
   if not okn or type(names) ~= "table" then return nil end
-  for _, n in ipairs(names) do
+  for k, n in ipairs(names) do
+    if k > 4 then break end              -- dev 10.21: your log: a long component list ran past the frame budget
     local ok, c = pcall(rivet.component, handle, tostring(n))
     if ok and type(c) == "table" and c.address then
       local b = read(tonumber(c.address, 16), 0x18)
@@ -381,7 +382,15 @@ function P.probe(rec, why)
       end
       local vars = {}
       for _, v in ipairs(type(t.vars) == "table" and t.vars or {}) do
-        if type(v) == "table" then vars[#vars + 1] = tostring(v.plug_name or v.plug) .. ":" .. tostring(v.type) .. "=" .. tostring(v.value) end
+        if type(v) == "table" then
+          local val = v.value
+          if type(val) == "table" then      -- dev 10.21: an actors var: its handles, group flag, count and uid
+            local hs = {}
+            for i = 1, math.min(4, #val) do hs[i] = tostring(val[i]) end
+            val = string.format("{%s}%s count %s uid %s", table.concat(hs, ","), val.group and " group" or "", tostring(val.count), tostring(val.uid))
+          end
+          vars[#vars + 1] = tostring(v.plug_name or v.plug) .. ":" .. tostring(v.type) .. "=" .. tostring(val)
+        end
         if #vars >= 8 then break end
       end
       log(string.format("%s: script_node %s; outputs %s; vars %s", tag, table.concat(parts, " "),
@@ -555,21 +564,21 @@ function P.on_frame()
 end
 
 -- ---- wiring (rivet.on_event directly: this works whatever the randomizer's switches are) ------------
+-- dev 10.21: the events come through the spawner layer's listeners (16_rando_spawners SP.listen): rivet_hook
+-- allows 64 event callbacks in all and your dev 10.20 log hit that limit (PlanetChanged / Checkpoint lost)
 if not P.subscribed then
   P.subscribed = true
-  local function on(class, fn)
-    local ok, err = pcall(rivet.on_event, class, function(ev)
-      local okf, e = pcall(fn, type(ev) == "table" and ev.fields or {}, ev)
-      if not okf then log("RANDO-ERROR", class, tostring(e)) end
-    end)
-    if not ok then log("cannot subscribe", class, tostring(err)) end
+  local SPL = RANDO_SPAWNERS
+  if SPL and SPL.listen then
+    SPL.listen("SpawnerSpawnEvent", P.on_spawn)
+    SPL.listen("SpawnerStartedEvent", function(f) P.on_spawner_event("started", f) end)
+    SPL.listen("SpawnerStoppedEvent", function(f) P.on_spawner_event("stopped", f) end)
+    SPL.listen("LevelLoadedEvent", function() P.schedule("level loaded") end)
+    SPL.listen("PlanetChangedEvent", function(f) if f.NewPlanetName then P.schedule("planet " .. tostring(f.NewPlanetName)) end end)
+    SPL.listen("Checkpoint", function(cp) if cp.loaded then P.schedule("checkpoint loaded") end end)
+  else
+    log("16_rando_spawners.lua (with SP.listen) is missing: no events")
   end
-  on("SpawnerSpawnEvent", P.on_spawn)
-  on("SpawnerStartedEvent", function(f) P.on_spawner_event("started", f) end)
-  on("SpawnerStoppedEvent", function(f) P.on_spawner_event("stopped", f) end)
-  on("LevelLoadedEvent", function() P.schedule("level loaded") end)
-  on("PlanetChangedEvent", function(f) if f.NewPlanetName then P.schedule("planet " .. tostring(f.NewPlanetName)) end end)
-  on("CheckpointTriggeredEvent", function(f) if f.Loaded then P.schedule("checkpoint loaded") end end)
   pcall(rivet.on_frame, P.on_frame)
 end
 P.schedule("scripts loaded")

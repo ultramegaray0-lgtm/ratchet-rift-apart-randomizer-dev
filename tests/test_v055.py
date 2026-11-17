@@ -72,7 +72,7 @@ class ReleaseFilesTests(unittest.TestCase):
         g = Game(release=True, settings={"seed": "v055-release"}, dll_version=6)
         self.assertEqual(g.load_errors, [])
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.15"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.16"), [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.log_has("developer files loaded"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
         for name in ("RANDO_DEV_KEYS", "RANDO_TEST_TRAVEL", "RANDO_TEST_MODE", "RANDO_PROBE", "RANDO_VTABLES"):
@@ -80,7 +80,7 @@ class ReleaseFilesTests(unittest.TestCase):
 
     def test_every_developer_file_follows_the_naming_and_is_listed(self):
         dev = sorted(p.name for p in DEV_DIR.glob("*.lua") if is_dev(p.name))
-        self.assertEqual(dev, ["dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua", "dev(spawnprobe).lua", "dev(testmode).lua",
+        self.assertEqual(dev, ["dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua", "dev(spawnprobe).lua", "dev(spawnproof).lua", "dev(testmode).lua",
                                "dev(testtravel).lua", "dev(vtables).lua"])
         for p in list(SCRIPTS.glob("*.lua")) + [DEV_DIR / n for n in dev]:
             text = p.read_text(encoding="utf-8")
@@ -311,7 +311,7 @@ class HubAbsentTests(unittest.TestCase):
         self.assertIsNone(g.g.RANDO_HUB)
         g.companion_restore()
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.15 (15_rando_hub not installed)"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.16 (15_rando_hub not installed)"))
         self.assertTrue(g.seed.hub)                           # the seed is the same seed
         self.assertFalse(g.R.planet_shuffle_on())
         parade(g)

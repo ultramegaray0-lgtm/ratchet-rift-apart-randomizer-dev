@@ -238,7 +238,7 @@ int main(void) {
 	rg_mailbox_init(mailbox, fake_exe);
 	CHECK(RG_U64(mailbox, MB_MAGIC) == RG_MAGIC);
 	CHECK(memcmp(mailbox, "RANDGIV1", 8) == 0);
-	CHECK(RG_U32(mailbox, MB_VERSION) == 6);
+	CHECK(RG_U32(mailbox, MB_VERSION) == 7);
 
 	/* not ready: nothing happens */
 	RG_U32(mailbox, MB_REQ) = 1;
@@ -776,6 +776,27 @@ int main(void) {
 		CHECK(m == 2 && found == code + 0x100 + RG_CONFIG_REL + 4 - 0x80); /* the first, like rivet_hook */
 		/* a match cut off by the end of the section is not read */
 		CHECK(rg_find_config_manager(code + 0x300, 0x24, &m) == 0);
+	}
+
+	/* v7: the SceneManager by rivet_hook's SCENE_MANAGER signature (?? bytes are wildcards) */
+	{
+		static u8 code[0x400];
+		static const u8 hit[15] = { 0x48, 0x8D, 0x0D, 0x11, 0x22, 0x33, 0x44, 0xE8, 0x55, 0x66, 0x77, 0x88, 0x48, 0x63, 0x75 };
+		u32 m = 9;
+		u8 *found;
+		memset(code, 0xCC, sizeof code);
+		CHECK(rg_find_scene_manager(code, sizeof code, &m) == 0 && m == 0);
+		memcpy(code + 0x40, hit, sizeof hit);
+		*(int *)(code + 0x40 + RG_SCENE_REL) = -0x20;      /* lea rcx, [rip - 0x20] */
+		found = rg_find_scene_manager(code, sizeof code, &m);
+		CHECK(m == 1 && found == code + 0x40 + 7 - 0x20);
+		code[0x40 + 14] = 0x76;                            /* a fixed byte differs: no match */
+		CHECK(rg_find_scene_manager(code, sizeof code, &m) == 0 && m == 0);
+		code[0x40 + 14] = 0x75;
+		memcpy(code + 0x200, hit, sizeof hit);              /* two matches: the caller publishes nothing */
+		found = rg_find_scene_manager(code, sizeof code, &m);
+		CHECK(m == 2 && found == code + 0x40 + 7 - 0x20);
+		CHECK(rg_find_scene_manager(code + 0x200, 14, &m) == 0 && m == 0);   /* cut off */
 	}
 
 	/* the give count: currency comes with big counts */

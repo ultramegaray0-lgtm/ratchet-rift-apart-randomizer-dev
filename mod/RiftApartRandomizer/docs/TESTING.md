@@ -34,6 +34,24 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
+## 2-dev8. Dev 10.21 (kit 10.0.16): ONE controlled enemy replacement (Zurkon)
+
+Build: commit of dev 10.21 on main. Files: the kit's whole `scripts` folder (dev(spawnproof).lua and
+dev(spawnprobe).lua included) AND `rando_give_source/dev_build/rando_give.dll` copied over the game
+folder's rando_give.dll (it must say v7; the kit's top-level DLL is the older v6).
+1. Load your save, go to Zurkon (Zurkie's Battleplex). Start an arena challenge with several waves of
+   ordinary enemies (the A1 challenge you replayed is fine) and play it to the end. The file only acts on
+   Zurkon, once per session, only in memory.
+2. Watch for the first enemy of a later wave: if the file armed a node, one encounter should spawn a
+   different ordinary enemy than usual. Finish the challenge (that it completes is part of the test).
+3. Quit normally and send rivet.log.
+Expected `RANDO-SPAWNPROOF` lines: `SceneManager ... (signature matched 1 x)`; `scan N on scarstu: X node(s)
+...; Y with a Template variable`; `spawn H is node U's (its LastSpawn) ...`; then `ARMED node ... read back
+OK`, `VERIFY node ...: REPLACEMENT SPAWNED` (or ORIGINAL SPAWNED / SOMETHING ELSE SPAWNED) and `put back
+(its Spawner stopped) ...: OK`. Each line answers one open question: Y = 0 means arena nodes do not use the
+Template variable; no `spawn ... is node` line means LastSpawn does not tie spawns to nodes; ORIGINAL
+SPAWNED means the node does not read the variable at each spawn.
+
 ## 2-dev7. Dev 10.20 (kit 10.0.15): ONE focused test - where the encounter's Templates live
 
 Nothing is randomized by this test and nothing is written to the game: dev(spawnprobe).lua only reads.

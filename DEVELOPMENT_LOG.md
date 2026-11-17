@@ -4,6 +4,48 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-17: dev 10.21 (kit 10.0.16, rando_give.dll v7 developer build): the Template variable
+
+- Asked: make Enemy / Boss / Chaos actually work; one controlled in-game replacement first. Log:
+  tests/data/round31_rivet.log (dev 10.20 with dev(spawnprobe); NefCity, Zurkon arena challenge A1 replayed
+  and completed, NefCity; Chaos ON from the save, Enemy/Boss toggled; game path replaced).
+- CONFIRMED (real game): kit 10.0.15 / dev 10.20 loaded, 25/25 scripts. The probe lost PlanetChangedEvent
+  and CheckpointTriggeredEvent ("too many callbacks registered, the limit is 64": rivet_hook allows 64 event
+  callbacks in all), so it never re-indexed on Zurkon: its index there listed only the two hub nodes
+  a74767e9 / d4f89629 (also on NefCity), its 6 spawn descriptions were ambient NPCs, its sweeps saw nothing.
+  The 16 census on Zurkon listed 0 nodes 5 times (round30: 120-197). No arena encounter was observed.
+- CONFIRMED (real game, ComponentInfo via the node's actor): SpawnerScriptAction (size 128, id 31B870E3) and
+  Spawner (432, id FC56D431 = hash "Spawner") both have a Prius TYPE, prius size 0, ReadWrite, and
+  ddlPriusData 0 on both instances.
+- CONFIRMED (real game, rivet.script_node on the hub nodes): a SpawnerScriptAction has VARIABLE PLUGS
+  "Template" (1835115251, actors), "Location" (2761897147, actors), "MaxAlive" (161848772, float 1.0),
+  "NumSpawns" (1830449615, float 1.0), "LastSpawn" (406637480, actors) and output "OnSpawned" (2046202852).
+  Names = rivet.hash (reflected CRC-32, start 0xEDB88320) of these words. The real plug block matches
+  rivet_hook's ScriptPlugs exactly (in 1 / out 1 / vars 5, zone, owner = node handle 0x2144C2).
+- HYPOTHESIS (not proven): the node spawns the actor held by its Template variable; LastSpawn holds its last
+  spawn. Supported by: the names, NumSpawns / MaxAlive also coming from variables, round30's census showing
+  readable varGroups (plugs +0x10) on many Zurkon nodes. UNKNOWN: whether arena nodes use the Template
+  variable, and whether the node reads it at each spawn or only once.
+- HYPOTHESIS: rivet.script_nodes returns a partial (even empty) list when the 8 ms callback budget runs out
+  (rivet_hook nodes() stops on expired() and l_script_nodes drops "truncated"); the shop's search ran past
+  the budget on Zurkon in the same callback as the census.
+- rando_give.dll v7 (rando_give_source/dev_build/; the kit keeps the verified v6 for the release builder):
+  finds the SceneManager with rivet_hook's own SCENE_MANAGER signature (lea rcx, [rip+x]; exactly one match,
+  as rivet_hook requires) and publishes it at mailbox +0x128 (+0x130 match count). Read only.
+- 16: SP.listen / SP.notify_listeners (developer files share the layer's callbacks; checkpoints as
+  "Checkpoint"). dev(spawnprobe) uses it, prints actors variables, asks at most 4 components per actor.
+- New dev(spawnproof).lua (developer file): on Zurkon only, every 2 s lists the nodes, reads their variable
+  plugs and the variables (SceneManager +0x75A0, 0x40 each, generation checked); ties each spawn to its node
+  through LastSpawn and learns what each template is from what it spawned; arms ONE node (not spawned,
+  Template holds one actor, not shared, a regular enemy) with another learned regular-enemy template of
+  another asset (check, write uid +0x00 and handle +0x10, read back); VERIFY on its next spawn; put back when
+  its Spawner stops; a reload is never written. Kit 10.0.16, banner dev 10.21.
+- Tests: tests/test_v1021.py (14): 5 on the real log, 2 on the real plug-block bytes, 7 in the simulator
+  (synthetic memory; one caught a real bug: a learned template was overwritten by the armed node's own
+  spawn). Native core test for the signature; the dev DLL is byte for byte the source's build. 609 run, 0
+  failures, 23 skipped.
+- Verified in the game: nothing of 10.21. Enemy / Boss / Chaos still change nothing. Next: TESTING.md 2-dev8.
+
 ## 2026-11-17: dev 10.20 (kit 10.0.15, generator 10.11.0): evidence instead of another offset
 
 - Asked: "Dev 10.19 still does NOT work in the actual game ... a serious engineering investigation, not

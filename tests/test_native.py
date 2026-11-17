@@ -161,11 +161,16 @@ class ShippedDllTests(unittest.TestCase):
             shutil.copytree(SRC, work)
             subprocess.run(["sh", "build.sh"], cwd=work, check=True, capture_output=True)
             built = open(os.path.join(work, "out", "rando_give.dll"), "rb").read()
-        shipped = (MOD / "rando_give.dll").read_bytes()
-        # 8.4: build.sh pins the link time, so the build is byte for byte the shipped DLL (the one
-        # rounds 17-20 ran: sha256 efb92723...)
-        self.assertEqual(built, shipped)
         import hashlib
+        # dev 10.21: the source is v7 (it also publishes the SceneManager). Its build is the developer
+        # binary rando_give_source/dev_build/rando_give.dll; the kit keeps the verified v6 binary (the one
+        # rounds 17-31 ran, sha256 efb92723...) until v7 has run in your game, so a public package built
+        # from this kit still gets v6 (tools/build_public_release.py checks that hash).
+        dev = (SRC / "dev_build" / "rando_give.dll").read_bytes()
+        self.assertEqual(built, dev)            # build.sh pins the link time: byte for byte
+        self.assertEqual(hashlib.sha256(dev).hexdigest(),
+                         "8055703e7dd7f48e16aa5a081d6795c15d515a52802bd0d70aafe88b54640744")
+        shipped = (MOD / "rando_give.dll").read_bytes()
         self.assertEqual(hashlib.sha256(shipped).hexdigest(),
                          "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12")
 

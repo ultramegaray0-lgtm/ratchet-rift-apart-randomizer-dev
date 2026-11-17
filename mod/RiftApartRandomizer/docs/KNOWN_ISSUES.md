@@ -4,6 +4,17 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0m. Since dev 10.21 (kit 10.0.16): still NO enemy is randomized in the game
+
+- NOT FIXED. No in-game replacement has happened yet; 0l still holds.
+- LEAD (your dev 10.20 log): spawner nodes take their template from a script VARIABLE ("Template", actors)
+  and report spawns in "LastSpawn". dev(spawnproof).lua tests it with ONE replacement on Zurkon; it needs
+  the developer rando_give.dll v7 (rando_give_source/dev_build). TESTING.md 2-dev8.
+- FIXED (developer files): dev(spawnprobe) lost PlanetChanged / Checkpoint events to rivet_hook's limit of
+  64 event callbacks; developer files now listen through 16_rando_spawners.
+- OPEN: rivet.script_nodes may return a short list when the frame budget runs out (the census listed 0
+  nodes on Zurkon five times in your last log).
+
 ## 0l. Since dev 10.20 (kit 10.0.15): Enemy / Boss / Chaos Randomizers DO NOT WORK in the game
 
 - NOT FIXED. Your rivet.log of 2026-11-17 with dev 10.19 (tests/data/round30_rivet.log): 17 censuses, every

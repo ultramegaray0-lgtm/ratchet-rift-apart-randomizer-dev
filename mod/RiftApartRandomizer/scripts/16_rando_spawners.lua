@@ -47,7 +47,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.15"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.16"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -1447,6 +1447,7 @@ end
 -- 14_rando_travel.lua calls this for every CheckpointTriggeredEvent
 function SP.on_checkpoint(cp)
   if type(cp) ~= "table" then return end
+  if SP.listeners.Checkpoint then SP.notify_listeners("Checkpoint", cp) end
   local name = cp.name and tostring(cp.name):upper() or nil
   local was = SP.zone
   SP.zone = nil
@@ -1544,6 +1545,26 @@ function SP.on_level(why)
 end
 
 -- ---------------------------------------------------------------------------------------------
+-- dev 10.21: LISTENERS. rivet_hook allows 64 event callbacks in all (scripting.cpp MAX_CALLBACKS); your
+-- dev 10.20 log: dev(spawnprobe) "cannot subscribe PlanetChangedEvent / CheckpointTriggeredEvent: too many
+-- callbacks registered, the limit is 64". Developer files listen to the spawner layer's own callbacks
+-- instead: SP.listen(class, fn) costs no rivet callback. fn(fields, ev) runs for every event of the class
+-- (whatever the switches say), after the layer's own handler; checkpoints come as "Checkpoint" with the
+-- travel layer's { hash, name, loaded } record.
+-- ---------------------------------------------------------------------------------------------
+SP.listeners = SP.listeners or {}
+function SP.listen(class, fn)
+  SP.listeners[class] = SP.listeners[class] or {}
+  table.insert(SP.listeners[class], fn)
+end
+function SP.notify_listeners(class, f, ev)
+  for _, fn in ipairs(SP.listeners[class] or {}) do
+    local ok, err = pcall(fn, f, ev)
+    if not ok then log("RANDO-ERROR", "listener of", class, tostring(err)) end
+  end
+end
+
+-- ---------------------------------------------------------------------------------------------
 -- subscriptions (once per VM; RANDO.subscribe retries a class the game does not know yet)
 -- ---------------------------------------------------------------------------------------------
 if not SP.subscribed then
@@ -1553,9 +1574,11 @@ if not SP.subscribed then
   -- an encounter already running when a feature is switched on is never changed
   local function on(class, fn, always)
     sub(class, function(ev)
-      if not always and not SP.any_enabled() then return end
-      local ok, err = pcall(fn, ev.fields or {}, ev)
-      if not ok then log("RANDO-ERROR", class, tostring(err)) end
+      if always or SP.any_enabled() then
+        local ok, err = pcall(fn, ev.fields or {}, ev)
+        if not ok then log("RANDO-ERROR", class, tostring(err)) end
+      end
+      if SP.listeners[class] then SP.notify_listeners(class, ev.fields or {}, ev) end
     end)
   end
   on("SpawnerStartedEvent", SP.on_started, true)

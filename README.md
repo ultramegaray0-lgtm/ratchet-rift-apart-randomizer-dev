@@ -1,5 +1,10 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.21 (kit 10.0.16):** still no enemy randomized in the game. The last log showed spawner nodes take
+their template from a script variable ("Template"); `dev(spawnproof).lua` with the developer
+`rando_give.dll` v7 (`rando_give_source/dev_build/`) makes ONE controlled replacement on Zurkon to prove it.
+`docs/TESTING.md` 2-dev8.
+
 **Dev 10.20 (kit 10.0.15):** the Enemy / Boss / Chaos Randomizers DO NOT WORK in the game yet (no census has
 ever read a spawner node). 10.19's premise was refuted by the next log; 10.20 fixes two diagnostics and adds
 the read-only `dev(spawnprobe).lua` to find where an encounter's Templates live. `docs/KNOWN_ISSUES.md` 0l,

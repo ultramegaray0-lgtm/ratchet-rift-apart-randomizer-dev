@@ -264,7 +264,7 @@ class SpawnProbeTests(unittest.TestCase):
         self.assertNotIn("dev(spawnprobe).lua", [p.name for p in script_files()])       # only when asked for
         g = Game(spawnprobe=True)
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.15"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are " + g.R.KIT_VERSION))
         self.assertTrue(g.log_has("dev(spawnprobe)"))
         self.assertFalse([l for l in g.logs() if "RANDO-ERROR" in l])
 
