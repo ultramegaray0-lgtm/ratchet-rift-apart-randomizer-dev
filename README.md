@@ -1,5 +1,11 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.23 (kit 10.0.17):** Enemy / Boss / Chaos randomization is still NOT working in the game. The dev 10.22 test
+never ran its experiment: the companion started late, the randomizer's 500-event buffer dropped the move to Zurkon,
+and spawnproof v2 (gated on that state) stayed silent. 10.23 fixes the buffer (planet / level / checkpoint / mission /
+item events are always kept) and makes spawnproof v3 independent of it, loud about being inactive, and visible on
+screen. `docs/TESTING.md` 2-dev10.
+
 **Dev 10.22 (kit 10.0.16):** still no enemy randomized in the game. The dev 10.21 log showed why v1 never
 acted: the Battleplex's enemy nodes have no "Template" variable, they spawn through a "Factories" variable
 (a SunsetSpawnerFactory node). `dev(spawnproof).lua` v2 learns and swaps Factories as well as Templates, ties

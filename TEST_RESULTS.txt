@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.22 (build 10.0.16) - test run 2026-11-17 21:06 UTC
+Rift Apart Randomizer dev 10.23 (build 10.0.17) - test run 2026-11-17 21:29 UTC
 Python 3.13.18 on Linux
-ran 629, failures 0, errors 0, skipped 23
+ran 650, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -554,6 +554,27 @@ test_nothing_is_written_off_zurkon (tests.test_v1022.SpawnProofTwoSimulatorTests
 test_scan_sees_factories_nodes (tests.test_v1022.SpawnProofTwoSimulatorTests.test_scan_sees_factories_nodes) ... ok
 test_spawns_are_tied_by_the_spawner_slots_without_lastspawn (tests.test_v1022.SpawnProofTwoSimulatorTests.test_spawns_are_tied_by_the_spawner_slots_without_lastspawn) ... ok
 test_the_original_spawning_is_reported (tests.test_v1022.SpawnProofTwoSimulatorTests.test_the_original_spawning_is_reported) ... ok
+test_a_planet_change_survives_a_full_buffer (tests.test_v1023.EventBufferSimulatorTests.test_a_planet_change_survives_a_full_buffer) ... ok
+test_the_old_bound_still_holds_for_the_rest (tests.test_v1023.EventBufferSimulatorTests.test_the_old_bound_still_holds_for_the_rest) ... ok
+test_spawnproof_v2_loaded_and_then_said_nothing (tests.test_v1023.RoundThirtyThreeLogTests.test_spawnproof_v2_loaded_and_then_said_nothing) ... ok
+test_the_buffer_was_full_and_the_planet_change_was_lost (tests.test_v1023.RoundThirtyThreeLogTests.test_the_buffer_was_full_and_the_planet_change_was_lost) ... ok
+test_the_challenges_ran_after_the_seed_was_ready (tests.test_v1023.RoundThirtyThreeLogTests.test_the_challenges_ran_after_the_seed_was_ready) ... ok
+test_the_game_path_was_replaced (tests.test_v1023.RoundThirtyThreeLogTests.test_the_game_path_was_replaced) ... ok
+test_armed_and_verify_are_shown_on_screen (tests.test_v1023.SpawnProofThreeSimulatorTests.test_armed_and_verify_are_shown_on_screen) ... ok
+test_both_deliveries_of_a_spawn_count_once (tests.test_v1023.SpawnProofThreeSimulatorTests.test_both_deliveries_of_a_spawn_count_once) ... ok
+test_it_says_why_it_is_inactive (tests.test_v1023.SpawnProofThreeSimulatorTests.test_it_says_why_it_is_inactive) ... ok
+test_its_own_planet_event_wins_over_a_wrong_state (tests.test_v1023.SpawnProofThreeSimulatorTests.test_its_own_planet_event_wins_over_a_wrong_state) ... ok
+test_loaded_line_reports_its_own_subscriptions (tests.test_v1023.SpawnProofThreeSimulatorTests.test_loaded_line_reports_its_own_subscriptions) ... ok
+test_a_budget_error_does_not_end_the_job (test_v1022.SpawnProofTwoSimulatorTests.test_a_budget_error_does_not_end_the_job) ... ok
+test_a_factory_replacement_is_armed_verified_and_put_back (test_v1022.SpawnProofTwoSimulatorTests.test_a_factory_replacement_is_armed_verified_and_put_back) ... ok
+test_a_factory_that_spawned_two_kinds_is_never_used (test_v1022.SpawnProofTwoSimulatorTests.test_a_factory_that_spawned_two_kinds_is_never_used) ... ok
+test_a_reloaded_variable_is_never_written (test_v1022.SpawnProofTwoSimulatorTests.test_a_reloaded_variable_is_never_written) ... ok
+test_an_activated_spawner_copy_is_written_and_put_back (test_v1022.SpawnProofTwoSimulatorTests.test_an_activated_spawner_copy_is_written_and_put_back) ... ok
+test_it_is_a_developer_file (test_v1022.SpawnProofTwoSimulatorTests.test_it_is_a_developer_file) ... ok
+test_nothing_is_written_off_zurkon (test_v1022.SpawnProofTwoSimulatorTests.test_nothing_is_written_off_zurkon) ... ok
+test_scan_sees_factories_nodes (test_v1022.SpawnProofTwoSimulatorTests.test_scan_sees_factories_nodes) ... ok
+test_spawns_are_tied_by_the_spawner_slots_without_lastspawn (test_v1022.SpawnProofTwoSimulatorTests.test_spawns_are_tied_by_the_spawner_slots_without_lastspawn) ... ok
+test_the_original_spawning_is_reported (test_v1022.SpawnProofTwoSimulatorTests.test_the_original_spawning_is_reported) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -653,6 +674,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 629 tests in 155.737s
+Ran 650 tests in 161.271s
 
 OK (skipped=23)

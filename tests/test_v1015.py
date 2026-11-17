@@ -331,12 +331,12 @@ class OwnershipTests(unittest.TestCase):
         g.R.grant("weapon:enforcer")
         deliver(g)
         self.assertEqual(g.give_count("weapon:enforcer"), 1)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.16"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.17"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("17_rando_omega not installed"))
 
     def test_kit_check_and_status(self):
         g = game(offset=OMEGA_AT)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.16"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.17"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("RANDO-OMEGA\tloaded"))
         g.R.grant("omega:enforcer")
         deliver(g)

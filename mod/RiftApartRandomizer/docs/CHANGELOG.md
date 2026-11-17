@@ -2,6 +2,25 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.23 (kit 10.0.17, rando_give.dll v7 developer build; not released): the lost planet
+
+Asked: "Enemies/bosses didn't got randomized" with the rivet.log of 2026-11-18 (dev 10.22,
+tests/data/round33_rivet.log) and a brief: find the real blocker, no speculative implementation, honest status.
+Seeds unchanged. **Still nothing randomized in the game**; nothing of 10.23 has run there.
+
+- Found in the log: spawnproof v2 loaded and wrote nothing else. The companion started late (seed = random), the
+  pre-seed event buffer (500) filled on NefCity, and the PlanetChangedEvent to Zurkon was dropped: the session
+  logged only "RANDO-PLANET NefCity" and every Zurkon checkpoint "on nefarious_city". v2 only acted on "scarstu",
+  so the Factories experiment never ran. Nothing about the Factories mechanism was learned, for or against.
+- 10_rando_runtime (kit fix): planet, level, checkpoint, save, mission, objective, item, bolt and purchase events are
+  never dropped from the pre-seed buffer (up to 2000); the rest keeps the 500 bound; the replay line says what was
+  dropped. Without it, a late companion meant a whole session on the wrong planet (travel, hub, rewards too).
+- dev(spawnproof).lua v3: own PlanetChangedEvent / SpawnerSpawnEvent subscriptions (not buffered); "on Zurkon" from
+  the event's planet name; a "level reset ... active / inactive" line every level and "inactive: N spawn(s) ignored";
+  ARMED and VERIFY shown on screen; a spawn delivered twice counts once.
+- ENEMIES_AND_BOSSES.md / CHAOS.md now open with "NOT WORKING IN THE GAME".
+- Kit 10.0.17, banner dev 10.23. Tests: tests/test_v1023.py (21). 650 run, 0 failures, 23 skipped.
+
 ## Dev 10.22 (kit 10.0.16, rando_give.dll v7 developer build; not released): the Factories variable
 
 Asked: "tried 2 battles, 1 normal enemies, 1 boss. Nothing randomized. Solve." (rivet.log of 2026-11-17 with

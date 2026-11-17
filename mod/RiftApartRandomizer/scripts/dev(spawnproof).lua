@@ -1,5 +1,18 @@
--- DEVELOPER TOOL - not part of a release. SPAWN PROOF v2 (dev 10.22): controlled enemy replacements on Zurkon,
+-- DEVELOPER TOOL - not part of a release. SPAWN PROOF v3 (dev 10.23): controlled enemy replacements on Zurkon,
 -- to prove (or disprove) in your game the mechanism the Enemy / Boss / Chaos Randomizers will use.
+--
+-- WHY v2 DID NOTHING AT ALL (your dev 10.22 log, tests/data/round33_rivet.log, real game): it loaded ("v2 loaded")
+-- and then wrote not one more line. It only acted where RANDO.state.current_planet == "scarstu". The companion
+-- started late, so every event waited in 10_rando_runtime's buffer of 500; the buffer filled on NefCity and the
+-- PlanetChangedEvent to Zurkon was DROPPED ("replaying 500 event(s)", then only "RANDO-PLANET NefCity", and every
+-- checkpoint on Zurkon logged "on nefarious_city"). v2 believed it was on NefCity and stayed silent, so the
+-- Factories experiment never ran. v3:
+--   * subscribes to PlanetChangedEvent and SpawnerSpawnEvent ITSELF (rivet.on_event, not buffered by the seed),
+--     and decides "on Zurkon" from the event's own planet name (the randomizer's state only as a fallback);
+--   * never stays silent: every level change logs where it thinks it is and why, and spawns it ignores are counted
+--     and reported ("inactive: ...");
+--   * shows ARMED and VERIFY on screen, so what you SEE in the game can be matched with the log.
+-- (The kit's buffer was fixed too: planet / level / checkpoint / mission / item events are never dropped.)
 --
 -- WHY v1 NEVER ARMED (your dev 10.21 log, tests/data/round32_rivet.log, real game):
 --   * v1 learned a template only from a node's "Template" variable. The Battleplex nodes that spawn ENEMIES have
@@ -30,10 +43,10 @@
 --   6. PUT BACK when the node's Spawner stops, or on a level change (only what still holds what was written).
 --   Every unit of work is guarded: a frame-budget error yields and retries on the next frame instead of ending it.
 -- Every line starts with "RANDO-SPAWNPROOF". Remove this file and nothing of it runs.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.16"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.17"   -- the kit check (10_rando_runtime.lua)
 RANDO_SPAWNPROOF = RANDO_SPAWNPROOF or {}
 local P = RANDO_SPAWNPROOF
-P.version = 2
+P.version = 3
 P.frame = P.frame or 0
 P.ENABLED = true
 P.PLANET = "scarstu"            -- Zurkon (Zurkie's Battleplex): replayable fights, nothing of the story
@@ -58,6 +71,7 @@ P.SP_FACTORY, P.SP_TEMPLATE, P.SP_LOCATION = 0x48, 0x50, 0x58
 P.SP_COUNT, P.SP_SLOTS, P.SP_STRIDE, P.SP_SLOT_MAX = 0x9C, 0xDC, 12, 15
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-SPAWNPROOF", ...) end
+local function say(text) if RANDO and RANDO.say then pcall(RANDO.say, text, { type = "center", duration = 6 }) end end
 P.log = log
 local function clock() return (os and os.clock and os.clock()) or 0 end
 
@@ -259,6 +273,21 @@ function P.describe_factory(lvl, fac)
 end
 
 -- ---- the level --------------------------------------------------------------------------------------
+-- where you are: the last PlanetChangedEvent this file saw itself (not buffered), else the randomizer's state
+P.ZURKON_EVENT_NAME = "Zurkon"
+local function state_planet()
+  local s = RANDO and RANDO.state
+  return s and s.current_planet
+end
+local function planet()
+  if P.event_planet then return P.event_planet == P.ZURKON_EVENT_NAME and P.PLANET or ("event:" .. P.event_planet) end
+  return state_planet()
+end
+P.planet = planet
+function P.where()
+  return string.format("event planet %s, randomizer state %s", tostring(P.event_planet), tostring(state_planet()))
+end
+
 P.swaps = P.swaps or 0
 P.armed = P.armed or {}
 P.spawn_queue = {}
@@ -273,15 +302,12 @@ function P.reset(why)
   if P.lvl and P.lvl.scans > 0 then P.summary() end
   P.armed = {}
   P.lvl = { nodes = {}, order = {}, scans = 0, learned = { template = {}, factory = {} }, logged = 0, other = 0,
-            described = {}, ndescribed = 0, stopped = {}, why = why, untied = 0, ties = 0 }
+            described = {}, ndescribed = 0, stopped = {}, why = why, untied = 0, ties = 0, ignored = 0 }
+  log(string.format("level reset (%s): %s (%s)", tostring(why), planet() == P.PLANET and "ON ZURKON - active" or "not Zurkon - inactive", P.where()))
   P.spawn_queue = {}
   P.next_scan = P.frame + P.SCAN_EVERY
 end
 
-local function planet()
-  local s = RANDO and RANDO.state
-  return s and s.current_planet
-end
 
 -- one new node: plugs, Spawner, slot
 function P.read_node(node)
@@ -523,6 +549,8 @@ function P.arm(sc, r, v, orig, rep)
   log(string.format("ARMED %d/%d node %s (Spawner %X, %s, spawned %d time(s) so far): %s variable %d at %X: %s -> %s; read back %s; %s",
       P.swaps, P.MAX_SWAPS, tostring(r.uid), r.spawner or 0, slot.kind, A.spawned_before, plug_name(slot.plug), slot.var.idx, now.addr,
       who(orig), who(rep), ok and "OK" or "FAILED", cache))
+  if ok then say(string.format("SPAWNPROOF ARMED: next %s here should be %s", tostring(orig.name):match("([^\\]+)%.actor$") or "enemy",
+      tostring(rep.name):match("([^\\]+)%.actor$") or "another enemy")) end
   if not ok then A.verified = true; P.put_back(A, "the write did not read back") end
 end
 
@@ -535,6 +563,7 @@ function P.verify(A, a, e)
   log(string.format("VERIFY node %s (%s, SpawnFactory %s): requested %s; original %s; spawned %s: %s", tostring(A.rec.uid), A.slot.kind,
       tostring(e and e.fac), who(A.rep), who(A.orig), who(a), verdict))
   A.verdict = verdict
+  say("SPAWNPROOF: " .. verdict:match("^[A-Z ]+"):gsub("%s+$", "") .. " (" .. (tostring(a and a.name):match("([^\\]+)%.actor$") or "?") .. ")")
   P.verdicts = P.verdicts or {}
   P.verdicts[#P.verdicts + 1] = verdict
 end
@@ -583,8 +612,26 @@ end
 -- ---- events (through the spawner layer: no rivet callback of its own) ------------------------------------
 function P.on_spawn(f)
   local h = math.tointeger(tonumber(f.SpawnedHandle))
-  if h and P.lvl and planet() == P.PLANET and #P.spawn_queue < 256 then
+  if not (h and P.lvl) then return end
+  if P.seen_spawn[h] then return end                        -- direct and buffered deliveries of the same spawn
+  P.seen_spawn[h] = true
+  if planet() ~= P.PLANET then
+    P.lvl.ignored = P.lvl.ignored + 1
+    if P.lvl.ignored == 1 or P.lvl.ignored == 50 then
+      log(string.format("inactive: %d spawn(s) ignored on this level - not Zurkon (%s)", P.lvl.ignored, P.where()))
+    end
+    return
+  end
+  if #P.spawn_queue < 256 then
     P.spawn_queue[#P.spawn_queue + 1] = { h = h, fac = math.tointeger(tonumber(f.SpawnFactory)), loc = math.tointeger(tonumber(f.SpawnLocation)) }
+  end
+end
+P.seen_spawn = P.seen_spawn or {}
+function P.on_planet(f)
+  if f.NewPlanetName then
+    P.event_planet = tostring(f.NewPlanetName)
+    P.seen_spawn = {}
+    P.reset("planet " .. P.event_planet)
   end
 end
 function P.on_stopped(f)
@@ -639,11 +686,19 @@ end
 if not P.subscribed then
   P.subscribed = true
   local SPL = RANDO_SPAWNERS
+  -- dev 10.23: planet and spawns straight from rivet (2 of rivet_hook's 64 event callbacks): the spawner layer's
+  -- events wait in the randomizer's buffer until the seed is ready, and that buffer once dropped the planet
+  local function direct(class, fn)
+    local ok, err = pcall(rivet.on_event, class, function(ev) local okf, e = pcall(fn, ev.fields or {}); if not okf then log("RANDO-ERROR", class, tostring(e)) end end)
+    if not ok then log("cannot subscribe", class, tostring(err), "- using the spawner layer's (buffered) copy") end
+    return ok
+  end
+  P.direct = { planet = direct("PlanetChangedEvent", P.on_planet), spawn = direct("SpawnerSpawnEvent", P.on_spawn) }
   if SPL and SPL.listen then
-    SPL.listen("SpawnerSpawnEvent", P.on_spawn)
+    SPL.listen("SpawnerSpawnEvent", P.on_spawn)            -- a second copy is ignored (P.seen_spawn)
     SPL.listen("SpawnerStoppedEvent", P.on_stopped)
     SPL.listen("LevelLoadedEvent", function() P.reset("level loaded") end)
-    SPL.listen("PlanetChangedEvent", function(f) if f.NewPlanetName then P.reset("planet " .. tostring(f.NewPlanetName)) end end)
+    if not P.direct.planet then SPL.listen("PlanetChangedEvent", P.on_planet) end
     SPL.listen("Checkpoint", function(cp) if cp.loaded then P.reset("checkpoint loaded") end end)
   else
     log("16_rando_spawners.lua (with SP.listen) is missing: nothing runs")
@@ -653,5 +708,6 @@ if not P.subscribed then
 end
 P.reset("scripts loaded")
 local hash_ok = (not rivet.hash) or (pcall(rivet.hash, "Factories") and rivet.hash("Factories") == P.PLUG_FACTORIES)
-log(string.format("v2 loaded: Template and Factories replacements on Zurkon (%s, at most %d); plugs Template %d Factories %d LastSpawn %d%s",
-    P.ENABLED and "on" or "off", P.MAX_SWAPS, P.PLUG_TEMPLATE, P.PLUG_FACTORIES, P.PLUG_LASTSPAWN, hash_ok and "" or " - rivet.hash DISAGREES, nothing will match"))
+log(string.format("v3 loaded: Template and Factories replacements on Zurkon (%s, at most %d); plugs Template %d Factories %d LastSpawn %d%s; own events: planet %s, spawns %s",
+    P.ENABLED and "on" or "off", P.MAX_SWAPS, P.PLUG_TEMPLATE, P.PLUG_FACTORIES, P.PLUG_LASTSPAWN, hash_ok and "" or " - rivet.hash DISAGREES, nothing will match",
+    P.direct and P.direct.planet and "yes" or "NO", P.direct and P.direct.spawn and "yes" or "NO"))

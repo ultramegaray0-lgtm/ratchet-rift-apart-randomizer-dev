@@ -34,6 +34,23 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
+## 2-dev10. Dev 10.23 (kit 10.0.17): the Factories experiment, for real this time (Zurkon)
+
+Build: commit of dev 10.23 on main. Files: the kit's WHOLE `scripts` folder (the kit is 10.0.17: the runtime changed;
+`RANDO-KIT all 12 required scripts are 10.0.17` must appear), with `dev(spawnproof).lua` v3 and WITHOUT
+`dev(spawnprobe).lua`; `rando_give_source/dev_build/rando_give.dll` (v7) over the game folder's rando_give.dll.
+1. Start the companion BEFORE the game if you can (not required any more, but it keeps the log simple).
+2. Load your save, go to Zurkon. In rivet.log (or just trust it) the file now says `level reset (planet Zurkon): ON
+   ZURKON - active`. Play ONE multi-wave challenge of ordinary enemies (A1) to the end.
+3. WATCH THE SCREEN: `SPAWNPROOF ARMED: next X here should be Y` appears when it changes a node; then
+   `SPAWNPROOF: REPLACEMENT SPAWNED (Y)` / `ORIGINAL SPAWNED` / `SOMETHING ELSE SPAWNED` when that node spawns.
+   If you see REPLACEMENT SPAWNED, look at the enemy that just appeared: is it really a Y? Does the wave finish?
+4. Quit normally, send rivet.log, and say what you saw on screen.
+Lines that answer each question: `v3 loaded ... own events: planet yes, spawns yes` (subscriptions); `level reset`
+(where it thinks it is); `scan N on scarstu: ... Y Factories` (nodes found); `spawn H ... via LastSpawn|Spawner
+slot; slot factory = F` (spawn request seen and tied); `learned:` (originals identified); `ARMED ... read back OK`
+(replacement written); `VERIFY ...` (what the game created); `put back`, `level summary`.
+
 ## 2-dev9. Dev 10.22 (kit 10.0.16): Factories replacements (Zurkon)
 
 Build: commit of dev 10.22 on main. Files: the kit's whole `scripts` folder with `dev(spawnproof).lua` v2, but

@@ -4,6 +4,45 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.23 (kit 10.0.17, rando_give.dll v7 developer build): the lost planet
+
+- Asked: "Enemies/bosses didn't got randomized. Also, update it in github next time", with a brief (find the real
+  blocker; no speculative implementation; one real in-game replacement; diagnostics; honest report). Log:
+  tests/data/round33_rivet.log (dev 10.22, kit 10.0.16; seed = random, companion started late; NefCity, Zurkon
+  arena challenges A1 and A2 replayed and completed; game path replaced).
+- DIAGNOSIS (real game, this log):
+  * The experiment NEVER RAN. "RANDO-SPAWNPROOF v2 loaded" is its only line. v2 acted only where
+    RANDO.state.current_planet == "scarstu".
+  * Why the state was wrong: the seed waited for the companion; every event went to the pre-seed buffer (500,
+    first come first kept). NefCity's load filled it; the PlanetChangedEvent to Zurkon (DISCOVER line present) was
+    dropped. After "replaying 500 event(s)" the session logged only "RANDO-PLANET NefCity nefarious_city", and
+    every Zurkon checkpoint "on nefarious_city". Reproduced in the simulator (without the fix: "dropped:
+    PlanetChangedEvent 3, SpawnerSpawnEvent 125").
+  * So round33 says NOTHING about the Factories mechanism. The spawner layer's events did flow after the seed
+    (RANDO-SPAWNERS spawn lines during A1/A2), the 16 census again read 0 nodes (expected; it looks for Templates).
+- What is known to work (real game, earlier logs): rivet.script_nodes lists 185-197 SpawnerScriptAction nodes on
+  Zurkon; their variable plugs and the SceneManager's script variables read correctly (v7 helper, signature 1x);
+  LastSpawn and the Spawner slot list tie spawns to nodes; rivet.write / read-back work (items, armor). Known NOT
+  to work: Prius-based Templates (10.12-10.20), Template-variable swaps for enemies (round32: enemy nodes have
+  none). Unverified: whether swapping a node's Factories variable (or its Spawner +0x48 copy) changes the enemy.
+- Native route considered: rivet_hook's rivet.detour only skips / passes component update slots (no argument
+  rewrite, no Lua callback); it cannot intercept a spawn. A rando_give.dll hook of the engine's spawn function needs
+  that function's address and code, which no log or file here contains. Not started; the Lua-level Factories swap
+  must be tested first (it costs one challenge).
+- 10_rando_runtime (kit): R.BUFFER_KEEP classes (planet, level, checkpoint, save, mission, objective, mission
+  devstats, weapon / gadget added, bolts, raritanium, purchase) are never dropped (cap 2000); others keep the 500
+  bound; the replay line lists kept / dropped.
+- dev(spawnproof).lua v3: direct rivet.on_event for PlanetChangedEvent and SpawnerSpawnEvent (2 callbacks; falls back
+  to the spawner layer's copy if refused); planet from the event name "Zurkon" (state as fallback); "level reset (...):
+  ON ZURKON - active / not Zurkon - inactive (event planet X, randomizer state Y)"; "inactive: N spawn(s) ignored";
+  on-screen "SPAWNPROOF ARMED: next X here should be Y" and "SPAWNPROOF: <verdict> (name)"; duplicate deliveries of a
+  spawn ignored. test_v81's static check caught a use-before-definition (planet() in P.reset) - fixed.
+- ENEMIES_AND_BOSSES.md and CHAOS.md open with "NOT WORKING IN THE GAME". Kit 10.0.17 (every RANDO_FILES tag),
+  banner dev 10.23.
+- Tests: tests/test_v1023.py (21): 4 on the real log, 2 buffer tests in the simulator (the planet one fails without
+  the fix), 5 spawnproof v3 tests in the simulator. Full suite: 650 run, 0 failures, 23 skipped (9 need pwsh, 14 need old git history); native: the v6 and v7 DLLs rebuild byte for byte (test_native). No native code changed.
+- Verified in the game: nothing of 10.23. Enemy / Boss / Chaos: NOT working. Next: TESTING.md 2-dev10.
+
 ## 2026-11-18: dev 10.22 (kit 10.0.16, rando_give.dll v7 developer build): the Factories variable
 
 - Asked: "tried 2 battles, 1 normal enemies, 1 boss. Nothing randomized. Solve. Even if it was an exe or dll."

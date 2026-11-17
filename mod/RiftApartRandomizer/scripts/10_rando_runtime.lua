@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.16"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.17"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.16"
-R.RELEASE = "dev 10.22"               -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.17"
+R.RELEASE = "dev 10.23"               -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -820,6 +820,13 @@ end
 R.GEN_BUDGET = 0.002                  -- seconds of generation work per frame
 local gen_job
 local event_buffer = {}               -- events that arrive before the seed is ready
+-- dev 10.23: classes the buffer never drops (up to BUFFER_KEEP_MAX); the others share BUFFER_MAX
+R.BUFFER_KEEP = { PlanetChangedEvent = true, LevelLoadedEvent = true, CheckpointTriggeredEvent = true,
+  SaveDataAppliedEvent = true, MissionStateChangedEvent = true, ObjectiveStateChangedEvent = true,
+  StartMissionDevstatsEvent = true, EndMissionDevstatsEvent = true, WeaponAddedEvent = true, GadgetItemAddedEvent = true,
+  GainBoltEvent = true, GainRaritaniumEvent = true, PurchaseWeaponEvent = true }
+R.BUFFER_MAX, R.BUFFER_KEEP_MAX = 500, 2000
+R.buffer_kept, R.buffer_dropped = 0, {}
 local seed_source = { text = nil, why = nil }
 
 local function random_seed_text()
@@ -1121,8 +1128,21 @@ local function try_subscribe(sub)
     if not ok1 then log("RANDO-ERROR discover", sub.class, tostring(e1)) end
     if not sub.fn then return end
     if not SEED or not S then
-      -- keep it for after generation (bounded)
-      if event_buffer and #event_buffer < 500 then event_buffer[#event_buffer + 1] = { fn = sub.fn, ev = ev, class = sub.class } end
+      -- keep it for after generation (bounded). dev 10.23: your dev 10.22 log (round33) started the companion
+      -- late; 500 events filled the buffer on NefCity and the PlanetChangedEvent to Zurkon was DROPPED, so the
+      -- whole session believed it was on NefCity. Events that say where you are or what you did are kept
+      -- (R.BUFFER_KEEP_MAX); only the rest shares the old bound (spawns, deaths, health bars: stale by then).
+      if event_buffer then
+        local keep = R.BUFFER_KEEP[sub.class]
+        local cap = keep and R.BUFFER_KEEP_MAX or R.BUFFER_MAX
+        local n = keep and R.buffer_kept or (#event_buffer - R.buffer_kept)
+        if n < cap then
+          event_buffer[#event_buffer + 1] = { fn = sub.fn, ev = ev, class = sub.class }
+          if keep then R.buffer_kept = R.buffer_kept + 1 end
+        else
+          R.buffer_dropped[sub.class] = (R.buffer_dropped[sub.class] or 0) + 1
+        end
+      end
       return
     end
     local ok2, e2 = pcall(sub.fn, ev)
@@ -1382,7 +1402,13 @@ local function frame(dt)
   end
   if R.replay_events then
     local buf = R.replay_events; R.replay_events = nil
-    if #buf > 0 then log("RANDO-SEED replaying " .. #buf .. " event(s) that came in while generating") end
+    if #buf > 0 then
+      local dropped = {}
+      for class, n in pairs(R.buffer_dropped) do dropped[#dropped + 1] = class .. " " .. n end
+      table.sort(dropped)
+      log("RANDO-SEED replaying " .. #buf .. " event(s) that came in while generating (" .. R.buffer_kept .. " kept in full; dropped: "
+          .. (#dropped > 0 and table.concat(dropped, ", ") or "none") .. ")")
+    end
     for _, e in ipairs(buf) do
       local ok, err = pcall(e.fn, e.ev)
       if not ok then log("RANDO-ERROR", e.class, tostring(err)) end

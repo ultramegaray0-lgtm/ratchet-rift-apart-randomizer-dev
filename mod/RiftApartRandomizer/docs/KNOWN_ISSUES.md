@@ -4,6 +4,17 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0o. Since dev 10.23 (kit 10.0.17): still NO enemy is randomized in the game
+
+- NOT FIXED, and NOT TESTED: your dev 10.22 log (round33) never ran the Factories experiment. The companion started
+  late, the pre-seed event buffer (500) dropped the PlanetChangedEvent to Zurkon, the randomizer believed it was on
+  NefCity all session, and spawnproof v2 (Zurkon only) stayed silent.
+- FIXED (kit, simulator only): the buffer keeps planet / level / checkpoint / mission / item events. This also
+  affected travel, the hub and rewards in any session where the companion started late.
+- FIXED (dev file): spawnproof v3 has its own unbuffered planet and spawn events and says when it is inactive.
+- OPEN: whether a Factories swap changes what spawns (TESTING.md 2-dev10). Where a factory's template lives is
+  unknown (the DDL's SunsetSpawnerFactoryPrius has no template field).
+
 ## 0n. Since dev 10.22 (kit 10.0.16): still NO enemy is randomized in the game
 
 - NOT FIXED. Your dev 10.21 log (tests/data/round32_rivet.log): dev(spawnproof) v1 never armed ("0
