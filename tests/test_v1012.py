@@ -147,9 +147,10 @@ class ExplicitlyOffTests(unittest.TestCase):
         self.assertFalse(any("RANDO-ERROR" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_the_kit_check_lists_them_as_optional(self):
-        g = Game()
+        # dev 10.16 made them ON in 04; the harness runs the classic test settings, so ON is set here
+        g = Game(settings={"enemy_randomizer": True, "boss_randomizer": True})
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.11"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.12"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("RANDO-ENEMY\tinstalled (ON"))
         self.assertTrue(g.log_has("RANDO-BOSS\tinstalled (ON"))
 
@@ -510,7 +511,7 @@ class RemovalTests(unittest.TestCase):
         g.press("=")
         g.step(300)
         self.assertEqual(changed(g), set())
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.11"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.12"))
         self.assertFalse(any("RANDO-ERROR" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_without_enemy_lua_bosses_still_work(self):

@@ -532,7 +532,8 @@ local function node_by_comp(c) for _, n in ipairs(S.nodes) do if n.component == 
 function rivet.component(actor, class)
   for _, n in ipairs(S.nodes) do
     if n.actor == actor and n.class == class then
-      return { address = string.format("%X", n.addr), size = n.size or 0x80, handle = n.component }
+      return { address = string.format("%X", n.addr), size = n.size or 0x80, handle = n.component,
+               prius = n.prius and string.format("%016x", n.prius) or nil, prius_size = n.prius_size }
     end
   end
   -- dev 10.12: a spawned bot's component (S.actor_class), by its DDL class name without "Prius"
@@ -540,7 +541,18 @@ function rivet.component(actor, class)
   if cls and cls == class then
     return { address = string.format("%X", 0x30000000 + actor * 0x100), size = 0x400, handle = actor * 10 }
   end
-  -- dev 10.15: the hero's inventory component
+  -- dev 10.17: rivet.uid and rivet.components (rivet_hook's LUA_SCRIPTING.md)
+function rivet.uid(handle)
+  local id = S.actor_uid and S.actor_uid[math.tointeger(tonumber(handle)) or handle]
+  return id
+end
+function rivet.components(handle)
+  local cls = S.actor_class and S.actor_class[handle]
+  if S.components_off then error("attempt to call a nil value", 2) end
+  if cls then return { "SceneObject", cls, "Health" } end
+  error("no actor for handle " .. tostring(handle), 2)
+end
+-- dev 10.15: the hero's inventory component
   if S.inventory_component and actor == S.hero_handle and class == S.INV_CLASS then
     S.inv_layout()
     return { address = string.format("%X", S.inv_comp), size = 0x200, handle = 4242 }
@@ -1019,7 +1031,12 @@ function S.reset_spawners()
 end
 local function put_array(addr, ptr, n) S.put_u64(addr, ptr); S.put_u32(addr + 8, n); S.put_u32(addr + 12, n) end
 -- spec = { uid, templates = { ids }, num = spawns (0 = each template once), mission, objective,
---          x = layout offset, garbage = true (a node whose bytes match nothing) }
+--          x = layout offset, garbage = true (a node whose bytes match nothing),
+--          prius = true (dev 10.17, what rivet.log of 2026-11-17 shows: the instance is small
+--          (size 0x60), the fields are behind rivet.component's `prius` at the DDL offsets
+--          (FactoryGroup +8), and SpawnerSpawnEvent names its SpawnLocation actor but carries no
+--          SenderHandle; nosender = true: no ev.sender either; small = true: an instance of 0x60
+--          bytes and no Prius from rivet, the 10.12-10.16 read path that failed in your game) }
 function S.add_encounter(spec)
   S.spawner_count = S.spawner_count + 1
   local i = S.spawner_count
@@ -1030,7 +1047,24 @@ function S.add_encounter(spec)
   S.put_u64(base, 0x7FF6C4B00000)
   local tptr, lptr = base + 0x800, base + 0x900
   S.map(tptr, 0x100); S.map(lptr, 0x100)
-  if not spec.garbage then
+  local pr
+  if spec.prius then
+    pr = base + 0x400
+    S.map(pr, 0x100)
+    for a = pr, pr + 0xFF do S.mem[a] = 0 end
+    x = 0x08
+  end
+  local fb = pr or base                                         -- where the Prius fields are
+  if spec.prius then
+    put_array(fb + x, 0, 0)
+    put_array(fb + x + 24, tptr, #spec.templates)
+    put_array(fb + x + 48, lptr, 2)
+    S.mem[fb + x + 70] = 1
+    S.put_u32(fb + x + 84, 0x3D23D70A); S.put_u32(fb + x + 88, 0x3D23D70A)
+    S.put_u32(fb + x + 100, spec.num or 0)
+    S.put_u32(fb + x + 104, 0xFFFFFFFF)
+    S.put_u32(fb + x + 120, 1)
+  elseif not spec.garbage then
     put_array(base + x, 0, 0)
     put_array(base + x + 24, tptr, #spec.templates)
     put_array(base + x + 48, lptr, 2)
@@ -1044,13 +1078,20 @@ function S.add_encounter(spec)
     for a = base + 8, base + 0xFF do S.mem[a] = (a * 7) % 251 end
   end
   for k, t in ipairs(spec.templates) do S.put_hex_id(tptr + (k - 1) * 8, t) end
-  S.put_u64(lptr, 0x0123456789AB); S.put_u64(lptr + 8, 0x0123456789AC)
+  -- the spawn points' actor ids (zone actors: bit 63 set), unique per encounter, with their handles
+  local loc_ids = { string.format("8%03X00000000%04X", i, 1), string.format("8%03X00000000%04X", i, 2) }
+  S.put_hex_id(lptr, loc_ids[1]); S.put_hex_id(lptr + 8, loc_ids[2])
+  S.actor_uid = S.actor_uid or {}
+  local loc_handles = { 6000000 + i * 10 + 1, 6000000 + i * 10 + 2 }
+  S.actor_uid[loc_handles[1]] = loc_ids[1]; S.actor_uid[loc_handles[2]] = loc_ids[2]
   local e = { uid = spec.uid, templates = spec.templates, num = spec.num or 0, base = base, tptr = tptr, x = x,
               component = 3000000 + i, actor = 4000000 + i, mission = spec.mission, objective = spec.objective,
-              spawned = 0, dead = 0, alive = {}, running = false, done = false }
+              spawned = 0, dead = 0, alive = {}, running = false, done = false,
+              prius = spec.prius, nosender = spec.nosender, loc_handles = loc_handles }
   S.encounters[spec.uid] = e
   S.nodes[#S.nodes + 1] = { component = e.component, actor = e.actor, uid = spec.uid, class = "SpawnerScriptAction",
-                            addr = base, size = 0x100, outputs = {}, planet = spec.planet }
+                            addr = base, size = (spec.prius or spec.small) and 0x60 or 0x100, prius = pr, prius_size = pr and 0x98 or nil,
+                            outputs = {}, planet = spec.planet }
   return e
 end
 function S.encounter_template(uid, k) return S.get_hex_id(S.encounters[uid].tptr + (k - 1) * 8) end
@@ -1066,7 +1107,14 @@ local function spawn_one(e)
   S.actor_class[h] = S.template_class[tid]
   e.spawned = e.spawned + 1
   e.alive[h] = tid
-  S.emit("SpawnerSpawnEvent", { SenderHandle = e.component, SpawnedHandle = h, SpawnIndex = k - 1, SpawnLocation = 0 })
+  if e.prius then
+    -- the real game's fields (rivet.log 2026-11-17): SpawnFactory, SpawnIndex, SpawnLocation, SpawnedHandle
+    S.emit("SpawnerSpawnEvent", { SpawnFactory = 0, SpawnedHandle = h, SpawnIndex = k - 1,
+                                  SpawnLocation = e.loc_handles[(e.spawned - 1) % 2 + 1] },
+           { sender = (not e.nosender) and e.component or nil })
+  else
+    S.emit("SpawnerSpawnEvent", { SenderHandle = e.component, SpawnedHandle = h, SpawnIndex = k - 1, SpawnLocation = 0 })
+  end
   if S.hb_templates[tid] then S.emit("HealthBarShowEvent", { SenderHandle = h, IsFriendly = false }) end
   return true
 end

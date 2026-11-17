@@ -4,6 +4,20 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0i. Since dev 10.17 (kit 10.0.12): the spawner census reads the Prius
+
+- FIXED (your rivet.log of 2026-11-17): the Enemy, Boss and Chaos Randomizers changed nothing. Every
+  census read 0 spawner nodes ("cannot read the node"): the fields are in the node's Prius, not in its
+  small instance. 10.17 reads the Prius (`layout prius +0x8` in the census line). Simulator only.
+- FIXED: a census stopped by rivet_hook's 8 ms frame budget (that log: `16_rando_spawners.lua:542/437`)
+  was dropped until the next checkpoint or planet; it now starts again (up to 5 times).
+- NEW (fallback): a spawn whose event has no sender is matched to its node by its SpawnLocation.
+- OPEN (needs the game): whether a Templates write in the Prius changes what the node spawns (the node
+  may copy its Prius when it starts; then only nodes not started yet change, which is what is written);
+  the bot class names `rivet.components` returns for spawned enemies.
+- Ms. Zurkon's vendor (`only 0 vendor weapon(s) in the array at +0x48`) and `RANDO-OMEGA inventory not
+  found` in the same log are separate issues, not touched here.
+
 ## 0h. Since dev 10.15 (kit 10.0.11): Omega weapons
 
 `omega_weapons` is off by default; nothing below matters while it is off. Nothing has run in the game

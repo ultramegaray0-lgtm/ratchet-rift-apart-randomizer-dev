@@ -36,7 +36,7 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT all 12 required scripts are 10.0.11
+       RANDO-KIT all 12 required scripts are 10.0.12
        RANDO-KIT developer files loaded (not part of a release): ...
 
 KEYS

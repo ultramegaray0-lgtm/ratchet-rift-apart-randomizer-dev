@@ -2,6 +2,28 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.17 (kit 10.0.12, generator 10.11.0; not released): Enemy / Boss / Chaos Randomizers fixed
+
+Asked: "enemy, boss and chaos randomizer didn't work. Fix it" (rivet.log of 2026-11-17, dev 10.15 kit with
+10.16's defaults). Seeds unchanged (generator untouched). **Tested in the simulator only.**
+
+- Cause: all 32 censuses in that log read 0 spawner nodes; every node "cannot read the node". rivet_hook's
+  `rivet.component` returns the instance (`size` = class size) and, separately, the Prius data (`prius`).
+  The census read only min(0x100, size) bytes of the instance and needed 0x88, so nothing was read,
+  nothing learned and nothing changed, for all three randomizers (they share 16_rando_spawners.lua).
+- 16_rando_spawners: the census reads the Prius at the DDL's offsets (FactoryGroup +8) with the same
+  signature check; the instance search is kept only when rivet gives no Prius. The census line says
+  `layout prius +0x8 xN`; a skipped node says why (the Prius, or the instance's size).
+- Spawns: handlers also take `ev.sender`; a spawn with no sender is matched by its SpawnLocation actor id
+  (`rivet.uid`) in one node's SpawnLocations list (the real event has SpawnFactory / SpawnIndex /
+  SpawnLocation / SpawnedHandle).
+- Learning: one `rivet.components` call per spawned actor (the old ~90 failing `rivet.component` calls stay as
+  fallback); unknown bot classes are logged once (`spawned actor not classified`).
+- Frame budget: a census stopped by the 8 ms budget starts again 20 frames later (up to 5 times) instead
+  of waiting for the next load.
+- Tests: tests/test_v1017.py (10, a simulator model of what the log shows: small instance, Prius, no sender);
+  test_v1012's kit-check test fixed for 10.16's ON defaults. 548 run, 0 failures, 21 skipped.
+
 ## Dev 10.15 (kit 10.0.11, generator 10.11.0; not released): Omega weapons
 
 Asked: Omega weapons (Challenge Mode / New Game+) in the randomized item pool as items of their own,

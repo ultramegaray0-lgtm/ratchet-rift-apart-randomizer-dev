@@ -4,6 +4,36 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-17: dev 10.17 (kit 10.0.12, generator 10.11.0): Enemy / Boss / Chaos Randomizers fixed
+
+- Asked: "enemy, boss and chaos randomizer didn't work. Fix it", with a rivet.log (dev 10.15 kit 10.0.11 and
+  10.16's ON defaults; NefCity, Sargasso, Cordelion). Dev repo only. Base: 8f7948d (dev 10.16, which only
+  turned Omega / Enemy / Boss ON in 04 and left kit 10.0.11 and banner 10.15).
+- Log evidence: 32 censuses, all "0 spawner node(s) read, 0 template(s), 2..326 skipped", every listed node
+  "cannot read the node" (so rivet.component found each node: the read failed). Two
+  "census: 16_rando_spawners.lua:542/437: ran past the 8 ms frame budget" dropped a census each. Toggles
+  logged "0 spawner slot(s) put back". SpawnerSpawnEvent fields: SpawnFactory, SpawnIndex, SpawnLocation,
+  SpawnedHandle; no SpawnerStartedEvent seen.
+- Cause (rivet_hook source, github.com/neptuwunium/rivet_hook src/scripting.cpp l_component/find_component
+  and docs/LUA_SCRIPTING.md): rivet.component returns `size` = ComponentInfo.size (the instance) and
+  `prius` / `prius_size` = the Prius data (ddlPriusData -> holder +16 -> data). read_node read
+  min(0x100, size) bytes of the instance and needed 0x88: the SpawnerScriptAction instance is smaller.
+- 16: read_node reads SP.PRIUS_READ (0x90) bytes at `prius` and checks SP.layout_at at SP.PRIUS_X (+8);
+  instance search only without a Prius and never past `size`. rec.where, census line "layout prius +0x8".
+  rec.locs (SpawnLocations ids) -> lvl.loc_index; handlers get (fields, ev): sender = SenderHandle field,
+  else ev.sender; SP.rec_of_spawn falls back to rivet.uid(SpawnLocation). classify_actor: one
+  rivet.components call (old loop as fallback), "spawned actor not classified" logged once per class set.
+  Census budget errors (also from rivet.script_nodes) reschedule the census (SP.CENSUS_RETRIES 5).
+- Kit 10.0.12 (every RANDO_FILES tag, C/H/TT versions, build_data, build_public_release BUILD), banner
+  "Randomizer dev 10.17". test_v1012 kit-check test fixed for 10.16's ON defaults (it failed since 10.16).
+- Simulator: spec.prius (instance 0x60, fields behind `prius` at +8, real SpawnerSpawnEvent fields with
+  SpawnLocation handles and rivet.uid), spec.nosender, spec.small (the 10.16 failure), rivet.components.
+- Verified only offline: tests/test_v1017.py (10; all 10 fail against the 10.16 spawner file); 548 run,
+  0 failures, 21 skipped.
+- Open (needs the game): the census line should now read nodes; does a Templates write in the Prius change
+  what spawns (or does the node copy it at start)? Which bot class names rivet.components returns (watch
+  for "not classified"). Not touched: the vendor array (0 weapons at +0x48), RANDO-OMEGA inventory not found.
+
 ## 2026-11-16: dev 10.15 (kit 10.0.11, generator 10.11.0): Omega weapons
 
 - Asked: Omega weapons (New Game+) in the randomized item pool as separate items, with smart

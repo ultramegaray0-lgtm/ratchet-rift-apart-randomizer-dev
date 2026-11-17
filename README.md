@@ -1,5 +1,9 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.17 (kit 10.0.12):** the Enemy, Boss and Chaos Randomizers read each spawner's Prius (in your game
+the old instance read failed on every node, so nothing was ever changed). Simulator-tested only;
+`docs/KNOWN_ISSUES.md` 0i, `docs/ENEMIES_AND_BOSSES.md` section 6.
+
 **Dev 10.15 (kit 10.0.11):** **Omega weapons** (Challenge Mode): `omega_weapons = true` adds the 20 Omega
 versions as rewards of their own; an Omega found first also gives its weapon, the weapon found later never
 undoes it. The game's Omega flag is set by `scripts/17_rando_omega.lua` (developer kit only) once it has

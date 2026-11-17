@@ -118,7 +118,14 @@ Kept-original encounters are saved in `state.spawn_blocked` (at most 300) and li
 
 ## 6. Finding the Templates list without trusting an offset
 
-`SP.find_layout` searches the node's first 0x100 bytes for the DDL layout of
+**Dev 10.17:** the fields are read from the node's **Prius** (`rivet.component(...).prius`, which
+rivet_hook resolves through `Component.ddlPriusData` -> holder -> data) at the DDL's own offsets
+(FactoryGroup +8), checked with the same signature as below. Your rivet.log of 2026-11-17 showed why:
+the instance is smaller than the 0x88 bytes the old search needed (`size` is the class's instance size),
+so every node was "cannot read the node", nothing was learned and none of the three randomizers changed
+anything. The instance search below is now only the fallback for a node rivet gives no Prius for.
+
+Before 10.17, `SP.find_layout` searched the node's first 0x100 bytes for the DDL layout of
 `SpawnerScriptActionPrius` (FactoryGroup +8, Templates +32, SpawnLocations +56): three dynamic
 arrays `{ pointer, count, capacity }` 24 bytes apart, the two selection enums below 16, the eight
 flag bytes 0 or 1, and sane NumSpawns / MaxSimultaneousSpawns / MaxActivations. Zero-filled memory
@@ -133,13 +140,19 @@ once per changed node.
 
 ## 7. What the first real round must confirm (rivet.log)
 
-1. `RANDO-SPAWNERS census 1 (...): N spawner node(s) read ... layout +0x50 xN`. If every node is
-   `skipped`, the layout is different in memory: send the log, nothing was changed.
-2. `RANDO-DISCOVER SpawnerSpawnEvent ...`, `SpawnerStartedEvent`, `BotDeathCompleteEvent`,
+1. `RANDO-SPAWNERS census 1 (...): N spawner node(s) read ... layout prius +0x8 xN` (dev 10.17). If every
+   node is `skipped`, the reason is on the `skipped` lines: send the log, nothing was changed.
+   (2026-11-17, dev 10.15: every node `cannot read the node`; fixed in 10.17, see section 6.)
+2. Seen 2026-11-17: `SpawnerSpawnEvent` has `SpawnFactory SpawnIndex SpawnLocation SpawnedHandle`
+   (a SenderHandle, if any, is hidden as noise by RANDO-DISCOVER); `SpawnerStoppedEvent` has
+   `SpawnerComponentHandle`; no `SpawnerStartedEvent` appeared. 10.17 finds a spawn's node by the
+   field, then `ev.sender`, then the SpawnLocation's actor id in one node's SpawnLocations list.
+   Still to confirm: `RANDO-DISCOVER SpawnerSpawnEvent ...`, `SpawnerStartedEvent`, `BotDeathCompleteEvent`,
    `HealthBarShowEvent`: their field names (`SenderHandle`, `SpawnedHandle`, `SpawnerComponentHandle`,
    `IsFriendly`) and whether `SenderHandle` of a spawn is the node's component or actor.
-3. `RANDO-SPAWNERS learned <id> = <family>`: does `rivet.component(spawned actor, "GameBotShooter")`
-   answer? If no template is ever learned, nothing is ever randomized (safe, but the feature is idle).
+3. `RANDO-SPAWNERS learned <id> = <family>`: 10.17 asks `rivet.components(spawned actor)` once and
+   logs `spawned actor not classified (left alone): <classes>` for bot classes the table does not know
+   (send those lines). Does it answer? If no template is ever learned, nothing is ever randomized (safe, but the feature is idle).
 4. `plan (...): N slot(s) changed`, then the encounter: do the new enemies appear, fight, die, and
    does the door / objective / wave follow? Watch for `put back ... kept so:` lines.
 5. A death in a changed encounter, a checkpoint reload, a planet change and a return.

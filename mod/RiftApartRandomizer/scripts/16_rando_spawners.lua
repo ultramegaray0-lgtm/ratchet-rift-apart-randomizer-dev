@@ -20,6 +20,8 @@
 -- WHAT IS NOT KNOWN UNTIL IT IS SEEN IN YOUR GAME (so nothing is guessed)
 --   * Where Templates sits in a live node: found per node by a signature of the DDL layout (three
 --     dynamic arrays 24 bytes apart, the eight flag bytes after them, sane counts), never assumed.
+--     dev 10.17: it is in the node's Prius (rivet.component(...).prius), read at FactoryGroup +8 and
+--     checked with that signature; the instance (too small in your game) is only a fallback.
 --     A node that does not match is left alone (RANDO-SPAWNERS says why).
 --   * What an actor template is: learned when the game itself spawns it. The spawned actor is asked
 --     for the bot components of the DDL (SP.FAMILY_CLASSES): a turret, a flyer, a swarmer, a ground
@@ -45,7 +47,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.11"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.12"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -76,6 +78,7 @@ SP.LEARN_CAP = 600
 SP.BLOCK_CAP = 300
 SP.BOSS_ZONES = { "BOSS", "FINALE", "HEAVY_FIGHT", "CHASE" }
 SP.BUDGET_SECONDS = 0.003         -- writes per frame stop after this long; the rest follows next frame
+SP.CENSUS_RETRIES = 5             -- dev 10.17: a census stopped by the frame budget is started again this often
 
 -- the bot components of the DDL, most specific first: class, family, role. role: "enemy" (enemy.lua),
 -- "boss" (boss.lua), "story_boss" / "friendly" / "never" (nobody touches them). Classes whose purpose is
@@ -343,8 +346,31 @@ end
 
 -- the bot components of a spawned actor (its first class of SP.FAMILY_CLASSES)
 SP.CLASS_SUFFIXES = { "", "Prius" }
+SP.unclassified_logged = SP.unclassified_logged or {}
 function SP.classify_actor(handle)
   if handle == nil then return nil end
+  -- dev 10.17: one rivet.components call lists the actor's classes (instead of ~90 failing lookups)
+  local okl, names = pcall(rivet.components, handle)
+  if okl and type(names) == "table" and #names > 0 then
+    local have = {}
+    for _, n in ipairs(names) do
+      have[tostring(n)] = true
+      if tostring(n):sub(-5) == "Prius" then have[tostring(n):sub(1, -6)] = true end
+    end
+    for _, e in ipairs(SP.FAMILY_CLASSES) do if have[e[1]] then return e[2], e[1] end end
+    -- not one class of the table: said once per class list, so the next log shows what bots really are
+    local bots = {}
+    for _, n in ipairs(names) do
+      local t = tostring(n)
+      if t:find("Bot", 1, true) or t:find("Boss", 1, true) or t:find("NPC", 1, true) then bots[#bots + 1] = t end
+    end
+    local key = table.concat(bots, ",")
+    if #bots > 0 and not SP.unclassified_logged[key] and count(SP.unclassified_logged) < 20 then
+      SP.unclassified_logged[key] = true
+      log("spawned actor not classified (left alone):", key)
+    end
+    if #bots > 0 then return nil end
+  end
   for _, e in ipairs(SP.FAMILY_CLASSES) do
     for _, suffix in ipairs(SP.CLASS_SUFFIXES) do
       local ok, c = pcall(rivet.component, handle, e[1] .. suffix)
@@ -427,23 +453,64 @@ function SP.still_valid(rec)
   return ok and type(c) == "table" and c.handle == rec.component and tonumber(c.address, 16) == rec.addr
 end
 
+-- dev 10.17: where the SpawnerScriptActionPrius fields really are. rivet_hook's rivet.component gives
+-- `prius` = the component's Prius data (Component.ddlPriusData -> holder { vtable, count, data } ->
+-- data), separate from the instance, and `size` = the class's instance size. 10.12-10.16 searched
+-- only the instance's first min(0x100, size) bytes and needed 0x88: in your game every node failed
+-- ("cannot read the node", rivet.log of 2026-11-17: 0 nodes read in 32 censuses), so nothing was
+-- ever learned or changed. Now the Prius is read at the DDL's own offsets (FactoryGroup +8); the
+-- instance search stays only for a node rivet gives no Prius for.
+SP.PRIUS_X = 0x08                 -- FactoryGroup's offset in SpawnerScriptActionPrius (rivet DDL)
+SP.PRIUS_READ = 0x90              -- bytes of the Prius read: through MaxActivations (+128) and OnNumDeadTrigger
+local function read_ids(ptr, n)
+  if n < 1 then return {} end
+  local b = read_bytes(ptr, n * 8)
+  if not b or #b < n * 8 then return nil end
+  local out = {}
+  for k = 1, n do out[k] = hex64(b, (k - 1) * 8 + 1) end
+  return out
+end
+
 -- one node -> a record, or nil and why
 function SP.read_node(node)
   local okc, c = pcall(rivet.component, node.actor, node.class)
   if not (okc and type(c) == "table" and c.handle == node.component and c.address) then return nil, "instance not reachable" end
   local addr = tonumber(c.address, 16)
   if not valid_ptr(addr) then return nil, "no address" end
-  local len = math.min(SP.HEADER, (c.size and c.size > 0) and c.size or SP.HEADER)
-  local b = read_bytes(addr, len)
-  if not b or #b < 0x88 then return nil, "cannot read the node" end
-  local lay, why = SP.find_layout(b)
-  if not lay then return nil, why end
+  local lay, why, where
+  local pr = c.prius and tonumber(c.prius, 16)
+  if valid_ptr(pr) then
+    local need = SP.PRIUS_X + 0x80
+    local plen = SP.PRIUS_READ
+    if c.prius_size and c.prius_size > 0 and c.prius_size < plen then plen = c.prius_size end
+    local pb = read_bytes(pr, plen)
+    if not pb or #pb < need then why = "cannot read the Prius (" .. tostring(c.prius_size) .. " bytes)"
+    else
+      lay = SP.layout_at(pb, SP.PRIUS_X)
+      if lay then where = "prius" else why = "the Prius does not hold the spawner's fields at +8" end
+    end
+  end
+  if not lay then
+    -- no Prius from rivet (older rivet_hook, the simulator's old nodes): the instance, never past its size
+    local len = math.min(SP.HEADER, (c.size and c.size > 0) and c.size or SP.HEADER)
+    if len < 0x88 then return nil, why or ("no Prius and the instance is only " .. tostring(c.size) .. " bytes") end
+    local b = read_bytes(addr, len)
+    if not b or #b < 0x88 then return nil, why or "cannot read the node" end
+    local why2
+    lay, why2 = SP.find_layout(b)
+    if not lay then return nil, why and (why .. "; instance: " .. tostring(why2)) or why2 end
+    where = "instance"
+  end
   local t = lay.templates
   local tb = read_bytes(t.ptr, t.count * 8)
   if not tb or #tb < t.count * 8 then return nil, "cannot read the Templates list" end
-  local rec = { uid = node.uid, component = node.component, actor = node.actor, addr = addr, x = lay.x,
+  local rec = { uid = node.uid, component = node.component, actor = node.actor, addr = addr, x = lay.x, where = where,
                 tptr = t.ptr, count = t.count, slots = {}, max_alive = lay.max_alive, num_spawns = lay.num_spawns,
                 spawned = 0, alive = {}, alive_n = 0 }
+  -- the spawn points' actor ids: a SpawnerSpawnEvent names its SpawnLocation, which finds the node when the
+  -- event carries no sender (fallback only; never used to change anything)
+  local l = lay.locations
+  if l and l.count >= 1 and l.count <= 32 then rec.locs = read_ids(l.ptr, l.count) end
   for k = 1, t.count do
     local id = hex64(tb, (k - 1) * 8 + 1)
     if not id or id == "0000000000000000" then return nil, "an empty template" end
@@ -462,11 +529,12 @@ end
 local function census(job)
   local okl, list = pcall(rivet.script_nodes, SP.NODE_CLASS, SP.SCAN_LIMIT)
   if not okl or type(list) ~= "table" then
+    if tostring(list):find("budget", 1, true) then error(list, 0) end      -- dev 10.17: SP.tick starts it again
     log("the level's spawner nodes cannot be listed:", tostring(list))
     return
   end
   coroutine.yield()
-  local lvl = { nodes = {}, order = {}, slots_by_addr = {}, skipped = {}, done = false, id = (SP.level_id or 0) + 1 }
+  local lvl = { nodes = {}, order = {}, slots_by_addr = {}, skipped = {}, loc_index = {}, done = false, id = (SP.level_id or 0) + 1 }
   SP.level_id = lvl.id
   local n_in_slice, t0 = 0, clock()
   for _, node in ipairs(list) do
@@ -493,6 +561,13 @@ local function census(job)
         if st then rec.started = st.frame; rec.stopped = st.stopped end
         lvl.nodes[rec.uid] = rec
         lvl.order[#lvl.order + 1] = rec.uid
+        -- dev 10.17: spawn point id -> node uid (false when two nodes share the point: not a lead)
+        for _, id in ipairs(rec.locs or {}) do
+          if id ~= "0000000000000000" then
+            local prev = lvl.loc_index[id]
+            if prev == nil then lvl.loc_index[id] = rec.uid elseif prev ~= rec.uid then lvl.loc_index[id] = false end
+          end
+        end
       else
         lvl.skipped[#lvl.skipped + 1] = tostring(node.uid) .. ": " .. tostring(why)
       end
@@ -509,9 +584,13 @@ local function census(job)
   for _, uid in ipairs(lvl.order) do for _, sl in ipairs(lvl.nodes[uid].slots) do tids[sl.orig] = true end end
   lvl.templates = tids
   local layouts = {}
-  for _, uid in ipairs(lvl.order) do local x = lvl.nodes[uid].x; layouts[x] = (layouts[x] or 0) + 1 end
+  for _, uid in ipairs(lvl.order) do
+    local r = lvl.nodes[uid]
+    local k = string.format("%s+0x%X", r.where == "prius" and "prius " or "", r.x)
+    layouts[k] = (layouts[k] or 0) + 1
+  end
   local lay = {}
-  for _, x in ipairs(sorted_keys(layouts)) do lay[#lay + 1] = string.format("+0x%X x%d", x, layouts[x]) end
+  for _, k in ipairs(sorted_keys(layouts)) do lay[#lay + 1] = string.format("%s x%d", k, layouts[k]) end
   log(string.format("census %d (%s): %d spawner node(s) read, %d template(s), %d skipped%s", lvl.id, tostring(job.why),
       #lvl.order, count(tids), #lvl.skipped, #lay > 0 and (" - layout " .. table.concat(lay, ", ")) or ""))
   for i = 1, math.min(5, #lvl.skipped) do log("  skipped", lvl.skipped[i]) end
@@ -823,8 +902,24 @@ local function distinct_cur(rec)
   return one
 end
 
-function SP.on_started(f)
-  local h = f.SpawnerComponentHandle or f.SenderHandle
+-- dev 10.17: the event's sender comes from ev.sender when its fields carry no SenderHandle
+local function sender_of(f, ev) return f.SenderHandle or (type(ev) == "table" and ev.sender) or nil end
+-- the node of a spawn: its sender, else its SpawnLocation's actor id in one node's SpawnLocations
+local function rec_of_spawn(f, ev)
+  local rec = rec_by_handle(sender_of(f, ev))
+  if rec then return rec end
+  local lvl = SP.level
+  local loc = math.tointeger(tonumber(f.SpawnLocation))
+  if not (lvl and loc and loc ~= 0 and rivet.uid) then return nil end
+  local ok, id = pcall(rivet.uid, loc)
+  if not ok or type(id) ~= "string" then return nil end
+  local uid = lvl.loc_index[id:upper()]
+  return uid and lvl.nodes[uid] or nil
+end
+SP.rec_of_spawn = rec_of_spawn
+
+function SP.on_started(f, ev)
+  local h = f.SpawnerComponentHandle or sender_of(f, ev)
   h = math.tointeger(tonumber(h)) or h
   if h ~= nil then SP.started_handles[h] = { frame = SP.frame } end
   local rec = rec_by_handle(h)
@@ -834,15 +929,15 @@ function SP.on_started(f)
   rec.stopped = nil
   rec.started_cp = SP.cp_hash
 end
-function SP.on_stopped(f)
-  local h = f.SpawnerComponentHandle or f.SenderHandle
+function SP.on_stopped(f, ev)
+  local h = f.SpawnerComponentHandle or sender_of(f, ev)
   h = math.tointeger(tonumber(h)) or h
   if h ~= nil and SP.started_handles[h] then SP.started_handles[h].stopped = SP.frame end
   local rec = rec_by_handle(h)
   if rec then rec.stopped = SP.frame; rec.last_activity = SP.frame end
 end
-function SP.on_spawn(f)
-  local rec = rec_by_handle(f.SenderHandle)
+function SP.on_spawn(f, ev)
+  local rec = rec_of_spawn(f, ev)
   if not rec then return end
   local h = math.tointeger(tonumber(f.SpawnedHandle)) or f.SpawnedHandle
   rec.started = rec.started or SP.frame
@@ -878,8 +973,9 @@ function SP.on_spawn(f)
     SP.learn(tid, fam, "spawned by " .. tostring(rec.uid))
   end
 end
-function SP.on_death(f)
-  local h = math.tointeger(tonumber(f.SenderHandle)) or f.SenderHandle
+function SP.on_death(f, ev)
+  local s = sender_of(f, ev)
+  local h = math.tointeger(tonumber(s)) or s
   local who = h ~= nil and SP.spawned_by[h]
   if not who then return end
   SP.spawned_by[h] = nil
@@ -887,9 +983,10 @@ function SP.on_death(f)
   local rec = lvl and lvl.nodes[who.uid]
   if rec and rec.alive[h] then rec.alive[h] = nil; rec.alive_n = rec.alive_n - 1; rec.last_activity = SP.frame end
 end
-function SP.on_health_bar(f)
+function SP.on_health_bar(f, ev)
   if f.IsFriendly == true then return end
-  local h = math.tointeger(tonumber(f.SenderHandle)) or f.SenderHandle
+  local s = sender_of(f, ev)
+  local h = math.tointeger(tonumber(s)) or s
   local who = h ~= nil and SP.spawned_by[h]
   if not (who and who.tid) then return end
   SP.learn_health_bar(who.tid)
@@ -950,8 +1047,18 @@ function SP.tick(frame, ready)
   if not ready then return end
   if SP.job then
     local ok, err = coroutine.resume(SP.job.co)
-    if not ok then log("RANDO-ERROR census:", tostring(err)); SP.job = nil
-    elseif coroutine.status(SP.job.co) == "dead" then SP.job = nil end
+    if not ok then
+      SP.job = nil
+      -- dev 10.17: a frame that ran past rivet_hook's budget is a bad frame, not a broken level: the
+      -- census starts again shortly (10.16 dropped it until the next checkpoint or planet)
+      SP.census_retries = (SP.census_retries or 0) + 1
+      if tostring(err):find("budget", 1, true) and SP.census_retries <= SP.CENSUS_RETRIES then
+        log("census interrupted by the frame budget - reading again (" .. SP.census_retries .. "/" .. SP.CENSUS_RETRIES .. ")")
+        SP.schedule_scan(SP.scan_why or "after a frame budget overrun", 20)
+      else
+        log("RANDO-ERROR census:", tostring(err))
+      end
+    elseif coroutine.status(SP.job.co) == "dead" then SP.job = nil; SP.census_retries = 0 end
     return
   end
   if (SP.scan_at and frame >= SP.scan_at) or (SP.level == nil and SP.scan_at == nil) then
@@ -979,6 +1086,7 @@ end
 -- a planet change or a level load: read the spawners again
 function SP.on_level(why)
   SP.level = nil
+  SP.census_retries = 0
   SP.spawned_by, SP.started_handles = {}, {}
   SP.schedule_scan(why)
 end
@@ -994,7 +1102,7 @@ if not SP.subscribed then
   local function on(class, fn, always)
     sub(class, function(ev)
       if not always and not SP.any_enabled() then return end
-      local ok, err = pcall(fn, ev.fields or {})
+      local ok, err = pcall(fn, ev.fields or {}, ev)
       if not ok then log("RANDO-ERROR", class, tostring(err)) end
     end)
   end
