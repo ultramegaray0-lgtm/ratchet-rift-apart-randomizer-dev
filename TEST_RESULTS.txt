@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.26 (build 10.0.17) - test run 2026-11-17 22:24 UTC
+Rift Apart Randomizer dev 10.26 (build 10.0.17) - test run 2026-11-17 22:35 UTC
 Python 3.13.18 on Linux
-ran 677, failures 0, errors 0, skipped 23
+ran 682, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -602,6 +602,11 @@ test_the_armed_factory_never_spawned_again (tests.test_v1026.RoundThirtySixLogTe
 test_the_challenge_still_completed (tests.test_v1026.RoundThirtySixLogTests.test_the_challenge_still_completed) ... ok
 test_the_first_enemy_templates_write_read_back_ok (tests.test_v1026.RoundThirtySixLogTests.test_the_first_enemy_templates_write_read_back_ok) ... ok
 test_the_game_path_was_replaced (tests.test_v1026.RoundThirtySixLogTests.test_the_game_path_was_replaced) ... ok
+test_dev_10_26_ran (tests.test_v1026_result.RoundThirtySevenLogTests.test_dev_10_26_ran) ... ok
+test_every_armed_factory_spawned_the_replacement (tests.test_v1026_result.RoundThirtySevenLogTests.test_every_armed_factory_spawned_the_replacement) ... ok
+test_the_challenge_completed_and_everything_was_put_back (tests.test_v1026_result.RoundThirtySevenLogTests.test_the_challenge_completed_and_everything_was_put_back) ... ok
+test_the_game_path_was_replaced (tests.test_v1026_result.RoundThirtySevenLogTests.test_the_game_path_was_replaced) ... ok
+test_two_experiments_on_fresh_factories (tests.test_v1026_result.RoundThirtySevenLogTests.test_two_experiments_on_fresh_factories) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -701,6 +706,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 677 tests in 166.534s
+Ran 682 tests in 165.868s
 
 OK (skipped=23)

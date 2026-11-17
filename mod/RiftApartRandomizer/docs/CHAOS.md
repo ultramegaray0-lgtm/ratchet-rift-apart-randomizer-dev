@@ -1,7 +1,8 @@
 # Chaos Randomizer (dev 10.13, kit 10.0.9): EVERYTHING CAN BECOME ANYTHING
 
-> **STATUS (dev 10.26, kit 10.0.17): NOT WORKING IN THE GAME.** No enemy or boss has ever been replaced in your game.
-> The switches below load and toggle, but the spawner layer has never read an encounter (see KNOWN_ISSUES 0r).
+> **STATUS (dev 10.26, kit 10.0.17): THIS FEATURE DOES NOT WORK IN THE GAME YET.** The replacement mechanism itself
+> was proven in round37 (developer experiment `dev(spawnproof).lua`), but this feature does not use it yet. No enemy or boss has ever been replaced in your game.
+> The switches below load and toggle, but the spawner layer has never read an encounter (see KNOWN_ISSUES 0s).
 > A developer experiment, `dev(spawnproof).lua`, is trying to prove one replacement first (TESTING.md 2-dev13).
 
 > **READ THIS BEFORE SWITCHING IT ON.** Chaos has **no protection of any kind**. A door may never

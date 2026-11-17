@@ -1,5 +1,9 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.26 result (round37):** the FIRST enemy replacements in the real game: spawnproof v6 turned robot shooters
+into robot melee bots on 6 arena factories (20/20 spawns, challenge completed twice, all put back). The mechanism is a
+SunsetSpawnerFactory node's "Templates" script variable. The Enemy / Boss / Chaos Randomizers do not use it yet.
+
 **Dev 10.26 (kit 10.0.17):** still no enemy replacement SEEN in the game, but the dev 10.25 test made the first real
 write of an enemy Templates value (factory 1109878, robot melee -> robot shooter, read back OK, put back OK, challenge
 completed). That factory had already spawned and never spawned again. spawnproof v6 arms only factories that have not

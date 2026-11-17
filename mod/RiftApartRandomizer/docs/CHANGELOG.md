@@ -2,6 +2,13 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.26 result (round37): first enemy replacements in the game
+
+- spawnproof v6, two runs of Zurkon challenge A1: robot shooter -> robot melee on 3 fresh factories each run; 6/6
+  REPLACEMENT SPAWNED, 20/20 spawns of those factories were robot melee; both runs completed; all put back.
+- The Enemy / Boss / Chaos Randomizers do not use this route yet (they still change nothing).
+- Tests: tests/test_v1026_result.py (5).
+
 ## Dev 10.26 (kit 10.0.17; not released): fresh factories only
 
 Asked: (the rivet.log of 2026-11-18, dev 10.25, tests/data/round36_rivet.log). Seeds unchanged. **Still no replacement

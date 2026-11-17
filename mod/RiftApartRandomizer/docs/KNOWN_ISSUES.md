@@ -4,6 +4,15 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0s. Dev 10.26 result (round37): the replacement MECHANISM works in the game; the randomizers do not use it yet
+
+- WORKS (the game's own data, round37): spawnproof v6 changed 6 arena factories' Templates (robot shooter -> robot
+  melee) before they spawned; all 20 enemies they created were robot melee; challenge A1 completed twice; all put back.
+- PENDING: your on-screen confirmation of what you saw.
+- NOT YET: Enemy / Boss / Chaos Randomizers (16_rando_spawners, enemy.lua, boss.lua, chaos.lua) still use the old
+  Prius / Template route and change nothing. They must be rebuilt on the factory Templates route.
+- Not covered by the route yet: enemies from SpawnerScriptAction nodes with a Template actor GROUP (SpawnFactory 0).
+
 ## 0r. Since dev 10.26 (kit 10.0.17): still NO enemy replacement seen in the game
 
 - NOT FIXED. Your dev 10.25 log (round36): the first enemy Templates write in the game (factory 1109878, read back OK,

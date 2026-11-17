@@ -4,6 +4,21 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.26 RESULT (round37): the first enemy replacements in the real game
+
+- Log: tests/data/round37_rivet.log (dev 10.26 scripts, v7 helper; Zurkon, challenge A1 played twice to the end).
+- CONFIRMED BY THE GAME'S OWN DATA: two experiments, each "enm_pirate_robot_sh -> enm_pirate_robot_me on 3 factory(ies)
+  that have not spawned yet" (1097939/40/44, then 1104436/37/41). All 6 writes read back OK. All 6 factories' first
+  spawns: "VERIFY ... REPLACEMENT SPAWNED". All 20 spawns of armed factories were enm_pirate_robot_me
+  (GameBotMeleeSwarmer) where these factories had held the robot shooter; 0 ORIGINAL, 0 SOMETHING ELSE. Both A1 runs
+  completed (EndReason=0, ~228 s each, as before); all 6 variables put back OK at the next checkpoint; no RANDO-ERROR.
+  ("Spawned" = rivet.name / rivet.components of the handle the SpawnerSpawnEvent carried: what the engine created.)
+- PENDING: the player's own on-screen observation (melee robots in place of shooter robots in those waves).
+- So the mechanism for the Enemy / Boss / Chaos Randomizers is found: write another enemy's Templates value into a
+  SunsetSpawnerFactory node's "Templates" script variable (SceneManager script variables, rando_give.dll v7) BEFORE
+  that factory spawns. The kit's 16_rando_spawners / enemy / boss / chaos do NOT use it yet - they still do nothing.
+- Tests: tests/test_v1026_result.py (5, real log).
+
 ## 2026-11-18: dev 10.26 (kit 10.0.17): fresh factories only
 
 - Log: tests/data/round36_rivet.log (dev 10.25 scripts, v7 helper; Zurkon arena challenge A1 replayed and completed,
