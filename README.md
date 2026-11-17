@@ -1,5 +1,11 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.27 (kit 10.0.18):** the Enemy Randomizer (`-`) is rebuilt on the method round37 proved: it writes another
+regular enemy's template into a spawner's script variable before the spawner runs - SunsetSpawnerFactory `Templates`
+(proven), SpawnerScriptAction `Template` and actor groups (robomutts / thugs; not yet seen in the game), each verified
+on its first spawn. Learned enemies are kept in the save. NOT yet run in the game; Boss / Chaos still do nothing.
+`docs/KNOWN_ISSUES.md` 0t, `docs/ENEMIES_AND_BOSSES.md` section 0, `docs/TESTING.md` 2-dev14.
+
 **Dev 10.26 result (round37):** the FIRST enemy replacements in the real game: spawnproof v6 turned robot shooters
 into robot melee bots on 6 arena factories (20/20 spawns, challenge completed twice, all put back). The mechanism is a
 SunsetSpawnerFactory node's "Templates" script variable. The Enemy / Boss / Chaos Randomizers do not use it yet.

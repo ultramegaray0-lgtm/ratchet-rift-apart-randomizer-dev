@@ -1,6 +1,10 @@
 -- DEVELOPER TOOL - not part of a release. SPAWN PROOF v6 (dev 10.26): controlled enemy replacements on Zurkon,
 -- to prove (or disprove) in your game the mechanism the Enemy / Boss / Chaos Randomizers will use.
 --
+-- dev 10.27: ITS RESULT (round37: 6/6 factories, 20/20 spawns replaced) is now the Enemy Randomizer itself
+-- (16_rando_spawners.lua section SP.V). This file STANDS DOWN - reads and writes nothing - while the Enemy Randomizer
+-- is ON (both would write the same factory variables); with it OFF it runs as before.
+--
 -- WHAT YOUR DEV 10.24 LOG SHOWED (tests/data/round35_rivet.log, real game, v7 helper, SceneManager found):
 --   * The arena's enemies are spawned by SunsetSpawnerFactory nodes (the SpawnerSpawnEvent's SpawnFactory). Each
 --     factory node has its own script variables: "Templates" (3990217346 = rivet.hash "Templates"), "Locations"
@@ -68,7 +72,7 @@
 --   6. PUT BACK when the node's Spawner stops, or on a level change (only what still holds what was written).
 --   Every unit of work is guarded: a frame-budget error yields and retries on the next frame instead of ending it.
 -- Every line starts with "RANDO-SPAWNPROOF". Remove this file and nothing of it runs.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.17"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.18"   -- the kit check (10_rando_runtime.lua)
 RANDO_SPAWNPROOF = RANDO_SPAWNPROOF or {}
 local P = RANDO_SPAWNPROOF
 P.version = 6
@@ -852,6 +856,17 @@ end
 
 function P.on_frame()
   P.frame = P.frame + 1
+  local V = RANDO_SPAWNERS and RANDO_SPAWNERS.V
+  if V and V.enabled and V.enabled() then
+    if not P.stood_down then
+      P.stood_down = true
+      for _, A in ipairs(P.armed) do if not A.restored then P.put_back(A, "the Enemy Randomizer is on") end end
+      P.job = nil
+      log("standing down: the Enemy Randomizer is ON (it uses this experiment's method); nothing of spawnproof runs")
+    end
+    return
+  end
+  if P.stood_down then P.stood_down = nil; log("the Enemy Randomizer is OFF: spawnproof runs again") end
   if P.job then
     local ok, err = coroutine.resume(P.job)
     if not ok then

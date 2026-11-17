@@ -4,6 +4,45 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.27 (kit 10.0.18): the Enemy Randomizer on the variable route
+
+- Asked: turn round37's proven factory method into the Enemy Randomizer (the `-` key), cover every normal enemy and
+  spawning mechanism (robomutts / thugs included), one registry, no more investigation-only rounds.
+- Why the old Enemy Randomizer never worked: enemy.lua was a client of 16_rando_spawners' census route (10.12-10.20),
+  which looks for a Prius `Templates` list in SpawnerScriptAction nodes. No real log ever showed one (the census read
+  0 nodes every round); the enemy is decided by script VARIABLES instead (round35-37).
+- Built (16_rando_spawners.lua section SP.V, ~900 lines, the production code):
+  * adapters: factory (SunsetSpawnerFactory `Templates`, plug 3990217346 - PROVEN), template (SpawnerScriptAction
+    `Template` single actor, 1835115251), group (the same variable holding an actor group, GROUP_BIT 0x80000000 -
+    round35-37's robomutt / thug / robot / bladeball waves with SpawnFactory 0). Factories nodes are covered by their
+    factories. Spawns tie to factories by SpawnFactory, to nodes by LastSpawn then the Spawner's spawn list.
+  * registry: template -> name / bot class / family / role, from spawns, from the template actor before any spawn
+    (rivet.components + rivet.name of the handle: unknown whether your game answers; logged per scan), and from the
+    save (state.enemy_reg by uid; rivet.find_uid adds known enemies loaded on another level). Group members:
+    state.enemy_groups by node id. Both kept over New Game and the companion's restore.
+  * rules: role "enemy" only (SP.FAMILY_CLASSES + name exclusions + health bar = boss tier); walkers (ground,
+    swarmer) / flyers / turrets stay in their group; another kind; loaded here; picks by seed + spawner id + original
+    name (stable over loads); a template that spawned two kinds is MIXED and never used; uid form kept as the proven
+    write (none -> none). Only spawners with 0 spawns on this level (counted even while off) and shared variables only
+    if every user is fresh.
+  * verification and safety: first spawn of each change -> REPLACEMENT / ORIGINAL / SOMETHING ELSE; ORIGINAL puts it
+    back; 2 ORIGINAL with 0 REPLACEMENT switches the adapter off for the session (all its changes put back). Put back
+    on checkpoint load, level / planet change, `-` off, story boss area (back on after it), stuck 180 s, 5 retries
+    (then kept original for the seed: spawn_blocked "v:<id>"); only a variable that still holds exactly what was
+    written, same generation. Jobs sliced at 1.5 ms, budget errors yield and retry, a failed read is read again.
+  * a group is replaced by ONE enemy, re-chosen after every spawn (a mixed wave); a group with a non-bot member or
+    walkers + flyers is never changed; groups change from their second run (the first learns the members).
+- enemy.lua: route "vars"; status / Ctrl+`-` from SP.V.status(). Setting `enemy_route = "census"` keeps the old route
+  (the v1012-v1019 tests use it: they cover the code Boss / Chaos still run). Boss / Chaos unchanged (still nothing in
+  the game). dev(spawnproof).lua stands down while the Enemy Randomizer is ON.
+- Tests: tests/test_v1027.py (40) on the PRODUCTION code: 5 rule tests; 31 simulator tests (synthetic memory; the
+  simulated game spawns what the variable holds - proven for factories, ASSUMED for nodes and groups); round37's real
+  factory data replayed (the engine changes 1097939/40/44 like the experiment, plus the bladeball factories, all
+  REPLACEMENT SPAWNED, the pub's NPC factories untouched); the 6/6 / 20/20 benchmark. Full suite: 722 run, 0
+  failures, 23 skipped (9 pwsh, 14 old git history).
+- Verified in the game: NOTHING of 10.27. In-game evidence for the method: round37 (factory route, robot shooter ->
+  robot melee). Visual confirmation: none yet. Next: TESTING.md 2-dev14.
+
 ## 2026-11-18: dev 10.26 RESULT (round37): the first enemy replacements in the real game
 
 - Log: tests/data/round37_rivet.log (dev 10.26 scripts, v7 helper; Zurkon, challenge A1 played twice to the end).

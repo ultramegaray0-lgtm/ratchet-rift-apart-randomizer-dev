@@ -25,7 +25,15 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from harness import Game  # noqa: E402
+from harness import Game as _HarnessGame  # noqa: E402
+
+
+def Game(*args, **kw):
+    """dev 10.27: these tests cover the old census / Prius route (the code the Boss and Chaos Randomizers still use);
+    enemy.lua takes it only with enemy_route = "census" (its default is the variable route, tests/test_v1027.py)"""
+    st = dict(kw.pop("settings", None) or {})
+    st.setdefault("enemy_route", "census")
+    return _HarnessGame(*args, settings=st, **kw)
 from luajson import py  # noqa: E402
 from test_v1012 import (LEVEL, LEARNED, ENEMY_SLOTS, BOSS_SLOTS, NEVER, G1, G2, F1, CLASS,  # noqa: E402
                         build_level, changed, original, play, slots)

@@ -1,9 +1,54 @@
 # Enemy Randomizer and Boss Randomizer (dev 10.12, kit 10.0.8)
 
-> **STATUS (dev 10.26, kit 10.0.17): THIS FEATURE DOES NOT WORK IN THE GAME YET.** The replacement mechanism itself
-> was proven in round37 (developer experiment `dev(spawnproof).lua`), but this feature does not use it yet. No enemy or boss has ever been replaced in your game.
-> The switches below load and toggle, but the spawner layer has never read an encounter (see KNOWN_ISSUES 0s).
-> A developer experiment, `dev(spawnproof).lua`, is trying to prove one replacement first (TESTING.md 2-dev13).
+> **STATUS (dev 10.27, kit 10.0.18):**
+> - **Enemy Randomizer (`-`): REBUILT on the method round37 proved in the game - NOT yet run in your game.** Section 0
+>   below describes it. Sections 1-8 describe the OLD census route (10.12-10.20), which never found an encounter in
+>   any real log; the Enemy Randomizer only uses it with `enemy_route = "census"` (a test setting).
+> - **Boss Randomizer (`=`): DOES NOT WORK IN THE GAME.** Still the old census route.
+> - Evidence levels: in-game logs - round37's factory experiment only; visual confirmation - none yet.
+
+## 0. Dev 10.27: the Enemy Randomizer on the variable route
+
+**What it changes.** A spawner's enemy is the template actor held by one of its script variables (SceneManager
+script variables, read and written through rando_give.dll v7). Before the spawner runs, that variable gets another
+regular enemy's template. The spawner then spawns, counts and completes the encounter itself.
+
+| Adapter | Spawner and variable | Who uses it (your logs) | Status |
+|---|---|---|---|
+| factory | SunsetSpawnerFactory node, `Templates` (one actor) | arena waves on Zurkon: robot shooter, robot melee, bladeball; pub NPCs (never touched) | **PROVEN in the game** (round37: 6/6, 20/20) |
+| template | SpawnerScriptAction node, `Template` (one actor) | portals, props, NPCs on Zurkon; enemies elsewhere unknown | same format; not yet seen with an enemy |
+| group | SpawnerScriptAction node, `Template` holding an actor GROUP | robomutt / thug / robot / bladeball waves (SpawnFactory 0) | not yet seen in the game; re-chosen after each spawn |
+
+Nodes with a `Factories` variable spawn through their factories, so the factory adapter covers them.
+
+**Registry.** What each template spawns (name, bot class, family, role), learned from the game's own spawns, from the
+template actor before any spawn when the game answers, and from the save (`state.enemy_reg`, by template uid, kept
+over a New Game). A known enemy whose template actor is loaded on another level (`rivet.find_uid`) joins that level's
+pool.
+
+**Rules.** Only role "enemy" (bot classes of `SP.FAMILY_CLASSES`: turrets, flyers, swarmers, ground bots) is replaced
+or used. Never: large bots, anything that showed a health bar (boss tier), story bosses, friendly bots, mounts, NPCs,
+names with npc_ / boss / civ_ / test_ and similar, portals, props, vehicles. Walkers (ground + swarmer) become
+walkers, flyers flyers, turrets turrets, always another kind. Picks are fixed by the seed and the spawner. Only
+spawners that have not spawned yet on this level are changed; a shared variable only if every user is fresh.
+
+**Supported enemy types** = every regular enemy of those bot classes that one of the three spawner kinds spawns, with a
+replacement of its movement group loaded on the same level. In-game evidence: enm_pirate_robot_sh -> enm_pirate_robot_me
+(Zurkon factories, round37). Everything else: simulator only.
+
+**Not supported** (KNOWN_ISSUES 0t): enemies placed in a level without a spawner; replacements from another planet
+(not loaded); boss-tier enemies (the `=` Boss Randomizer, not working); a group mixing walkers and flyers or holding a
+non-bot. The first wave of a never-seen kind and a group's first run are originals (learning).
+
+**Put back** on a checkpoint load, a level or planet change, `-` off, a story boss area, a spawner the game ignored,
+an encounter stuck 180 s without a death, or one retried 5 times (that one keeps its originals for the seed).
+
+**Log lines** (`RANDO-ENEMIES`): `scan N on <planet>: ... factory Templates, ... node Template, ... node Template
+group; K enemy kind(s) known here; template actors asked before a spawn: N, answered M`, `learned template ...`,
+`CHANGED <adapter> <id> (...): A -> B`, `VERIFY ...: REPLACEMENT SPAWNED / ORIGINAL SPAWNED / SOMETHING ELSE`,
+`group node ...: member ...`, `ADAPTER OFF ...`, `put back (...)`, `BLOCKED: ...`, `level summary (...)`.
+On screen: "Enemy Randomizer: working" (the first confirmed replacement of a session), "Enemy Randomizer cannot
+work" (helper missing), "one kind of spawner cannot be changed" (an adapter switched off). Ctrl+`-` shows the counts.
 
 > dev 10.13: a third, separate feature, the **Chaos Randomizer** (`chaos.lua`, BACKSPACE), has none of the
 > rules and safety nets below and **takes priority over both while ON** (their settings are kept, they

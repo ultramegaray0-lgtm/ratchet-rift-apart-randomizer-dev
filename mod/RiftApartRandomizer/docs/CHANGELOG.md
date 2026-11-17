@@ -2,6 +2,34 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.27 (kit 10.0.18; not released): the Enemy Randomizer on the proven method
+
+Asked: rebuild the Enemy Randomizer on round37's factory method, cover every normal enemy and spawning mechanism.
+Seeds unchanged. **Nothing of 10.27 has run in the game yet.**
+
+- 16_rando_spawners.lua, new section SP.V ("the variable route"): one registry and one rule set over three adapters -
+  factory `Templates` (PROVEN in round37), node `Template` one actor, node `Template` GROUP (robomutts / thugs; the
+  group is replaced by one enemy, re-chosen after every spawn). Lists the level's SunsetSpawnerFactory and
+  SpawnerScriptAction nodes every 2 s, reads each variable's original, learns what every template spawns (spawns,
+  template actors before a spawn, the save), changes only spawners that have not spawned on this level, verifies the
+  first spawn of each change, switches an adapter off for the session when the game ignores it, and puts back on
+  checkpoint loads, level / planet changes, `-` off, story boss areas, stuck (180 s) and retried (5x) encounters.
+- Rules: role "enemy" only (never boss tier, health-bar enemies, story bosses, friendlies, NPCs, mounts, props);
+  walkers -> walkers, flyers -> flyers, turrets -> turrets; another kind; loaded on this level; seeded by enemy name
+  and spawner id. Learned kinds and group members are saved (state.enemy_reg / enemy_groups, kept over New Game and
+  a companion restore).
+- enemy.lua: registers on the variable route (`route = "vars"`); Ctrl+`-` shows changed spawners per adapter, enemy
+  kinds here / known, replaced / ignored this session. The old census route stays for the Boss and Chaos Randomizers
+  (still not working) and, for the tests, `enemy_route = "census"`.
+- On screen: "Enemy Randomizer: working" (first confirmed replacement of a session), "Enemy Randomizer cannot work"
+  (rando_give.dll v6), "one kind of spawner cannot be changed" (adapter off), stuck / retried notes.
+- dev(spawnproof).lua stands down while the Enemy Randomizer is ON.
+- Banner dev 10.27, kit 10.0.18 (every RANDO_FILES tag). Tests: tests/test_v1027.py (40: rules; the production engine
+  in the simulator - detection, selection, waves, checkpoints, transitions, the key, ignored writes, shared and
+  regenerated variables, budget errors, errors, helper v6, health bars, stuck / retried encounters, boss areas, node
+  and group adapters; round37's real factory data replayed). Old-route tests run with enemy_route = "census".
+  Full suite: 722 run, 0 failures, 23 skipped.
+
 ## Dev 10.26 result (round37): first enemy replacements in the game
 
 - spawnproof v6, two runs of Zurkon challenge A1: robot shooter -> robot melee on 3 fresh factories each run; 6/6

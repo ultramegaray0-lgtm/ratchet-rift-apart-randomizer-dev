@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.26 (build 10.0.17) - test run 2026-11-17 22:35 UTC
+Rift Apart Randomizer dev 10.27 (build 10.0.18) - test run 2026-11-17 23:34 UTC
 Python 3.13.18 on Linux
-ran 682, failures 0, errors 0, skipped 23
+ran 722, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -607,6 +607,46 @@ test_every_armed_factory_spawned_the_replacement (tests.test_v1026_result.RoundT
 test_the_challenge_completed_and_everything_was_put_back (tests.test_v1026_result.RoundThirtySevenLogTests.test_the_challenge_completed_and_everything_was_put_back) ... ok
 test_the_game_path_was_replaced (tests.test_v1026_result.RoundThirtySevenLogTests.test_the_game_path_was_replaced) ... ok
 test_two_experiments_on_fresh_factories (tests.test_v1026_result.RoundThirtySevenLogTests.test_two_experiments_on_fresh_factories) ... ok
+test_npc_factories_of_the_pub_are_never_touched (tests.test_v1027.Round37ReplayTests.test_npc_factories_of_the_pub_are_never_touched) ... ok
+test_the_benchmark_still_reads_6_of_6_and_20_of_20 (tests.test_v1027.Round37ReplayTests.test_the_benchmark_still_reads_6_of_6_and_20_of_20) ... ok
+test_the_engine_changes_the_arena_like_the_experiment_and_more (tests.test_v1027.Round37ReplayTests.test_the_engine_changes_the_arena_like_the_experiment_and_more) ... ok
+test_the_write_is_the_format_round37_proved (tests.test_v1027.Round37ReplayTests.test_the_write_is_the_format_round37_proved) ... ok
+test_a_checkpoint_load_puts_back_and_the_save_changes_the_next_try_from_the_start (tests.test_v1027.SimulatorTests.test_a_checkpoint_load_puts_back_and_the_save_changes_the_next_try_from_the_start) ... ok
+test_a_death_keeps_the_watchdog_quiet (tests.test_v1027.SimulatorTests.test_a_death_keeps_the_watchdog_quiet) ... ok
+test_a_frame_budget_error_in_a_listing_is_retried (tests.test_v1027.SimulatorTests.test_a_frame_budget_error_in_a_listing_is_retried) ... ok
+test_a_group_adapter_the_game_ignores_turns_off (tests.test_v1027.SimulatorTests.test_a_group_adapter_the_game_ignores_turns_off) ... ok
+test_a_group_node_learns_its_members_then_is_changed_on_the_next_try (tests.test_v1027.SimulatorTests.test_a_group_node_learns_its_members_then_is_changed_on_the_next_try) ... ok
+test_a_group_with_a_non_bot_is_never_changed (tests.test_v1027.SimulatorTests.test_a_group_with_a_non_bot_is_never_changed) ... ok
+test_a_health_bar_makes_a_kind_boss_tier_and_its_changes_go_back (tests.test_v1027.SimulatorTests.test_a_health_bar_makes_a_kind_boss_tier_and_its_changes_go_back) ... ok
+test_a_level_change_puts_back (tests.test_v1027.SimulatorTests.test_a_level_change_puts_back) ... ok
+test_a_new_kind_learned_mid_fight_widens_the_pool (tests.test_v1027.SimulatorTests.test_a_new_kind_learned_mid_fight_widens_the_pool) ... ok
+test_a_node_template_is_changed_and_verified (tests.test_v1027.SimulatorTests.test_a_node_template_is_changed_and_verified) ... ok
+test_a_read_lost_to_the_budget_is_read_again (tests.test_v1027.SimulatorTests.test_a_read_lost_to_the_budget_is_read_again) ... ok
+test_a_shared_variable_with_a_spent_user_is_never_changed (tests.test_v1027.SimulatorTests.test_a_shared_variable_with_a_spent_user_is_never_changed) ... ok
+test_a_spawner_that_ignores_the_write_is_put_back_and_the_adapter_stops (tests.test_v1027.SimulatorTests.test_a_spawner_that_ignores_the_write_is_put_back_and_the_adapter_stops) ... ok
+test_a_story_boss_area_puts_back (tests.test_v1027.SimulatorTests.test_a_story_boss_area_puts_back) ... ok
+test_a_stuck_encounter_keeps_its_original_enemies (tests.test_v1027.SimulatorTests.test_a_stuck_encounter_keeps_its_original_enemies) ... ok
+test_a_variable_regenerated_by_the_game_is_left_alone (tests.test_v1027.SimulatorTests.test_a_variable_regenerated_by_the_game_is_left_alone) ... ok
+test_after_the_first_spawns_the_fresh_factories_change_and_spawn_the_replacement (tests.test_v1027.SimulatorTests.test_after_the_first_spawns_the_fresh_factories_change_and_spawn_the_replacement) ... ok
+test_an_error_is_logged_and_the_next_listing_works (tests.test_v1027.SimulatorTests.test_an_error_is_logged_and_the_next_listing_works) ... ok
+test_ctrl_key_reports (tests.test_v1027.SimulatorTests.test_ctrl_key_reports) ... ok
+test_factories_are_listed_and_nothing_unknown_is_changed (tests.test_v1027.SimulatorTests.test_factories_are_listed_and_nothing_unknown_is_changed) ... ok
+test_five_retries_keep_an_encounter_original (tests.test_v1027.SimulatorTests.test_five_retries_keep_an_encounter_original) ... ok
+test_flyers_only_for_flyers_turrets_for_turrets_never_boss_or_npc (tests.test_v1027.SimulatorTests.test_flyers_only_for_flyers_turrets_for_turrets_never_boss_or_npc) ... ok
+test_helper_v6_says_so_on_screen_and_writes_nothing (tests.test_v1027.SimulatorTests.test_helper_v6_says_so_on_screen_and_writes_nothing) ... ok
+test_later_waves_factories_found_by_a_later_scan (tests.test_v1027.SimulatorTests.test_later_waves_factories_found_by_a_later_scan) ... ok
+test_off_by_the_save_nothing_is_read_or_written (tests.test_v1027.SimulatorTests.test_off_by_the_save_nothing_is_read_or_written) ... ok
+test_spawnproof_stands_down_while_the_enemy_randomizer_is_on (tests.test_v1027.SimulatorTests.test_spawnproof_stands_down_while_the_enemy_randomizer_is_on) ... ok
+test_template_actors_answering_before_a_spawn_change_the_first_wave (tests.test_v1027.SimulatorTests.test_template_actors_answering_before_a_spawn_change_the_first_wave) ... ok
+test_templates_without_uid_still_change_within_the_level (tests.test_v1027.SimulatorTests.test_templates_without_uid_still_change_within_the_level) ... ok
+test_the_key_off_puts_back_at_once_and_on_changes_only_fresh_spawners (tests.test_v1027.SimulatorTests.test_the_key_off_puts_back_at_once_and_on_changes_only_fresh_spawners) ... ok
+test_the_seed_fixes_the_picks (tests.test_v1027.SimulatorTests.test_the_seed_fixes_the_picks) ... ok
+test_the_spawner_runtime_switch_stops_it (tests.test_v1027.SimulatorTests.test_the_spawner_runtime_switch_stops_it) ... ok
+test_movement_groups (tests.test_v1027.UnitTests.test_movement_groups) ... ok
+test_names_cut_at_64_characters_still_match (tests.test_v1027.UnitTests.test_names_cut_at_64_characters_still_match) ... ok
+test_plug_names_are_the_engines_hashes (tests.test_v1027.UnitTests.test_plug_names_are_the_engines_hashes) ... ok
+test_roles (tests.test_v1027.UnitTests.test_roles) ... ok
+test_the_enemy_client_uses_the_variable_route (tests.test_v1027.UnitTests.test_the_enemy_client_uses_the_variable_route) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -706,6 +746,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 682 tests in 165.868s
+Ran 722 tests in 146.919s
 
 OK (skipped=23)

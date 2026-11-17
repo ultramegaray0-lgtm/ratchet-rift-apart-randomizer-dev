@@ -13,7 +13,15 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from harness import Game  # noqa: E402
+from harness import Game as _HarnessGame  # noqa: E402
+
+
+def Game(*args, **kw):
+    """dev 10.27: these tests cover the old census / Prius route (the code the Boss and Chaos Randomizers still use);
+    enemy.lua takes it only with enemy_route = "census" (its default is the variable route, tests/test_v1027.py)"""
+    st = dict(kw.pop("settings", None) or {})
+    st.setdefault("enemy_route", "census")
+    return _HarnessGame(*args, settings=st, **kw)
 from luajson import py  # noqa: E402
 from test_v1012 import (LEVEL, LEARNED, CLASS, G1, G2, G3, F1, F2, T1, B1, B2, B3, HB, STORY, FRIEND, UNKNOWN,  # noqa: E402
                         ENEMY_SLOTS, BOSS_SLOTS, build_level, slots, original, changed, play, alive)
@@ -57,7 +65,7 @@ class LoadAndToggleTests(unittest.TestCase):
     def test_loads_off_by_default(self):
         g = game()
         self.assertTrue(g.log_has("RANDO-CHAOS\tinstalled (OFF"))
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.17"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.18"), [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.R.config.chaos_randomizer)
         self.assertEqual(g.R.config.key_chaos, "BACKSPACE")
         self.assertFalse(g.g.RANDO_CHAOS.enabled())

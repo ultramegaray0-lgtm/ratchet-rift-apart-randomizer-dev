@@ -4,7 +4,7 @@
 -- NEW seed with its own progress: start it with New Game. Lines starting with -- are notes; to
 -- change an option, remove the -- in front of it and edit the value. A wrong value is reported in
 -- rivet.log (search RANDO-SETTINGS) and the default is used instead.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.17"   -- version check (do not edit)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.18"   -- version check (do not edit)
 RANDO_SETTINGS = {
   -- THE SEED: "random" = the companion picks one and remembers it. Any other text is a fixed seed
   -- (the same text and settings give the same seed on every PC), e.g. "lombax-ryno-2026".
@@ -67,7 +67,8 @@ RANDO_SETTINGS = {
 
   -- ENEMIES AND BOSSES (DEV DEFAULTS ON; the save remembers changes made with the in-game keys).
   -- These only decide the start of a save that has never used the keys; they do not change the seed.
-  enemy_randomizer = true,            -- regular enemies of combat encounters become other regular enemies
+  enemy_randomizer = true,            -- regular enemies spawned by spawners become other regular enemies loaded on
+                                       -- the same level (dev 10.27: the spawner-variable method; needs rando_give.dll v7)
   boss_randomizer = true,              -- boss-tier enemies are shuffled among themselves (story bosses never)
   -- key_enemies = "-",                -- the Enemy Randomizer's key (Ctrl+key: what it changed here)
   -- key_bosses = "=",                 -- the Boss Randomizer's key

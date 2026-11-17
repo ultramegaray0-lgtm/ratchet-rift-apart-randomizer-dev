@@ -24,7 +24,15 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from harness import Game  # noqa: E402
+from harness import Game as _HarnessGame  # noqa: E402
+
+
+def Game(*args, **kw):
+    """dev 10.27: these tests cover the old census / Prius route (the code the Boss and Chaos Randomizers still use);
+    enemy.lua takes it only with enemy_route = "census" (its default is the variable route, tests/test_v1027.py)"""
+    st = dict(kw.pop("settings", None) or {})
+    st.setdefault("enemy_route", "census")
+    return _HarnessGame(*args, settings=st, **kw)
 from luajson import py  # noqa: E402
 
 G1, G2, G3 = "8100000000000001", "8100000000000002", "8100000000000003"      # ground bots
@@ -150,7 +158,7 @@ class ExplicitlyOffTests(unittest.TestCase):
         # dev 10.16 made them ON in 04; the harness runs the classic test settings, so ON is set here
         g = Game(settings={"enemy_randomizer": True, "boss_randomizer": True})
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.17"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.18"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("RANDO-ENEMY\tinstalled (ON"))
         self.assertTrue(g.log_has("RANDO-BOSS\tinstalled (ON"))
 
@@ -511,7 +519,7 @@ class RemovalTests(unittest.TestCase):
         g.press("=")
         g.step(300)
         self.assertEqual(changed(g), set())
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.17"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.18"))
         self.assertFalse(any("RANDO-ERROR" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_without_enemy_lua_bosses_still_work(self):

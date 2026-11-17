@@ -4,6 +4,35 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0t. Dev 10.27 (kit 10.0.18): the Enemy Randomizer is rebuilt on the proven method - NOT yet run in the game
+
+- CHANGED: the `-` Enemy Randomizer now writes spawner script variables before a spawner runs (16_rando_spawners.lua
+  section SP.V). Three adapters, one registry and one set of rules:
+  * factory Templates (SunsetSpawnerFactory) - the route round37 PROVED (6/6, 20/20). Arena waves.
+  * node Template, one actor (SpawnerScriptAction) - same variable format; NOT yet seen replacing an enemy in the game.
+  * node Template GROUP (robomutt / thug waves, SpawnFactory 0) - NOT yet seen in the game.
+  Every adapter checks its first spawn; one whose writes the game ignores twice (and never obeys) switches itself off
+  for the session and puts everything back ("ADAPTER OFF ..." in the log, a note on screen).
+- NOT VERIFIED IN THE GAME: nothing of 10.27 has run in your game. The only in-game evidence is still round37's
+  experiment (robot shooter -> robot melee, factory route, Zurkon). Visual confirmation: none yet.
+- LIMITS (by design or by the engine):
+  * The first wave of an enemy kind the randomizer has never seen spawns as the original (it learns the kind from that
+    spawn). Learned kinds are kept in the save (state.enemy_reg), so later visits change from the first wave. If your
+    game answers rivet.components / rivet.name for a template actor, even the first wave changes (the log says
+    "template actors asked before a spawn: N, answered M").
+  * A group node (robomutts / thugs) changes from its SECOND run on: the first run learns which enemies the group holds
+    (state.enemy_groups). A group holding a non-bot (vehicle, prop) or both walkers and flyers is never changed.
+  * A replacement must be loaded on the current level (its template actor must exist there): enemies from other
+    planets cannot appear. Robomutts and thugs are replaced, but serve as replacements only where a single-actor
+    variable holds their template (on Zurkon they only appear in groups).
+  * Enemies placed directly in a level (not spawned by a spawner) cannot be replaced: no spawner, no variable, and
+    rivet_hook has no way to spawn an actor.
+  * Boss-tier enemies (large bots, anything that showed a health bar) are never touched by `-`. The Boss (`=`) and
+    Chaos (BACKSPACE) Randomizers still use the old census route and still change NOTHING in the game.
+  * Needs rando_give.dll v7 (the kit's). With v6 the screen says "Enemy Randomizer cannot work".
+- `dev(spawnproof).lua` stands down while the Enemy Randomizer is ON (both would write the same variables).
+- Test: TESTING.md 2-dev14.
+
 ## 0s. Dev 10.26 result (round37): the replacement MECHANISM works in the game; the randomizers do not use it yet
 
 - WORKS (the game's own data, round37): spawnproof v6 changed 6 arena factories' Templates (robot shooter -> robot

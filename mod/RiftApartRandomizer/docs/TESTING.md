@@ -9,6 +9,7 @@ first full playthrough.
 `python run_tests.py`: **536 tests, 0 failures, 0 errors, 21 skipped** (TEST_RESULTS.txt; dev 10.11 adds tests/test_v1011.py, 20;
 dev 10.12 adds tests/test_v1012.py, 32 - see TEST_REPORT_10.12.md; dev 10.13 adds tests/test_v1013.py, 23 - TEST_REPORT_10.13.md;
 dev 10.15 adds tests/test_v1015.py, 32 - TEST_REPORT_10.15.md).
+Dev 10.27: 722 run, 0 failures, 23 skipped (tests/test_v1027.py adds 40 for the Enemy Randomizer's variable route).
 All of these are SIMULATOR tests: none of them is a result from the real game.
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
@@ -33,6 +34,22 @@ The skipped tests:
 The older suites pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
+
+## 2-dev14. Dev 10.27 (kit 10.0.18): the Enemy Randomizer itself (no developer file needed)
+
+Build: commit of dev 10.27 on main. Copy `rando_give.dll` (v7) next to RiftApart.exe and the WHOLE `scripts` folder
+(banner "Randomizer dev 10.27"; log `RANDO-KIT all 12 required scripts are 10.0.18` and `RANDO-ENEMIES variable route
+loaded (dev 10.27)`). dev(spawnproof).lua may stay: it stands down while the Enemy Randomizer is ON.
+The Enemy Randomizer is ON in this dev kit; if Ctrl+`-` says OFF, press `-` once.
+1. Zurkon, challenge A1 (the benchmark), to the end. After the first wave a corner note should say
+   "Enemy Randomizer: working - X came as Y". LOOK: do later waves bring other walker kinds where the usual ones came?
+2. Zurkon, a challenge with robomutts / thugs, TWICE (the first run learns the group; the second should change it).
+   LOOK at the second run: other walkers where robomutts / thugs came?
+3. One ordinary fight on another planet (any wave of regular enemies). Press Ctrl+`-` there and note the counts.
+4. Note anything stuck, unbeatable, or a challenge that does not finish. Send rivet.log and what you saw.
+Lines: `RANDO-ENEMIES scan ...` (how many factory / node / group variables; "template actors asked before a spawn: N,
+answered M"), `CHANGED ...`, `VERIFY ...: REPLACEMENT SPAWNED / ORIGINAL SPAWNED`, `group node ...: member ...`,
+`ADAPTER OFF ...` (an adapter the game ignored), `put back ...`, `level summary ...`.
 
 ## 2-dev13. Dev 10.26 (kit 10.0.17): one enemy kind -> another on the factories still to come (Zurkon)
 

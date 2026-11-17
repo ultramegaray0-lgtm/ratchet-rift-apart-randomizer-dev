@@ -1,5 +1,10 @@
 -- Rift Apart Randomizer dev 10.12: the spawner layer shared by enemy.lua and boss.lua (rivet_hook, Lua 5.4).
 --
+-- dev 10.27: THE ENEMY RANDOMIZER NOW USES "THE VARIABLE ROUTE" (section SP.V below): it writes another enemy's
+-- template into a spawner's script variable before that spawner runs - the method your game proved in round37
+-- (dev 10.26 spawnproof). The census / Prius route described next is what the Boss and Chaos Randomizers still use;
+-- it never found a Templates list in your game (every log since 10.12), so those two still change nothing.
+--
 -- OPTIONAL. This file does nothing by itself: it only works for the two features that register with
 -- it (enemy.lua: regular enemies, boss.lua: boss-tier enemies). Without it, both say so in rivet.log
 -- and stay off; without them, it never reads or writes anything. Removing any of the three files
@@ -47,7 +52,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.17"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.18"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -254,6 +259,15 @@ function SP.any_enabled()
   for _, name in ipairs(SP.client_order) do if SP.enabled(SP.clients[name]) then return true end end
   return false
 end
+-- dev 10.27: the clients of the old census / Prius route (boss.lua, chaos.lua); enemy.lua uses the variable route
+function SP.legacy(client) return client ~= nil and client.route ~= "vars" end
+function SP.any_legacy_enabled()
+  for _, name in ipairs(SP.client_order) do
+    local c = SP.clients[name]
+    if SP.legacy(c) and SP.enabled(c) then return true end
+  end
+  return false
+end
 
 function SP.set(client, on, why)
   if type(client) == "string" then client = SP.clients[client] end
@@ -265,6 +279,11 @@ function SP.set(client, on, why)
   SP.session.choice[client.state_key] = on        -- this session's choice outlives a later restore
   changed()
   history(string.format("[%s %s] (%s)", client.label:upper(), on and "ON" or "OFF", tostring(why)))
+  if not SP.legacy(client) then
+    log(client.label, (on and "ON" or "OFF") .. " (" .. tostring(why) .. ")")
+    if SP.V and SP.V.on_switch then SP.V.on_switch(on) end
+    return true
+  end
   if on then
     log(client.label, "ON (" .. tostring(why) .. ")")
     if SP.level and SP.level.done then SP.plan("switched on") else SP.schedule_scan("switched on", 1) end
@@ -273,7 +292,7 @@ function SP.set(client, on, why)
     local n = SP.continue_reverts()
     log(client.label, "OFF (" .. tostring(why) .. "):", n, "spawner slot(s) put back to their original enemies" ..
         (next(SP.revert_pending) and " (the rest over the next frames)" or ""))
-    if not SP.any_enabled() then SP.job = nil else SP.replan = true end   -- the others plan again (dev 10.13)
+    if not SP.any_legacy_enabled() then SP.job = nil else SP.replan = true end   -- the others plan again (dev 10.13)
   end
   return true
 end
@@ -282,7 +301,7 @@ function SP.toggle(client, why)
   if not client then return false end
   local on = not SP.enabled(client)
   SP.set(client, on, why)
-  local sub = on and "takes effect for encounters that have not started yet" or "every encounter has its original enemies again"
+  local sub = on and "takes effect for spawners that have not spawned yet" or "every spawner has its original enemies again"
   say(client.label .. ": " .. (on and "ON" or "OFF"), { type = "center", sub = sub, duration = 5 })
   return on
 end
@@ -293,7 +312,7 @@ function SP.after_restore(live)
   if not s then return end
   for k, v in pairs(SP.session.choice) do s[k] = v end
   if type(live) == "table" and live ~= s then
-    for _, k in ipairs({ "spawn_learned", "spawn_blocked" }) do
+    for _, k in ipairs({ "spawn_learned", "spawn_blocked", "enemy_reg", "enemy_groups" }) do
       if type(live[k]) == "table" and next(live[k]) ~= nil then
         s[k] = s[k] or {}
         for key, v in pairs(live[k]) do if s[k][key] == nil then s[k][key] = v end end
@@ -309,10 +328,10 @@ function SP.after_restore(live)
     if not SP.enabled(SP.clients[name]) then SP.revert_pending[name] = "off in the restored save" end
   end
   if next(SP.revert_pending) then SP.continue_reverts() end
-  if not SP.any_enabled() then SP.job = nil else SP.replan = true end
+  if not SP.any_legacy_enabled() then SP.job = nil else SP.replan = true end
 end
 -- kept over a New Game: the switches and what was learned about the game (not about the run)
-SP.KEEP_OVER_NEW_GAME = { "enemy_rando", "boss_rando", "spawn_learned", "spawn_blocked" }
+SP.KEEP_OVER_NEW_GAME = { "enemy_rando", "boss_rando", "spawn_learned", "spawn_blocked", "enemy_reg", "enemy_groups" }
 
 -- ---------------------------------------------------------------------------------------------
 -- learning: what an actor template is
@@ -1018,7 +1037,7 @@ end
 
 function SP.start_scan(why)
   SP.scan_at = nil
-  if not SP.any_enabled() then return end
+  if not SP.any_legacy_enabled() then return end
   local job = { why = why }
   job.co = coroutine.create(function() census(job) end)
   SP.job = job
@@ -1195,6 +1214,7 @@ function SP.plan(why)
       else
         key, role = SP.pool_key(sl.orig)
         owner = role and SP.client_for_role(role)
+        if owner and not SP.legacy(owner) then owner = nil end    -- dev 10.27: enemy.lua works on the variable route
       end
       -- a slot changed by a client that is off now, or that belongs to another client now: back
       if sl.cur ~= sl.orig and not sl.failed and (not owner or sl.owner ~= owner.name or not SP.enabled(owner)) then
@@ -1255,6 +1275,10 @@ SP.sorted_keys = sorted_keys
 
 -- what a client changed in the loaded level (for its status line)
 function SP.client_status(client)
+  if not SP.legacy(client) and SP.V then
+    local v = SP.V.status()
+    return { slots = v.changed, encounters = v.changed, learned = v.known, blocked = 0, vars = v }
+  end
   local lvl = SP.level
   local slots, nodes = 0, 0
   if lvl then
@@ -1453,7 +1477,11 @@ function SP.on_checkpoint(cp)
   SP.zone = nil
   if name then for _, z in ipairs(SP.BOSS_ZONES) do if name:find(z, 1, true) then SP.zone = cp.name end end end
   SP.cp_hash = cp.hash
-  if not SP.any_enabled() then return end
+  if SP.V then
+    local okv, ev = pcall(SP.V.on_checkpoint, cp)
+    if not okv then log("RANDO-ERROR enemies checkpoint:", tostring(ev)) end
+  end
+  if not SP.any_legacy_enabled() then return end
   if SP.zone and not was then
     local n = SP.revert_guarded("story boss area " .. tostring(SP.zone))
     log("story boss area", tostring(SP.zone), "- every change put back (" .. n .. " slot(s)) while you are there")
@@ -1484,13 +1512,964 @@ function SP.on_checkpoint(cp)
   end
 end
 
+-- =============================================================================================
+-- dev 10.27: THE VARIABLE ROUTE - what the Enemy Randomizer (enemy.lua, the - key) uses
+-- =============================================================================================
+-- PROVEN IN YOUR GAME (tests/data/round37_rivet.log, dev 10.26 spawnproof v6, Zurkon challenge A1 twice): an arena
+-- wave's enemies come from SunsetSpawnerFactory nodes; each one's "Templates" script variable (SceneManager script
+-- variables, published by rando_give.dll v7) holds the enemy's template actor. Writing ANOTHER enemy's value (uid +
+-- handle) into it BEFORE the factory spawns made it spawn the other enemy: 6/6 factories, 20/20 spawns, both runs
+-- completed, every variable put back. This section turns that into the randomizer:
+--
+--   ADAPTERS (one registry, one set of rules, three kinds of spawner variable):
+--     factory  - a SunsetSpawnerFactory node's "Templates" (one actor)          PROVEN (round37)
+--     template - a SpawnerScriptAction node's "Template" (one actor)            same variable format, NOT yet seen
+--                                                                                 replacing an enemy in the game
+--     group    - a SpawnerScriptAction node's "Template" holding an actor GROUP NOT yet seen in the game: robomutts /
+--                (round35-37: robomutts, thugs, robots, bladeballs from one     thugs waves. The group is replaced
+--                 node, SpawnFactory 0)                                          by one enemy (re-chosen after each
+--                                                                                 spawn so the wave stays mixed)
+--   Every adapter VERIFIES its first spawn (the spawned actor's name against the replacement's). An adapter whose
+--   writes the game ignores (V.FAIL_LIMIT "original spawned" with no "replacement spawned" in a session) is switched
+--   off for the session and everything it wrote is put back - it never keeps writing blindly.
+--
+--   REGISTRY: what each template actor spawns (name, bot family, role), learned (a) when the game spawns it, (b) from
+--   the template actor itself before any spawn (rivet.components / rivet.name of the handle in the variable; whether
+--   your game answers this is logged), (c) from the save: state.enemy_reg keeps every learned enemy by its uid, so a
+--   later visit is randomized from the first wave, and a known enemy whose template actor is loaded on another level
+--   (rivet.find_uid) joins that level's pool.
+--
+--   RULES: only role "enemy" (SP.FAMILY_CLASSES: turret, flyer, swarmer, ground) is ever replaced or used. Boss-tier
+--   (large bots, anything that showed a health bar), story bosses, friendly bots, mounts, NPCs, portals and props are
+--   never touched. A replacement is of the same movement group (walkers - ground and swarmer - for walkers, flyers for
+--   flyers, turrets for turrets), of another kind, and its template actor is loaded on this level (it could not
+--   spawn otherwise). Picks are fixed by the seed and the spawner (the same encounter gets the same enemies on a
+--   retry). Only spawners that have NOT spawned yet on this level are changed; a variable another spawner shares is
+--   changed only if every user is fresh.
+--
+--   PUT BACK: every write is put back on a checkpoint load, a level / planet change, the - key (off), a story boss
+--   area, a spawner the game ignored, an encounter stuck V.STUCK_SECONDS without a death, or one retried
+--   V.RETRY_LIMIT (5) times (that one keeps its original enemies for the seed: state.spawn_blocked "v:<node>").
+--   Only a variable that still holds exactly what was written (same generation) is ever written back.
+SP.V = SP.V or {}
+local V = SP.V
+V.HELPER_MIN = 7
+V.MB_SCENE = 0x128
+V.SCENE_VARS = 0x75A0
+V.VAR_SIZE = 0x40
+V.VAR_TYPE_ACTORS = 5
+V.GROUP_BIT = 0x80000000
+V.ZERO_UID = "0000000000000000"
+V.FIRST_SCAN = 20                 -- frames after a level reset before the first listing
+V.SCAN_EVERY = 120                -- frames between two listings (new factories of later waves)
+V.NODE_LIMIT = 512
+V.SLICE = 0.0015                  -- seconds of work per frame (rivet_hook's 8 ms budget is shared)
+V.QUEUE_CAP = 256
+V.REG_CAP = 400
+V.GROUP_CAP = 300
+V.MEMBER_CAP = 8
+V.STUCK_SECONDS = 180
+V.RETRY_LIMIT = 5                 -- deaths / reloads while a changed encounter ran before it keeps its originals
+V.FAIL_LIMIT = 2
+V.SPAWN_LOG = 12                  -- spawns of changed spawners logged per level
+V.FACTORY_CLASS = "SunsetSpawnerFactoryScriptAction"
+V.NODE_CLASS = "SpawnerScriptAction"
+V.ADAPTER_LABEL = { factory = "factory Templates", template = "node Template", group = "node Template group" }
+V.FAMILY_GROUP = { ground = "walker", swarmer = "walker", turret = "turret", flyer = "flyer" }
+-- names that are never an enemy to change or to use, whatever their bot class says
+V.NAME_EXCLUDE = { "npc_", "boss", "ally", "friend", "civ_", "vendor", "dummy", "test_", "infobot", "sheep", "lemming" }
+
+local function u16(b, i) if not (b and b[i + 1]) then return nil end return b[i] + b[i + 1] * 0x100 end
+local function le32(v) return string.format("%02X %02X %02X %02X", v & 0xFF, (v >> 8) & 0xFF, (v >> 16) & 0xFF, (v >> 24) & 0xFF) end
+local function vlog(...) pcall(rivet.log, "[rando]", "RANDO-ENEMIES", ...) end
+V.log = vlog
+
+-- the engine's string hash (rivet_hook script_signal.cpp: reflected CRC-32, start 0xEDB88320) for plug names
+local CRC = {}
+for i = 0, 255 do
+  local c = i
+  for _ = 1, 8 do if c & 1 == 1 then c = (c >> 1) ~ 0xEDB88320 else c = c >> 1 end end
+  CRC[i] = c
+end
+function V.crc(text)
+  local c = 0xEDB88320
+  for k = 1, #text do c = (c >> 8) ~ CRC[(text:byte(k) ~ c) & 0xFF] end
+  return c
+end
+V.PLUG_TEMPLATE = V.crc("Template")       -- 1835115251
+V.PLUG_TEMPLATES = V.crc("Templates")     -- 3990217346
+V.PLUG_LASTSPAWN = V.crc("LastSpawn")     -- 406637480
+V.PLUG_FACTORIES = V.crc("Factories")     -- 838143302
+
+-- the last path segment, without .actor / .a ("characters\enemy\x\actors\enm_pirate_robot_me" -> enm_pirate_robot_me)
+function V.short(name)
+  if name == nil then return nil end
+  local n = tostring(name):match("([^\\/]+)$") or tostring(name)
+  return (n:gsub("%.actor$", ""):gsub("%.a$", ""))
+end
+-- two names of one actor: rivet.name cuts names at 64 characters, so one may be a prefix of the other
+function V.same_name(a, b)
+  a, b = V.short(a), V.short(b)
+  if not (a and b) then return false end
+  if a == b then return true end
+  local n = math.min(#a, #b)
+  return n >= 8 and a:sub(1, n) == b:sub(1, n)
+end
+
+local function clock_() return (os and os.clock and os.clock()) or 0 end
+-- one unit of work: a frame-budget error yields (the job goes on next frame) and retries, up to 3 times
+local function vguard(fn, ...)
+  for _ = 1, 3 do
+    local res = table.pack(pcall(fn, ...))
+    if res[1] then return table.unpack(res, 2, res.n) end
+    local err = tostring(res[2])
+    if not err:find("frame budget", 1, true) then error(err, 0) end
+    V.budget_hits = (V.budget_hits or 0) + 1
+    if coroutine.isyieldable() then coroutine.yield() else return nil end
+  end
+  return nil
+end
+V.guard = vguard
+local function vpace(t0)
+  if clock_() - t0 > V.SLICE and coroutine.isyieldable() then coroutine.yield(); return clock_() end
+  return t0
+end
+
+-- ---- the client and its switch ---------------------------------------------------------------------
+function V.client()
+  for _, name in ipairs(SP.client_order) do
+    local c = SP.clients[name]
+    if c.route == "vars" then return c end
+  end
+  return nil
+end
+function V.enabled()
+  local c = V.client()
+  return c ~= nil and SP.enabled(c)
+end
+
+-- ---- the save: registry, groups, blocked spawners ----------------------------------------------------
+local function vstate() return RANDO and RANDO.state end
+local function reg_t(write)
+  local s = vstate(); if not s then return {} end
+  if write then s.enemy_reg = s.enemy_reg or {} end
+  return s.enemy_reg or {}
+end
+local function groups_t(write)
+  local s = vstate(); if not s then return {} end
+  if write then s.enemy_groups = s.enemy_groups or {} end
+  return s.enemy_groups or {}
+end
+local function vblocked(key) local s = vstate(); return s and s.spawn_blocked and s.spawn_blocked["v:" .. tostring(key)] or nil end
+
+-- a registry entry: "short|family|class|role[|hb][|mixed]"
+function V.reg_get(uid)
+  local v = uid and reg_t()[uid]
+  if type(v) ~= "string" then return nil end
+  local name, fam, cls, role, rest = v:match("^([^|]*)|([^|]*)|([^|]*)|([^|]*)(.*)$")
+  if not name then return nil end
+  return { name = name, family = fam ~= "" and fam or nil, class = cls ~= "" and cls or nil, role = role,
+           hb = rest:find("|hb", 1, true) ~= nil, mixed = rest:find("|mixed", 1, true) ~= nil }
+end
+function V.reg_put(uid, T)
+  if not uid or uid == V.ZERO_UID or not T.name then return end
+  local R_ = reg_t(true)
+  local v = string.format("%s|%s|%s|%s%s%s", V.short(T.name), T.family or "", T.class or "", T.role or "never",
+                          T.hb and "|hb" or "", T.mixed and "|mixed" or "")
+  if R_[uid] == v then return end
+  if R_[uid] == nil then
+    local n = 0
+    for _ in pairs(R_) do n = n + 1 end
+    if n >= V.REG_CAP then return end
+  end
+  R_[uid] = v
+  if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
+end
+
+-- the role a template plays for the randomizer
+function V.role_of(T)
+  if not (T and T.family) then return "never" end
+  local role = SP.ROLE_OF_FAMILY[T.family] or "never"
+  local n = (V.short(T.name) or ""):lower()
+  for _, x in ipairs(V.NAME_EXCLUDE) do if n:find(x, 1, true) then return "never" end end
+  if role == "enemy" and T.hb then role = "boss" end
+  return role
+end
+function V.usable(T)
+  return T and not T.mixed and not T.hb and V.role_of(T) == "enemy" and V.FAMILY_GROUP[T.family] ~= nil
+end
+
+-- ---- the SceneManager and its script variables (rando_give.dll v7) ----------------------------------
+function V.scene()
+  local n = RANDO_REAL and RANDO_REAL.native
+  if not (n and n.addr) then return nil, "rando_give.dll is not answering" end
+  local hb = read_bytes(n.addr, 0x10)
+  local ver = hb and u32(hb, 9)
+  if not ver or ver < V.HELPER_MIN then
+    return nil, "rando_give.dll is v" .. tostring(ver) .. ", v" .. V.HELPER_MIN .. " is needed (copy the kit's rando_give.dll into the game folder)"
+  end
+  local mb = read_bytes(n.addr + V.MB_SCENE, 0x0C)
+  local scene, sigs = mb and ptr64(mb, 1), mb and u32(mb, 9)
+  if not valid_ptr(scene) then return nil, "rando_give.dll found no SceneManager (signature matched " .. tostring(sigs) .. "x, exactly 1 needed)" end
+  local sb = read_bytes(scene + V.SCENE_VARS, 0x20)
+  local base, max = sb and ptr64(sb, 1), sb and u32(sb, 0x1D)
+  if not (valid_ptr(base) and max and max > 0 and max < 0x100000) then
+    return nil, string.format("SceneManager %X: no script variable array", scene)
+  end
+  return { scene = scene, base = base, max = max, sigs = sigs }
+end
+
+-- one variable, checked against the plug's generation: { addr, uid, actors, type, gen, single, group }
+function V.var(sc, idx, gen)
+  if not (sc and idx and gen) or gen == 0 or idx >= sc.max then return nil, "no such variable" end
+  local addr = sc.base + idx * V.VAR_SIZE
+  local b = read_bytes(addr, V.VAR_SIZE)
+  if not b or #b < V.VAR_SIZE then return nil, "unreadable" end
+  local v = { addr = addr, uid = hex64(b, 1), actors = u32(b, 0x11), type = u16(b, 0x35), gen = u16(b, 0x37) }
+  if v.gen ~= gen then return nil, "generation " .. tostring(v.gen) .. ", the plug says " .. tostring(gen) end
+  local is_actors = v.type == V.VAR_TYPE_ACTORS and v.actors ~= nil and v.actors ~= 0
+  v.single = is_actors and (v.actors & V.GROUP_BIT) == 0
+  v.group = is_actors and (v.actors & V.GROUP_BIT) ~= 0
+  return v
+end
+
+-- a node's variable plugs (node +0x58 -> ScriptPlugs: entries { u32 plug, u16 idx, u16 gen } at +8, count at +0x1A)
+function V.plugs_of(addr)
+  local nb = read_bytes(addr, 0x80)
+  if not nb or #nb < 0x80 then return nil end
+  local plugs = ptr64(nb, 0x59)
+  if not valid_ptr(plugs) then return nil end
+  local hb = read_bytes(plugs, 0x28)
+  if not hb or #hb < 0x28 then return nil end
+  local var_ptr, n = ptr64(hb, 9), hb[0x1B]
+  local out = { spawner = u32(nb, 0x61), key = hex64(nb, 0x49), vars = {} }
+  if not n or n == 0 then return out end
+  if not (var_ptr and var_ptr > 0x10000) or n > 32 then return nil end
+  local vb = read_bytes(var_ptr, n * 8)
+  if not vb or #vb < n * 8 then return nil end
+  for k = 0, n - 1 do out.vars[u32(vb, k * 8 + 1)] = { idx = u16(vb, k * 8 + 5), gen = u16(vb, k * 8 + 7) } end
+  return out
+end
+
+-- the Spawner component's spawn list (+0x9C count, +0xDC entries of 12 bytes { spawned, location, time })
+function V.spawner_slots(saddr)
+  local b = saddr and read_bytes(saddr + 0x9C, 0x4 + 0x40 + 15 * 12)
+  if not b or #b < 4 then return nil end
+  local count_ = u32(b, 1) or 0
+  local out = { count = count_ }
+  for i = 0, math.min(count_, 15) - 1 do
+    local h = u32(b, 0xDC - 0x9C + i * 12 + 1)
+    if h and h ~= 0 then out[#out + 1] = h end
+  end
+  return out
+end
+
+-- ---- what an actor is ---------------------------------------------------------------------------------
+function V.actor(h)
+  if not h or h == 0 then return nil end
+  local a = { handle = h }
+  if rivet.name then local ok, n = pcall(rivet.name, h); if ok and type(n) == "string" then a.name = n end end
+  local okc, fam, cls = pcall(SP.classify_actor, h, true)
+  if okc and fam then a.family, a.class = fam, cls end
+  return a
+end
+
+-- ---- the level ---------------------------------------------------------------------------------------
+V.adapters = V.adapters or {}
+for _, k in ipairs({ "factory", "template", "group" }) do
+  V.adapters[k] = V.adapters[k] or { on = true, armed = 0, ok = 0, original = 0, other = 0, write_failed = 0 }
+end
+V.session = V.session or { said_blocked = false, said_ok = false, said_off = {}, retries = {} }
+
+function V.new_level(why)
+  V.lvl = { why = why, scans = 0, fac = {}, nodes = {}, order = {}, users = {}, tpl = {}, tpl_uid = {}, fac_spawns = {},
+            started = {}, arms = {}, queue = {}, spawned = {}, reg_checked = false, probe = { tried = 0, ok = 0 },
+            logged = 0, next_scan = (SP.frame or 0) + V.FIRST_SCAN, frame0 = SP.frame or 0 }
+  V.job = nil
+end
+
+-- a level / planet / checkpoint load: put back what is still ours, then start over (the nodes may be new)
+function V.reset(why)
+  local lvl = V.lvl
+  if lvl and #lvl.arms > 0 then V.put_back_all(tostring(why)) end
+  if lvl and lvl.scans > 0 and V.enabled() then V.summary() end
+  V.new_level(why)
+end
+
+-- a template value seen in a variable on this level (handle -> T); T from the registry when its uid is known
+function V.tpl_of(handle, uid)
+  local lvl = V.lvl
+  local T = lvl.tpl[handle]
+  if T then
+    if uid and uid ~= V.ZERO_UID and not T.uid then T.uid = uid; lvl.tpl_uid[uid] = T end
+    return T
+  end
+  T = { handle = handle, uid = (uid ~= V.ZERO_UID) and uid or nil }
+  local e = T.uid and V.reg_get(T.uid)
+  if e then
+    T.name, T.family, T.class, T.hb, T.mixed, T.src = e.name, e.family, e.class, e.hb, e.mixed, "save"
+  end
+  lvl.tpl[handle] = T
+  if T.uid then lvl.tpl_uid[T.uid] = T end
+  return T
+end
+
+-- learn what a template made (a spawn of an unchanged spawner, or its template actor)
+function V.learn(T, a, src)
+  if not (T and a and a.name) then return end
+  if T.name and not V.same_name(T.name, a.name) and T.src ~= "template actor" then
+    if not T.mixed then T.mixed = true; vlog(string.format("template %s (%s) spawned %s and %s: MIXED, never used", tostring(T.handle),
+        tostring(T.uid), tostring(V.short(T.name)), tostring(V.short(a.name)))) end
+  else
+    local new = T.name == nil or T.src == "template actor" and src ~= "template actor"
+    T.name = a.name
+    if a.family then T.family, T.class = a.family, a.class end
+    T.src = (T.src == "save" and not new) and "save" or src
+    if new and T.family then
+      vlog(string.format("learned template %s (uid %s): %s = %s/%s, role %s (%s)", tostring(T.handle), tostring(T.uid), tostring(V.short(T.name)),
+          tostring(T.family), tostring(T.class), V.role_of(T), src))
+    end
+  end
+  T.role = V.role_of(T)
+  if T.uid and T.family then V.reg_put(T.uid, T) end
+end
+
+-- the factory record of a SunsetSpawnerFactory actor (nil if it has no Templates variable)
+function V.factory_rec(fac, node)
+  local lvl = V.lvl
+  local r = lvl.fac[fac]
+  if r ~= nil then return r or nil end
+  local okc, c = pcall(rivet.component, fac, V.FACTORY_CLASS)
+  local addr = okc and type(c) == "table" and c.address and tonumber(c.address, 16)
+  local pl = addr and V.plugs_of(addr)
+  local tv = pl and pl.vars[V.PLUG_TEMPLATES]
+  if not tv then lvl.fac[fac] = false; return nil end
+  r = { kind = "factory", actor = fac, component = c.handle, addr = addr, key = V.key_of(pl, fac), var = tv }
+  lvl.fac[fac] = r
+  V.add_rec(r)
+  return r
+end
+-- a spawner's id for the seed's picks, its group members and "kept original": the node's own id (node +0x48, the same
+-- on every load), or - if that reads as zero - its actor handle (this load only)
+function V.key_of(pl, actor)
+  if pl and pl.key and pl.key ~= V.ZERO_UID then return pl.key end
+  return "a" .. tostring(actor)
+end
+function V.add_rec(r)
+  local lvl = V.lvl
+  lvl.order[#lvl.order + 1] = r
+  local u = lvl.users[r.var.idx] or {}
+  u[#u + 1] = r
+  lvl.users[r.var.idx] = u
+end
+
+-- a SpawnerScriptAction node with a Template variable (one actor or a group); Factories nodes are covered by
+-- their factories, nodes without a Template variable are left alone
+function V.node_rec(node)
+  local okc, c = pcall(rivet.component, node.actor, V.NODE_CLASS)
+  if not (okc and type(c) == "table" and (c.handle == nil or c.handle == node.component)) then return false end   -- another node of the actor
+  local addr = c.address and tonumber(c.address, 16)
+  local pl = addr and V.plugs_of(addr)
+  local tv = pl and pl.vars[V.PLUG_TEMPLATE]
+  if not tv then return false end
+  local r = { kind = "template", actor = node.actor, component = node.component, addr = addr, key = V.key_of(pl, node.actor),
+              var = tv, last = pl.vars[V.PLUG_LASTSPAWN], spawner = pl.spawner }
+  local oks, s = pcall(rivet.component, node.actor, "Spawner")
+  if oks and type(s) == "table" and s.address and (pl.spawner == nil or s.handle == pl.spawner) then r.saddr = tonumber(s.address, 16) end
+  return r
+end
+
+-- the template actor itself, before any spawn: its components (bot class) and name. Whether your game answers this
+-- for a template actor is logged per level ("asked N template actor(s) before a spawn: M answered").
+function V.probe(T)
+  local lvl = V.lvl
+  if T.family or T.probed then return end
+  T.probed = true
+  lvl.probe.tried = lvl.probe.tried + 1
+  local a = V.actor(T.handle)
+  if a and a.family and a.name then
+    lvl.probe.ok = lvl.probe.ok + 1
+    V.learn(T, a, "template actor")
+  end
+end
+
+-- ---- the listing ---------------------------------------------------------------------------------------
+local function list_nodes(class)
+  return vguard(function()
+    local ok, l = pcall(rivet.script_nodes, class, V.NODE_LIMIT)
+    if ok and type(l) == "table" then return l end
+    if not ok then error(l, 0) end
+  end)
+end
+
+function V.scan(sc)
+  local lvl = V.lvl
+  lvl.scans = lvl.scans + 1
+  local t0 = clock_()
+  local nf, nn = #lvl.order, 0
+  for _, node in ipairs(list_nodes(V.FACTORY_CLASS) or {}) do
+    if node.actor and lvl.fac[node.actor] == nil then vguard(V.factory_rec, node.actor, node) end
+    t0 = vpace(t0)
+  end
+  for _, node in ipairs(list_nodes(V.NODE_CLASS) or {}) do
+    if node.component and lvl.nodes[node.component] == nil then
+      local r = vguard(V.node_rec, node)
+      lvl.nodes[node.component] = r or false
+      if r then V.add_rec(r); nn = nn + 1 end
+    end
+    t0 = vpace(t0)
+  end
+  -- the original value of every spawner still without one: what it holds before anything of ours (a read lost
+  -- to the frame budget - rivet.read answers nothing then - is tried again at the next listing, 5 times at most)
+  local new = #lvl.order - nf
+  for _, r in ipairs(lvl.order) do
+    if not r.orig and (r.reads or 0) < 5 then
+      r.reads = (r.reads or 0) + 1
+      vguard(function()
+        local v = V.var(sc, r.var.idx, r.var.gen)
+        if v then
+          r.orig = { uid = v.uid, actors = v.actors, single = v.single, group = v.group }
+          if r.kind == "template" and v.group then r.kind = "group" end
+          if v.single then V.probe(V.tpl_of(v.actors, v.uid)) end
+        end
+      end)
+      t0 = vpace(t0)
+    end
+  end
+  -- the registry's enemies whose template actor is loaded here (once a level)
+  if not lvl.reg_checked and rivet.find_uid then
+    lvl.reg_checked = true
+    local found = 0
+    local uids = {}
+    for uid in pairs(reg_t()) do uids[#uids + 1] = uid end
+    table.sort(uids)
+    for _, uid in ipairs(uids) do
+      if not lvl.tpl_uid[uid] then
+        local e = V.reg_get(uid)
+        if e and not e.mixed and not e.hb and e.role == "enemy" then
+          local ok, h = pcall(rivet.find_uid, uid)
+          h = ok and math.tointeger(tonumber(h)) or nil
+          if h and h ~= 0 then
+            local T = V.tpl_of(h, uid)
+            T.src = "save, loaded here"
+            found = found + 1
+          end
+        end
+      end
+      t0 = vpace(t0)
+    end
+    if found > 0 then vlog(string.format("%d enemy kind(s) of the save have their template actor loaded on this level", found)) end
+  end
+  if new > 0 then
+    local kinds = { factory = 0, template = 0, group = 0 }
+    for _, r in ipairs(lvl.order) do kinds[r.kind] = kinds[r.kind] + 1 end
+    local known = 0
+    for _, T in pairs(lvl.tpl) do if V.usable(T) then known = known + 1 end end
+    vlog(string.format("scan %d on %s: %d spawner variable(s) (%d new): %d factory Templates, %d node Template, %d node Template group; %d enemy kind(s) known here; template actors asked before a spawn: %d, answered %d",
+        lvl.scans, tostring(vstate() and vstate().current_planet), #lvl.order, new, kinds.factory, kinds.template, kinds.group, known,
+        lvl.probe.tried, lvl.probe.ok))
+  end
+end
+
+-- ---- choosing ------------------------------------------------------------------------------------------
+-- the level's pool for a movement group: usable templates loaded here (a handle in a variable or found by uid)
+-- (excl: names the pick must not have - the original, or a group's members; need_uid: the variable holds a uid, so
+-- the replacement must have one too - round37's factories: whatever the original held, the write kept that form)
+function V.pool(group, excl, need_uid)
+  local out = {}
+  for _, T in pairs(V.lvl.tpl) do
+    if V.usable(T) and V.FAMILY_GROUP[T.family] == group and (T.uid or not need_uid) then
+      local ok = true
+      for _, n in ipairs(excl or {}) do if V.same_name(T.name, n) then ok = false end end
+      if ok then out[#out + 1] = T end
+    end
+  end
+  return out
+end
+-- the seed's pick for this spawner (n: the n-th pick of a group node), by enemy NAME (the same on every load; handles
+-- are not). A group whose members are the level's only enemies of their kind still gets one of them.
+function V.pick(r, group, excl, n, need_uid)
+  local pool = V.pool(group, excl, need_uid)
+  if #pool == 0 and r.kind == "group" then pool = V.pool(group, nil, need_uid) end
+  if #pool == 0 then return nil, "no other " .. group .. " enemy known on this level" end
+  local keys, by = {}, {}
+  for _, T in ipairs(pool) do
+    local k = V.short(T.name)
+    local b = by[k]
+    if not b then keys[#keys + 1] = k end
+    -- one template per name: one with a uid first, then the lowest handle
+    if not b or (T.uid and not b.uid) or ((T.uid ~= nil) == (b.uid ~= nil) and T.handle < b.handle) then by[k] = T end
+  end
+  table.sort(keys)
+  local order = SP.rank(SP.seed_key() .. "|enemy|" .. tostring(r.key) .. "|" .. tostring(r.orig_name or "group") .. "|" .. tostring(n or 0), keys)
+  return by[order[1]]
+end
+
+-- may this spawner be changed now?
+function V.fresh(r)
+  local lvl = V.lvl
+  if r.kind == "factory" then return (lvl.fac_spawns[r.actor] or 0) == 0 and (r.spawned or 0) == 0 end
+  if (r.spawned or 0) > 0 or (r.spawner and lvl.started[r.spawner]) then return false end
+  if r.saddr then
+    local sl = V.spawner_slots(r.saddr)
+    if sl and sl.count > 0 then return false end
+  end
+  return true
+end
+
+function V.plan_rec(sc, r)
+  local lvl = V.lvl
+  if r.arm or r.tried or r.not_enemy or not r.orig or not V.adapters[r.kind].on or vblocked(r.key) or SP.zone then return end
+  local orig_T, group
+  local excl = {}
+  if r.kind == "group" then
+    local G = groups_t()[r.key]
+    if type(G) ~= "string" or G == "" then return end
+    for m in G:gmatch("[^,]+") do
+      local fam, nm = m:match("^([^:]*):(.*)$")
+      local T = { family = fam, name = nm }
+      if not V.usable(T) then return end                                    -- a member that is no regular enemy
+      local g = V.FAMILY_GROUP[fam]
+      if group and g ~= group then return end                               -- a mixed group: left alone
+      group = g
+      excl[#excl + 1] = nm
+    end
+  else
+    if not r.orig.single then return end
+    orig_T = lvl.tpl[r.orig.actors]
+    if not V.usable(orig_T) then return end
+    group, excl[1] = V.FAMILY_GROUP[orig_T.family], orig_T.name
+  end
+  if not group then return end
+  for _, u in ipairs(lvl.users[r.var.idx] or {}) do
+    if u.arm or not V.fresh(u) then return end                              -- a shared variable: every user fresh
+  end
+  r.orig_name = orig_T and V.short(orig_T.name) or "group"
+  local rep = V.pick(r, group, excl, 0, r.kind ~= "group" and r.orig.uid ~= V.ZERO_UID)
+  if not rep then return end
+  r.tried = true
+  V.arm(sc, r, rep, orig_T)
+end
+
+function V.write_var(sc, r, uid, actors)
+  local now = V.var(sc, r.var.idx, r.var.gen)
+  if not now then return false, "the variable is gone" end
+  local ok1 = pcall(rivet.write, string.format("%X", now.addr), le_hex(uid))
+  local ok2 = pcall(rivet.write, string.format("%X", now.addr + 0x10), le32(actors))
+  local back = V.var(sc, r.var.idx, r.var.gen)
+  return ok1 and ok2 and back and back.uid == uid and back.actors == actors, back
+end
+
+function V.arm(sc, r, rep, orig_T)
+  local now = V.var(sc, r.var.idx, r.var.gen)
+  if not (now and now.uid == r.orig.uid and now.actors == r.orig.actors) then
+    vlog(string.format("not changed (the variable changed while it was checked): %s %s", r.kind, tostring(r.key))); return
+  end
+  -- the proven format (round37, spawnproof v6): a value without uid keeps none; with one, the replacement's own.
+  -- A group gets the replacement's own uid (none if it has none)
+  local new_uid
+  if r.kind == "group" then new_uid = rep.uid or V.ZERO_UID
+  elseif now.uid == V.ZERO_UID then new_uid = V.ZERO_UID
+  else new_uid = rep.uid end
+  if not new_uid then vlog("not changed (the replacement has no uid): " .. tostring(r.key)); return end
+  local ok = V.write_var(sc, r, new_uid, rep.handle)
+  local ad = V.adapters[r.kind]
+  if not ok then
+    ad.write_failed = ad.write_failed + 1
+    V.write_var(sc, r, r.orig.uid, r.orig.actors)
+    vlog(string.format("write FAILED (%s %s): put back", r.kind, tostring(r.key)))
+    return
+  end
+  local A = { rec = r, rep = rep, orig_T = orig_T, new_uid = new_uid, frame = SP.frame, spawns = 0, picks = 0, alive = {}, alive_n = 0,
+              last_activity = SP.frame }
+  r.arm = A
+  local lvl = V.lvl
+  lvl.arms[#lvl.arms + 1] = A
+  ad.armed = ad.armed + 1
+  vlog(string.format("CHANGED %s %s (actor %s, variable %d): %s -> %s",
+      V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(r.actor), r.var.idx,
+      r.kind == "group" and ("group " .. string.format("%08X", r.orig.actors) .. " (" .. tostring(groups_t()[r.key]) .. ")")
+        or tostring(V.short(orig_T and orig_T.name)), tostring(V.short(rep.name))))
+end
+
+-- a group node: the next spawn gets the next pick, so the wave stays mixed (only while the variable is ours)
+function V.rotate(sc, A)
+  local r = A.rec
+  A.picks = A.picks + 1
+  local G = groups_t()[r.key] or ""
+  local fam = G:match("^([^:,]*):")
+  local excl = {}
+  for m in G:gmatch("[^,]+") do excl[#excl + 1] = m:match(":(.*)$") end
+  local rep = fam and V.pick(r, V.FAMILY_GROUP[fam], excl, A.picks)
+  if not rep or rep.handle == A.rep.handle then return end
+  local now = V.var(sc, r.var.idx, r.var.gen)
+  if not (now and now.uid == A.new_uid and now.actors == A.rep.handle) then return end
+  local uid = rep.uid or V.ZERO_UID
+  if V.write_var(sc, r, uid, rep.handle) then A.rep, A.new_uid = rep, uid end
+end
+
+function V.put_back(A, why)
+  if not A or A.restored then return end
+  A.restored = true
+  local r = A.rec
+  r.arm = nil
+  r.restored_frame = SP.frame
+  local sc = V.scene()
+  local v = sc and V.var(sc, r.var.idx, r.var.gen)
+  local res
+  if v and v.uid == A.new_uid and v.actors == A.rep.handle then
+    res = V.write_var(sc, r, r.orig.uid, r.orig.actors) and "OK" or "FAILED"
+  else
+    res = "skipped (the variable no longer holds what was written)"
+  end
+  V.lvl.put_back = (V.lvl.put_back or 0) + 1
+  if V.lvl.put_back <= 8 or res == "FAILED" then
+    vlog(string.format("put back (%s): %s %s: %s", tostring(why), V.ADAPTER_LABEL[r.kind], tostring(r.key), res))
+  end
+end
+function V.put_back_all(why)
+  local lvl = V.lvl
+  if not lvl then return 0 end
+  local n = 0
+  for _, A in ipairs(lvl.arms) do if not A.restored then V.put_back(A, why); n = n + 1 end end
+  if n > 0 then vlog(string.format("%d changed spawner(s) put back: %s", n, tostring(why))) end
+  return n
+end
+
+function V.block(A, why)
+  local s = vstate()
+  local key = "v:" .. tostring(A.rec.key)
+  if s then
+    s.spawn_blocked = s.spawn_blocked or {}
+    if s.spawn_blocked[key] == nil then s.spawn_blocked[key] = why; if RANDO and RANDO.mark_changed then RANDO.mark_changed() end end
+  end
+  vlog(string.format("kept original for this seed: %s %s - %s", V.ADAPTER_LABEL[A.rec.kind], tostring(A.rec.key), tostring(why)))
+  V.put_back(A, why)
+end
+
+-- ---- spawns ---------------------------------------------------------------------------------------------
+-- every spawn is counted (also while the feature is off), so a spawner that already ran is never changed
+function V.on_spawn_seen(f)
+  local lvl = V.lvl
+  if not lvl then return end
+  local h = math.tointeger(tonumber(f.SpawnedHandle))
+  local fac = math.tointeger(tonumber(f.SpawnFactory)) or 0
+  if fac ~= 0 then lvl.fac_spawns[fac] = (lvl.fac_spawns[fac] or 0) + 1 end
+  if not h or lvl.spawned[h] then return end
+  lvl.spawned[h] = true
+  if V.enabled() and #lvl.queue < V.QUEUE_CAP then lvl.queue[#lvl.queue + 1] = { h = h, fac = fac } end
+end
+function V.on_started(f)
+  local lvl = V.lvl
+  local h = math.tointeger(tonumber(f.SpawnerComponentHandle))
+  if lvl and h then lvl.started[h] = true end
+end
+
+-- the node of a SpawnFactory-0 spawn: its LastSpawn variable first, then its Spawner's spawn list
+function V.tie(sc, wanted)
+  local lvl, found, left, t0 = V.lvl, {}, 0, clock_()
+  for _ in pairs(wanted) do left = left + 1 end
+  for pass = 1, 2 do
+    for _, r in ipairs(lvl.order) do
+      if left == 0 then return found end
+      if r.kind ~= "factory" and not r.not_enemy then
+        vguard(function()
+          if pass == 1 and r.last then
+            local lv = V.var(sc, r.last.idx, r.last.gen)
+            if lv and lv.actors and wanted[lv.actors] and not found[lv.actors] then found[lv.actors] = r; left = left - 1 end
+          elseif pass == 2 and r.saddr then
+            for _, h in ipairs(V.spawner_slots(r.saddr) or {}) do
+              if wanted[h] and not found[h] then found[h] = r; left = left - 1 end
+            end
+          end
+        end)
+        t0 = vpace(t0)
+      end
+    end
+  end
+  return found
+end
+
+function V.verify(A, a)
+  local r, ad = A.rec, V.adapters[A.rec.kind]
+  local verdict
+  if a and a.name and V.same_name(a.name, A.rep.name) then verdict = "REPLACEMENT SPAWNED"; ad.ok = ad.ok + 1
+  elseif a and a.name and A.orig_T and V.same_name(a.name, A.orig_T.name) then verdict = "ORIGINAL SPAWNED"; ad.original = ad.original + 1
+  elseif a and a.name and r.kind == "group" then
+    verdict = "ORIGINAL SPAWNED (a group member)"
+    local G = groups_t()[r.key] or ""
+    local member = false
+    for m in G:gmatch("[^,]+") do if V.same_name(m:match(":(.*)$"), a.name) then member = true end end
+    if member then ad.original = ad.original + 1 else verdict = "SOMETHING ELSE SPAWNED"; ad.other = ad.other + 1 end
+  elseif a and a.name then verdict = "SOMETHING ELSE SPAWNED"; ad.other = ad.other + 1
+  else return end                                                           -- the actor is gone: the next spawn decides
+  if verdict == "SOMETHING ELSE SPAWNED" and A.rep.src == "template actor" then
+    V.learn(A.rep, a, "spawn")                                              -- its template actor misled: what it really makes
+    if not V.usable(A.rep) then A.verified = verdict; V.put_back(A, "the replacement is no regular enemy"); return end
+  end
+  A.verified = verdict
+  vlog(string.format("VERIFY %s %s: requested %s, spawned %s: %s", V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(V.short(A.rep.name)),
+      tostring(V.short(a.name)), verdict))
+  if verdict == "REPLACEMENT SPAWNED" and not V.session.said_ok then
+    V.session.said_ok = true
+    say("Enemy Randomizer: working", { type = "corner", sub = string.format("%s came as %s",
+        tostring(V.short(A.orig_T and A.orig_T.name or "a group enemy")), tostring(V.short(A.rep.name))), duration = 5 })
+  end
+  if verdict:find("ORIGINAL", 1, true) then
+    V.put_back(A, "the game ignored the change")
+    if ad.ok == 0 and ad.original >= V.FAIL_LIMIT and ad.on then
+      ad.on = false
+      local n = 0
+      for _, B in ipairs(V.lvl.arms) do if not B.restored and B.rec.kind == r.kind then V.put_back(B, "adapter off"); n = n + 1 end end
+      vlog(string.format("ADAPTER OFF for this session: %s - the game ignored %d change(s) and made none (%d more put back)",
+          V.ADAPTER_LABEL[r.kind], ad.original, n))
+      if not V.session.said_off[r.kind] then
+        V.session.said_off[r.kind] = true
+        say("Enemy Randomizer: one kind of spawner cannot be changed", { type = "corner", sub = V.ADAPTER_LABEL[r.kind] .. " - kept original", duration = 5 })
+      end
+    end
+  end
+end
+
+-- one batch of spawns: learn, verify, keep group members, follow the changed ones
+function V.process(sc, batch)
+  local lvl = V.lvl
+  local wanted, any0 = {}, false
+  for _, e in ipairs(batch) do if e.fac == 0 then wanted[e.h] = e; any0 = true end end
+  local tied = any0 and V.tie(sc, wanted) or {}
+  local t0 = clock_()
+  for _, e in ipairs(batch) do
+    vguard(function()
+      local r
+      if e.fac ~= 0 then r = V.factory_rec(e.fac) else r = tied[e.h] end
+      if not r then return end
+      r.spawned = (r.spawned or 0) + 1
+      local a = V.actor(e.h)
+      local A = r.arm
+      if A and not A.restored then
+        A.spawns = A.spawns + 1
+        A.alive[e.h] = true; A.alive_n = A.alive_n + 1; A.last_activity = SP.frame
+        lvl.spawned[e.h] = { A = A, T = A.rep }
+        if lvl.logged < V.SPAWN_LOG then
+          lvl.logged = lvl.logged + 1
+          vlog(string.format("spawn %d of changed %s %s: %s", e.h, V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(a and V.short(a.name))))
+        end
+        if not A.verified then V.verify(A, a) end
+        if r.kind == "group" and not A.restored and A.verified == "REPLACEMENT SPAWNED" then V.rotate(sc, A) end
+        return
+      end
+      if not (a and a.name) then return end
+      -- a spawn of a spawner put back moments ago may still be the replacement: nothing is learned from it
+      if r.restored_frame and (SP.frame or 0) - r.restored_frame < 120 then return end
+      if r.kind == "group" then
+        if not a.family then r.not_enemy = true end                         -- a vehicle, a prop: never this group
+        local fam = a.family or "-"
+        local G = groups_t()[r.key]
+        local has = false
+        local n = 0
+        for m in (G or ""):gmatch("[^,]+") do n = n + 1; if V.same_name(m:match(":(.*)$"), a.name) then has = true end end
+        if not has and n < V.MEMBER_CAP then
+          local Gt = groups_t(true)
+          if G == nil then
+            local c = 0
+            for _ in pairs(Gt) do c = c + 1 end
+            if c >= V.GROUP_CAP then return end
+          end
+          Gt[r.key] = (G and G ~= "" and (G .. ",") or "") .. fam .. ":" .. V.short(a.name)
+          if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
+          vlog(string.format("group node %s: member %s (%s)", tostring(r.key), V.short(a.name), fam))
+        end
+      else
+        local v = V.var(sc, r.var.idx, r.var.gen)
+        if v and v.single then
+          local T = V.tpl_of(v.actors, v.uid)
+          V.learn(T, a, "spawn")
+          lvl.spawned[e.h] = { T = T }
+          if r.kind == "template" and not V.usable(T) then r.not_enemy = true end
+        end
+      end
+    end)
+    t0 = vpace(t0)
+  end
+end
+
+-- ---- deaths, health bars, checkpoints, the watchdog --------------------------------------------------------
+function V.on_death(f, ev)
+  local lvl = V.lvl
+  local s = f.SenderHandle or (type(ev) == "table" and ev.sender)
+  local h = math.tointeger(tonumber(s))
+  local x = lvl and h and lvl.spawned[h]
+  if type(x) ~= "table" or not x.A then return end
+  local A = x.A
+  if A.alive[h] then A.alive[h] = nil; A.alive_n = A.alive_n - 1; A.last_activity = SP.frame end
+end
+function V.on_health_bar(f, ev)
+  if f.IsFriendly == true then return end
+  local lvl = V.lvl
+  local s = f.SenderHandle or (type(ev) == "table" and ev.sender)
+  local h = math.tointeger(tonumber(s))
+  local x = lvl and h and lvl.spawned[h]
+  local T = type(x) == "table" and x.T
+  if not T or T.hb then return end
+  T.hb = true
+  T.role = V.role_of(T)
+  if T.uid then V.reg_put(T.uid, T) end
+  vlog(string.format("%s showed a health bar: boss tier, never used by the Enemy Randomizer", tostring(V.short(T.name))))
+  for _, A in ipairs(lvl.arms) do
+    if not A.restored and (A.rep == T or A.orig_T == T) then V.put_back(A, "boss tier (health bar)") end
+  end
+end
+function V.on_checkpoint(cp)
+  if not (type(cp) == "table" and cp.loaded) then
+    local lvl = V.lvl
+    if SP.zone and not V.in_zone and lvl and #lvl.arms > 0 then V.put_back_all("story boss area " .. tostring(SP.zone)) end
+    if not SP.zone and V.in_zone and lvl then
+      for _, r in ipairs(lvl.order) do if not r.arm then r.tried = nil end end      -- left it: fresh spawners may change again
+    end
+    V.in_zone = SP.zone ~= nil
+    return
+  end
+  V.in_zone = SP.zone ~= nil
+  -- a changed encounter that was running when the checkpoint was loaded counts one retry
+  local lvl = V.lvl
+  if lvl and V.enabled() then
+    for _, A in ipairs(lvl.arms) do
+      if not A.restored and A.spawns > 0 and A.alive_n > 0 then
+        local k = A.rec.key
+        V.session.retries[k] = (V.session.retries[k] or 0) + 1
+        if V.session.retries[k] >= V.RETRY_LIMIT then
+          V.block(A, "the checkpoint was loaded " .. V.session.retries[k] .. " times while it ran")
+          say("Enemy Randomizer: an encounter you retried " .. V.session.retries[k] .. " times has its original enemies now",
+              { type = "corner", duration = 6 })
+        end
+      end
+    end
+  end
+  V.reset("checkpoint loaded")
+end
+function V.watchdog()
+  local lvl = V.lvl
+  for _, A in ipairs(lvl and lvl.arms or {}) do
+    if not A.restored and A.alive_n > 0 and SP.frame - A.last_activity > V.STUCK_SECONDS * 60 then
+      V.block(A, "its enemies stayed alive " .. V.STUCK_SECONDS .. " s without a death")
+      say("Enemy Randomizer: an encounter looked stuck - its next enemies are the original ones (load the last checkpoint if one cannot be reached)",
+          { type = "corner", duration = 8 })
+    end
+  end
+end
+
+-- ---- the frame ---------------------------------------------------------------------------------------------
+function V.start(fn)
+  V.job_fn, V.job_restarts = fn, 0
+  V.job = coroutine.create(fn)
+end
+function V.arm_pass(sc)
+  local t0 = clock_()
+  for _, r in ipairs(V.lvl.order) do
+    vguard(V.plan_rec, sc, r)
+    t0 = vpace(t0)
+  end
+end
+
+function V.tick(frame, ready)
+  if not V.lvl then V.new_level("scripts loaded") end
+  local lvl = V.lvl
+  if not V.enabled() then
+    V.job = nil
+    if #lvl.arms > 0 then V.put_back_all("Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
+    lvl.queue = {}
+    return
+  end
+  if not ready then return end
+  if V.job then
+    local ok, err = coroutine.resume(V.job)
+    if not ok then
+      if tostring(err):find("frame budget", 1, true) and (V.job_restarts or 0) < 2 then
+        V.job_restarts = (V.job_restarts or 0) + 1
+        V.budget_hits = (V.budget_hits or 0) + 1
+        V.job = coroutine.create(V.job_fn)
+      else
+        V.job = nil
+        vlog("RANDO-ERROR " .. tostring(err))
+      end
+    elseif coroutine.status(V.job) == "dead" then V.job = nil end
+    return
+  end
+  if frame % 60 == 0 then V.watchdog() end
+  local work = (lvl.scans > 0 and #lvl.queue > 0) or frame >= lvl.next_scan
+  if not work then return end
+  local sc, why = V.scene()
+  if not sc then
+    lvl.next_scan = frame + V.SCAN_EVERY
+    lvl.queue = {}
+    if not lvl.blocked_said then
+      lvl.blocked_said = true
+      vlog("BLOCKED: " .. tostring(why))
+      if not V.session.said_blocked then
+        V.session.said_blocked = true
+        say("Enemy Randomizer cannot work", { type = "corner", sub = tostring(why), duration = 8 })
+      end
+    end
+    return
+  end
+  if lvl.scans > 0 and #lvl.queue > 0 then
+    local batch = lvl.queue
+    lvl.queue = {}
+    V.start(function() vguard(V.process, sc, batch); V.arm_pass(sc) end)
+    return
+  end
+  if frame >= lvl.next_scan then
+    lvl.next_scan = frame + V.SCAN_EVERY
+    V.start(function() V.scan(sc); V.arm_pass(sc) end)
+  end
+end
+
+-- the switch: off puts everything back at once (V.tick); on changes only spawners that have not run yet
+function V.on_switch(on)
+  if on then
+    if V.lvl then V.lvl.next_scan = SP.frame or 0 end
+  else
+    V.put_back_all("Enemy Randomizer off")
+  end
+end
+
+function V.status()
+  local lvl = V.lvl
+  local out = { changed = 0, factory = 0, template = 0, group = 0, kinds = 0, known = 0, ok = 0, original = 0 }
+  if lvl then
+    for _, A in ipairs(lvl.arms) do if not A.restored then out.changed = out.changed + 1; out[A.rec.kind] = out[A.rec.kind] + 1 end end
+    local names = {}
+    for _, T in pairs(lvl.tpl) do if V.usable(T) and not names[V.short(T.name)] then names[V.short(T.name)] = true; out.kinds = out.kinds + 1 end end
+  end
+  for uid in pairs(reg_t()) do local e = V.reg_get(uid); if e and e.role == "enemy" and not e.hb and not e.mixed then out.known = out.known + 1 end end
+  for _, ad in pairs(V.adapters) do out.ok, out.original = out.ok + ad.ok, out.original + ad.original end
+  return out
+end
+
+function V.summary()
+  local lvl = V.lvl
+  local parts = {}
+  for _, k in ipairs({ "factory", "template", "group" }) do
+    local ad = V.adapters[k]
+    parts[#parts + 1] = string.format("%s: %s, %d changed, %d replaced, %d original, %d other", k, ad.on and "on" or "OFF", ad.armed, ad.ok, ad.original, ad.other)
+  end
+  local active = 0
+  for _, A in ipairs(lvl.arms) do if not A.restored then active = active + 1 end end
+  vlog(string.format("level summary (%s): %d spawner variable(s), %d changed (%d still), budget retries %d | session %s",
+      tostring(lvl.why), #lvl.order, #lvl.arms, active, V.budget_hits or 0, table.concat(parts, " | ")))
+end
+
 -- ---------------------------------------------------------------------------------------------
 -- the frame (10_rando_runtime.lua calls it)
 -- ---------------------------------------------------------------------------------------------
 function SP.tick(frame, ready)
   SP.frame = frame
+  if SP.V then
+    local okv, ev = pcall(SP.V.tick, frame, ready)
+    if not okv then SP.V.job = nil; log("RANDO-ERROR enemies:", tostring(ev)) end
+  end
   if ready and next(SP.revert_pending) then SP.continue_reverts() end
-  if not SP.any_enabled() then
+  if not SP.any_legacy_enabled() then
     SP.job = nil
     if not next(SP.revert_pending) then SP.level = nil end
     return
@@ -1537,6 +2516,7 @@ end
 
 -- a planet change or a level load: read the spawners again
 function SP.on_level(why)
+  if SP.V then pcall(SP.V.reset, why) end
   SP.level = nil
   SP.job = nil                      -- dev 10.18: a census of the level before is dropped (its nodes are gone)
   SP.census_retries = 0
@@ -1572,23 +2552,32 @@ if not SP.subscribed then
   local sub = (R and R.subscribe) or function(class, fn) pcall(rivet.on_event, class, function(ev) pcall(fn, ev) end) end
   -- `always`: a spawner's start and stop are noted even while both are off (no read, no write), so
   -- an encounter already running when a feature is switched on is never changed
-  local function on(class, fn, always)
+  -- dev 10.27: `vfn`, the variable route's handler (enemy.lua), runs first; the old route's handler only while
+  -- Boss or Chaos is on. `always`: also while everything is off (only counting, no read, no write)
+  local function on(class, fn, always, vfn, vfn_always)
     sub(class, function(ev)
-      if always or SP.any_enabled() then
+      if vfn and SP.V and (vfn_always or SP.V.enabled()) then
+        local ok, err = pcall(vfn, ev.fields or {}, ev)
+        if not ok then log("RANDO-ERROR enemies", class, tostring(err)) end
+      end
+      if always or SP.any_legacy_enabled() then
         local ok, err = pcall(fn, ev.fields or {}, ev)
         if not ok then log("RANDO-ERROR", class, tostring(err)) end
       end
       if SP.listeners[class] then SP.notify_listeners(class, ev.fields or {}, ev) end
     end)
   end
-  on("SpawnerStartedEvent", SP.on_started, true)
+  local function vcall(name) return function(...) return SP.V[name](...) end end
+  on("SpawnerStartedEvent", SP.on_started, true, vcall("on_started"), true)
   on("SpawnerStoppedEvent", SP.on_stopped, true)
-  on("SpawnerSpawnEvent", SP.on_spawn)
-  on("BotDeathCompleteEvent", SP.on_death)
-  on("HealthBarShowEvent", SP.on_health_bar)
+  on("SpawnerSpawnEvent", SP.on_spawn, false, vcall("on_spawn_seen"), true)
+  on("BotDeathCompleteEvent", SP.on_death, false, vcall("on_death"))
+  on("HealthBarShowEvent", SP.on_health_bar, false, vcall("on_health_bar"))
   on("BossPhaseChangeEvent", SP.on_boss_phase)
-  on("LevelLoadedEvent", function() SP.on_level("level loaded") end)
-  on("PlanetChangedEvent", function(f) if f.NewPlanetName then SP.on_level("planet " .. tostring(f.NewPlanetName)) end end)
+  on("LevelLoadedEvent", function() SP.on_level("level loaded") end, true)
+  on("PlanetChangedEvent", function(f) if f.NewPlanetName then SP.on_level("planet " .. tostring(f.NewPlanetName)) end end, true)
 end
 
 log("spawner layer loaded (" .. SP.NODE_CLASS .. " Templates; families " .. #SP.FAMILY_CLASSES .. " bot classes)")
+SP.V.log(string.format("variable route loaded (dev 10.27): factory Templates, node Template, node Template group; plugs Templates %d Template %d",
+    SP.V.PLUG_TEMPLATES, SP.V.PLUG_TEMPLATE))

@@ -11,7 +11,7 @@ if __name__ == "__main__":
     buf = io.StringIO()
     suite = unittest.defaultTestLoader.discover("tests", top_level_dir=".")
     result = unittest.TextTestRunner(stream=buf, verbosity=2).run(suite)
-    head = (f"Rift Apart Randomizer dev 10.26 (build 10.0.17) - test run {datetime.now(timezone.utc):%Y-%m-%d %H:%M UTC}\n"
+    head = (f"Rift Apart Randomizer dev 10.27 (build 10.0.18) - test run {datetime.now(timezone.utc):%Y-%m-%d %H:%M UTC}\n"
             f"Python {platform.python_version()} on {platform.system()}\n"
             f"ran {result.testsRun}, failures {len(result.failures)}, errors {len(result.errors)}, "
             f"skipped {len(result.skipped)}\n\n")

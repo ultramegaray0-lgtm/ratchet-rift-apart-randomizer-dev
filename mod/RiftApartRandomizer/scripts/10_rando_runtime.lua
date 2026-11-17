@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.17"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.18"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.17"
-R.RELEASE = "dev 10.26"               -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.18"
+R.RELEASE = "dev 10.27"               -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -147,6 +147,10 @@ R.config = {
   key_enemies = "-",                 -- Enemy Randomizer on/off (Ctrl: what it changed here)
   key_bosses = "=",                  -- Boss Randomizer on/off (Ctrl: what it changed here)
   spawner_runtime = true,            -- false: neither changes anything, whatever the keys say
+  -- dev 10.27: "vars" = the Enemy Randomizer writes spawner script variables (the method round37 proved in the
+  -- game); "census" = the old Prius census route of 10.12-10.20 (never found a Templates list in a real game; kept
+  -- for the tests of the code the Boss and Chaos Randomizers still use)
+  enemy_route = "vars",
   -- dev 10.13: chaos.lua. OFF by default; NO safety guards (docs/CHAOS.md); while ON the two above pause
   chaos_randomizer = false,          -- anything can become anything (the start of a save that never used its key)
   key_chaos = "BACKSPACE",           -- Chaos Randomizer on/off (Ctrl: what it changed here)

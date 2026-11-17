@@ -24,7 +24,8 @@ LAYOUT
                      dev(vtables)     data for dev(probe)
                      dev(item_ids)    data for dev(probe)
                      dev(spawnprobe)  read-only spawner evidence (RANDO-SPAWNPROBE lines; dev 10.20)
-                     dev(spawnproof)  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF lines; v6, dev 10.26)
+                     dev(spawnproof)  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF lines; v6, dev 10.26;
+                                      dev 10.27: stands down while the Enemy Randomizer is ON)
   rivet.toml       rivet_hook settings (copy next to RiftApart.exe)
   rando_give.dll   the native helper (copy next to RiftApart.exe); rando_give_source\ rebuilds it
                    dev 10.24: this IS v7 (it publishes the SceneManager dev(spawnproof) needs; it ran in your game
@@ -41,15 +42,16 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT all 12 required scripts are 10.0.17
+       RANDO-KIT all 12 required scripts are 10.0.18
        RANDO-KIT developer files loaded (not part of a release): ...
 
 KEYS
   Players: 0 planet shuffle on/off (off by default), Ctrl+0 twice gives randomizer items back.
-           - Enemy Randomizer on/off, = Boss Randomizer on/off (both off by default; the save
-           remembers them). Ctrl+- / Ctrl+= show what each changed on this planet.
+           - Enemy Randomizer on/off, = Boss Randomizer on/off (both ON in this dev kit's 04 file; the
+           save remembers them). Ctrl+- / Ctrl+= show what each changed here. dev 10.27: only the Enemy
+           Randomizer changes enemies in the game (it needs this rando_give.dll, v7).
            BACKSPACE Chaos Randomizer on/off (off by default; no protection; while on, the
-           Enemy and Boss Randomizers pause). Ctrl+BACKSPACE shows what it changed.
+           Boss Randomizer pauses). Ctrl+BACKSPACE shows what it changed.
   Everything else needs dev(keys).lua (see the top of that file).
 
 TESTS AND RELEASE
