@@ -4,6 +4,29 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.24 (kit 10.0.17, rando_give.dll v7 in the kit): the helper that was never copied
+
+- Asked: "Nothing changed". Log: tests/data/round34_rivet.log (dev 10.23, kit 10.0.17; companion on from the start;
+  NefCity, Zurkon arena challenge A1 replayed and completed, NefCity; game path replaced).
+- CONFIRMED (real game): kit 10.0.17 complete; spawnproof v3 subscribed its own planet and spawn events ("planet yes,
+  spawns yes"); the 10.23 planet fix WORKED: "level reset (planet Zurkon): ON ZURKON - active", the randomizer itself
+  logged "RANDO-PLANET Zurkon scarstu", every Zurkon checkpoint "on scarstu".
+- BLOCKER (real game): "RANDO-SPAWNPROOF no script variables: rando_give.dll is v6, v7 is needed (copy the kit's)".
+  The game folder had the kit's top-level rando_give.dll (v6); v7 was only in rando_give_source/dev_build and every
+  TESTING step since 10.21 asked for a manual copy. Nothing was scanned, armed or written. The experiment has still not
+  run; nothing is known for or against the Factories mechanism.
+- v7 evidence (round32, real game, v7 copied that time): SceneManager found (signature 1x), RANDO-REAL direct delivery
+  ready, RANDO-ARMOR armor give verified, mission helper ready - every v6 function plus the SceneManager.
+- Kit: rando_give.dll := the v7 build (sha256 8055703e..., byte for byte the source's build, test_native). The v6
+  binary (efb92723...) moved to rando_give_source/release_v6/; tools/build_public_release.py packages it
+  (RELEASE_DLL), validate_release unchanged, so a public package is unchanged. dev_build/ removed.
+- dev(spawnproof).lua v4: "BLOCKED: no script variables: <why>" logged and shown on screen ("SPAWNPROOF BLOCKED: ...")
+  on every Zurkon level where it cannot work (was: one log line per session).
+- Banner dev 10.24; kit scripts unchanged at 10.0.17 (only dev(spawnproof) and the banner string changed).
+- Tests: tests/test_v1024.py (10): 4 on the real log, 4 on the DLL files (hashes, public plan, no dev_build), 1 on
+  round32's v7 evidence, 1 simulator (BLOCKED on screen with a v6 helper). Full suite: 659 run, 0 failures, 23 skipped (9 pwsh, 14 old git history); test_native rebuilt the source with clang and got the kit DLL byte for byte.
+- Verified in the game: nothing of 10.24. Enemy / Boss / Chaos: NOT working. Next: TESTING.md 2-dev11.
+
 ## 2026-11-18: dev 10.23 (kit 10.0.17, rando_give.dll v7 developer build): the lost planet
 
 - Asked: "Enemies/bosses didn't got randomized. Also, update it in github next time", with a brief (find the real

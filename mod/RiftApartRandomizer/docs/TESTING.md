@@ -34,6 +34,15 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
+## 2-dev11. Dev 10.24 (kit 10.0.17): the Factories experiment with the right helper (Zurkon)
+
+Build: commit of dev 10.24 on main. Copy, from `mod/RiftApartRandomizer/`:
+- `rando_give.dll` next to RiftApart.exe (overwrite the old one: the kit's is v7 now; nothing else to copy by hand);
+- the whole `scripts` folder into <game>\scripts (without `dev(spawnprobe).lua`).
+Then exactly as 2-dev10 below: Zurkon, challenge A1 to the end, watch the screen, send rivet.log + what you saw.
+NEW: if anything stops the experiment, the screen says `SPAWNPROOF BLOCKED: <reason>` as soon as you are on Zurkon.
+If you see that, it is not worth playing the challenge - send rivet.log right away.
+
 ## 2-dev10. Dev 10.23 (kit 10.0.17): the Factories experiment, for real this time (Zurkon)
 
 Build: commit of dev 10.23 on main. Files: the kit's WHOLE `scripts` folder (the kit is 10.0.17: the runtime changed;

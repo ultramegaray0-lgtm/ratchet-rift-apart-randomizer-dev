@@ -1,5 +1,12 @@
--- DEVELOPER TOOL - not part of a release. SPAWN PROOF v3 (dev 10.23): controlled enemy replacements on Zurkon,
+-- DEVELOPER TOOL - not part of a release. SPAWN PROOF v4 (dev 10.24): controlled enemy replacements on Zurkon,
 -- to prove (or disprove) in your game the mechanism the Enemy / Boss / Chaos Randomizers will use.
+--
+-- WHY v3 DID NOTHING (your dev 10.23 log, tests/data/round34_rivet.log, real game): the planet fix worked ("level
+-- reset (planet Zurkon): ON ZURKON - active", and the randomizer itself said scarstu), but the game folder still had
+-- rando_give.dll v6: "no script variables: rando_give.dll is v6, v7 is needed". v7 was only in
+-- rando_give_source/dev_build and had to be copied by hand; that one log line was the only sign. Since dev 10.24 the
+-- kit's own rando_give.dll IS v7 (it ran in your game in round32), and v4 says it ON SCREEN, on every Zurkon level,
+-- whenever it cannot work ("SPAWNPROOF BLOCKED: ...").
 --
 -- WHY v2 DID NOTHING AT ALL (your dev 10.22 log, tests/data/round33_rivet.log, real game): it loaded ("v2 loaded")
 -- and then wrote not one more line. It only acted where RANDO.state.current_planet == "scarstu". The companion
@@ -46,7 +53,7 @@
 RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.17"   -- the kit check (10_rando_runtime.lua)
 RANDO_SPAWNPROOF = RANDO_SPAWNPROOF or {}
 local P = RANDO_SPAWNPROOF
-P.version = 3
+P.version = 4
 P.frame = P.frame or 0
 P.ENABLED = true
 P.PLANET = "scarstu"            -- Zurkon (Zurkie's Battleplex): replayable fights, nothing of the story
@@ -333,7 +340,11 @@ function P.scan()
   if not lvl then return end
   local sc, why = P.scene()
   if not sc then
-    if not P.scene_said then P.scene_said = true; log("no script variables:", why) end
+    if not lvl.blocked_said then
+      lvl.blocked_said = true
+      log("BLOCKED: no script variables:", why)
+      say("SPAWNPROOF BLOCKED: " .. tostring(why))
+    end
     return
   end
   if not P.scene_logged then
@@ -708,6 +719,6 @@ if not P.subscribed then
 end
 P.reset("scripts loaded")
 local hash_ok = (not rivet.hash) or (pcall(rivet.hash, "Factories") and rivet.hash("Factories") == P.PLUG_FACTORIES)
-log(string.format("v3 loaded: Template and Factories replacements on Zurkon (%s, at most %d); plugs Template %d Factories %d LastSpawn %d%s; own events: planet %s, spawns %s",
+log(string.format("v4 loaded: Template and Factories replacements on Zurkon (%s, at most %d); plugs Template %d Factories %d LastSpawn %d%s; own events: planet %s, spawns %s",
     P.ENABLED and "on" or "off", P.MAX_SWAPS, P.PLUG_TEMPLATE, P.PLUG_FACTORIES, P.PLUG_LASTSPAWN, hash_ok and "" or " - rivet.hash DISAGREES, nothing will match",
     P.direct and P.direct.planet and "yes" or "NO", P.direct and P.direct.spawn and "yes" or "NO"))

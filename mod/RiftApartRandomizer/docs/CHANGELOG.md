@@ -2,6 +2,21 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.24 (kit 10.0.17, rando_give.dll v7 IN THE KIT; not released): the helper that was never copied
+
+Asked: "Nothing changed" with the rivet.log of 2026-11-18 (dev 10.23, tests/data/round34_rivet.log). Seeds unchanged.
+**Still nothing randomized in the game**; the experiment has still not run.
+
+- Found in the log: the 10.23 planet fix worked (spawnproof "ON ZURKON - active", RANDO-PLANET Zurkon scarstu, every
+  Zurkon checkpoint "on scarstu"). The experiment stopped at its first step: "no script variables: rando_give.dll is
+  v6, v7 is needed". v7 lived only in rando_give_source/dev_build and had to be copied by hand.
+- The kit's rando_give.dll is now the v7 build (sha256 8055703e...): it ran in your game in round32 (SceneManager found
+  1x, direct delivery ready, armor give verified, mission helper ready). dev_build/ is gone. The verified v6 binary moved
+  to rando_give_source/release_v6/ and tools/build_public_release.py packages that one (public packages unchanged).
+- dev(spawnproof).lua v4: "SPAWNPROOF BLOCKED: <why>" on screen and "BLOCKED:" in rivet.log on every Zurkon level
+  where it cannot read script variables.
+- Banner dev 10.24 (kit scripts still 10.0.17). Tests: tests/test_v1024.py (10). 659 run, 0 failures, 23 skipped.
+
 ## Dev 10.23 (kit 10.0.17, rando_give.dll v7 developer build; not released): the lost planet
 
 Asked: "Enemies/bosses didn't got randomized" with the rivet.log of 2026-11-18 (dev 10.22,

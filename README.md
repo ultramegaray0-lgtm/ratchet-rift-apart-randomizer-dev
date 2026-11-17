@@ -1,5 +1,11 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.24 (kit 10.0.17):** Enemy / Boss / Chaos randomization is still NOT working in the game, and the experiment
+has still not run: in the dev 10.23 test the planet fix worked, but the game folder had rando_give.dll v6 and spawnproof
+needs v7. The kit's `rando_give.dll` is now v7 itself (it ran in your game in round32); v6 is kept in
+`rando_give_source/release_v6/` for public packages. spawnproof v4 shows "SPAWNPROOF BLOCKED: ..." on screen when it
+cannot work. `docs/TESTING.md` 2-dev11.
+
 **Dev 10.23 (kit 10.0.17):** Enemy / Boss / Chaos randomization is still NOT working in the game. The dev 10.22 test
 never ran its experiment: the companion started late, the randomizer's 500-event buffer dropped the move to Zurkon,
 and spawnproof v2 (gated on that state) stayed silent. 10.23 fixes the buffer (planet / level / checkpoint / mission /

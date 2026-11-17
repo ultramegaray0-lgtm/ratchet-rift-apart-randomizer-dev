@@ -39,6 +39,7 @@ HELD_BACK = ["chaos.lua", "17_rando_omega.lua"]
 COMPANION = ["Start-Companion.bat", "RandoCompanion.ps1"]
 DOCS = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "CREDITS_AND_LICENSES.md", "LICENSE.txt"]
 DLL_SHA256 = "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12"
+RELEASE_DLL = os.path.join(KIT, "rando_give_source", "release_v6", "rando_give.dll")
 
 
 def release_scripts():
@@ -51,7 +52,9 @@ def plan(scripts):
     """(source path, path inside the package) for every file."""
     p = [(os.path.join(REL, d), d) for d in DOCS]
     p.append((os.path.join(KIT, "rivet.toml"), "GAME_FOLDER/rivet.toml"))
-    p.append((os.path.join(KIT, "rando_give.dll"), "GAME_FOLDER/rando_give.dll"))
+    # dev 10.24: the kit's rando_give.dll is v7 (it ran in your game: round32); a public package keeps the v6 binary
+    # (rando_give_source/release_v6) until a public release is decided
+    p.append((RELEASE_DLL, "GAME_FOLDER/rando_give.dll"))
     for s in scripts:
         p.append((os.path.join(KIT, "scripts", s), "GAME_FOLDER/scripts/" + s))
     for c in COMPANION:
@@ -84,7 +87,7 @@ def main(argv=None):
             sys.exit(f"{s} is not tagged {BUILD}")
         if "DEVELOPER TOOL" in txt:
             sys.exit(f"{s} says it is a developer tool but is not named dev(name).lua")
-    if sha256(os.path.join(KIT, "rando_give.dll")) != DLL_SHA256:
+    if sha256(RELEASE_DLL) != DLL_SHA256:
         sys.exit("rando_give.dll is not the verified v6 binary")
 
     stage = os.path.join(a.out, NAME)

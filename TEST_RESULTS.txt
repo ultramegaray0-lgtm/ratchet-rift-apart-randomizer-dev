@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.23 (build 10.0.17) - test run 2026-11-17 21:29 UTC
+Rift Apart Randomizer dev 10.24 (build 10.0.17) - test run 2026-11-17 21:48 UTC
 Python 3.13.18 on Linux
-ran 650, failures 0, errors 0, skipped 23
+ran 659, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -575,6 +575,15 @@ test_nothing_is_written_off_zurkon (test_v1022.SpawnProofTwoSimulatorTests.test_
 test_scan_sees_factories_nodes (test_v1022.SpawnProofTwoSimulatorTests.test_scan_sees_factories_nodes) ... ok
 test_spawns_are_tied_by_the_spawner_slots_without_lastspawn (test_v1022.SpawnProofTwoSimulatorTests.test_spawns_are_tied_by_the_spawner_slots_without_lastspawn) ... ok
 test_the_original_spawning_is_reported (test_v1022.SpawnProofTwoSimulatorTests.test_the_original_spawning_is_reported) ... ok
+test_an_old_helper_is_shown_on_screen (tests.test_v1024.BlockedOnScreenTests.test_an_old_helper_is_shown_on_screen) ... ok
+test_no_second_v7_copy_to_forget (tests.test_v1024.KitDllTests.test_no_second_v7_copy_to_forget) ... ok
+test_the_kit_dll_is_v7 (tests.test_v1024.KitDllTests.test_the_kit_dll_is_v7) ... ok
+test_v6_is_kept_for_public_packages (tests.test_v1024.KitDllTests.test_v6_is_kept_for_public_packages) ... ok
+test_v7_ran_in_the_game_before (tests.test_v1024.KitDllTests.test_v7_ran_in_the_game_before) ... ok
+test_kit_10_0_17_and_spawnproof_v3_ran (tests.test_v1024.RoundThirtyFourLogTests.test_kit_10_0_17_and_spawnproof_v3_ran) ... ok
+test_the_experiment_was_blocked_by_the_v6_helper (tests.test_v1024.RoundThirtyFourLogTests.test_the_experiment_was_blocked_by_the_v6_helper) ... ok
+test_the_game_path_was_replaced (tests.test_v1024.RoundThirtyFourLogTests.test_the_game_path_was_replaced) ... ok
+test_the_planet_fix_worked (tests.test_v1024.RoundThirtyFourLogTests.test_the_planet_fix_worked) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -674,6 +683,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 650 tests in 161.271s
+Ran 659 tests in 161.662s
 
 OK (skipped=23)

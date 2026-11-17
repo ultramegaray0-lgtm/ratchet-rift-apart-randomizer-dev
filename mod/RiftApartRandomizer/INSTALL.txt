@@ -24,11 +24,12 @@ LAYOUT
                      dev(vtables)     data for dev(probe)
                      dev(item_ids)    data for dev(probe)
                      dev(spawnprobe)  read-only spawner evidence (RANDO-SPAWNPROBE lines; dev 10.20)
-                     dev(spawnproof)  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF lines; v3, dev 10.23)
+                     dev(spawnproof)  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF lines; v4, dev 10.24)
   rivet.toml       rivet_hook settings (copy next to RiftApart.exe)
   rando_give.dll   the native helper (copy next to RiftApart.exe); rando_give_source\ rebuilds it
-                   dev 10.21: rando_give_source\dev_build\rando_give.dll is the v7 DEVELOPER build that
-                   dev(spawnproof) needs (copy it over the game folder's rando_give.dll for that test only)
+                   dev 10.24: this IS v7 (it publishes the SceneManager dev(spawnproof) needs; it ran in your game
+                   in round32). rando_give_source\release_v6\ keeps the v6 binary for public packages.
+                   (dev 10.21-10.23: the v7 build was in rando_give_source\dev_build and had to be copied by hand)
   companion\       the companion (saving, random seeds, spoilers); companion\research\ is dev-only
   docs\            development notes and research (not shipped)
 

@@ -4,6 +4,14 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0p. Since dev 10.24 (kit 10.0.17): still NO enemy is randomized in the game
+
+- NOT FIXED, and the experiment has STILL NOT RUN. Your dev 10.23 log (round34): the planet fix worked, but the game
+  folder had rando_give.dll v6; spawnproof needs v7 ("no script variables: rando_give.dll is v6, v7 is needed").
+- FIXED (kit): the kit's rando_give.dll IS v7 now (it ran in your game in round32). Copy it next to RiftApart.exe.
+- FIXED (dev file): spawnproof v4 shows "SPAWNPROOF BLOCKED: ..." on screen.
+- OPEN: whether a Factories swap changes what spawns (TESTING.md 2-dev11).
+
 ## 0o. Since dev 10.23 (kit 10.0.17): still NO enemy is randomized in the game
 
 - NOT FIXED, and NOT TESTED: your dev 10.22 log (round33) never ran the Factories experiment. The companion started

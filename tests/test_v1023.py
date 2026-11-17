@@ -117,7 +117,7 @@ class SpawnProofThreeSimulatorTests(unittest.TestCase):
 
     def test_loaded_line_reports_its_own_subscriptions(self):
         g = self.game()
-        self.assertTrue(any("v3 loaded:" in l and "own events: planet yes, spawns yes" in l for l in self.lines(g)))
+        self.assertTrue(any(" loaded: Template and Factories" in l and "own events: planet yes, spawns yes" in l for l in self.lines(g)))
 
 
 if __name__ == "__main__":
