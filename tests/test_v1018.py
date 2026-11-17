@@ -206,7 +206,10 @@ class OtherLayoutsTests(unittest.TestCase):
     def test_placed_spawner_components_are_read(self):
         level = {"sp_a": ([G1], 1, "O1"), "sp_b": ([G2], 1, "O2"), "sp_c": ([G3], 1, "O3")}
         extra = {u: {"spawner_component": True} for u in level}
-        g = game(enemy=True, level=level, extra=extra)
+
+        def scan_on(g):                         # dev 10.19: off by default (it ran past the budget in your game)
+            g.g.RANDO_SPAWNERS.SCAN_SPAWNER_COMPONENTS = True
+        g = game(enemy=True, level=level, extra=extra, before=scan_on)
         self.assertTrue(g.log_has("; 3 Spawner component(s)"))
         self.assertIn("3 spawner node(s) read", census(g))
         moved = [u for u in level if g.sim.encounter_template(u, 1) != level[u][0][0]]

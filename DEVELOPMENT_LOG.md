@@ -4,6 +4,34 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-17: dev 10.19 (kit 10.0.14, generator 10.11.0): the node's Spawner component
+
+- Asked: "no enemy/boss randomized", with tests/data/round29_rivet.log (dev 10.18; Zurkon, NefCity,
+  Sargasso, Ardolis; save with Chaos ON).
+- Log evidence: every node skipped (rivet no prius; ddlPriusData 0; no pointer route); the global
+  find_component("Spawner") "ran past the frame budget"; census restarted up to 4 times on a level.
+  `spawn:` lines: sender == field SenderHandle == SpawnedHandle (the bot sends it); location uids are bit-63
+  zone uids. Six `dump` lines (Zurkon), all alike: vtable +0, ddlPriusData 0, actor +0x10, timeScale 1.0,
+  own handle +0x1C (0x406E8E, 0x406E90 ...), updateListIndex all -1, uid twice +0x48/+0x50, plugs +0x58,
+  **+0x60 = own handle + 1**, +0x64 = 0x80B003E8 (group bit), +0x70.. 1, 1, 1.
+- Conclusion: the node made a component right after itself and keeps its handle. rivet.hash("Spawner") =
+  4233548849 = SpawnerPrius's component_id (checked with the hash rivet_hook documents: MIS_INTRO and
+  PerformWarpEvent reproduce). SpawnerScriptActionPrius extends SpawnerPrius: the Spawner component carries
+  the Templates list.
+- 16: SP.spawner_of(node, addr) - u32 at +0x60, rivet.component(node.actor, "Spawner") (+ any other
+  `*Spawner*` class of rivet.components), used only if c.handle equals it; SP.find_prius(c2, addr2, short)
+  with up to 0x200 bytes of the component read, own pointers from +0x48, new `inline` route (strict) and
+  path; rec.spawner_component / spawner_class; rec_by_handle matches it; diagnostics (component list / dump)
+  for 6 nodes; event_diag for 3 start/stop events a level; per-node pcall + yield on a budget error (3
+  tries), SP.CENSUS_RETRIES 8; SP.SCAN_SPAWNER_COMPONENTS false.
+- Simulator: spec.comp = prius / holder / inline / elsewhere (node +0x1C own handle, +0x60 Spawner handle,
+  +0x64 group; Spawner on the node's actor), SpawnerSpawnEvent sent by the bot, Started/Stopped carry the
+  Spawner handle.
+- Kit 10.0.14, banner dev 10.19. tests/test_v1019.py (11); test_v1018's placed-Spawner test opts into the
+  scan; test_v1017's retry text /8. 578 run, 0 failures, 21 skipped.
+- Open (needs the game): the Spawner component found on the node's actor (`layout prius/spawner/...`);
+  `verify ... TOOK EFFECT`.
+
 ## 2026-11-17: dev 10.18 (kit 10.0.13, generator 10.11.0): spawner Prius reached by hand
 
 - Asked: "Still nothing randomized. Take your time, investigate and fix, and make no mistake. Next try

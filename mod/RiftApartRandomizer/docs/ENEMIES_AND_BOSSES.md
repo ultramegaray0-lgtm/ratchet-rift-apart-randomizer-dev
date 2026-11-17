@@ -118,6 +118,17 @@ Kept-original encounters are saved in `state.spawn_blocked` (at most 300) and li
 
 ## 6. Finding the Templates list without trusting an offset
 
+**Dev 10.19 (your third log of 2026-11-17, its `dump` lines):** a SpawnerScriptAction keeps no Prius
+(`ddlPriusData` +0x08 is 0). At +0x60 it keeps the handle of a **Spawner** component made right after it
+(own handle 0x406E8E -> 0x406E8F in every dump); +0x64 is an actor group. `Spawner` is the component of
+`SpawnerPrius` (rivet.hash("Spawner") = 4233548849 = its DDL component id), the same Templates /
+SpawnLocations lists. 10.19 asks the node's own actor for that component (`rivet.component(actor,
+"Spawner")`, or another `*Spawner*` class `rivet.components` lists), uses it only if its handle equals the
+one at +0x60, then reads its Prius: rivet's `prius`, `ddlPriusData`, lists copied into its instance
+(`inline`, strict), pointers. The census line says `layout prius/spawner/<route>`. Spawn events are sent by
+the spawned bot (sender = SpawnedHandle), so a spawn is tied to its node by its spawn point only. The
+level-wide `find_component("Spawner")` scan is off (it ran past the frame budget).
+
 **Dev 10.18 (your second log of 2026-11-17):** rivet gives **no** `prius` for SpawnerScriptAction and the
 instance is 128 bytes: ScriptAction's header (Component 0x48, instance uid +0x48, graph uid +0x50, plugs
 +0x58; rivet_hook `src/game/script.hpp`) plus 32 bytes of its own. The Prius is reached by hand, best route
@@ -164,6 +175,8 @@ once per changed node.
 
 ## 7. What the first real round must confirm (rivet.log)
 
+00. Dev 10.19: `layout prius/spawner/rivet xN` in the census line (or spawner/holder, spawner/inline);
+   `spawner component of <node> not found: ...` names the components the node's actor has instead.
 0. Dev 10.18: `Prius routes (census N): holder xN` (or scan / deep), `learned <id> = <family> (template
    actor <class>)`, `plan (...): N slot(s) changed`, the first 5 `spawn: ...` lines per level, and after
    a changed fight `verify ...: TOOK EFFECT`. `DID NOT take effect` means the game copies the list when the

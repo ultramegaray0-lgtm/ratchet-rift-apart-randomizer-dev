@@ -12,7 +12,7 @@
 -- is not spawned by an encounter's spawner node.
 --
 -- Needs 16_rando_spawners.lua. Removing this file only removes the enemy randomizer.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["enemy"] = "10.0.13"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["enemy"] = "10.0.14"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_ENEMY = RANDO_ENEMY or {}
 local E = RANDO_ENEMY

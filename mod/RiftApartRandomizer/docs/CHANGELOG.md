@@ -2,6 +2,22 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.19 (kit 10.0.14, generator 10.11.0; not released): the node's Spawner component
+
+Asked: "no enemy/boss randomized" (rivet.log of 2026-11-17 with dev 10.18, tests/data/round29_rivet.log).
+Seeds unchanged. **Tested in the simulator only.**
+
+- Cause (10.18's dumps): SpawnerScriptAction's ddlPriusData is 0; +0x60 holds the handle of its Spawner
+  component (own handle + 1 in all six dumps). Spawner = SpawnerPrius's component (hash 4233548849).
+- 16_rando_spawners: SP.spawner_of (the node actor's Spawner component, handle checked against +0x60), its
+  Prius via SP.find_prius (short layout; new `inline` route for lists copied into the component); rec
+  remembers the component's handle (SpawnerStopped/Started events match it); diagnostics when it is not on
+  the node's actor; first start/stop events logged per level.
+- The census retries a node interrupted by the frame budget (pcall + yield) instead of restarting; 8
+  restarts allowed. The level-wide Spawner scan is off by default.
+- Simulator: `comp` node model (prius / holder / inline / elsewhere), bot-sent spawn events.
+- Tests: tests/test_v1019.py (11; 8 fail and 1 errors against 10.18). 578 run, 0 failures, 21 skipped.
+
 ## Dev 10.18 (kit 10.0.13, generator 10.11.0; not released): spawner Prius reached by hand
 
 Asked: "Still nothing randomized. Take your time, investigate and fix, and make no mistake." (rivet.log of

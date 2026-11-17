@@ -536,6 +536,14 @@ function rivet.find_component(class, limit, exact)
 end
 function rivet.component(actor, class)
   if class == "Spawner" then
+    for _, e in pairs(S.encounters or {}) do
+      if e.comp and e.comp ~= "elsewhere" and e.actor == actor then
+        return { address = string.format("%X", e.spawner_addr), size = (e.comp == "inline") and 0x100 or 0x60,
+                 handle = e.spawner_handle,
+                 prius = (e.comp == "prius") and string.format("%016x", e.spawner_prius) or nil,
+                 prius_size = (e.comp == "prius") and 0x78 or nil }
+      end
+    end
     for _, c in ipairs(S.spawner_comps or {}) do
       if c.actor == actor then
         return { address = string.format("%X", c.addr), size = 0x60, handle = c.component,
@@ -571,6 +579,11 @@ function rivet.find_uid(uid)
   return S.uid_actor and S.uid_actor[tostring(uid):upper()] or nil
 end
 function rivet.components(handle)
+  for _, e in pairs(S.encounters or {}) do
+    if e.comp and e.actor == handle then
+      return (e.comp == "elsewhere") and { "SpawnerScriptAction" } or { "SpawnerScriptAction", "Spawner" }
+    end
+  end
   local cls = S.actor_class and S.actor_class[handle]
   if S.components_off then error("attempt to call a nil value", 2) end
   if cls then return { "SceneObject", cls, "Health" } end
@@ -1078,11 +1091,22 @@ function S.add_encounter(spec)
   local tptr, lptr = base + 0x800, base + 0x900
   S.map(tptr, 0x100); S.map(lptr, 0x100)
   local pr
-  local real = spec.holder or spec.ptr or spec.deep
+  local real = spec.holder or spec.ptr or spec.deep or spec.comp
   if spec.spawner_component then spec.prius = true end         -- dev 10.18: a placed actor's Spawner component
-  local robj
+  local robj, sb
+  if spec.comp then
+    -- dev 10.19, what your third log's dumps show: the 128-byte node keeps no Prius (ddlPriusData 0) and the
+    -- handle of its Spawner component at +0x60; that component (on the node's actor) holds SpawnerPrius:
+    -- "prius" = rivet gives it, "holder" = only via ddlPriusData, "inline" = copied into its 0x100-byte
+    -- instance (FactoryGroup +0x50), "elsewhere" = not on the node's actor
+    sb = base + 0xC00
+    S.map(sb, 0x200)
+    for a = sb, sb + 0x1FF do S.mem[a] = 0 end
+    S.put_u64(sb, 0x7FF6C4B30000)
+  end
   if spec.prius or real then
     pr = base + 0x400
+    if spec.comp == "inline" then pr = sb + 0x48 end
     if spec.deep then
       -- dev 10.18: ddlPriusData null; node +0x70 -> a runtime object: "embed" = the SpawnerPrius fields at
       -- its +0x20 (FactoryGroup +0x28), "ptr" = its +0x30 points at the Prius
@@ -1092,7 +1116,7 @@ function S.add_encounter(spec)
       S.put_u64(robj, 0x7FF6C4B20000)
       if spec.deep == "embed" then pr = robj + 0x20 end
     end
-    if not spec.deep or pr ~= robj + 0x20 then S.map(pr, 0x100); for a = pr, pr + 0xFF do S.mem[a] = 0 end end
+    if spec.comp ~= "inline" and (not spec.deep or pr ~= robj + 0x20) then S.map(pr, 0x100); for a = pr, pr + 0xFF do S.mem[a] = 0 end end
     x = 0x08
   end
   local fb = pr or base                                         -- where the Prius fields are
@@ -1105,7 +1129,18 @@ function S.add_encounter(spec)
     S.put_u32(fb + x + 100, spec.num or 0)
     S.put_u32(fb + x + 104, 0xFFFFFFFF)
     S.put_u32(fb + x + 120, 1)
-    if real and spec.deep ~= "embed" then S.put_u32(fb + x + 112, 60) end   -- ActionType (SpawnerScriptActionPrius +120)
+    if real and spec.deep ~= "embed" and not spec.comp then S.put_u32(fb + x + 112, 60) end   -- ActionType (SpawnerScriptActionPrius +120)
+    if spec.comp then
+      S.put_u32(base + 0x1C, 3000000 + i)                       -- the node's own handle
+      S.put_u32(base + 0x60, 3500000 + i)                       -- its Spawner component's handle
+      S.put_u32(base + 0x64, 0x80B003E8)                        -- an actor group
+      S.put_u32(base + 0x70, 1); S.put_u32(base + 0x74, 1); S.put_u32(base + 0x78, 1)
+      if spec.comp == "holder" then
+        local hold = sb + 0x180
+        S.put_u64(hold, 0x7FF6C4B10000); S.put_u32(hold + 8, 1); S.put_u64(hold + 16, pr)
+        S.put_u64(sb + 8, hold)
+      end
+    end
     if spec.deep then
       S.put_u64(base + 0x70, robj)
       if spec.deep == "ptr" then S.put_u64(robj + 0x30, pr) end
@@ -1161,6 +1196,7 @@ function S.add_encounter(spec)
               component = 3000000 + i, actor = 4000000 + i, mission = spec.mission, objective = spec.objective,
               spawned = 0, dead = 0, alive = {}, running = false, done = false,
               prius = spec.prius or real, nosender = spec.nosender, loc_handles = loc_handles,
+              comp = spec.comp, spawner_handle = spec.comp and (3500000 + i) or nil, spawner_addr = sb, spawner_prius = pr,
               sender_field = spec.sender_field }
   S.encounters[spec.uid] = e
   if spec.spawner_component then
@@ -1194,9 +1230,9 @@ local function spawn_one(e)
     -- the real game's fields (rivet.log 2026-11-17): SpawnFactory, SpawnIndex, SpawnLocation, SpawnedHandle
     S.emit("SpawnerSpawnEvent", { SpawnFactory = 0, SpawnedHandle = h, SpawnIndex = k - 1,
                                   SpawnLocation = e.loc_handles[(e.spawned - 1) % 2 + 1],
-                                  SenderHandle = (e.sender_field == "component" and e.component)
+                                  SenderHandle = (e.comp and h) or (e.sender_field == "component" and e.component)
                                                  or (e.sender_field == "actor" and e.actor) or nil },
-           { sender = (not e.nosender) and e.component or nil })
+           { sender = e.comp and h or ((not e.nosender) and e.component or nil) })
   else
     S.emit("SpawnerSpawnEvent", { SenderHandle = e.component, SpawnedHandle = h, SpawnIndex = k - 1, SpawnLocation = 0 })
   end
@@ -1206,7 +1242,7 @@ end
 function S.start_encounter(uid)
   local e = S.encounters[uid]
   e.running = true
-  S.emit("SpawnerStartedEvent", { SpawnerComponentHandle = e.component })
+  S.emit("SpawnerStartedEvent", { SpawnerComponentHandle = e.spawner_handle or e.component })
   S.step(1)
   local tries = 0
   while e.spawned < to_spawn(e) and tries < 3 do
@@ -1241,7 +1277,7 @@ function S.kill(uid, h)
     e.done, e.running = true, false
     S.completions[uid] = (S.completions[uid] or 0) + 1
     S.doors[uid] = true
-    S.emit("SpawnerStoppedEvent", { SpawnerComponentHandle = e.component })
+    S.emit("SpawnerStoppedEvent", { SpawnerComponentHandle = e.spawner_handle or e.component })
     if e.mission then
       S.emit("ObjectiveStateChangedEvent", { MissionName = e.mission, ObjectiveName = e.objective, ObjectiveState = 2 })
     end

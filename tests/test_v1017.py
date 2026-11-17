@@ -166,7 +166,7 @@ class FrameBudgetTests(unittest.TestCase):
               end""")
         g = game(enemy=True, before=before)
         g.step(120)
-        self.assertTrue(g.log_has("census interrupted by the frame budget - reading again (1/5)"))
+        self.assertTrue(g.log_has("census interrupted by the frame budget - reading again (1/8)"))
         self.assertIn("%d spawner node(s) read" % len(LEVEL), census_lines(g)[-1])
         self.assertTrue(changed(g))
 

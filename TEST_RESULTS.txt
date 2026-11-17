@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.18 (build 10.0.13) - test run 2026-11-17 09:32 UTC
+Rift Apart Randomizer dev 10.19 (build 10.0.14) - test run 2026-11-17 10:05 UTC
 Python 3.13.18 on Linux
-ran 567, failures 0, errors 0, skipped 21
+ran 578, failures 0, errors 0, skipped 21
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -492,6 +492,17 @@ test_explicitly_off_reads_and_writes_nothing (tests.test_v1018.YourGamesLayoutTe
 test_switching_off_puts_everything_back (tests.test_v1018.YourGamesLayoutTests.test_switching_off_puts_everything_back) ... ok
 test_templates_are_learned_from_their_template_actors_before_any_fight (tests.test_v1018.YourGamesLayoutTests.test_templates_are_learned_from_their_template_actors_before_any_fight) ... ok
 test_the_first_spawn_of_a_changed_encounter_is_verified (tests.test_v1018.YourGamesLayoutTests.test_the_first_spawn_of_a_changed_encounter_is_verified) ... ok
+test_a_node_stopped_by_the_budget_is_read_again_without_a_restart (tests.test_v1019.FrameBudgetTests.test_a_node_stopped_by_the_budget_is_read_again_without_a_restart) ... ok
+test_a_component_on_another_actor_is_named (tests.test_v1019.SpawnerComponentTests.test_a_component_on_another_actor_is_named) ... ok
+test_boss_and_chaos (tests.test_v1019.SpawnerComponentTests.test_boss_and_chaos) ... ok
+test_learning_from_spawns_without_template_actors (tests.test_v1019.SpawnerComponentTests.test_learning_from_spawns_without_template_actors) ... ok
+test_lists_copied_into_the_component (tests.test_v1019.SpawnerComponentTests.test_lists_copied_into_the_component) ... ok
+test_no_level_wide_component_scan (tests.test_v1019.SpawnerComponentTests.test_no_level_wide_component_scan) ... ok
+test_only_through_ddlPriusData (tests.test_v1019.SpawnerComponentTests.test_only_through_ddlPriusData) ... ok
+test_rivet_gives_the_spawner_components_prius (tests.test_v1019.SpawnerComponentTests.test_rivet_gives_the_spawner_components_prius) ... ok
+test_spawns_are_matched_by_their_spawn_point (tests.test_v1019.SpawnerComponentTests.test_spawns_are_matched_by_their_spawn_point) ... ok
+test_stop_events_name_the_spawner_component (tests.test_v1019.SpawnerComponentTests.test_stop_events_name_the_spawner_component) ... ok
+test_the_dumped_node_is_what_the_simulator_builds (tests.test_v1019.TheLogTests.test_the_dumped_node_is_what_the_simulator_builds) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -591,6 +602,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 567 tests in 143.471s
+Ran 578 tests in 139.702s
 
 OK (skipped=21)

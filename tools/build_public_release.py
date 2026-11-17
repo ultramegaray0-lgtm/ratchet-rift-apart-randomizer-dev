@@ -17,7 +17,7 @@ import sys
 import zipfile
 
 VERSION = "0.55"
-BUILD = "10.0.13"                # dev 10.18: the kit in this repo (VERSION is set when a public release is made)
+BUILD = "10.0.14"                # dev 10.19: the kit in this repo (VERSION is set when a public release is made)
 NAME = f"Ratchet_Rift_Apart_Randomizer_v{VERSION}_Player_Release"
 ZIP_NAME = NAME + ".zip"
 DATE = (2026, 11, 15, 0, 0, 0)

@@ -1,5 +1,9 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.19 (kit 10.0.14):** a spawner node keeps its enemy list in a separate Spawner component (handle at
+node +0x60, seen in your log's dumps); the randomizers now read and change that component's list.
+Simulator-tested only; `docs/KNOWN_ISSUES.md` 0k.
+
 **Dev 10.18 (kit 10.0.13):** the spawner's Prius is reached through `ddlPriusData` by hand (rivet gives none
 for script nodes), templates are learned from their template actors, and each changed fight logs whether the
 change took effect. Simulator-tested only; `docs/KNOWN_ISSUES.md` 0j, `docs/ENEMIES_AND_BOSSES.md` section 6.

@@ -9,7 +9,7 @@
 --   '  (F12)  campaign director: travel to the next visit (experimental mission orders only)
 -- The F keys in brackets work as well while legacy_f_keys = true. Key names are settings
 -- (key_status, key_hub, key_hub_return, key_story, key_campaign in 04_rando_settings.lua).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(keys)"] = "10.0.13"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(keys)"] = "10.0.14"   -- the kit check (10_rando_runtime.lua)
 
 local R = RANDO
 if not (R and R.bind_setting) then return end

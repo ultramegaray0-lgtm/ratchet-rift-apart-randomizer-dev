@@ -1,0 +1,771 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[rivet] game version mismatch, invalidating pointers
+[loader] mod path mods/default does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED.stage does not exist! skipping.
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF79826A8C0, QueueEvent at 00007FF793066A60
+[time] time scale system at 00007FF7974B02E0
+[camera] fov scale at 00007FF7972EEEC8
+[camera] camera system at 00007FF7972EEDE0
+[hud] ShowMessage at 00007FF79262D160
+[vanity] EquipBundle at 00007FF79288A8E0
+[hero_look] HandleTransformationEvent at 00007FF792538D40, OnTransformationPostActivate at 00007FF7927463F0
+[configs] config asset manager at 00007FF7972FBFE0
+[script] signal queue at 00007FF79875FB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF792753900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[overlay] loading dxgi and d3d12...
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	RANDO-KEYS	keyboard keys on	| planet shuffle 0, give items back Ctrl+0 twice
+[script] [rando]	Randomizer 10.0.13 loaded (data 5.1.0, generator 10.11.0)
+[script] [rando]	RANDO-STATUS events subscribed 20/20
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] [rando]	RANDO-SHOP	loaded (15 vendor weapons)
+[script] [rando]	RANDO-ARMOR	loaded (21 armor pieces, interception needs rando_give.dll v5)
+[script] [rando]	RANDO-TRAVEL	loaded
+[script] [rando]	RANDO-HUB	loaded (10.0.13)
+[script] [rando]	RANDO-SPAWNERS	spawner layer loaded (SpawnerScriptAction Templates; families 48 bot classes)
+[script] [rando]	RANDO-OMEGA	loaded (Omega flag not learned yet)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	is installed (	boss-tier enemies	)
+[script] [rando]	RANDO-BOSS	installed (ON until the save says otherwise) - = turns it on / off, Ctrl+= shows what it changed; 8 story boss fights are kept as they are
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	is installed (	every enemy and boss, priority, no guards	)
+[script] [rando]	RANDO-CHAOS	installed (OFF until the save says otherwise) - BACKSPACE turns it on / off, Ctrl+BACKSPACE shows what it changed. NO safety guards; priority over the Enemy and Boss Randomizers while ON
+[script] [rando]	RANDO-KEYS developer keys:	status ; | hub ] | stay [ | story / | campaign ' | old F keys too
+[script] [rando]	RANDO-PROBE	v7 loaded: NUMPAD3 survey, NUMPAD4 select, NUMPAD5 fire, NUMPAD7 item, NUMPAD6 give item, NUMPAD9 census, NUMPAD8 give via borrowed node
+[script] [rando]	RANDO-STATUS TEST MODE on: F10 story mission, F11 Gold Bolt, Ctrl+F10 twice resets, Ctrl+' lab read, Ctrl+F11 lab try
+[script] [rando]	RANDO-TEST	loaded (10.0.13) - off
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	is installed (	regular enemies	)
+[script] [rando]	RANDO-ENEMY	installed (ON until the save says otherwise) - - turns it on / off, Ctrl+- shows what it changed
+[script] loaded 24 of 24 scripts, 4 frame and 29 key callbacks
+[script] [rando]	RANDO-KIT developer files loaded (not part of a release): dev(item_ids), dev(keys), dev(probe), dev(testmode), dev(testtravel), dev(vtables)
+[script] [rando]	RANDO-KIT all 12 required scripts are 10.0.13
+[script] [rando]	RANDO-SEED seed = "random" needs the companion to remember the seed - start the companion
+[script] [rando]	notify failed:	the player hud is not loaded
+[DDL] indexed 8211 types for struct walking
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=813750 TotalBolts=813750
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=132.0 TotalRaritanium=132.0
+[script] [rando]	RANDO-REAL	no saved state restored - going ahead
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=9FF1525EEC1DC571980FAE3C013DDC62
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=17BBBDD6FC1DF7427B9125857356399C
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072360 Component=2129941
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072362 Component=2129965
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129999
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129937 ItemHandle=2130314
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129937
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129997 ItemHandle=2130315
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129997
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129937 ItemHandle=2130316
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129997 ItemHandle=2130317
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129937 ItemHandle=2130321
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129951
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129975
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072360 Component=2129942
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072362 Component=2129966
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123493
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060937 SpawnIndex=0 SpawnLocation=1060891 SpawnedHandle=1073499
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1061482 SpawnedHandle=1073500
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067842 SpawnIndex=0 SpawnLocation=1063397 SpawnedHandle=1073501
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067832 SpawnIndex=0 SpawnLocation=1063399 SpawnedHandle=1073502
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=0 SpawnLocation=1060733 SpawnedHandle=1073503
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=0 SpawnLocation=1060727 SpawnedHandle=1073504
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=0 SpawnLocation=1060715 SpawnedHandle=1073505
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=0 SpawnLocation=1060739 SpawnedHandle=1073506
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=0 SpawnLocation=1060721 SpawnedHandle=1073507
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=0 SpawnLocation=1060745 SpawnedHandle=1073508
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1062096 SpawnIndex=0 SpawnLocation=1061079 SpawnedHandle=1073509
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1062095 SpawnIndex=0 SpawnLocation=1061088 SpawnedHandle=1073510
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1061483 SpawnedHandle=1073511
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067845 SpawnIndex=0 SpawnLocation=1063400 SpawnedHandle=1073512
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067840 SpawnIndex=0 SpawnLocation=1063398 SpawnedHandle=1073513
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070667 SpawnIndex=0 SpawnLocation=1070543 SpawnedHandle=1073514
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070671 SpawnIndex=0 SpawnLocation=1070538 SpawnedHandle=1073515
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070671 SpawnIndex=1 SpawnLocation=1070536 SpawnedHandle=1073516
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070670 SpawnIndex=0 SpawnLocation=1070531 SpawnedHandle=1073517
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070662 SpawnIndex=0 SpawnLocation=1070602 SpawnedHandle=1073518
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070674 SpawnIndex=0 SpawnLocation=1070524 SpawnedHandle=1073519
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1070627 SpawnedHandle=1073520
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=0 SpawnLocation=1070606 SpawnedHandle=1073521
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1070588 SpawnedHandle=1073522
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071158 SpawnIndex=0 SpawnLocation=1071056 SpawnedHandle=1073523
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071161 SpawnIndex=0 SpawnLocation=1071036 SpawnedHandle=1073524
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071162 SpawnIndex=0 SpawnLocation=1071033 SpawnedHandle=1073525
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2124798
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123487
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123465
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116222
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116212
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106699
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106689
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116240
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116220
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1070597 SpawnedHandle=1073740
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=1 SpawnLocation=1070565 SpawnedHandle=1073741
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1070623 SpawnedHandle=1073742
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070674 SpawnIndex=1 SpawnLocation=1070523 SpawnedHandle=1073743
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070670 SpawnIndex=1 SpawnLocation=1070530 SpawnedHandle=1073744
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1061481 SpawnedHandle=1073745
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071161 SpawnIndex=1 SpawnLocation=1071038 SpawnedHandle=1073746
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071162 SpawnIndex=1 SpawnLocation=1071032 SpawnedHandle=1073747
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=1 SpawnLocation=1060750 SpawnedHandle=1073748
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=1 SpawnLocation=1060726 SpawnedHandle=1073749
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=1 SpawnLocation=1060744 SpawnedHandle=1073750
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=1 SpawnLocation=1060720 SpawnedHandle=1073751
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=1 SpawnLocation=1060732 SpawnedHandle=1073752
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=1 SpawnLocation=1060738 SpawnedHandle=1073753
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060932 SpawnIndex=0 SpawnLocation=1060779 SpawnedHandle=1073754
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060922 SpawnIndex=0 SpawnLocation=1060883 SpawnedHandle=1073755
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060928 SpawnIndex=0 SpawnLocation=1060790 SpawnedHandle=1073756
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060940 SpawnIndex=0 SpawnLocation=1060841 SpawnedHandle=1073757
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060931 SpawnIndex=0 SpawnLocation=1060829 SpawnedHandle=1073758
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071156 SpawnIndex=0 SpawnLocation=1071049 SpawnedHandle=1073759
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071153 SpawnIndex=0 SpawnLocation=1071125 SpawnedHandle=1073760
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071165 SpawnIndex=0 SpawnLocation=1071064 SpawnedHandle=1073761
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105404
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060930 SpawnIndex=0 SpawnLocation=1060705 SpawnedHandle=1073762
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071157 SpawnIndex=0 SpawnLocation=1071091 SpawnedHandle=1073763
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071155 SpawnIndex=0 SpawnLocation=1071041 SpawnedHandle=1073764
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071160 SpawnIndex=0 SpawnLocation=1071115 SpawnedHandle=1073765
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070268 SpawnIndex=0 SpawnLocation=1070248 SpawnedHandle=1073766
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105392
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071153 SpawnIndex=1 SpawnLocation=1071116 SpawnedHandle=1073767
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071156 SpawnIndex=1 SpawnLocation=1071060 SpawnedHandle=1073768
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060940 SpawnIndex=1 SpawnLocation=1060792 SpawnedHandle=1073769
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060928 SpawnIndex=1 SpawnLocation=1060836 SpawnedHandle=1073770
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060922 SpawnIndex=1 SpawnLocation=1060885 SpawnedHandle=1073771
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060932 SpawnIndex=1 SpawnLocation=1060861 SpawnedHandle=1073772
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106717
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105426
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105440
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105436
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105430
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105444
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105422
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105408
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105428
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105418
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105432
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105402
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105412
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122720
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122716
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105400
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105398
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105434
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123473
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105410
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105442
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105406
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105394
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105396
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105416
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105414
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122718
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123477
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105438
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123491
+[script] [rando]	RANDO-CAMPAIGN mission helper:	ready (rando_give.dll v4, mission code matches this exe)
+[script] [rando]	RANDO-CAMPAIGN mission system 2: MIS_INTRO is active (done)
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105424
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=23.213542938232 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=C9BBF512369FD1B77CFEA5BB83A949B2
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionState=4 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=19.963972091675 MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionSegmentId=B7B57F794F2815EB2AE72E72C5F713BE
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=23.213542938232 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=DA499C4144A93FCE1DDD1FF1205D1935
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094419 Component=2195816
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094419 Component=2195817
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094419 Component=2195818
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195966
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195967
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195968
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195969
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195970
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195971
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195972
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195973
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195974
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=2195816 ItemHandle=2195975
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2195816 ItemHandle=2195976
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2195816 ItemHandle=2195977
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2195816 ItemHandle=2195978
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3067984382 InventoryHandle=2195816 ItemHandle=2195982
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1010
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1011
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1012
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1013
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1014
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1015
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1016
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1017
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1018
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1019
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1020
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1021
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1022
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1023
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1024
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1025
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094419 Component=2195756
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094419 Component=2195757
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195758
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094419 Component=2195759
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195760
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094413 Component=2195761
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2195756 ItemHandle=2196345
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2195756 ItemHandle=2196346
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=2195756 ItemHandle=2196347
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2195756 ItemHandle=2196348
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2195756 ItemHandle=2196349
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2195756 ItemHandle=2196350
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094415 Component=2195780
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094415 Component=2195781
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094415 Component=2195782
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094415 Component=2195783
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094415 Component=2195784
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094415 Component=2195785
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094414 Component=2195768
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094414 Component=2195769
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094414 Component=2195770
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094414 Component=2195771
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094414 Component=2195772
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094414 Component=2195773
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195792
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195793
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195794
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195795
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195796
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1094416 Component=2195797
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=AED58E484F4BE9AF2EA34B77883AE8E5
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=2 PreviousState=1
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=B31D79C5318CB97380D3A5B8B9F3CDB1
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194535
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194519
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194541
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194537
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194533
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194547
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194513
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194543
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194527
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194521
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194517
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194539
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194523
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194545
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194511
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194529
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194531
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP ObjectiveName=OBJ_ZURK_ARENA_COMPLETE_GOLD_CUP ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP ObjectiveName=OBJ_ZURK_ARENA_COMPLETE_BRONZE_CUP ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1026
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1027
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1028
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1029
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1030
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1031
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1032
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1033
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1034
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1035
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1036
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1037
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1038
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1039
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1040
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1041
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1042
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1043
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1044
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2627579503 Loaded=true
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=98524 TotalBolts=942611
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-DISCOVER	BotDeathCompleteEvent	
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-REAL	weapon replay with	43	types new to this session - none taken as a late answer
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionState=2 PreviousState=4
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=true MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionSegmentId=698175DAD88D7D1FF703E27011A0FCFC
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 ObjectiveName=OBJ_ZURK_08_ARENA_CHALLENGE_A2 ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 ObjectiveName=OBJ_ZURK_08_ARENA_CHALLENGE_A2 ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 ObjectiveName=OBJ_ZURK_08B_ARENA_CHALLENGE_A2_SKIP_INTRO ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2195756 ItemHandle=2220311
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2195756 ItemHandle=2220312
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=2195756 ItemHandle=2220313
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2195756 ItemHandle=2220314
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2195756 ItemHandle=2220315
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2195756 ItemHandle=2220316
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1045
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1046
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1047
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1048
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1049
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1050
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2195816 ItemHandle=2220402
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2195816 ItemHandle=2220403
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2195816 ItemHandle=2220404
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3067984382 InventoryHandle=2195816 ItemHandle=2220408
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=947897175 Loaded=true
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=194182092 Loaded=true
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	RANDO-NOTIFY	Randomizer: the seed is still being prepared
+[script] [rando]	RANDO-SEED ARSENAL_RESTORED is not installed: its weapons stay out (the companion checked rivet.toml and the game's toc)
+[script] [rando]	RANDO-SEED generating seed	torren-qwark-blizar-217	(random seed from the companion)
+[script] [rando]	RANDO-SETTINGS	raritanium rewards scaled down to the raritanium_budget of 2000 (they would have given 6160)
+[script] [rando]	RANDO-SEED ready	torren-qwark-blizar-217	fc77380ad773	preset balanced	attempt 1
+[script] [rando]	RANDO-SEED share code	RA10|torren-qwark-blizar-217|balanced|distribution=goldbolts_first,omega_weapons=true,travel_lock=true
+[script] [rando]	RANDO-SEED replaying 500 event(s) that came in while generating
+[script] [rando]	RANDO-GADGET	grindboots
+[script] [rando]	RANDO-GADGET	glide
+[script] [rando]	RANDO-GADGET	grapple
+[script] [rando]	RANDO-GADGET	rift_tether
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-NOTIFY	Randomizer dev 10.18 - seed torren-qwark-blizar-217 (fc77380ad773)
+[script] [rando]	RANDO-SPAWNERS	Spawner components not listed (the script nodes are read anyway):	the component scan ran past the frame budget
+[script] [rando]	RANDO-SPAWNERS	census 1 (level loaded): 0 spawner node(s) read, 0 template(s), 0 skipped
+[script] [rando]	RANDO-NOTIFY	Randomizer: start the companion (seed = random)
+[script] [rando]	RANDO-SAVE restored:	Gold Bolts 0/25 | rewards 15/99 | planets open 3/10 (warp off) | hub: starts after the parade of a New Game | planets 1 | in inventory 19 | armor sources 13/27 | Omega 0/3 (flag not learned) | CHAOS ON (0 changed here, pool 0; enemy/boss randomizers paused)
+[script] [rando]	RANDO-NOTIFY	Randomizer progress restored: Gold Bolts 0/25 | rewards 15/99 | planets open 3/10 (warp off) | hub: starts after the parade of a New Game | planets 1 | in inventory 19 | armor sources 13/27 | Omega 0/3 (flag not learned) | CHAOS ON (0 changed here, pool 0; enemy/boss randomizers paused)
+[script] [rando]	RANDO-ARMOR	helper: armor give verified, armor sources on
+[script] [rando]	RANDO-ARMOR	intercepting 8 armor source(s)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-TRAVEL	checkpoint catalog:	corson_v 116=CHK_DEMO_START, nefarious_city 90=CHK_NEFCITY_START, sargasso 112=CHK_SARG_GELFACTORY_LANDINGPAD, scarstu 56=CHK_ZURK_LANDING_SHIP, savali 60=CHK_SAV_01_START, blizar_prime 109=CHK_BLIZAR_A_LANDINGPAD, torren_iv 55=CHK_MOL_START, cordelion 45=CHK_CORD_A_START, ardolis 46=CHK_ARD_START, viceron 52=CHK_ZORDOOM_START
+[script] [rando]	RANDO-SHOP	helper: config manager at 00007FF7972FBFE0 (exe +0x52EBFE0, rivet_hook's signature matched 1x)
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000259459F9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 1)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1099115 (field 1099115), location 1087232 uid 8f03ea4025a0fa44, spawned 1099115 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1099116 (field 1099116), location 1087238 uid fb48ae97de8a3ef1, spawned 1099116 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1099117 (field 1099117), location 1087177 uid 936a71b7d761a1c8, spawned 1099117 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1099118 (field 1099118), location 1091971 uid c0af806d42fac913, spawned 1099118 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1099119 (field 1099119), location 1091859 uid d5c4f94b1f2daff6, spawned 1099119 -> no node of the census
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000259459F9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 2)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER ON] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	ON (=)
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: ON
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER OFF] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	OFF (BACKSPACE):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: OFF
+[script] [rando]	RANDO-CHAOS	OFF (BACKSPACE) - Enemy Randomizer ON, Boss Randomizer ON (resume)
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER ON] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	ON (BACKSPACE)
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: ON
+[script] [rando]	RANDO-CHAOS	ON (BACKSPACE) - Enemy Randomizer ON, Boss Randomizer ON (paused while Chaos is ON)
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000259459F9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 3)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Zurkon
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=41.4040184021 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=B31D79C5318CB97380D3A5B8B9F3CDB1
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=30.018180847168 MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionSegmentId=698175DAD88D7D1FF703E27011A0FCFC
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=41.4040184021 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=AED58E484F4BE9AF2EA34B77883AE8E5
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108828 Component=4241592
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108828 Component=4241593
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108828 Component=4241594
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241743
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241744
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241745
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241746
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241747
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241748
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241749
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241750
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241751
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=4241592 ItemHandle=4241752
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=4241592 ItemHandle=4241754
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4241592 ItemHandle=4241755
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4241592 ItemHandle=4241756
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3067984382 InventoryHandle=4241592 ItemHandle=4241760
+[script] [rando]	RANDO-REAL	already in the game:	weapon:enforcer	(equipped)
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108828 Component=4241531
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108828 Component=4241532
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108822 Component=4241533
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108828 Component=4241534
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108822 Component=4241535
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108822 Component=4241536
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4241531 ItemHandle=4242128
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4241531 ItemHandle=4242129
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4241531 ItemHandle=4242130
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4241531 ItemHandle=4242131
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4241531 ItemHandle=4242132
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4241531 ItemHandle=4242133
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108824 Component=4241555
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108824 Component=4241556
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108824 Component=4241557
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108824 Component=4241558
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108824 Component=4241559
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108824 Component=4241560
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108823 Component=4241543
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108823 Component=4241544
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108823 Component=4241545
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108823 Component=4241546
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108823 Component=4241547
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108823 Component=4241548
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108825 Component=4241567
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108825 Component=4241568
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1108825 Component=4241569
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=A83E109494E5E8EF4D86997320B3F520
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=ECEED9A434F3AC1229030102CB17079F
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000259459F9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 4)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 160 frames
+[script] [rando]	RANDO-SPAWNERS	dump 8129e049adf415a5 SpawnerScriptAction size 128 instance at 2594D2D2A80: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 00 fa 64 ed 58 02 00 00 00 00 80 3f 8e 6e 40 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 a5 15 f4 ad 49 e0 29 81 a5 15 f4 ad 49 e0 29 81 40 ee d6 45 59 02 00 00 8f 6e 40 00 e8 03 b0 80 00 00 00 00 00 00 00 00 01 00 00 00 01 00 00 00 01 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 823ab1612cbcff5e SpawnerScriptAction size 128 instance at 2594D2D2B00: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 c0 fa 64 ed 58 02 00 00 00 00 80 3f 90 6e 40 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 5e ff bc 2c 61 b1 3a 82 5e ff bc 2c 61 b1 3a 82 c0 ed d6 45 59 02 00 00 91 6e 40 00 e9 03 b0 80 00 00 00 00 00 00 00 00 01 00 00 00 01 00 00 00 01 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 835db064a96e08d1 SpawnerScriptAction size 128 instance at 2594D2D2B80: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 80 fb 64 ed 58 02 00 00 00 00 80 3f 92 6e 40 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 d1 08 6e a9 64 b0 5d 83 d1 08 6e a9 64 b0 5d 03 40 ed d6 45 59 02 00 00 93 6e 40 00 ea 03 b0 80 00 00 00 00 00 00 00 00 01 00 00 00 01 00 00 00 01 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 88bbb0a73c8ff1a3 SpawnerScriptAction size 128 instance at 2594D2D2C00: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 40 fc 64 ed 58 02 00 00 00 00 80 3f 94 6e 40 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 a3 f1 8f 3c a7 b0 bb 88 a3 f1 8f 3c a7 b0 bb 08 40 ec d6 45 59 02 00 00 95 6e 40 00 ed 03 b0 80 00 00 00 00 00 00 00 00 01 00 00 00 01 00 00 00 01 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 8d917d2872e8a105 SpawnerScriptAction size 128 instance at 2594D2D2C80: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 00 fd 64 ed 58 02 00 00 00 00 80 3f 96 6e 40 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 05 a1 e8 72 28 7d 91 8d 05 a1 e8 72 28 7d 91 0d c0 ec d6 45 59 02 00 00 97 6e 40 00 f2 03 b0 80 00 00 00 00 00 00 00 00 01 00 00 00 01 00 00 00 01 00 00 00 00 00 00 00
+[script] [rando]	RANDO-SPAWNERS	dump 93a407009c444590 SpawnerScriptAction size 128 instance at 2594D2D2D00: e0 cb 62 96 f7 7f 00 00 00 00 00 00 00 00 00 00 c0 fd 64 ed 58 02 00 00 00 00 80 3f 98 6e 40 00 ff ff ff ff 00 01 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 90 45 44 9c 00 07 a4 93 90 45 44 9c 00 07 a4 93 c0 eb d6 45 59 02 00 00 99 6e 40 00 f3 03 b0 80 00 00 00 00 00 00 00 00 01 00 00 00 01 00 00 00 01 00 00 00 00 00 00 00
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_ZURK_ARENA_PUB_RETURN_TABLE	hash 2627579503	on	scarstu
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionState=2 PreviousState=4
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=true MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionSegmentId=FDA229CF9703BA9EB0C21DCFEC10E853
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 ObjectiveName=OBJ_ZURK_06_ARENA_CHALLENGE_A1 ObjectiveState=1
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	00000259459F9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 5)
+[script] [rando]	RANDO-NOTIFY	Randomizer: Ms. Zurkon could not be changed - she sells her usual weapons (some are also rewards in this seed); the seed's other shop weapons were given to you (see rivet.log)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-SPAWNERS	census 3 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 197 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	110x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	69x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	18x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8129e049adf415a5: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	823ab1612cbcff5e: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	835db064a96e08d1: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1112854 (field 1112854), location 1104592 uid a5c534c7ae994c47, spawned 1112854 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1112855 (field 1112855), location 1103516 uid a19cec2f8d782140, spawned 1112855 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1112857 (field 1112857), location 1104597 uid cc2ec8521174b87e, spawned 1112857 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1112858 (field 1112858), location 1103516 uid a19cec2f8d782140, spawned 1112858 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 1112861 (field 1112861), location 1099931 uid 8b7e2bf3b9e099dc, spawned 1112861 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4241531 ItemHandle=4259753
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4241531 ItemHandle=4259754
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4241531 ItemHandle=4259755
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4241531 ItemHandle=4259756
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4241531 ItemHandle=4259757
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_ZURK_ARENA_PUB_RETURN	hash 947897175	on	scarstu
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (1/5)
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (2/5)
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (3/5)
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionState=4 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=15.796527862549 MissionName=MIS_ZURK_ARENA_CHALLENGE_A1 MissionSegmentId=FDA229CF9703BA9EB0C21DCFEC10E853
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=18.218111038208 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=ECEED9A434F3AC1229030102CB17079F
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=18.218111038208 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=A83E109494E5E8EF4D86997320B3F520
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=99D0644D5BB7C5F79C27DD1EAC733EB6
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=02D8853AA7AE849758491AF263039121
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (1/5)
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=true MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionSegmentId=92DFCBE01997923D1FE720D39150AE9F
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_ZURK_08B_ARENA_CHALLENGE_A2_SKIP_INTRO	hash 194182092	on	scarstu
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (2/5)
+[script] [rando]	RANDO-SPAWNERS	census 11 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 190 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	119x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	57x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	5x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	9x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8331f33bdf2e94bd: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f2523736933cac0: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	91f5fb8187b91ae2: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2112224 (field 2112224), location 1113780 uid cd6b9e50f4f66adf, spawned 2112224 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2112225 (field 2112225), location 1113865 uid a0d855d983270ea6, spawned 2112225 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2112226 (field 2112226), location 1113863 uid d15b5836440ae55d, spawned 2112226 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2112227 (field 2112227), location 1113792 uid c7a88d768671b247, spawned 2112227 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2112228 (field 2112228), location 1113853 uid c711316f7c402baa, spawned 2112228 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (1/5)
+[script] [rando]	RANDO-SPAWNERS	census 13 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 190 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	138x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	38x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	5x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	9x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8331f33bdf2e94bd: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f2523736933cac0: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	91f5fb8187b91ae2: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=14.842344284058 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=02D8853AA7AE849758491AF263039121
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=12.055807113647 MissionName=MIS_ZURK_ARENA_CHALLENGE_A2 MissionSegmentId=92DFCBE01997923D1FE720D39150AE9F
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=14.842344284058 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=99D0644D5BB7C5F79C27DD1EAC733EB6
+[script] [rando]	RANDO-PLANET	Zurkon	scarstu	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=3679878D752F33815E8EFE0527E5B05D
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=1A3111218DB3FDE528A758CB34CA4CEB
+[script] [rando]	RANDO-REAL	already in the game:	weapon:bouncer	(equipped)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=2401.6716308594 MissionName=MIS_ARD_POST_MISSION MissionSegmentId=91B06927572E814F14272B5776BDE03B
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=7210.4799804688 MissionName=MIS_CORD_01_FIRST_VISIT MissionSegmentId=D903D44B687B98B01533BCD1F83F664D
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=3970.2839355469 MissionName=MIS_MOL_01_POST_MISSION MissionSegmentId=69AE5067411C3F5D4F6BED3DDB9CD7C9
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=13286.979492188 MissionName=MIS_RYNO_PLANS MissionSegmentId=6EDCBA79871D6C0EC5424D9050D2D491
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=9941.6015625 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=446240611A872246E02FAFCF847514D0
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=9290.9853515625 MissionName=MIS_SARG_GEMQUEST MissionSegmentId=89207EAD5950D17329543C205E64990E
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=9277.4423828125 MissionName=MIS_SAV_01_ENCOUNTERS MissionSegmentId=6081EB34FEA98C46E2238E84835837B1
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=7210.4799804688 MissionName=MIS_SAV_01_POST_MISSION MissionSegmentId=1C289575949EA3DB80CC96CF6EF9AE6C
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=1.9272323846817 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=1A3111218DB3FDE528A758CB34CA4CEB
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=1.9272323846817 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=3679878D752F33815E8EFE0527E5B05D
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=B3CC1F050B34C98B9B738939EEBA9EA5
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=9346D4E4E17CDBD1F29201A233614B81
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 15 (planet NefCity): 0 spawner node(s) read, 0 template(s), 115 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	31x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	18x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	12x	rivet: no prius; holder: ddlPriusData is #; +0x68: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	6x	rivet: no prius; holder: ddlPriusData is #; +0x68: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	33x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	13x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	1x	rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	1x	rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	84d434c4dd460d51: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	87bc2c4850e877e5: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	94e21d6237d2448e: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2137496 (field 2137496), location 2129373 uid b1bd2fa4f9631b3b, spawned 2137496 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2137497 (field 2137497), location 2129363 uid b50029dd7f9a679e, spawned 2137497 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2137498 (field 2137498), location 2129339 uid b5181086010b2bc1, spawned 2137498 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2137499 (field 2137499), location 2129285 uid b77fb5e94a65df2f, spawned 2137499 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 2137500 (field 2137500), location 2129383 uid c307df2b44f27d4d, spawned 2137500 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Sargasso
+[script] [rando]	RANDO-PLANET	Sargasso	sargasso	rewards locked
+[script] [rando]	RANDO-NOTIFY	Sargasso: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (1/5)
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (2/5)
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=159 TotalBolts=727722
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (3/5)
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (4/5)
+[script] [rando]	RANDO-SPAWNERS	census 20 (planet Sargasso): 0 spawner node(s) read, 0 template(s), 241 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	97x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	27x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	3x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	48x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	16x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	50x	rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	9e95c80cea1e1668: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	ae436ddcb29c2fd3: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	b41b40eed9945e3c: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-DISCOVER	PlanetMenuAcceptEvent	DestinationCheckpointName=CHK_ARD_START InterplanetaryCheckpointName=CHK_TRANSITION_TO_ARDOLIS
+[script] [rando]	RANDO-TRAVEL	planet menu:	CHK_ARD_START	->	ardolis	from	sargasso
+[script] [rando]	RANDO-HUB	planet menu:	CHK_ARD_START	->	ardolis
+[script] [rando]	RANDO-TRAVEL	planet menu:	CHK_ARD_START	->	ardolis	from	sargasso
+[script] [rando]	RANDO-HUB	planet menu:	CHK_ARD_START	->	ardolis
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Ardolis OldPlanetName=Sargasso
+[script] [rando]	RANDO-PLANET	Ardolis	ardolis	rewards locked
+[script] [rando]	RANDO-NOTIFY	Ardolis: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2633575531 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_TRANSITION_TO_ARDOLIS	hash 2633575531	on	ardolis
+[script] [rando]	RANDO-SPAWNERS	census 21 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 2 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	2x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3175480 (field 3175480), location 2164726 uid fc83bc771d724f35, spawned 3175480 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3175481 (field 3175481), location 2163968 uid 9aa622e16982c75c, spawned 3175481 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3175482 (field 3175482), location 2164698 uid b3f38cfca131d5f7, spawned 3175482 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3175483 (field 3175483), location 2164770 uid d2f373a3c7a33bd1, spawned 3175483 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3175484 (field 3175484), location 2164694 uid beb36709322b9970, spawned 3175484 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=894761074 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_ARD_START	hash 894761074	on	ardolis
+[script] [rando]	RANDO-SPAWNERS	census 22 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 112 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	47x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	14x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	30x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	17x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	4x	rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	9ed32b22a16a0495: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	97128c5e949eb93a: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	d83b08c4e2e8962f: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3167308 (field 3167308), location 3175840 uid 81dd5b01c69e8c74, spawned 3167308 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3167309 (field 3167309), location 3175832 uid 9ff30b3f34143cec, spawned 3167309 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3167310 (field 3167310), location 3175828 uid 9354f276b6b7ffd2, spawned 3167310 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3167311 (field 3167311), location 3175836 uid b27fde5aac0724e8, spawned 3167311 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3167312 (field 3167312), location 3175848 uid e9c5d9ffb6ace388, spawned 3167312 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Ardolis
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Ardolis
+[script] [rando]	RANDO-PLANET	Ardolis	ardolis	rewards locked
+[script] [rando]	RANDO-NOTIFY	Ardolis: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 23 (planet Ardolis): 0 spawner node(s) read, 0 template(s), 118 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	53x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	14x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	36x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	11x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	4x	rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	800456abc3f6c73b: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8250b30175604ccf: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	87b36e7a1c1e87c8: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3173200 (field 3173200), location 3168136 uid 906eea7f0b177520, spawned 3173200 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3173201 (field 3173201), location 3168132 uid 9a3ad6b317530ebf, spawned 3173201 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3173202 (field 3173202), location 3168141 uid 9b815f9a81a075e9, spawned 3173202 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3173208 (field 3173208), location 3168104 uid 9c3f26a32b1f0805, spawned 3173208 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3173209 (field 3173209), location 3168096 uid a5b5b8530a49bbc7, spawned 3173209 -> no node of the census
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER OFF] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	OFF (=):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: OFF
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER OFF] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	OFF (BACKSPACE):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: OFF
+[script] [rando]	RANDO-CHAOS	OFF (BACKSPACE) - Enemy Randomizer OFF, Boss Randomizer OFF (resume)
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER ON] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	ON (BACKSPACE)
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: ON
+[script] [rando]	RANDO-CHAOS	ON (BACKSPACE) - Enemy Randomizer OFF, Boss Randomizer OFF (paused while Chaos is ON)
+[script] [rando]	RANDO-SPAWNERS	census 24 (switched on): 0 spawner node(s) read, 0 template(s), 112 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	50x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	11x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	36x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	11x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	4x	rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	800456abc3f6c73b: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8250b30175604ccf: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	87b36e7a1c1e87c8: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3173443 (field 3173443), location 3165465 uid 9c49b89837ecdfc9, spawned 3173443 -> no node of the census
+[script] [rando]	RANDO-PLANET	Ardolis	ardolis	rewards locked
+[script] [rando]	RANDO-NOTIFY	Ardolis: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (1/5)
+[script] [rando]	RANDO-SPAWNERS	census interrupted by the frame budget - reading again (2/5)
+[script] [rando]	RANDO-SPAWNERS	census 27 (planet Ardolis): 0 spawner node(s) read, 0 template(s), 118 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	54x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	15x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	31x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	16x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	2x	rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	800456abc3f6c73b: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	8250b30175604ccf: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	87b36e7a1c1e87c8: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3186404 (field 3186404), location 3183632 uid 84ec2abffd412fee, spawned 3186404 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3186406 (field 3186406), location 3183644 uid 884367bece372873, spawned 3186406 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3186408 (field 3186408), location 3183641 uid 8c3463bbe127e9b2, spawned 3186408 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3186409 (field 3186409), location 3183629 uid 8ff0f962972df9ab, spawned 3186409 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 3186411 (field 3186411), location 3183658 uid 906eea7f0b177520, spawned 3186411 -> no node of the census
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=219 TotalBolts=727941
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=2856.2770996094 MissionName=MIS_ARD_POST_MISSION MissionSegmentId=7B060D2EC94099E176674771AA9001F1
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=4629.1860351562 MissionName=MIS_CORD_01_POST_MISSION MissionSegmentId=610137CD2D7A39CEDBB7D725099F0368
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=5914.3403320312 MissionName=MIS_MOL_01_POST_MISSION MissionSegmentId=07AC4A23DCF07001C09BC92A82D10481
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=11036.967773438 MissionName=MIS_RYNO_PLANS MissionSegmentId=CFFB41FCA91973549A5A362A4230BBD3
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=8899.9482421875 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=AB44589F0323BC6D100908A7555C107F
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=8495.5302734375 MissionName=MIS_SARG_GEMQUEST MissionSegmentId=6F60402AFA1D13CC4FB25E3CD9608ADA
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=8477.138671875 MissionName=MIS_SAV_01_ENCOUNTERS MissionSegmentId=25D72BAE25FB1AF2F580FEF8BDE7D1DB
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=7458.7739257812 MissionName=MIS_SAV_01_POST_MISSION MissionSegmentId=39C15B837BAB7AEF139202A27D44D000
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=AEA5D4E624DB2311A6B8442CF9A2FFF6
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=56ACF50C5DB0DD0B62CD3C4C4EFB157D
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 28 (planet NefCity): 0 spawner node(s) read, 0 template(s), 115 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	35x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	19x	rivet: no prius; holder: ddlPriusData is #; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	5x	rivet: no prius; holder: ddlPriusData is #; +0x68: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	13x	rivet: no prius; holder: ddlPriusData is #; +0x68: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	30x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	12x	rivet: no prius; holder: ddlPriusData is #; +0x70: unreadable; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	1x	rivet: no prius; holder: ddlPriusData is #; +0x78: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: no three lists; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	f5855aafc9fe651a: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	fbbd71e8e101e04f: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x70: unreadable; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	  skipped	a5d33e7ae46dba79: rivet: no prius; holder: ddlPriusData is 0000000000000000; +0x10: no three lists; +0x10->+16: not a pointer; +0x58: no three lists; +0x58->+16: not a pointer; deep search not run (4 nodes tried this session)
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 4208336 (field 4208336), location 3189561 uid b50029dd7f9a679e, spawned 4208336 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 4208337 (field 4208337), location 3189537 uid b5181086010b2bc1, spawned 4208337 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 4208338 (field 4208338), location 3189483 uid b77fb5e94a65df2f, spawned 4208338 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 4208339 (field 4208339), location 3189581 uid c307df2b44f27d4d, spawned 4208339 -> no node of the census
+[script] [rando]	RANDO-SPAWNERS	spawn: sender 4208340 (field 4208340), location 3189570 uid c32ee1039611fbd9, spawned 4208340 -> no node of the census
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing ui/loaded/exported/hud/mm_6.json
+[loader] closing ui/loaded/exported/hud/mm_5.json
+[loader] closing ui/loaded/exported/hud/mm_3.json
+[loader] closing ui/loaded/exported/hud/mm_0.json
+[loader] closing ui/loaded/exported/hud/mm_2.json
+[loader] closing ui/loaded/exported/hud/mm_1.json
+[loader] closing ui/loaded/exported/hud/mm_7.json
+[loader] closing ui/loaded/exported/hud/mm_4.json
+[rivet] fini complete

@@ -4,6 +4,16 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0k. Since dev 10.19 (kit 10.0.14): the node's Spawner component
+
+- FIXED (your rivet.log of 2026-11-17, dev 10.18): still nothing randomized. Its dumps show the node keeps
+  no Prius; it keeps the handle of its Spawner component at +0x60. 10.19 reads that component's Prius.
+  ENEMIES_AND_BOSSES.md section 6. Simulator only (modelled on the dumps).
+- FIXED: a node stopped by the frame budget is read again (the census was restarted from scratch).
+- OFF: the level-wide Spawner component scan (it ran past the frame budget every time).
+- OPEN (needs the game): the Spawner component on the node's own actor (else
+  `spawner component of ... not found` lists what is there); `verify ... TOOK EFFECT`.
+
 ## 0j. Since dev 10.18 (kit 10.0.13): the Prius reached by hand
 
 - FIXED (your rivet.log of 2026-11-17, dev 10.17): still nothing randomized. Every node "no Prius and the

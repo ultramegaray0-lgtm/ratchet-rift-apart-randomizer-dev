@@ -47,7 +47,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.13"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.14"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -78,8 +78,9 @@ SP.LEARN_CAP = 600
 SP.BLOCK_CAP = 300
 SP.BOSS_ZONES = { "BOSS", "FINALE", "HEAVY_FIGHT", "CHASE" }
 SP.BUDGET_SECONDS = 0.003         -- writes per frame stop after this long; the rest follows next frame
-SP.CENSUS_RETRIES = 5
-SP.SCAN_SPAWNER_COMPONENTS = true -- dev 10.18: also read placed actors' Spawner components (SpawnerPrius)             -- dev 10.17: a census stopped by the frame budget is started again this often
+SP.CENSUS_RETRIES = 8
+SP.SCAN_SPAWNER_COMPONENTS = false -- dev 10.18 listed every Spawner component of the level; your log: "the component
+                                   -- scan ran past the frame budget". 10.19 asks each node's own actor instead             -- dev 10.17: a census stopped by the frame budget is started again this often
 
 -- the bot components of the DDL, most specific first: class, family, role. role: "enemy" (enemy.lua),
 -- "boss" (boss.lua), "story_boss" / "friendly" / "never" (nobody touches them). Classes whose purpose is
@@ -605,6 +606,11 @@ function SP.follow_path(path, c, addr, inst, short)
     if lay then lay.holder_count = s32(hb, 9); lay.prius_addr = data end
     return lay
   end
+  if path.route == "inline" then
+    local lay = SP.try_prius(addr + path.x - SP.PRIUS_X, nil, true, true)
+    if lay then lay.prius_addr = addr + path.x - SP.PRIUS_X end
+    return lay
+  end
   local p = ptr64(inst, path.off + 1)
   if not valid_ptr(p) then return nil end
   local target = p
@@ -625,7 +631,10 @@ SP.DEEP_NODES = 4                 -- nodes per session the deep search (route 4)
 SP.deep_runs = SP.deep_runs or 0
 function SP.find_prius(c, addr, short)
   local tried = {}
-  local inst = read_bytes(addr, math.min(SP.INSTANCE_READ, math.max(0x10, (c.size and c.size > 0) and c.size or SP.INSTANCE_READ)))
+  -- dev 10.19: a Spawner component (short) may be bigger than a script node: up to 0x200 of it is read
+  local inst_len = short and math.min(0x200, math.max(0x80, (c.size and c.size > 0) and c.size or 0x80))
+                   or math.min(SP.INSTANCE_READ, math.max(0x10, (c.size and c.size > 0) and c.size or SP.INSTANCE_READ))
+  local inst = read_bytes(addr, inst_len)
   local function done(lay, route, path)
     path.route = path.route or route
     SP.path_hint = path
@@ -666,8 +675,17 @@ function SP.find_prius(c, addr, short)
     else tried[#tried + 1] = "holder: no data pointer" end
   else tried[#tried + 1] = "holder: ddlPriusData is " .. tostring(hex64(inst, 9)) end
   if tried.empty then return nil, table.concat(tried, "; "), inst, true end
+  -- 2b. dev 10.19: a Spawner component that copied its lists into its own instance (strict: a loaded uid)
+  if short then
+    for x = 0x48, #inst - 0x74, 8 do
+      if SP.layout_at(inst, x, true) then
+        local lay = attempt(string.format("inline +0x%X", x), addr + x - SP.PRIUS_X, nil, true, true)
+        if lay then return done(lay, "inline", { route = "inline", x = x }) end
+      end
+    end
+  end
   -- 3. a pointer in the instance: to the Prius itself, or to a holder of it
-  local own = pointers_in(inst, 0x60, #inst - 8)
+  local own = pointers_in(inst, short and 0x48 or 0x60, #inst - 8)
   local head = pointers_in(inst, 0x10, 0x58, { [0x18] = true })
   local cands = {}
   for _, e in ipairs(own) do cands[#cands + 1] = e end
@@ -716,6 +734,44 @@ function SP.find_prius(c, addr, short)
   return nil, table.concat(tried, "; "), inst, tried.empty
 end
 
+-- ---------------------------------------------------------------------------------------------
+-- dev 10.19: THE NODE'S SPAWNER COMPONENT. Your rivet.log with 10.18 dumped six nodes (all alike):
+--   +0x08 ddlPriusData 0 | +0x1C own handle 0x406E8E | +0x48/+0x50 uid | +0x58 plugs |
+--   +0x60 0x406E8F = the handle of the component made right after the node | +0x64 0x80B003E8 = an
+--   actor group (bit 31, ScriptVar's group bit) | +0x68.. counters.
+-- So a SpawnerScriptAction keeps no Prius itself: it makes a Spawner component (SpawnerPrius, which
+-- SpawnerScriptActionPrius extends: the same Templates / SpawnLocations lists) and keeps its handle at
+-- +0x60. That component is asked for on the node's own actor (rivet.component by class name) and used
+-- only if its handle is exactly the one at +0x60; its Prius is then found the usual ways (short layout).
+-- ---------------------------------------------------------------------------------------------
+SP.SPAWNER_HANDLE_AT = 0x60
+SP.spawner_diag = SP.spawner_diag or 0
+function SP.spawner_of(node, addr)
+  local hb = read_bytes(addr + SP.SPAWNER_HANDLE_AT, 4)
+  local want = hb and #hb >= 4 and u32(hb, 1)
+  if not want or want == 0 or want == 0xFFFFFFFF then return nil, "no component handle at +0x60" end
+  local names, listed = { "Spawner" }, nil
+  local okl, list = pcall(rivet.components, node.actor)
+  if okl and type(list) == "table" then
+    local t = {}
+    for _, n in ipairs(list) do
+      n = tostring(n); t[#t + 1] = n
+      if n ~= "Spawner" and n:find("Spawner", 1, true) and not n:find("ScriptAction", 1, true) then names[#names + 1] = n end
+    end
+    listed = table.concat(t, ",")
+  end
+  local other = {}
+  for _, name in ipairs(names) do
+    local ok, c2 = pcall(rivet.component, node.actor, name)
+    if ok and type(c2) == "table" and c2.address then
+      if c2.handle == want then return c2, name, want end
+      other[#other + 1] = name .. " " .. string.format("%X", tonumber(c2.handle) or 0)
+    end
+  end
+  return nil, string.format("component %X of +0x60 is not on the node's actor (%s; its components: %s)", want,
+      #other > 0 and table.concat(other, ", ") or "no Spawner", tostring(listed)), want
+end
+
 -- one node -> a record, or nil and why
 function SP.read_node(node)
   local class = node.class or SP.NODE_CLASS
@@ -724,7 +780,36 @@ function SP.read_node(node)
   local addr = tonumber(c.address, 16)
   if not valid_ptr(addr) then return nil, "no address" end
   local short = node.kind == "spawner"
-  local lay, route, inst, empty = SP.find_prius(c, addr, short)
+  local lay, route, inst, empty
+  -- dev 10.19: a script node's Spawner component first
+  local spawner_c, spawner_name, spawner_why
+  if not short then
+    local c2, name = SP.spawner_of(node, addr)
+    if c2 then
+      local addr2 = tonumber(c2.address, 16)
+      if valid_ptr(addr2) then
+        local l2, r2, i2, e2 = SP.find_prius(c2, addr2, true)
+        if l2 then lay, route = l2, "spawner/" .. tostring(r2); spawner_c, spawner_name = c2, name
+        else
+          spawner_why = "Spawner component " .. tostring(name) .. ": " .. tostring(r2)
+          if e2 then return nil, "factory-only spawner (no Templates)" end
+          if SP.spawner_diag < SP.DUMP_LIMIT and i2 then
+            SP.spawner_diag = SP.spawner_diag + 1
+            log(string.format("dump %s Spawner component %s size %s at %X prius %s: %s", tostring(node.uid), tostring(name),
+                tostring(c2.size), addr2, tostring(c2.prius), hexdump(i2, 1, #i2)))
+          end
+        end
+      end
+    else
+      spawner_why = name                     -- the reason
+      if SP.spawner_diag < SP.DUMP_LIMIT then
+        SP.spawner_diag = SP.spawner_diag + 1
+        log("spawner component of", tostring(node.uid), "not found:", tostring(name))
+      end
+    end
+  end
+  if not lay then lay, route, inst, empty = SP.find_prius(c, addr, short) end
+  if not lay and spawner_why then route = spawner_why .. "; node: " .. tostring(route) end
   if not lay and not short and (c.size or 0) >= 0x88 then
     -- an instance big enough to hold the fields itself (the simulator's 10.12 nodes)
     local b = read_bytes(addr, math.min(SP.HEADER, c.size))
@@ -762,6 +847,7 @@ function SP.read_node(node)
   if not lay.tids then return nil, "cannot read the Templates list" end
   local t = lay.templates
   local rec = { uid = node.uid, component = node.component, actor = node.actor, class = class, addr = addr, x = lay.x,
+                spawner_component = spawner_c and spawner_c.handle, spawner_class = spawner_name,
                 where = route, prius_addr = lay.prius_addr, holder_count = lay.holder_count, action = lay.action,
                 tptr = t.ptr, count = t.count, slots = {}, max_alive = lay.max_alive, num_spawns = lay.num_spawns,
                 spawned = 0, alive = {}, alive_n = 0, locs = lay.locs, factories = lay.factories }
@@ -818,7 +904,16 @@ local function census(job)
   local n_in_slice, t0 = 0, clock()
   for _, node in ipairs(list) do
     if (node.class == SP.NODE_CLASS or node.kind == "spawner") and node.uid and not lvl.nodes[node.uid] then
-      local rec, why = SP.read_node(node)
+      -- dev 10.19: a node interrupted by the frame budget is read again next frame (10.18 started the
+      -- whole census over: your log shows up to 4 restarts on one level)
+      local okr, rec, why
+      for _ = 1, 3 do
+        okr, rec, why = pcall(SP.read_node, node)
+        if okr then break end
+        if not tostring(rec):find("budget", 1, true) then error(rec, 0) end
+        coroutine.yield(); t0 = clock(); SP.slice_t0 = clock()
+      end
+      if not okr then rec, why = nil, "read three times, each stopped by the frame budget" end
       if rec then
         lvl.routes[rec.where or "?"] = (lvl.routes[rec.where or "?"] or 0) + 1
         if rec.holder_count and rec.holder_count ~= 1 then lvl.holder_counts = (lvl.holder_counts or 0) + 1 end
@@ -1169,7 +1264,7 @@ local function rec_by_handle(h)
   h = math.tointeger(tonumber(h)) or h
   for _, uid in ipairs(lvl.order) do
     local rec = lvl.nodes[uid]
-    if rec.component == h or rec.actor == h then return rec end
+    if rec.component == h or rec.actor == h or (rec.spawner_component and rec.spawner_component == h) then return rec end
   end
   return nil
 end
@@ -1211,11 +1306,20 @@ local function rec_of_spawn(f, ev)
 end
 SP.rec_of_spawn = rec_of_spawn
 
+-- dev 10.19: the first start / stop events of a level, with their sender and node, go to rivet.log
+local function event_diag(kind, f, ev, rec)
+  local lvl = SP.level
+  if not lvl or (lvl.event_logged or 0) >= 3 then return end
+  lvl.event_logged = (lvl.event_logged or 0) + 1
+  log(string.format("%s: SpawnerComponentHandle %s, sender %s -> %s", kind, tostring(f.SpawnerComponentHandle),
+      tostring(type(ev) == "table" and ev.sender), rec and ("node " .. tostring(rec.uid)) or "no node of the census"))
+end
 function SP.on_started(f, ev)
   local h = f.SpawnerComponentHandle or sender_of(f, ev)
   h = math.tointeger(tonumber(h)) or h
   if h ~= nil then SP.started_handles[h] = { frame = SP.frame } end
   local rec = rec_by_handle(h)
+  event_diag("started", f, ev, rec)
   if not rec then return end
   rec.started = rec.started or SP.frame
   rec.last_activity = SP.frame
@@ -1227,6 +1331,7 @@ function SP.on_stopped(f, ev)
   h = math.tointeger(tonumber(h)) or h
   if h ~= nil and SP.started_handles[h] then SP.started_handles[h].stopped = SP.frame end
   local rec = rec_by_handle(h)
+  event_diag("stopped", f, ev, rec)
   if rec then rec.stopped = SP.frame; rec.last_activity = SP.frame end
 end
 SP.SPAWN_LOG = 5                  -- dev 10.18: spawns per level whose node match is written to rivet.log
