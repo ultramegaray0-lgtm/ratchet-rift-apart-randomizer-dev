@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.17 (build 10.0.12) - test run 2026-11-17 08:58 UTC
+Rift Apart Randomizer dev 10.18 (build 10.0.13) - test run 2026-11-17 09:32 UTC
 Python 3.13.18 on Linux
-ran 548, failures 0, errors 0, skipped 21
+ran 567, failures 0, errors 0, skipped 21
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -412,6 +412,7 @@ test_every_category_is_replaced_and_used (tests.test_v1013.AnythingBecomesAnythi
 test_no_learning_needed (tests.test_v1013.AnythingBecomesAnythingTests.test_no_learning_needed) ... ok
 test_seed_decides (tests.test_v1013.AnythingBecomesAnythingTests.test_seed_decides) ... ok
 test_the_same_replacement_repeats_as_little_as_possible (tests.test_v1013.AnythingBecomesAnythingTests.test_the_same_replacement_repeats_as_little_as_possible) ... ok
+test_another_planets_template_that_is_not_loaded_is_never_used (tests.test_v1013.CrossPlanetTests.test_another_planets_template_that_is_not_loaded_is_never_used) ... ok
 test_enemies_of_another_planet_appear (tests.test_v1013.CrossPlanetTests.test_enemies_of_another_planet_appear) ... ok
 test_this_planet_only_when_switched_off (tests.test_v1013.CrossPlanetTests.test_this_planet_only_when_switched_off) ... ok
 test_garbage_and_shared_lists_are_never_written (tests.test_v1013.IntegrityTests.test_garbage_and_shared_lists_are_never_written) ... ok
@@ -473,6 +474,24 @@ test_boss_randomizer_changes_boss_tier_only (tests.test_v1017.TheThreeRandomizer
 test_chaos_changes_every_category (tests.test_v1017.TheThreeRandomizersWorkTests.test_chaos_changes_every_category) ... ok
 test_enemy_randomizer_changes_regular_enemies_and_encounters_complete (tests.test_v1017.TheThreeRandomizersWorkTests.test_enemy_randomizer_changes_regular_enemies_and_encounters_complete) ... ok
 test_switching_off_puts_everything_back (tests.test_v1017.TheThreeRandomizersWorkTests.test_switching_off_puts_everything_back) ... ok
+test_a_holder_count_above_one_is_only_noted (tests.test_v1018.OtherLayoutsTests.test_a_holder_count_above_one_is_only_noted) ... ok
+test_a_pointer_among_the_nodes_own_bytes (tests.test_v1018.OtherLayoutsTests.test_a_pointer_among_the_nodes_own_bytes) ... ok
+test_a_runtime_object_holding_the_fields_or_pointing_at_them (tests.test_v1018.OtherLayoutsTests.test_a_runtime_object_holding_the_fields_or_pointing_at_them) ... ok
+test_a_spawner_already_running_before_the_census_is_never_changed (tests.test_v1018.OtherLayoutsTests.test_a_spawner_already_running_before_the_census_is_never_changed) ... ok
+test_factory_only_spawner_is_named_and_not_dumped (tests.test_v1018.OtherLayoutsTests.test_factory_only_spawner_is_named_and_not_dumped) ... ok
+test_nothing_found_dumps_the_bytes (tests.test_v1018.OtherLayoutsTests.test_nothing_found_dumps_the_bytes) ... ok
+test_placed_spawner_components_are_read (tests.test_v1018.OtherLayoutsTests.test_placed_spawner_components_are_read) ... ok
+test_template_actors_without_components_learn_from_spawns (tests.test_v1018.OtherLayoutsTests.test_template_actors_without_components_learn_from_spawns) ... ok
+test_two_nodes_reaching_the_same_prius_are_never_written (tests.test_v1018.OtherLayoutsTests.test_two_nodes_reaching_the_same_prius_are_never_written) ... ok
+test_the_simulated_node_is_what_the_log_reports (tests.test_v1018.TheRealLogsTests.test_the_simulated_node_is_what_the_log_reports) ... ok
+test_boss_randomizer (tests.test_v1018.YourGamesLayoutTests.test_boss_randomizer) ... ok
+test_chaos_randomizer (tests.test_v1018.YourGamesLayoutTests.test_chaos_randomizer) ... ok
+test_enemy_randomizer_changes_the_first_level_at_once_and_everything_completes (tests.test_v1018.YourGamesLayoutTests.test_enemy_randomizer_changes_the_first_level_at_once_and_everything_completes) ... ok
+test_every_node_is_read_through_ddlPriusData (tests.test_v1018.YourGamesLayoutTests.test_every_node_is_read_through_ddlPriusData) ... ok
+test_explicitly_off_reads_and_writes_nothing (tests.test_v1018.YourGamesLayoutTests.test_explicitly_off_reads_and_writes_nothing) ... ok
+test_switching_off_puts_everything_back (tests.test_v1018.YourGamesLayoutTests.test_switching_off_puts_everything_back) ... ok
+test_templates_are_learned_from_their_template_actors_before_any_fight (tests.test_v1018.YourGamesLayoutTests.test_templates_are_learned_from_their_template_actors_before_any_fight) ... ok
+test_the_first_spawn_of_a_changed_encounter_is_verified (tests.test_v1018.YourGamesLayoutTests.test_the_first_spawn_of_a_changed_encounter_is_verified) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -572,6 +591,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 548 tests in 137.870s
+Ran 567 tests in 143.471s
 
 OK (skipped=21)

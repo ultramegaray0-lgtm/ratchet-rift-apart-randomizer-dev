@@ -4,6 +4,55 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-17: dev 10.18 (kit 10.0.13, generator 10.11.0): spawner Prius reached by hand
+
+- Asked: "Still nothing randomized. Take your time, investigate and fix, and make no mistake. Next try
+  HAVE to work. Use any means necessary." Log: tests/data/round28_rivet.log (dev 10.17, kit 10.0.12; save
+  with Chaos / Enemy / Boss ON, nothing learned; NefCity, Cordelion, Zurkon, Malinon).
+- Log evidence: 22 censuses, 0 nodes read, every node "no Prius and the instance is only 128 bytes".
+  rivet `[rivet] game version mismatch, invalidating pointers` (new; rivet re-finds its signatures).
+  SpawnerSpawnEvent fields again SpawnFactory / SpawnIndex / SpawnLocation / SpawnedHandle; no
+  SpawnerStartedEvent; many spawns before the first census (the level's load population).
+- Research (no game): rivet_hook source (github.com/neptuwunium/rivet_hook @ 2.0.1):
+  * l_component pushes `prius` only when find_component got data: it follows ComponentInfo.prius only;
+    script nodes evidently have none there (both logs). script_signal.cpp properties() says the same
+    ("if it keeps them").
+  * src/game/script.hpp: ScriptAction = Component (0x48) + instanceUid +0x48 + graphUid +0x50 +
+    plugs +0x58; the node's own fields from +0x60 (as AddToInventoryAction's item at +0x60, 09's
+    ITEM_OFFSET). SpawnerScriptAction's 128 bytes leave 32 bytes: no room for its lists.
+  * Component.ddlPriusData +0x08 -> holder { vtable, int32 count +8, data +16 } (ddl_visit.hpp).
+  * dynamic arrays { T *data; int32 count; int32 capacity }, "confirmed against live instances".
+  * rivet.find_uid parses hex text; actor_by_uid needs a valid actor (scene object).
+  neptuwunium/rivet DDL dump (docs/ddl/rcra_ddl.json): SpawnerScriptActionPrius (144) extends SpawnerPrius
+  (120, component "Spawner"); Templates / SpawnLocations / FactoryGroup are TUID (type 17) dynamic arrays;
+  ActionType +120 default 60; SpawnerSpawnEvent also has SenderHandle (+44), hidden by RANDO-DISCOVER's
+  noise list. Factories (SunsetSpawnerFactory) carry setup data, not templates. Every GameBot* class is in
+  SP.FAMILY_CLASSES; added NPCBot (friendly) and BotHexapod (never).
+- 16: SP.find_prius routes rivet / holder / scan (node pointers as Prius or holder; strict) / deep (a runtime
+  object: fields embedded or a pointer; strict; SP.DEEP_NODES 4 per session); SP.path_hint follows the last
+  working path first; SP.try_prius checks SP.layout_at at +8 (short for SpawnerPrius) and scores ActionType
+  60 / a loaded uid (rivet.find_uid) among the templates or spawn points. array_at trusts only the count.
+  Dumps (instance, holder, holder data, node pointers) for the first 6 failing nodes a session. Spawner
+  components via rivet.find_component("Spawner", exact) (failure logged once, never stops the census).
+  SP.learn_template (find_uid + rivet.components, kept per session as SP.tpl_seen = family/false, learned
+  again into a replaced save). Pre-census spawns -> SP.started_handles / SP.started_locs. on_level /
+  checkpoint load drop a running census (SP.job = nil). SP.pause yields inside long searches (slice clock
+  set at each resume). "verify" log on a changed node's first spawn (SP.tpl_class); "spawn:" lines for the
+  first 5 spawns a level; "Prius routes (census N)" and skip reasons grouped. Holder count > 1 only noted:
+  two nodes reaching one Prius are caught by the shared-list rule.
+- chaos.lua: C.check_loaded (inside the census) - another planet's template joins the pool only where
+  its template actor is loaded; without rivet.find_uid 10.13's behaviour.
+- Simulator: rivet.uid / find_uid / components moved out of rivet.component (10.17 had nested them: they
+  existed only after rivet.component had run - the 10.17 tests passed partly by that accident). Node models
+  holder (both logs: 128 bytes, no rivet prius, ActionType 60), ptr, deep embed / ptr, spawner_component,
+  same_prius_as, holder_count; template actors with uids (templates_unhatched); sender_field.
+- Kit 10.0.13, banner dev 10.18. Logs kept: tests/data/round27_rivet.log (10.15) and round28_rivet.log
+  (10.17), game path replaced.
+- Verified only offline: tests/test_v1018.py (18); test_v1013 cross-planet tests changed for the loaded
+  rule; test_v1017 expectations updated for the new reasons. 567 run, 0 failures, 21 skipped.
+- Open (needs the game): which route finds the Prius (expected: holder); template actors answering
+  find_uid / components; `verify ... TOOK EFFECT` (the engine reading Templates at each spawn).
+
 ## 2026-11-17: dev 10.17 (kit 10.0.12, generator 10.11.0): Enemy / Boss / Chaos Randomizers fixed
 
 - Asked: "enemy, boss and chaos randomizer didn't work. Fix it", with a rivet.log (dev 10.15 kit 10.0.11 and

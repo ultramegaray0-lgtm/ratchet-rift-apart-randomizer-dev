@@ -102,9 +102,11 @@ As asked, none of 10.12's protections apply to Chaos:
   there. Defeat sequences and cutscenes may not play.
 - **Enemies in the wrong place:** flyers on the ground, large bots in small rooms, turrets on nav
   meshes, enemies inside geometry or falling through the map.
-- **Templates from other planets** whose assets are not loaded where they are used. What the game does
-  then is not known: nothing may spawn, or the game may misbehave or crash. If you see crashes,
-  set `chaos_cross_planet = false`.
+- **Templates from other planets.** Dev 10.18: a Templates entry is a TUID, the uid of a template actor
+  the level has loaded (rivet DDL). Another planet's template is now used only where its template actor
+  is loaded here (`rivet.find_uid`, checked once per level); one that is not loaded could never spawn.
+  An older rivet_hook without `rivet.find_uid` keeps 10.13's behaviour. `chaos_cross_planet = false`
+  still limits the pool to this planet's own templates.
 - **Clank puzzles and other spawner-driven non-combat scripts** may use templates Chaos has not
   learned as friendly yet, and break.
 - **Performance:** many large enemies at once.

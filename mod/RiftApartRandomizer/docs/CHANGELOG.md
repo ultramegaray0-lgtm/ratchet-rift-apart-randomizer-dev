@@ -2,6 +2,28 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.18 (kit 10.0.13, generator 10.11.0; not released): spawner Prius reached by hand
+
+Asked: "Still nothing randomized. Take your time, investigate and fix, and make no mistake." (rivet.log of
+2026-11-17 with dev 10.17). Seeds unchanged. **Tested in the simulator only** (now modelled on both logs).
+
+- Cause: rivet_hook returns no `prius` for SpawnerScriptAction (its find_component follows only
+  ComponentInfo.prius); the 128-byte instance is ScriptAction's header + 32 bytes. 10.17 relied on rivet's
+  `prius`, so every node was skipped again.
+- 16_rando_spawners: SP.find_prius - rivet's prius, then `ddlPriusData` (+0x08) -> holder -> data, then
+  pointers in the node (as Prius or holder), then a bounded deep search; strict candidates need
+  ActionType 60 or a loaded actor's uid; the path that worked is followed first; bytes dumped when nothing
+  works. Placed `Spawner` components read too. Capacity of the lists no longer checked (only the count).
+- Learning from template actors at the census (`rivet.find_uid` + `rivet.components`; Templates are TUIDs).
+- Verification log on each changed fight's first spawn; `spawn:` match lines for the first 5 spawns a level.
+- Fixes: a census of the previous level is dropped on a level change; spawns before the census mark their
+  spawner started; template learning survives the save being replaced; census yields inside long searches.
+- Chaos: another planet's template only where its template actor is loaded.
+- Simulator: `rivet.uid` / `rivet.components` were defined inside `rivet.component` since 10.17 (only after
+  it ran); moved out. New node models: holder (your game), ptr, deep embed/ptr, Spawner components, shared
+  Prius, template actors. Real logs kept as tests/data/round27_rivet.log, round28_rivet.log.
+- Tests: tests/test_v1018.py (18); 567 run, 0 failures, 21 skipped.
+
 ## Dev 10.17 (kit 10.0.12, generator 10.11.0; not released): Enemy / Boss / Chaos Randomizers fixed
 
 Asked: "enemy, boss and chaos randomizer didn't work. Fix it" (rivet.log of 2026-11-17, dev 10.15 kit with

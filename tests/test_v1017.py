@@ -63,8 +63,10 @@ class TheLogsFailureTests(unittest.TestCase):
         lines = census_lines(g)
         self.assertTrue(lines)
         self.assertIn("0 spawner node(s) read", lines[-1])
-        self.assertTrue(any("no Prius and the instance is only 96 bytes" in l for l in g.logs()),
+        # dev 10.18: every route is named, and the bytes are dumped for the next log
+        self.assertTrue(any("rivet: no prius; holder: ddlPriusData is 0000000000000000" in l for l in g.logs()),
                         [l for l in g.logs() if "skipped" in l][:3])
+        self.assertTrue(any("RANDO-SPAWNERS\tdump enc_" in l for l in g.logs()))
         self.assertEqual(changed(g), set())
 
     def test_the_prius_is_read_and_every_node_found(self):
@@ -72,7 +74,7 @@ class TheLogsFailureTests(unittest.TestCase):
         line = census_lines(g)[-1]
         self.assertIn("%d spawner node(s) read" % len(LEVEL), line)
         self.assertIn("0 skipped", line)
-        self.assertIn("layout prius +0x8 x%d" % len(LEVEL), line)
+        self.assertIn("layout prius/rivet +0x8 x%d" % len(LEVEL), line)
         self.assertFalse(any("RANDO-ERROR" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
 

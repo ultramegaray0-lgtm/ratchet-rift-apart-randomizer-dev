@@ -118,6 +118,30 @@ Kept-original encounters are saved in `state.spawn_blocked` (at most 300) and li
 
 ## 6. Finding the Templates list without trusting an offset
 
+**Dev 10.18 (your second log of 2026-11-17):** rivet gives **no** `prius` for SpawnerScriptAction and the
+instance is 128 bytes: ScriptAction's header (Component 0x48, instance uid +0x48, graph uid +0x50, plugs
++0x58; rivet_hook `src/game/script.hpp`) plus 32 bytes of its own. The Prius is reached by hand, best route
+first, and the route that worked is followed first for the next node:
+
+| route | path | accepted when |
+|---|---|---|
+| `rivet` | `rivet.component(...).prius` | the layout matches |
+| `holder` | instance +0x08 (`Component.ddlPriusData`) -> holder +16 -> data | the layout matches |
+| `scan` | a pointer in the instance (its own bytes +0x60..+0x78 first), as the Prius or as a holder | layout + ActionType 60 or a loaded actor's uid |
+| `deep` | a runtime object the node points to: the fields inside it, or a pointer in it (4 nodes per session) | layout + ActionType 60 or a loaded actor's uid |
+
+"The layout" is `SpawnerScriptActionPrius` at the DDL's offsets: `{ data, int32 count, int32 capacity }`
+lists at +8 / +32 / +56 (only the count is trusted), the two selection enums, the eight flag bytes, sane
+counts. `Templates` and `SpawnLocations` are TUIDs, i.e. actor uids. Placed actors' `Spawner` components
+(`SpawnerPrius`, the same lists) are read too. A spawner whose Prius has no Templates (factory only) is
+named and left alone. When no route works, the first 6 nodes' bytes are logged (`RANDO-SPAWNERS dump`).
+
+**Learning (10.18):** a template id is a template actor's uid, so `rivet.find_uid` + `rivet.components`
+tell its bot class at the census: the first level randomizes without a fight first. Spawns still teach
+(the event's SenderHandle field, `ev.sender`, or the SpawnLocation's uid). A boss health bar is only
+learned when it shows. **Verification:** the first spawn of each changed encounter is checked against the
+written and the original template's classes: `verify <node>: ... TOOK EFFECT` / `DID NOT take effect`.
+
 **Dev 10.17:** the fields are read from the node's **Prius** (`rivet.component(...).prius`, which
 rivet_hook resolves through `Component.ddlPriusData` -> holder -> data) at the DDL's own offsets
 (FactoryGroup +8), checked with the same signature as below. Your rivet.log of 2026-11-17 showed why:
@@ -140,6 +164,10 @@ once per changed node.
 
 ## 7. What the first real round must confirm (rivet.log)
 
+0. Dev 10.18: `Prius routes (census N): holder xN` (or scan / deep), `learned <id> = <family> (template
+   actor <class>)`, `plan (...): N slot(s) changed`, the first 5 `spawn: ...` lines per level, and after
+   a changed fight `verify ...: TOOK EFFECT`. `DID NOT take effect` means the game copies the list when the
+   level loads: send that log. `dump ...` lines mean no route found the Prius: send that log.
 1. `RANDO-SPAWNERS census 1 (...): N spawner node(s) read ... layout prius +0x8 xN` (dev 10.17). If every
    node is `skipped`, the reason is on the `skipped` lines: send the log, nothing was changed.
    (2026-11-17, dev 10.15: every node `cannot read the node`; fixed in 10.17, see section 6.)

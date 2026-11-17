@@ -30,7 +30,7 @@
 -- settings.
 --
 -- Needs 16_rando_spawners.lua. Removing this file only removes Chaos.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["chaos"] = "10.0.12"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["chaos"] = "10.0.13"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_CHAOS = RANDO_CHAOS or {}
 local C = RANDO_CHAOS
@@ -80,15 +80,43 @@ function C.on_census(lvl)
     end
   end
   if n > 0 then changed(); log("pool:", n, "new template(s) from", p, (full > 0) and ("(" .. full .. " over the cap)") or "") end
+  C.check_loaded(lvl)
+end
+
+-- dev 10.18: a Templates entry is a TUID, the uid of a template actor the level has loaded (rivet DDL:
+-- SpawnerScriptActionPrius.Templates is a dynamic array of TUID). A template of another planet whose
+-- actor is not loaded here cannot be spawned: the spawner would wait for ever, and Chaos has no guard
+-- to put it back. So another planet's template joins the pool only where its template actor is loaded
+-- (rivet.find_uid), checked once per level inside the census (it yields between checks).
+function C.check_loaded(lvl)
+  if lvl.chaos_loaded or not rivet.find_uid or not coroutine.isyieldable() then return end
+  if R.config.chaos_cross_planet == false then return end
+  local loaded, n = {}, 0
+  local cands = {}
+  for tid in pairs(seen_t()) do cands[tid] = true end
+  local s = S()
+  for tid in pairs((s and s.spawn_learned) or {}) do cands[tid] = true end
+  for _, tid in ipairs(SP.sorted_keys(cands)) do
+    if not (lvl.templates and lvl.templates[tid]) then
+      SP.pause()
+      if SP.uid_loaded(tid) then loaded[tid] = true; n = n + 1 end
+    end
+  end
+  lvl.chaos_loaded = loaded
+  if n > 0 then log(n, "template(s) of other planets are loaded here and join the pool") end
 end
 
 function C.pool(lvl)
   local all = {}
   for tid in pairs(lvl.templates or {}) do all[tid] = true end
   if R.config.chaos_cross_planet ~= false then
-    for tid in pairs(seen_t()) do all[tid] = true end
+    -- dev 10.18: another planet's template only where its template actor is loaded (C.check_loaded);
+    -- an older rivet_hook without rivet.find_uid keeps 10.13's behaviour
+    local loaded = lvl.chaos_loaded
+    local function ok(tid) return (loaded and loaded[tid]) or (loaded == nil and not rivet.find_uid) end
+    for tid in pairs(seen_t()) do if ok(tid) then all[tid] = true end end
     local s = S()
-    for tid in pairs((s and s.spawn_learned) or {}) do all[tid] = true end
+    for tid in pairs((s and s.spawn_learned) or {}) do if ok(tid) then all[tid] = true end end
   end
   local out = {}
   for _, tid in ipairs(SP.sorted_keys(all)) do if not not_enemy(tid) then out[#out + 1] = tid end end

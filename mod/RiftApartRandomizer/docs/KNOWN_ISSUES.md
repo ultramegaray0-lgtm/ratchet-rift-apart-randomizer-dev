@@ -4,6 +4,22 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0j. Since dev 10.18 (kit 10.0.13): the Prius reached by hand
+
+- FIXED (your rivet.log of 2026-11-17, dev 10.17): still nothing randomized. Every node "no Prius and the
+  instance is only 128 bytes": rivet_hook gives no `prius` for script actions. 10.18 follows
+  `ddlPriusData` -> holder -> data itself (then pointers in the node, then a bounded deep search), and
+  learns templates from their template actors. ENEMIES_AND_BOSSES.md section 6. Simulator only.
+- FIXED: a census still running when the level changed could publish the old level's nodes.
+- FIXED: a spawner that spawned before the census read the level (at the load) counted as idle and could
+  be changed mid-fight; it now counts as started (Enemy / Boss leave it alone; Chaos still changes it).
+- CHANGED: Chaos uses another planet's template only where its template actor is loaded (CHAOS.md).
+- LIMIT (by design): enemies a level spawns the moment it loads are there before any script can read the
+  level, so their first wave keeps its enemies; later waves, later fights and the next loads change.
+- OPEN (needs the game): `verify ... TOOK EFFECT` on a changed fight (the engine reading Templates at each
+  spawn). Not touched: the vendor array, RANDO-OMEGA inventory, the old `16_rando_testtravel.lua` in your
+  scripts folder (delete it).
+
 ## 0i. Since dev 10.17 (kit 10.0.12): the spawner census reads the Prius
 
 - FIXED (your rivet.log of 2026-11-17): the Enemy, Boss and Chaos Randomizers changed nothing. Every

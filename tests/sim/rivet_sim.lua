@@ -529,7 +529,20 @@ function rivet.script_nodes(filter, limit)
   return out
 end
 local function node_by_comp(c) for _, n in ipairs(S.nodes) do if n.component == c then return n end end end
+function rivet.find_component(class, limit, exact)
+  local out = {}
+  if class == "Spawner" then for _, c in ipairs(S.spawner_comps or {}) do out[#out + 1] = c.actor end end
+  return out
+end
 function rivet.component(actor, class)
+  if class == "Spawner" then
+    for _, c in ipairs(S.spawner_comps or {}) do
+      if c.actor == actor then
+        return { address = string.format("%X", c.addr), size = 0x60, handle = c.component,
+                 prius = string.format("%016x", c.prius), prius_size = 0x78 }
+      end
+    end
+  end
   for _, n in ipairs(S.nodes) do
     if n.actor == actor and n.class == class then
       return { address = string.format("%X", n.addr), size = n.size or 0x80, handle = n.component,
@@ -541,23 +554,34 @@ function rivet.component(actor, class)
   if cls and cls == class then
     return { address = string.format("%X", 0x30000000 + actor * 0x100), size = 0x400, handle = actor * 10 }
   end
-  -- dev 10.17: rivet.uid and rivet.components (rivet_hook's LUA_SCRIPTING.md)
-function rivet.uid(handle)
-  local id = S.actor_uid and S.actor_uid[math.tointeger(tonumber(handle)) or handle]
-  return id
-end
-function rivet.components(handle)
-  local cls = S.actor_class and S.actor_class[handle]
-  if S.components_off then error("attempt to call a nil value", 2) end
-  if cls then return { "SceneObject", cls, "Health" } end
-  error("no actor for handle " .. tostring(handle), 2)
-end
--- dev 10.15: the hero's inventory component
+  -- dev 10.15: the hero's inventory component
   if S.inventory_component and actor == S.hero_handle and class == S.INV_CLASS then
     S.inv_layout()
     return { address = string.format("%X", S.inv_comp), size = 0x200, handle = 4242 }
   end
   return nil
+end
+-- dev 10.17: rivet.uid and rivet.components (rivet_hook's LUA_SCRIPTING.md)
+function rivet.uid(handle)
+  local id = S.actor_uid and S.actor_uid[math.tointeger(tonumber(handle)) or handle]
+  return id
+end
+function rivet.find_uid(uid)
+  if S.find_uid_off then error("attempt to call a nil value", 2) end
+  return S.uid_actor and S.uid_actor[tostring(uid):upper()] or nil
+end
+function rivet.components(handle)
+  local cls = S.actor_class and S.actor_class[handle]
+  if S.components_off then error("attempt to call a nil value", 2) end
+  if cls then return { "SceneObject", cls, "Health" } end
+  local tid = S.handle_tpl and S.handle_tpl[handle]
+  if tid then
+    if S.templates_unhatched then return { "SceneObject" } end
+    local c = S.template_class[tid]
+    return c and { "SceneObject", c, "GameBotHealth" } or { "SceneObject" }
+  end
+  if S.actor_uid and S.actor_uid[handle] then return { "SceneObject" } end
+  error("no actor for handle " .. tostring(handle), 2)
 end
 -- dev 10.15: lay the records out (again): the component, its pointer array, one object per owned weapon
 function S.inv_layout()
@@ -1036,7 +1060,13 @@ local function put_array(addr, ptr, n) S.put_u64(addr, ptr); S.put_u32(addr + 8,
 --          (size 0x60), the fields are behind rivet.component's `prius` at the DDL offsets
 --          (FactoryGroup +8), and SpawnerSpawnEvent names its SpawnLocation actor but carries no
 --          SenderHandle; nosender = true: no ev.sender either; small = true: an instance of 0x60
---          bytes and no Prius from rivet, the 10.12-10.16 read path that failed in your game) }
+--          bytes and no Prius from rivet, the 10.12-10.16 read path that failed in your game),
+--          holder = true (dev 10.18, what BOTH real logs of 2026-11-17 show: a 128-byte instance, NO
+--          `prius` from rivet.component; the SpawnerScriptActionPrius (ActionType 60 at +120) is reached
+--          through Component.ddlPriusData (+0x08) -> holder { vtable, count 1, data +16 }),
+--          ptr = true (dev 10.18: ddlPriusData null, the node's own field +0x68 points at the Prius) }
+-- dev 10.18: every template id is also a loaded template actor's uid (rivet.find_uid), whose components
+-- are its bot class (S.templates_unhatched = true: template actors without components)
 function S.add_encounter(spec)
   S.spawner_count = S.spawner_count + 1
   local i = S.spawner_count
@@ -1048,14 +1078,25 @@ function S.add_encounter(spec)
   local tptr, lptr = base + 0x800, base + 0x900
   S.map(tptr, 0x100); S.map(lptr, 0x100)
   local pr
-  if spec.prius then
+  local real = spec.holder or spec.ptr or spec.deep
+  if spec.spawner_component then spec.prius = true end         -- dev 10.18: a placed actor's Spawner component
+  local robj
+  if spec.prius or real then
     pr = base + 0x400
-    S.map(pr, 0x100)
-    for a = pr, pr + 0xFF do S.mem[a] = 0 end
+    if spec.deep then
+      -- dev 10.18: ddlPriusData null; node +0x70 -> a runtime object: "embed" = the SpawnerPrius fields at
+      -- its +0x20 (FactoryGroup +0x28), "ptr" = its +0x30 points at the Prius
+      robj = base + 0xA00
+      S.map(robj, 0x100)
+      for a = robj, robj + 0xFF do S.mem[a] = 0 end
+      S.put_u64(robj, 0x7FF6C4B20000)
+      if spec.deep == "embed" then pr = robj + 0x20 end
+    end
+    if not spec.deep or pr ~= robj + 0x20 then S.map(pr, 0x100); for a = pr, pr + 0xFF do S.mem[a] = 0 end end
     x = 0x08
   end
   local fb = pr or base                                         -- where the Prius fields are
-  if spec.prius then
+  if spec.prius or real then
     put_array(fb + x, 0, 0)
     put_array(fb + x + 24, tptr, #spec.templates)
     put_array(fb + x + 48, lptr, 2)
@@ -1064,6 +1105,23 @@ function S.add_encounter(spec)
     S.put_u32(fb + x + 100, spec.num or 0)
     S.put_u32(fb + x + 104, 0xFFFFFFFF)
     S.put_u32(fb + x + 120, 1)
+    if real and spec.deep ~= "embed" then S.put_u32(fb + x + 112, 60) end   -- ActionType (SpawnerScriptActionPrius +120)
+    if spec.deep then
+      S.put_u64(base + 0x70, robj)
+      if spec.deep == "ptr" then S.put_u64(robj + 0x30, pr) end
+    end
+    if spec.holder then
+      local hold = base + 0x600
+      S.map(hold, 0x20)
+      S.put_u64(hold, 0x7FF6C4B10000); S.put_u32(hold + 8, spec.holder_count or 1); S.put_u64(hold + 16, pr)
+      S.put_u64(base + 8, hold)                                 -- Component.ddlPriusData
+      S.holders = S.holders or {}
+      S.holders[spec.uid] = hold
+      -- dev 10.18: two nodes of one graph reaching the same Prius (spec.same_prius_as = another uid)
+      if spec.same_prius_as then S.put_u64(base + 8, S.holders[spec.same_prius_as]) end
+    end
+    if spec.ptr then S.put_u64(base + 0x68, pr) end             -- a pointer among the node's own 32 bytes
+    S.put_hex_id(base + 0x48, spec.uid_hex or string.format("9%03X00000000ABCD", i))   -- ScriptAction instance uid
   elseif not spec.garbage then
     put_array(base + x, 0, 0)
     put_array(base + x + 24, tptr, #spec.templates)
@@ -1084,13 +1142,38 @@ function S.add_encounter(spec)
   S.actor_uid = S.actor_uid or {}
   local loc_handles = { 6000000 + i * 10 + 1, 6000000 + i * 10 + 2 }
   S.actor_uid[loc_handles[1]] = loc_ids[1]; S.actor_uid[loc_handles[2]] = loc_ids[2]
+  S.uid_actor = S.uid_actor or {}
+  S.uid_actor[loc_ids[1]] = loc_handles[1]; S.uid_actor[loc_ids[2]] = loc_handles[2]
+  -- dev 10.18: the template actors (loaded with the level, flagged Template)
+  S.tpl_handle = S.tpl_handle or {}
+  S.handle_tpl = S.handle_tpl or {}
+  if ((real or spec.spawner_component) and not spec.no_template_actors) or spec.template_actors then
+    for _, t in ipairs(spec.templates) do
+      local id = tostring(t):upper()
+      if not S.tpl_handle[id] then
+        S.next_tpl = (S.next_tpl or 7000000) + 1
+        S.tpl_handle[id] = S.next_tpl; S.handle_tpl[S.next_tpl] = id
+        S.uid_actor[id] = S.next_tpl; S.actor_uid[S.next_tpl] = id
+      end
+    end
+  end
   local e = { uid = spec.uid, templates = spec.templates, num = spec.num or 0, base = base, tptr = tptr, x = x,
               component = 3000000 + i, actor = 4000000 + i, mission = spec.mission, objective = spec.objective,
               spawned = 0, dead = 0, alive = {}, running = false, done = false,
-              prius = spec.prius, nosender = spec.nosender, loc_handles = loc_handles }
+              prius = spec.prius or real, nosender = spec.nosender, loc_handles = loc_handles,
+              sender_field = spec.sender_field }
   S.encounters[spec.uid] = e
+  if spec.spawner_component then
+    -- not a script node: an actor with a Spawner component (SpawnerPrius, 120 bytes) rivet.find_component lists
+    e.sender_field = e.sender_field or "component"
+    S.spawner_comps = S.spawner_comps or {}
+    S.spawner_comps[#S.spawner_comps + 1] = { actor = e.actor, component = e.component, addr = base, prius = pr }
+    S.actor_uid[e.actor] = string.format("A%03X00000000BEEF", i)
+    return e
+  end
   S.nodes[#S.nodes + 1] = { component = e.component, actor = e.actor, uid = spec.uid, class = "SpawnerScriptAction",
-                            addr = base, size = (spec.prius or spec.small) and 0x60 or 0x100, prius = pr, prius_size = pr and 0x98 or nil,
+                            addr = base, size = real and 0x80 or ((spec.prius or spec.small) and 0x60 or 0x100),
+                            prius = spec.prius and pr or nil, prius_size = spec.prius and 0x98 or nil,
                             outputs = {}, planet = spec.planet }
   return e
 end
@@ -1110,7 +1193,9 @@ local function spawn_one(e)
   if e.prius then
     -- the real game's fields (rivet.log 2026-11-17): SpawnFactory, SpawnIndex, SpawnLocation, SpawnedHandle
     S.emit("SpawnerSpawnEvent", { SpawnFactory = 0, SpawnedHandle = h, SpawnIndex = k - 1,
-                                  SpawnLocation = e.loc_handles[(e.spawned - 1) % 2 + 1] },
+                                  SpawnLocation = e.loc_handles[(e.spawned - 1) % 2 + 1],
+                                  SenderHandle = (e.sender_field == "component" and e.component)
+                                                 or (e.sender_field == "actor" and e.actor) or nil },
            { sender = (not e.nosender) and e.component or nil })
   else
     S.emit("SpawnerSpawnEvent", { SenderHandle = e.component, SpawnedHandle = h, SpawnIndex = k - 1, SpawnLocation = 0 })

@@ -57,7 +57,7 @@ class LoadAndToggleTests(unittest.TestCase):
     def test_loads_off_by_default(self):
         g = game()
         self.assertTrue(g.log_has("RANDO-CHAOS\tinstalled (OFF"))
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.12"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.13"), [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.R.config.chaos_randomizer)
         self.assertEqual(g.R.config.key_chaos, "BACKSPACE")
         self.assertFalse(g.g.RANDO_CHAOS.enabled())
@@ -164,6 +164,8 @@ class CrossPlanetTests(unittest.TestCase):
     def two_planets(self, **kw):
         level = {uid: v for uid, v in LEVEL.items()}
         g = Game(settings=kw.pop("settings", None))
+        g.sim.uid_actor = g.sim.uid_actor or g.lua.table()
+        g.sim.actor_uid = g.sim.actor_uid or g.lua.table()
         build_level(g, level, extra={uid: {"planet": "NefCity"} for uid in level})
         build_level(g, SAVALI, extra={uid: {"planet": "Savali"} for uid in SAVALI})
         for t in (P1, P2, P3):
@@ -173,12 +175,20 @@ class CrossPlanetTests(unittest.TestCase):
         g.g.RANDO_SPAWNERS.set("chaos", True, "test")
         g.travel("NefCity")
         g.step(300)
+        if kw.get("before_savali"):
+            kw["before_savali"](g)
         g.travel("Savali")
         g.step(300)
         return g
 
     def test_enemies_of_another_planet_appear(self):
-        g = self.two_planets()
+        # dev 10.18: a Templates entry is the uid of a template actor (a TUID): another planet's template is
+        # used only where its template actor is loaded (here: Nefarious City's G1/G2 loaded on Savali too)
+        def load_here(g):
+            for i, t in enumerate((G1, G2)):
+                g.sim.uid_actor[t] = 7100000 + i
+                g.sim.actor_uid[7100000 + i] = t
+        g = self.two_planets(before_savali=load_here)
         seen = py(g.state.chaos_seen)
         self.assertEqual(seen[G1], "nefarious_city")
         self.assertEqual(seen[P1], "savali")
@@ -186,6 +196,13 @@ class CrossPlanetTests(unittest.TestCase):
         here = {P1, P2, P3}
         self.assertTrue([x for x, v in sav.items() if v not in here], sav)   # from Nefarious City
         self.assertEqual(g.g.RANDO_CHAOS.last.foreign, sum(1 for v in sav.values() if v not in here))
+
+    def test_another_planets_template_that_is_not_loaded_is_never_used(self):
+        # dev 10.18: it could not spawn (no template actor here), and Chaos has no guard to put it back
+        g = self.two_planets()
+        sav = [g.sim.encounter_template(u, k) for u, (t, _, _) in SAVALI.items() for k in range(1, len(t) + 1)]
+        self.assertTrue(set(sav) <= {P1, P2, P3}, sav)
+        self.assertEqual(g.g.RANDO_CHAOS.last.foreign, 0)
 
     def test_this_planet_only_when_switched_off(self):
         g = self.two_planets(settings={"chaos_cross_planet": False})

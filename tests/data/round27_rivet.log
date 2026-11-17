@@ -1,0 +1,1060 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[loader] mod path mods/default does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED.stage does not exist! skipping.
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF70C60A8C0, QueueEvent at 00007FF707406A60
+[time] time scale system at 00007FF70B8502E0
+[camera] fov scale at 00007FF70B68EEC8
+[camera] camera system at 00007FF70B68EDE0
+[hud] ShowMessage at 00007FF7069CD160
+[vanity] EquipBundle at 00007FF706C2A8E0
+[hero_look] HandleTransformationEvent at 00007FF7068D8D40, OnTransformationPostActivate at 00007FF706AE63F0
+[configs] config asset manager at 00007FF70B69BFE0
+[script] signal queue at 00007FF70CAFFB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF706AF3900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[overlay] loading dxgi and d3d12...
+[bridge] listening on \\.\pipe\rivet_hook
+[bridge] could not create the pipe, error 231
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing ui/loaded/exporte[events] 2197 event classes registered
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	RANDO-KEYS	keyboard keys on	| planet shuffle 0, give items back Ctrl+0 twice
+[script] [rando]	Randomizer 10.0.11 loaded (data 5.1.0, generator 10.11.0)
+[script] [rando]	RANDO-STATUS events subscribed 20/20
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] [rando]	RANDO-SHOP	loaded (15 vendor weapons)
+[script] [rando]	RANDO-ARMOR	loaded (21 armor pieces, interception needs rando_give.dll v5)
+[script] [rando]	RANDO-TRAVEL	loaded
+[script] [rando]	RANDO-HUB	loaded (10.0.11)
+[script] [rando]	RANDO-SPAWNERS	spawner layer loaded (SpawnerScriptAction Templates; families 46 bot classes)
+[script] [rando]	RANDO-TEST	loaded (10.0.5) - off
+[script] [rando]	RANDO-OMEGA	loaded (Omega flag not learned yet)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	is installed (	boss-tier enemies	)
+[script] [rando]	RANDO-BOSS	installed (ON until the save says otherwise) - = turns it on / off, Ctrl+= shows what it changed; 8 story boss fights are kept as they are
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	is installed (	every enemy and boss, priority, no guards	)
+[script] [rando]	RANDO-CHAOS	installed (OFF until the save says otherwise) - BACKSPACE turns it on / off, Ctrl+BACKSPACE shows what it changed. NO safety guards; priority over the Enemy and Boss Randomizers while ON
+[script] [rando]	RANDO-KEYS developer keys:	status ; | hub ] | stay [ | story / | campaign ' | old F keys too
+[script] [rando]	RANDO-PROBE	v7 loaded: NUMPAD3 survey, NUMPAD4 select, NUMPAD5 fire, NUMPAD7 item, NUMPAD6 give item, NUMPAD9 census, NUMPAD8 give via borrowed node
+[script] [rando]	RANDO-STATUS TEST MODE on: F10 story mission, F11 Gold Bolt, Ctrl+F10 twice resets, Ctrl+' lab read, Ctrl+F11 lab try
+[script] [rando]	RANDO-SETTINGS key	.	is used twice:	key_test_travel	and	key_test_travel
+[script] [rando]	RANDO-SETTINGS key	F7	is used twice:	key_test_travel (old key)	and	key_test_travel (old key)
+[script] [rando]	RANDO-SETTINGS key	,	is used twice:	key_test_point	and	key_test_point
+[script] [rando]	RANDO-SETTINGS key	F8	is used twice:	key_test_point (old key)	and	key_test_point (old key)
+[script] [rando]	RANDO-TEST	loaded (10.0.11) - off
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	is installed (	regular enemies	)
+[script] [rando]	RANDO-ENEMY	installed (ON until the save says otherwise) - - turns it on / off, Ctrl+- shows what it changed
+[script] loaded 25 of 25 scripts, 4 frame and 33 key callbacks
+[script] [rando]	RANDO-ERROR RANDO-KIT delete from the scripts folder: 16_rando_testtravel.lua (a developer tool, now dev(testtravel).lua) - it was left by an older version
+[script] [rando]	notify failed:	the player hud is not loaded
+[script] [rando]	RANDO-KIT developer files loaded (not part of a release): dev(item_ids), dev(keys), dev(probe), dev(testmode), dev(testtravel), dev(vtables)
+[script] [rando]	RANDO-KIT all 12 required scripts are 10.0.11
+[DDL] indexed 8211 types for struct walking
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=813750 TotalBolts=813750
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=132.0 TotalRaritanium=132.0
+[script] [rando]	RANDO-SEED seed = "random" needs the companion to remember the seed - start the companion
+[script] [rando]	notify failed:	the player hud is not loaded
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=E5CCB42319892AE9C0DE26C64FDE2290
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=E53E23BC03D2362798858DD41DEF1E25
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072360 Component=2129941
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072362 Component=2129965
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129999
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129937 ItemHandle=2130314
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129937
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129997 ItemHandle=2130315
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129997
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129937 ItemHandle=2130316
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129997 ItemHandle=2130317
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129937 ItemHandle=2130321
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129951
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129975
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072360 Component=2129942
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072362 Component=2129966
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123493
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060937 SpawnIndex=0 SpawnLocation=1060891 SpawnedHandle=1073500
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1061482 SpawnedHandle=1073501
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067842 SpawnIndex=0 SpawnLocation=1063397 SpawnedHandle=1073502
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067832 SpawnIndex=0 SpawnLocation=1063399 SpawnedHandle=1073503
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=0 SpawnLocation=1060733 SpawnedHandle=1073504
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=0 SpawnLocation=1060727 SpawnedHandle=1073505
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=0 SpawnLocation=1060715 SpawnedHandle=1073506
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=0 SpawnLocation=1060739 SpawnedHandle=1073507
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=0 SpawnLocation=1060721 SpawnedHandle=1073508
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=0 SpawnLocation=1060745 SpawnedHandle=1073509
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1062096 SpawnIndex=0 SpawnLocation=1061079 SpawnedHandle=1073510
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1062095 SpawnIndex=0 SpawnLocation=1061088 SpawnedHandle=1073511
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1061483 SpawnedHandle=1073512
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067845 SpawnIndex=0 SpawnLocation=1063400 SpawnedHandle=1073513
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067840 SpawnIndex=0 SpawnLocation=1063398 SpawnedHandle=1073514
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070667 SpawnIndex=0 SpawnLocation=1070543 SpawnedHandle=1073515
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070671 SpawnIndex=0 SpawnLocation=1070538 SpawnedHandle=1073516
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070671 SpawnIndex=1 SpawnLocation=1070536 SpawnedHandle=1073517
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070670 SpawnIndex=0 SpawnLocation=1070531 SpawnedHandle=1073518
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070662 SpawnIndex=0 SpawnLocation=1070602 SpawnedHandle=1073519
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070674 SpawnIndex=0 SpawnLocation=1070524 SpawnedHandle=1073520
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1070627 SpawnedHandle=1073521
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=0 SpawnLocation=1070606 SpawnedHandle=1073522
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1070588 SpawnedHandle=1073523
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071159 SpawnIndex=0 SpawnLocation=1071057 SpawnedHandle=1073524
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071162 SpawnIndex=0 SpawnLocation=1071037 SpawnedHandle=1073525
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071163 SpawnIndex=0 SpawnLocation=1071034 SpawnedHandle=1073526
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2124799
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123487
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123465
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116222
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116212
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106699
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106689
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116240
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116220
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071166 SpawnIndex=0 SpawnLocation=1071065 SpawnedHandle=1073527
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071154 SpawnIndex=0 SpawnLocation=1071126 SpawnedHandle=1073528
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070269 SpawnIndex=0 SpawnLocation=1070257 SpawnedHandle=1073529
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070268 SpawnIndex=0 SpawnLocation=1070248 SpawnedHandle=1073530
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1070597 SpawnedHandle=1073745
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=1 SpawnLocation=1070565 SpawnedHandle=1073746
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1070623 SpawnedHandle=1073747
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070674 SpawnIndex=1 SpawnLocation=1070523 SpawnedHandle=1073748
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070670 SpawnIndex=1 SpawnLocation=1070530 SpawnedHandle=1073749
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1061481 SpawnedHandle=1073750
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071162 SpawnIndex=1 SpawnLocation=1071039 SpawnedHandle=1073751
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071163 SpawnIndex=1 SpawnLocation=1071033 SpawnedHandle=1073752
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=1 SpawnLocation=1060750 SpawnedHandle=1073753
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=1 SpawnLocation=1060726 SpawnedHandle=1073754
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=1 SpawnLocation=1060744 SpawnedHandle=1073755
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=1 SpawnLocation=1060720 SpawnedHandle=1073756
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=1 SpawnLocation=1060732 SpawnedHandle=1073757
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=1 SpawnLocation=1060738 SpawnedHandle=1073758
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071166 SpawnIndex=1 SpawnLocation=1071040 SpawnedHandle=1073759
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071154 SpawnIndex=1 SpawnLocation=1071117 SpawnedHandle=1073760
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070269 SpawnIndex=1 SpawnLocation=1070256 SpawnedHandle=1073761
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070268 SpawnIndex=1 SpawnLocation=1070242 SpawnedHandle=1073762
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071157 SpawnIndex=0 SpawnLocation=1071050 SpawnedHandle=1073763
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071158 SpawnIndex=0 SpawnLocation=1071092 SpawnedHandle=1073764
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071156 SpawnIndex=0 SpawnLocation=1071042 SpawnedHandle=1073765
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071161 SpawnIndex=0 SpawnLocation=1071116 SpawnedHandle=1073766
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070270 SpawnIndex=0 SpawnLocation=1070221 SpawnedHandle=1073767
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060931 SpawnIndex=0 SpawnLocation=1060829 SpawnedHandle=1073768
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105404
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122716
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070270 SpawnIndex=1 SpawnLocation=1070221 SpawnedHandle=1073769
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071161 SpawnIndex=1 SpawnLocation=1071121 SpawnedHandle=1073770
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071156 SpawnIndex=1 SpawnLocation=1071058 SpawnedHandle=1073771
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071158 SpawnIndex=1 SpawnLocation=1071066 SpawnedHandle=1073772
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071157 SpawnIndex=1 SpawnLocation=1071061 SpawnedHandle=1073773
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122720
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106717
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105426
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105440
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105436
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105430
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105444
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105422
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105412
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105396
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123473
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105416
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105414
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105410
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105442
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105394
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105406
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105392
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105428
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105402
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105408
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105432
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105400
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122718
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105418
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105398
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105434
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123477
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105438
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123491
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105424
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-CAMPAIGN mission helper:	ready (rando_give.dll v4, mission code matches this exe)
+[script] [rando]	RANDO-CAMPAIGN mission system 2: MIS_INTRO is active (done)
+[script] [rando]	RANDO-REAL	no saved state restored - going ahead
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Malinon OldPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185148
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185140
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185144
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185134
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2170953
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185132
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185136
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=805795996 Loaded=true
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185142
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185138
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START_CINE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185146
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=934271974 Loaded=true
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194295
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2194293
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129998
+[script] [rando]	RANDO-SEED ARSENAL_RESTORED is not installed: its weapons stay out (the companion checked rivet.toml and the game's toc)
+[script] [rando]	RANDO-SEED generating seed	torren-qwark-blizar-217	(random seed from the companion)
+[script] [rando]	RANDO-SETTINGS	raritanium rewards scaled down to the raritanium_budget of 2000 (they would have given 6160)
+[script] [rando]	RANDO-SEED ready	torren-qwark-blizar-217	fc77380ad773	preset balanced	attempt 1
+[script] [rando]	RANDO-SEED share code	RA10|torren-qwark-blizar-217|balanced|distribution=goldbolts_first,omega_weapons=true,travel_lock=true
+[script] [rando]	RANDO-SEED replaying 500 event(s) that came in while generating
+[script] [rando]	RANDO-GADGET	grindboots
+[script] [rando]	RANDO-GADGET	glide
+[script] [rando]	RANDO-GADGET	grapple
+[script] [rando]	RANDO-GADGET	rift_tether
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards locked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-NOTIFY	Randomizer dev 10.15 - seed torren-qwark-blizar-217 (fc77380ad773)
+[script] [rando]	RANDO-SPAWNERS	census 1 (planet NefCity): 0 spawner node(s) read, 0 template(s), 0 skipped
+[script] [rando]	RANDO-NOTIFY	Randomizer: delete 16_rando_testtravel.lua (a developer tool, now dev(testtravel).lua) from the scripts folder (left by an older version) - see rivet.log
+[script] [rando]	RANDO-NOTIFY	Randomizer: start the companion (seed = random)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	received Hoverboots
+[script] [rando]	received Map-O-Matic
+[script] [rando]	received Ricochet
+[script] [rando]	received Buzz Blades
+[script] [rando]	received Omniglove (wall panels)
+[script] [rando]	seed started: torren-qwark-blizar-217 (fc77380ad773), run 1
+[script] [rando]	RANDO-NOTIFY	Randomizer start: Hoverboots, Map-O-Matic, Ricochet, Buzz Blades, Omniglove (wall panels)
+[script] [rando]	RANDO-REAL	sync:	5	item(s) waiting for the game
+[script] [rando]	RANDO-SAVE no saved progress for this seed, starting fresh
+[script] [rando]	RANDO-ARMOR	helper: armor give verified, armor sources on
+[script] [rando]	RANDO-REAL	sent	hoverboots	configs/equipment/gdgt_hoverboots_item.config	842E8D8EFE349E00	via rando_give.dll	request 2	target hero	
+[script] [rando]	RANDO-ARMOR	intercepting 21 armor source(s)
+[script] [rando]	RANDO-REAL	direct delivery: target hero works - kept for next time
+[script] [rando]	RANDO-REAL	confirmed	hoverboots	via	native	after	0	frames	
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Hoverboots
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2129937 ItemHandle=2208745
+[script] [rando]	RANDO-GADGET	hoverboots
+[script] [rando]	RANDO-REAL	sent	map_o_matic	configs/equipment/gdgt_mapomatic_item.config	9AB06529F129A923	via rando_give.dll	request 3	target hero	
+[script] [rando]	RANDO-REAL	confirmed	map_o_matic	via	native	after	0	frames	
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Map-O-Matic
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2129997 ItemHandle=2208787
+[script] [rando]	RANDO-GADGET	map_o_matic
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_PICKUP_WRENCH ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3095202961 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_MALINON_INTRO_GOING_DOWN	hash 3095202961	on	nefarious_city
+[script] [rando]	RANDO-REAL	sent	omniglove	configs/equipment/gdgt_versaglove_item.config	98F2996246EB8469	via rando_give.dll	request 4	target hero	
+[script] [rando]	RANDO-SHOP	helper: config manager at 00007FF70B69BFE0 (exe +0x52EBFE0, rivet_hook's signature matched 1x)
+[script] [rando]	RANDO-REAL	confirmed	omniglove	via	native	after	0	frames	
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Omniglove (wall panels)
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2129937 ItemHandle=2208824
+[script] [rando]	RANDO-GADGET	omniglove
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-TRAVEL	checkpoint catalog:	corson_v 116=CHK_DEMO_START, nefarious_city 90=CHK_NEFCITY_START, sargasso 112=CHK_SARG_GELFACTORY_LANDINGPAD, scarstu 56=CHK_ZURK_LANDING_SHIP, savali 60=CHK_SAV_01_START, blizar_prime 109=CHK_BLIZAR_A_LANDINGPAD, torren_iv 55=CHK_MOL_START, cordelion 45=CHK_CORD_A_START, ardolis 46=CHK_ARD_START, viceron 52=CHK_ZORDOOM_START
+[script] [rando]	RANDO-REAL	sent	weapon:buzz_blades	configs/equipment/wpn_buzzblades_item.config	8B01A641F040FBDA	via rando_give.dll	request 6	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1004	is	weapon:buzz_blades
+[script] [rando]	RANDO-REAL	confirmed	weapon:buzz_blades	via	native	after	0	frames	
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Buzz Blades
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER OFF] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	OFF (=):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: OFF
+[script] [rando]	RANDO-REAL	sent	weapon:ricochet	configs/equipment/wpn_ricochet_item.config	B511407E34E7C680	via rando_give.dll	request 7	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1005	is	weapon:ricochet
+[script] [rando]	RANDO-REAL	confirmed	weapon:ricochet	via	native	after	0	frames	
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Ricochet
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-ARMOR	baseline: 0 armor piece(s) owned before this seed - they do not count
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER ON] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	ON (=)
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: ON
+[script] [rando]	RANDO-SPAWNERS	census 2 (switched on): 0 spawner node(s) read, 0 template(s), 265 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	85f46721a0441f2a: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86d6d3c128c6f1b6: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8729267ed21bc763: cannot read the node
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000001587A8B9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 1)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-SPAWNERS	census 3 (switched on): 0 spawner node(s) read, 0 template(s), 265 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	85f46721a0441f2a: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86d6d3c128c6f1b6: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8729267ed21bc763: cannot read the node
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000001587A8B9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 2)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000001587A8B9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 3)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER OFF] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	OFF (=):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: OFF
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER ON] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	ON (=)
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: ON
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2184575
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000001587A8B9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 4)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-SHOP	vendor	AE5CE1E22662E244	at	000001587A8B9620	-	only 0 vendor weapon(s) in the array at +0x48	(try 5)
+[script] [rando]	RANDO-NOTIFY	Randomizer: Ms. Zurkon could not be changed - she sells her usual weapons (some are also rewards in this seed); the seed's other shop weapons were given to you (see rivet.log)
+[script] [rando]	RANDO-SHOP	vendor AE5CE1E22662E244: search ended after 131 frames
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_GOING_DOWN ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2893844490 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_MALINON_INTRO_PARADE_VELDIN_FLOAT	hash 2893844490	on	nefarious_city
+[script] [rando]	RANDO-SPAWNERS	census 4 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 256 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	85f46721a0441f2a: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86d6d3c128c6f1b6: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8729267ed21bc763: cannot read the node
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PARADE_VELDIN_END ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=114 TotalBolts=114
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.		key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,		key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,	with Ctrl	key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,	with Ctrl	key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.	with Ctrl	key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	.	with Ctrl	key_test_travel
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,	with Ctrl	key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-KEY	,	with Ctrl	key_test_point
+[script] [rando]	RANDO-NOTIFY	Randomizer: test travel is off - set test_travel = true in 04_rando_settings.lua, then press Pause
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=2 TotalBolts=116
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Malinon
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=85.991134643555 MissionName=MIS_INTRO MissionSegmentId=E53E23BC03D2362798858DD41DEF1E25
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=85.991134643555 MissionName=MIS_RYNO_PLANS MissionSegmentId=E5CCB42319892AE9C0DE26C64FDE2290
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=ACFDC317975BA83038FD008BB4C291EF
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=1B9CD98A301A60664D88A2968DBC3244
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112589 Component=4208782
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4208720 ItemHandle=4208953
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112589 Component=4208720
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4208780 ItemHandle=4208954
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112589 Component=4208780
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4208720 ItemHandle=4208955
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4208780 ItemHandle=4208956
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4208720 ItemHandle=4208960
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112589 Component=4208734
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112589 Component=4208758
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112583 Component=4208725
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112585 Component=4208749
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=4200808
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=4203467
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=4200802
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=4200780
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112583 Component=4208724
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1112585 Component=4208748
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 5 (planet NefCity): 0 spawner node(s) read, 0 template(s), 115 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8d95ab8d6bcb6544: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90040122662db42c: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	9339970b08eb7574: cannot read the node
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120330 Component=4295873
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120330 Component=4295874
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120330 Component=4295875
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4295873 ItemHandle=4296023
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4295873 ItemHandle=4296024
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=4295873 ItemHandle=4296029
+[script] [rando]	RANDO-REAL	already in the game:	weapon:ryno_8	(equipped)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1010
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1011
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1012
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120330 Component=4295813
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120330 Component=4295814
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120324 Component=4295815
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120330 Component=4295816
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120324 Component=4295817
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120324 Component=4295818
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4295813 ItemHandle=4296212
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4295813 ItemHandle=4296213
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4295813 ItemHandle=4296214
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4295813 ItemHandle=4296215
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4295813 ItemHandle=4296216
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=4295813 ItemHandle=4296217
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120326 Component=4295837
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120326 Component=4295838
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120326 Component=4295839
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120326 Component=4295840
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120326 Component=4295841
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120326 Component=4295842
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120325 Component=4295825
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120325 Component=4295826
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120325 Component=4295827
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120325 Component=4295828
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120325 Component=4295829
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120325 Component=4295830
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120327 Component=4295849
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120327 Component=4295850
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120327 Component=4295851
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120327 Component=4295852
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120327 Component=4295853
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2120327 Component=4295854
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-REAL	already in the game:	weapon:burst_pistol	(equipped)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 6 (planet NefCity): 0 spawner node(s) read, 0 template(s), 170 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c0c7796d5e29b9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c67e882ee18f6d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f3501c85e82f290: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f63bc30fd5c07c3: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	93ee2e5d9cc022d9: cannot read the node
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=44211 TotalBolts=270427
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Galactic Ranger helmet	source:galactic_ranger_head
+[script] [rando]	location source:galactic_ranger_head (armor source of the Galactic Ranger helmet (found by polling))
+[script] [rando]	received Omega Shatterbomb
+[script] [rando]	received Omega Shatterbomb
+[script] [rando]	  Shatterbomb given first: Omega Shatterbomb needs the weapon
+[script] [rando]	RANDO-OMEGA	an Omega reward waits: the Omega flag's place is not known yet - buy one Omega at Ms. Zurkon (Challenge Mode) and it is learned, or set omega_flag_offset (docs/OMEGA.md)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Galactic Ranger helmet): Omega Shatterbomb - Shatterbomb added first (an Omega needs the weapon); recorded - set once the randomizer has found your game's Omega flag (docs/OMEGA.md)
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Robot Pirate helmet	source:pirate_head
+[script] [rando]	location source:pirate_head (armor source of the Robot Pirate helmet (found by polling))
+[script] [rando]	received 7500 bolts (source:pirate_head)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Robot Pirate helmet): 7500 Bolts
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Robot Pirate boots	source:pirate_legs
+[script] [rando]	location source:pirate_legs (armor source of the Robot Pirate boots (found by polling))
+[script] [rando]	received 190 raritanium (source:pirate_legs)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Robot Pirate boots): 190 Raritanium
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Q-Force helmet	source:qforce_armor_head
+[script] [rando]	location source:qforce_armor_head (armor source of the Q-Force helmet (found by polling))
+[script] [rando]	received 5750 bolts (source:qforce_armor_head)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Q-Force helmet): 5750 Bolts
+[script] [rando]	RANDO-REAL	sent	weapon:shatterbomb	configs/equipment/wpn_protogrenade_item.config	AC67940BC647D31D	via rando_give.dll	request 12	target hero	
+[script] [rando]	RANDO-ARMOR	intercepting 17 armor source(s)
+[script] [rando]	RANDO-REAL	weapon type	1013	is	weapon:shatterbomb
+[script] [rando]	RANDO-REAL	confirmed	weapon:shatterbomb	via	native	after	0	frames	
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Shatterbomb
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1013
+[script] [rando]	RANDO-REAL	currency sent:	7500	currency:bolts	(source:pirate_head)
+[script] [rando]	RANDO-NOTIFY	+7500 Bolts
+[script] [rando]	RANDO-REAL	currency sent:	190	currency:raritanium	(source:pirate_legs)
+[script] [rando]	RANDO-NOTIFY	+190 Raritanium
+[script] [rando]	RANDO-REAL	currency sent:	5750	currency:bolts	(source:qforce_armor_head)
+[script] [rando]	RANDO-NOTIFY	+5750 Bolts
+[script] [rando]	RANDO-REAL	weapon replay with	9	types new to this session - none taken as a late answer
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=13250 TotalBolts=283677
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER OFF] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	OFF (=):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: OFF
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER ON] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	ON (=)
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: ON
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_SORTING_01_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_SORTING_01_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=295306221 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_TRAINSTATION_SORTING_01_COMPLETE	hash 295306221	on	nefarious_city
+[script] [rando]	RANDO-SPAWNERS	census 7 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 155 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c0c7796d5e29b9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c67e882ee18f6d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f3501c85e82f290: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f63bc30fd5c07c3: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	93ee2e5d9cc022d9: cannot read the node
+[script] [rando]	RANDO-DISCOVER	BotDeathCompleteEvent	
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_SORTING_01_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_SORTING_02_START ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2347444000 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_TRAINSTATION_SORTING_02_START	hash 2347444000	on	nefarious_city
+[script] [rando]	RANDO-SPAWNERS	census 8 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 155 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c0c7796d5e29b9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c67e882ee18f6d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f3501c85e82f290: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f63bc30fd5c07c3: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	93ee2e5d9cc022d9: cannot read the node
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=4205689070 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_TRAINSTATION_SORTING_02_COMPLETE	hash 4205689070	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_SORTING_02_START ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_FREIGHT_NEARSIDE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3824517421 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_TRAINSTATION_FREIGHT_NEARSIDE	hash 3824517421	on	nefarious_city
+[script] [rando]	RANDO-SPAWNERS	census 9 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 170 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c0c7796d5e29b9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c67e882ee18f6d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f3501c85e82f290: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f63bc30fd5c07c3: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	93ee2e5d9cc022d9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	census 10 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 170 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c0c7796d5e29b9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c67e882ee18f6d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f3501c85e82f290: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f63bc30fd5c07c3: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	93ee2e5d9cc022d9: cannot read the node
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_FREIGHT_NEARSIDE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_FREIGHT_FARSIDE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1913704950 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_TRAINSTATION_FREIGHT_FARSIDE	hash 1913704950	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=109 TotalBolts=283786
+[script] [rando]	RANDO-SPAWNERS	census 11 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 170 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c0c7796d5e29b9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c67e882ee18f6d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f3501c85e82f290: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f63bc30fd5c07c3: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	93ee2e5d9cc022d9: cannot read the node
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=1678.1981201172 MissionName=MIS_BLIZAR MissionSegmentId=DD58A30C46B15D8994FF1548F98B3918
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=424.88134765625 MissionName=MIS_CORD_01_FIRST_VISIT MissionSegmentId=2BECDFD0DD492251D8E5DB2199DCE3DF
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=141.12342834473 MissionName=MIS_NEFCITY_01_TRAINSTATION MissionSegmentId=DFE149E5A6E9DAE594ECFEFF0B9AC494
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=6230.3818359375 MissionName=MIS_RYNO_PLANS MissionSegmentId=857631949EB0EEFAEA9138FA6D99EF0F
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=2614.052734375 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=7C8407BC5A8BD0498B8DA1F1DCC92EBE
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=1753.2286376953 MissionName=MIS_SARG_GEMQUEST MissionSegmentId=B8FC0C925604BA35BE235E054A69DBE5
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=1678.1981201172 MissionName=MIS_SAV_01_ENCOUNTERS MissionSegmentId=26ABF9A1A3350D08F60DEE8442B49AB0
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=424.88134765625 MissionName=MIS_SAV_01_POST_MISSION MissionSegmentId=42E3B1C7F76809C3CE2E2B1F1E9DE9F9
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=CDEF8F621C37064AC4DB84F741EBF3B7
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=12E91A2711116F026E6194749858E451
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132932 Component=4315471
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4314975 ItemHandle=4315670
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132932 Component=4314975
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4315469 ItemHandle=4315671
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132932 Component=4315469
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4314975 ItemHandle=4315672
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4315469 ItemHandle=4315673
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4314975 ItemHandle=4315677
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132932 Component=4314989
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132932 Component=4315013
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132926 Component=4314980
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132928 Component=4315004
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132926 Component=4314979
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2132928 Component=4315003
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 12 (planet NefCity): 0 spawner node(s) read, 0 template(s), 115 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c0c7796d5e29b9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	86c67e882ee18f6d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f3501c85e82f290: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8f63bc30fd5c07c3: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	93ee2e5d9cc022d9: cannot read the node
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=804.49493408203 MissionName=MIS_ZURK_ARENA_BRONZE_CUP MissionSegmentId=258D15C956FF2A0F81518E96625E5620
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionState=1 PreviousState=2
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=2 IsReplay=false MissionDuration=804.49493408203 MissionName=MIS_ZURK_ARENA_GOLD_CUP MissionSegmentId=41B8843B711D0B83E07EF4938A95A747
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2160894 Component=8409502
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2160894 Component=8409524
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2160894 Component=8409745
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410234
+[script] [rando]	RANDO-GADGET	box_breaker
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410235
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410236
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410237
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410238
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410239
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=8409502 ItemHandle=8410240
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410241
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410242
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410243
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=8409502 ItemHandle=8410245
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=8409502 ItemHandle=8410246
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3067984382 InventoryHandle=8409502 ItemHandle=8410250
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=8409502 ItemHandle=8410316
+[script] [rando]	RANDO-REAL	already in the game:	weapon:blackhole_storm	(equipped)
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1014
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1015
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1016
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1017
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1018
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1019
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1020
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1021
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1022
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1023
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1024
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2160894 Component=8408682
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2160894 Component=8408683
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=8408682 ItemHandle=8411633
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=8408682 ItemHandle=8411634
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3741994936 InventoryHandle=8408682 ItemHandle=8411635
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=8408682 ItemHandle=8411636
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=8408682 ItemHandle=8411637
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=8408682 ItemHandle=8411638
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-REAL	already in the game:	weapon:volcanic_eruptor	(equipped)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Carbonox Advanced helmet	source:carbonox_armor_head
+[script] [rando]	location source:carbonox_armor_head (armor source of the Carbonox Advanced helmet (found by polling))
+[script] [rando]	received Lombax Praetorian boots
+[script] [rando]	RANDO-NOTIFY	Armor pod (Carbonox Advanced helmet): Lombax Praetorian boots - adding it to your armor
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Carbonox Advanced boots	source:carbonox_armor_legs
+[script] [rando]	location source:carbonox_armor_legs (armor source of the Carbonox Advanced boots (found by polling))
+[script] [rando]	received Omega Headhunter
+[script] [rando]	received Omega Headhunter
+[script] [rando]	  Headhunter given first: Omega Headhunter needs the weapon
+[script] [rando]	RANDO-NOTIFY	Armor pod (Carbonox Advanced boots): Omega Headhunter - Headhunter added first (an Omega needs the weapon); recorded - set once the randomizer has found your game's Omega flag (docs/OMEGA.md)
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Carbonox Advanced chest	source:carbonox_armor_torso
+[script] [rando]	location source:carbonox_armor_torso (armor source of the Carbonox Advanced chest (found by polling))
+[script] [rando]	received Captain Starshield helmet
+[script] [rando]	RANDO-NOTIFY	Armor pod (Carbonox Advanced chest): Captain Starshield helmet - adding it to your armor
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Galactic Ranger chest	source:galactic_ranger_torso
+[script] [rando]	location source:galactic_ranger_torso (armor source of the Galactic Ranger chest (found by polling))
+[script] [rando]	received 180 raritanium (source:galactic_ranger_torso)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Galactic Ranger chest): 180 Raritanium
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Q-Force chest	source:qforce_armor_torso
+[script] [rando]	location source:qforce_armor_torso (armor source of the Q-Force chest (found by polling))
+[script] [rando]	received 3750 bolts (source:qforce_armor_torso)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Q-Force chest): 3750 Bolts
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Captain Starshield boots	source:starshield_armor_legs
+[script] [rando]	location source:starshield_armor_legs (armor source of the Captain Starshield boots (found by polling))
+[script] [rando]	received 3250 bolts (source:starshield_armor_legs)
+[script] [rando]	RANDO-NOTIFY	Armor pod (Captain Starshield boots): 3250 Bolts
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	Captain Starshield chest	source:starshield_armor_torso
+[script] [rando]	location source:starshield_armor_torso (armor source of the Captain Starshield chest (found by polling))
+[script] [rando]	received Omega Mr. Fungi
+[script] [rando]	received Omega Mr. Fungi
+[script] [rando]	  Mr. Fungi given first: Omega Mr. Fungi needs the weapon
+[script] [rando]	RANDO-NOTIFY	Armor pod (Captain Starshield chest): Omega Mr. Fungi - Mr. Fungi added first (an Omega needs the weapon); recorded - set once the randomizer has found your game's Omega flag (docs/OMEGA.md)
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	War Machine boots	source:warmachine_armor_legs
+[script] [rando]	location source:warmachine_armor_legs (armor source of the War Machine boots (found by polling))
+[script] [rando]	received 3750 bolts (source:warmachine_armor_legs)
+[script] [rando]	RANDO-NOTIFY	Armor pod (War Machine boots): 3750 Bolts
+[script] [rando]	RANDO-ARMOR	new piece without an intercepted source:	War Machine chest	source:warmachine_armor_torso
+[script] [rando]	location source:warmachine_armor_torso (armor source of the War Machine chest (found by polling))
+[script] [rando]	received 3750 bolts (source:warmachine_armor_torso)
+[script] [rando]	RANDO-NOTIFY	Armor pod (War Machine chest): 3750 Bolts
+[script] [rando]	RANDO-REAL	sent	armor:lombax_armor_legs	configs/hero/vanity/vanitybundles/lombax_armor/hero_vanity_bundle_legs_lombax_armor.config	9E4EAAF5C6CC8F98	via rando_give.dll (armor)	request 16
+[script] [rando]	RANDO-ARMOR	intercepting 8 armor source(s)
+[script] [rando]	RANDO-REAL	already in the game:	armor:lombax_armor_legs	(the game's armor code said no: owned)
+[script] [rando]	RANDO-NOTIFY	Lombax Praetorian boots: you have this armor piece already
+[script] [rando]	RANDO-REAL	sent	armor:starshield_armor_head	configs/hero/vanity/vanitybundles/starshield_armor/hero_vanity_bundle_head_starshield_armor.config	A080A54E2B9F5FCB	via rando_give.dll (armor)	request 17
+[script] [rando]	RANDO-REAL	already in the game:	armor:starshield_armor_head	(the game's armor code said no: owned)
+[script] [rando]	RANDO-NOTIFY	Captain Starshield helmet: you have this armor piece already
+[script] [rando]	RANDO-REAL	sent	weapon:headhunter	configs/equipment/wpn_fossilizer_item.config	864AF50640390CBF	via rando_give.dll	request 18	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:headhunter
+[script] [rando]	RANDO-SPAWNERS	census 13 (planet NefCity): 0 spawner node(s) read, 0 template(s), 322 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	8d95ab8d6bcb6544: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90040122662db42c: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	9339970b08eb7574: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	975e30eb1a90d93e: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	987a26c712b2e886: cannot read the node
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=84021 TotalBolts=534012
+[script] [rando]	RANDO-REAL	direct delivery: no answer for	weapon:headhunter	with target hero (it worked before) - trying again shortly
+[script] [rando]	RANDO-REAL	sent	weapon:mr_fungi	configs/equipment/wpn_mrfunguy_item.config	8D632A5622511F00	via rando_give.dll	request 19	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:mr_fungi
+[script] [rando]	RANDO-REAL	interrupted by a level change:	weapon:mr_fungi
+[script] [rando]	RANDO-REAL	weapon replay with	11	types new to this session - none taken as a late answer
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409373
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409374
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409375
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409376
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409377
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409378
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=6409219 ItemHandle=6409379
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409380
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409381
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2861803654 InventoryHandle=6409219 ItemHandle=6409382
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=6409219 ItemHandle=6409384
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=6409219 ItemHandle=6409385
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3067984382 InventoryHandle=6409219 ItemHandle=6409409
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-REAL	sent	weapon:mr_fungi	configs/equipment/wpn_mrfunguy_item.config	8D632A5622511F00	via rando_give.dll	request 20	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:mr_fungi
+[script] [rando]	RANDO-SPAWNERS	census 14 (planet NefCity): 0 spawner node(s) read, 0 template(s), 322 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	819e0b9236532cdc: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	83d030878f2a4b93: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	864f72924ce88d07: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	881761abb99f5da9: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	893c2728b4afcc74: cannot read the node
+[script] [rando]	RANDO-REAL	direct delivery: no answer for	weapon:mr_fungi	with target hero (it worked before) - trying again shortly
+[script] [rando]	RANDO-REAL	currency sent:	180	currency:raritanium	(source:galactic_ranger_torso)
+[script] [rando]	RANDO-NOTIFY	+180 Raritanium
+[script] [rando]	RANDO-REAL	currency sent:	3750	currency:bolts	(source:qforce_armor_torso)
+[script] [rando]	RANDO-NOTIFY	+3750 Bolts
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1176643395 Loaded=false
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_BAZAAR_WEAPON_VENDOR	hash 1176643395	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1176643395 Loaded=true
+[script] [rando]	RANDO-REAL	currency sent:	3250	currency:bolts	(source:starshield_armor_legs)
+[script] [rando]	RANDO-NOTIFY	+3250 Bolts
+[script] [rando]	RANDO-REAL	sent	weapon:headhunter	configs/equipment/wpn_fossilizer_item.config	864AF50640390CBF	via rando_give.dll	request 24	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:headhunter
+[script] [rando]	RANDO-REAL	no confirmation yet for	weapon:headhunter	(direct) - will retry
+[script] [rando]	RANDO-REAL	sent	weapon:headhunter	configs/equipment/wpn_fossilizer_item.config	864AF50640390CBF	via rando_give.dll	request 25	target hero	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:headhunter
+[script] [rando]	RANDO-SPAWNERS	census 15 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 326 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	84eb2b5b66cab2b5: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	b7b18f253188d18d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	bf7c2da75a52328c: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	f4b38d721c126411: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	819e0b9236532cdc: cannot read the node
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=7003 TotalBolts=541015
+[script] [rando]	RANDO-REAL	direct delivery: still no answer for	weapon:headhunter	- trying again on the next planet
+[script] [rando]	RANDO-NOTIFY	Headhunter: the game has not answered yet - trying again on the next planet
+[script] [rando]	RANDO-REAL	direct delivery: 2 different items got no answer - checking the target again
+[script] [rando]	RANDO-REAL	currency sent:	3750	currency:bolts	(source:warmachine_armor_legs)
+[script] [rando]	RANDO-NOTIFY	+3750 Bolts
+[script] [rando]	RANDO-REAL	currency sent:	3750	currency:bolts	(source:warmachine_armor_torso)
+[script] [rando]	RANDO-NOTIFY	+3750 Bolts
+[script] [rando]	RANDO-REAL	sent	weapon:mr_fungi	configs/equipment/wpn_mrfunguy_item.config	8D632A5622511F00	via rando_give.dll	request 28	target group 1	
+[script] [rando]	RANDO-REAL	direct delivery: message sent to	1	actor(s) for	weapon:mr_fungi
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=7500 TotalBolts=548515
+[script] [rando]	RANDO-REAL	direct delivery: no reaction from the game for	weapon:mr_fungi	with target group 1
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=2239.2761230469 MissionName=MIS_ARD_POST_MISSION MissionSegmentId=91B06927572E814F14272B5776BDE03B
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=7048.083984375 MissionName=MIS_CORD_01_FIRST_VISIT MissionSegmentId=D903D44B687B98B01533BCD1F83F664D
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=49.304958343506 MissionName=MIS_MEGA_FINALE MissionSegmentId=13E360041D5CB05CDA0406144DE5A505
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=3807.8884277344 MissionName=MIS_MOL_01_POST_MISSION MissionSegmentId=69AE5067411C3F5D4F6BED3DDB9CD7C9
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=13124.584960938 MissionName=MIS_RYNO_PLANS MissionSegmentId=6EDCBA79871D6C0EC5424D9050D2D491
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=9779.20703125 MissionName=MIS_SARG_01_POST_MISSION MissionSegmentId=446240611A872246E02FAFCF847514D0
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=9128.5908203125 MissionName=MIS_SARG_GEMQUEST MissionSegmentId=89207EAD5950D17329543C205E64990E
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=9115.0478515625 MissionName=MIS_SAV_01_ENCOUNTERS MissionSegmentId=6081EB34FEA98C46E2238E84835837B1
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=7048.083984375 MissionName=MIS_SAV_01_POST_MISSION MissionSegmentId=1C289575949EA3DB80CC96CF6EF9AE6C
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=0DC03F7234EFAC236F1D1C25ABF8B3A0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=3DB6AF2BC4F225B3CECA523437AB39E3
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-REAL	sent	weapon:mr_fungi	configs/equipment/wpn_mrfunguy_item.config	8D632A5622511F00	via rando_give.dll	request 29	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1001	is	weapon:mr_fungi
+[script] [rando]	RANDO-REAL	direct delivery: target hero works - kept for next time
+[script] [rando]	RANDO-REAL	confirmed	weapon:mr_fungi	via	native	after	0	frames	
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Mr. Fungi
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-REAL	sent	weapon:headhunter	configs/equipment/wpn_fossilizer_item.config	864AF50640390CBF	via rando_give.dll	request 30	target hero	
+[script] [rando]	RANDO-REAL	weapon type	1002	is	weapon:headhunter
+[script] [rando]	RANDO-REAL	confirmed	weapon:headhunter	via	native	after	0	frames	
+[script] [rando]	RANDO-NOTIFY	Added to your inventory: Headhunter
+[script] [rando]	RANDO-SPAWNERS	census 16 (planet NefCity): 0 spawner node(s) read, 0 template(s), 115 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8d95ab8d6bcb6544: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90040122662db42c: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	9339970b08eb7574: cannot read the node
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 17 (planet NefCity): 0 spawner node(s) read, 0 template(s), 170 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	8d95ab8d6bcb6544: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90040122662db42c: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	9339970b08eb7574: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	975e30eb1a90d93e: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	987a26c712b2e886: cannot read the node
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=57587 TotalBolts=341390
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=300 TotalBolts=341690
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_FREIGHT_FARSIDE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_RETURN ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=398658303 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_TRAINSTATION_RETURN	hash 398658303	on	nefarious_city
+[script] [rando]	RANDO-SPAWNERS	census 18 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 170 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	8d95ab8d6bcb6544: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90040122662db42c: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	9339970b08eb7574: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	975e30eb1a90d93e: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	987a26c712b2e886: cannot read the node
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_RETURN ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_COMPLETE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=4015739765 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_NEFCITY_TRAINSTATION_COMPLETE	hash 4015739765	on	nefarious_city
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=110 TotalBolts=341800
+[script] [rando]	RANDO-SPAWNERS	census 19 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 170 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	8d95ab8d6bcb6544: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90040122662db42c: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	9339970b08eb7574: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	975e30eb1a90d93e: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	987a26c712b2e886: cannot read the node
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE OFF] (0)
+[script] [rando]	RANDO-HUB	hub at rest:	planet shuffle off
+[script] [rando]	RANDO-HUB	planet shuffle OFF (0): the game's own travel, levels and stories are left alone
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle OFF - travel and levels are the game's own (items stay randomized)
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION ObjectiveName=OBJ_NEFCITY_TRAINSTATION_COMPLETE ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_NEFCITY_01_TRAINSTATION MissionState=4 PreviousState=2
+[script] [rando]	location planet:nefarious_city (story mission MIS_NEFCITY_01_TRAINSTATION)
+[script] [rando]	received Galactic Ranger boots
+[script] [rando]	RANDO-NOTIFY	Randomizer: Galactic Ranger boots - adding it to your armor
+[script] [rando]	location story2:corson_v (the story moved on to nefarious_city)
+[script] [rando]	received 1750 bolts (story2:corson_v)
+[script] [rando]	RANDO-NOTIFY	Randomizer: 1750 Bolts
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=0 IsReplay=false MissionDuration=182.28294372559 MissionName=MIS_NEFCITY_01_TRAINSTATION MissionSegmentId=DFE149E5A6E9DAE594ECFEFF0B9AC494
+[script] [rando]	RANDO-KEY	0		key_shuffle
+[script] [rando]	[PLANET SHUFFLE ON] (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON (0)
+[script] [rando]	RANDO-HUB	planet shuffle ON outside the parade: the hub starts with the next New Game
+[script] [rando]	RANDO-NOTIFY	Randomizer: planet shuffle ON
+[script] [rando]	RANDO-REAL	sent	armor:galactic_ranger_legs	configs/hero/vanity/vanitybundles/galactic ranger/hero_vanity_bundle_legs_galactic_ranger.config	84302A735518B94C	via rando_give.dll (armor)	request 31
+[script] [rando]	RANDO-REAL	confirmed	armor:galactic_ranger_legs	(armor) after	1	frames
+[script] [rando]	RANDO-NOTIFY	Added to your armor: Galactic Ranger boots
+[script] [rando]	RANDO-REAL	currency sent:	1750	currency:bolts	(story2:corson_v)
+[script] [rando]	RANDO-NOTIFY	+1750 Bolts
+[script] [rando]	RANDO-SPAWNERS	census 20 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 140 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	f4b38d721c126411: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8d95ab8d6bcb6544: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90040122662db42c: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	9339970b08eb7574: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	975e30eb1a90d93e: cannot read the node
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=1750 TotalBolts=343550
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER ON] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	ON (-)
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: ON
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER OFF] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	OFF (=):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: OFF
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER ON] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	ON (=)
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: ON
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER ON] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	ON (BACKSPACE)
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: ON
+[script] [rando]	RANDO-CHAOS	ON (BACKSPACE) - Enemy Randomizer ON, Boss Randomizer ON (paused while Chaos is ON)
+[script] [rando]	RANDO-DISCOVER	PlanetMenuAcceptEvent	DestinationCheckpointName=CHK_SARG_GELFACTORY_LANDINGPAD InterplanetaryCheckpointName=CHK_TRANSITION_TO_SARG
+[script] [rando]	RANDO-TRAVEL	planet menu:	CHK_SARG_GELFACTORY_LANDINGPAD	->	sargasso	from	nefarious_city
+[script] [rando]	RANDO-HUB	planet menu:	CHK_SARG_GELFACTORY_LANDINGPAD	->	sargasso
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Sargasso OldPlanetName=NefCity
+[script] [rando]	RANDO-PLANET	Sargasso	sargasso	rewards locked
+[script] [rando]	RANDO-NOTIFY	Sargasso: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3358770726 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_TRANSITION_TO_SARG	hash 3358770726	on	sargasso
+[script] [rando]	RANDO-SPAWNERS	census 21 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 2 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: cannot read the node
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=1368004068 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_SARG_GELFACTORY_LANDINGPAD	hash 1368004068	on	sargasso
+[script] [rando]	RANDO-SPAWNERS	census 22 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 241 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	80d9b9a4fc22ee18: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	831f691d70217a7a: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90b8f6cd15786bc7: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	962272b38ce94c2d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	981ba24c60acc70e: cannot read the node
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3328294118 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_SARG_GEMQUEST_AFTER_GELATONIUM	hash 3328294118	on	sargasso
+[script] [rando]	RANDO-SPAWNERS	census 23 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 241 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	80d9b9a4fc22ee18: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	831f691d70217a7a: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90b8f6cd15786bc7: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	962272b38ce94c2d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	981ba24c60acc70e: cannot read the node
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2298239015 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_SARG_GEMQUEST_AFTER_BEETLE_BRIDGEGLIDE	hash 2298239015	on	sargasso
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=6 TotalBolts=343556
+[script] [rando]	RANDO-SPAWNERS	RANDO-ERROR census:	scripts\16_rando_spawners.lua:542: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SPAWNERS	census 25 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 241 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	80d9b9a4fc22ee18: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	831f691d70217a7a: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90b8f6cd15786bc7: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	962272b38ce94c2d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	981ba24c60acc70e: cannot read the node
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=121 TotalBolts=343677
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=6 TotalBolts=343683
+[script] [rando]	RANDO-SPAWNERS	RANDO-ERROR census:	scripts\16_rando_spawners.lua:437: ran past the 8 ms frame budget
+[script] [rando]	RANDO-SPAWNERS	census 27 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 241 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	80d9b9a4fc22ee18: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	831f691d70217a7a: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	90b8f6cd15786bc7: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	962272b38ce94c2d: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	981ba24c60acc70e: cannot read the node
+[script] [rando]	RANDO-DISCOVER	PlanetMenuAcceptEvent	DestinationCheckpointName=CHK_CORD_A_START InterplanetaryCheckpointName=CHK_TRANSITION_TO_KEDARO
+[script] [rando]	RANDO-TRAVEL	planet menu:	CHK_CORD_A_START	->	cordelion	from	sargasso
+[script] [rando]	RANDO-HUB	planet menu:	CHK_CORD_A_START	->	cordelion
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Cordelion OldPlanetName=Sargasso
+[script] [rando]	RANDO-PLANET	Cordelion	cordelion	rewards locked
+[script] [rando]	RANDO-NOTIFY	Cordelion: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=3033341315 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_TRANSITION_TO_KEDARO	hash 3033341315	on	cordelion
+[script] [rando]	RANDO-SPAWNERS	census 28 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 2 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: cannot read the node
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2571950514 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_CORD_A_START	hash 2571950514	on	cordelion
+[script] [rando]	RANDO-SPAWNERS	census 29 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 104 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	88a413409a2d7484: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ac44532fcec60c2: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ad0cf101e63a553: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8e265e7afcfa67d2: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ee845d228a1e87e: cannot read the node
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=Cordelion
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=Cordelion
+[script] [rando]	RANDO-PLANET	Cordelion	cordelion	rewards locked
+[script] [rando]	RANDO-NOTIFY	Cordelion: mission rewards here wait for its Coordinates (Gold Bolts pay at once)
+[script] [rando]	RANDO-OMEGA	inventory not found:	the hero has no component ItemInventory / ItemInventoryPrius / GridInventory / GridInventoryPrius
+[script] [rando]	RANDO-SPAWNERS	census 30 (planet Cordelion): 0 spawner node(s) read, 0 template(s), 104 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	88a413409a2d7484: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ac44532fcec60c2: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ad0cf101e63a553: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8e265e7afcfa67d2: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ee845d228a1e87e: cannot read the node
+[script] [rando]	RANDO-KEY	-		key_enemies
+[script] [rando]	[ENEMY RANDOMIZER OFF] (-)
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	OFF (-):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Enemy Randomizer: OFF
+[script] [rando]	RANDO-KEY	=		key_bosses
+[script] [rando]	[BOSS RANDOMIZER OFF] (=)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	OFF (=):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	Boss Randomizer: OFF
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER OFF] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	OFF (BACKSPACE):	0	spawner slot(s) put back to their original enemies
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: OFF
+[script] [rando]	RANDO-CHAOS	OFF (BACKSPACE) - Enemy Randomizer OFF, Boss Randomizer OFF (resume)
+[script] [rando]	RANDO-KEY	BACKSPACE		key_chaos
+[script] [rando]	[CHAOS RANDOMIZER ON] (BACKSPACE)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	ON (BACKSPACE)
+[script] [rando]	RANDO-NOTIFY	CHAOS RANDOMIZER: ON
+[script] [rando]	RANDO-CHAOS	ON (BACKSPACE) - Enemy Randomizer OFF, Boss Randomizer OFF (paused while Chaos is ON)
+[script] [rando]	RANDO-SPAWNERS	census 31 (switched on): 0 spawner node(s) read, 0 template(s), 104 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	88a413409a2d7484: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ac44532fcec60c2: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ad0cf101e63a553: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8e265e7afcfa67d2: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	8ee845d228a1e87e: cannot read the node
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=859 TotalBolts=344542
+[script] [rando]	RANDO-DISCOVER	CheckpointTriggeredEvent	CheckpointHash=2874629401 Loaded=true
+[script] [rando]	RANDO-TRAVEL	RANDO-CHECKPOINT	CHK_CORD_B_PHASED	hash 2874629401	on	cordelion
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_CORD_01_FIRST_VISIT ObjectiveName=OBJ_CORD_LANDED ObjectiveState=2
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_CORD_01_FIRST_VISIT ObjectiveName=OBJ_CORD_PHASED ObjectiveState=1
+[script] [rando]	RANDO-SPAWNERS	census 32 (checkpoint loaded): 0 spawner node(s) read, 0 template(s), 103 skipped
+[script] [rando]	RANDO-SPAWNERS	  skipped	89eee369dd840f8b: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	b955d4c3b78ce311: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	c06969d07e274c37: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	a74767e9d45e5361: cannot read the node
+[script] [rando]	RANDO-SPAWNERS	  skipped	d4f89629ddc51e5d: cannot read the node
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=44 TotalBolts=344586
