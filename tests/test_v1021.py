@@ -6,7 +6,8 @@ THREE KINDS OF TEST, kept apart:
   * RoundThirtyOneLogTests: facts read from the real game log (no simulator).
   * RealPlugBlockTests: rivet_hook's ScriptPlugs layout checked against the REAL plug-block bytes the log
     dumped, cross-checked with what rivet.script_node said about the same node in the same log.
-  * SpawnProofSimulatorTests: dev(spawnproof).lua's logic in the SIMULATOR. The memory there (a
+  * SpawnProofSimulatorTests: dev(spawnproof).lua's logic in the SIMULATOR (since dev 10.22 they run v2's
+    Template route; the wording checks follow v2). The memory there (a
     SceneManager, script variables, nodes, spawns) is SYNTHETIC, laid out as rivet_hook's headers say. These
     tests show the code does what it says; they prove nothing about the game.
 Nothing in this file is in-game verification.
@@ -220,13 +221,13 @@ class SpawnProofSimulatorTests(unittest.TestCase):
         g = self.game()
         scan = [l for l in self.lines(g) if "\tscan 1 on scarstu" in l]
         self.assertTrue(scan, self.lines(g))
-        self.assertIn("4 node(s) (4 new); 4 with a Template variable (4 holding one actor, 0 shared), 4 with LastSpawn", scan[0])
+        self.assertIn("4 node(s) (4 new): 4 Template, 0 Factories, 0 neither; slots holding one actor 4, groups 0, shared 0; 4 with LastSpawn", scan[0])   # v2 wording (dev 10.22)
 
     def test_one_replacement_is_armed_verified_and_put_back(self):
         g = self.game()
         self.spawn(g, 11, 7001, "characters\\enemy\\grunt.actor", ["SceneObject", "GameBotShooter"])   # node A
         self.spawn(g, 12, 7002, "characters\\enemy\\flyer.actor", ["SceneObject", "GameBotMeleeFlier"])  # node B
-        armed = [l for l in self.lines(g) if "\tARMED node" in l]
+        armed = [l for l in self.lines(g) if "\tARMED " in l]
         self.assertEqual(len(armed), 1, self.lines(g)[-6:])
         self.assertIn("grunt.actor", armed[0].split("->")[0])
         self.assertIn("flyer.actor", armed[0].split("->")[1])
@@ -237,7 +238,7 @@ class SpawnProofSimulatorTests(unittest.TestCase):
         self.assertTrue(any("VERIFY node" in l and "REPLACEMENT SPAWNED" in l for l in self.lines(g)), self.lines(g)[-4:])
         g.fire("SpawnerStoppedEvent", SpawnerComponentHandle=0x214002)
         g.step(5)
-        self.assertTrue(any("put back (its Spawner stopped)" in l and ": OK" in l for l in self.lines(g)))
+        self.assertTrue(any("put back (its Spawner stopped)" in l and "variable OK" in l for l in self.lines(g)))
         self.assertEqual(g.lua.eval("PF.var_actors(3)"), 9001)
         self.assertEqual(g.lua.eval("PF.var_uid(3)") & 0xFFFFFFFFFFFFFFFF, 0x8000000000000000 | 9001)
         self.assertEqual(len(g.lua.eval("PF.writes")), 4)                          # 2 to arm, 2 to put back
@@ -265,7 +266,7 @@ class SpawnProofSimulatorTests(unittest.TestCase):
         g.fire("CheckpointTriggeredEvent", CheckpointHash=1, Loaded=True)
         g.step(5)
         self.assertEqual(len(g.lua.eval("PF.writes")), 2)
-        self.assertTrue(any("put back: skipped" in l for l in self.lines(g)))
+        self.assertTrue(any("variable skipped" in l for l in self.lines(g)))
 
     def test_it_is_a_developer_file(self):
         self.assertNotIn("dev(spawnproof).lua", [p.name for p in script_files(release=True)])

@@ -1,5 +1,10 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.22 (kit 10.0.16):** still no enemy randomized in the game. The dev 10.21 log showed why v1 never
+acted: the Battleplex's enemy nodes have no "Template" variable, they spawn through a "Factories" variable
+(a SunsetSpawnerFactory node). `dev(spawnproof).lua` v2 learns and swaps Factories as well as Templates, ties
+spawns through the Spawner component's slot list too, and survives the frame budget. `docs/TESTING.md` 2-dev9.
+
 **Dev 10.21 (kit 10.0.16):** still no enemy randomized in the game. The last log showed spawner nodes take
 their template from a script variable ("Template"); `dev(spawnproof).lua` with the developer
 `rando_give.dll` v7 (`rando_give_source/dev_build/`) makes ONE controlled replacement on Zurkon to prove it.

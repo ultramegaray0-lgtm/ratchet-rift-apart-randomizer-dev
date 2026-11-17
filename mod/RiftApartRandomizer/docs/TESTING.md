@@ -34,6 +34,24 @@ The older suites pin the settings they were written for (`tests/harness.py`, CLA
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
 
+## 2-dev9. Dev 10.22 (kit 10.0.16): Factories replacements (Zurkon)
+
+Build: commit of dev 10.22 on main. Files: the kit's whole `scripts` folder with `dev(spawnproof).lua` v2, but
+**without** `dev(spawnprobe).lua` (delete it from <game>\scripts: it costs frame budget and v2 logs what is
+needed), AND `rando_give_source/dev_build/rando_give.dll` (v7) over the game folder's rando_give.dll.
+1. Load your save, go to Zurkon (Zurkie's Battleplex). Play ONE multi-wave challenge of ordinary enemies to the
+   end (A1 is fine). The file learns from the first waves and arms nodes of later waves.
+2. If a later wave brings an enemy type that does not belong there, that is the replacement. Finish the
+   challenge (that it completes is part of the test). A second challenge in the same session is welcome.
+3. Quit normally and send rivet.log.
+Expected `RANDO-SPAWNPROOF` lines: `v2 loaded`; `scan N on scarstu: ... X Template, Y Factories ...`;
+`spawn H (SpawnFactory F, ...): node U via LastSpawn|Spawner slot; slot factory = F; spawned ...`;
+`factory F: classes ...; node variables ...`; `learned: ...`; then `ARMED k/4 node ... read back OK; ...`,
+`VERIFY node ...: REPLACEMENT SPAWNED` (or ORIGINAL / SOMETHING ELSE), `put back (...)`, `level summary`.
+What each answer means: REPLACEMENT SPAWNED = the mechanism for Enemy / Boss / Chaos is proven; ORIGINAL
+SPAWNED = the node does not read the variable/copy at spawn time (the factory's own variables, logged, are the
+next place); no `ARMED` = read `learned:` and `level summary` (fewer than 2 factories with enemies, or MIXED).
+
 ## 2-dev8. Dev 10.21 (kit 10.0.16): ONE controlled enemy replacement (Zurkon)
 
 Build: commit of dev 10.21 on main. Files: the kit's whole `scripts` folder (dev(spawnproof).lua and

@@ -2,6 +2,22 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.22 (kit 10.0.16, rando_give.dll v7 developer build; not released): the Factories variable
+
+Asked: "tried 2 battles, 1 normal enemies, 1 boss. Nothing randomized. Solve." (rivet.log of 2026-11-17 with
+dev 10.21, tests/data/round32_rivet.log). Seeds unchanged. **Still nothing randomized in the game**; nothing of
+10.22 has run there.
+
+- Found in the log: v1 never armed because the arena's enemy nodes have no "Template" variable; their only
+  variable is "Factories" (838143302, a SunsetSpawnerFactory node), cached in their Spawner component at +0x48.
+  All 104 Template nodes on Zurkon spawned rift portals. v1's jobs also died on the 8 ms frame budget, and it
+  logged only the first 12 spawns of a level.
+- dev(spawnproof).lua v2: Template AND Factories slots; spawns tied by LastSpawn or by the Spawner's slot list
+  (+0x9C count, +0xDC 12-byte entries, checked on real bytes); up to 4 swaps a session (2 at a time), only on
+  nodes not yet seen spawning; the Spawner's cached copy written too when the node is already active; budget
+  errors retried; per-level summary; factories described with their own variables.
+- Banner dev 10.22. Tests: tests/test_v1022.py (20); test_v1021's simulator tests follow v2's wording.
+
 ## Dev 10.21 (kit 10.0.16, generator 10.11.0, rando_give.dll v7 developer build; not released): the Template variable
 
 Asked: make the Enemy / Boss / Chaos Randomizers work, starting with one proven replacement (rivet.log of

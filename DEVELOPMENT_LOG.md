@@ -4,6 +4,44 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.22 (kit 10.0.16, rando_give.dll v7 developer build): the Factories variable
+
+- Asked: "tried 2 battles, 1 normal enemies, 1 boss. Nothing randomized. Solve. Even if it was an exe or dll."
+  Log: tests/data/round32_rivet.log (dev 10.21; NefCity, Zurkon arena challenges A1 and A2 replayed and
+  completed, NefCity; Chaos ON from the save; game path replaced).
+- CONFIRMED (real game): v7 helper found the SceneManager (signature matched 1x); spawnproof v1 scanned 185-197
+  nodes on Zurkon (106 with a Template variable, 124-126 with LastSpawn) and tied spawns through LastSpawn. It
+  NEVER armed: "0 regular-enemy template(s) learned" every time.
+- WHY (real bytes): every Template-variable spawn on Zurkon was a rift portal (anomaly_portal_*) or a prop. The
+  enemy spawns came from nodes WITHOUT a Template variable ("Template variable none"): their variable is
+  838143302 = rivet.hash("Factories") (the DDL's SpawnerPrius FactoryGroup), one actor in the
+  1087129..1087143 range - the same range as the SpawnFactory field's SunsetSpawnerFactoryScriptAction actors.
+  The Spawner component agrees on 9 dumped nodes: +0x48 = factory, +0x50 = template, +0x58 = location (factory
+  nodes: +0x50 = +0x58 = 0; portal nodes: +0x48 = 0 and +0x50 / +0x58 = their Template / Location variables);
+  +0x9C = count and +0xDC = slots of 12 bytes { spawned handle, location handle, f32 time } (node 9620735f's
+  slot = 1097158 = v1's LastSpawn tie; cd8dc00e's slot = its LastSpawn variable 1105863).
+- ALSO: v1's jobs died on "ran past the 8 ms frame budget" 13 times (lines 101/133/244/272/400, outside a
+  pcall: the job ended and its spawns were lost), and v1 logged only the first 12 spawns per level (pub bots and
+  portals), so the challenges themselves left no spawn lines.
+- DDL (neptuwunium/rivet docs/ddl/rcra_ddl.json): SunsetSpawnerFactoryPrius has NumForcedHealthDrops,
+  BotSetupData (intro / wander flags) and SetupControllerData - no template field. So where a Factories node's
+  enemy template lives is NOT known; v2 tests the cheapest hypothesis (the factory decides what spawns) and
+  describes each factory's own script-node variables for the next step.
+- dev(spawnproof).lua v2: slot = Template variable, else Factories variable; spawns tied by LastSpawn, then by
+  the Spawner slot list; learns per slot value what spawned (MIXED if a value spawned two kinds: never used);
+  arms nodes not yet seen spawning (up to 4 a session, 2 at a time), same kind and role (enemy / boss) only;
+  writes the variable (uid +0x00, actors +0x10, checked and read back) and the Spawner's cached copy if it
+  already holds the old value; VERIFY on the node's next spawn; put back on the Spawner's stop or a level
+  change. Every unit of work is guarded against budget errors (yield and retry); a job killed outside a
+  guard restarts (twice). Logs: 40 enemy / boss spawns per level, 6 others, 12 factory descriptions, a level
+  summary. Banner dev 10.22 (R.RELEASE); kit files otherwise unchanged (10.0.16).
+- NOT DONE: a native (rando_give.dll / exe) spawn hook. Finding the engine's spawn function needs the exe's code
+  (Dump-GameCode around the Spawner vtable 7FF7A20F83E8 or the SpawnerSpawnEvent sender); not available here.
+- Tests: tests/test_v1022.py (20): 6 on the real log, 4 on the real Spawner bytes, 10 in the simulator (a
+  real-style budget hook that raises inside the coroutine and clears itself). test_v1021's simulator tests
+  follow v2's wording.
+- Verified in the game: nothing of 10.22. Enemy / Boss / Chaos still change nothing. Next: TESTING.md 2-dev9.
+
 ## 2026-11-17: dev 10.21 (kit 10.0.16, rando_give.dll v7 developer build): the Template variable
 
 - Asked: make Enemy / Boss / Chaos actually work; one controlled in-game replacement first. Log:

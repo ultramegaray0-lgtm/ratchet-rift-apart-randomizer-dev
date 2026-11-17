@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.21 (build 10.0.16) - test run 2026-11-17 11:18 UTC
+Rift Apart Randomizer dev 10.22 (build 10.0.16) - test run 2026-11-17 21:06 UTC
 Python 3.13.18 on Linux
-ran 609, failures 0, errors 0, skipped 23
+ran 629, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -534,6 +534,26 @@ test_nothing_is_written_off_zurkon (tests.test_v1021.SpawnProofSimulatorTests.te
 test_one_replacement_is_armed_verified_and_put_back (tests.test_v1021.SpawnProofSimulatorTests.test_one_replacement_is_armed_verified_and_put_back) ... ok
 test_scan_counts_template_variables (tests.test_v1021.SpawnProofSimulatorTests.test_scan_counts_template_variables) ... ok
 test_the_original_spawning_is_reported (tests.test_v1021.SpawnProofSimulatorTests.test_the_original_spawning_is_reported) ... ok
+test_factory_nodes_cache_the_factory_at_0x48 (tests.test_v1022.RealSpawnerBytesTests.test_factory_nodes_cache_the_factory_at_0x48) ... ok
+test_template_nodes_cache_template_and_location (tests.test_v1022.RealSpawnerBytesTests.test_template_nodes_cache_template_and_location) ... ok
+test_the_slot_list_agrees_with_v1s_lastspawn_tie (tests.test_v1022.RealSpawnerBytesTests.test_the_slot_list_agrees_with_v1s_lastspawn_tie) ... ok
+test_v2_reads_the_real_bytes_the_same_way (tests.test_v1022.RealSpawnerBytesTests.test_v2_reads_the_real_bytes_the_same_way) ... ok
+test_every_template_variable_spawn_was_a_portal_or_prop (tests.test_v1022.RoundThirtyTwoLogTests.test_every_template_variable_spawn_was_a_portal_or_prop) ... ok
+test_the_challenges_ran (tests.test_v1022.RoundThirtyTwoLogTests.test_the_challenges_ran) ... ok
+test_the_enemy_nodes_hold_a_factories_variable (tests.test_v1022.RoundThirtyTwoLogTests.test_the_enemy_nodes_hold_a_factories_variable) ... ok
+test_the_game_path_was_replaced (tests.test_v1022.RoundThirtyTwoLogTests.test_the_game_path_was_replaced) ... ok
+test_v1_jobs_died_on_the_frame_budget (tests.test_v1022.RoundThirtyTwoLogTests.test_v1_jobs_died_on_the_frame_budget) ... ok
+test_v1_was_loaded_and_never_armed (tests.test_v1022.RoundThirtyTwoLogTests.test_v1_was_loaded_and_never_armed) ... ok
+test_a_budget_error_does_not_end_the_job (tests.test_v1022.SpawnProofTwoSimulatorTests.test_a_budget_error_does_not_end_the_job) ... ok
+test_a_factory_replacement_is_armed_verified_and_put_back (tests.test_v1022.SpawnProofTwoSimulatorTests.test_a_factory_replacement_is_armed_verified_and_put_back) ... ok
+test_a_factory_that_spawned_two_kinds_is_never_used (tests.test_v1022.SpawnProofTwoSimulatorTests.test_a_factory_that_spawned_two_kinds_is_never_used) ... ok
+test_a_reloaded_variable_is_never_written (tests.test_v1022.SpawnProofTwoSimulatorTests.test_a_reloaded_variable_is_never_written) ... ok
+test_an_activated_spawner_copy_is_written_and_put_back (tests.test_v1022.SpawnProofTwoSimulatorTests.test_an_activated_spawner_copy_is_written_and_put_back) ... ok
+test_it_is_a_developer_file (tests.test_v1022.SpawnProofTwoSimulatorTests.test_it_is_a_developer_file) ... ok
+test_nothing_is_written_off_zurkon (tests.test_v1022.SpawnProofTwoSimulatorTests.test_nothing_is_written_off_zurkon) ... ok
+test_scan_sees_factories_nodes (tests.test_v1022.SpawnProofTwoSimulatorTests.test_scan_sees_factories_nodes) ... ok
+test_spawns_are_tied_by_the_spawner_slots_without_lastspawn (tests.test_v1022.SpawnProofTwoSimulatorTests.test_spawns_are_tied_by_the_spawner_slots_without_lastspawn) ... ok
+test_the_original_spawning_is_reported (tests.test_v1022.SpawnProofTwoSimulatorTests.test_the_original_spawning_is_reported) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -633,6 +653,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 609 tests in 198.186s
+Ran 629 tests in 155.737s
 
 OK (skipped=23)

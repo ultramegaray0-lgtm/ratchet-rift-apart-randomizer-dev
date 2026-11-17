@@ -4,6 +4,14 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0n. Since dev 10.22 (kit 10.0.16): still NO enemy is randomized in the game
+
+- NOT FIXED. Your dev 10.21 log (tests/data/round32_rivet.log): dev(spawnproof) v1 never armed ("0
+  regular-enemy template(s) learned" every time). REASON (real bytes): the arena's enemy nodes have no Template
+  variable; they spawn through a "Factories" variable (a SunsetSpawnerFactory node), cached at Spawner +0x48.
+  All Template nodes on Zurkon spawned rift portals. v1 also lost work to the 8 ms frame budget.
+- dev(spawnproof) v2 swaps Factories (and Templates); TESTING.md 2-dev9. Unproven in the game.
+
 ## 0m. Since dev 10.21 (kit 10.0.16): still NO enemy is randomized in the game
 
 - NOT FIXED. No in-game replacement has happened yet; 0l still holds.

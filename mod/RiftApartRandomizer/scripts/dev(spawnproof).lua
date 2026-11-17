@@ -1,53 +1,61 @@
--- DEVELOPER TOOL - not part of a release. SPAWN PROOF v1 (dev 10.21): ONE controlled enemy replacement,
+-- DEVELOPER TOOL - not part of a release. SPAWN PROOF v2 (dev 10.22): controlled enemy replacements on Zurkon,
 -- to prove (or disprove) in your game the mechanism the Enemy / Boss / Chaos Randomizers will use.
 --
--- WHAT YOUR DEV 10.20 LOG SHOWED (tests/data/round31_rivet.log), real game:
---   * A SpawnerScriptAction node keeps no Prius (ComponentInfo: prius type set, ddlPriusData 0 on both the
---     node and its Spawner component) - every Templates-list route since 10.12 looked in the wrong place.
---   * rivet.script_node lists the node's VARIABLE PLUGS: "Template" (1835115251, actors), "Location"
---     (2761897147, actors), "MaxAlive" (161848772, float 1.0), "NumSpawns" (1830449615, float 1.0) and
---     "LastSpawn" (406637480, actors); output "OnSpawned" (2046202852). The names are the engine hash
---     (rivet.hash: reflected CRC-32, start 0xEDB88320) of these words - checked below at load.
---   So the template a node spawns is (at least for the nodes probed) a SCRIPT VARIABLE of type actors,
---   and the node reports each spawn in its "LastSpawn" variable. That is the lead this file tests.
+-- WHY v1 NEVER ARMED (your dev 10.21 log, tests/data/round32_rivet.log, real game):
+--   * v1 learned a template only from a node's "Template" variable. The Battleplex nodes that spawn ENEMIES have
+--     none: their one variable is "Factories" (838143302 = rivet.hash "Factories", the DDL's SpawnerPrius
+--     FactoryGroup), holding a SunsetSpawnerFactory node (handles 1087129..1087143 on Zurkon; the SpawnerSpawnEvent
+--     SpawnFactory field names the same kind of actor). Their Spawner component says the same: +0x48 = the factory
+--     handle, +0x50 (template) and +0x58 (location) = 0. The 104 nodes that do have a Template variable spawned
+--     only rift portals (anomaly_portal_*). So "0 regular-enemy template(s) learned" in every scan.
+--   * v1's jobs died on "ran past the 8 ms frame budget" (lines 101/133/272/400) during the fight: a budget error
+--     outside a pcall ended the job and lost the spawns it was matching.
+--   * v1 logged its first 12 spawns per level (the pub's bots and portals) and nothing of the challenges.
 --
--- WHAT IT DOES (only on Zurkon, at most ONE node per session, only in memory, never saved):
---   1. Every 2 s it lists the level's SpawnerScriptAction nodes and reads each new node's variable plugs
---      (node +0x58 -> ScriptPlugs: varPlugs +0x08, varCount +0x1A; entries { u32 plug, u16 index,
---      u16 generation }: rivet_hook src/game/script.hpp).
---   2. The variables themselves are in the SceneManager's script variable array (+0x75A0, 0x40 bytes each:
---      actorUid +0x00, actors +0x10, type +0x34, generation +0x36: rivet_hook scene_manager.hpp,
---      script.hpp). The SceneManager's address comes from rando_give.dll v7, which finds it with
---      rivet_hook's own signature (exactly one match, as rivet_hook requires). No address is guessed.
---   3. Spawns are tied to their node by the node's LastSpawn variable (it holds the spawned actor). What
---      a template is (a regular enemy, a flyer, a friendly NPC ...) is learned from what it really spawned.
---   4. ARM: one node that has not spawned yet (LastSpawn empty), whose Template variable holds one actor,
---      is not shared with another node, and whose template has spawned a regular enemy here. Its
---      replacement: another template that has spawned a regular enemy of ANOTHER actor asset here.
---      The variable is checked (generation, type, value) right before the write and read back after it.
---   5. VERIFY: the node's next spawn is compared with the requested template (actor asset name and
---      bot class). The log says REPLACEMENT SPAWNED, ORIGINAL SPAWNED or something else.
---   6. PUT BACK when the node's Spawner stops (SpawnerStoppedEvent with its +0x60 handle), only if the
---      variable still holds what was written (a level load drops the record without writing).
+-- WHAT v2 DOES (only on Zurkon, only in memory, never saved, at most MAX_SWAPS per session):
+--   1. Lists the level's SpawnerScriptAction nodes; reads each node's variable plugs (node +0x58 -> ScriptPlugs) and
+--      its Spawner component (handle == node +0x60). A node's SLOT is its Template variable ("template") or, when it
+--      has none, its Factories variable ("factory").
+--   2. Ties every spawn to its node by the node's LastSpawn variable OR by the Spawner's slot list (+0x9C count,
+--      +0xDC entries of 12 bytes { spawned handle, location handle, time }: real bytes of 9 nodes in your log).
+--      A spawn with a SpawnFactory and no node is still learned for that factory.
+--   3. Learns per slot value what it really spawned (actor name, bot family, role) and logs the first 40
+--      enemy / boss spawns of each level in full, with each new factory's own variables (rivet.script_node).
+--   4. ARM: a node whose slot holds ONE actor (not a group), whose variable no other node shares, whose value was
+--      learned to spawn an enemy (or a boss), gets another learned value of the SAME kind and role that spawned
+--      another actor. Written: the variable (uid +0x00, actors
+--      +0x10; generation, type and value checked right before, read back after) and, if it holds the old value,
+--      the Spawner's cached copy (+0x48 factory, +0x50 template). Only nodes not seen spawning on this level.
+--   5. VERIFY on that node's next spawn: REPLACEMENT SPAWNED / ORIGINAL SPAWNED / SOMETHING ELSE.
+--   6. PUT BACK when the node's Spawner stops, or on a level change (only what still holds what was written).
+--   Every unit of work is guarded: a frame-budget error yields and retries on the next frame instead of ending it.
 -- Every line starts with "RANDO-SPAWNPROOF". Remove this file and nothing of it runs.
 RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.16"   -- the kit check (10_rando_runtime.lua)
 RANDO_SPAWNPROOF = RANDO_SPAWNPROOF or {}
 local P = RANDO_SPAWNPROOF
-P.version = 1
+P.version = 2
 P.frame = P.frame or 0
 P.ENABLED = true
 P.PLANET = "scarstu"            -- Zurkon (Zurkie's Battleplex): replayable fights, nothing of the story
 P.SCAN_EVERY = 120              -- frames between two listings of the level's nodes
 P.NODE_LIMIT = 512
-P.MAX_SWAPS = 1                 -- per session
+P.MAX_SWAPS = 4                 -- per session
+P.MAX_ACTIVE = 2                -- armed at the same time
 P.HELPER_MIN = 7                -- rando_give.dll v7 publishes the SceneManager
-P.MB_SCENE, P.MB_SCENE_SIGS = 0x128, 0x130
-P.SCENE_VARS, P.SCENE_VAR_MAX = 0x75A0, 0x75BC
+P.MB_SCENE = 0x128
+P.SCENE_VARS = 0x75A0
 P.VAR_SIZE = 0x40
 P.VAR_TYPE_ACTORS = 5
 P.GROUP_BIT = 0x80000000
-P.SLICE = 0.002
-P.LEARN_LOG = 12                -- learned spawns written to rivet.log per level
+P.SLICE = 0.0015
+P.LEARN_LOG = 40                -- enemy / boss spawns logged in full per level
+P.OTHER_LOG = 6                 -- other spawns (portals, props, NPCs) logged per level
+P.FACTORY_LOG = 12              -- factories described per level
+P.ROLES = { enemy = true, boss = true }
+-- the Spawner component (432 bytes), measured on 9 nodes of your dev 10.21 log
+P.SP_READ_AT, P.SP_READ_LEN = 0x40, 0x160
+P.SP_FACTORY, P.SP_TEMPLATE, P.SP_LOCATION = 0x48, 0x50, 0x58
+P.SP_COUNT, P.SP_SLOTS, P.SP_STRIDE, P.SP_SLOT_MAX = 0x9C, 0xDC, 12, 15
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-SPAWNPROOF", ...) end
 P.log = log
@@ -65,9 +73,15 @@ function P.hash(text)
   for k = 1, #text do c = (c >> 8) ~ CRC[(text:byte(k) ~ c) & 0xFF] end
   return c
 end
-P.PLUG_TEMPLATE = P.hash("Template")      -- 1835115251 in your log
+P.PLUG_TEMPLATE = P.hash("Template")      -- 1835115251
 P.PLUG_LASTSPAWN = P.hash("LastSpawn")    -- 406637480
 P.PLUG_LOCATION = P.hash("Location")      -- 2761897147
+P.PLUG_FACTORIES = P.hash("Factories")    -- 838143302 (your dev 10.21 log: the arena's enemy nodes)
+P.PLUG_NAMES = {}
+for _, n in ipairs({ "Template", "LastSpawn", "Location", "Factories", "MaxAlive", "NumSpawns", "OnSpawned", "OnAllSpawned" }) do
+  P.PLUG_NAMES[P.hash(n)] = n
+end
+local function plug_name(h) return P.PLUG_NAMES[h] or tostring(h) end
 
 -- ---- bytes ---------------------------------------------------------------------------------------
 local function bytes_of(text)
@@ -104,8 +118,25 @@ local function read(addr, len)
 end
 P.read = read
 
+-- one unit of work: a frame-budget error yields (the job goes on next frame) and retries, up to 3 times
+local function guard(fn, ...)
+  for _ = 1, 3 do
+    local res = table.pack(pcall(fn, ...))
+    if res[1] then return table.unpack(res, 2, res.n) end
+    local err = tostring(res[2])
+    if not err:find("frame budget", 1, true) then error(err, 0) end
+    P.budget_hits = (P.budget_hits or 0) + 1
+    if coroutine.isyieldable() then coroutine.yield() else return nil end
+  end
+  return nil
+end
+P.guard = guard
+local function pace(t0)
+  if clock() - t0 > P.SLICE and coroutine.isyieldable() then coroutine.yield(); return clock() end
+  return t0
+end
+
 -- ---- the SceneManager and its script variables ------------------------------------------------------
--- nil and why, or the variable array { base, max }
 function P.scene()
   local rr = RANDO_REAL
   local n = rr and rr.native
@@ -124,7 +155,7 @@ function P.scene()
   return { scene = scene, base = base, max = max, sigs = sigs }
 end
 
--- one variable: nil and why, or { addr, uid, actors, type, gen } (checked against the plug's generation)
+-- one variable: nil and why, or { addr, uid, actors, type, gen, single } (checked against the plug's generation)
 function P.var(sc, idx, gen)
   if not (sc and idx and gen) or gen == 0 or idx >= sc.max then return nil, "no such variable" end
   local addr = sc.base + idx * P.VAR_SIZE
@@ -132,10 +163,11 @@ function P.var(sc, idx, gen)
   if not b then return nil, "unreadable" end
   local v = { addr = addr, uid = hex64(b, 1), actors = u32(b, 0x11), type = u16(b, 0x35), gen = u16(b, 0x37) }
   if v.gen ~= gen then return nil, string.format("generation %s, the plug says %s", tostring(v.gen), tostring(gen)) end
+  v.single = v.type == P.VAR_TYPE_ACTORS and v.actors ~= 0 and (v.actors & P.GROUP_BIT) == 0
   return v
 end
 
--- a node's variable plugs: { [plug] = { idx, gen } }, its Spawner handle (+0x60), or nil and why
+-- a node's variable plugs: { spawner (+0x60), uid, vars = { [plug] = { idx, gen } }, order = { plug... } }
 function P.plugs_of(addr)
   local nb = read(addr, 0x80)
   if not nb then return nil, "node unreadable" end
@@ -144,19 +176,34 @@ function P.plugs_of(addr)
   local hb = read(plugs, 0x28)
   if not hb then return nil, "plug block unreadable" end
   local var_ptr, n = ptr64(hb, 9), hb[0x1B]
-  local out = { spawner = u32(nb, 0x61), uid = hex64(nb, 0x49), vars = {}, nvars = n or 0 }
+  local out = { spawner = u32(nb, 0x61), uid = hex64(nb, 0x49), vars = {}, order = {}, nvars = n or 0 }
   if not n or n == 0 then return out end
   if not (var_ptr and var_ptr > 0x10000) or n > 32 then return nil, "variable plugs unreadable" end
   local vb = read(var_ptr, n * 8)
   if not vb then return nil, "variable plugs unreadable" end
   for k = 0, n - 1 do
-    out.vars[u32(vb, k * 8 + 1)] = { idx = u16(vb, k * 8 + 5), gen = u16(vb, k * 8 + 7) }
+    local plug = u32(vb, k * 8 + 1)
+    out.vars[plug] = { idx = u16(vb, k * 8 + 5), gen = u16(vb, k * 8 + 7) }
+    out.order[#out.order + 1] = plug
   end
   return out
 end
 
+-- the Spawner component's cached factory / template / location and its spawn slots
+function P.spawner_state(saddr)
+  local b = saddr and read(saddr + P.SP_READ_AT, P.SP_READ_LEN)
+  if not b then return nil end
+  local at = function(off) return u32(b, off - P.SP_READ_AT + 1) end
+  local st = { factory = at(P.SP_FACTORY), template = at(P.SP_TEMPLATE), location = at(P.SP_LOCATION), count = at(P.SP_COUNT), slots = {} }
+  local n = math.min(st.count or 0, P.SP_SLOT_MAX)
+  for i = 0, n - 1 do
+    local h = at(P.SP_SLOTS + i * P.SP_STRIDE)
+    if h and h ~= 0 then st.slots[#st.slots + 1] = { spawned = h, location = at(P.SP_SLOTS + i * P.SP_STRIDE + 4) } end
+  end
+  return st
+end
+
 -- ---- actors --------------------------------------------------------------------------------------
--- { name, family, role, template } of an actor handle (one rivet.components call; rivet.name)
 function P.actor(h)
   if not h or h == 0 then return nil end
   local a = { handle = h }
@@ -171,25 +218,62 @@ function P.actor(h)
 end
 local function who(a)
   if not a then return "none" end
-  return string.format("%s (handle %s uid %s, %s/%s)", tostring(a.name), tostring(a.handle), tostring(a.uid), tostring(a.family), tostring(a.class))
+  return string.format("%s (handle %s, %s/%s)", tostring(a.name), tostring(a.handle), tostring(a.family), tostring(a.class))
 end
 P.who = who
+local function norm_uid(u)
+  if type(u) ~= "string" or not u:match("^%x+$") or #u > 16 then return nil end
+  return string.rep("0", 16 - #u) .. u:upper()
+end
+
+-- a factory actor, said once per level: its classes and its own node's variables (rivet.script_node)
+function P.describe_factory(lvl, fac)
+  if not fac or fac == 0 or lvl.described[fac] then return end
+  lvl.described[fac] = true
+  if lvl.ndescribed >= P.FACTORY_LOG then return end
+  lvl.ndescribed = lvl.ndescribed + 1
+  local okl, names = pcall(rivet.components, fac)
+  local classes = (okl and type(names) == "table") and table.concat(names, ",", 1, math.min(#names, 6)) or "?"
+  local vars = {}
+  for _, cls in ipairs({ "SunsetSpawnerFactoryScriptAction", "SpawnerFactoryScriptAction" }) do
+    local okc, c = pcall(rivet.component, fac, cls)
+    if okc and type(c) == "table" and c.handle and rivet.script_node then
+      local okn, t = pcall(rivet.script_node, c.handle, false)
+      if okn and type(t) == "table" then
+        for _, v in ipairs(type(t.vars) == "table" and t.vars or {}) do
+          local val = v.value
+          if type(val) == "table" then
+            local hs = {}
+            for i = 1, math.min(4, #val) do hs[i] = tostring(val[i]) end
+            val = string.format("{%s}%s", table.concat(hs, ","), val.group and " group" or "")
+          end
+          vars[#vars + 1] = tostring(v.plug_name or plug_name(v.plug or 0)) .. ":" .. tostring(v.type) .. "=" .. tostring(val)
+          if #vars >= 8 then break end
+        end
+        vars[#vars + 1] = "outputs " .. tostring(#(t.outputs or {}))
+      end
+      break
+    end
+  end
+  log(string.format("factory %s: classes %s; node variables %s", tostring(fac), classes, #vars > 0 and table.concat(vars, ", ") or "-"))
+end
 
 -- ---- the level --------------------------------------------------------------------------------------
-P.lvl = P.lvl or nil
 P.swaps = P.swaps or 0
+P.armed = P.armed or {}
 P.spawn_queue = {}
 
 function P.reset(why)
-  local A = P.armed
-  if A and not A.restored then
-    -- written only if the variable still holds exactly what was written (generation checked): after a
-    -- real reload it does not, and nothing is written
-    P.put_back("level changed: " .. tostring(why))
-    if not A.verified then P.swaps = math.max(0, P.swaps - 1) end
+  for _, A in ipairs(P.armed) do
+    if not A.restored then
+      P.put_back(A, "level changed: " .. tostring(why))
+      if not A.verified then P.swaps = math.max(0, P.swaps - 1) end
+    end
   end
-  P.armed = nil
-  P.lvl = { nodes = {}, order = {}, scans = 0, learned = {}, logged = 0, why = why }
+  if P.lvl and P.lvl.scans > 0 then P.summary() end
+  P.armed = {}
+  P.lvl = { nodes = {}, order = {}, scans = 0, learned = { template = {}, factory = {} }, logged = 0, other = 0,
+            described = {}, ndescribed = 0, stopped = {}, why = why, untied = 0, ties = 0 }
   P.spawn_queue = {}
   P.next_scan = P.frame + P.SCAN_EVERY
 end
@@ -199,7 +283,25 @@ local function planet()
   return s and s.current_planet
 end
 
--- list the level's nodes and read the new ones' plugs (inside the job: yields between slices)
+-- one new node: plugs, Spawner, slot
+function P.read_node(node)
+  local okc, c = pcall(rivet.component, node.actor, "SpawnerScriptAction")
+  local addr = okc and type(c) == "table" and c.handle == node.component and c.address and tonumber(c.address, 16)
+  local pl = addr and P.plugs_of(addr)
+  local rec = { component = node.component, actor = node.actor, uid = node.uid, addr = addr, plugs = pl }
+  if pl then
+    rec.spawner, rec.last = pl.spawner, pl.vars[P.PLUG_LASTSPAWN]
+    if pl.vars[P.PLUG_TEMPLATE] then
+      rec.slot = { kind = "template", var = pl.vars[P.PLUG_TEMPLATE], plug = P.PLUG_TEMPLATE, cache = P.SP_TEMPLATE }
+    elseif pl.vars[P.PLUG_FACTORIES] then
+      rec.slot = { kind = "factory", var = pl.vars[P.PLUG_FACTORIES], plug = P.PLUG_FACTORIES, cache = P.SP_FACTORY }
+    end
+    local oks, s = pcall(rivet.component, node.actor, "Spawner")
+    if oks and type(s) == "table" and s.handle == pl.spawner and s.address then rec.saddr = tonumber(s.address, 16) end
+  end
+  return rec
+end
+
 function P.scan()
   local lvl = P.lvl
   if not lvl then return end
@@ -212,197 +314,325 @@ function P.scan()
     P.scene_logged = true
     log(string.format("SceneManager %X (signature matched %s x), script variables at %X, max %d", sc.scene, tostring(sc.sigs), sc.base, sc.max))
   end
-  local ok, list = pcall(rivet.script_nodes, "SpawnerScriptAction", P.NODE_LIMIT)
-  if not ok or type(list) ~= "table" then return end
+  local list = guard(function()
+    local ok, l = pcall(rivet.script_nodes, "SpawnerScriptAction", P.NODE_LIMIT)
+    if ok and type(l) == "table" then return l end
+    if not ok then error(l, 0) end
+  end)
+  if type(list) ~= "table" then return end
   lvl.scans = lvl.scans + 1
   local new, t0 = 0, clock()
   for _, node in ipairs(list) do
     if node.component and not lvl.nodes[node.component] then
-      local okc, c = pcall(rivet.component, node.actor, "SpawnerScriptAction")
-      local addr = okc and type(c) == "table" and c.handle == node.component and c.address and tonumber(c.address, 16)
-      local pl = addr and P.plugs_of(addr)
-      local rec = { component = node.component, actor = node.actor, uid = node.uid, addr = addr, plugs = pl }
-      if pl then rec.tpl, rec.last, rec.spawner = pl.vars[P.PLUG_TEMPLATE], pl.vars[P.PLUG_LASTSPAWN], pl.spawner end
-      lvl.nodes[node.component] = rec
-      lvl.order[#lvl.order + 1] = node.component
-      new = new + 1
-      if clock() - t0 > P.SLICE and coroutine.isyieldable() then coroutine.yield(); t0 = clock() end
+      local rec = guard(P.read_node, node)
+      if rec then
+        lvl.nodes[node.component] = rec
+        lvl.order[#lvl.order + 1] = node.component
+        new = new + 1
+      end
+      t0 = pace(t0)
     end
   end
   if new > 0 then
-    local tpl, single, last, shared, users = 0, 0, 0, 0, {}
+    local users, kinds = {}, { template = 0, factory = 0, none = 0 }
     for _, k in ipairs(lvl.order) do
       local r = lvl.nodes[k]
-      if r.tpl then tpl = tpl + 1; users[r.tpl.idx] = (users[r.tpl.idx] or 0) + 1 end
+      if r.slot then users[r.slot.var.idx] = (users[r.slot.var.idx] or 0) + 1 end
+    end
+    local single, groups, shared, last, sp = 0, 0, 0, 0, 0
+    for _, k in ipairs(lvl.order) do
+      local r = lvl.nodes[k]
+      kinds[r.slot and r.slot.kind or "none"] = kinds[r.slot and r.slot.kind or "none"] + 1
       if r.last then last = last + 1 end
-    end
-    for _, k in ipairs(lvl.order) do
-      local r = lvl.nodes[k]
-      if r.tpl then
-        r.shared = users[r.tpl.idx] > 1
+      if r.saddr then sp = sp + 1 end
+      if r.slot then
+        r.shared = users[r.slot.var.idx] > 1
         if r.shared then shared = shared + 1 end
-        local v = P.var(sc, r.tpl.idx, r.tpl.gen)
-        r.tvar = v
-        if v and v.type == P.VAR_TYPE_ACTORS and v.actors ~= 0 and (v.actors & P.GROUP_BIT) == 0 then single = single + 1 end
+        local v = guard(P.var, sc, r.slot.var.idx, r.slot.var.gen)
+        if v and v.single then single = single + 1 elseif v and v.actors ~= 0 then groups = groups + 1 end
       end
+      t0 = pace(t0)
     end
-    log(string.format("scan %d on %s: %d node(s) (%d new); %d with a Template variable (%d holding one actor, %d shared), %d with LastSpawn",
-        lvl.scans, tostring(planet()), #lvl.order, new, tpl, single, shared, last))
+    log(string.format("scan %d on %s: %d node(s) (%d new): %d Template, %d Factories, %d neither; slots holding one actor %d, groups %d, shared %d; %d with LastSpawn, %d Spawner(s) read",
+        lvl.scans, tostring(planet()), #lvl.order, new, kinds.template, kinds.factory, kinds.none, single, groups, shared, last, sp))
   end
 end
 
--- spawns: which node's LastSpawn holds each of them; learn what that node's template is. One pass over the
--- nodes for every batch of spawns (a node's LastSpawn holds only its latest spawn), sliced over frames.
-function P.learn(handles)
+-- the node that made each spawn: its LastSpawn variable (one 64-byte read a node) first; the Spawner's slot list
+-- (one read of its component) only for spawns still not found
+function P.tie(sc, wanted)
+  local lvl, found, t0 = P.lvl, {}, clock()
+  local left = 0
+  for _ in pairs(wanted) do left = left + 1 end
+  for pass = 1, 2 do
+    for _, k in ipairs(lvl.order) do
+      if left == 0 then return found end
+      local r = lvl.nodes[k]
+      guard(function()
+        if pass == 1 and r.last then
+          local lv = P.var(sc, r.last.idx, r.last.gen)
+          if lv and lv.actors and wanted[lv.actors] and not found[lv.actors] then found[lv.actors] = { rec = r, via = "LastSpawn" }; left = left - 1 end
+        elseif pass == 2 and r.saddr then
+          local st = P.spawner_state(r.saddr)
+          r.state = st
+          for _, s in ipairs(st and st.slots or {}) do
+            if wanted[s.spawned] and not found[s.spawned] then found[s.spawned] = { rec = r, via = "Spawner slot" }; left = left - 1 end
+          end
+        end
+      end)
+      t0 = pace(t0)
+    end
+  end
+  return found
+end
+
+function P.learn(batch)
   local lvl = P.lvl
   local sc = P.scene()
   if not (lvl and sc) then return end
-  local want = {}
-  for _, h in ipairs(handles) do want[h] = true end
+  local wanted = {}
+  for _, e in ipairs(batch) do wanted[e.h] = e end
+  local found = P.tie(sc, wanted)
   local t0 = clock()
-  for _, k in ipairs(lvl.order) do
-    local r = lvl.nodes[k]
-    if r.last then
-      local lv = P.var(sc, r.last.idx, r.last.gen)
-      local h = lv and lv.actors
-      if h and want[h] then
-        want[h] = nil
-        r.spawned = (r.spawned or 0) + 1
-        local a = P.actor(h)
-        local tv = r.tpl and P.var(sc, r.tpl.idx, r.tpl.gen)
-        local mine = P.armed and P.armed.rec == r          -- its variable holds what this file wrote: not a lesson
-        if tv and tv.actors ~= 0 and (tv.actors & P.GROUP_BIT) == 0 and a and not mine then
-          local t = lvl.learned[tv.actors] or { handle = tv.actors, uid = tv.uid }
-          t.name, t.family, t.role, t.class = a.name, a.family, a.role, a.class
-          lvl.learned[tv.actors] = t
-        end
-        if lvl.logged < P.LEARN_LOG then
-          lvl.logged = lvl.logged + 1
-          log(string.format("spawn %s is node %s's (its LastSpawn); Template variable %s = %s; spawned %s",
-              tostring(h), tostring(r.uid), r.tpl and tostring(r.tpl.idx) or "none", tv and (tostring(tv.actors) .. " uid " .. tostring(tv.uid)) or "-", who(a)))
-        end
-        if P.armed and P.armed.rec == r and not P.armed.done then P.verify(a) end
+  for _, e in ipairs(batch) do
+    guard(function()
+      local a = P.actor(e.h)
+      local t = found[e.h]
+      local r = t and t.rec
+      local interesting = a and P.ROLES[a.role or ""]
+      local kind, value, v
+      if r and r.slot then
+        v = P.var(sc, r.slot.var.idx, r.slot.var.gen)
+        kind = r.slot.kind
+        if kind == "factory" and e.fac and e.fac ~= 0 then value = e.fac          -- the factory the game used
+        elseif v and v.single then value = v.actors
+        elseif r.state then value = r.state[kind] end                             -- the Spawner's cached copy
+      elseif e.fac and e.fac ~= 0 then
+        kind, value = "factory", e.fac
       end
-    end
-    if clock() - t0 > P.SLICE and coroutine.isyieldable() then coroutine.yield(); t0 = clock() end
+      if r then lvl.ties = lvl.ties + 1; r.spawned = (r.spawned or 0) + 1 else lvl.untied = lvl.untied + 1 end
+      local mine = r and P.armed_of(r)
+      if kind and value and value ~= 0 and a and a.name and not mine then
+        local L = lvl.learned[kind]
+        local x = L[value] or { handle = value, kind = kind, count = 0 }
+        if v and v.single and v.actors == value then x.uid = v.uid end
+        if not x.uid and kind == "factory" then local oku, u = pcall(rivet.uid, value); x.uid = oku and norm_uid(u) or nil end
+        if x.name and x.name ~= a.name then x.mixed = true end          -- spawned more than one kind: never used
+        x.name, x.family, x.role, x.class = a.name, a.family, a.role, a.class
+        x.count = x.count + 1
+        L[value] = x
+      end
+      if kind == "factory" then P.describe_factory(lvl, value) end
+      local say = (interesting and lvl.logged < P.LEARN_LOG) or (not interesting and lvl.other < P.OTHER_LOG)
+      if mine then say = true end
+      if say then
+        if interesting then lvl.logged = lvl.logged + 1 else lvl.other = lvl.other + 1 end
+        log(string.format("spawn %s (SpawnFactory %s, location %s): %s; slot %s = %s%s; spawned %s",
+            tostring(e.h), tostring(e.fac), tostring(e.loc),
+            r and string.format("node %s via %s", tostring(r.uid), t.via) or "no node",
+            kind or "none", tostring(value), v and (v.single and "" or string.format(" (variable %08X)", v.actors or 0)) or "",
+            who(a)))
+      end
+      if mine and not mine.verified then P.verify(mine, a, e) end
+    end)
+    t0 = pace(t0)
   end
-  local missed = 0
-  for _ in pairs(want) do missed = missed + 1 end
-  lvl.unmatched = (lvl.unmatched or 0) + missed
+end
+
+function P.armed_of(r)
+  for _, A in ipairs(P.armed) do if A.rec == r and not A.restored then return A end end
+  return nil
 end
 
 -- ---- arm, verify, put back ------------------------------------------------------------------------------
 function P.try_arm()
   local lvl = P.lvl
-  if not (P.ENABLED and lvl) or P.armed or P.swaps >= P.MAX_SWAPS or planet() ~= P.PLANET then return end
+  if not (P.ENABLED and lvl) or P.swaps >= P.MAX_SWAPS or planet() ~= P.PLANET then return end
+  local active = 0
+  for _, A in ipairs(P.armed) do if not A.restored then active = active + 1 end end
+  if active >= P.MAX_ACTIVE then return end
   local sc = P.scene()
   if not sc then return end
-  -- replacements: templates seen spawning a regular enemy on this level
-  local enemies = {}
-  for _, t in pairs(lvl.learned) do if t.role == "enemy" then enemies[#enemies + 1] = t end end
-  local why = string.format("%d regular-enemy template(s) learned on this level (2 of different assets needed)", #enemies)
-  if why ~= lvl.waiting_said then lvl.waiting_said = why; log("not armed yet: " .. why) end
-  if #enemies < 2 then return end
-  table.sort(enemies, function(a, b) return tostring(a.uid) < tostring(b.uid) end)
+  local pool = { template = {}, factory = {} }
+  local counts = {}
+  for kind, L in pairs(lvl.learned) do
+    for _, x in pairs(L) do
+      if P.ROLES[x.role or ""] and not x.mixed then
+        pool[kind][#pool[kind] + 1] = x
+        counts[#counts + 1] = kind .. " " .. tostring(x.handle) .. "=" .. tostring(x.name):match("([^\\]+)$")
+      end
+    end
+    table.sort(pool[kind], function(a, b) return a.handle < b.handle end)
+  end
+  local why = string.format("%d template(s), %d factory(ies) learned spawning an enemy or boss on this level%s",
+      #pool.template, #pool.factory, #counts > 0 and (" (" .. table.concat(counts, ", ", 1, math.min(#counts, 8)) .. ")") or "")
+  if why ~= lvl.waiting_said then lvl.waiting_said = why; log("learned: " .. why) end
+  if #pool.template < 2 and #pool.factory < 2 then return end
+  local best
+  local t0 = clock()
   for _, k in ipairs(lvl.order) do
     local r = lvl.nodes[k]
-    if r.tpl and r.last and not r.shared and not r.spawned and r.spawner then
-      local tv = P.var(sc, r.tpl.idx, r.tpl.gen)
-      local lv = P.var(sc, r.last.idx, r.last.gen)
-      local orig = tv and lvl.learned[tv.actors]
-      if tv and lv and lv.actors == 0 and tv.type == P.VAR_TYPE_ACTORS and (tv.actors & P.GROUP_BIT) == 0 and orig and orig.role == "enemy" then
-        for _, rep in ipairs(enemies) do
-          if rep.handle ~= tv.actors and rep.name ~= orig.name then return P.arm(sc, r, tv, orig, rep) end
+    if r.slot and not r.shared and (r.spawned or 0) == 0 and not lvl.stopped[r.spawner or -1] and not P.armed_of(r) and not r.tried
+        and #pool[r.slot.kind] >= 2 then
+      local v = guard(P.var, sc, r.slot.var.idx, r.slot.var.gen)
+      local orig = v and v.single and lvl.learned[r.slot.kind][v.actors]
+      if orig and P.ROLES[orig.role or ""] and not orig.mixed then
+        for _, rep in ipairs(pool[r.slot.kind]) do
+          if rep.handle ~= v.actors and rep.name ~= orig.name and rep.role == orig.role and (rep.uid or v.uid == "0000000000000000") then
+            best = { r = r, v = v, orig = orig, rep = rep }
+            break
+          end
         end
       end
     end
+    if best then break end
+    t0 = pace(t0)
   end
+  if best then P.arm(sc, best.r, best.v, best.orig, best.rep) end
 end
 
-function P.arm(sc, r, tv, orig, rep)
-  -- right before the write: the same variable, the same value
-  local now = P.var(sc, r.tpl.idx, r.tpl.gen)
-  if not (now and now.actors == tv.actors and now.uid == tv.uid) then log("not armed: the variable changed while it was checked"); return end
-  local okw1 = pcall(rivet.write, string.format("%X", now.addr), le(rep.uid))
+function P.arm(sc, r, v, orig, rep)
+  r.tried = true
+  local slot = r.slot
+  local now = P.var(sc, slot.var.idx, slot.var.gen)
+  if not (now and now.actors == v.actors and now.uid == v.uid) then log("not armed: the variable changed while it was checked"); return end
+  local new_uid = (now.uid == "0000000000000000") and now.uid or rep.uid
+  local okw1 = pcall(rivet.write, string.format("%X", now.addr), le(new_uid))
   local okw2 = pcall(rivet.write, string.format("%X", now.addr + 0x10), le32(rep.handle))
-  local back = P.var(sc, r.tpl.idx, r.tpl.gen)
-  P.swaps = P.swaps + 1
-  local function copy(t) local c = {} for k, v in pairs(t) do c[k] = v end return c end
-  P.armed = { rec = r, var = r.tpl, orig = copy(orig), rep = copy(rep), orig_uid = tv.uid, orig_handle = tv.actors, frame = P.frame }
-  local ok = okw1 and okw2 and back and back.uid == rep.uid and back.actors == rep.handle
-  log(string.format("ARMED node %s (Spawner %X): Template variable %d at %X: %s -> %s; read back %s",
-      tostring(r.uid), r.spawner or 0, r.tpl.idx, now.addr, who(orig), who(rep), ok and "OK" or "FAILED"))
-  if not ok then
-    P.armed.done = true
-    P.put_back("the write did not read back")
+  local back = P.var(sc, slot.var.idx, slot.var.gen)
+  local cache = "no Spawner"
+  local cache_written = false
+  if r.saddr then
+    local cb = read(r.saddr + slot.cache, 4)
+    local cur = cb and u32(cb, 1)
+    if cur == v.actors then
+      pcall(rivet.write, string.format("%X", r.saddr + slot.cache), le32(rep.handle))
+      local cb2 = read(r.saddr + slot.cache, 4)
+      cache_written = cb2 and u32(cb2, 1) == rep.handle
+      cache = string.format("Spawner +0x%X %s -> %s %s", slot.cache, tostring(cur), tostring(rep.handle), cache_written and "OK" or "FAILED")
+    else
+      cache = string.format("Spawner +0x%X holds %s (not activated yet): left alone", slot.cache, tostring(cur))
+    end
   end
+  P.swaps = P.swaps + 1
+  local function copy(t) local c = {} for k, x in pairs(t) do c[k] = x end return c end
+  local A = { rec = r, slot = slot, orig = copy(orig), rep = copy(rep), orig_uid = v.uid, orig_handle = v.actors, new_uid = new_uid,
+              cache_written = cache_written, frame = P.frame, spawned_before = r.spawned or 0 }
+  P.armed[#P.armed + 1] = A
+  local ok = okw1 and okw2 and back and back.uid == new_uid and back.actors == rep.handle
+  log(string.format("ARMED %d/%d node %s (Spawner %X, %s, spawned %d time(s) so far): %s variable %d at %X: %s -> %s; read back %s; %s",
+      P.swaps, P.MAX_SWAPS, tostring(r.uid), r.spawner or 0, slot.kind, A.spawned_before, plug_name(slot.plug), slot.var.idx, now.addr,
+      who(orig), who(rep), ok and "OK" or "FAILED", cache))
+  if not ok then A.verified = true; P.put_back(A, "the write did not read back") end
 end
 
-function P.verify(a)
-  local A = P.armed
-  if A.verified then return end
+function P.verify(A, a, e)
   A.verified = true
   local verdict
   if a and a.name == A.rep.name then verdict = "REPLACEMENT SPAWNED"
   elseif a and a.name == A.orig.name then verdict = "ORIGINAL SPAWNED (the write had no effect on this spawn)"
   else verdict = "SOMETHING ELSE SPAWNED" end
-  log(string.format("VERIFY node %s: requested %s; original %s; spawned %s: %s", tostring(A.rec.uid), who(A.rep), who(A.orig), who(a), verdict))
+  log(string.format("VERIFY node %s (%s, SpawnFactory %s): requested %s; original %s; spawned %s: %s", tostring(A.rec.uid), A.slot.kind,
+      tostring(e and e.fac), who(A.rep), who(A.orig), who(a), verdict))
   A.verdict = verdict
+  P.verdicts = P.verdicts or {}
+  P.verdicts[#P.verdicts + 1] = verdict
 end
 
-function P.put_back(why)
-  local A = P.armed
+function P.put_back(A, why)
   if not A or A.restored then return end
   A.restored = true
   local sc = P.scene()
-  local v = sc and P.var(sc, A.var.idx, A.var.gen)
-  if not (v and v.uid == A.rep.uid and v.actors == A.rep.handle) then
-    log("put back: skipped (" .. tostring(why) .. "): the variable no longer holds what was written")
-    return
+  local v = sc and P.var(sc, A.slot.var.idx, A.slot.var.gen)
+  local parts = {}
+  if v and v.uid == A.new_uid and v.actors == A.rep.handle then
+    pcall(rivet.write, string.format("%X", v.addr), le(A.orig_uid))
+    pcall(rivet.write, string.format("%X", v.addr + 0x10), le32(A.orig_handle))
+    local back = P.var(sc, A.slot.var.idx, A.slot.var.gen)
+    parts[#parts + 1] = "variable " .. ((back and back.actors == A.orig_handle and back.uid == A.orig_uid) and "OK" or "FAILED")
+  else
+    parts[#parts + 1] = "variable skipped (it no longer holds what was written)"
   end
-  pcall(rivet.write, string.format("%X", v.addr), le(A.orig_uid))
-  pcall(rivet.write, string.format("%X", v.addr + 0x10), le32(A.orig_handle))
-  local back = P.var(sc, A.var.idx, A.var.gen)
-  log(string.format("put back (%s): node %s Template variable %d = %s: %s", tostring(why), tostring(A.rec.uid), A.var.idx,
-      tostring(A.orig_handle), (back and back.actors == A.orig_handle and back.uid == A.orig_uid) and "OK" or "FAILED"))
+  if A.cache_written and A.rec.saddr then
+    local cb = read(A.rec.saddr + A.slot.cache, 4)
+    if cb and u32(cb, 1) == A.rep.handle then
+      pcall(rivet.write, string.format("%X", A.rec.saddr + A.slot.cache), le32(A.orig_handle))
+      parts[#parts + 1] = "Spawner copy put back"
+    else
+      parts[#parts + 1] = "Spawner copy changed by the game: left alone"
+    end
+  end
+  log(string.format("put back (%s): node %s %s = %s: %s", tostring(why), tostring(A.rec.uid), A.slot.kind, tostring(A.orig_handle), table.concat(parts, "; ")))
+end
+
+function P.summary()
+  local lvl = P.lvl
+  local L = {}
+  for kind, t in pairs(lvl.learned) do
+    for _, x in pairs(t) do
+      L[#L + 1] = string.format("%s %s x%d %s/%s %s%s", kind, tostring(x.handle), x.count, tostring(x.family), tostring(x.role),
+          tostring(x.name):match("([^\\]+)$") or "?", x.mixed and " (MIXED)" or "")
+      if #L >= 16 then break end
+    end
+  end
+  log(string.format("level summary (%s): %d node(s), %d spawn(s) tied, %d not tied, %d budget retries; learned: %s; verdicts: %s",
+      tostring(lvl.why), #lvl.order, lvl.ties, lvl.untied, P.budget_hits or 0, #L > 0 and table.concat(L, " | ") or "-",
+      P.verdicts and table.concat(P.verdicts, " | ") or "-"))
 end
 
 -- ---- events (through the spawner layer: no rivet callback of its own) ------------------------------------
 function P.on_spawn(f)
   local h = math.tointeger(tonumber(f.SpawnedHandle))
-  if h and P.lvl and planet() == P.PLANET and #P.spawn_queue < 256 then P.spawn_queue[#P.spawn_queue + 1] = h end
+  if h and P.lvl and planet() == P.PLANET and #P.spawn_queue < 256 then
+    P.spawn_queue[#P.spawn_queue + 1] = { h = h, fac = math.tointeger(tonumber(f.SpawnFactory)), loc = math.tointeger(tonumber(f.SpawnLocation)) }
+  end
 end
 function P.on_stopped(f)
   local h = math.tointeger(tonumber(f.SpawnerComponentHandle))
-  local A = P.armed
-  if A and h and A.rec.spawner == h then
-    log(string.format("node %s's Spawner %X stopped (its encounter ran %d frame(s) after arming; %s)", tostring(A.rec.uid), h,
-        P.frame - A.frame, A.verdict or "no spawn of it was seen"))
-    A.done = true
-    P.put_back("its Spawner stopped")
+  if not (h and P.lvl) then return end
+  P.lvl.stopped[h] = true
+  for _, A in ipairs(P.armed) do
+    if not A.restored and A.rec.spawner == h then
+      log(string.format("node %s's Spawner %X stopped (%d frame(s) after arming; %s)", tostring(A.rec.uid), h,
+          P.frame - A.frame, A.verdict or "no spawn of it was seen"))
+      P.put_back(A, "its Spawner stopped")
+    end
   end
+end
+
+function P.start(fn)
+  P.job_fn, P.job_restarts = fn, 0
+  P.job = coroutine.create(fn)
 end
 
 function P.on_frame()
   P.frame = P.frame + 1
   if P.job then
     local ok, err = coroutine.resume(P.job)
-    if not ok then P.job = nil; log("RANDO-ERROR", tostring(err))
+    if not ok then
+      -- the budget can also run out outside every guard: the job starts again (at most twice), nothing is lost
+      if tostring(err):find("frame budget", 1, true) and (P.job_restarts or 0) < 2 then
+        P.job_restarts = (P.job_restarts or 0) + 1
+        P.budget_hits = (P.budget_hits or 0) + 1
+        P.job = coroutine.create(P.job_fn)
+      else
+        P.job = nil; log("RANDO-ERROR", tostring(err))
+      end
     elseif coroutine.status(P.job) == "dead" then P.job = nil end
     return
   end
   if not P.lvl or planet() ~= P.PLANET then return end      -- nothing is listed or read anywhere else
   local okr, ready = pcall(rivet.scene_ready)
   if okr and ready == false then return end
-  if #P.spawn_queue > 0 then
+  if P.lvl.scans > 0 and #P.spawn_queue > 0 then
     local batch = P.spawn_queue
     P.spawn_queue = {}
-    P.job = coroutine.create(function() P.learn(batch) end)
+    P.start(function() guard(P.learn, batch); guard(P.try_arm) end)
     return
   end
-  if P.frame >= (P.next_scan or 0) then
+  if P.frame >= (P.next_scan or 0) or (P.lvl.scans == 0 and #P.spawn_queue > 0) then
     P.next_scan = P.frame + P.SCAN_EVERY
-    P.job = coroutine.create(function() P.scan(); P.try_arm() end)
+    P.start(function() guard(P.scan); guard(P.try_arm) end)
   end
 end
 
@@ -422,6 +652,6 @@ if not P.subscribed then
   pcall(rivet.on_frame, P.on_frame)
 end
 P.reset("scripts loaded")
-local hash_ok = (not rivet.hash) or (pcall(rivet.hash, "Template") and rivet.hash("Template") == P.PLUG_TEMPLATE)
-log(string.format("v1 loaded: one Template-variable replacement on Zurkon (%s); plugs Template %d LastSpawn %d%s", P.ENABLED and "on" or "off",
-    P.PLUG_TEMPLATE, P.PLUG_LASTSPAWN, hash_ok and "" or " - rivet.hash DISAGREES, nothing will match"))
+local hash_ok = (not rivet.hash) or (pcall(rivet.hash, "Factories") and rivet.hash("Factories") == P.PLUG_FACTORIES)
+log(string.format("v2 loaded: Template and Factories replacements on Zurkon (%s, at most %d); plugs Template %d Factories %d LastSpawn %d%s",
+    P.ENABLED and "on" or "off", P.MAX_SWAPS, P.PLUG_TEMPLATE, P.PLUG_FACTORIES, P.PLUG_LASTSPAWN, hash_ok and "" or " - rivet.hash DISAGREES, nothing will match"))
