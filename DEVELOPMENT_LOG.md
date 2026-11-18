@@ -4,6 +4,46 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.30 (kit 10.0.19): combat compatibility (round40: "enemies that could not be killed")
+
+- Asked: root cause of unkillable randomized enemies (and "the randomized pirates with guns were unkillable"), a
+  compatibility layer so every replacement is combat-functional, spawn coverage, a Boss Randomizer audit, one release
+  in the scripts folder, tests, docs. Log: tests/data/round40_rivet.log (dev 10.29 scripts, v7 helper, spawnprobe and
+  spawnproof still in the scripts folder; NefCity, Zurkon pub / A1 twice / A3 / pub, NefCity, Ardolis, NefCity,
+  Cordelion; game path replaced). Read in full (the 397 raw SPAWNPROBE byte dumps skimmed).
+- WHAT ROUND40 PROVES (real game; tools/combat_audit.py):
+  * 40 replaced spawns, all on 4 Zurkon A1 factories, every one "SUCCESS" / "VERIFY ... REPLACEMENT SPAWNED". A1
+    completed twice (EndReason=0). Run 1: 20 replaced, "deaths seen 18 (of our bots 12)" - 12 = the 10 brawler + 2
+    bladeball replacements; the 8 robot shooters DD6478DACCDD2129 (bladeball factory) spawned never had a death. Run 2:
+    13 of 20 (7 shooters short). With the player's report: bladeball factory -> robot shooter does not die.
+  * ORIGINAL SPAWNED once (E9C64DEC, brawler -> shooter: the game ignored it; put back OK). 68 spawners put back over the session, every logged put-back OK (38 lines).
+  * NOT CHANGED: 34 before planned, 34 already spawned, 31 before read, 9 tied to no spawner (the pub's group wave), 4
+    no other flyer, 1 put back, 1 kind unknown. Ardolis and Cordelion: nothing replaced (too late / already spawned).
+  * All 10 RANDO-ERRORs: "dev(spawnprobe).lua:103: ran past the 8 ms frame budget" (a SpawnerSpawnEvent listener of the
+    developer probe). The production engine had none (it retried: "budget retries 26").
+  * Install: one release (all 12 required 10.0.18 = dev 10.29), plus 8 developer files incl. spawnprobe / spawnproof.
+    The kit stamp had not changed since 10.18, so the kit check could not have caught a mixed DEV install.
+  * Boss Randomizer: ON, "0 boss spawner(s) changed here"; no boss-tier kind learned anywhere in round40.
+  * A3: 14 thug spawns, nothing replaced, 0 deaths in 82 s, left (MissionState 2 -> 1).
+- ROOT CAUSE (as far as proven): 10.29 treated "the spawner spawned the replacement's actor" as success. Nothing checked
+  that the replacement could be damaged, die and be counted. WHY a robot shooter from a bladeball factory cannot die is
+  NOT proven: (a) the swarmer factory's spawn point / entrance (the only failing direction is swarmer -> shooter), or
+  (b) the one template actor every shooter replacement on the level clones (V.pick: lowest handle with a uid). 10.30
+  logs each change's template handle / uid / source so a future log can separate them.
+- BUILT (16_rando_spawners.lua "COMBAT COMPATIBILITY"; enemy.lua; boss.lua; 10_rando_runtime; settings):
+  pairs (adapter|orig kind>rep kind), V.COMPAT_BUILTIN (3 verified, 2 rejected, with evidence), enemy_compat
+  verified (default) / trial / any, state.enemy_combat (kept over New Game), V.combat_watch (death = proof; alive 45 s
+  while 6 others died = reject + put back + note; budget error = no answer; removed = gone), V.init_check (components
+  vs the game's own of that kind), DEATH / COMBAT / COMBAT VERIFIED / COMBAT CHECK FAILED lines, Ctrl+- counts.
+  Coverage: factories read and planned before nodes, first listing 6 frames after a load (was 20), node listing errors
+  non-fatal, early factory changes put back if a later node shares the variable and spawned, watchdog during jobs.
+  Release: kit 10.0.19 / dev 10.30 everywhere, route line from R.RELEASE, dev(*).lua -> dev_scripts/, stale developer
+  files named for deletion. rando_give.dll unchanged (v7, rebuilt byte for byte).
+- Tests: tests/test_v1030.py (35: 11 round40 log facts, 20 simulator, 4 kit; against 10.29's scripts all 20 simulator
+  and 3 kit tests fail). test_v1027's simulator harness pins enemy_compat = "any"; older tests updated for the dev_scripts
+  layout and the 10.0.19 / dev 10.30 labels (no expectation about enemies changed). Full suite: 804 run, 0 failures, 23 skipped.
+- Verified in the game: nothing of 10.30. Next: TESTING.md 2-dev17 (Zurkon A1 twice; every enemy should die).
+
 ## 2026-11-18: dev 10.29 (kit 10.0.18): the Enemy Randomizer overhaul (round39: "the enemies were the same")
 
 - Asked: a comprehensive, provable Enemy Randomizer (registry, every spawn mechanism, visible verification, meaningful

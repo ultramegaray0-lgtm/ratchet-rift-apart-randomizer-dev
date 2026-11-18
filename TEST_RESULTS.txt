@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.29 (build 10.0.18) - test run 2026-11-18 11:28 UTC
+Rift Apart Randomizer dev 10.30 (build 10.0.19) - test run 2026-11-18 17:24 UTC
 Python 3.13.18 on Linux
-ran 769, failures 0, errors 0, skipped 23
+ran 804, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -694,6 +694,41 @@ test_the_budget_never_drops_a_spawn (tests.test_v1029.SimulatorTests.test_the_bu
 test_the_note_names_original_replacement_and_result (tests.test_v1029.SimulatorTests.test_the_note_names_original_replacement_and_result) ... ok
 test_the_same_pick_after_every_reload_and_every_run_changed_again (tests.test_v1029.SimulatorTests.test_the_same_pick_after_every_reload_and_every_run_changed_again) ... ok
 test_without_another_species_another_kind_of_the_same_species (tests.test_v1029.SimulatorTests.test_without_another_species_another_kind_of_the_same_species) ... ok
+test_an_old_developer_file_left_in_the_scripts_folder_is_named_for_deletion (tests.test_v1030.KitTests.test_an_old_developer_file_left_in_the_scripts_folder_is_named_for_deletion) ... ok
+test_the_dll_is_unchanged_v7 (tests.test_v1030.KitTests.test_the_dll_is_unchanged_v7) ... ok
+test_the_release_label_is_one (tests.test_v1030.KitTests.test_the_release_label_is_one) ... ok
+test_the_scripts_folder_holds_one_release_and_no_developer_file (tests.test_v1030.KitTests.test_the_scripts_folder_holds_one_release_and_no_developer_file) ... ok
+test_a1_run1_bots_without_a_death_are_exactly_the_shooters_from_the_bladeball_factory (tests.test_v1030.Round40LogTests.test_a1_run1_bots_without_a_death_are_exactly_the_shooters_from_the_bladeball_factory) ... ok
+test_a1_run2_the_same_pairs_and_7_bots_without_a_death (tests.test_v1030.Round40LogTests.test_a1_run2_the_same_pairs_and_7_bots_without_a_death) ... ok
+test_anonymized (tests.test_v1030.Round40LogTests.test_anonymized) ... ok
+test_both_a1_runs_completed_and_a3_was_left (tests.test_v1030.Round40LogTests.test_both_a1_runs_completed_and_a3_was_left) ... ok
+test_every_frame_budget_error_came_from_the_developer_probe (tests.test_v1030.Round40LogTests.test_every_frame_budget_error_came_from_the_developer_probe) ... ok
+test_every_put_back_succeeded (tests.test_v1030.Round40LogTests.test_every_put_back_succeeded) ... ok
+test_no_boss_tier_swap_happened (tests.test_v1030.Round40LogTests.test_no_boss_tier_swap_happened) ... ok
+test_the_game_ignored_one_change_and_it_was_put_back (tests.test_v1030.Round40LogTests.test_the_game_ignored_one_change_and_it_was_put_back) ... ok
+test_the_install_was_one_release_plus_developer_files (tests.test_v1030.Round40LogTests.test_the_install_was_one_release_plus_developer_files) ... ok
+test_the_randomizer_called_every_shooter_spawn_a_success (tests.test_v1030.Round40LogTests.test_the_randomizer_called_every_shooter_spawn_a_success) ... ok
+test_why_enemy_spawns_kept_their_enemy (tests.test_v1030.Round40LogTests.test_why_enemy_spawns_kept_their_enemy) ... ok
+test_a_built_in_verified_pair_is_rejected_only_after_two_failures (tests.test_v1030.SimulatorTests.test_a_built_in_verified_pair_is_rejected_only_after_two_failures) ... ok
+test_a_complete_replacement_passes_the_initialization_check (tests.test_v1030.SimulatorTests.test_a_complete_replacement_passes_the_initialization_check) ... ok
+test_a_death_is_counted_once_and_the_budget_never_drops_the_watch (tests.test_v1030.SimulatorTests.test_a_death_is_counted_once_and_the_budget_never_drops_the_watch) ... ok
+test_a_death_verifies_a_trial_pair_for_the_save (tests.test_v1030.SimulatorTests.test_a_death_verifies_a_trial_pair_for_the_save) ... ok
+test_a_frame_budget_error_is_no_answer_to_is_it_still_there (tests.test_v1030.SimulatorTests.test_a_frame_budget_error_is_no_answer_to_is_it_still_there) ... ok
+test_a_group_spawner_needs_verified_pairs_for_every_member (tests.test_v1030.SimulatorTests.test_a_group_spawner_needs_verified_pairs_for_every_member) ... ok
+test_a_node_listed_late_that_shares_a_changed_factorys_variable_puts_it_back (tests.test_v1030.SimulatorTests.test_a_node_listed_late_that_shares_a_changed_factorys_variable_puts_it_back) ... ok
+test_a_rejected_pair_stays_rejected_after_a_checkpoint_and_a_new_session (tests.test_v1030.SimulatorTests.test_a_rejected_pair_stays_rejected_after_a_checkpoint_and_a_new_session) ... ok
+test_a_replacement_removed_without_a_death_is_gone_not_failed (tests.test_v1030.SimulatorTests.test_a_replacement_removed_without_a_death_is_gone_not_failed) ... ok
+test_a_replacement_that_lives_through_the_fight_is_rejected_and_put_back (tests.test_v1030.SimulatorTests.test_a_replacement_that_lives_through_the_fight_is_rejected_and_put_back) ... ok
+test_a_replacement_that_spawns_without_a_component_the_originals_have_is_rejected (tests.test_v1030.SimulatorTests.test_a_replacement_that_spawns_without_a_component_the_originals_have_is_rejected) ... ok
+test_a_trial_is_the_same_bot_class_and_one_spawner_at_a_time (tests.test_v1030.SimulatorTests.test_a_trial_is_the_same_bot_class_and_one_spawner_at_a_time) ... ok
+test_an_unverified_kind_never_enters_the_pool (tests.test_v1030.SimulatorTests.test_an_unverified_kind_never_enters_the_pool) ... ok
+test_ctrl_minus_says_how_many_pairs_are_verified_and_rejected (tests.test_v1030.SimulatorTests.test_ctrl_minus_says_how_many_pairs_are_verified_and_rejected) ... ok
+test_factories_are_planned_before_the_nodes_are_listed (tests.test_v1030.SimulatorTests.test_factories_are_planned_before_the_nodes_are_listed) ... ok
+test_round40s_failing_pair_is_never_armed_by_default (tests.test_v1030.SimulatorTests.test_round40s_failing_pair_is_never_armed_by_default) ... ok
+test_story_bosses_never_and_boss_tier_only_with_proof (tests.test_v1030.SimulatorTests.test_story_bosses_never_and_boss_tier_only_with_proof) ... ok
+test_the_default_is_verified (tests.test_v1030.SimulatorTests.test_the_default_is_verified) ... ok
+test_the_level_summary_holds_every_pair_against_its_deaths (tests.test_v1030.SimulatorTests.test_the_level_summary_holds_every_pair_against_its_deaths) ... ok
+test_with_no_verified_replacement_the_spawner_keeps_its_enemy (tests.test_v1030.SimulatorTests.test_with_no_verified_replacement_the_spawner_keeps_its_enemy) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -793,6 +828,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 769 tests in 169.609s
+Ran 804 tests in 158.225s
 
 OK (skipped=23)

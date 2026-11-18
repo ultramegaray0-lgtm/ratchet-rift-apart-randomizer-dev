@@ -52,7 +52,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.18"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -331,7 +331,8 @@ function SP.after_restore(live)
   if not SP.any_legacy_enabled() then SP.job = nil else SP.replan = true end
 end
 -- kept over a New Game: the switches and what was learned about the game (not about the run)
-SP.KEEP_OVER_NEW_GAME = { "enemy_rando", "boss_rando", "spawn_learned", "spawn_blocked", "enemy_reg", "enemy_groups" }
+SP.KEEP_OVER_NEW_GAME = { "enemy_rando", "boss_rando", "spawn_learned", "spawn_blocked", "enemy_reg", "enemy_groups",
+                          "enemy_combat" }   -- dev 10.30: combat evidence (verified / rejected replacement pairs)
 
 -- ---------------------------------------------------------------------------------------------
 -- learning: what an actor template is
@@ -374,6 +375,7 @@ SP.CLASS_SUFFIXES = { "", "Prius" }
 SP.unclassified_logged = SP.unclassified_logged or {}
 function SP.classify_actor(handle, fast)
   if handle == nil then return nil end
+  SP.last_classes = nil
   -- dev 10.17: one rivet.components call lists the actor's classes (instead of ~90 failing lookups)
   local okl, names = pcall(rivet.components, handle)
   if okl and type(names) == "table" and #names > 0 then
@@ -382,6 +384,7 @@ function SP.classify_actor(handle, fast)
       have[tostring(n)] = true
       if tostring(n):sub(-5) == "Prius" then have[tostring(n):sub(1, -6)] = true end
     end
+    SP.last_classes = names                                              -- dev 10.30: SP.V's initialization check
     for _, e in ipairs(SP.FAMILY_CLASSES) do if have[e[1]] then return e[2], e[1] end end
     -- not one class of the table: said once per class list, so the next log shows what bots really are
     local bots = {}
@@ -1560,7 +1563,9 @@ V.VAR_SIZE = 0x40
 V.VAR_TYPE_ACTORS = 5
 V.GROUP_BIT = 0x80000000
 V.ZERO_UID = "0000000000000000"
-V.FIRST_SCAN = 20                 -- frames after a level reset before the first listing
+V.FIRST_SCAN = 6                  -- frames after a level reset before the first listing (dev 10.30: 20 -> 6; round40:
+                                  -- 31 enemy spawns came "before the randomizer read its spawner", mostly in the first
+                                  -- second after a checkpoint)
 V.SCAN_EVERY = 120                -- frames between two listings (new factories of later waves)
 V.NODE_LIMIT = 512
 V.SLICE = 0.001                   -- seconds of work per frame (rivet_hook's 8 ms budget is shared; 10.28: 1.5 -> 1 ms)
@@ -1617,6 +1622,15 @@ V.PLUG_LOCATIONS = V.crc("Locations")     -- 2501629366 (a factory's spawn point
 V.LEDGER_LOG = 300                        -- dev 10.29: per-spawn ledger lines logged per level (then counted only)
 V.NOTE_GAP = 180                          -- dev 10.29: frames between two on-screen replacement notes
 V.NOTE_QUEUE = 4                          -- dev 10.29: notes waiting at most (the rest are counted in the next one)
+-- dev 10.30: combat compatibility (see "COMBAT COMPATIBILITY" below)
+V.COMPAT_MODES = { verified = true, trial = true, any = true }
+V.COMBAT_DEATHS = 6                       -- other deaths on the level after a replaced bot spawned ...
+V.COMBAT_SECONDS = 45                     -- ... and seconds it lived: alive past BOTH = it does not die in a fight
+V.SUSPECT_LIMIT = 2                       -- a pair verified by the built-in table is rejected after this many failures
+V.TRIAL_PER_LEVEL = 1                     -- enemy_compat = "trial": spawners with an unverified pair at a time
+V.DEATH_LOG = 60                          -- DEATH lines (a replaced bot died) logged per level
+V.COMPAT_CAP = 300                        -- pairs kept in the save
+V.SIG_SAMPLES = 5                         -- original spawns of a kind whose components are compared (intersection)
 
 -- the last path segment, without .actor / .a ("characters\enemy\x\actors\enm_pirate_robot_me" -> enm_pirate_robot_me)
 function V.short(name)
@@ -1825,6 +1839,250 @@ function V.group_of(T)
   return nil, role
 end
 
+-- ---- dev 10.30: COMBAT COMPATIBILITY ------------------------------------------------------------------------
+-- Round40 (dev 10.29; tests/data/round40_rivet.log): Zurkon arena A1 twice, 40 replaced spawns, every change "VERIFY
+-- ... REPLACEMENT SPAWNED" - and the player could not kill the pirate robot SHOOTERS that a bladeball factory spawned
+-- (DD6478DACCDD2129, bladeball -> robot shooter). The game's own deaths say the same: run 1 replaced 20 enemies (10
+-- brawler, 2 bladeball, 8 shooter replacements) and BotDeathCompleteEvent named 12 of them - the number that were not
+-- shooters (run 2: 13 of 20, 7 shooters short). A spawn proves which template the factory used; it does not prove the
+-- enemy can take damage, die and be counted. WHY that shooter does not die is not known (the swarmer factory's spawn
+-- point / entrance, or the template actor's own setup) - this layer does not guess it, it asks the game for proof:
+--   * a replacement is a PAIR "spawner kind|original kind>replacement kind" (V.pair_key; kinds as cut names + family);
+--   * a pair is VERIFIED (in-game evidence: V.COMPAT_BUILTIN from the round37-40 logs, or a replaced bot of the pair
+--     that died in your game - kept in the save), REJECTED (in-game evidence it does not die, or it spawned without a
+--     component the game's own enemies of that kind have - kept in the save) or UNVERIFIED;
+--   * enemy_compat = "verified" (the default): only verified pairs are used - an unverified enemy never enters the
+--     pool. "trial": unverified pairs of the SAME bot class too, one spawner per level at a time, watched (developer
+--     test rounds; the first death verifies it). "any": the 10.29 rules (simulator tests of the scheduling only);
+--   * every replaced bot is watched (V.combat_watch): a death naming it is the proof; alive V.COMBAT_SECONDS after it
+--     spawned while V.COMBAT_DEATHS other bots died on the level = its pair is rejected and every spawner using it is
+--     put back at once (the next spawns are the original enemies; one that already stands there stays until a reload).
+V.COMPAT_BUILTIN = {
+  ["factory|enm_pirate_robot_sh/ground>enm_pirate_robot_me/swarmer"] = { "ok",
+    "round37: 20 of 20 spawns, A1 completed twice; round40: A1 completed twice, its replaced brawlers died" },
+  ["factory|enm_pirate_robot_sh/ground>enm_pirate_bladebal/swarmer"] = { "ok",
+    "round38-40: spawned in A1, A1 completed; round40: its bladeballs died" },
+  ["factory|enm_pirate_bladebal/swarmer>enm_pirate_robot_me/swarmer"] = { "ok",
+    "round38-40: spawned in A1, A1 completed; round40: its brawlers died" },
+  ["factory|enm_pirate_bladebal/swarmer>enm_pirate_robot_sh/ground"] = { "bad",
+    "round40: the player could not kill them; 16 spawned, 8 of 8 (run 1) and 7 of 8 (run 2) never died" },
+  ["factory|enm_pirate_robot_me/swarmer>enm_pirate_robot_sh/ground"] = { "bad",
+    "the same direction as round40's failure (a melee swarmer factory given the robot shooter); round40: the game ignored it once" },
+}
+local function compat_t(write)
+  local s = vstate()
+  if not s then V.session.compat_mem = V.session.compat_mem or {}; return V.session.compat_mem end
+  if write then s.enemy_combat = s.enemy_combat or {} end
+  return s.enemy_combat or {}
+end
+V.compat_t = compat_t
+function V.kind_key(name, family)
+  return (V.short(name) or "?"):lower():sub(1, 19) .. "/" .. tostring(family or "?")
+end
+function V.pair_key(adapter, o_name, o_fam, r_name, r_fam)
+  return tostring(adapter) .. "|" .. V.kind_key(o_name, o_fam) .. ">" .. V.kind_key(r_name, r_fam)
+end
+-- the original kind(s) a spawner's replacement stands in for: its template, or every member of its group
+function V.origs_of(r)
+  local out = {}
+  if r.kind == "group" then
+    for m in (groups_t()[r.key] or ""):gmatch("[^,]+") do
+      local fam, nm = m:match("^([^:]*):(.*)$")
+      if nm then out[#out + 1] = { name = nm, family = fam ~= "-" and fam or nil } end
+    end
+  else
+    local T = r.orig and r.orig.single and V.lvl and V.lvl.tpl[r.orig.actors]
+    if T and T.name then out[1] = T end
+  end
+  return out
+end
+function V.pairs_of(r, rep)
+  local out = {}
+  for _, o in ipairs(V.origs_of(r)) do out[#out + 1] = V.pair_key(r.kind, o.name, o.family, rep.name, rep.family) end
+  return out
+end
+function V.compat_mode()
+  local m = RANDO and RANDO.config and RANDO.config.enemy_compat
+  return V.COMPAT_MODES[m] and m or "verified"
+end
+-- "verified" / "rejected" / "unverified", and the evidence
+function V.compat_status(pair)
+  local saved = compat_t()[pair]
+  local b = V.COMPAT_BUILTIN[pair]
+  if type(saved) == "string" and saved:sub(1, 4) == "bad:" then return "rejected", "your game: " .. saved:sub(5) end
+  local sb = V.session and V.session.compat_bad and V.session.compat_bad[pair]
+  if sb then return "rejected", "this session: " .. sb end
+  if b and b[1] == "bad" then return "rejected", b[2] end
+  if b and b[1] == "ok" then return "verified", b[2] end
+  if type(saved) == "string" and saved:sub(1, 3) == "ok:" then return "verified", "your game: " .. saved:sub(4) .. " of them died" end
+  return "unverified", nil
+end
+-- may rep stand in for every original kind of spawner r? -> ok, how ("verified" / "trial" / "any"), why not
+function V.compat_allows(r, rep, origs)
+  local mode = V.compat_mode()
+  if mode == "any" then return true, "any" end
+  origs = origs or V.origs_of(r)
+  if #origs == 0 then return false, nil, "unverified" end
+  local how = "verified"
+  for _, o in ipairs(origs) do
+    local st = V.compat_status(V.pair_key(r.kind, o.name, o.family, rep.name, rep.family))
+    if st == "rejected" then return false, nil, "rejected" end
+    if st ~= "verified" then
+      if mode ~= "trial" then return false, nil, "unverified" end
+      local same
+      if o.class and rep.class then same = o.class == rep.class else same = o.family ~= nil and o.family == rep.family end
+      if not same then return false, nil, "unverified" end
+      how = "trial"
+    end
+  end
+  return true, how
+end
+function V.trials_running(r)
+  local n = 0
+  for _, A in ipairs(V.lvl and V.lvl.arms or {}) do if not A.restored and A.compat == "trial" and A.rec ~= r then n = n + 1 end end
+  return n
+end
+function V.combat_c(pair)
+  local lvl = V.lvl
+  lvl.combat = lvl.combat or {}
+  local c = lvl.combat[pair]
+  if not c then c = { spawned = 0, died = 0, gone = 0 }; lvl.combat[pair] = c; lvl.combat_order = lvl.combat_order or {}; lvl.combat_order[#lvl.combat_order + 1] = pair end
+  return c
+end
+local function compat_put(pair, value)
+  local t = compat_t(true)
+  if t[pair] == nil then
+    local n = 0
+    for _ in pairs(t) do n = n + 1 end
+    if n >= V.COMPAT_CAP then return end
+  end
+  t[pair] = value
+  if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
+end
+-- a replaced bot died: the proof its pair works (an unverified pair is verified for your save from now on)
+function V.combat_died(h, x)
+  if x.dead then return end
+  x.dead = true
+  local lvl = V.lvl
+  lvl.death_logged = (lvl.death_logged or 0) + 1
+  if lvl.death_logged <= V.DEATH_LOG then
+    vlog(string.format("DEATH %d | %s replacing %s | %d s after its spawn | %s", h, tostring(V.short(x.T and x.T.name)),
+        tostring(x.orig or "?"), math.floor(((SP.frame or 0) - (x.frame or 0)) / 60 + 0.5), tostring(x.compat)))
+  end
+  for _, p in ipairs(x.pairs or {}) do
+    local c = V.combat_c(p)
+    c.died = c.died + 1
+    local st = V.compat_status(p)
+    local saved = compat_t()[p]
+    if st == "unverified" then
+      compat_put(p, "ok:1")
+      vlog("COMBAT VERIFIED " .. p .. ": a replaced bot of it died in your game (kept in the save)")
+    elseif type(saved) == "string" and saved:sub(1, 3) == "ok:" then
+      compat_put(p, "ok:" .. math.min(999, (tonumber(saved:sub(4)) or 0) + 1))
+    end
+  end
+end
+-- in-game evidence against pairs: rejected for this session at once and in the save (a built-in verified pair only
+-- after V.SUSPECT_LIMIT failures), every change on this level that uses one is put back
+function V.combat_reject(pairs, why, label)
+  local lvl = V.lvl
+  V.session.compat_bad = V.session.compat_bad or {}
+  local said = {}
+  for _, p in ipairs(pairs or {}) do
+    local c = V.combat_c(p)
+    if not c.rejected then
+      c.rejected = why
+      V.session.compat_bad[p] = why
+      local b = V.COMPAT_BUILTIN[p]
+      local saved = compat_t()[p]
+      local scope
+      if b and b[1] == "ok" then
+        local n = (tonumber(type(saved) == "string" and saved:match("^suspect:(%d+)") or 0) or 0) + 1
+        if n >= V.SUSPECT_LIMIT then compat_put(p, "bad:" .. why); scope = "rejected for this save"
+        else compat_put(p, "suspect:" .. n); scope = string.format("rejected for this session; failure %d of %d for this save", n, V.SUSPECT_LIMIT) end
+      else
+        compat_put(p, "bad:" .. why); scope = "rejected for this save"
+      end
+      vlog(string.format("COMBAT CHECK FAILED %s: %s - %s", p, why, scope))
+      said[#said + 1] = p
+    end
+  end
+  local n = 0
+  for _, A in ipairs(lvl and lvl.arms or {}) do
+    if not A.restored then
+      for _, p in ipairs(A.pairs or {}) do
+        if V.session.compat_bad[p] then V.put_back(A, "combat check: " .. why); n = n + 1; break end
+      end
+    end
+  end
+  if #said > 0 then
+    vlog(string.format("combat check: %d changed spawner(s) put back", n))
+    say("Enemy Randomizer: " .. tostring(label or "a replacement") .. " - its spawners use the original enemy again",
+        { type = "corner", sub = "if an enemy here cannot be killed, load the last checkpoint", duration = 8 })
+  end
+end
+-- a replaced bot that lives on while the fight goes on (V.tick, once a second)
+function V.combat_watch()
+  local lvl = V.lvl
+  if not (lvl and lvl.watch and #lvl.watch > 0) then return end
+  local frame = SP.frame or 0
+  local keep, asked = {}, 0
+  for _, h in ipairs(lvl.watch) do
+    local x = lvl.spawned[h]
+    if type(x) == "table" and not x.dead and not x.gone and not x.failed then
+      local others = lvl.deaths_seen - (x.deaths0 or 0)
+      if others >= V.COMBAT_DEATHS and frame - (x.frame or 0) >= V.COMBAT_SECONDS * 60 and asked < V.ALIVE_CHECKS then
+        asked = asked + 1
+        local state = V.presence(h)
+        if state == "unknown" then
+          -- a frame-budget error is no answer: asked again next second (never taken as "alive")
+        elseif state == "gone" then
+          x.gone = true
+          for _, p in ipairs(x.pairs or {}) do local c = V.combat_c(p); c.gone = c.gone + 1 end
+        else
+          x.failed = true
+          local secs = math.floor((frame - (x.frame or 0)) / 60 + 0.5)
+          V.combat_reject(x.pairs, string.format("%s replacing %s (bot %d) was alive %d s after its spawn while %d other bots died",
+              tostring(V.short(x.T and x.T.name)), tostring(x.orig or "?"), h, secs, others),
+              string.format("%s replacing %s could not be killed", V.display(x.T and x.T.name, x.T and x.T.family), tostring(x.orig_display or x.orig or "?")))
+        end
+      end
+      if not x.gone and not x.failed then keep[#keep + 1] = h end
+    end
+  end
+  lvl.watch = keep
+end
+-- dev 10.30: the INITIALIZATION check. The components of the game's own (unchanged) enemies of a kind are noted
+-- (the intersection of up to V.SIG_SAMPLES spawns); a replacement of that kind that spawns without one of them did not
+-- initialize as the game's own do - its pair is rejected. Uses the component list V.actor already asked for.
+function V.sig_note(a)
+  if not (a and a.classes and a.name and a.family) then return end
+  V.session.sig = V.session.sig or {}
+  local k = V.kind_key(a.name, a.family)
+  local s = V.session.sig[k]
+  if s and s.n >= V.SIG_SAMPLES then return end
+  local have = {}
+  for _, c in ipairs(a.classes) do have[tostring(c)] = true end
+  if not s then V.session.sig[k] = { n = 1, set = have }; return end
+  s.n = s.n + 1
+  for c in pairs(s.set) do if not have[c] then s.set[c] = nil end end
+end
+function V.init_check(A, a, h)
+  local s = V.session.sig and V.session.sig[V.kind_key(A.rep.name, A.rep.family)]
+  if not (s and a and a.classes) then return "no original of it seen yet" end
+  local have = {}
+  for _, c in ipairs(a.classes) do have[tostring(c)] = true end
+  local missing = {}
+  for c in pairs(s.set) do if not have[c] then missing[#missing + 1] = c end end
+  if #missing == 0 then return "OK (" .. s.n .. " original(s) compared)" end
+  table.sort(missing)
+  V.combat_reject(A.pairs, string.format("%s (bot %d) spawned without %s that the game's own %s have", tostring(V.short(a.name)), h,
+      table.concat(missing, ", "), tostring(V.short(A.rep.name))),
+      string.format("%s replacing %s did not start like the game's own", V.display(A.rep.name, A.rep.family),
+          A.orig_T and V.display(A.orig_T.name, A.orig_T.family) or "a group"))
+  return "MISSING " .. table.concat(missing, ", ")
+end
+
 -- ---- the SceneManager and its script variables (rando_give.dll v7) ----------------------------------
 function V.scene()
   local n = RANDO_REAL and RANDO_REAL.native
@@ -1900,6 +2158,7 @@ function V.actor(h)
   if rivet.name then local ok, n = pcall(rivet.name, h); if ok and type(n) == "string" then a.name = n end end
   local okc, fam, cls = pcall(SP.classify_actor, h, true)
   if okc and fam then a.family, a.class = fam, cls end
+  if okc then a.classes = SP.last_classes end                              -- dev 10.30: the initialization check
   -- dev 10.29: a bot's full name from its actor asset (a cut rivet.name is only a prefix of it)
   if a.class and V.ASSET_NAMES ~= false then
     local okn, full = pcall(V.asset_name, h, a.class)
@@ -1911,6 +2170,18 @@ end
 -- with its bot, so deaths are also found by asking for the actor: nothing answering for its handle = gone. (If the
 -- game keeps answering for dead bots, nothing is ever "gone" this way - the stuck rule then waits for the whole
 -- level to go quiet, see V.watchdog.) A frame-budget error is NOT taken as gone.
+-- dev 10.30: "present" / "gone" / "unknown" (a frame-budget error: no answer either way) for the combat watch
+function V.presence(h)
+  local okc, c = pcall(rivet.components, h)
+  if okc and type(c) == "table" and #c > 0 then return "present" end
+  if not okc and tostring(c):find("budget", 1, true) then return "unknown" end
+  if rivet.name then
+    local okn, n = pcall(rivet.name, h)
+    if okn and type(n) == "string" and n ~= "" then return "present" end
+    if not okn and tostring(n):find("budget", 1, true) then return "unknown" end
+  end
+  return "gone"
+end
 function V.gone(h)
   local okc, c = pcall(rivet.components, h)
   if okc and type(c) == "table" and #c > 0 then return false end
@@ -2086,28 +2357,11 @@ local function list_nodes(class)
   end)
 end
 
-function V.scan(sc)
+-- the original value of spawner records still without one (kind: only those of that kind)
+local function read_origs(sc, kind, t0)
   local lvl = V.lvl
-  lvl.scans = lvl.scans + 1
-  local t0 = clock_()
-  local nf, nn = #lvl.order, 0
-  for _, node in ipairs(list_nodes(V.FACTORY_CLASS) or {}) do
-    if node.actor and lvl.fac[node.actor] == nil then vguard(V.factory_rec, node.actor, node) end
-    t0 = vpace(t0)
-  end
-  for _, node in ipairs(list_nodes(V.NODE_CLASS) or {}) do
-    if node.component and lvl.nodes[node.component] == nil then
-      local r = vguard(V.node_rec, node)
-      lvl.nodes[node.component] = r or false
-      if r then V.add_rec(r); nn = nn + 1 end
-    end
-    t0 = vpace(t0)
-  end
-  -- the original value of every spawner still without one: what it holds before anything of ours (a read lost
-  -- to the frame budget - rivet.read answers nothing then - is tried again at the next listing, 5 times at most)
-  local new = #lvl.order - nf
   for _, r in ipairs(lvl.order) do
-    if not r.orig and (r.reads or 0) < 5 then
+    if (kind == nil or r.kind == kind) and not r.orig and (r.reads or 0) < 5 then
       r.reads = (r.reads or 0) + 1
       vguard(function()
         local v = V.var(sc, r.var.idx, r.var.gen)
@@ -2120,6 +2374,48 @@ function V.scan(sc)
       end)
       t0 = vpace(t0)
     end
+  end
+  return t0
+end
+
+function V.scan(sc)
+  local lvl = V.lvl
+  lvl.scans = lvl.scans + 1
+  local t0 = clock_()
+  local nf, nn = #lvl.order, 0
+  for _, node in ipairs(list_nodes(V.FACTORY_CLASS) or {}) do
+    if node.actor and lvl.fac[node.actor] == nil then vguard(V.factory_rec, node.actor, node) end
+    t0 = vpace(t0)
+  end
+  -- dev 10.30: FACTORIES FIRST - read and planned before the level's node records are listed. Round40: 31 enemy
+  -- spawns "before the randomizer read its spawner" and 34 "before it planned it", most of them arena factories that
+  -- spawn in the first second after a checkpoint, while 10.29 was still listing 100-200 nodes (portals, cars, props).
+  t0 = read_origs(sc, "factory", t0)
+  for _, r in ipairs(lvl.order) do
+    if r.kind == "factory" and not r.tried and not r.arm then vguard(V.plan_rec, sc, r); t0 = vpace(t0) end
+  end
+  -- dev 10.30: a node listing that fails (not the frame budget) no longer stops the scan: the factories above are
+  -- planned and the spawn queue is followed; the nodes are listed again at the next scan
+  local okl, nodes = pcall(list_nodes, V.NODE_CLASS)
+  if not okl then
+    if tostring(nodes):find("budget", 1, true) then error(nodes, 0) end
+    lvl.errors = lvl.errors or {}
+    if not lvl.errors["nodes:" .. tostring(nodes)] then lvl.errors["nodes:" .. tostring(nodes)] = true; vlog("RANDO-ERROR node listing: " .. tostring(nodes)) end
+    nodes = nil
+  end
+  for _, node in ipairs(nodes or {}) do
+    if node.component and lvl.nodes[node.component] == nil then
+      local r = vguard(V.node_rec, node)
+      lvl.nodes[node.component] = r or false
+      if r then V.add_rec(r); nn = nn + 1 end
+    end
+    t0 = vpace(t0)
+  end
+  -- the original value of every spawner still without one: what it holds before anything of ours (a read lost
+  -- to the frame budget - rivet.read answers nothing then - is tried again at the next listing, 5 times at most)
+  local new = #lvl.order - nf
+  t0 = read_origs(sc, nil, t0)
+  for _, r in ipairs(lvl.order) do
     -- dev 10.29: its spawn point(s) -> this node (V.tie_one)
     if r.kind ~= "factory" and r.loc and not r.loc_done and (r.loc_reads or 0) < 5 then
       r.loc_reads = (r.loc_reads or 0) + 1
@@ -2192,6 +2488,21 @@ function V.pick(r, group, excl, n, need_uid)
   local pool = V.pool(group, excl, need_uid)
   if #pool == 0 and r.kind == "group" then pool = V.pool(group, nil, need_uid) end
   if #pool == 0 then return nil, "no other " .. group .. " kind known on this level" end
+  -- dev 10.30: only what combat compatibility allows (V.compat_allows): in-game verified pairs by default
+  if V.compat_mode() ~= "any" then
+    local origs, allowed, rejected = V.origs_of(r), {}, false
+    local trials = V.trials_running(r)
+    for _, T in ipairs(pool) do
+      local ok, how, why = V.compat_allows(r, T, origs)
+      if ok and how == "trial" and trials >= V.TRIAL_PER_LEVEL then ok = false end
+      if ok then allowed[#allowed + 1] = T elseif why == "rejected" then rejected = true end
+    end
+    if #allowed == 0 then
+      return nil, (rejected and V.compat_mode() == "verified") and "no combat-verified replacement here (some are rejected)"
+                  or "no combat-verified replacement here"
+    end
+    pool = allowed
+  end
   local bases, species = {}, {}
   for _, x in ipairs(excl or {}) do bases[V.base_name(x)] = true; species[V.species(x)] = true end
   local kept, other = {}, {}
@@ -2246,6 +2557,13 @@ function V.plan_rec(sc, r)
   local lvl = V.lvl
   if r.arm then
     local A = r.arm
+    -- dev 10.30: factories are planned before the nodes are listed; a node listed later that shares the variable and
+    -- has already spawned makes the change unsafe (10.29's rule: shared variables only while every user is fresh)
+    for _, u in ipairs(lvl.users[r.var.idx] or {}) do
+      if A.spawns == 0 and not A.restored and u ~= r and not u.arm and not V.fresh(u) then
+        V.put_back(A, "shares its variable with a spent spawner"); return
+      end
+    end
     if not A.restored and A.spawns == 0 and A.kinds_seen ~= (lvl.kinds_n or 0) and V.fresh(r) then V.repick(sc, A) end
     return
   end
@@ -2324,14 +2642,35 @@ function V.arm(sc, r, rep, orig_T, role)
   local A = { rec = r, rep = rep, orig_T = orig_T, new_uid = new_uid, frame = SP.frame, spawns = 0, picks = 0, alive = {}, alive_n = 0,
               last_activity = SP.frame, role = role or "enemy", group = r.plan_group, excl = r.plan_excl,
               kinds_seen = V.lvl.kinds_n or 0 }
+  V.arm_compat(A)
   r.arm = A
   local lvl = V.lvl
   lvl.arms[#lvl.arms + 1] = A
   ad.armed = ad.armed + 1
-  vlog(string.format("CHANGED %s %s (actor %s, variable %d): %s -> %s",
+  vlog(string.format("CHANGED %s %s (actor %s, variable %d): %s -> %s [template %s uid %s from %s; %s]",
       V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(r.actor), r.var.idx,
       r.kind == "group" and ("group " .. string.format("%08X", r.orig.actors) .. " (" .. tostring(groups_t()[r.key]) .. ")")
-        or tostring(V.short(orig_T and orig_T.name)), tostring(V.short(rep.name))))
+        or tostring(V.short(orig_T and orig_T.name)), tostring(V.short(rep.name)), tostring(rep.handle), tostring(rep.uid or "-"),
+      tostring(rep.src or "?"), V.compat_label(A)))
+end
+-- dev 10.30: the pairs a change stands for and how combat compatibility allowed it
+function V.arm_compat(A)
+  local r = A.rec
+  A.pairs = V.pairs_of(r, A.rep)
+  local _, how = V.compat_allows(r, A.rep)
+  A.compat = how or "unverified"
+  local o = V.origs_of(r)
+  A.orig_label = (#o == 1) and tostring(V.short(o[1].name)) or ("group (" .. tostring(groups_t()[r.key] or "?"):gsub("[%w_]*:", "") .. ")")
+  A.orig_display = (#o == 1) and V.display(o[1].name, o[1].family) or A.orig_label
+end
+function V.compat_label(A)
+  if A.compat == "verified" then
+    local _, ev = V.compat_status(A.pairs[1] or "")
+    return "combat-verified pair (" .. tostring(ev) .. ")"
+  end
+  if A.compat == "trial" then return "TRIAL: an unverified pair of the same bot class, watched" end
+  if A.compat == "any" then return "enemy_compat = any: NOT combat-verified" end
+  return "not combat-verified"
 end
 
 -- dev 10.29: a change that has not spawned yet is picked again when the level's pool grew (round39: Zurkon's A1
@@ -2354,6 +2693,7 @@ function V.repick(sc, A)
     vlog(string.format("CHANGED AGAIN %s %s (a kind learned since): %s -> %s", V.ADAPTER_LABEL[r.kind], tostring(r.key),
         tostring(V.short(A.rep.name)), tostring(V.short(rep.name))))
     A.rep, A.new_uid = rep, new_uid
+    V.arm_compat(A)                                                         -- dev 10.30
   else
     V.write_var(sc, r, A.new_uid, A.rep.handle)                            -- the earlier pick stays
   end
@@ -2372,7 +2712,7 @@ function V.rotate(sc, A)
   local now = V.var(sc, r.var.idx, r.var.gen)
   if not (now and now.uid == A.new_uid and now.actors == A.rep.handle) then return end
   local uid = rep.uid or V.ZERO_UID
-  if V.write_var(sc, r, uid, rep.handle) then A.rep, A.new_uid = rep, uid end
+  if V.write_var(sc, r, uid, rep.handle) then A.rep, A.new_uid = rep, uid; V.arm_compat(A) end
 end
 
 function V.put_back_now(A, why)
@@ -2614,8 +2954,12 @@ function V.verify(A, a)
     if not V.group_of(A.rep) then A.verified = verdict; V.put_back(A, "the replacement is no regular enemy"); return end
   end
   A.verified = verdict
-  vlog(string.format("VERIFY %s %s: requested %s, spawned %s: %s", V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(V.short(A.rep.name)),
-      tostring(V.short(a.name)), verdict))
+  -- dev 10.30: a spawn is not proof it fights: its components against the game's own of that kind, its combat pair
+  local init = verdict == "REPLACEMENT SPAWNED" and V.init_check(A, a, A.first_h or 0) or nil
+  vlog(string.format("VERIFY %s %s: requested %s, spawned %s: %s%s", V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(V.short(A.rep.name)),
+      tostring(V.short(a.name)), verdict, init and (" | initialization " .. init .. " | combat " .. V.compat_label(A) ..
+      " - a death of it is the proof") or ""))
+  if A.restored then return end                                            -- the initialization check put it back
   -- dev 10.29: on screen, for every changed spawner's first spawn (V.note: a queue, one note at a time)
   local orig_name = A.orig_T and V.display(A.orig_T.name, A.orig_T.family) or "group (" .. tostring(groups_t()[r.key] or "?"):gsub("[%w_]*:", "") .. ")"
   if verdict == "REPLACEMENT SPAWNED" then
@@ -2740,6 +3084,7 @@ function V.process_one(sc, e)
     if V.eligible(a) and not e.ledgered then
       e.ledgered = true
       lvl.activity = SP.frame or 0
+      V.sig_note(a)                                                         -- dev 10.30: the game's own enemy
       V.ledger_add(e, nil, a, nil, "NOT CHANGED", "not tied to a spawner: " .. tostring(tie_why))
       if e.fac == 0 and lvl.untied_logged < V.UNTIED_LOG then
         lvl.untied_logged = lvl.untied_logged + 1
@@ -2784,7 +3129,16 @@ function V.process_one(sc, e)
       e.armcounted = true
       A.spawns = A.spawns + 1
       A.alive[e.h] = true; A.alive_n = A.alive_n + 1; A.last_activity = SP.frame
-      lvl.spawned[e.h] = { A = A, T = A.rep }
+      -- dev 10.30: every replaced bot is watched until it dies (V.combat_watch / V.combat_died)
+      local replaced = a and a.name and V.same_kind(a.name, a.family, A.rep.name, A.rep.family)
+      lvl.spawned[e.h] = { A = A, T = A.rep, frame = SP.frame or 0, deaths0 = lvl.deaths_seen, pairs = replaced and A.pairs or {},
+                           compat = A.compat, orig = A.orig_label, orig_display = A.orig_display }
+      if replaced then
+        A.first_h = A.first_h or e.h
+        lvl.watch = lvl.watch or {}
+        lvl.watch[#lvl.watch + 1] = e.h
+        for _, p in ipairs(A.pairs or {}) do local c = V.combat_c(p); c.spawned = c.spawned + 1 end
+      end
       if lvl.logged < V.SPAWN_LOG then
         lvl.logged = lvl.logged + 1
         vlog(string.format("spawn %d of changed %s %s: %s", e.h, V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(a and V.short(a.name))))
@@ -2798,6 +3152,7 @@ function V.process_one(sc, e)
   if not (a and a.name) then e.done = true; return end
   -- a spawn of a spawner put back moments ago may still be the replacement: nothing is learned from it
   if r.restored_frame and (SP.frame or 0) - r.restored_frame < 120 then e.done = true; return end
+  if V.eligible(a) and not e.sig then e.sig = true; V.sig_note(a) end      -- dev 10.30: what the game's own have
   if r.kind == "group" then
     if not a.family then r.not_enemy = true end                         -- a vehicle, a prop: never this group
     local fam = a.family or "-"
@@ -2850,6 +3205,7 @@ function V.on_death(f, ev)
   if type(x) ~= "table" or not x.A then return end
   local A = x.A
   if A.alive[h] then A.alive[h] = nil; A.alive_n = A.alive_n - 1; A.last_activity = SP.frame; lvl.deaths_tied = (lvl.deaths_tied or 0) + 1 end
+  if x.pairs and #x.pairs > 0 then V.combat_died(h, x) end                -- dev 10.30: the proof the pair fights
 end
 function V.on_health_bar(f, ev)
   if f.IsFriendly == true then return end
@@ -2915,10 +3271,16 @@ function V.watchdog()
           A.alive[h] = nil; A.alive_n = A.alive_n - 1; A.last_activity = SP.frame
           lvl.gone_seen = lvl.gone_seen + 1
           lvl.activity = SP.frame
+          local x = lvl.spawned[h]                                           -- dev 10.30: no longer watched
+          if type(x) == "table" and not x.dead and not x.gone then
+            x.gone = true
+            for _, p in ipairs(x.pairs or {}) do local c = V.combat_c(p); c.gone = c.gone + 1 end
+          end
         end
       end
     end
   end
+  V.combat_watch()                                                          -- dev 10.30
   for _, A in ipairs(lvl.arms) do
     local quiet = SP.frame - math.max(A.last_activity or 0, lvl.activity or 0)
     if not A.restored and A.alive_n > 0 and quiet > V.STUCK_SECONDS * 60 then
@@ -3061,6 +3423,12 @@ function V.tick(frame, ready)
       A.rec.tried = nil
     end
   end
+  -- dev 10.30: the watchdog (gone bots, stuck encounters, the combat watch) also while a long job runs (a busy level
+  -- kept 10.29's job running for many seconds and its watchdog waited)
+  if frame % 60 == 0 then
+    local okw, errw = pcall(V.watchdog)
+    if not okw and not tostring(errw):find("budget", 1, true) then job_error(errw) end
+  end
   if V.job then
     local ok, err = coroutine.resume(V.job)
     if not ok then
@@ -3081,10 +3449,6 @@ function V.tick(frame, ready)
       end
     elseif coroutine.status(V.job) == "dead" then V.job = nil end
     return
-  end
-  if frame % 60 == 0 then
-    local okw, errw = pcall(V.watchdog)
-    if not okw and not tostring(errw):find("budget", 1, true) then job_error(errw) end
   end
   local due = frame >= lvl.next_scan
   local work = due or #V.pending > 0 or (lvl.scans > 0 and (#lvl.queue > 0 or lvl.dirty or lvl.arm_running))
@@ -3146,6 +3510,19 @@ function V.status()
   local top, topn = nil, 0
   for reason, n in pairs(L and L.reasons or {}) do if n > topn then top, topn = reason, n end end
   out.top_reason = top
+  -- dev 10.30: combat compatibility
+  out.compat = V.compat_mode()
+  out.pairs_verified, out.pairs_rejected = 0, 0
+  for p in pairs(V.COMPAT_BUILTIN) do
+    local st = V.compat_status(p)
+    if st == "verified" then out.pairs_verified = out.pairs_verified + 1 elseif st == "rejected" then out.pairs_rejected = out.pairs_rejected + 1 end
+  end
+  for p in pairs(compat_t()) do
+    if not V.COMPAT_BUILTIN[p] then
+      local st = V.compat_status(p)
+      if st == "verified" then out.pairs_verified = out.pairs_verified + 1 elseif st == "rejected" then out.pairs_rejected = out.pairs_rejected + 1 end
+    end
+  end
   return out
 end
 
@@ -3192,6 +3569,21 @@ function V.summary()
     vlog(string.format("ENEMY SPAWNS on this level: %d, replaced %d (%d%%), original despite a change %d, something else %d, not changed %d%s | by kind (replaced/spawned): %s",
         L.eligible, L.replaced, math.floor(100 * L.replaced / L.eligible + 0.5), L.original, L.other, L.unchanged,
         #rp > 0 and (" - why: " .. table.concat(rp, "; ")) or "", table.concat(kp, ", ")))
+  end
+  -- dev 10.30: every replacement pair of this level against the game's deaths (a spawn is not the proof; a death is)
+  for i, p in ipairs(lvl.combat_order or {}) do
+    if i > 16 then vlog(string.format("COMBAT ... %d more pair(s)", #lvl.combat_order - 16)); break end
+    local c = lvl.combat[p]
+    local alive = 0
+    for _, h in ipairs(lvl.watch or {}) do
+      local x = lvl.spawned[h]
+      if type(x) == "table" and not x.dead and not x.gone and not x.failed then
+        for _, q in ipairs(x.pairs or {}) do if q == p then alive = alive + 1 end end
+      end
+    end
+    local st, ev = V.compat_status(p)
+    vlog(string.format("COMBAT %s: replaced bots spawned %d, died %d, gone %d, alive at the end %d%s | pair %s%s", p, c.spawned, c.died,
+        c.gone, alive, c.rejected and " | REJECTED here" or "", st, ev and (" (" .. ev .. ")") or ""))
   end
 end
 
@@ -3331,5 +3723,5 @@ if not SP.subscribed then
 end
 
 log("spawner layer loaded (" .. SP.NODE_CLASS .. " Templates; families " .. #SP.FAMILY_CLASSES .. " bot classes)")
-SP.V.log(string.format("variable route loaded (dev 10.29): factory Templates, node Template, node Template group; plugs Templates %d Template %d",
-    SP.V.PLUG_TEMPLATES, SP.V.PLUG_TEMPLATE))
+SP.V.log(string.format("variable route loaded (%s, kit %s): factory Templates, node Template, node Template group; plugs Templates %d Template %d; combat compatibility %s",
+    tostring(RANDO and RANDO.RELEASE or "?"), tostring(RANDO_FILES["16_rando_spawners"]), SP.V.PLUG_TEMPLATES, SP.V.PLUG_TEMPLATE, SP.V.compat_mode()))

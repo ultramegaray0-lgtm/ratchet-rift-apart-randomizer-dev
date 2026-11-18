@@ -2,6 +2,48 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.30 (kit 10.0.19; not released): combat compatibility after round40 ("enemies that could not be killed")
+
+Asked: find and fix why some randomized enemies (the pirates with guns) could not be killed; make every replacement
+combat-functional; spawn coverage; Boss Randomizer audit; one consistent release; tests. Log: round40 (dev 10.29 in the
+game: Zurkon A1 twice, A3, the pub, Ardolis, Cordelion). Seeds unchanged.
+
+- ROUND40 EVIDENCE: 40 replaced spawns, all Zurkon A1 factories, every one logged "SUCCESS". Run 1: 20 replaced, the
+  game's BotDeathCompleteEvent named 12 of them - exactly the 10 brawler + 2 bladeball replacements; the 8 pirate robot
+  shooters a bladeball factory spawned (DD6478DACCDD2129) never died (run 2: 13 of 20). With your report ("the
+  randomized pirates with guns were unkillable") the failing pair is bladeball factory -> robot shooter. WHY that bot
+  cannot die is not proven (see KNOWN_ISSUES 0w); the fix does not depend on it.
+- Combat compatibility (16_rando_spawners.lua, "COMBAT COMPATIBILITY"): a replacement is a PAIR (spawner kind |
+  original kind > replacement kind). V.COMPAT_BUILTIN holds the in-game evidence (3 verified pairs, 2 rejected);
+  `enemy_compat = "verified"` (new setting, default) uses only verified pairs - an unverified enemy never enters the
+  pool; "trial" also allows unverified pairs of the same bot class, one spawner per level, watched; "any" = 10.29's
+  rules (simulator tests only). Evidence is kept in the save (`state.enemy_combat`, kept over New Game).
+- Combat watch: every replaced bot is followed; a death naming it is the proof (`DEATH <bot> | ... replacing ...`,
+  an unverified pair becomes verified for the save: `COMBAT VERIFIED`); a bot alive 45 s after its spawn while 6 other
+  bots died = `COMBAT CHECK FAILED`: the pair is rejected (a built-in verified pair after 2 such failures), every
+  spawner using it is put back at once and a corner note says so. A frame-budget error is no answer (never "alive"); a
+  bot removed without a death is "gone" (no evidence either way).
+- Initialization check: the components of the game's own spawns of a kind (intersection of up to 5) against the
+  replacement's; one missing = the pair is rejected. VERIFY lines now say "initialization OK / MISSING ... | combat
+  ... - a death of it is the proof". Per level: `COMBAT <pair>: replaced bots spawned N, died D, gone G, alive at the
+  end A | pair verified/rejected/unverified (evidence)`. CHANGED lines name the template handle, uid and source.
+- Spawn coverage: factories are read and planned BEFORE the level's nodes are listed (round40: 31 spawns "before the
+  randomizer read its spawner", 34 "before it planned it"); the first listing 6 frames after a load (was 20); a node
+  listing that fails no longer stops the scan; a factory changed early is put back if a node listed later shares its
+  variable and has spawned; the watchdog runs while a long job runs.
+- Boss Randomizer: on the same compatibility rules; no boss-tier pair has in-game evidence, so in "verified" it
+  changes nothing (round40 shows no boss-tier swap either: "0 boss spawner(s) changed here"). The 8 story bosses stay
+  protected (unchanged rules). boss.lua logs this; Ctrl+`=` shows the mode.
+- One release: every script tagged 10.0.19, banner "Randomizer dev 10.30", the route line names the release; the
+  developer tools moved to `mod/RiftApartRandomizer/dev_scripts/` (the scripts folder holds only the release); a
+  dev(name).lua of another kit left in <game>\scripts is named for deletion (round40: dev(spawnprobe).lua caused all
+  10 "ran past the 8 ms frame budget" errors).
+- rando_give.dll: unchanged (v7, sha256 8055703e...; rebuilt byte for byte from rando_give_source by the test suite).
+- tools/combat_audit.py (new): replacements per pair against the deaths per level visit of any rivet.log.
+- Tests: tests/test_v1030.py (35: 11 round40 log facts, 20 simulator, 4 kit); run against dev 10.29's scripts, all 20
+  simulator tests and 3 of the 4 kit tests fail (the 4th checks that the DLL is unchanged). test_v1027's simulator harness pins `enemy_compat = "any"` (its subject is scheduling);
+  older tests updated for the dev_scripts layout and the 10.0.19 / dev 10.30 labels. Full suite: see TESTING.md.
+
 ## Dev 10.29 (kit 10.0.18; not released): the Enemy Randomizer overhaul
 
 Asked: a comprehensive Enemy Randomizer, provably working, after round39 ("didn't notice any new enemies"). Seeds unchanged.

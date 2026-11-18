@@ -23,7 +23,7 @@
 --
 -- Needs 16_rando_spawners.lua. Removing this file only removes the boss randomizer; regular enemies
 -- (enemy.lua) never become bosses and bosses never become regular enemies.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["boss"] = "10.0.18"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["boss"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_BOSS = RANDO_BOSS or {}
 local B = RANDO_BOSS
@@ -88,8 +88,8 @@ function B.key()
     local k = 0
     for _ in pairs(kinds) do k = k + 1 end
     R.say(string.format("Boss Randomizer %s: %d boss spawner(s) changed here", B.enabled() and "ON" or "OFF", n),
-          { type = "corner", sub = string.format("%d boss-tier kind(s) loaded here (2 are needed to swap); the %d story bosses stay as they are",
-                                                 k, #B.STORY), duration = 6 })
+          { type = "corner", sub = string.format("%d boss-tier kind(s) loaded here (2 are needed to swap); the %d story bosses stay as they are; combat: %s",
+                                                 k, #B.STORY, SP.V.compat_mode()), duration = 6 })
     return
   end
   if R.ctrl_down() then
@@ -106,3 +106,11 @@ R.bind_key(R.config.key_bosses, B.key, "key_bosses")
 log("installed (" .. (B.enabled() and "ON" or "OFF") .. " until the save says otherwise) - " .. R.key("key_bosses") ..
     " turns it on / off, " .. R.key("key_bosses", true) .. " shows what it changed; " .. #B.STORY ..
     " story boss fights are kept as they are")
+-- dev 10.30: boss-tier swaps go through the same combat compatibility as regular enemies (16_rando_spawners.lua): with
+-- enemy_compat = "verified" (the default) a boss-tier pair needs in-game evidence that the replacement dies. No real
+-- log has shown a boss-tier swap yet (round40: "0 boss spawner(s) changed here"), so none is verified and the Boss
+-- Randomizer changes nothing until a "trial" round proves a pair.
+if B.client.route == "vars" then
+  log("combat compatibility: " .. SP.V.compat_mode() .. " - a boss-tier swap needs in-game proof that the replacement dies "
+      .. "(no real log has one yet; a pair a trial round verified is kept in the save)")
+end

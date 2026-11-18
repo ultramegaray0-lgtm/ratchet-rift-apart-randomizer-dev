@@ -257,9 +257,10 @@ class Round20LogTests(unittest.TestCase):
 class VersionTests(unittest.TestCase):
     def test_versions(self):
         # v0.55: kit 10.0.6; dev 10.1: generator 10.1.0 (Spybots/Lorbs hold items, reward-only weapons: new seeds)
-        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.18"'), ("dev(testtravel).lua", 'TT.VERSION = "10.0.18"'),
-                           ("02_rando_generator.lua", 'G.VERSION = "10.11.0"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.18"')):
-            with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
+        for name, want in (("10_rando_runtime.lua", 'R.KIT_VERSION = "10.0.19"'), ("dev(testtravel).lua", 'TT.VERSION = "10.0.19"'),
+                           ("02_rando_generator.lua", 'G.VERSION = "10.11.0"'), ("03_rando_campaign.lua", 'C.VERSION = "10.0.19"')):
+            d = os.path.join(os.path.dirname(SCRIPTS), "dev_scripts") if name.startswith("dev(") else SCRIPTS   # dev 10.30
+            with open(os.path.join(d, name), encoding="utf-8") as f:
                 self.assertIn(want, f.read(), name)
 
 
@@ -271,7 +272,7 @@ class KitCheckTests(unittest.TestCase):
     def test_a_complete_kit_says_so(self):
         g = Game(settings_file=True)
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.18"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.19"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
 
     def test_a_missing_or_older_script_is_reported(self):
@@ -302,7 +303,9 @@ class InstallTests(unittest.TestCase):
         names = [f[:-4] for f in os.listdir(os.path.join(self.KIT, "scripts")) if f.endswith(".lua")]
         shipped = {n for n in names if not n.startswith("dev(")}
         self.assertEqual(listed, shipped)
-        self.assertEqual(listed_dev, {n for n in names if n.startswith("dev(")})
+        self.assertEqual(shipped, set(names))                # dev 10.30: no developer file in scripts\
+        dev_names = [f[:-4] for f in os.listdir(os.path.join(self.KIT, "dev_scripts")) if f.endswith(".lua")]
+        self.assertEqual(listed_dev, set(dev_names))
         self.assertEqual(len(shipped), 18)                   # dev 10.12: 16_rando_spawners, enemy, boss; 10.13: chaos; 10.15: 17_rando_omega
         g = Game()
         self.assertEqual(set(g.R.KIT_FILES.values()) | set(g.R.OPTIONAL_FILES.values()), shipped)
@@ -310,4 +313,4 @@ class InstallTests(unittest.TestCase):
     def test_top_level(self):
         shipped = set(os.listdir(self.KIT))
         self.assertEqual(shipped, {"INSTALL.txt", "rivet.toml", "rando_give.dll", "rando_give_source", "scripts",
-                                   "companion", "docs"})
+                                   "dev_scripts", "companion", "docs"})      # dev 10.30: dev_scripts

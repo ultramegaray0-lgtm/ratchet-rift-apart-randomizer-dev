@@ -147,7 +147,10 @@ class Sim:
     """one simulated level; factories f(i) = 8001+i; the production engine"""
 
     def __init__(self, test, factories, nodes=(), dll=7, probe=False, enemy=True, planet="Zurkon", extra=None, settings=None):
-        st = {"enemy_randomizer": enemy, "boss_randomizer": False}
+        # dev 10.30: these simulator tests exercise the engine's scheduling (listing, writing, tying, verifying,
+        # putting back) with synthetic kinds no game ever verified in combat; they run with enemy_compat = "any"
+        # (10.29's pick rules). Combat compatibility itself is tested in tests/test_v1030.py with the default.
+        st = {"enemy_randomizer": enemy, "boss_randomizer": False, "enemy_compat": "any"}
         st.update(settings or {})
         self.g = g = Game(settings=st, dll_version=dll)
         test.assertFalse(g.load_errors, g.load_errors)

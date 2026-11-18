@@ -72,7 +72,7 @@
 --   6. PUT BACK when the node's Spawner stops, or on a level change (only what still holds what was written).
 --   Every unit of work is guarded: a frame-budget error yields and retries on the next frame instead of ending it.
 -- Every line starts with "RANDO-SPAWNPROOF". Remove this file and nothing of it runs.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.18"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnproof)"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
 RANDO_SPAWNPROOF = RANDO_SPAWNPROOF or {}
 local P = RANDO_SPAWNPROOF
 P.version = 6

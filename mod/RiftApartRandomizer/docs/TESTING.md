@@ -13,7 +13,11 @@ Dev 10.27: 722 run, 0 failures, 23 skipped (tests/test_v1027.py adds 40 for the 
 Dev 10.28: 744 run, 0 failures, 23 skipped (tests/test_v1028.py adds 22: round38 real-log facts and the fixes).
 Dev 10.29: 769 run, 0 failures, 23 skipped (tests/test_v1029.py adds 25: 7 on round39's real log, 18 simulator -
 every spawn mechanism, family, the ledger, notes, bosses, checkpoints, planets and a 600-spawn busy level).
-All of these are SIMULATOR tests: none of them is a result from the real game.
+Dev 10.30: 804 run, 0 failures, 23 skipped (tests/test_v1030.py adds 35: 11 on round40's real log, 20 simulator -
+combat compatibility, the death / no-death watch, the initialization check, trials, groups, bosses, factories first,
+the frame budget - and 4 on the install). Against dev 10.29's scripts all 20 simulator tests fail.
+All of these are SIMULATOR tests: none of them is a result from the real game. The simulator cannot know whether an
+enemy can be killed; it only shows what the engine does with the deaths the game reports (or their absence).
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
 - 8 need the 5.0 and 6.0 git commits, which are not in this repository.
@@ -37,6 +41,25 @@ The skipped tests:
 The older suites pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
+
+## 2-dev17. Dev 10.30 (kit 10.0.19): every replacement must die - ONE test
+
+Build: commit of dev 10.30 on main. Copy `rando_give.dll` (unchanged v7) next to RiftApart.exe and the WHOLE `scripts`
+folder into <game>\scripts. **Delete every `dev(...).lua` from <game>\scripts** (they now live in `dev_scripts\` and
+are not needed). Check rivet.log: `RANDO-KIT release dev 10.30 (kit 10.0.19)`, `all 12 required scripts are 10.0.19`,
+no `RANDO-ERROR RANDO-KIT` line (if one names an old dev file, delete that file). Banner: "Randomizer dev 10.30".
+Same save is fine. `-` ON (Ctrl+`-` ends with "combat: 3 pair(s) verified, 2 rejected (verified)").
+1. **Zurkon, challenge A1 to the end.** Kill everything. LOOK: no pirate robot SHOOTER where a bladeball came; every
+   enemy dies. Press Ctrl+`-` at the end.
+2. **Zurkon A1 once more** (restart it). Same check.
+3. Write down: any enemy you could not kill (which one, which wave), and whether A1 finished. Send rivet.log.
+Optional, only if you want more variety tested: set `enemy_compat = "trial"` in 04_rando_settings.lua and play ONE
+ordinary fight on another planet (Sargasso, Savali...). If an enemy will not die, keep fighting about a minute: a corner
+note says its spawners use the original enemy again; then load the last checkpoint. Set it back to "verified" after.
+What the log answers without you: `DEATH <bot> | X replacing Y | N s after its spawn` for every replaced bot that died,
+`COMBAT <pair>: replaced bots spawned N, died D, ... alive at the end A` per level, `COMBAT VERIFIED` / `COMBAT CHECK
+FAILED` (trial), `VERIFY ... | initialization OK ...`, and `CHANGED ... [template H uid U from S; ...]` (which template
+actor each change used - the clue to WHY round40's shooters could not die).
 
 ## 2-dev16. Dev 10.29 (kit 10.0.18): the Enemy Randomizer overhaul - ONE consolidated test
 

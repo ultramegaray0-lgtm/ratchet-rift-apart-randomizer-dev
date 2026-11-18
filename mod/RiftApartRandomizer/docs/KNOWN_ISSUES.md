@@ -4,6 +4,31 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0w. Dev 10.30 (kit 10.0.19): enemies that could not be killed (round40)
+
+- CONFIRMED (round40 log + your report): pirate robot SHOOTERS that a pirate BLADEBALL factory spawned in Zurkon arena
+  A1 could not be killed. The randomizer had called each of their 16 spawns a success. Death count of A1 run 1: 20
+  replaced, 12 died = every replacement that was not a shooter; run 2: 13 of 20.
+- CONFIRMED: the other replacements of round40 died (robot shooter -> robot brawler, robot shooter -> bladeball,
+  bladeball -> robot brawler) and both A1 runs completed (EndReason=0).
+- NOT PROVEN - why the shooter could not die. Two explanations fit the evidence and the logs cannot tell them apart:
+  (a) the slot: a melee-swarmer factory's spawn point / entrance does something a ground shooter does not finish (the
+  only failing direction is swarmer -> shooter; shooter -> swarmer works); (b) the template: every robot-shooter
+  replacement on a level clones ONE template actor (the lowest handle with a uid), which may carry its own encounter
+  setup. 10.30 logs the template handle, uid and source of every change so the next log can separate (a) from (b).
+  Also unexplained: A1 still completed with shooters alive (the challenge may not need every bot dead).
+- FIXED IN 10.30 (simulator only): only in-game verified pairs are used by default; the failing pair and its mirror
+  (brawler -> shooter) are rejected; every replaced bot is watched and a pair whose bots live through a fight is
+  rejected and put back at once. A bot that already stands there when its pair is rejected stays until you load the
+  last checkpoint (the randomizer cannot remove a bot).
+- CONSEQUENCE: far fewer replacements. With `enemy_compat = "verified"` only Zurkon's arena pirates are swapped (3
+  verified pairs), and node / group spawners and the Boss Randomizer change nothing until a "trial" round proves a pair.
+  This is deliberate: a working fight first, variety second.
+- Chaos Randomizer (BACKSPACE) is unchanged and has NO safety guard: it can make unkillable enemies.
+- Other planets: Ardolis (35 enemy spawns) and Cordelion (22) changed nothing in round40 - 10.29 changed spawners too
+  late there (20 "before read", 15 "before planned" on Ardolis; 20 "already spawned" on Cordelion). 10.30 plans
+  factories first; with "verified" those planets have no verified pair yet anyway.
+
 ## 0v. Dev 10.29 (kit 10.0.18): the Enemy Randomizer overhaul after round39 ("the enemies were the same")
 
 Full table: ENEMY_RANDOMIZER_COVERAGE.md.

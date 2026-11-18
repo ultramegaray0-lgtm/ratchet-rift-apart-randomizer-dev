@@ -15,8 +15,14 @@
 -- level change, the - key, and when a changed encounter looks stuck or was retried 5 times (16_rando_spawners.lua,
 -- section SP.V). Needs rando_give.dll v7 (the kit's) in the game folder; it says so on screen if it cannot work.
 --
+-- dev 10.30: COMBAT COMPATIBILITY. Round40 showed a replacement that spawned and could not be killed (pirate robot
+-- shooters from a bladeball factory). A replacement is now used only when its PAIR (spawner kind, original enemy,
+-- replacement) has in-game evidence that it dies (enemy_compat = "verified", the default); every replaced bot is
+-- watched, and a pair whose bots stay alive through a fight is rejected and its spawners put back at once
+-- (16_rando_spawners.lua, "COMBAT COMPATIBILITY"; docs/ENEMY_RANDOMIZER_COVERAGE.md has the table).
+--
 -- Needs 16_rando_spawners.lua. Removing this file only removes the enemy randomizer.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["enemy"] = "10.0.18"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["enemy"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_ENEMY = RANDO_ENEMY or {}
 local E = RANDO_ENEMY
@@ -66,9 +72,10 @@ function E.key()
     -- dev 10.29: what happened to this level's enemy spawns, first
     R.say(string.format("Enemy Randomizer %s: %d of %d enemy spawn(s) here were replaced", E.enabled() and "ON" or "OFF",
                         st.replaced, st.spawns),
-          { type = "corner", sub = string.format("%d spawner(s) changed now (%d factory, %d node, %d group); %d kind(s) here%s",
+          { type = "corner", sub = string.format("%d spawner(s) changed now (%d factory, %d node, %d group); %d kind(s) here%s; combat: %d pair(s) verified, %d rejected (%s)",
                                                  st.changed, st.factory, st.template, st.group, st.kinds,
-                                                 st.top_reason and ("; most kept: " .. st.top_reason) or ""), duration = 7 })
+                                                 st.top_reason and ("; most kept: " .. st.top_reason) or "",
+                                                 st.pairs_verified or 0, st.pairs_rejected or 0, tostring(st.compat)), duration = 7 })
     return
   end
   E.toggle(R.key("key_enemies"))

@@ -1,5 +1,12 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**Dev 10.30 (kit 10.0.19):** combat compatibility. Round40 showed randomized enemies that spawned but could not be
+killed (pirate robot shooters from a bladeball factory). A replacement is now used only for a spawner kind / original /
+replacement PAIR with in-game evidence that it dies (`enemy_compat = "verified"`, default); every replaced bot is
+watched and a pair whose bots live through a fight is rejected and put back at once. Developer tools moved to
+`mod/RiftApartRandomizer/dev_scripts/`. NOT yet run in the game. `docs/KNOWN_ISSUES.md` 0w, `docs/TESTING.md` 2-dev17,
+`docs/ENEMY_RANDOMIZER_COVERAGE.md` "Combat compatibility".
+
 **Dev 10.27 (kit 10.0.18):** the Enemy Randomizer (`-`) is rebuilt on the method round37 proved: it writes another
 regular enemy's template into a spawner's script variable before the spawner runs - SunsetSpawnerFactory `Templates`
 (proven), SpawnerScriptAction `Template` and actor groups (robomutts / thugs; not yet seen in the game), each verified

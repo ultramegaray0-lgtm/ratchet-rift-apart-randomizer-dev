@@ -4,8 +4,8 @@ This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
 
 LAYOUT
-  scripts\         every Lua script. rivet_hook loads scripts\*.lua in name order.
-                   Release scripts (all go into <game>\scripts):
+  scripts\         the release's Lua scripts (dev 10.30: nothing else). rivet_hook loads scripts\*.lua in
+                   name order. Release scripts (all go into <game>\scripts):
                      01_rando_data  02_rando_generator  03_rando_campaign  04_rando_settings
                      05_rando_bindings  06_rando_capabilities  09_rando_real  10_rando_runtime
                      11_rando_campaign  12_rando_shop  13_rando_armor  14_rando_travel
@@ -16,7 +16,8 @@ LAYOUT
                        safety guards; needs 16_rando_spawners; never in a player package)
                      17_rando_omega  (optional, dev 10.15: sets the game's Omega flag for an Omega
                        reward, docs/OMEGA.md; never in a player package until it has run in the game)
-                   Developer files, never in a release (named dev(name).lua):
+  dev_scripts\     dev 10.30: OPTIONAL developer diagnostics, never in a release and never needed to play
+                   (named dev(name).lua; copy one into <game>\scripts only for a test that asks for it):
                      dev(keys)        the developer keys ; ] [ / ' and the old F keys
                      dev(testtravel)  test travel (keys . and , with test_travel = true)
                      dev(testmode)    F10 / F11 fake progress, Ctrl+F10 x2 reset, the mission lab
@@ -37,13 +38,14 @@ LAYOUT
 INSTALL FOR DEVELOPMENT
   1. Back up Documents\Ratchet & Clank - Rift Apart. Use a spare save slot.
   2. rivet_hook 2.0.x must be installed (hid.dll + rivet_hook.dll next to RiftApart.exe).
-  3. Delete every old *_rando_*.lua and dev(*).lua from <game>\scripts, then copy the release
-     scripts and the developer files you want from scripts\ into <game>\scripts.
+  3. Delete every old *_rando_*.lua and dev(*).lua from <game>\scripts, then copy everything in
+     scripts\ into <game>\scripts (and only the developer files a test asks for from dev_scripts\).
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT all 12 required scripts are 10.0.18
-       RANDO-KIT developer files loaded (not part of a release): ...
+       RANDO-KIT release dev 10.30 (kit 10.0.19)
+       RANDO-KIT all 12 required scripts are 10.0.19
+     A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
 
 KEYS
   Players: 0 planet shuffle on/off (off by default), Ctrl+0 twice gives randomizer items back.

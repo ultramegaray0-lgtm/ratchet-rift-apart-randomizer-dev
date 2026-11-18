@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.18"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.18"
-R.RELEASE = "dev 10.29"               -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.19"
+R.RELEASE = "dev 10.30"               -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -153,6 +153,10 @@ R.config = {
   enemy_route = "vars",
   boss_route = "vars",                -- dev 10.29: the Boss Randomizer on the same engine ("census": the old route)
   enemy_notify = true,               -- dev 10.29: an on-screen note for every replaced spawner (false: rivet.log only)
+  -- dev 10.30: combat compatibility. "verified": only replacements with in-game evidence that they die (round40: some
+  -- that spawned could not be killed); "trial": also unverified ones of the same bot class, one spawner per level,
+  -- watched - for developer test rounds; "any": the 10.29 rules, NOT safe (simulator tests of the scheduling)
+  enemy_compat = "verified",
   -- dev 10.13: chaos.lua. OFF by default; NO safety guards (docs/CHAOS.md); while ON the two above pause
   chaos_randomizer = false,          -- anything can become anything (the start of a save that never used its key)
   key_chaos = "BACKSPACE",           -- Chaos Randomizer on/off (Ctrl: what it changed here)
@@ -1341,15 +1345,28 @@ function R.kit_check()
   for _, f in ipairs(R.OPTIONAL_FILES) do
     if files[f] == nil then optional[#optional + 1] = f .. " not installed" else check(f, files[f]) end
   end
+  -- dev 10.30: developer tools live in dev_scripts\ (not in a release's scripts folder). One of ANOTHER version in the
+  -- scripts folder is a leftover (round40: dev(spawnprobe).lua of an older round still loaded, its listener the source
+  -- of every "ran past the 8 ms frame budget" error): it is named for deletion, apart from the required scripts.
+  local stale = {}
   for f, v in pairs(files) do
-    if f:sub(1, 4) == "dev(" then dev[#dev + 1] = f; check(f, v) end
+    if f:sub(1, 4) == "dev(" then
+      if v ~= R.KIT_VERSION then stale[#stale + 1] = f .. ".lua (" .. tostring(v or "no version") .. ")" else dev[#dev + 1] = f end
+    end
   end
-  table.sort(dev)
-  if #dev > 0 then log("RANDO-KIT developer files loaded (not part of a release): " .. table.concat(dev, ", ")) end
+  table.sort(dev); table.sort(stale)
+  if #dev > 0 then log("RANDO-KIT developer files loaded (diagnostics, not part of a release - remove them for normal play): " .. table.concat(dev, ", ")) end
+  if #stale > 0 then
+    log("RANDO-ERROR RANDO-KIT delete from the scripts folder: " .. table.concat(stale, ", ") ..
+        " - an old developer file (developer tools are in the kit's dev_scripts folder now and never needed to play)")
+    say("Randomizer: delete the old developer file(s) " .. table.concat(stale, ", ") .. " from the scripts folder - see rivet.log",
+        { type = "center", duration = 10 })
+  end
+  log("RANDO-KIT release " .. tostring(R.RELEASE) .. " (kit " .. R.KIT_VERSION .. ")")
   if #missing == 0 and #other == 0 then
     log("RANDO-KIT all " .. #R.KIT_FILES .. " required scripts are " .. R.KIT_VERSION ..
         (#optional > 0 and (" (" .. table.concat(optional, ", ") .. ")") or ""))
-    return #gone == 0
+    return #gone == 0 and #stale == 0
   end
   log("RANDO-ERROR RANDO-KIT the scripts folder does not hold one version:" ..
       (#missing > 0 and (" missing " .. table.concat(missing, ", ")) or "") ..

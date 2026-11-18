@@ -259,7 +259,7 @@ class SpawnProbeTests(unittest.TestCase):
         return [l for l in g.logs() if "RANDO-SPAWNPROBE" in l]
 
     def test_it_is_a_developer_file_and_never_in_a_release(self):
-        self.assertTrue((ROOT / "mod/RiftApartRandomizer/scripts/dev(spawnprobe).lua").exists())
+        self.assertTrue((ROOT / "mod/RiftApartRandomizer/dev_scripts/dev(spawnprobe).lua").exists())
         self.assertNotIn("dev(spawnprobe).lua", [p.name for p in script_files(release=True)])
         self.assertNotIn("dev(spawnprobe).lua", [p.name for p in script_files()])       # only when asked for
         g = Game(spawnprobe=True)

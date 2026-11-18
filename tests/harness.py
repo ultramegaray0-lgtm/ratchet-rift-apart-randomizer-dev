@@ -72,7 +72,7 @@ def is_dev(name):
 
 # where developer files come from when the release scripts are an installed copy (the release
 # validator points RANDO_MOD_DIR at a game folder that has no developer file)
-DEV_DIR = pathlib.Path(os.environ.get("RANDO_DEV_SCRIPTS", MOD / "scripts"))
+DEV_DIR = pathlib.Path(os.environ.get("RANDO_DEV_SCRIPTS", MOD / "dev_scripts"))   # dev 10.30: out of scripts\
 
 
 def script_files(test_mode=False, dev_tools=False, scripts_dir=None, release=False, without=(), spawnprobe=False, spawnproof=False):

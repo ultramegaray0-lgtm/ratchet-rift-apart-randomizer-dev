@@ -4,7 +4,7 @@
 -- NEW seed with its own progress: start it with New Game. Lines starting with -- are notes; to
 -- change an option, remove the -- in front of it and edit the value. A wrong value is reported in
 -- rivet.log (search RANDO-SETTINGS) and the default is used instead.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.18"   -- version check (do not edit)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.19"   -- version check (do not edit)
 RANDO_SETTINGS = {
   -- THE SEED: "random" = the companion picks one and remembers it. Any other text is a fixed seed
   -- (the same text and settings give the same seed on every PC), e.g. "lombax-ryno-2026".
@@ -72,6 +72,10 @@ RANDO_SETTINGS = {
   boss_randomizer = true,              -- boss-tier enemies are shuffled among themselves (story bosses never)
   enemy_notify = true,                 -- dev 10.29: a corner note "[ENEMY RANDOMIZER] SUCCESS - Original: X -> Replacement: Y"
                                        -- for every changed spawner's first spawn (false: only rivet.log)
+  enemy_compat = "verified",           -- dev 10.30: only replacements the game has shown can be killed ("verified").
+                                       -- "trial": also untested ones of the same bot class, one spawner per level at a
+                                       -- time, watched (a test round; one that cannot be killed is rejected for good and
+                                       -- you may need to load the last checkpoint). Never "any" (10.29's rules, unsafe).
   -- key_enemies = "-",                -- the Enemy Randomizer's key (Ctrl+key: what it changed here)
   -- key_bosses = "=",                 -- the Boss Randomizer's key
   -- CHAOS (chaos.lua, OFF by default): ANY enemy or boss can become ANY other, from any planet, with NO

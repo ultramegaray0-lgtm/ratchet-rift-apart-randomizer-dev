@@ -176,7 +176,7 @@ check("rando_companion sits next to RiftApart.exe (where the companion looks for
 # the release's scripts are the INSTALLED copy; tests that also load developer tooling (dev(name).lua,
 # never shipped) take it from the repo
 env = {"PATH": "/usr/bin:/bin", "HOME": user_home, "RANDO_MOD_DIR": game,
-       "RANDO_SCRIPTS": os.path.join(game, "scripts"), "RANDO_DEV_SCRIPTS": os.path.join(KIT, "scripts"),
+       "RANDO_SCRIPTS": os.path.join(game, "scripts"), "RANDO_DEV_SCRIPTS": os.path.join(KIT, "dev_scripts"),
        "LANG": "C.UTF-8", "PYTHONDONTWRITEBYTECODE": "1"}
 mods = ["tests.test_v055", "tests.test_v100", "tests.test_v054", "tests.test_v90", "tests.test_runtime", "tests.test_levels",
         "tests.test_generator", "tests.test_campaign", "tests.test_v85", "tests.test_registry"]
