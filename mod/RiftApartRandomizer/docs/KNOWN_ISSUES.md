@@ -4,6 +4,36 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0u. Dev 10.28 (kit 10.0.18): round38 - the Enemy Randomizer works on factories; four 10.27 bugs fixed
+
+- CONFIRMED IN THE GAME (round38, tests/data/round38_rivet.log): factory spawners. 11 of 11 first spawns of changed
+  factories were the replacement (0 original, 0 other): Zurkon A1 twice (robot shooter / robot melee / bladeball) and,
+  first off Zurkon and first for flyers, Sargasso (a jetpack thug factory spawned wasps). Checkpoint reloads put every
+  change back (27 OK) and the next try was changed again. Boss tier (Grunthor), mounts (burrower beetle), NPCs,
+  vendors and miners were never touched. NOT CONFIRMED: what you saw on screen (no observations came with the log).
+- FIXED in 10.28 (each was seen in round38):
+  * "An encounter looked stuck" while you fought: no death event ever named a bot, so 10.27 flagged every changed A1
+    factory 180 s after its last spawn and saved it "kept original" for the seed (5 of them). Now: bots that no longer
+    answer are taken off their encounter, "stuck" needs the WHOLE level quiet for 180 s, and it only puts the spawner
+    back for that level (5 stuck / retried runs still keep it original for the seed). The 5 wrong entries are dropped
+    from your save on load.
+  * ~100 "ran past the 8 ms frame budget" errors, each dropping spawns before they were followed, once cutting short a
+    checkpoint's put-backs. Now one resumable job; budget errors are counted, not logged; a put-back the budget cuts
+    finishes on the next frame before anything is read.
+  * Ambient portals / cars made the randomizer search every node for each spawn; a spawn point now remembers its node.
+  * The ground and the jetpack shooter thug share one cut name ("enm_thugs4less_shoo"); their bot family now tells
+    them apart (verification, learning).
+- STILL OPEN (needs TESTING.md 2-dev15):
+  * Group spawners (robomutts / thugs): members are learned (round38: two groups), but no group was changed yet; the
+    thug spawns at A5 tied to no spawner. 10.28 adds a third way to tie them (the node's spawned-actors variable,
+    942662419) and logs every enemy spawn it could not tie.
+  * Single-enemy node spawners: 0 changed in round38 (all the ones seen spawned portals, cars, props). The level
+    detail line now says why each node was left alone.
+  * Template actors never answer before a spawn (0 of ~100): the first wave of a kind not in the save stays original.
+    Asking stops after 40 unanswered asks a session.
+  * Picks can shift on a retry when a new kind was learned in between (the pool grew); stable once the save knows the
+    level's kinds.
+
 ## 0t. Dev 10.27 (kit 10.0.18): the Enemy Randomizer is rebuilt on the proven method - NOT yet run in the game
 
 - CHANGED: the `-` Enemy Randomizer now writes spawner script variables before a spawner runs (16_rando_spawners.lua

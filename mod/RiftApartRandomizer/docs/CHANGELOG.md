@@ -2,6 +2,28 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.28 (kit 10.0.18; not released): round38 fixes for the Enemy Randomizer
+
+Asked: perfect the Enemy Randomizer (no Boss / Chaos work). Log: round38 (the first real run of 10.27). Seeds unchanged.
+
+- Stuck rule (16_rando_spawners.lua V.watchdog): bots that no longer answer (V.gone) leave their encounter; stuck =
+  bots alive AND the whole level quiet (no death of anything, no enemy spawn, no bot gone) for 180 s; it puts back for
+  the level and counts a retry (5 -> kept original for the seed). V.migrate drops 10.27's "without a death" blocks.
+- Frame budget: V.pump, one job whose progress lives in the level record (put-backs, spawn queue, plan cursor);
+  restarted after a budget error (40 restarts without progress drop it; counted as "jobs dropped"); budget errors
+  counted, not logged; the arm pass runs only when something changed (lvl.dirty). V.SLICE 1.5 -> 1 ms.
+- Put-backs: V.put_back is safe (pcall); an interrupted one waits in V.pending and runs before any read; half-written
+  and unreadable variables are retried; on leaving a planet (PlanetChangedEvent with OldPlanetName only) everything is
+  put back while the variables are still there; after an unload the log says "nothing to write".
+- Tying SpawnFactory-0 spawns (V.tie_one): per spawn, a location cache checked against the node's own record,
+  LastSpawn, the spawned-actors variable 942662419, the whole 17-entry spawn ring, and for groups rivet.script_node;
+  a location that tied to nothing 3 times is skipped for the level.
+- V.same_kind: name AND bot family (the two thugs of one cut name). Template-actor asks stop after 40 with no answer.
+- Diagnostics: "level detail" per level (why node / group spawners were not changed, untied spawns, deaths seen and
+  tied, bots gone, jobs dropped); every enemy spawn tied to no spawner is logged (6 per level).
+- Banner dev 10.28. Tests: tests/test_v1028.py (22: 7 on round38's real log, 15 simulator); 3 test_v1027 tests follow the
+  new rules. Full suite: 744 run, 0 failures, 23 skipped.
+
 ## Dev 10.27 (kit 10.0.18; not released): the Enemy Randomizer on the proven method
 
 Asked: rebuild the Enemy Randomizer on round37's factory method, cover every normal enemy and spawning mechanism.

@@ -1563,8 +1563,13 @@ V.ZERO_UID = "0000000000000000"
 V.FIRST_SCAN = 20                 -- frames after a level reset before the first listing
 V.SCAN_EVERY = 120                -- frames between two listings (new factories of later waves)
 V.NODE_LIMIT = 512
-V.SLICE = 0.0015                  -- seconds of work per frame (rivet_hook's 8 ms budget is shared)
+V.SLICE = 0.001                   -- seconds of work per frame (rivet_hook's 8 ms budget is shared; 10.28: 1.5 -> 1 ms)
 V.QUEUE_CAP = 256
+V.SLOTS = 17                      -- dev 10.28: the Spawner's spawn list is a ring of 17 entries (0xDC..0x1B0), read whole
+V.RESTART_CAP = 40                -- dev 10.28: budget restarts of one job without any progress before it is dropped
+V.PROBE_GIVEUP = 40               -- dev 10.28: template actors asked with no answer before asking stops for the session
+V.UNTIED_LOG = 6                  -- dev 10.28: enemy spawns tied to no spawner variable, logged per level
+V.ALIVE_CHECKS = 24               -- dev 10.28: spawned actors checked for being gone per watchdog run
 V.REG_CAP = 400
 V.GROUP_CAP = 300
 V.MEMBER_CAP = 8
@@ -1600,6 +1605,9 @@ V.PLUG_TEMPLATE = V.crc("Template")       -- 1835115251
 V.PLUG_TEMPLATES = V.crc("Templates")     -- 3990217346
 V.PLUG_LASTSPAWN = V.crc("LastSpawn")     -- 406637480
 V.PLUG_FACTORIES = V.crc("Factories")     -- 838143302
+-- dev 10.28: a node variable whose name is unknown (no rivet.hash match) that holds the node's SPAWNED actors (round38:
+-- portal nodes {LastSpawn's actor}, the vehicle group node a86fb955 a group of 3 spawned cars). Used to tie spawns.
+V.PLUG_SPAWNED = 942662419
 
 -- the last path segment, without .actor / .a ("characters\enemy\x\actors\enm_pirate_robot_me" -> enm_pirate_robot_me)
 function V.short(name)
@@ -1614,6 +1622,13 @@ function V.same_name(a, b)
   if a == b then return true end
   local n = math.min(#a, #b)
   return n >= 8 and a:sub(1, n) == b:sub(1, n)
+end
+-- dev 10.28: the same KIND of enemy: the same (possibly cut) name AND, when both are known, the same bot family.
+-- Round38: the ground and the jetpack shooter thug both read "enm_thugs4less_shoo" (cut at 64 characters); only their
+-- family (ground / flyer) tells them apart.
+function V.same_kind(a_name, a_fam, b_name, b_fam)
+  if not V.same_name(a_name, b_name) then return false end
+  return a_fam == nil or b_fam == nil or a_fam == b_fam
 end
 
 local function clock_() return (os and os.clock and os.clock()) or 0 end
@@ -1631,6 +1646,7 @@ local function vguard(fn, ...)
 end
 V.guard = vguard
 local function vpace(t0)
+  V.progress = (V.progress or 0) + 1                                       -- dev 10.28: a unit done (V.tick's restarts)
   if clock_() - t0 > V.SLICE and coroutine.isyieldable() then coroutine.yield(); return clock_() end
   return t0
 end
@@ -1751,13 +1767,16 @@ function V.plugs_of(addr)
   return out
 end
 
--- the Spawner component's spawn list (+0x9C count, +0xDC entries of 12 bytes { spawned, location, time })
+-- the Spawner component's spawn list (+0x9C count, +0xDC entries of 12 bytes { spawned, location, time }).
+-- dev 10.28: round38's diffs show the list is a ring that runs to the end of the 432-byte component (17 entries; the
+-- vehicle node a86fb955 counted 115 spawns with its newest entries past the 15th): every entry is read.
 function V.spawner_slots(saddr)
-  local b = saddr and read_bytes(saddr + 0x9C, 0x4 + 0x40 + 15 * 12)
+  local b = saddr and read_bytes(saddr + 0x9C, 0x40 + V.SLOTS * 12)
   if not b or #b < 4 then return nil end
   local count_ = u32(b, 1) or 0
   local out = { count = count_ }
-  for i = 0, math.min(count_, 15) - 1 do
+  if count_ == 0 then return out end
+  for i = 0, V.SLOTS - 1 do
     local h = u32(b, 0xDC - 0x9C + i * 12 + 1)
     if h and h ~= 0 then out[#out + 1] = h end
   end
@@ -1773,26 +1792,53 @@ function V.actor(h)
   if okc and fam then a.family, a.class = fam, cls end
   return a
 end
+-- dev 10.28: is a spawned actor gone (killed and removed)? Round38: no BotDeathCompleteEvent ever reached the randomizer
+-- with its bot, so deaths are also found by asking for the actor: nothing answering for its handle = gone. (If the
+-- game keeps answering for dead bots, nothing is ever "gone" this way - the stuck rule then waits for the whole
+-- level to go quiet, see V.watchdog.) A frame-budget error is NOT taken as gone.
+function V.gone(h)
+  local okc, c = pcall(rivet.components, h)
+  if okc and type(c) == "table" and #c > 0 then return false end
+  if not okc and tostring(c):find("budget", 1, true) then return false end
+  if rivet.name then
+    local okn, n = pcall(rivet.name, h)
+    if okn and type(n) == "string" and n ~= "" then return false end
+    if not okn and tostring(n):find("budget", 1, true) then return false end
+  end
+  return true
+end
 
 -- ---- the level ---------------------------------------------------------------------------------------
 V.adapters = V.adapters or {}
 for _, k in ipairs({ "factory", "template", "group" }) do
   V.adapters[k] = V.adapters[k] or { on = true, armed = 0, ok = 0, original = 0, other = 0, write_failed = 0 }
 end
-V.session = V.session or { said_blocked = false, said_ok = false, said_off = {}, retries = {} }
+V.session = V.session or { said_blocked = false, said_ok = false, said_off = {}, retries = {}, probe_tried = 0, probe_ok = 0 }
+V.pending = V.pending or {}       -- dev 10.28: put-backs a frame-budget error interrupted (done first, before any read)
 
 function V.new_level(why)
   V.lvl = { why = why, scans = 0, fac = {}, nodes = {}, order = {}, users = {}, tpl = {}, tpl_uid = {}, fac_spawns = {},
             started = {}, arms = {}, queue = {}, spawned = {}, reg_checked = false, probe = { tried = 0, ok = 0 },
-            logged = 0, next_scan = (SP.frame or 0) + V.FIRST_SCAN, frame0 = SP.frame or 0 }
+            logged = 0, next_scan = (SP.frame or 0) + V.FIRST_SCAN, frame0 = SP.frame or 0,
+            -- dev 10.28
+            loc = {}, untied = 0, untied_logged = 0, why_not = {}, activity = SP.frame or 0, dirty = true, arm_i = 1,
+            gone_seen = 0, deaths_seen = 0, stuck_said = false, alive_i = 0, errors = {} }
   V.job = nil
 end
 
 -- a level / planet / checkpoint load: put back what is still ours, then start over (the nodes may be new)
 function V.reset(why)
   local lvl = V.lvl
-  if lvl and #lvl.arms > 0 then V.put_back_all(tostring(why)) end
-  if lvl and lvl.scans > 0 and V.enabled() then V.summary() end
+  local w = tostring(why)
+  if lvl and #lvl.arms > 0 then
+    local unloaded = w == "level loaded" or w:find("^planet ") ~= nil
+    -- dev 10.28: whatever stops the put-backs here, every change still to put back waits in V.pending and the new
+    -- level record is made all the same
+    if not pcall(V.put_back_all, w, unloaded) then
+      for _, A in ipairs(lvl.arms) do if not A.restored then A.unloaded = A.unloaded or unloaded; V.queue_put_back(A, w) end end
+    end
+  end
+  if lvl and lvl.scans > 0 and V.enabled() then pcall(V.summary) end
   V.new_level(why)
 end
 
@@ -1817,7 +1863,8 @@ end
 -- learn what a template made (a spawn of an unchanged spawner, or its template actor)
 function V.learn(T, a, src)
   if not (T and a and a.name) then return end
-  if T.name and not V.same_name(T.name, a.name) and T.src ~= "template actor" then
+  local was_usable = V.usable(T)
+  if T.name and not V.same_kind(T.name, T.family, a.name, a.family) and T.src ~= "template actor" then
     if not T.mixed then T.mixed = true; vlog(string.format("template %s (%s) spawned %s and %s: MIXED, never used", tostring(T.handle),
         tostring(T.uid), tostring(V.short(T.name)), tostring(V.short(a.name)))) end
   else
@@ -1832,6 +1879,7 @@ function V.learn(T, a, src)
   end
   T.role = V.role_of(T)
   if T.uid and T.family then V.reg_put(T.uid, T) end
+  if V.lvl and V.usable(T) ~= was_usable then V.lvl.dirty = true end      -- dev 10.28: the pool changed: plan again
 end
 
 -- the factory record of a SunsetSpawnerFactory actor (nil if it has no Templates variable)
@@ -1858,6 +1906,7 @@ end
 function V.add_rec(r)
   local lvl = V.lvl
   lvl.order[#lvl.order + 1] = r
+  lvl.dirty = true
   local u = lvl.users[r.var.idx] or {}
   u[#u + 1] = r
   lvl.users[r.var.idx] = u
@@ -1873,7 +1922,7 @@ function V.node_rec(node)
   local tv = pl and pl.vars[V.PLUG_TEMPLATE]
   if not tv then return false end
   local r = { kind = "template", actor = node.actor, component = node.component, addr = addr, key = V.key_of(pl, node.actor),
-              var = tv, last = pl.vars[V.PLUG_LASTSPAWN], spawner = pl.spawner }
+              var = tv, last = pl.vars[V.PLUG_LASTSPAWN], spawned_var = pl.vars[V.PLUG_SPAWNED], spawner = pl.spawner }
   local oks, s = pcall(rivet.component, node.actor, "Spawner")
   if oks and type(s) == "table" and s.address and (pl.spawner == nil or s.handle == pl.spawner) then r.saddr = tonumber(s.address, 16) end
   return r
@@ -1881,14 +1930,27 @@ end
 
 -- the template actor itself, before any spawn: its components (bot class) and name. Whether your game answers this
 -- for a template actor is logged per level ("asked N template actor(s) before a spawn: M answered").
+-- dev 10.28: round38 asked ~100 template actors on Zurkon, Sargasso and Nefarious City and the game answered NONE:
+-- after V.PROBE_GIVEUP asks with no answer, asking stops for the session (each ask cost frame budget for nothing).
 function V.probe(T)
   local lvl = V.lvl
   if T.family or T.probed then return end
+  local ss = V.session
+  if ss.probe_ok == 0 and ss.probe_tried >= V.PROBE_GIVEUP then
+    if not ss.probe_said then
+      ss.probe_said = true
+      vlog(string.format("template actors never answered before a spawn (%d asked): asking stops for this session; a kind "
+          .. "not in the save is learned from its first spawn", ss.probe_tried))
+    end
+    return
+  end
   T.probed = true
   lvl.probe.tried = lvl.probe.tried + 1
+  ss.probe_tried = ss.probe_tried + 1
   local a = V.actor(T.handle)
   if a and a.family and a.name then
     lvl.probe.ok = lvl.probe.ok + 1
+    ss.probe_ok = ss.probe_ok + 1
     V.learn(T, a, "template actor")
   end
 end
@@ -1929,6 +1991,7 @@ function V.scan(sc)
         local v = V.var(sc, r.var.idx, r.var.gen)
         if v then
           r.orig = { uid = v.uid, actors = v.actors, single = v.single, group = v.group }
+          lvl.dirty = true
           if r.kind == "template" and v.group then r.kind = "group" end
           if v.single then V.probe(V.tpl_of(v.actors, v.uid)) end
         end
@@ -2017,47 +2080,68 @@ function V.fresh(r)
   return true
 end
 
+-- dev 10.28: why a node / group spawner was not changed, counted once per spawner and level (the level summary prints
+-- it: round38 changed 0 node and 0 group spawners and the log could not say why)
+local function note_why(r, reason)
+  if r.kind == "factory" or r.why_said == reason then return end
+  local lvl = V.lvl
+  if r.why_said then local t = lvl.why_not[r.kind]; if t and t[r.why_said] then t[r.why_said] = t[r.why_said] - 1 end end
+  r.why_said = reason
+  lvl.why_not[r.kind] = lvl.why_not[r.kind] or {}
+  lvl.why_not[r.kind][reason] = (lvl.why_not[r.kind][reason] or 0) + 1
+end
+V.note_why = note_why
+
 function V.plan_rec(sc, r)
   local lvl = V.lvl
-  if r.arm or r.tried or r.not_enemy or not r.orig or not V.adapters[r.kind].on or vblocked(r.key) or SP.zone then return end
+  if r.arm or r.tried then return end
+  if r.not_enemy then return note_why(r, "spawns no enemy") end
+  if not r.orig then return note_why(r, "value not read yet") end
+  if not V.adapters[r.kind].on then return note_why(r, "adapter off") end
+  if vblocked(r.key) then return note_why(r, "kept original for the seed") end
+  if SP.zone then return note_why(r, "story boss area") end
   local orig_T, group
   local excl = {}
   if r.kind == "group" then
     local G = groups_t()[r.key]
-    if type(G) ~= "string" or G == "" then return end
+    if type(G) ~= "string" or G == "" then return note_why(r, "members not learned yet (changes from its next run)") end
     for m in G:gmatch("[^,]+") do
       local fam, nm = m:match("^([^:]*):(.*)$")
       local T = { family = fam, name = nm }
-      if not V.usable(T) then return end                                    -- a member that is no regular enemy
+      if not V.usable(T) then return note_why(r, "a member is no regular enemy") end
       local g = V.FAMILY_GROUP[fam]
-      if group and g ~= group then return end                               -- a mixed group: left alone
+      if group and g ~= group then return note_why(r, "walkers and flyers mixed") end
       group = g
       excl[#excl + 1] = nm
     end
   else
-    if not r.orig.single then return end
+    if not r.orig.single then return note_why(r, "empty") end
     orig_T = lvl.tpl[r.orig.actors]
-    if not V.usable(orig_T) then return end
+    if not (orig_T and orig_T.family) then return note_why(r, "kind not known yet") end
+    if not V.usable(orig_T) then return note_why(r, "not a regular enemy") end
     group, excl[1] = V.FAMILY_GROUP[orig_T.family], orig_T.name
   end
   if not group then return end
   for _, u in ipairs(lvl.users[r.var.idx] or {}) do
-    if u.arm or not V.fresh(u) then return end                              -- a shared variable: every user fresh
+    if u.arm or not V.fresh(u) then return note_why(r, u == r and "already spawned on this level" or "shares its variable with a spent spawner") end
   end
   r.orig_name = orig_T and V.short(orig_T.name) or "group"
   local rep = V.pick(r, group, excl, 0, r.kind ~= "group" and r.orig.uid ~= V.ZERO_UID)
-  if not rep then return end
+  if not rep then return note_why(r, "no other " .. group .. " kind known on this level") end
   r.tried = true
   V.arm(sc, r, rep, orig_T)
+  if r.arm then note_why(r, "CHANGED") end
 end
 
 function V.write_var(sc, r, uid, actors)
   local now = V.var(sc, r.var.idx, r.var.gen)
   if not now then return false, "the variable is gone" end
-  local ok1 = pcall(rivet.write, string.format("%X", now.addr), le_hex(uid))
-  local ok2 = pcall(rivet.write, string.format("%X", now.addr + 0x10), le32(actors))
+  local ok1, e1 = pcall(rivet.write, string.format("%X", now.addr), le_hex(uid))
+  local ok2, e2 = pcall(rivet.write, string.format("%X", now.addr + 0x10), le32(actors))
   local back = V.var(sc, r.var.idx, r.var.gen)
-  return ok1 and ok2 and back and back.uid == uid and back.actors == actors, back
+  -- dev 10.28: the third answer says a write was lost to the frame budget (a put-back then tries again next frame)
+  local budget = (not ok1 and tostring(e1):find("budget", 1, true) ~= nil) or (not ok2 and tostring(e2):find("budget", 1, true) ~= nil)
+  return ok1 and ok2 and back and back.uid == uid and back.actors == actors, back, budget
 end
 
 function V.arm(sc, r, rep, orig_T)
@@ -2108,32 +2192,91 @@ function V.rotate(sc, A)
   if V.write_var(sc, r, uid, rep.handle) then A.rep, A.new_uid = rep, uid end
 end
 
-function V.put_back(A, why)
+function V.put_back_now(A, why)
   if not A or A.restored then return end
-  A.restored = true
   local r = A.rec
-  r.arm = nil
-  r.restored_frame = SP.frame
   local sc = V.scene()
-  local v = sc and V.var(sc, r.var.idx, r.var.gen)
+  local v, verr = nil, nil
+  if sc then v, verr = V.var(sc, r.var.idx, r.var.gen) end
+  -- a read lost to the frame budget (rivet.read answers nothing) is not "the variable changed": try again later
+  if not v and verr == "unreadable" and not A.unloaded and (A.unreadable or 0) < 10 then
+    A.unreadable = (A.unreadable or 0) + 1
+    error("frame budget: the variable could not be read for its put-back", 0)
+  end
   local res
-  if v and v.uid == A.new_uid and v.actors == A.rep.handle then
-    res = V.write_var(sc, r, r.orig.uid, r.orig.actors) and "OK" or "FAILED"
+  -- ours, or half ours (one of the two writes of an interrupted put-back went through)
+  local ours = v and ((v.uid == A.new_uid and v.actors == A.rep.handle) or (v.uid == r.orig.uid and v.actors == A.rep.handle and A.new_uid ~= r.orig.uid)
+                      or (v.uid == A.new_uid and v.actors == r.orig.actors and A.new_uid ~= r.orig.uid))
+  if ours then
+    local ok, back, budget = V.write_var(sc, r, r.orig.uid, r.orig.actors)
+    if not ok and (back == nil or budget) and (A.unreadable or 0) < 10 then
+      A.unreadable = (A.unreadable or 0) + 1
+      error("frame budget: the put-back could not be read back", 0)
+    end
+    res = ok and "OK" or "FAILED"
+  elseif v and v.uid == r.orig.uid and v.actors == r.orig.actors then
+    res = "OK"                                                              -- written before an interrupted read-back
+  elseif A.unloaded then
+    res = "nothing to write (the level it was on is unloaded)"
   else
     res = "skipped (the variable no longer holds what was written)"
   end
-  V.lvl.put_back = (V.lvl.put_back or 0) + 1
-  if V.lvl.put_back <= 8 or res == "FAILED" then
+  -- marked only once the write is done: a frame-budget error above leaves it for V.pending (dev 10.28)
+  A.restored = true
+  r.arm = nil
+  r.restored_frame = SP.frame
+  local lvl = V.lvl
+  local n = 1
+  if lvl then lvl.put_back = (lvl.put_back or 0) + 1; n = lvl.put_back end
+  if n <= 8 or res == "FAILED" then
     vlog(string.format("put back (%s): %s %s: %s", tostring(why), V.ADAPTER_LABEL[r.kind], tostring(r.key), res))
   end
 end
-function V.put_back_all(why)
+function V.queue_put_back(A, why)
+  if A.restored or A.queued then return end
+  A.queued = true
+  V.pending[#V.pending + 1] = { A = A, why = why }
+end
+-- the put-back every other part uses: one that cannot finish now (frame budget) waits in V.pending
+function V.put_back(A, why)
+  if not A or A.restored then return end
+  local ok, err = pcall(V.put_back_now, A, why)
+  if ok and A.restored then return end
+  V.queue_put_back(A, why)
+  if not ok and not tostring(err):find("budget", 1, true) then vlog("RANDO-ERROR put back: " .. tostring(err)) end
+end
+-- dev 10.28: every put-back runs on its own; one a frame-budget error interrupts waits in V.pending and is done at the
+-- next frame BEFORE anything is read or written (round38: a checkpoint's put-backs were cut short by the budget once).
+function V.put_back_all(why, unloaded)
   local lvl = V.lvl
   if not lvl then return 0 end
   local n = 0
-  for _, A in ipairs(lvl.arms) do if not A.restored then V.put_back(A, why); n = n + 1 end end
-  if n > 0 then vlog(string.format("%d changed spawner(s) put back: %s", n, tostring(why))) end
+  for _, A in ipairs(lvl.arms) do
+    if not A.restored then
+      n = n + 1
+      if unloaded then A.unloaded = true end
+      local ok, err = pcall(V.put_back_now, A, why)
+      if not ok or not A.restored then
+        V.queue_put_back(A, why)
+        if not ok and not tostring(err):find("budget", 1, true) then vlog("RANDO-ERROR put back: " .. tostring(err)) end
+      end
+    end
+  end
+  if n > 0 then vlog(string.format("%d changed spawner(s) put back: %s%s", n, tostring(why),
+      #V.pending > 0 and string.format(" (%d finish next frame)", #V.pending) or "")) end
   return n
+end
+function V.drain_pending()
+  while #V.pending > 0 do
+    local p = V.pending[1]
+    if not p.A.restored then
+      p.tries = (p.tries or 0) + 1
+      local ok = pcall(V.put_back_now, p.A, p.why)
+      if not ok and p.tries < 20 then return false end
+    end
+    table.remove(V.pending, 1)
+  end
+  return true
 end
 
 function V.block(A, why)
@@ -2157,7 +2300,9 @@ function V.on_spawn_seen(f)
   if fac ~= 0 then lvl.fac_spawns[fac] = (lvl.fac_spawns[fac] or 0) + 1 end
   if not h or lvl.spawned[h] then return end
   lvl.spawned[h] = true
-  if V.enabled() and #lvl.queue < V.QUEUE_CAP then lvl.queue[#lvl.queue + 1] = { h = h, fac = fac } end
+  if V.enabled() and #lvl.queue < V.QUEUE_CAP then
+    lvl.queue[#lvl.queue + 1] = { h = h, fac = fac, loc = math.tointeger(tonumber(f.SpawnLocation)), idx = math.tointeger(tonumber(f.SpawnIndex)) }
+  end
 end
 function V.on_started(f)
   local lvl = V.lvl
@@ -2165,26 +2310,56 @@ function V.on_started(f)
   if lvl and h then lvl.started[h] = true end
 end
 
--- the node of a SpawnFactory-0 spawn: its LastSpawn variable first, then its Spawner's spawn list
-function V.tie(sc, wanted)
-  local lvl, found, left, t0 = V.lvl, {}, 0, clock_()
-  for _ in pairs(wanted) do left = left + 1 end
-  for pass = 1, 2 do
+-- does node record r name spawned actor h? (its LastSpawn, its spawned-actors variable, its Spawner's spawn list; for
+-- a group node also the spawned-actors GROUP, expanded by rivet.script_node)
+local function holds(sc, r, h, pass)
+  if pass == 1 then
+    if r.last then local lv = V.var(sc, r.last.idx, r.last.gen); if lv and lv.actors == h then return true end end
+    if r.spawned_var then local sv = V.var(sc, r.spawned_var.idx, r.spawned_var.gen); if sv and sv.single and sv.actors == h then return true end end
+  elseif pass == 2 then
+    if r.saddr then for _, x in ipairs(V.spawner_slots(r.saddr) or {}) do if x == h then return true end end end
+  elseif pass == 3 and r.kind == "group" and rivet.script_node and r.component then
+    local ok, t = pcall(rivet.script_node, r.component, false)
+    if ok and type(t) == "table" and type(t.vars) == "table" then
+      for _, v in ipairs(t.vars) do
+        if type(v) == "table" and type(v.value) == "table" and tonumber(v.plug) ~= V.PLUG_TEMPLATE then
+          for _, x in ipairs(v.value) do if math.tointeger(tonumber(x)) == h then return true end end
+        end
+      end
+    end
+  end
+  return false
+end
+V.holds = holds
+
+-- dev 10.28: the node of a SpawnFactory-0 spawn, ONE spawn at a time. Round38: ambient portals and cars spawn all the
+-- time with SpawnFactory 0 and 10.27 searched every node for each batch of them - the frame-budget storm. Now a spawn
+-- location remembers its node (checked against that node's own spawn record, as two waves may share a spawn point);
+-- a location that tied to nothing 3 times is not searched again on this level.
+function V.tie_one(sc, e)
+  local lvl = V.lvl
+  local c = e.loc and e.loc ~= 0 and lvl.loc[e.loc]
+  if c then
+    for pass = 1, 3 do if vguard(holds, sc, c, e.h, pass) then return c end end
+  elseif c == false then
+    return nil
+  end
+  local t0, found = clock_(), nil
+  for pass = 1, 3 do
     for _, r in ipairs(lvl.order) do
-      if left == 0 then return found end
-      if r.kind ~= "factory" and not r.not_enemy then
-        vguard(function()
-          if pass == 1 and r.last then
-            local lv = V.var(sc, r.last.idx, r.last.gen)
-            if lv and lv.actors and wanted[lv.actors] and not found[lv.actors] then found[lv.actors] = r; left = left - 1 end
-          elseif pass == 2 and r.saddr then
-            for _, h in ipairs(V.spawner_slots(r.saddr) or {}) do
-              if wanted[h] and not found[h] then found[h] = r; left = left - 1 end
-            end
-          end
-        end)
+      if r.kind ~= "factory" and r ~= c then
+        if vguard(holds, sc, r, e.h, pass) then found = r; break end
         t0 = vpace(t0)
       end
+    end
+    if found then break end
+  end
+  if e.loc and e.loc ~= 0 then
+    if found then lvl.loc[e.loc] = found
+    else
+      lvl.loc_miss = lvl.loc_miss or {}
+      lvl.loc_miss[e.loc] = (lvl.loc_miss[e.loc] or 0) + 1
+      if lvl.loc_miss[e.loc] >= 3 then lvl.loc[e.loc] = false end
     end
   end
   return found
@@ -2193,13 +2368,16 @@ end
 function V.verify(A, a)
   local r, ad = A.rec, V.adapters[A.rec.kind]
   local verdict
-  if a and a.name and V.same_name(a.name, A.rep.name) then verdict = "REPLACEMENT SPAWNED"; ad.ok = ad.ok + 1
-  elseif a and a.name and A.orig_T and V.same_name(a.name, A.orig_T.name) then verdict = "ORIGINAL SPAWNED"; ad.original = ad.original + 1
+  if a and a.name and V.same_kind(a.name, a.family, A.rep.name, A.rep.family) then verdict = "REPLACEMENT SPAWNED"; ad.ok = ad.ok + 1
+  elseif a and a.name and A.orig_T and V.same_kind(a.name, a.family, A.orig_T.name, A.orig_T.family) then verdict = "ORIGINAL SPAWNED"; ad.original = ad.original + 1
   elseif a and a.name and r.kind == "group" then
     verdict = "ORIGINAL SPAWNED (a group member)"
     local G = groups_t()[r.key] or ""
     local member = false
-    for m in G:gmatch("[^,]+") do if V.same_name(m:match(":(.*)$"), a.name) then member = true end end
+    for m in G:gmatch("[^,]+") do
+      local mf, mn = m:match("^([^:]*):(.*)$")
+      if V.same_kind(mn, mf ~= "-" and mf or nil, a.name, a.family) then member = true end
+    end
     if member then ad.original = ad.original + 1 else verdict = "SOMETHING ELSE SPAWNED"; ad.other = ad.other + 1 end
   elseif a and a.name then verdict = "SOMETHING ELSE SPAWNED"; ad.other = ad.other + 1
   else return end                                                           -- the actor is gone: the next spawn decides
@@ -2231,77 +2409,100 @@ function V.verify(A, a)
   end
 end
 
--- one batch of spawns: learn, verify, keep group members, follow the changed ones
-function V.process(sc, batch)
+-- one spawn: learn, verify, keep group members, follow the changed ones (dev 10.28: one at a time, see V.pump)
+function V.process_one(sc, e)
+  if e.done then return end
   local lvl = V.lvl
-  local wanted, any0 = {}, false
-  for _, e in ipairs(batch) do if e.fac == 0 then wanted[e.h] = e; any0 = true end end
-  local tied = any0 and V.tie(sc, wanted) or {}
-  local t0 = clock_()
-  for _, e in ipairs(batch) do
-    vguard(function()
-      local r
-      if e.fac ~= 0 then r = V.factory_rec(e.fac) else r = tied[e.h] end
-      if not r then return end
-      r.spawned = (r.spawned or 0) + 1
-      local a = V.actor(e.h)
-      local A = r.arm
-      if A and not A.restored then
-        A.spawns = A.spawns + 1
-        A.alive[e.h] = true; A.alive_n = A.alive_n + 1; A.last_activity = SP.frame
-        lvl.spawned[e.h] = { A = A, T = A.rep }
-        if lvl.logged < V.SPAWN_LOG then
-          lvl.logged = lvl.logged + 1
-          vlog(string.format("spawn %d of changed %s %s: %s", e.h, V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(a and V.short(a.name))))
-        end
-        if not A.verified then V.verify(A, a) end
-        if r.kind == "group" and not A.restored and A.verified == "REPLACEMENT SPAWNED" then V.rotate(sc, A) end
-        return
-      end
-      if not (a and a.name) then return end
-      -- a spawn of a spawner put back moments ago may still be the replacement: nothing is learned from it
-      if r.restored_frame and (SP.frame or 0) - r.restored_frame < 120 then return end
-      if r.kind == "group" then
-        if not a.family then r.not_enemy = true end                         -- a vehicle, a prop: never this group
-        local fam = a.family or "-"
-        local G = groups_t()[r.key]
-        local has = false
-        local n = 0
-        for m in (G or ""):gmatch("[^,]+") do n = n + 1; if V.same_name(m:match(":(.*)$"), a.name) then has = true end end
-        if not has and n < V.MEMBER_CAP then
-          local Gt = groups_t(true)
-          if G == nil then
-            local c = 0
-            for _ in pairs(Gt) do c = c + 1 end
-            if c >= V.GROUP_CAP then return end
-          end
-          Gt[r.key] = (G and G ~= "" and (G .. ",") or "") .. fam .. ":" .. V.short(a.name)
-          if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
-          vlog(string.format("group node %s: member %s (%s)", tostring(r.key), V.short(a.name), fam))
-        end
-      else
-        local v = V.var(sc, r.var.idx, r.var.gen)
-        if v and v.single then
-          local T = V.tpl_of(v.actors, v.uid)
-          V.learn(T, a, "spawn")
-          lvl.spawned[e.h] = { T = T }
-          if r.kind == "template" and not V.usable(T) then r.not_enemy = true end
+  local r
+  if e.fac ~= 0 then r = V.factory_rec(e.fac) else r = V.tie_one(sc, e) end
+  if not r then
+    if e.fac == 0 then
+      lvl.untied = lvl.untied + 1
+      if lvl.untied_logged < V.UNTIED_LOG then
+        local a = V.actor(e.h)
+        if a and a.family and V.role_of(a) == "enemy" then
+          lvl.untied_logged = lvl.untied_logged + 1
+          lvl.activity = SP.frame or 0
+          vlog(string.format("spawn %d of %s (%s) at location %s index %s: tied to no spawner variable (SpawnFactory 0)",
+              e.h, tostring(V.short(a.name)), tostring(a.family), tostring(e.loc), tostring(e.idx)))
         end
       end
-    end)
-    t0 = vpace(t0)
+    end
+    e.done = true
+    return
   end
+  r.spawned = (r.spawned or 0) + 1
+  local a = V.actor(e.h)
+  if a and V.FAMILY_GROUP[a.family or ""] then lvl.activity = SP.frame or 0 end
+  local A = r.arm
+  if A and not A.restored then
+    A.spawns = A.spawns + 1
+    A.alive[e.h] = true; A.alive_n = A.alive_n + 1; A.last_activity = SP.frame
+    lvl.spawned[e.h] = { A = A, T = A.rep }
+    if lvl.logged < V.SPAWN_LOG then
+      lvl.logged = lvl.logged + 1
+      vlog(string.format("spawn %d of changed %s %s: %s", e.h, V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(a and V.short(a.name))))
+    end
+    if not A.verified then V.verify(A, a) end
+    if r.kind == "group" and not A.restored and A.verified == "REPLACEMENT SPAWNED" then V.rotate(sc, A) end
+    e.done = true
+    return
+  end
+  if not (a and a.name) then e.done = true; return end
+  -- a spawn of a spawner put back moments ago may still be the replacement: nothing is learned from it
+  if r.restored_frame and (SP.frame or 0) - r.restored_frame < 120 then e.done = true; return end
+  if r.kind == "group" then
+    if not a.family then r.not_enemy = true end                         -- a vehicle, a prop: never this group
+    local fam = a.family or "-"
+    local G = groups_t()[r.key]
+    local has = false
+    local n = 0
+    for m in (G or ""):gmatch("[^,]+") do
+      n = n + 1
+      local mf, mn = m:match("^([^:]*):(.*)$")
+      if V.same_kind(mn, mf ~= "-" and mf or nil, a.name, a.family) then has = true end
+    end
+    if not has and n < V.MEMBER_CAP then
+      local Gt = groups_t(true)
+      local ok = true
+      if G == nil then
+        local c = 0
+        for _ in pairs(Gt) do c = c + 1 end
+        if c >= V.GROUP_CAP then ok = false end
+      end
+      if ok then
+        Gt[r.key] = (G and G ~= "" and (G .. ",") or "") .. fam .. ":" .. V.short(a.name)
+        if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
+        vlog(string.format("group node %s: member %s (%s)", tostring(r.key), V.short(a.name), fam))
+        lvl.dirty = true
+      end
+    end
+  else
+    local v = V.var(sc, r.var.idx, r.var.gen)
+    if v and v.single then
+      local T = V.tpl_of(v.actors, v.uid)
+      V.learn(T, a, "spawn")
+      lvl.spawned[e.h] = { T = T }
+      if r.kind == "template" and not V.usable(T) then r.not_enemy = true end
+    end
+  end
+  e.done = true
 end
 
 -- ---- deaths, health bars, checkpoints, the watchdog --------------------------------------------------------
+-- dev 10.28: ANY death keeps the level "active" for the stuck rule (round38: the event came, but never with a bot the
+-- randomizer could match); a death that names one of our spawned bots also takes it off its encounter's list
 function V.on_death(f, ev)
   local lvl = V.lvl
+  if not lvl then return end
+  lvl.activity = SP.frame or 0
+  lvl.deaths_seen = lvl.deaths_seen + 1
   local s = f.SenderHandle or (type(ev) == "table" and ev.sender)
   local h = math.tointeger(tonumber(s))
-  local x = lvl and h and lvl.spawned[h]
+  local x = h and lvl.spawned[h]
   if type(x) ~= "table" or not x.A then return end
   local A = x.A
-  if A.alive[h] then A.alive[h] = nil; A.alive_n = A.alive_n - 1; A.last_activity = SP.frame end
+  if A.alive[h] then A.alive[h] = nil; A.alive_n = A.alive_n - 1; A.last_activity = SP.frame; lvl.deaths_tied = (lvl.deaths_tied or 0) + 1 end
 end
 function V.on_health_bar(f, ev)
   if f.IsFriendly == true then return end
@@ -2347,22 +2548,106 @@ function V.on_checkpoint(cp)
   end
   V.reset("checkpoint loaded")
 end
+-- dev 10.28: the stuck rule. 10.27 called an encounter stuck when no death NAMED one of its bots for 180 s - and in
+-- round38 no death ever did: all 5 changed A1 factories were "stuck" while you fought, and saved "kept original" for
+-- the seed. Now: (1) bots that no longer answer are taken off their encounter (V.gone, a few per second); (2) stuck =
+-- some of its bots still answer AND the whole level was quiet for V.STUCK_SECONDS (no death of anything, no enemy
+-- spawn, no bot gone); (3) stuck puts the spawner back for this level only and counts one retry - only V.RETRY_LIMIT
+-- retries keep it original for the seed.
 function V.watchdog()
   local lvl = V.lvl
-  for _, A in ipairs(lvl and lvl.arms or {}) do
-    if not A.restored and A.alive_n > 0 and SP.frame - A.last_activity > V.STUCK_SECONDS * 60 then
-      V.block(A, "its enemies stayed alive " .. V.STUCK_SECONDS .. " s without a death")
-      say("Enemy Randomizer: an encounter looked stuck - its next enemies are the original ones (load the last checkpoint if one cannot be reached)",
-          { type = "corner", duration = 8 })
+  if not lvl then return end
+  local checked = 0
+  for _, A in ipairs(lvl.arms) do
+    if not A.restored and A.alive_n > 0 then
+      for h in pairs(A.alive) do
+        if checked >= V.ALIVE_CHECKS then break end
+        checked = checked + 1
+        if V.gone(h) then
+          A.alive[h] = nil; A.alive_n = A.alive_n - 1; A.last_activity = SP.frame
+          lvl.gone_seen = lvl.gone_seen + 1
+          lvl.activity = SP.frame
+        end
+      end
+    end
+  end
+  for _, A in ipairs(lvl.arms) do
+    local quiet = SP.frame - math.max(A.last_activity or 0, lvl.activity or 0)
+    if not A.restored and A.alive_n > 0 and quiet > V.STUCK_SECONDS * 60 then
+      local k = A.rec.key
+      V.session.retries[k] = (V.session.retries[k] or 0) + 1
+      if V.session.retries[k] >= V.RETRY_LIMIT then
+        V.block(A, "stuck or retried " .. V.session.retries[k] .. " times")
+      else
+        V.put_back(A, string.format("the level was quiet %d s with %d of its enemies alive (retry %d of %d)", V.STUCK_SECONDS,
+            A.alive_n, V.session.retries[k], V.RETRY_LIMIT))
+      end
+      if not lvl.stuck_said then
+        lvl.stuck_said = true
+        say("Enemy Randomizer: an encounter looks stuck - its next enemies here are the original ones (load the last checkpoint if an enemy cannot be reached)",
+            { type = "corner", duration = 8 })
+      end
     end
   end
 end
 
+-- dev 10.28: 10.27's watchdog saved "kept original for the seed" for encounters that were not stuck (round38: 5 Zurkon
+-- A1 factories). Those entries are dropped once per save (10.28 never writes that reason).
+function V.migrate()
+  local s = vstate()
+  if not s or V.migrated_state == s then return end
+  V.migrated_state = s
+  local n = 0
+  for k, why in pairs(s.spawn_blocked or {}) do
+    if type(k) == "string" and k:sub(1, 2) == "v:" and tostring(why):find("without a death", 1, true) then
+      s.spawn_blocked[k] = nil; n = n + 1
+    end
+  end
+  if n > 0 then
+    vlog(string.format("%d spawner(s) 10.27 wrongly kept original (\"stuck\" while you fought) are randomized again", n))
+    if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
+  end
+end
+
 -- ---- the frame ---------------------------------------------------------------------------------------------
+-- dev 10.28: ONE job, V.pump, whose progress lives in the level record (the put-back list, the spawn queue, the plan
+-- cursor), so a frame-budget error that kills it loses nothing: the job is started again from where it was. Round38:
+-- ~100 "ran past the 8 ms frame budget" RANDO-ERRORs, each one dropped a batch of spawns (never verified, never learned)
+-- and the plan restarted from the first spawner. Budget errors are now counted (level summary), not logged one by one.
 function V.start(fn)
-  V.job_fn, V.job_restarts = fn, 0
+  V.job_fn, V.job_restarts, V.job_progress = fn, 0, V.progress or 0
   V.job = coroutine.create(fn)
 end
+
+function V.pump(sc)
+  if not V.drain_pending() then return end                                 -- put-backs first: nothing is read before
+  local lvl = V.lvl
+  local t0 = clock_()
+  if lvl.scan_due then
+    V.scan(sc)                                                              -- memoized: a restart continues it
+    lvl.scan_due = false
+    t0 = clock_()
+  end
+  while lvl.scans > 0 and #lvl.queue > 0 do
+    local e = lvl.queue[1]
+    if not e.done then
+      e.tries = (e.tries or 0) + 1
+      if e.tries <= 3 then vguard(V.process_one, sc, e) end
+    end
+    if lvl.queue[1] == e then table.remove(lvl.queue, 1) end
+    t0 = vpace(t0)
+  end
+  if lvl.scans > 0 and (lvl.dirty or lvl.arm_running) then
+    if not lvl.arm_running then lvl.arm_running, lvl.dirty, lvl.arm_i = true, false, 1 end
+    while lvl.arm_i <= #lvl.order do
+      vguard(V.plan_rec, sc, lvl.order[lvl.arm_i])
+      lvl.arm_i = lvl.arm_i + 1
+      t0 = vpace(t0)
+    end
+    lvl.arm_running = false
+  end
+end
+-- kept for the tests and developer files of 10.27
 function V.arm_pass(sc)
   local t0 = clock_()
   for _, r in ipairs(V.lvl.order) do
@@ -2371,32 +2656,53 @@ function V.arm_pass(sc)
   end
 end
 
+local function job_error(err)
+  local lvl = V.lvl
+  local msg = tostring(err)
+  if lvl and lvl.errors[msg] then return end
+  if lvl then lvl.errors[msg] = true end
+  vlog("RANDO-ERROR " .. msg)
+end
+
 function V.tick(frame, ready)
   if not V.lvl then V.new_level("scripts loaded") end
   local lvl = V.lvl
   if not V.enabled() then
     V.job = nil
     if #lvl.arms > 0 then V.put_back_all("Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
+    if #V.pending > 0 and ready then pcall(V.drain_pending) end
     lvl.queue = {}
     return
   end
   if not ready then return end
+  V.migrate()
   if V.job then
     local ok, err = coroutine.resume(V.job)
     if not ok then
-      if tostring(err):find("frame budget", 1, true) and (V.job_restarts or 0) < 2 then
-        V.job_restarts = (V.job_restarts or 0) + 1
+      if tostring(err):find("budget", 1, true) then
         V.budget_hits = (V.budget_hits or 0) + 1
-        V.job = coroutine.create(V.job_fn)
+        if (V.progress or 0) ~= V.job_progress then V.job_progress, V.job_restarts = V.progress or 0, 0 end
+        V.job_restarts = (V.job_restarts or 0) + 1
+        if V.job_restarts <= V.RESTART_CAP then
+          V.job = coroutine.create(V.job_fn)
+        else
+          V.job = nil
+          lvl.jobs_dropped = (lvl.jobs_dropped or 0) + 1
+          lvl.queue = {}                                                    -- spawns of a level too busy to follow
+        end
       else
         V.job = nil
-        vlog("RANDO-ERROR " .. tostring(err))
+        job_error(err)
       end
     elseif coroutine.status(V.job) == "dead" then V.job = nil end
     return
   end
-  if frame % 60 == 0 then V.watchdog() end
-  local work = (lvl.scans > 0 and #lvl.queue > 0) or frame >= lvl.next_scan
+  if frame % 60 == 0 then
+    local okw, errw = pcall(V.watchdog)
+    if not okw and not tostring(errw):find("budget", 1, true) then job_error(errw) end
+  end
+  local due = frame >= lvl.next_scan
+  local work = due or #V.pending > 0 or (lvl.scans > 0 and (#lvl.queue > 0 or lvl.dirty or lvl.arm_running))
   if not work then return end
   local sc, why = V.scene()
   if not sc then
@@ -2412,22 +2718,14 @@ function V.tick(frame, ready)
     end
     return
   end
-  if lvl.scans > 0 and #lvl.queue > 0 then
-    local batch = lvl.queue
-    lvl.queue = {}
-    V.start(function() vguard(V.process, sc, batch); V.arm_pass(sc) end)
-    return
-  end
-  if frame >= lvl.next_scan then
-    lvl.next_scan = frame + V.SCAN_EVERY
-    V.start(function() V.scan(sc); V.arm_pass(sc) end)
-  end
+  if due then lvl.next_scan, lvl.scan_due = frame + V.SCAN_EVERY, true end
+  V.start(function() V.pump(sc) end)
 end
 
 -- the switch: off puts everything back at once (V.tick); on changes only spawners that have not run yet
 function V.on_switch(on)
   if on then
-    if V.lvl then V.lvl.next_scan = SP.frame or 0 end
+    if V.lvl then V.lvl.next_scan = SP.frame or 0; V.lvl.dirty = true end
   else
     V.put_back_all("Enemy Randomizer off")
   end
@@ -2439,7 +2737,10 @@ function V.status()
   if lvl then
     for _, A in ipairs(lvl.arms) do if not A.restored then out.changed = out.changed + 1; out[A.rec.kind] = out[A.rec.kind] + 1 end end
     local names = {}
-    for _, T in pairs(lvl.tpl) do if V.usable(T) and not names[V.short(T.name)] then names[V.short(T.name)] = true; out.kinds = out.kinds + 1 end end
+    for _, T in pairs(lvl.tpl) do
+      local k = tostring(V.short(T.name)) .. "/" .. tostring(T.family)
+      if V.usable(T) and not names[k] then names[k] = true; out.kinds = out.kinds + 1 end
+    end
   end
   for uid in pairs(reg_t()) do local e = V.reg_get(uid); if e and e.role == "enemy" and not e.hb and not e.mixed then out.known = out.known + 1 end end
   for _, ad in pairs(V.adapters) do out.ok, out.original = out.ok + ad.ok, out.original + ad.original end
@@ -2457,6 +2758,22 @@ function V.summary()
   for _, A in ipairs(lvl.arms) do if not A.restored then active = active + 1 end end
   vlog(string.format("level summary (%s): %d spawner variable(s), %d changed (%d still), budget retries %d | session %s",
       tostring(lvl.why), #lvl.order, #lvl.arms, active, V.budget_hits or 0, table.concat(parts, " | ")))
+  -- dev 10.28: what the next test needs to know about the routes that changed nothing in round38
+  local why = {}
+  for _, k in ipairs({ "template", "group" }) do
+    local t = lvl.why_not[k]
+    if t then
+      local keys = {}
+      for reason, n in pairs(t) do if n > 0 then keys[#keys + 1] = reason end end
+      table.sort(keys)
+      local p = {}
+      for _, reason in ipairs(keys) do p[#p + 1] = string.format("%d %s", t[reason], reason) end
+      if #p > 0 then why[#why + 1] = V.ADAPTER_LABEL[k] .. ": " .. table.concat(p, ", ") end
+    end
+  end
+  vlog(string.format("level detail: %s | SpawnFactory-0 spawns tied to nothing %d | deaths seen %d (of our bots %d), bots gone %d | jobs dropped %d",
+      #why > 0 and table.concat(why, " | ") or "no node spawner considered", lvl.untied, lvl.deaths_seen, lvl.deaths_tied or 0,
+      lvl.gone_seen, lvl.jobs_dropped or 0))
 end
 
 -- ---------------------------------------------------------------------------------------------
@@ -2575,9 +2892,12 @@ if not SP.subscribed then
   on("HealthBarShowEvent", SP.on_health_bar, false, vcall("on_health_bar"))
   on("BossPhaseChangeEvent", SP.on_boss_phase)
   on("LevelLoadedEvent", function() SP.on_level("level loaded") end, true)
-  on("PlanetChangedEvent", function(f) if f.NewPlanetName then SP.on_level("planet " .. tostring(f.NewPlanetName)) end end, true)
+  on("PlanetChangedEvent", function(f)
+    if f.NewPlanetName then SP.on_level("planet " .. tostring(f.NewPlanetName))
+    elseif f.OldPlanetName and SP.V and SP.V.lvl then pcall(SP.V.put_back_all, "leaving " .. tostring(f.OldPlanetName)) end   -- dev 10.28
+  end, true)
 end
 
 log("spawner layer loaded (" .. SP.NODE_CLASS .. " Templates; families " .. #SP.FAMILY_CLASSES .. " bot classes)")
-SP.V.log(string.format("variable route loaded (dev 10.27): factory Templates, node Template, node Template group; plugs Templates %d Template %d",
+SP.V.log(string.format("variable route loaded (dev 10.28): factory Templates, node Template, node Template group; plugs Templates %d Template %d",
     SP.V.PLUG_TEMPLATES, SP.V.PLUG_TEMPLATE))

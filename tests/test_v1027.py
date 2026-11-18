@@ -357,7 +357,8 @@ class SimulatorTests(unittest.TestCase):
         s.g.travel("NefCity")
         s.g.step(5)
         self.assertEqual(s.var(22), 9001)
-        self.assertTrue(s.has("put back: planet NefCity"), s.ev()[-4:])
+        # dev 10.28: put back when the old planet is left (its variables still there), not after the new one loaded
+        self.assertTrue(s.has("put back: leaving Zurkon") or s.has("put back: planet NefCity"), s.ev()[-4:])
 
     def test_the_key_off_puts_back_at_once_and_on_changes_only_fresh_spawners(self):
         s = Sim(self, A1)
@@ -467,16 +468,19 @@ class SimulatorTests(unittest.TestCase):
         self.assertEqual(s.var(22), 9001)
         self.assertIn("|hb", s.g.lua.eval("RANDO.state.enemy_reg['%016X']" % (0x8000000000000000 | 9002)))
 
-    def test_a_stuck_encounter_keeps_its_original_enemies(self):
+    def test_a_stuck_encounter_is_put_back_for_this_level_only(self):
+        # dev 10.28 (round38): stuck = the whole level quiet with its bots alive; it is put back for this level and
+        # counts one retry - no longer "kept original for this seed" at once
         s = Sim(self, A1)
         s.g.lua.execute("RANDO_SPAWNERS.V.STUCK_SECONDS = 2")
         s.spawn(8001); s.spawn(8002); s.spawn(8003)
         s.g.step(200)
-        self.assertTrue(s.has("kept original for this seed: factory Templates 000000000000F002"), s.ev()[-3:])
-        self.assertTrue(s.g.note_has("Enemy Randomizer: an encounter looked stuck"))
+        self.assertTrue(s.has("put back (the level was quiet 2 s with 1 of its enemies alive (retry 1 of 5)): factory Templates 000000000000F002: OK"), s.ev()[-3:])
+        self.assertFalse(s.has("kept original for this seed"))
+        self.assertTrue(s.g.note_has("Enemy Randomizer: an encounter looks stuck"))
         self.assertEqual(s.var(22), 9001)
         s.checkpoint()
-        self.assertEqual(s.var(22), 9001)                                         # blocked for the seed
+        self.assertEqual(s.var(22), 9002)                                         # the next try is randomized again
 
     def test_a_death_keeps_the_watchdog_quiet(self):
         s = Sim(self, A1)
@@ -659,8 +663,8 @@ class Round37ReplayTests(unittest.TestCase):
     def test_the_write_is_the_format_round37_proved(self):
         # round37: uid +0x00 and handle +0x10 of the variable; a value without uid keeps none (spawnproof v6, P.arm)
         text = (SCRIPTS / "16_rando_spawners.lua").read_text(encoding="utf-8")
-        self.assertIn('local ok1 = pcall(rivet.write, string.format("%X", now.addr), le_hex(uid))', text)
-        self.assertIn('local ok2 = pcall(rivet.write, string.format("%X", now.addr + 0x10), le32(actors))', text)
+        self.assertIn('local ok1, e1 = pcall(rivet.write, string.format("%X", now.addr), le_hex(uid))', text)
+        self.assertIn('local ok2, e2 = pcall(rivet.write, string.format("%X", now.addr + 0x10), le32(actors))', text)
         self.assertIn("V.SCENE_VARS = 0x75A0", text)
         self.assertIn("V.MB_SCENE = 0x128", text)
         self.assertIn('elseif now.uid == V.ZERO_UID then new_uid = V.ZERO_UID', text)

@@ -1,11 +1,14 @@
 # Enemy Randomizer and Boss Randomizer (dev 10.12, kit 10.0.8)
 
-> **STATUS (dev 10.27, kit 10.0.18):**
-> - **Enemy Randomizer (`-`): REBUILT on the method round37 proved in the game - NOT yet run in your game.** Section 0
+> **STATUS (dev 10.28, kit 10.0.18):**
+> - **Enemy Randomizer (`-`): WORKS IN THE GAME ON FACTORY SPAWNERS** (round38: 11/11 first spawns were the
+>   replacement, Zurkon and Sargasso, walkers and flyers). Group (robomutt / thug) and single-enemy node spawners:
+>   not changed yet (KNOWN_ISSUES 0u). Section 0
 >   below describes it. Sections 1-8 describe the OLD census route (10.12-10.20), which never found an encounter in
 >   any real log; the Enemy Randomizer only uses it with `enemy_route = "census"` (a test setting).
 > - **Boss Randomizer (`=`): DOES NOT WORK IN THE GAME.** Still the old census route.
-> - Evidence levels: in-game logs - round37's factory experiment only; visual confirmation - none yet.
+> - Evidence levels: in-game logs - round37 (experiment) and round38 (the Enemy Randomizer itself); visual confirmation -
+>   none reported yet.
 
 ## 0. Dev 10.27: the Enemy Randomizer on the variable route
 
@@ -15,9 +18,9 @@ regular enemy's template. The spawner then spawns, counts and completes the enco
 
 | Adapter | Spawner and variable | Who uses it (your logs) | Status |
 |---|---|---|---|
-| factory | SunsetSpawnerFactory node, `Templates` (one actor) | arena waves on Zurkon: robot shooter, robot melee, bladeball; pub NPCs (never touched) | **PROVEN in the game** (round37: 6/6, 20/20) |
-| template | SpawnerScriptAction node, `Template` (one actor) | portals, props, NPCs on Zurkon; enemies elsewhere unknown | same format; not yet seen with an enemy |
-| group | SpawnerScriptAction node, `Template` holding an actor GROUP | robomutt / thug / robot / bladeball waves (SpawnFactory 0) | not yet seen in the game; re-chosen after each spawn |
+| factory | SunsetSpawnerFactory node, `Templates` (one actor) | arena waves on Zurkon (robot shooter, robot melee, bladeball); Sargasso fights (wasps, horned toads, thugs); pub NPCs (never touched) | **WORKS in the game** (round37 6/6, 20/20; round38 11/11 incl. Sargasso flyers) |
+| template | SpawnerScriptAction node, `Template` (one actor) | portals, props, NPCs, cars on Zurkon / Sargasso; one Sargasso wasp | 0 changed in round38 (no enemy node fresh with a known kind) |
+| group | SpawnerScriptAction node, `Template` holding an actor GROUP | robomutt / thug / robot / bladeball waves (SpawnFactory 0) | members learned in round38, 0 changed; 10.28 ties them more ways |
 
 Nodes with a `Factories` variable spawn through their factories, so the factory adapter covers them.
 

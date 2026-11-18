@@ -10,6 +10,7 @@ first full playthrough.
 dev 10.12 adds tests/test_v1012.py, 32 - see TEST_REPORT_10.12.md; dev 10.13 adds tests/test_v1013.py, 23 - TEST_REPORT_10.13.md;
 dev 10.15 adds tests/test_v1015.py, 32 - TEST_REPORT_10.15.md).
 Dev 10.27: 722 run, 0 failures, 23 skipped (tests/test_v1027.py adds 40 for the Enemy Randomizer's variable route).
+Dev 10.28: 744 run, 0 failures, 23 skipped (tests/test_v1028.py adds 22: round38 real-log facts and the fixes).
 All of these are SIMULATOR tests: none of them is a result from the real game.
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
@@ -34,6 +35,27 @@ The skipped tests:
 The older suites pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
+
+## 2-dev15. Dev 10.28 (kit 10.0.18): the Enemy Randomizer after round38 - groups, nodes, no false "stuck"
+
+Build: commit of dev 10.28 on main. Copy `rando_give.dll` (v7) next to RiftApart.exe and the WHOLE `scripts` folder
+(banner "Randomizer dev 10.28"; log `RANDO-ENEMIES variable route loaded (dev 10.28)`). For a lighter frame budget
+you may remove `dev(spawnprobe).lua` (round38's budget errors came partly from it); keep it if you can, its node
+records help the group work.
+The Enemy Randomizer is ON in this dev kit; if Ctrl+`-` says OFF, press `-` once. Use the SAME save as round38 if you
+can: the log should then say `5 spawner(s) 10.27 wrongly kept original ... are randomized again`.
+1. Zurkon, challenge A1 to the end. LOOK: other walkers in later waves; NO "encounter looks stuck" note while you fight.
+2. Zurkon, the challenge with robomutts / thugs (round38: A5 area, thugs at spawn index 8 / 9), TWICE in a row (the
+   first run learns the group; load the checkpoint or restart it for the second). LOOK at the second run: does
+   anything else come where the robomutts / thugs came? Does it finish?
+3. Sargasso, any fight with wasps / horned toads / thugs (round38 proved a jetpack thug -> wasp there). Press Ctrl+`-`.
+4. One more planet with regular enemies (Savali, Blizar Prime or Torren IV, any wave). Press Ctrl+`-`.
+5. Note anything stuck, unbeatable, or a challenge that does not finish, and which enemies you saw where. Send rivet.log.
+Lines: `CHANGED ...`, `VERIFY ...`, `group node ...: member ...`, `spawn N of X (family) at location L index I: tied to
+no spawner variable` (an enemy no adapter could follow: the next step for groups), `level detail: node Template: ...
+| node Template group: ... | SpawnFactory-0 spawns tied to nothing N | deaths seen D (of our bots d), bots gone G | jobs
+dropped J` (why node and group spawners were not changed; whether deaths and gone bots are seen), `put back (the level
+was quiet ...)` (the new stuck rule), `template actors never answered ...`.
 
 ## 2-dev14. Dev 10.27 (kit 10.0.18): the Enemy Randomizer itself (no developer file needed)
 

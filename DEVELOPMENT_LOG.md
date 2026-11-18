@@ -4,6 +4,49 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.28 (kit 10.0.18): round38 - the Enemy Randomizer's first real run, four bugs fixed
+
+- Asked: no Boss / Chaos work; perfect the Enemy Randomizer: audit the 10.27 run (Phase 1), then cover every practical
+  spawning method (Phase 2). Log: tests/data/round38_rivet.log (dev 10.27 scripts, v7 helper, spawnproof standing down,
+  spawnprobe on; NefCity, Zurkon A1 twice, A3 started, A5 area, Sargasso, NefCity; game path replaced). No on-screen
+  observations came with it.
+- CONFIRMED IN THE GAME (round38):
+  * factory adapter: 57 CHANGED, 11 VERIFY, 11 REPLACEMENT SPAWNED, 0 ORIGINAL, 0 other. Zurkon A1 (robot sh / me /
+    bladeball, every direction) and Sargasso: BBE933CB "enm_thugs4less_shoo (jetpack, flyer) -> enm_indigenous_wasp",
+    3 wasps spawned - the first replacement off Zurkon and the first for flyers. Both A1 runs ended EndReason=0.
+  * checkpoint reloads: 27 put back OK; the same factories re-armed on the next try (deterministic by seed + node id,
+    except when a new kind was learned in between: A97C435B went robot_me -> bladeball -> thugs as the pool grew).
+  * rules: Grunthor learned "large ... role boss", burrower beetle "mount ... never", miners / vendors / helper bots
+    "friendly ... never" - never touched. Group members learned for 2 nodes (8B848504: thug melee, thug shooter,
+    robomutt; AA509229: bladeball, robot sh, robot me); vehicle group A86FB955 kept out (member "-").
+- BUGS SEEN (fixed in 10.28):
+  1. False stuck: BotDeathCompleteEvent came (DISCOVER) but never with a bot the randomizer could match, so every
+     changed A1 factory was "stuck" 180 s after its last spawn while the fight went on: 5 blocks saved for the seed and
+     5 notes. Fix: V.gone (a bot that no longer answers rivet.components / rivet.name is gone), stuck = bots alive AND
+     the whole level quiet (any death, enemy spawn or gone bot counts) for 180 s; stuck puts back for the level and
+     counts a retry; V.migrate drops 10.27's "without a death" blocks.
+  2. Frame budget: 100 RANDO-ERRORs at 16_rando_spawners.lua:2369/2370/1634 (the arm pass loop and vpace - the hook's
+     error lands on our own lines, outside every pcall), each killing the job after 2 restarts: spawn batches lost,
+     the arm pass restarted from spawner 1; one checkpoint put-back cut short (:2057). Fix: V.pump with persistent
+     progress (V.pending put-backs first, the queue one spawn at a time, the plan cursor), restarts until 40 without
+     progress, budget errors counted; the arm pass only when lvl.dirty; V.SLICE 1 ms; V.put_back safe everywhere.
+  3. Cost: each batch with a SpawnFactory-0 spawn (ambient portals and cars, constantly) searched every node twice.
+     Fix: V.tie_one with a location cache (checked against the node's own spawn record - waves may share spawn
+     points) and a negative cache (3 misses).
+  4. Cut names: ground and jetpack shooter thug both "enm_thugs4less_shoo". Fix: V.same_kind = name + bot family.
+- FOUND (real game, used now): the node variable 942662419 (name unknown, no rivet.hash match) holds a node's SPAWNED
+  actors (portal nodes: = LastSpawn; vehicle group node: a group of 3 cars); rivet.script_node expands actor groups.
+  The Spawner spawn list is a 17-entry ring to the end of the 432-byte component (A86FB955 counted 115 spawns).
+  Template actors never answer before a spawn: 0 of >90 asks on 3 planets (asking now stops after 40).
+- NOT CHANGED, STILL OPEN: group nodes were never re-listed / tied on the second run (A5's thugs at spawn index 8 / 9
+  tied to no record); single-enemy nodes: 0 changed (the ones seen spawn portals / cars / props; Sargasso's node wasp
+  never fresh with a known kind). 10.28 adds a third tie (spawned-actors variable, group expansion) and the "level
+  detail" + "tied to no spawner variable" lines so round39 says exactly why.
+- Tests: tests/test_v1028.py (22): 7 parse round38's real log, 15 simulator on the production code (the fixes above).
+  test_v1027: 3 tests follow the new rules (put back on leaving a planet, stuck = level-only put-back, the write line).
+  Full suite: 744 run, 0 failures, 23 skipped.
+- Verified in the game: factory route of 10.27 (round38). Nothing of 10.28 has run. Next: TESTING.md 2-dev15.
+
 ## 2026-11-18: dev 10.27 (kit 10.0.18): the Enemy Randomizer on the variable route
 
 - Asked: turn round37's proven factory method into the Enemy Randomizer (the `-` key), cover every normal enemy and

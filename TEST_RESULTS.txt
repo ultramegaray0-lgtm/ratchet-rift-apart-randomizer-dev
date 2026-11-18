@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.27 (build 10.0.18) - test run 2026-11-17 23:34 UTC
+Rift Apart Randomizer dev 10.28 (build 10.0.18) - test run 2026-11-18 10:48 UTC
 Python 3.13.18 on Linux
-ran 722, failures 0, errors 0, skipped 23
+ran 744, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -625,7 +625,7 @@ test_a_read_lost_to_the_budget_is_read_again (tests.test_v1027.SimulatorTests.te
 test_a_shared_variable_with_a_spent_user_is_never_changed (tests.test_v1027.SimulatorTests.test_a_shared_variable_with_a_spent_user_is_never_changed) ... ok
 test_a_spawner_that_ignores_the_write_is_put_back_and_the_adapter_stops (tests.test_v1027.SimulatorTests.test_a_spawner_that_ignores_the_write_is_put_back_and_the_adapter_stops) ... ok
 test_a_story_boss_area_puts_back (tests.test_v1027.SimulatorTests.test_a_story_boss_area_puts_back) ... ok
-test_a_stuck_encounter_keeps_its_original_enemies (tests.test_v1027.SimulatorTests.test_a_stuck_encounter_keeps_its_original_enemies) ... ok
+test_a_stuck_encounter_is_put_back_for_this_level_only (tests.test_v1027.SimulatorTests.test_a_stuck_encounter_is_put_back_for_this_level_only) ... ok
 test_a_variable_regenerated_by_the_game_is_left_alone (tests.test_v1027.SimulatorTests.test_a_variable_regenerated_by_the_game_is_left_alone) ... ok
 test_after_the_first_spawns_the_fresh_factories_change_and_spawn_the_replacement (tests.test_v1027.SimulatorTests.test_after_the_first_spawns_the_fresh_factories_change_and_spawn_the_replacement) ... ok
 test_an_error_is_logged_and_the_next_listing_works (tests.test_v1027.SimulatorTests.test_an_error_is_logged_and_the_next_listing_works) ... ok
@@ -647,6 +647,28 @@ test_names_cut_at_64_characters_still_match (tests.test_v1027.UnitTests.test_nam
 test_plug_names_are_the_engines_hashes (tests.test_v1027.UnitTests.test_plug_names_are_the_engines_hashes) ... ok
 test_roles (tests.test_v1027.UnitTests.test_roles) ... ok
 test_the_enemy_client_uses_the_variable_route (tests.test_v1027.UnitTests.test_the_enemy_client_uses_the_variable_route) ... ok
+test_10_27_false_blocks_are_dropped_and_real_ones_kept (tests.test_v1028.FixTests.test_10_27_false_blocks_are_dropped_and_real_ones_kept) ... ok
+test_a_budget_error_outside_any_pcall_loses_no_spawn (tests.test_v1028.FixTests.test_a_budget_error_outside_any_pcall_loses_no_spawn) ... ok
+test_a_job_that_never_progresses_is_dropped_quietly (tests.test_v1028.FixTests.test_a_job_that_never_progresses_is_dropped_quietly) ... ok
+test_a_killed_bot_is_found_gone_and_the_encounter_is_not_stuck (tests.test_v1028.FixTests.test_a_killed_bot_is_found_gone_and_the_encounter_is_not_stuck) ... ok
+test_a_location_that_ties_to_nothing_is_not_searched_forever (tests.test_v1028.FixTests.test_a_location_that_ties_to_nothing_is_not_searched_forever) ... ok
+test_a_put_back_lost_to_the_budget_finishes_before_anything_is_read (tests.test_v1028.FixTests.test_a_put_back_lost_to_the_budget_finishes_before_anything_is_read) ... ok
+test_an_enemy_spawn_tied_to_no_spawner_is_logged (tests.test_v1028.FixTests.test_an_enemy_spawn_tied_to_no_spawner_is_logged) ... ok
+test_deaths_that_name_no_bot_keep_a_running_fight_from_being_stuck (tests.test_v1028.FixTests.test_deaths_that_name_no_bot_keep_a_running_fight_from_being_stuck) ... ok
+test_five_stuck_or_retried_runs_keep_it_original (tests.test_v1028.FixTests.test_five_stuck_or_retried_runs_keep_it_original) ... ok
+test_same_name_other_family_is_another_kind (tests.test_v1028.FixTests.test_same_name_other_family_is_another_kind) ... ok
+test_template_actor_asks_stop_when_none_is_answered (tests.test_v1028.FixTests.test_template_actor_asks_stop_when_none_is_answered) ... ok
+test_the_group_changes_on_the_next_try_and_spawns_a_regular_enemy (tests.test_v1028.FixTests.test_the_group_changes_on_the_next_try_and_spawns_a_regular_enemy) ... ok
+test_the_level_detail_says_why_a_group_was_not_changed (tests.test_v1028.FixTests.test_the_level_detail_says_why_a_group_was_not_changed) ... ok
+test_the_spawn_list_ring_is_read_whole (tests.test_v1028.FixTests.test_the_spawn_list_ring_is_read_whole) ... ok
+test_two_nodes_sharing_a_spawn_point_are_told_apart (tests.test_v1028.FixTests.test_two_nodes_sharing_a_spawn_point_are_told_apart) ... ok
+test_every_verified_factory_spawned_the_replacement (tests.test_v1028.Round38LogTests.test_every_verified_factory_spawned_the_replacement) ... ok
+test_group_members_were_learned (tests.test_v1028.Round38LogTests.test_group_members_were_learned) ... ok
+test_template_actors_never_answered (tests.test_v1028.Round38LogTests.test_template_actors_never_answered) ... ok
+test_the_budget_storm (tests.test_v1028.Round38LogTests.test_the_budget_storm) ... ok
+test_the_false_stuck_of_10_27 (tests.test_v1028.Round38LogTests.test_the_false_stuck_of_10_27) ... ok
+test_the_log_is_anonymized (tests.test_v1028.Round38LogTests.test_the_log_is_anonymized) ... ok
+test_two_thugs_one_cut_name (tests.test_v1028.Round38LogTests.test_two_thugs_one_cut_name) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -746,6 +768,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 722 tests in 146.919s
+Ran 744 tests in 151.887s
 
 OK (skipped=23)
