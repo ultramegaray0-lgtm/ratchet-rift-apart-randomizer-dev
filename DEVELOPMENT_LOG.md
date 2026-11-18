@@ -4,6 +4,45 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-19: Public Release v0.60 (beta, kit 10.0.23) - branch release-v0.60
+
+Built on the player's dev 10.33 kit (imported from RiftApartRandomizer_dev10.33.zip: the 10.31-10.33 scripts never
+reached `main`; their own tests test_round42/43 were not available - this branch adapts the older tests instead) plus
+the round44 log (dev 10.33 in the game, `tests/data/round44_rivet.log`). `main` is untouched.
+
+- ROUND44 (in the game, dev 10.33): Zurkon A1 61/71 replaced, C5 12/16, B3 19/45; 92 replaced bots: 64 died, 28 "gone"
+  (B3's jetpacks/bikers never send BotDeathCompleteEvent - 10.33's gone-proof verified both B3 pairs), alive at the end
+  0, no COMBAT CHECK FAILED, no RANDO-ERROR. The robot shooter was never a replacement (B3's robomutts: "every
+  replacement here is rejected"). Late changes stayed armed. Cordelion: 0/45 (still read too late; the known limit).
+  Omega: "inventory not found" again (rounds 27-44, 89 lines): the flag has never been written in the game.
+- 15 (kit 10.0.23) WARP TO HUB WITHOUT PLANET SHUFFLE (asked): cause - v0.54 made shuffle "off" switch the whole hub
+  off: H.finish returned before setting H.return_at, H.tick returned before running it, H.on_arrival ignored the
+  landing. Now H.returns() / H.returns_after(d) decide the trip back in both modes; H.tick_off runs the timer, the
+  arrival timeout and the retry; H.arrival_off handles the landing (inventory watch, "Back at Nefarious City") and,
+  only when the game has planetary travel off, sets the travel byte (never the level bits: the game's own order).
+  Exceptions in both modes: hub-planet destinations, the parade (kind intro), the finale, the player's own planet-menu
+  flight while the trip waits (H.on_menu_accept), the game's own travel into an open first visit (hub_follow_new).
+  H.on_mission_started (a hook on R.on_mission_state, state 2 - the runtime passes only 3/4 to the hub) takes the
+  travel byte back when one of the city's stories starts (v0.53's round 25 rule).
+- 10: the kit check no longer names boss / chaos as "not installed" (R.DEV_ONLY_OPTIONAL): a player's rivet.log never
+  mentions them. R.RELEASE = "v0.60".
+- Release: tools/build_public_release.py v0.60 - 16 scripts (12 + 15, 16, enemy, 17), EXCLUDED boss.lua / chaos.lua
+  (the build stops if one would go in, or if a player-facing file names them), release/04_rando_settings.lua (the
+  player's defaults: enemy_randomizer on, enemy_notify off, omega_weapons OFF - the player's decision, collectibles OFF
+  - Spybot/Lorb pickups are not bound, 05 collectible_events is empty), rando_give.dll v7 (rebuilt byte-identical:
+  8055703e...), Install-ArsenalRestored.bat/.ps1 restored from release-v0.54 (its script list replaced by name
+  patterns: v0.54's list missed 15_rando_hub and every later file), KNOWN_ISSUES.md in the zip.
+  release_tools/validate_release.py: 32/32. Zip `Ratchet_Rift_Apart_Randomizer_v0.60_Player_Release.zip`, 271,385
+  bytes, sha256 584aab41785646165440b90a5e0429411b00f680c2830a5ae9fd97ccbe55554d (deterministic).
+- Tests: 842 run, 0 failures, 22 skipped (10 need PowerShell 7, 12 need commits this repo does not have). New:
+  test_v060 (13, Warp to Hub ON/OFF), test_round44 (11: 7 real-log, 4 simulator), test_release_v060 (15, the package).
+  Changed for 10.31-10.33 behaviour: test_v1030 (default "all"; the robot-shooter ban list is cleared only for the
+  10.30 trial-mechanics tests; the initialization check is advisory), test_v1029 (no on-screen FAILED note),
+  test_v054 banner, version pins; for v0.60 decisions: test_v1015/test_v1024/test_v055/test_v81 (17 and the Arsenal
+  launcher ship, v7 DLL).
+- NOT verified in the game: the shuffle-off trip back, Omega flag writing, the Arsenal launcher's run on Windows (no
+  pwsh here), Cordelion's first fights.
+
 ## 2026-11-18: dev 10.30 (kit 10.0.19): combat compatibility (round40: "enemies that could not be killed")
 
 - Asked: root cause of unkillable randomized enemies (and "the randomized pirates with guns were unkillable"), a

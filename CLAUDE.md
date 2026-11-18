@@ -37,6 +37,7 @@ This is the **private development source of truth**. The public player repositor
 - `data/`, `tools/` — game database, generators and analysis tools.
 - `tests/` — simulator-based test suite (`tests/sim/rivet_sim.lua`), real-log replays.
 
-Current version: v0.55 (kit 10.0.6), the public beta (player ZIP SHA-256
-`0f262a9e2a5227732d03764c54ca21c2e62d2b00949f2557ebd6eab955418e1c`). Not yet verified in the real
-game: see `mod/RiftApartRandomizer/docs/KNOWN_ISSUES.md` and the public repo's KNOWN_ISSUES.
+Current version: v0.60 (kit 10.0.23), the public beta, built from branch `release-v0.60` (dev 10.33 + the
+shuffle-independent trip back); player ZIP SHA-256
+`584aab41785646165440b90a5e0429411b00f680c2830a5ae9fd97ccbe55554d`. `main` still holds dev 10.30 (the 10.31-10.33 scripts are on `release-v0.60`).
+Not yet verified in the real game: see `release/KNOWN_ISSUES.md` and `mod/RiftApartRandomizer/docs/KNOWN_ISSUES.md`.

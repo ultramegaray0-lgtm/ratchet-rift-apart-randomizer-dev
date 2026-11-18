@@ -13,6 +13,9 @@ import sys
 import tomllib
 import zipfile
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
+import build_public_release as B  # noqa: E402  (v0.60: one list of what a package holds)
+
 ZIP, REPO, WORK = (os.path.abspath(p) for p in sys.argv[1:4])
 KIT = os.path.join(REPO, "mod", "RiftApartRandomizer")
 results = []
@@ -88,34 +91,44 @@ check("SHA256SUMS.txt matches every file", not mism, ", ".join(mism))
 check("every file is in SHA256SUMS.txt", not unlisted, ", ".join(unlisted))
 
 # ---- 4. contents: required present, nothing unwanted
-required = ["README.md", "INSTALLATION.md", "TROUBLESHOOTING.md", "CREDITS_AND_LICENSES.md", "LICENSE.txt",
-            "VERSION.txt", "SHA256SUMS.txt", "GAME_FOLDER/rivet.toml", "GAME_FOLDER/rando_give.dll",
-            "GAME_FOLDER/rando_companion/Start-Companion.bat", "GAME_FOLDER/rando_companion/RandoCompanion.ps1"]
-# every script of the kit except developer files (dev(name).lua)
-# (dev 10.13: chaos.lua is held back from player packages, tools/build_public_release.py HELD_BACK;
-#  dev 10.15: 17_rando_omega.lua too, until its Omega flag write has run in the game)
-HELD_BACK = ["chaos.lua", "17_rando_omega.lua"]
+required = B.DOCS + ["VERSION.txt", "SHA256SUMS.txt", "GAME_FOLDER/rivet.toml", "GAME_FOLDER/rando_give.dll"]
+required += ["GAME_FOLDER/rando_companion/" + c for c in B.COMPANION]
+# every script of the kit except developer files (dev(name).lua) and the private randomizers
+# (v0.60: boss.lua and chaos.lua never ship; 17_rando_omega.lua ships with omega_weapons = false)
+HELD_BACK = list(B.EXCLUDED)
 kit_scripts = sorted(f for f in os.listdir(os.path.join(KIT, "scripts")) if f.endswith(".lua") and not re.match(r"dev\(.+\)\.lua$", f)
                      and f not in HELD_BACK)
 required += ["GAME_FOLDER/scripts/" + s for s in kit_scripts]
 missing = [p for p in required if p not in actual]
 check("all required files present", not missing, ", ".join(missing))
 check(f"{len(kit_scripts)} scripts", len([p for p in actual if p.startswith("GAME_FOLDER/scripts/")]) == len(kit_scripts))
-check("no held-back script", not [p for p in actual if p.rsplit("/", 1)[-1] in HELD_BACK])
+check("no Boss or Chaos Randomizer script (boss.lua, chaos.lua)", not [p for p in actual if p.rsplit("/", 1)[-1] in HELD_BACK])
+facing_hits = []
+for p in actual:
+    if p.endswith((".md", ".txt", ".bat", ".ps1")) or p.endswith("04_rando_settings.lua"):
+        for i, line in enumerate(open(os.path.join(pkg, p), encoding="utf-8", errors="replace"), 1):
+            if B.EXCLUDED_WORDS.search(line):
+                facing_hits.append(f"{p}:{i}")
+check("no player-facing file (docs, settings, companion, launchers) mentions the Boss / Chaos Randomizer or a dev default",
+      not facing_hits, ", ".join(facing_hits[:5]))
 check("exactly the files listed above, nothing more", sorted(actual) == sorted(required), ", ".join(sorted(set(actual) ^ set(required))))
-unwanted = [p for p in actual if re.search(r"(^|/)(\.git|__pycache__|extras|research|source|tests?)(/|$)|\.(log|pyc|bak|tmp|sav|save|zip|exe|c|h|def|sh|py)$|_dev|dev\(|DEVELOPMENT_LOG|TEST_RESULTS|BATCH_|07_rando_testmode|08_rando_probe|06_rando_vtables|06_rando_item_ids|16_rando_testtravel|Install-Arsenal|randomizer_saves|spoiler", p, re.I)]
+unwanted = [p for p in actual if re.search(r"(^|/)(\.git|__pycache__|extras|research|source|tests?)(/|$)|\.(log|pyc|bak|tmp|sav|save|zip|exe|c|h|def|sh|py)$|_dev|dev\(|DEVELOPMENT_LOG|TEST_RESULTS|BATCH_|07_rando_testmode|08_rando_probe|06_rando_vtables|06_rando_item_ids|16_rando_testtravel|randomizer_saves|spoiler|boss\.lua|chaos\.lua", p, re.I)]
 check("no development, debug, log, save or test files", not unwanted, ", ".join(unwanted))
 
 # ---- 5. packaged files == the final build in the repo
 pairs = {"GAME_FOLDER/rivet.toml": "rivet.toml", "GAME_FOLDER/rando_give.dll": "rando_give.dll"}
-pairs.update({f"GAME_FOLDER/scripts/{s}": f"scripts/{s}" for s in kit_scripts})
-pairs.update({f"GAME_FOLDER/rando_companion/{c}": f"companion/{c}" for c in ["Start-Companion.bat", "RandoCompanion.ps1"]})
+pairs.update({f"GAME_FOLDER/scripts/{s}": f"scripts/{s}" for s in kit_scripts if s != "04_rando_settings.lua"})
+pairs.update({f"GAME_FOLDER/rando_companion/{c}": f"companion/{c}" for c in B.COMPANION})
 diff = [p for p, k in pairs.items() if actual[p] != sha(os.path.join(KIT, k))]
+if actual["GAME_FOLDER/scripts/04_rando_settings.lua"] != sha(B.PUBLIC_SETTINGS):
+    diff.append("GAME_FOLDER/scripts/04_rando_settings.lua (not release/04_rando_settings.lua)")
 check("packaged files byte-identical to the final build (repo)", not diff, ", ".join(diff))
 tags = {s: re.search(r'RANDO_FILES\["[^"]+"\]\s*=\s*"([^"]+)"', open(os.path.join(pkg, "GAME_FOLDER", "scripts", s)).read()) for s in kit_scripts}
 vers = {s: (m.group(1) if m else None) for s, m in tags.items()}
-check("all 13 scripts carry the same kit tag", len(set(vers.values())) == 1 and None not in vers.values(), str(set(vers.values())))
-check("rando_give.dll is the verified v6 binary", actual["GAME_FOLDER/rando_give.dll"] == "efb927232f67b7740aec473afa3866dd50636e1c29d0b2822717116a40092c12")
+check(f"all {len(kit_scripts)} scripts carry the same kit tag", len(set(vers.values())) == 1 and None not in vers.values(), str(set(vers.values())))
+check("rando_give.dll is the verified v7 binary (rebuilt byte-identical from its source)", actual["GAME_FOLDER/rando_give.dll"] == B.DLL_SHA256)
+arsenal = open(os.path.join(pkg, "GAME_FOLDER", "rando_companion", "Install-ArsenalRestored.bat")).read()
+check("Install-ArsenalRestored.bat runs its own script relative to itself, quoted", '"%~dp0Install-ArsenalRestored.ps1"' in arsenal)
 
 # ---- 6. no personal data or machine-specific paths
 pat = re.compile(r"ultramega|@gmail|/home/|/mnt/|/root/|[A-Za-z]:\\Users\\(?!USER|USERNAME|<)|Users/[A-Za-z]|\bv2\.618\b|\bv3\.618\b|Rift\.Apart\.v|AppData\\Roaming|claude\.ai/", re.I)
@@ -179,7 +192,8 @@ env = {"PATH": "/usr/bin:/bin", "HOME": user_home, "RANDO_MOD_DIR": game,
        "RANDO_SCRIPTS": os.path.join(game, "scripts"), "RANDO_DEV_SCRIPTS": os.path.join(KIT, "dev_scripts"),
        "LANG": "C.UTF-8", "PYTHONDONTWRITEBYTECODE": "1"}
 mods = ["tests.test_v055", "tests.test_v100", "tests.test_v054", "tests.test_v90", "tests.test_runtime", "tests.test_levels",
-        "tests.test_generator", "tests.test_campaign", "tests.test_v85", "tests.test_registry"]
+        "tests.test_generator", "tests.test_campaign", "tests.test_v85", "tests.test_registry",
+        "tests.test_v060", "tests.test_round44", "tests.test_v1015"]
 r = subprocess.run([sys.executable, "-m", "unittest", "-q"] + mods, cwd=REPO, env=env, capture_output=True, text=True, timeout=3000)
 tail = r.stderr.strip().splitlines()
 summary = " / ".join(l for l in tail[-3:] if l.strip())

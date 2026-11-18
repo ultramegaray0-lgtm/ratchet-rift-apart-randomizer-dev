@@ -331,12 +331,12 @@ class OwnershipTests(unittest.TestCase):
         g.R.grant("weapon:enforcer")
         deliver(g)
         self.assertEqual(g.give_count("weapon:enforcer"), 1)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.19"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.23"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("17_rando_omega not installed"))
 
     def test_kit_check_and_status(self):
         g = game(offset=OMEGA_AT)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.19"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.23"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("RANDO-OMEGA\tloaded"))
         g.R.grant("omega:enforcer")
         deliver(g)
@@ -564,19 +564,15 @@ class StartTests(unittest.TestCase):
 
 # ---------------------------------------------------------------------------------- release safety
 class ReleaseTests(unittest.TestCase):
-    def test_17_is_held_back_from_player_packages(self):
+    def test_17_ships_in_v060_with_omega_off_by_default(self):
+        # v0.60 (the player's decision): 17 ships, but the player's settings keep omega_weapons = false because the
+        # flag has not been written in the real game yet (rounds 27-44: "inventory not found")
         sys.path.insert(0, str(ROOT / "tools"))
         import build_public_release as b
-        self.assertIn("17_rando_omega.lua", b.HELD_BACK)
-        self.assertNotIn("17_rando_omega.lua", b.release_scripts())
-        txt = (ROOT / "release_tools" / "validate_release.py").read_text(encoding="utf-8")
-        self.assertIn('"17_rando_omega.lua"', txt)
-
-    def test_player_docs_untouched(self):
-        r = subprocess.run(["git", "-C", str(ROOT), "diff", "--name-only", BASE_1013, "--", "release"], capture_output=True, text=True)
-        if r.returncode != 0:
-            self.skipTest("git history not available")
-        self.assertEqual(r.stdout.strip(), "")
+        self.assertIn("17_rando_omega.lua", b.release_scripts())
+        self.assertIn("17_rando_omega.lua", b.OPTIONAL)
+        txt = (ROOT / "release" / "04_rando_settings.lua").read_text(encoding="utf-8")
+        self.assertIn("omega_weapons = false,", txt)
 
 
 if __name__ == "__main__":

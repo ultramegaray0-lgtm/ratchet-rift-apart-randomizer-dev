@@ -43,13 +43,17 @@ class LoadingTests(unittest.TestCase):
             self.assertFalse(any("RANDO-ERROR" in l or "[sim]" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_play_folder(self):
+        from harness import INSTALLED, PLAYER_EXCLUDED
         names = {p.name for p in (MOD / "scripts").glob("*.lua") if not is_dev(p.name)}
-        self.assertEqual(names, {"01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua",
-                                 "04_rando_settings.lua", "05_rando_bindings.lua", "06_rando_capabilities.lua",
-                                 "09_rando_real.lua", "10_rando_runtime.lua", "11_rando_campaign.lua",
-                                 "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua",
-                                 "15_rando_hub.lua", "16_rando_spawners.lua", "enemy.lua", "boss.lua", "chaos.lua",
-                                 "17_rando_omega.lua"})
+        want = {"01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua",
+                "04_rando_settings.lua", "05_rando_bindings.lua", "06_rando_capabilities.lua",
+                "09_rando_real.lua", "10_rando_runtime.lua", "11_rando_campaign.lua",
+                "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua",
+                "15_rando_hub.lua", "16_rando_spawners.lua", "enemy.lua", "boss.lua", "chaos.lua",
+                "17_rando_omega.lua"}
+        if INSTALLED:                                   # v0.60: a player install never has the private randomizers
+            want -= set(PLAYER_EXCLUDED)
+        self.assertEqual(names, want)
         dev = {p.name for p in DEV_DIR.glob("*.lua") if is_dev(p.name)}
         self.assertEqual(dev, {"dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua", "dev(spawnprobe).lua", "dev(spawnproof).lua",
                                "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"})

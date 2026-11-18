@@ -218,6 +218,7 @@ class SimulatorTests(unittest.TestCase):
         self.assertTrue(q.has("| SUCCESS"))                                     # the log keeps it
 
     def test_a_write_the_game_ignores_is_reported_as_failed(self):
+        # dev 10.33: reported in rivet.log only (VERIFY ... ORIGINAL) and put back - no on-screen FAILED note
         s = sim(self, ZURK, extra="""
           local osf = PF.spawn_factory
           PF.spawn_factory = function(fac, h)                                     -- this game ignores the variable
@@ -230,7 +231,8 @@ class SimulatorTests(unittest.TestCase):
         s.spawn(8003)
         s.g.step(5)
         self.assertTrue(s.has("| ORIGINAL: the game spawned something else than the variable held"), s.ev()[-5:])
-        self.assertTrue(any(x[0].startswith("[ENEMY RANDOMIZER] FAILED") for x in notes_full(s)))
+        self.assertFalse(any(x[0].startswith("[ENEMY RANDOMIZER] FAILED") for x in notes_full(s)))
+        self.assertTrue(s.has("the game ignored the change"), s.ev()[-5:])
         self.assertEqual(ledger(s).original, 1)
 
     # 5 group spawners through the spawn-point index

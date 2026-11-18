@@ -74,8 +74,8 @@ class StaticTests(unittest.TestCase):
         self.assertIn("mods/default", paths)
         self.assertIn("mods/ARSENAL_RESTORED", paths)
         self.assertIn("mods/ARSENAL_RESTORED.stage", paths)
-        for f in ("Install-ArsenalRestored.ps1", "Install-ArsenalRestored.bat"):      # removed in v0.55
-            self.assertFalse(os.path.exists(os.path.join(MOD, "companion", f)), f)
+        for f in ("Install-ArsenalRestored.ps1", "Install-ArsenalRestored.bat"):      # removed in v0.55, back in v0.60
+            self.assertTrue(os.path.exists(os.path.join(MOD, "companion", f)), f)
         comp = open(os.path.join(MOD, "companion", "RandoCompanion.ps1"), encoding="utf-8").read()
         self.assertIn("Find-LooseArsenal", comp)
 

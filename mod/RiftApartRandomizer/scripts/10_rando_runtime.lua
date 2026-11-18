@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.23"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.19"
-R.RELEASE = "dev 10.30"               -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.23"
+R.RELEASE = "v0.60"                   -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -156,7 +156,10 @@ R.config = {
   -- dev 10.30: combat compatibility. "verified": only replacements with in-game evidence that they die (round40: some
   -- that spawned could not be killed); "trial": also unverified ones of the same bot class, one spawner per level,
   -- watched - for developer test rounds; "any": the 10.29 rules, NOT safe (simulator tests of the scheduling)
-  enemy_compat = "verified",
+  -- dev 10.31: "all" (this dev kit's default): every regular enemy can replace every other; only pairs the game showed
+  -- cannot be killed stay out. enemy_mix_movement = true mixes walkers / flyers / turrets in "all" (dev 10.32: off).
+  enemy_compat = "all",
+  enemy_mix_movement = false,        -- dev 10.32: OFF (round42: walkers at flyer spawns could not be killed)
   -- dev 10.13: chaos.lua. OFF by default; NO safety guards (docs/CHAOS.md); while ON the two above pause
   chaos_randomizer = false,          -- anything can become anything (the start of a save that never used its key)
   key_chaos = "BACKSPACE",           -- Chaos Randomizer on/off (Ctrl: what it changed here)
@@ -1231,7 +1234,10 @@ for _, c in ipairs({ "MissionStartedEvent", "MissionObjectiveCompleteEvent",
                      "MissionDeactivatedEvent", "StartMissionDevstatsEvent", "EndMissionDevstatsEvent",
                      "PurchaseWeaponEvent", "VendorPurchaseEvent", "WeaponAddedEvent",
                      "LevelLoadedEvent", "SaveDataAppliedEvent", "PlanetMenuAcceptEvent",
-                     "GainBoltEvent", "GainRaritaniumEvent" }) do on(c) end
+                     "GainRaritaniumEvent" }) do on(c) end
+-- dev 10.33: bolts drop from killed enemies - the Enemy Randomizer's stall watch takes them as "the fight goes on"
+-- (round43 B3: kills, bolts, and not one BotDeathCompleteEvent). Same subscription as before (it was discovery only).
+on("GainBoltEvent", function(ev) if R.on_gain_bolt then R.on_gain_bolt(ev) end end)
 
 -- bind a key by name; every press is logged (RANDO-KEY), so a key the game never passes on shows
 -- up as missing in rivet.log. Returns true when bound.
@@ -1314,6 +1320,7 @@ R.KIT_FILES = { "01_rando_data", "02_rando_generator", "03_rando_campaign", "04_
                 "06_rando_capabilities", "09_rando_real", "10_rando_runtime", "11_rando_campaign", "12_rando_shop",
                 "13_rando_armor", "14_rando_travel" }
 R.OPTIONAL_FILES = { "15_rando_hub", "16_rando_spawners", "17_rando_omega", "enemy", "boss", "chaos" }
+R.DEV_ONLY_OPTIONAL = { boss = true, chaos = true }   -- v0.60: never in a player package (tools/build_public_release.py)
 -- scripts of older versions that must not be in the folder any more
 R.GONE_FILES = { ["16_rando_testtravel"] = "a developer tool, now dev(testtravel).lua" }
 function R.kit_check()
@@ -1343,7 +1350,10 @@ function R.kit_check()
   end
   local optional = {}
   for _, f in ipairs(R.OPTIONAL_FILES) do
-    if files[f] == nil then optional[#optional + 1] = f .. " not installed" else check(f, files[f]) end
+    -- v0.60: a randomizer that only the developer kit has is not named when it is absent (player packages)
+    if files[f] == nil then
+      if not R.DEV_ONLY_OPTIONAL[f] then optional[#optional + 1] = f .. " not installed" end
+    else check(f, files[f]) end
   end
   -- dev 10.30: developer tools live in dev_scripts\ (not in a release's scripts folder). One of ANOTHER version in the
   -- scripts folder is a leftover (round40: dev(spawnprobe).lua of an older round still loaded, its listener the source

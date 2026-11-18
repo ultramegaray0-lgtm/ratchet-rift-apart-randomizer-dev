@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.30 (build 10.0.19) - test run 2026-11-18 17:24 UTC
+Rift Apart Randomizer v0.60 release branch (build 10.0.23) - test run 2026-11-18 22:28 UTC
 Python 3.13.18 on Linux
-ran 804, failures 0, errors 0, skipped 23
+ran 842, failures 0, errors 0, skipped 22
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -120,6 +120,32 @@ test_same_helper_dll (tests.test_regression_v6.RegressionV6Tests.test_same_helpe
 8.0 replaced rando_give.dll (v6: new request kinds). Everything the earlier helper did ... skipped 'the 6.0 commit is not in this repository'
 test_same_locations_and_rules (tests.test_regression_v6.RegressionV6Tests.test_same_locations_and_rules) ... skipped 'the 6.0 commit is not in this repository'
 test_versions (tests.test_regression_v6.RegressionV6Tests.test_versions) ... skipped 'the 6.0 commit is not in this repository'
+test_no_packaged_script_can_be_overwritten_by_the_mods_lua (tests.test_release_v060.ArsenalLauncherTests.test_no_packaged_script_can_be_overwritten_by_the_mods_lua) ... ok
+test_rivet_toml_already_lists_both_arsenal_paths (tests.test_release_v060.ArsenalLauncherTests.test_rivet_toml_already_lists_both_arsenal_paths) ... ok
+test_the_bat_runs_its_own_script_with_crlf (tests.test_release_v060.ArsenalLauncherTests.test_the_bat_runs_its_own_script_with_crlf) ... ok
+test_the_installer_on_a_fake_game_folder (tests.test_release_v060.ArsenalLauncherTests.test_the_installer_on_a_fake_game_folder) ... skipped 'PowerShell 7 (pwsh) not installed'
+test_no_boss_or_chaos_randomizer_even_when_switched_on (tests.test_release_v060.ExclusionTests.test_no_boss_or_chaos_randomizer_even_when_switched_on) ... ok
+test_every_omega_is_registered_in_the_pool_when_on (tests.test_release_v060.OmegaReleaseTests.test_every_omega_is_registered_in_the_pool_when_on) ... ok
+test_new_game_plus_keeps_the_games_own_omegas (tests.test_release_v060.OmegaReleaseTests.test_new_game_plus_keeps_the_games_own_omegas) ... ok
+test_normal_first_then_omega (tests.test_release_v060.OmegaReleaseTests.test_normal_first_then_omega) ... ok
+test_omega_first_then_normal (tests.test_release_v060.OmegaReleaseTests.test_omega_first_then_normal) ... ok
+test_boss_chaos_and_developer_files_are_never_in_it (tests.test_release_v060.PackageTests.test_boss_chaos_and_developer_files_are_never_in_it) ... ok
+test_exactly_the_approved_files (tests.test_release_v060.PackageTests.test_exactly_the_approved_files) ... ok
+test_no_player_facing_file_mentions_an_excluded_randomizer (tests.test_release_v060.PackageTests.test_no_player_facing_file_mentions_an_excluded_randomizer) ... ok
+test_the_dll_is_v7_and_the_settings_are_the_players (tests.test_release_v060.PackageTests.test_the_dll_is_v7_and_the_settings_are_the_players) ... ok
+test_the_same_inputs_give_the_same_zip (tests.test_release_v060.PackageTests.test_the_same_inputs_give_the_same_zip) ... ok
+test_a_new_game_with_the_players_settings (tests.test_release_v060.PublicDefaultsTests.test_a_new_game_with_the_players_settings) ... ok
+test_10_33_kills_without_death_events_verified_b3s_pairs (tests.test_round44.Round44LogTests.test_10_33_kills_without_death_events_verified_b3s_pairs) ... ok
+test_10_33_late_changes_stayed_armed (tests.test_round44.Round44LogTests.test_10_33_late_changes_stayed_armed) ... ok
+test_10_33_never_used_the_robot_shooter_as_a_replacement (tests.test_round44.Round44LogTests.test_10_33_never_used_the_robot_shooter_as_a_replacement) ... ok
+test_cordelion_is_still_unchanged (tests.test_round44.Round44LogTests.test_cordelion_is_still_unchanged) ... ok
+test_it_is_dev_10_33_and_the_kit_is_whole (tests.test_round44.Round44LogTests.test_it_is_dev_10_33_and_the_kit_is_whole) ... ok
+test_no_replaced_enemy_was_left_alive (tests.test_round44.Round44LogTests.test_no_replaced_enemy_was_left_alive) ... ok
+test_the_three_arena_challenges_were_randomized (tests.test_round44.Round44LogTests.test_the_three_arena_challenges_were_randomized) ... ok
+test_a_kind_rejected_for_two_originals_is_banned_for_the_save (tests.test_round44.SimulatorTests.test_a_kind_rejected_for_two_originals_is_banned_for_the_save) ... ok
+test_a_replaced_bot_gone_soon_after_its_spawn_counts_as_killed (tests.test_round44.SimulatorTests.test_a_replaced_bot_gone_soon_after_its_spawn_counts_as_killed) ... ok
+test_the_built_in_registry_knows_the_logged_kinds_on_a_new_save (tests.test_round44.SimulatorTests.test_the_built_in_registry_knows_the_logged_kinds_on_a_new_save) ... ok
+test_the_robot_shooter_is_never_a_replacement (tests.test_round44.SimulatorTests.test_the_robot_shooter_is_never_a_replacement) ... ok
 test_armor_rewards_go_through_the_armor_code (tests.test_runtime.ArmorTests.test_armor_rewards_go_through_the_armor_code) ... ok
 test_intercepted_source_pays_its_location_once (tests.test_runtime.ArmorTests.test_intercepted_source_pays_its_location_once) ... ok
 test_interception_can_be_switched_off (tests.test_runtime.ArmorTests.test_interception_can_be_switched_off) ... ok
@@ -303,6 +329,19 @@ test_the_probe_finds_its_data_whatever_the_load_order (tests.test_v055.ReleaseFi
 test_the_release_loads_without_any_developer_file (tests.test_v055.ReleaseFilesTests.test_the_release_loads_without_any_developer_file) ... ok
 test_coordinates_still_open_planets_without_test_travel (tests.test_v055.TestTravelAbsentTests.test_coordinates_still_open_planets_without_test_travel) ... ok
 test_locked_travel_works_without_test_travel (tests.test_v055.TestTravelAbsentTests.test_locked_travel_works_without_test_travel) ... ok
+test_the_games_order_by_story_travel_only_pays_every_location_and_returns_after_revisits (tests.test_v060.ProgressionTests.test_the_games_order_by_story_travel_only_pays_every_location_and_returns_after_revisits) ... ok
+test_the_games_order_with_shuffle_off_pays_every_location (tests.test_v060.ProgressionTests.test_the_games_order_with_shuffle_off_pays_every_location) ... ok
+test_a_city_story_starting_takes_the_travel_byte_back (tests.test_v060.ShuffleOffReturnTests.test_a_city_story_starting_takes_the_travel_byte_back) ... ok
+test_a_destination_on_the_hub_planet_or_the_parade_needs_no_trip (tests.test_v060.ShuffleOffReturnTests.test_a_destination_on_the_hub_planet_or_the_parade_needs_no_trip) ... ok
+test_a_finished_planet_brings_you_back_to_the_hub (tests.test_v060.ShuffleOffReturnTests.test_a_finished_planet_brings_you_back_to_the_hub) ... ok
+test_a_warp_that_does_not_land_is_tried_at_the_next_hub_checkpoint (tests.test_v060.ShuffleOffReturnTests.test_a_warp_that_does_not_land_is_tried_at_the_next_hub_checkpoint) ... ok
+test_hub_auto_return_false_switches_it_off (tests.test_v060.ShuffleOffReturnTests.test_hub_auto_return_false_switches_it_off) ... ok
+test_the_games_own_story_into_a_first_visit_plays_it_there (tests.test_v060.ShuffleOffReturnTests.test_the_games_own_story_into_a_first_visit_plays_it_there) ... ok
+test_the_games_own_travel_to_a_revisit_still_brings_you_back (tests.test_v060.ShuffleOffReturnTests.test_the_games_own_travel_to_a_revisit_still_brings_you_back) ... ok
+test_travel_already_on_is_left_alone_and_never_counted_as_ours (tests.test_v060.ShuffleOffReturnTests.test_travel_already_on_is_left_alone_and_never_counted_as_ours) ... ok
+test_your_own_planet_menu_flight_replaces_the_trip_back (tests.test_v060.ShuffleOffReturnTests.test_your_own_planet_menu_flight_replaces_the_trip_back) ... ok
+test_a_finished_planet_brings_you_back_to_the_hub (tests.test_v060.ShuffleOnReturnTests.test_a_finished_planet_brings_you_back_to_the_hub) ... ok
+test_the_same_planet_finished_with_shuffle_off_returns_the_same_way (tests.test_v060.ShuffleOnReturnTests.test_the_same_planet_finished_with_shuffle_off_returns_the_same_way) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -434,7 +473,7 @@ test_without_the_shared_layer (tests.test_v1013.RemovalTests.test_without_the_sh
 test_build_data_reproduces_the_data (tests.test_v1015.DataTests.test_build_data_reproduces_the_data) ... ok
 test_twenty_omega_items_one_per_vanilla_weapon (tests.test_v1015.DataTests.test_twenty_omega_items_one_per_vanilla_weapon) ... ok
 test_audit_rejects_misplaced_omegas (tests.test_v1015.GeneratorTests.test_audit_rejects_misplaced_omegas) ... ok
-test_explicit_off_every_seed_is_the_1013_seed (tests.test_v1015.GeneratorTests.test_explicit_off_every_seed_is_the_1013_seed) ... skipped 'git history with dev 10.13 not available'
+test_explicit_off_every_seed_is_the_1013_seed (tests.test_v1015.GeneratorTests.test_explicit_off_every_seed_is_the_1013_seed) ... ok
 test_on_keeps_the_seed_and_adds_the_omegas_where_currency_was (tests.test_v1015.GeneratorTests.test_on_keeps_the_seed_and_adds_the_omegas_where_currency_was) ... ok
 test_on_places_each_omega_once_and_passes_the_audit (tests.test_v1015.GeneratorTests.test_on_places_each_omega_once_and_passes_the_audit) ... ok
 test_private_dev_settings_enable_omega_by_default (tests.test_v1015.GeneratorTests.test_private_dev_settings_enable_omega_by_default) ... ok
@@ -460,8 +499,7 @@ test_merge_keeps_the_furthest_omega_status (tests.test_v1015.PersistenceTests.te
 test_new_game_plus_keeps_the_games_own_omegas (tests.test_v1015.PersistenceTests.test_new_game_plus_keeps_the_games_own_omegas) ... ok
 test_restore_inventory_sends_cannot_downgrade (tests.test_v1015.PersistenceTests.test_restore_inventory_sends_cannot_downgrade) ... ok
 test_save_and_load_keep_the_tiers (tests.test_v1015.PersistenceTests.test_save_and_load_keep_the_tiers) ... ok
-test_17_is_held_back_from_player_packages (tests.test_v1015.ReleaseTests.test_17_is_held_back_from_player_packages) ... ok
-test_player_docs_untouched (tests.test_v1015.ReleaseTests.test_player_docs_untouched) ... skipped 'git history not available'
+test_17_ships_in_v060_with_omega_off_by_default (tests.test_v1015.ReleaseTests.test_17_ships_in_v060_with_omega_off_by_default) ... ok
 test_omega_seed_locations_pay_their_omega (tests.test_v1015.SeedTests.test_omega_seed_locations_pay_their_omega) ... ok
 test_an_omega_in_start_items_comes_with_its_weapon (tests.test_v1015.StartTests.test_an_omega_in_start_items_comes_with_its_weapon) ... ok
 test_a_census_stopped_by_the_budget_starts_again (tests.test_v1017.FrameBudgetTests.test_a_census_stopped_by_the_budget_starts_again) ... ok
@@ -578,7 +616,7 @@ test_the_original_spawning_is_reported (test_v1022.SpawnProofTwoSimulatorTests.t
 test_an_old_helper_is_shown_on_screen (tests.test_v1024.BlockedOnScreenTests.test_an_old_helper_is_shown_on_screen) ... ok
 test_no_second_v7_copy_to_forget (tests.test_v1024.KitDllTests.test_no_second_v7_copy_to_forget) ... ok
 test_the_kit_dll_is_v7 (tests.test_v1024.KitDllTests.test_the_kit_dll_is_v7) ... ok
-test_v6_is_kept_for_public_packages (tests.test_v1024.KitDllTests.test_v6_is_kept_for_public_packages) ... ok
+test_v6_is_kept_and_v060_packages_ship_v7 (tests.test_v1024.KitDllTests.test_v6_is_kept_and_v060_packages_ship_v7) ... ok
 test_v7_ran_in_the_game_before (tests.test_v1024.KitDllTests.test_v7_ran_in_the_game_before) ... ok
 test_kit_10_0_17_and_spawnproof_v3_ran (tests.test_v1024.RoundThirtyFourLogTests.test_kit_10_0_17_and_spawnproof_v3_ran) ... ok
 test_the_experiment_was_blocked_by_the_v6_helper (tests.test_v1024.RoundThirtyFourLogTests.test_the_experiment_was_blocked_by_the_v6_helper) ... ok
@@ -828,6 +866,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 804 tests in 158.225s
+Ran 842 tests in 188.529s
 
-OK (skipped=23)
+OK (skipped=22)

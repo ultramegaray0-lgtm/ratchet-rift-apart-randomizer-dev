@@ -23,7 +23,7 @@
 --
 -- Needs 16_rando_spawners.lua. Removing this file only removes the boss randomizer; regular enemies
 -- (enemy.lua) never become bosses and bosses never become regular enemies.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["boss"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["boss"] = "10.0.23"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_BOSS = RANDO_BOSS or {}
 local B = RANDO_BOSS
@@ -110,7 +110,12 @@ log("installed (" .. (B.enabled() and "ON" or "OFF") .. " until the save says ot
 -- enemy_compat = "verified" (the default) a boss-tier pair needs in-game evidence that the replacement dies. No real
 -- log has shown a boss-tier swap yet (round40: "0 boss spawner(s) changed here"), so none is verified and the Boss
 -- Randomizer changes nothing until a "trial" round proves a pair.
+-- dev 10.31: with enemy_compat = "all" boss-tier kinds swap among themselves without proof (watched like the rest).
 if B.client.route == "vars" then
-  log("combat compatibility: " .. SP.V.compat_mode() .. " - a boss-tier swap needs in-game proof that the replacement dies "
-      .. "(no real log has one yet; a pair a trial round verified is kept in the save)")
+  if SP.V.all_mode() then
+    log("combat compatibility: all - boss-tier enemies swap among themselves (watched; story bosses stay)")
+  else
+    log("combat compatibility: " .. SP.V.compat_mode() .. " - a boss-tier swap needs in-game proof that the replacement dies "
+        .. "(no real log has one yet; a pair a trial round verified is kept in the save)")
+  end
 end

@@ -52,7 +52,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.23"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -96,8 +96,11 @@ SP.FAMILY_CLASSES = {
   { "BossBotZordoomMonster", "story_boss", "story_boss" }, { "GameBotSargassoCentipedeBoss", "story_boss", "story_boss" },
   { "BossBase", "story_boss", "story_boss" },
   { "GameBotClankLemming", "friendly", "friendly" }, { "GameBotShooterSheep", "friendly", "friendly" },
-  { "GameBotShooterTestDummy", "friendly", "friendly" }, { "GameBotShooterNoFiring", "friendly", "friendly" },
-  { "GameBotShooterJetPackNoFiring", "friendly", "friendly" }, { "NPCInfobot", "friendly", "friendly" },
+  { "GameBotShooterTestDummy", "friendly", "friendly" }, { "NPCInfobot", "friendly", "friendly" },
+  -- dev 10.31: round41 - these are the Nefarious troopers (enm_neo_nefarious_shooter on Cordelion, _sniper in Zurkon
+  -- C5), spawned by combat factories. 10.12-10.30 called them "friendly", so no Nefarious trooper was ever changed or
+  -- used. The jetpack one first (it also has the plain class).
+  { "GameBotShooterJetPackNoFiring", "flyer", "enemy" }, { "GameBotShooterNoFiring", "ground", "enemy" },
   { "GameBotMountBeast", "mount", "never" }, { "GameBotMountBeetle", "mount", "never" },
   { "GameBotMountFlyer", "mount", "never" }, { "GameBotMountKit", "mount", "never" },
   { "NPCBot", "friendly", "friendly" }, { "BotHexapod", "unclear", "never" },
@@ -119,6 +122,10 @@ SP.FAMILY_CLASSES = {
 }
 SP.ROLE_OF_FAMILY = {}
 for _, e in ipairs(SP.FAMILY_CLASSES) do SP.ROLE_OF_FAMILY[e[2]] = SP.ROLE_OF_FAMILY[e[2]] or e[3] end
+-- dev 10.31: class -> family today (a save's registry keeps the family of the kit that learned it: its entries are
+-- read through this, so a reclassified class takes effect on old saves too)
+SP.FAMILY_BY_CLASS = {}
+for _, e in ipairs(SP.FAMILY_CLASSES) do SP.FAMILY_BY_CLASS[e[1]] = SP.FAMILY_BY_CLASS[e[1]] or e[2] end
 
 -- session state (a new Lua VM starts empty; what must outlive it is in RANDO.state)
 SP.clients = SP.clients or {}
@@ -1576,11 +1583,13 @@ V.PROBE_GIVEUP = 40               -- dev 10.28: template actors asked with no an
 V.UNTIED_LOG = 6                  -- dev 10.28: enemy spawns tied to no spawner variable, logged per level
 V.ALIVE_CHECKS = 24               -- dev 10.28: spawned actors checked for being gone per watchdog run
 V.REG_CAP = 400
+V.REG_RECHECK = 3                 -- dev 10.32: scans between two looks for the save's enemy kinds loaded on the level
 V.GROUP_CAP = 300
 V.MEMBER_CAP = 8
 V.STUCK_SECONDS = 180
 V.RETRY_LIMIT = 5                 -- deaths / reloads while a changed encounter ran before it keeps its originals
 V.FAIL_LIMIT = 2
+V.LATE_GRACE = 4                  -- dev 10.31 (unused since 10.33: a late change never gets an "original" verdict)
 V.SPAWN_LOG = 12                  -- spawns of changed spawners logged per level
 V.FACTORY_CLASS = "SunsetSpawnerFactoryScriptAction"
 V.NODE_CLASS = "SpawnerScriptAction"
@@ -1623,9 +1632,16 @@ V.LEDGER_LOG = 300                        -- dev 10.29: per-spawn ledger lines l
 V.NOTE_GAP = 180                          -- dev 10.29: frames between two on-screen replacement notes
 V.NOTE_QUEUE = 4                          -- dev 10.29: notes waiting at most (the rest are counted in the next one)
 -- dev 10.30: combat compatibility (see "COMBAT COMPATIBILITY" below)
-V.COMPAT_MODES = { verified = true, trial = true, any = true }
+-- dev 10.31: "all" (the dev kit's default): EVERY regular enemy may replace every other of its movement group
+-- (dev 10.32: enemy_mix_movement = true mixes walkers, flyers and turrets; off by default). Only a pair the game has
+-- shown cannot be killed (built-in "bad", rejected in your save, or rejected this session by the combat watch) stays out.
+V.COMPAT_MODES = { verified = true, trial = true, any = true, all = true }
 V.COMBAT_DEATHS = 6                       -- other deaths on the level after a replaced bot spawned ...
 V.COMBAT_SECONDS = 45                     -- ... and seconds it lived: alive past BOTH = it does not die in a fight
+V.STALL_SECONDS = 40                      -- dev 10.32: a replaced bot of an unverified pair alive this long while NOTHING on
+                                          -- the level died for this long = the fight is stuck on it (round42: Zurkon C5 and
+                                          -- B3 - the replaced robot shooters were the whole wave, so no "other deaths" ever
+                                          -- came and the check above never ran)
 V.SUSPECT_LIMIT = 2                       -- a pair verified by the built-in table is rejected after this many failures
 V.TRIAL_PER_LEVEL = 1                     -- enemy_compat = "trial": spawners with an unverified pair at a time
 V.DEATH_LOG = 60                          -- DEATH lines (a replaced bot died) logged per level
@@ -1686,6 +1702,27 @@ V.DISPLAY = {
   { "enm_amoeboid_large", "Amoeboid (large)" }, { "enm_seabase_boss", "Seabase boss (story)" },
   { "burrower_beetle", "Burrower Beetle (mount)" },
 }
+-- dev 10.32: a species as the player knows it (Ctrl+- and the first note of a level say which ones are loaded).
+-- Sargasso's creatures are each their own species (V.species): they are named one by one.
+V.SPECIES_DISPLAY = { pirate = "Pirates", thugs4less = "Goons-4-Less", neo = "Nefarious troopers", amoeboid = "Amoeboids" }
+function V.species_display(sp, name, family)
+  sp = tostring(sp or "?")
+  if V.SPECIES_DISPLAY[sp] then return V.SPECIES_DISPLAY[sp] end
+  if sp:find("_", 1, true) and name then return V.display(name, family) end
+  return (sp:gsub("_", " "):gsub("^%l", string.upper))
+end
+-- the species of the regular enemies usable on this level (sorted display names, one per species)
+function V.species_here()
+  local seen, out = {}, {}
+  for _, T in pairs(V.lvl and V.lvl.tpl or {}) do
+    if V.usable(T) and T.name then
+      local sp = V.species(T.name)
+      if not seen[sp] then seen[sp] = true; out[#out + 1] = V.species_display(sp, T.name, T.family) end
+    end
+  end
+  table.sort(out)
+  return out
+end
 function V.display(name, family)
   local n = V.short(name)
   if not n then return "?" end
@@ -1730,7 +1767,23 @@ function V.asset_name(h, cls)
   local off = u16(nb, 0x19) or 0
   local n = (off > 1 and off < #full) and full:sub(off + 1) or full
   n = n:gsub("%.actor$", "")
-  return (n:match("^[%w_]+$") and #n >= 4) and n or nil
+  if not (n:match("^[%w_]+$") and #n >= 4) then return nil end
+  return n, full                                                           -- dev 10.32: and the asset's whole path
+end
+-- dev 10.32: every enemy kind's actor asset path, once per kind and session ("ASSET" lines). The research for enemies
+-- from OTHER planets (an asset-level swap: a template stays, the actor asset it loads becomes another enemy's) needs
+-- these paths; they cost one log line per kind.
+V.ASSET_LOG = 80
+function V.note_asset(a)
+  if not (a and a.path and a.name and a.family) then return end
+  local ss = V.session
+  ss.assets = ss.assets or {}
+  local k = V.kind_key(a.name, a.family)
+  if ss.assets[k] then return end
+  ss.assets_n = (ss.assets_n or 0) + 1
+  if ss.assets_n > V.ASSET_LOG then return end
+  ss.assets[k] = a.path
+  vlog(string.format("ASSET %s (%s, %s): %s", tostring(V.short(a.name)), tostring(a.family), tostring(a.class), a.path))
 end
 
 local function clock_() return (os and os.clock and os.clock()) or 0 end
@@ -1789,14 +1842,50 @@ local function groups_t(write)
 end
 local function vblocked(key) local s = vstate(); return s and s.spawn_blocked and s.spawn_blocked["v:" .. tostring(key)] or nil end
 
+-- dev 10.33: THE BUILT-IN REGISTRY. A template actor's uid is level data: the same in every game (round42 and round43
+-- read the same uids for the same enemies). Until 10.32 a save learned a kind only when one SPAWNED, so a new save - every
+-- public player - changed nothing in a fight until its kinds had spawned once (round43 Cordelion: amoeboids and puffoids
+-- were learned 2 minutes in, after the first fights; "kind not known yet" was the most common reason everywhere). These
+-- are every enemy template uid the logs named; the save's own entries win.
+V.REG_BUILTIN = {
+  ["92B2CE851D2D2468"] = "enm_pirate_robot_melee|swarmer|GameBotMeleeSwarmer|enemy",          -- Zurkon arena
+  ["E045F83C7223AF50"] = "enm_pirate_bladeball|swarmer|GameBotMeleeSwarmer|enemy",            -- Zurkon arena
+  ["ECE0F432299E09D3"] = "enm_pirate_robot_shooter|ground|GameBotShooter|enemy",              -- Zurkon C5
+  ["881AC9C3CBA94E0E"] = "enm_pirate_robot_shooter|ground|GameBotShooter|enemy",              -- Zurkon B3
+  ["A1057DAD87C2604C"] = "enm_pirate_robot_shooter|ground|GameBotShooter|enemy",              -- Zurkon pub brawl
+  ["94B0766A6CE1B456"] = "enm_thugs4less_robomutt|swarmer|GameBotMeleeSwarmer|enemy",         -- Zurkon B3
+  ["F01DD224A2CE9D21"] = "enm_thugs4less_shooterjetpack|flyer|GameBotShooterJetPack|enemy",   -- Zurkon B3
+  ["85D9909397F0E02B"] = "enm_thugs4less_biker|flyer|GameBotShooterJetPack|enemy",            -- Zurkon B3
+  ["DC4C7E6CA0C585C8"] = "enm_neo_nefarious_sniper|flyer|GameBotShooterJetPackNoFiring|enemy",  -- Zurkon C5
+  ["B6A048EF0922182D"] = "enm_neo_nefarious_hover|flyer|GameBotShooterJetPack|enemy",         -- Zurkon C5
+  ["ED913ADEA9581235"] = "enm_neo_nefarious_shooter|ground|GameBotShooterNoFiring|enemy",     -- Cordelion
+  ["CDCD55A20442F76D"] = "enm_neo_nefarious_shooter|ground|GameBotShooterNoFiring|enemy",     -- Cordelion
+  ["8DBDBB2D4107EB6C"] = "enm_neo_nefarious_melee|swarmer|GameBotMeleeSwarmer|enemy",         -- Cordelion
+  ["BC549A234BC37F2A"] = "enm_neo_nefarious_swarmer|swarmer|GameBotMeleeSwarmer|enemy",       -- Cordelion
+  ["93F81D58CE0170AF"] = "enm_neo_nefarious_grenadier|flyer|GameBotShooterJetPackNoFiring|enemy", -- Cordelion
+  ["D5C79D3A26DF1EB9"] = "enm_amoeboid_small_ps4|swarmer|GameBotAmoeboid|enemy",             -- Cordelion
+  ["A49ABC9129557DC6"] = "enm_indigenous_puffoid|swarmer|GameBotMeleeSwarmer|enemy",          -- Cordelion
+}
+-- every uid the registry knows (the save's and the built-in ones)
+function V.reg_uids()
+  local seen, out = {}, {}
+  for uid in pairs(reg_t()) do seen[uid] = true; out[#out + 1] = uid end
+  for uid in pairs(V.REG_BUILTIN) do if not seen[uid] then out[#out + 1] = uid end end
+  table.sort(out)
+  return out
+end
 -- a registry entry: "short|family|class|role[|hb][|mixed]"
 function V.reg_get(uid)
-  local v = uid and reg_t()[uid]
+  local v = uid and (reg_t()[uid] or V.REG_BUILTIN[uid])
   if type(v) ~= "string" then return nil end
   local name, fam, cls, role, rest = v:match("^([^|]*)|([^|]*)|([^|]*)|([^|]*)(.*)$")
   if not name then return nil end
-  return { name = name, family = fam ~= "" and fam or nil, class = cls ~= "" and cls or nil, role = role,
-           hb = rest:find("|hb", 1, true) ~= nil, mixed = rest:find("|mixed", 1, true) ~= nil }
+  local e = { name = name, family = fam ~= "" and fam or nil, class = cls ~= "" and cls or nil, role = role,
+              hb = rest:find("|hb", 1, true) ~= nil, mixed = rest:find("|mixed", 1, true) ~= nil }
+  -- dev 10.31: the family of its class today (round41's save holds enm_neo_nefarious_sniper as "friendly")
+  local now = e.class and SP.FAMILY_BY_CLASS[e.class]
+  if now and now ~= e.family then e.family = now; e.role = V.role_of(e) end
+  return e
 end
 function V.reg_put(uid, T)
   if not uid or uid == V.ZERO_UID or not T.name then return end
@@ -1817,13 +1906,22 @@ end
 function V.role_of(T)
   if not (T and T.family) then return "never" end
   local role = SP.ROLE_OF_FAMILY[T.family] or "never"
+  -- dev 10.31: enemy_compat = "all": the "unclear" bot classes (Hexapod, Pool Shark, Mr. Fungi, Telepathipus) are
+  -- regular enemies too (walkers). Mounts, hazards, friendlies and story bosses stay out.
+  if T.family == "unclear" and V.all_mode() then role = "enemy" end
   local n = (V.short(T.name) or ""):lower()
   for _, x in ipairs(V.NAME_EXCLUDE) do if n:find(x, 1, true) then return "never" end end
   if role == "enemy" and T.hb then role = "boss" end
   return role
 end
+-- dev 10.31: the movement group of a family ("unclear" walks, in "all" mode)
+function V.family_group(fam)
+  local g = V.FAMILY_GROUP[fam or ""]
+  if not g and fam == "unclear" and V.all_mode() then g = "walker" end
+  return g
+end
 function V.usable(T)
-  return T and not T.mixed and not T.hb and V.role_of(T) == "enemy" and V.FAMILY_GROUP[T.family] ~= nil
+  return T and not T.mixed and not T.hb and V.role_of(T) == "enemy" and V.family_group(T.family) ~= nil
 end
 -- dev 10.29: the pool a template belongs to, and its role: regular enemies by movement (walker / flyer / turret);
 -- boss tier (large bots, anything that showed a health bar) as "boss_walker" / "boss_flyer" / "boss_turret".
@@ -1831,9 +1929,9 @@ end
 function V.group_of(T)
   if not T or T.mixed or not T.family then return nil end
   local role = V.role_of(T)
-  if role == "enemy" then return V.FAMILY_GROUP[T.family], "enemy" end
+  if role == "enemy" then return V.family_group(T.family), "enemy" end
   if role == "boss" then
-    local g = T.family == "large" and "walker" or V.FAMILY_GROUP[T.family]
+    local g = T.family == "large" and "walker" or V.family_group(T.family)
     return g and ("boss_" .. g) or nil, "boss"
   end
   return nil, role
@@ -1905,6 +2003,21 @@ function V.compat_mode()
   local m = RANDO and RANDO.config and RANDO.config.enemy_compat
   return V.COMPAT_MODES[m] and m or "verified"
 end
+-- dev 10.31
+function V.all_mode() return V.compat_mode() == "all" end
+-- walkers, flyers and turrets replace each other (boss tier: its own groups among themselves)
+-- dev 10.32: only when enemy_mix_movement = true (now OFF by default). Round42: every replaced bot that could not be
+-- killed was a walker (pirate robot shooter) at a flyer's spawn - a Nefarious sniper's in C5, a biker's in B3.
+function V.mix_movement()
+  return V.all_mode() and (RANDO and RANDO.config and RANDO.config.enemy_mix_movement == true) or false
+end
+-- the movement groups a spawner of group g may take its replacement from
+function V.groups_for(g)
+  if not g then return {} end
+  if not V.mix_movement() then return { [g] = true } end
+  if g:sub(1, 5) == "boss_" then return { boss_walker = true, boss_flyer = true, boss_turret = true } end
+  return { walker = true, flyer = true, turret = true }
+end
 -- "verified" / "rejected" / "unverified", and the evidence
 function V.compat_status(pair)
   local saved = compat_t()[pair]
@@ -1917,11 +2030,66 @@ function V.compat_status(pair)
   if type(saved) == "string" and saved:sub(1, 3) == "ok:" then return "verified", "your game: " .. saved:sub(4) .. " of them died" end
   return "unverified", nil
 end
+-- dev 10.33: REPLACEMENT KINDS that do not fight where another kind's spawner puts them. The pirate robot shooter has
+-- never been killed as a replacement in five rounds: for a bladeball and a brawler (round40), a Nefarious sniper and a
+-- biker (round42), a robomutt (round43, 10 of 10 alive 40 s, nothing died) and a pub-brawl group (round43). It stays
+-- what it is in its own spawners and is never put into another's. A kind the game rejects as the replacement of two
+-- different originals is banned the same way for your save (V.note_rep_failure).
+V.BAD_REPLACEMENT = {
+  ["enm_pirate_robot_sh/ground"] = "rounds 40-43: never killed as a replacement (bladeball, brawler, sniper, biker, robomutt spawners)",
+}
+V.REP_FAIL_LIMIT = 2
+function V.rep_ban(rep)
+  local k = V.kind_key(rep.name, rep.family)
+  if V.BAD_REPLACEMENT[k] then return V.BAD_REPLACEMENT[k] end
+  local saved = compat_t()["rep|" .. k]
+  if type(saved) == "string" and saved:sub(1, 4) == "bad:" then return "your game: " .. saved:sub(5) end
+  return nil
+end
+-- a rejected pair counts against its replacement kind (distinct originals; kept in the save)
+function V.note_rep_failure(pair)
+  local o, k = tostring(pair):match("|([^>]*)>(.*)$")
+  if not (o and k) or o == k then return end
+  local key = "rep|" .. k
+  local t = compat_t(true)
+  local saved = t[key]
+  if type(saved) == "string" and saved:sub(1, 4) == "bad:" then return end
+  local list = {}
+  for x in (type(saved) == "string" and saved:match("^fails:(.*)$") or ""):gmatch("[^,]+") do list[x] = true end
+  list[o] = true
+  local names = {}
+  for x in pairs(list) do names[#names + 1] = x end
+  table.sort(names)
+  if #names >= V.REP_FAIL_LIMIT then
+    t[key] = "bad:could not be killed replacing " .. table.concat(names, ", ")
+    vlog(string.format("REPLACEMENT BANNED %s: rejected as the replacement of %d different kinds (%s) - never used again in this save",
+        k, #names, table.concat(names, ", ")))
+  else
+    t[key] = "fails:" .. table.concat(names, ",")
+  end
+  if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
+end
 -- may rep stand in for every original kind of spawner r? -> ok, how ("verified" / "trial" / "any"), why not
 function V.compat_allows(r, rep, origs)
   local mode = V.compat_mode()
   if mode == "any" then return true, "any" end
   origs = origs or V.origs_of(r)
+  -- dev 10.33: a banned replacement kind only ever stands in for itself
+  if V.rep_ban(rep) then
+    local rk = V.kind_key(rep.name, rep.family)
+    for _, o in ipairs(origs) do if V.kind_key(o.name, o.family) ~= rk then return false, nil, "rejected" end end
+    if #origs == 0 then return false, nil, "rejected" end
+  end
+  -- dev 10.31: "all" - everything but a pair with in-game evidence that its replacement cannot be killed
+  if mode == "all" then
+    local how = (#origs > 0) and "verified" or "all"
+    for _, o in ipairs(origs) do
+      local st = V.compat_status(V.pair_key(r.kind, o.name, o.family, rep.name, rep.family))
+      if st == "rejected" then return false, nil, "rejected" end
+      if st ~= "verified" then how = "all" end
+    end
+    return true, how
+  end
   if #origs == 0 then return false, nil, "unverified" end
   local how = "verified"
   for _, o in ipairs(origs) do
@@ -1959,32 +2127,58 @@ local function compat_put(pair, value)
   t[pair] = value
   if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
 end
+-- dev 10.33: a replaced bot that is GONE soon after its spawn was killed (round43 B3: 25 replaced jetpacks and bikers were
+-- killed - the challenge was completed - and no BotDeathCompleteEvent named one; "deaths seen 0" on the whole level). That
+-- is proof too, but only within V.GONE_PROOF_SECONDS: a bot gone much later may have been unloaded with its area.
+V.GONE_PROOF_SECONDS = 60
+function V.kills(lvl) return (lvl.deaths_seen or 0) + (lvl.gone_seen or 0) end
+function V.combat_gone(h, x)
+  if type(x) ~= "table" or x.dead or x.gone then return end
+  x.gone = true
+  local lvl = V.lvl
+  local frame = SP.frame or 0
+  lvl.last_death = frame                                                    -- the fight goes on (the stall watch)
+  local secs = math.floor((frame - (x.frame or 0)) / 60 + 0.5)
+  for _, p in ipairs(x.pairs or {}) do local c = V.combat_c(p); c.gone = c.gone + 1 end
+  if secs <= V.GONE_PROOF_SECONDS and x.pairs and #x.pairs > 0 then
+    x.dead = false                                                          -- (combat_died marks it)
+    x.gone_proof = true
+    V.combat_died(h, x, string.format("killed: gone %d s after its spawn", secs))
+  end
+end
 -- a replaced bot died: the proof its pair works (an unverified pair is verified for your save from now on)
-function V.combat_died(h, x)
+function V.combat_died(h, x, how)
   if x.dead then return end
   x.dead = true
   local lvl = V.lvl
   lvl.death_logged = (lvl.death_logged or 0) + 1
   if lvl.death_logged <= V.DEATH_LOG then
-    vlog(string.format("DEATH %d | %s replacing %s | %d s after its spawn | %s", h, tostring(V.short(x.T and x.T.name)),
-        tostring(x.orig or "?"), math.floor(((SP.frame or 0) - (x.frame or 0)) / 60 + 0.5), tostring(x.compat)))
+    vlog(string.format("DEATH %d | %s replacing %s | %d s after its spawn | %s%s", h, tostring(V.short(x.T and x.T.name)),
+        tostring(x.orig or "?"), math.floor(((SP.frame or 0) - (x.frame or 0)) / 60 + 0.5), tostring(x.compat), how and (" | " .. how) or ""))
   end
   for _, p in ipairs(x.pairs or {}) do
     local c = V.combat_c(p)
-    c.died = c.died + 1
+    if not x.gone_proof then c.died = c.died + 1 end
     local st = V.compat_status(p)
     local saved = compat_t()[p]
     if st == "unverified" then
       compat_put(p, "ok:1")
-      vlog("COMBAT VERIFIED " .. p .. ": a replaced bot of it died in your game (kept in the save)")
+      vlog("COMBAT VERIFIED " .. p .. ": a replaced bot of it died in your game (kept in the save)" .. (how and (" - " .. how) or ""))
     elseif type(saved) == "string" and saved:sub(1, 3) == "ok:" then
       compat_put(p, "ok:" .. math.min(999, (tonumber(saved:sub(4)) or 0) + 1))
+    elseif type(saved) == "string" and saved:sub(1, 8) == "suspect:" then
+      -- dev 10.31: a death clears a failure count (round41: robot shooter > bladeball got "suspect:1" from the
+      -- initialization check, then its bot died)
+      compat_put(p, "ok:1")
+      vlog("COMBAT " .. p .. ": a replaced bot of it died - its earlier failure is cleared")
     end
   end
 end
 -- in-game evidence against pairs: rejected for this session at once and in the save (a built-in verified pair only
 -- after V.SUSPECT_LIMIT failures), every change on this level that uses one is put back
-function V.combat_reject(pairs, why, label)
+-- dev 10.32: soft = the stall watch's evidence (nothing died while it lived: it may also be a player who walked away):
+-- rejected for this session at once, for the save only after V.SUSPECT_LIMIT stalls (a death in between clears it)
+function V.combat_reject(pairs, why, label, soft)
   local lvl = V.lvl
   V.session.compat_bad = V.session.compat_bad or {}
   local said = {}
@@ -1996,7 +2190,7 @@ function V.combat_reject(pairs, why, label)
       local b = V.COMPAT_BUILTIN[p]
       local saved = compat_t()[p]
       local scope
-      if b and b[1] == "ok" then
+      if (b and b[1] == "ok") or soft then
         local n = (tonumber(type(saved) == "string" and saved:match("^suspect:(%d+)") or 0) or 0) + 1
         if n >= V.SUSPECT_LIMIT then compat_put(p, "bad:" .. why); scope = "rejected for this save"
         else compat_put(p, "suspect:" .. n); scope = string.format("rejected for this session; failure %d of %d for this save", n, V.SUSPECT_LIMIT) end
@@ -2005,6 +2199,7 @@ function V.combat_reject(pairs, why, label)
       end
       vlog(string.format("COMBAT CHECK FAILED %s: %s - %s", p, why, scope))
       said[#said + 1] = p
+      V.note_rep_failure(p)                                                 -- dev 10.33
     end
   end
   local n = 0
@@ -2018,10 +2213,17 @@ function V.combat_reject(pairs, why, label)
   if #said > 0 then
     vlog(string.format("combat check: %d changed spawner(s) put back", n))
     say("Enemy Randomizer: " .. tostring(label or "a replacement") .. " - its spawners use the original enemy again",
-        { type = "corner", sub = "if an enemy here cannot be killed, load the last checkpoint", duration = 8 })
+        { type = "corner", sub = "the one already here may still be out of reach: restart the challenge or load the last checkpoint",
+          duration = 8 })
   end
 end
 -- a replaced bot that lives on while the fight goes on (V.tick, once a second)
+-- dev 10.32: ... or while the whole level is stalled (V.STALL_SECONDS without any death), for pairs not verified yet
+function V.pairs_verified(pairs)
+  if not pairs or #pairs == 0 then return false end
+  for _, p in ipairs(pairs) do if V.compat_status(p) ~= "verified" then return false end end
+  return true
+end
 function V.combat_watch()
   local lvl = V.lvl
   if not (lvl and lvl.watch and #lvl.watch > 0) then return end
@@ -2030,21 +2232,31 @@ function V.combat_watch()
   for _, h in ipairs(lvl.watch) do
     local x = lvl.spawned[h]
     if type(x) == "table" and not x.dead and not x.gone and not x.failed then
-      local others = lvl.deaths_seen - (x.deaths0 or 0)
-      if others >= V.COMBAT_DEATHS and frame - (x.frame or 0) >= V.COMBAT_SECONDS * 60 and asked < V.ALIVE_CHECKS then
+      local others = V.kills(lvl) - (x.deaths0 or 0)                     -- dev 10.33: bots gone count as killed
+      local age = frame - (x.frame or 0)
+      local fight = others >= V.COMBAT_DEATHS and age >= V.COMBAT_SECONDS * 60
+      local quiet = frame - math.max(lvl.last_death or 0, x.frame or 0)
+      local stall = not fight and age >= V.STALL_SECONDS * 60 and quiet >= V.STALL_SECONDS * 60 and not V.pairs_verified(x.pairs)
+      if (fight or stall) and asked < V.ALIVE_CHECKS then
         asked = asked + 1
         local state = V.presence(h)
         if state == "unknown" then
           -- a frame-budget error is no answer: asked again next second (never taken as "alive")
         elseif state == "gone" then
-          x.gone = true
-          for _, p in ipairs(x.pairs or {}) do local c = V.combat_c(p); c.gone = c.gone + 1 end
+          V.combat_gone(h, x)
         else
           x.failed = true
-          local secs = math.floor((frame - (x.frame or 0)) / 60 + 0.5)
-          V.combat_reject(x.pairs, string.format("%s replacing %s (bot %d) was alive %d s after its spawn while %d other bots died",
-              tostring(V.short(x.T and x.T.name)), tostring(x.orig or "?"), h, secs, others),
-              string.format("%s replacing %s could not be killed", V.display(x.T and x.T.name, x.T and x.T.family), tostring(x.orig_display or x.orig or "?")))
+          local secs = math.floor(age / 60 + 0.5)
+          local label = string.format("%s replacing %s could not be killed", V.display(x.T and x.T.name, x.T and x.T.family),
+              tostring(x.orig_display or x.orig or "?"))
+          if fight then
+            V.combat_reject(x.pairs, string.format("%s replacing %s (bot %d) was alive %d s after its spawn while %d other bots died",
+                tostring(V.short(x.T and x.T.name)), tostring(x.orig or "?"), h, secs, others), label)
+          else
+            lvl.stalls = (lvl.stalls or 0) + 1
+            V.combat_reject(x.pairs, string.format("%s replacing %s (bot %d) was alive %d s after its spawn and nothing on the level died for %d s",
+                tostring(V.short(x.T and x.T.name)), tostring(x.orig or "?"), h, secs, math.floor(quiet / 60 + 0.5)), label, true)
+          end
         end
       end
       if not x.gone and not x.failed then keep[#keep + 1] = h end
@@ -2076,11 +2288,10 @@ function V.init_check(A, a, h)
   for c in pairs(s.set) do if not have[c] then missing[#missing + 1] = c end end
   if #missing == 0 then return "OK (" .. s.n .. " original(s) compared)" end
   table.sort(missing)
-  V.combat_reject(A.pairs, string.format("%s (bot %d) spawned without %s that the game's own %s have", tostring(V.short(a.name)), h,
-      table.concat(missing, ", "), tostring(V.short(A.rep.name))),
-      string.format("%s replacing %s did not start like the game's own", V.display(A.rep.name, A.rep.family),
-          A.orig_T and V.display(A.orig_T.name, A.orig_T.family) or "a group"))
-  return "MISSING " .. table.concat(missing, ", ")
+  -- dev 10.31: NOTED, no longer rejected. Round41: bladeball bot 1115177 (replacing a robot shooter) was rejected for
+  -- "spawned without WeakspotFiltered" - and died 9 s after its spawn. A missing component is not proof an enemy
+  -- cannot be killed; only the combat watch (alive through a fight) rejects a pair now.
+  return "MISSING " .. table.concat(missing, ", ") .. " (noted only; the combat watch decides)"
 end
 
 -- ---- the SceneManager and its script variables (rando_give.dll v7) ----------------------------------
@@ -2161,9 +2372,10 @@ function V.actor(h)
   if okc then a.classes = SP.last_classes end                              -- dev 10.30: the initialization check
   -- dev 10.29: a bot's full name from its actor asset (a cut rivet.name is only a prefix of it)
   if a.class and V.ASSET_NAMES ~= false then
-    local okn, full = pcall(V.asset_name, h, a.class)
-    if okn and full and (not a.name or V.same_name(full, a.name)) then a.cut, a.name = a.name, full end
+    local okn, full, path = pcall(V.asset_name, h, a.class)
+    if okn and full and (not a.name or V.same_name(full, a.name)) then a.cut, a.name, a.path = a.name, full, path end
   end
+  if a.path and V.eligible(a) then pcall(V.note_asset, a) end
   return a
 end
 -- dev 10.28: is a spawned actor gone (killed and removed)? Round38: no BotDeathCompleteEvent ever reached the randomizer
@@ -2208,7 +2420,7 @@ function V.new_level(why)
             logged = 0, next_scan = (SP.frame or 0) + V.FIRST_SCAN, frame0 = SP.frame or 0,
             -- dev 10.28
             loc = {}, untied = 0, untied_logged = 0, why_not = {}, activity = SP.frame or 0, dirty = true, arm_i = 1,
-            gone_seen = 0, deaths_seen = 0, stuck_said = false, alive_i = 0, errors = {},
+            gone_seen = 0, deaths_seen = 0, stuck_said = false, alive_i = 0, errors = {}, last_death = SP.frame or 0,
             -- dev 10.29: spawn point -> node (or list of nodes), spawns waiting for the next listing, the ledger
             loc_index = {}, loc_indexed = 0, deferred = {}, ledger = { eligible = 0, replaced = 0, original = 0, other = 0,
             unchanged = 0, reasons = {}, logged = 0, kinds = {} } }
@@ -2423,14 +2635,17 @@ function V.scan(sc)
       t0 = vpace(t0)
     end
   end
-  -- the registry's enemies whose template actor is loaded here (once a level)
-  if not lvl.reg_checked and rivet.find_uid then
-    lvl.reg_checked = true
-    local found = 0
-    local uids = {}
-    for uid in pairs(reg_t()) do uids[#uids + 1] = uid end
-    table.sort(uids)
-    for _, uid in ipairs(uids) do
+  -- the registry's enemies whose template actor is loaded here
+  -- dev 10.32: not only once a level - again whenever a listing found new spawner variables (a zone streamed in: the
+  -- next Zurkon challenge, the next area of a planet) and at most every V.REG_RECHECK scans. Round42 checked once, in
+  -- the first second of each level, and never found one: the zones holding the save's other kinds were not loaded yet.
+  if new > 0 and lvl.reg_checked then lvl.reg_due = true end              -- (kept over a frame-budget restart of the scan)
+  if rivet.find_uid and (not lvl.reg_checked or (lvl.reg_due and lvl.scans - (lvl.reg_scan or 0) >= V.REG_RECHECK)) then
+    local first = not lvl.reg_checked
+    lvl.reg_checked, lvl.reg_due = true, false
+    lvl.reg_scan = lvl.scans
+    local found, names = 0, {}
+    for _, uid in ipairs(V.reg_uids()) do                                   -- dev 10.33: the built-in ones too
       if not lvl.tpl_uid[uid] then
         local e = V.reg_get(uid)
         if e and not e.mixed and not e.hb and e.role == "enemy" then
@@ -2440,12 +2655,16 @@ function V.scan(sc)
             local T = V.tpl_of(h, uid)
             T.src = "save, loaded here"
             found = found + 1
+            if #names < 8 then names[#names + 1] = V.display(T.name, T.family) end
           end
         end
       end
       t0 = vpace(t0)
     end
-    if found > 0 then vlog(string.format("%d enemy kind(s) of the save have their template actor loaded on this level", found)) end
+    if found > 0 then
+      vlog(string.format("%d enemy kind(s) of the save have their template actor loaded on this level%s: %s", found,
+          first and "" or " (a zone streamed in)", table.concat(names, ", ")))
+    end
   end
   if new > 0 then
     -- dev 10.29: spawn points that tied to nothing may belong to a node listed now (round39: Sargasso's nodes were
@@ -2470,8 +2689,10 @@ end
 -- the replacement must have one too - round37's factories: whatever the original held, the write kept that form)
 function V.pool(group, excl, need_uid)
   local out = {}
+  local groups = V.groups_for(group)                                       -- dev 10.31: mixed movement in "all"
   for _, T in pairs(V.lvl.tpl) do
-    if V.group_of(T) == group and (T.uid or not need_uid) then
+    local g = V.group_of(T)
+    if g and groups[g] and (T.uid or not need_uid) then
       local ok = true
       for _, n in ipairs(excl or {}) do if V.same_name(T.name, n) then ok = false end end
       if ok then out[#out + 1] = T end
@@ -2487,7 +2708,9 @@ end
 function V.pick(r, group, excl, n, need_uid)
   local pool = V.pool(group, excl, need_uid)
   if #pool == 0 and r.kind == "group" then pool = V.pool(group, nil, need_uid) end
-  if #pool == 0 then return nil, "no other " .. group .. " kind known on this level" end
+  if #pool == 0 then
+    return nil, V.mix_movement() and "no other enemy kind known on this level" or ("no other " .. group .. " kind known on this level")
+  end
   -- dev 10.30: only what combat compatibility allows (V.compat_allows): in-game verified pairs by default
   if V.compat_mode() ~= "any" then
     local origs, allowed, rejected = V.origs_of(r), {}, false
@@ -2498,6 +2721,7 @@ function V.pick(r, group, excl, n, need_uid)
       if ok then allowed[#allowed + 1] = T elseif why == "rejected" then rejected = true end
     end
     if #allowed == 0 then
+      if V.all_mode() then return nil, "every replacement here is rejected (could not be killed in your game)" end
       return nil, (rejected and V.compat_mode() == "verified") and "no combat-verified replacement here (some are rejected)"
                   or "no combat-verified replacement here"
     end
@@ -2526,7 +2750,22 @@ function V.pick(r, group, excl, n, need_uid)
   end
   table.sort(keys)
   local order = SP.rank(SP.seed_key() .. "|enemy|" .. tostring(r.key) .. "|" .. tostring(r.orig_name or "group") .. "|" .. tostring(n or 0), keys)
-  return by[order[1]]
+  -- dev 10.32: SPREAD. The seed's order alone can give one kind to most spawners of a level (round42's A1: 52 of its
+  -- 64 replaced spawns were robot brawlers): the seed's order is kept, but a kind fewer spawners of this level use comes
+  -- first, so every kind loaded here shows up. The same listing order gives the same picks on a retry.
+  local used = {}
+  for _, A in ipairs(V.lvl and V.lvl.arms or {}) do
+    if not A.restored and A.rec ~= r and A.rep and A.rep.name then
+      local k = V.short(A.rep.name):lower():sub(1, 19) .. "/" .. tostring(A.rep.family)
+      used[k] = (used[k] or 0) + 1
+    end
+  end
+  local best, bestn = order[1], math.huge
+  for _, k in ipairs(order) do
+    local u = used[k] or 0
+    if u < bestn then best, bestn = k, u end
+  end
+  return by[best]
 end
 
 -- may this spawner be changed now?
@@ -2559,9 +2798,11 @@ function V.plan_rec(sc, r)
     local A = r.arm
     -- dev 10.30: factories are planned before the nodes are listed; a node listed later that shares the variable and
     -- has already spawned makes the change unsafe (10.29's rule: shared variables only while every user is fresh)
-    for _, u in ipairs(lvl.users[r.var.idx] or {}) do
-      if A.spawns == 0 and not A.restored and u ~= r and not u.arm and not V.fresh(u) then
-        V.put_back(A, "shares its variable with a spent spawner"); return
+    if not V.all_mode() then                                               -- dev 10.31: "all" changes spent spawners too
+      for _, u in ipairs(lvl.users[r.var.idx] or {}) do
+        if A.spawns == 0 and not A.restored and u ~= r and not u.arm and not V.fresh(u) then
+          V.put_back(A, "shares its variable with a spent spawner"); return
+        end
       end
     end
     if not A.restored and A.spawns == 0 and A.kinds_seen ~= (lvl.kinds_n or 0) and V.fresh(r) then V.repick(sc, A) end
@@ -2582,7 +2823,7 @@ function V.plan_rec(sc, r)
       local fam, nm = m:match("^([^:]*):(.*)$")
       local g, rl = V.group_of({ family = fam ~= "-" and fam or nil, name = nm })
       if not g or rl ~= "enemy" then return note_why(r, "a member is no regular enemy") end
-      if group and g ~= group then return note_why(r, "members of several movement groups (walkers and flyers)") end
+      if group and g ~= group and not V.mix_movement() then return note_why(r, "members of several movement groups (walkers and flyers)") end
       group, role = g, rl
       excl[#excl + 1] = nm
     end
@@ -2596,8 +2837,13 @@ function V.plan_rec(sc, r)
   end
   if not group then return end
   if not V.role_on(role) then return note_why(r, (role == "boss" and "Boss" or "Enemy") .. " Randomizer off") end
+  -- dev 10.31: round41 - Zurkon B3's robomutt / biker factories spawned their kind once ("kind not known yet"), and
+  -- from then on every spawn was "already spawned on this level". In "all" mode a spawner that has spawned is changed
+  -- for its NEXT spawns (the ones standing there stay what they are).
+  local all = V.all_mode()
   for _, u in ipairs(lvl.users[r.var.idx] or {}) do
-    if u.arm or not V.fresh(u) then return note_why(r, u == r and "already spawned on this level" or "shares its variable with a spent spawner") end
+    if u.arm then return note_why(r, u == r and "already spawned on this level" or "shares its variable with a spent spawner") end
+    if not all and not V.fresh(u) then return note_why(r, u == r and "already spawned on this level" or "shares its variable with a spent spawner") end
   end
   r.orig_name = orig_T and V.short(orig_T.name) or "group"
   local rep, why = V.pick(r, group, excl, 0, r.kind ~= "group" and r.orig.uid ~= V.ZERO_UID)
@@ -2642,13 +2888,14 @@ function V.arm(sc, r, rep, orig_T, role)
   local A = { rec = r, rep = rep, orig_T = orig_T, new_uid = new_uid, frame = SP.frame, spawns = 0, picks = 0, alive = {}, alive_n = 0,
               last_activity = SP.frame, role = role or "enemy", group = r.plan_group, excl = r.plan_excl,
               kinds_seen = V.lvl.kinds_n or 0 }
+  A.late = not V.fresh(r)                                                  -- dev 10.31: changed after it spawned
   V.arm_compat(A)
   r.arm = A
   local lvl = V.lvl
   lvl.arms[#lvl.arms + 1] = A
   ad.armed = ad.armed + 1
-  vlog(string.format("CHANGED %s %s (actor %s, variable %d): %s -> %s [template %s uid %s from %s; %s]",
-      V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(r.actor), r.var.idx,
+  vlog(string.format("CHANGED%s %s %s (actor %s, variable %d): %s -> %s [template %s uid %s from %s; %s]",
+      A.late and " (late: it had spawned, its next spawns)" or "", V.ADAPTER_LABEL[r.kind], tostring(r.key), tostring(r.actor), r.var.idx,
       r.kind == "group" and ("group " .. string.format("%08X", r.orig.actors) .. " (" .. tostring(groups_t()[r.key]) .. ")")
         or tostring(V.short(orig_T and orig_T.name)), tostring(V.short(rep.name)), tostring(rep.handle), tostring(rep.uid or "-"),
       tostring(rep.src or "?"), V.compat_label(A)))
@@ -2670,6 +2917,7 @@ function V.compat_label(A)
   end
   if A.compat == "trial" then return "TRIAL: an unverified pair of the same bot class, watched" end
   if A.compat == "any" then return "enemy_compat = any: NOT combat-verified" end
+  if A.compat == "all" then return "enemy_compat = all: not combat-verified yet, watched (a death verifies it)" end
   return "not combat-verified"
 end
 
@@ -2953,6 +3201,22 @@ function V.verify(A, a)
     V.learn(A.rep, a, "spawn")                                              -- its template actor misled: what it really makes
     if not V.group_of(A.rep) then A.verified = verdict; V.put_back(A, "the replacement is no regular enemy"); return end
   end
+  -- dev 10.31: a LATE change (its spawner had spawned before it was changed, "all" mode) may still see originals the
+  -- spawner had queued: up to V.LATE_GRACE of them are no verdict (not "the game ignored it", which puts the change
+  -- back and can switch the adapter off for the session)
+  -- dev 10.33: ... and never a verdict. Round43 Cordelion: C2E2DEEAE2E3C44B and C973D8BB298A4F20 were changed after
+  -- their first spawn and made 5 / 3 more originals: a factory keeps the enemies it queued for this run. 10.32 then
+  -- put the change back ("the game ignored the change") and showed FAILED. The change now stays for the factory's
+  -- next run (the next wave); nothing is put back and nothing counts against the adapter.
+  if A.late and verdict:find("ORIGINAL", 1, true) then
+    A.late_orig = (A.late_orig or 0) + 1
+    ad.original = ad.original - 1
+    if A.late_orig == 1 then
+      vlog(string.format("VERIFY %s %s: late change - the factory still makes the enemies it queued before; the change stays for its next run",
+          V.ADAPTER_LABEL[r.kind], tostring(r.key)))
+    end
+    return
+  end
   A.verified = verdict
   -- dev 10.30: a spawn is not proof it fights: its components against the game's own of that kind, its combat pair
   local init = verdict == "REPLACEMENT SPAWNED" and V.init_check(A, a, A.first_h or 0) or nil
@@ -2964,10 +3228,19 @@ function V.verify(A, a)
   local orig_name = A.orig_T and V.display(A.orig_T.name, A.orig_T.family) or "group (" .. tostring(groups_t()[r.key] or "?"):gsub("[%w_]*:", "") .. ")"
   if verdict == "REPLACEMENT SPAWNED" then
     V.session.said_ok = true
-    V.note(orig_name, V.display(A.rep.name, A.rep.family), "SUCCESS")
-  else
-    V.note(orig_name, V.display(A.rep.name, A.rep.family), "FAILED - " .. verdict:lower() .. " (" .. V.display(a.name, a.family) .. ")")
+    -- dev 10.32: round42 on Cordelion - "it said enemies randomized but I didn't notice": every kind loaded there was a
+    -- Nefarious trooper. The level's first note says so (the game can only spawn enemies whose template is loaded here)
+    local sp = V.species_here()
+    local lvl = V.lvl
+    if #sp == 1 and not lvl.one_species_said then
+      lvl.one_species_said = true
+      vlog(string.format("only %s are loaded on this level: replacements come from them (another planet's enemies are not loaded here)", sp[1]))
+      V.note(orig_name, V.display(A.rep.name, A.rep.family), "SUCCESS - only " .. sp[1] .. " are loaded here")
+    else
+      V.note(orig_name, V.display(A.rep.name, A.rep.family), "SUCCESS")
+    end
   end
+  -- dev 10.33: a change the game ignored is put back and logged (VERIFY line above); no on-screen FAILED note
   if verdict:find("ORIGINAL", 1, true) then
     V.put_back(A, "the game ignored the change")
     if ad.ok == 0 and ad.original >= V.FAIL_LIMIT and ad.on then
@@ -3131,7 +3404,7 @@ function V.process_one(sc, e)
       A.alive[e.h] = true; A.alive_n = A.alive_n + 1; A.last_activity = SP.frame
       -- dev 10.30: every replaced bot is watched until it dies (V.combat_watch / V.combat_died)
       local replaced = a and a.name and V.same_kind(a.name, a.family, A.rep.name, A.rep.family)
-      lvl.spawned[e.h] = { A = A, T = A.rep, frame = SP.frame or 0, deaths0 = lvl.deaths_seen, pairs = replaced and A.pairs or {},
+      lvl.spawned[e.h] = { A = A, T = A.rep, frame = SP.frame or 0, deaths0 = V.kills(lvl), pairs = replaced and A.pairs or {},
                            compat = A.compat, orig = A.orig_label, orig_display = A.orig_display }
       if replaced then
         A.first_h = A.first_h or e.h
@@ -3199,6 +3472,7 @@ function V.on_death(f, ev)
   if not lvl then return end
   lvl.activity = SP.frame or 0
   lvl.deaths_seen = lvl.deaths_seen + 1
+  lvl.last_death = SP.frame or 0                                           -- dev 10.32: the stall watch
   local s = f.SenderHandle or (type(ev) == "table" and ev.sender)
   local h = math.tointeger(tonumber(s))
   local x = h and lvl.spawned[h]
@@ -3272,10 +3546,8 @@ function V.watchdog()
           lvl.gone_seen = lvl.gone_seen + 1
           lvl.activity = SP.frame
           local x = lvl.spawned[h]                                           -- dev 10.30: no longer watched
-          if type(x) == "table" and not x.dead and not x.gone then
-            x.gone = true
-            for _, p in ipairs(x.pairs or {}) do local c = V.combat_c(p); c.gone = c.gone + 1 end
-          end
+          lvl.last_death = SP.frame or 0                                     -- dev 10.33: a bot gone = the fight goes on
+          if type(x) == "table" and not x.dead and not x.gone then V.combat_gone(h, x) end
         end
       end
     end
@@ -3502,7 +3774,7 @@ function V.status()
       if V.usable(T) and not names[k] then names[k] = true; out.kinds = out.kinds + 1 end
     end
   end
-  for uid in pairs(reg_t()) do local e = V.reg_get(uid); if e and e.role == "enemy" and not e.hb and not e.mixed then out.known = out.known + 1 end end
+  for _, uid in ipairs(V.reg_uids()) do local e = V.reg_get(uid); if e and e.role == "enemy" and not e.hb and not e.mixed then out.known = out.known + 1 end end
   for _, ad in pairs(V.adapters) do out.ok, out.original = out.ok + ad.ok, out.original + ad.original end
   -- dev 10.29: this level's enemy spawns (the ledger)
   local L = lvl and lvl.ledger
@@ -3510,6 +3782,8 @@ function V.status()
   local top, topn = nil, 0
   for reason, n in pairs(L and L.reasons or {}) do if n > topn then top, topn = reason, n end end
   out.top_reason = top
+  out.species = lvl and V.species_here() or {}                             -- dev 10.32
+  out.stalls = lvl and lvl.stalls or 0
   -- dev 10.30: combat compatibility
   out.compat = V.compat_mode()
   out.pairs_verified, out.pairs_rejected = 0, 0
@@ -3550,9 +3824,10 @@ function V.summary()
       if #p > 0 then why[#why + 1] = V.ADAPTER_LABEL[k] .. ": " .. table.concat(p, ", ") end
     end
   end
-  vlog(string.format("level detail: %s | SpawnFactory-0 spawns tied to nothing %d | deaths seen %d (of our bots %d), bots gone %d | jobs dropped %d | spawns given up %d | spawn points indexed %d",
+  vlog(string.format("level detail: %s | SpawnFactory-0 spawns tied to nothing %d | deaths seen %d (of our bots %d), bots gone %d | stalls %d | jobs dropped %d | spawns given up %d | spawn points indexed %d | species %s",
       #why > 0 and table.concat(why, " | ") or "no node spawner considered", lvl.untied, lvl.deaths_seen, lvl.deaths_tied or 0,
-      lvl.gone_seen, lvl.jobs_dropped or 0, lvl.given_up or 0, lvl.loc_indexed))
+      lvl.gone_seen, lvl.stalls or 0, lvl.jobs_dropped or 0, lvl.given_up or 0, lvl.loc_indexed,
+      (function() local sp = V.species_here(); return #sp > 0 and table.concat(sp, ", ") or "-" end)()))
   -- dev 10.29: the answer to "are enemies being replaced?" for this level, from every enemy spawn
   local L = lvl.ledger
   if L.eligible > 0 then
@@ -3584,6 +3859,14 @@ function V.summary()
     local st, ev = V.compat_status(p)
     vlog(string.format("COMBAT %s: replaced bots spawned %d, died %d, gone %d, alive at the end %d%s | pair %s%s", p, c.spawned, c.died,
         c.gone, alive, c.rejected and " | REJECTED here" or "", st, ev and (" (" .. ev .. ")") or ""))
+  end
+end
+
+-- dev 10.33: bolts picked up = something was killed (10_rando_runtime.lua calls this for every GainBoltEvent)
+if R then
+  R.on_gain_bolt = function()
+    local lvl = SP.V and SP.V.lvl
+    if lvl then lvl.last_death = SP.frame or 0; lvl.bolts_seen = (lvl.bolts_seen or 0) + 1 end
   end
 end
 
@@ -3723,5 +4006,6 @@ if not SP.subscribed then
 end
 
 log("spawner layer loaded (" .. SP.NODE_CLASS .. " Templates; families " .. #SP.FAMILY_CLASSES .. " bot classes)")
-SP.V.log(string.format("variable route loaded (%s, kit %s): factory Templates, node Template, node Template group; plugs Templates %d Template %d; combat compatibility %s",
-    tostring(RANDO and RANDO.RELEASE or "?"), tostring(RANDO_FILES["16_rando_spawners"]), SP.V.PLUG_TEMPLATES, SP.V.PLUG_TEMPLATE, SP.V.compat_mode()))
+SP.V.log(string.format("variable route loaded (%s, kit %s): factory Templates, node Template, node Template group; plugs Templates %d Template %d; combat compatibility %s%s",
+    tostring(RANDO and RANDO.RELEASE or "?"), tostring(RANDO_FILES["16_rando_spawners"]), SP.V.PLUG_TEMPLATES, SP.V.PLUG_TEMPLATE, SP.V.compat_mode(),
+    SP.V.all_mode() and ("; ALL enemies (movement " .. (SP.V.mix_movement() and "mixed" or "kept") .. ", spent spawners change too, Nefarious troopers included)") or ""))

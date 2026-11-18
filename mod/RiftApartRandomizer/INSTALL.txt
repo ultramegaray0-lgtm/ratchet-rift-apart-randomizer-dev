@@ -43,9 +43,21 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release dev 10.30 (kit 10.0.19)
-       RANDO-KIT all 12 required scripts are 10.0.19
+       RANDO-KIT release v0.60 (kit 10.0.23)
+       RANDO-KIT all 12 required scripts are 10.0.23
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
+
+ENEMY RANDOMIZER (dev 10.33)
+  enemy_compat = "all" in scripts\04_rando_settings.lua (the default): every regular enemy LOADED ON THE LEVEL can become
+  every other of its movement group (walkers / flyers / turrets), Nefarious troopers included, and a spawner that already
+  spawned changes for its next spawns. enemy_mix_movement = true also mixes the groups (off since dev 10.32: round42's
+  walkers at flyer spawns could not be killed). A replacement that is still alive after a fight (6 other deaths, 45 s)
+  or while nothing on the level died for 40 s is put back. enemy_compat = "verified" is 10.30's behaviour.
+  The game can only spawn an enemy whose template is loaded on the level: on Cordelion's first fights that is Nefarious
+  troopers only. Ctrl+- names the species loaded where you are. Enemies of OTHER planets need an asset-level swap (not
+  in this kit; rivet.log's "ASSET" lines collect what it needs).
+  dev 10.33: the enemy kinds every log has named are built in, so a new save randomizes from its first fight; the
+  pirate robot shooter is never used as a replacement (it could not be killed as one).
 
 KEYS
   Players: 0 planet shuffle on/off (off by default), Ctrl+0 twice gives randomizer items back.

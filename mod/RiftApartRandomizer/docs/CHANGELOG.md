@@ -2,6 +2,14 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Public Release v0.60 (beta, kit 10.0.23; dev 10.33 + the shuffle-independent trip back)
+
+Player-visible: the Enemy Randomizer (on by default; - and Ctrl+-), Omega weapons (omega_weapons, off by default:
+the in-game flag is not written yet), Install-ArsenalRestored.bat back in the download, the trip back to Nefarious
+City after a finished planet with planet shuffle on AND off, rando_give.dll v7, Spybots/Lorbs hold no rewards. Not in
+the download: the Boss and Chaos Randomizers, developer files. Every seed differs from v0.55. DEVELOPMENT_LOG.md has
+the details.
+
 ## Dev 10.30 (kit 10.0.19; not released): combat compatibility after round40 ("enemies that could not be killed")
 
 Asked: find and fix why some randomized enemies (the pirates with guns) could not be killed; make every replacement
