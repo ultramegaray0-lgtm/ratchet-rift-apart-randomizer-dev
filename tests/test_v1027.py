@@ -253,8 +253,9 @@ class UnitTests(unittest.TestCase):
     def test_the_enemy_client_uses_the_variable_route(self):
         g, V = lua_engine()
         self.assertEqual(g.lua.eval("RANDO_ENEMY.client.route"), "vars")
-        self.assertEqual(g.lua.eval("RANDO_BOSS and RANDO_BOSS.client.route"), None)       # Boss: still the old route
-        self.assertTrue(g.lua.eval("RANDO_SPAWNERS.legacy(RANDO_SPAWNERS.clients.boss)"))
+        # dev 10.29: the Boss Randomizer runs on the same engine (boss_route / enemy_route = "census": the old one)
+        self.assertEqual(g.lua.eval("RANDO_BOSS and RANDO_BOSS.client.route"), "vars")
+        self.assertFalse(g.lua.eval("RANDO_SPAWNERS.legacy(RANDO_SPAWNERS.clients.boss)"))
 
 
 # ---------------------------------------------------------------------------------------------- simulator
@@ -283,7 +284,7 @@ class SimulatorTests(unittest.TestCase):
         self.assertEqual(s.var(20), 9001)                                         # 8001: spent, unchanged
         self.assertEqual(s.spawn(8003), "enm_melee")                              # SIMULATED game: the variable decides
         self.assertTrue(s.has("VERIFY factory Templates 000000000000F002: requested enm_melee, spawned enm_melee: REPLACEMENT SPAWNED"), s.ev()[-3:])
-        self.assertTrue(s.g.note_has("Enemy Randomizer: working"), s.g.notes()[-3:])
+        self.assertTrue(s.g.note_has("[ENEMY RANDOMIZER] SUCCESS"), s.g.notes()[-3:])   # dev 10.29: the replacement note
         self.assertEqual(s.spawn(8003), "enm_melee")                              # the same factory again: still changed
         self.assertEqual(s.spawn(8006), "enm_grunt")
 
@@ -381,7 +382,7 @@ class SimulatorTests(unittest.TestCase):
         s.spawn(8001); s.spawn(8002); s.spawn(8003)
         s.g.press("-", ctrl=True)
         s.g.step(2)
-        self.assertTrue(s.g.note_has("Enemy Randomizer ON: 3 spawner(s) changed here (3 factory, 0 node, 0 group)"), s.g.notes()[-2:])
+        self.assertTrue(s.g.note_has("Enemy Randomizer ON: 1 of 3 enemy spawn(s) here were replaced"), s.g.notes()[-2:])   # dev 10.29: the ledger first
 
     def test_a_spawner_that_ignores_the_write_is_put_back_and_the_adapter_stops(self):
         s = Sim(self, A1 + [(8007, 9001), (8008, 9001)])

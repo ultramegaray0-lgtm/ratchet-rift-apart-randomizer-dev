@@ -1,6 +1,6 @@
-Rift Apart Randomizer dev 10.28 (build 10.0.18) - test run 2026-11-18 10:48 UTC
+Rift Apart Randomizer dev 10.29 (build 10.0.18) - test run 2026-11-18 11:28 UTC
 Python 3.13.18 on Linux
-ran 744, failures 0, errors 0, skipped 23
+ran 769, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -669,6 +669,31 @@ test_the_budget_storm (tests.test_v1028.Round38LogTests.test_the_budget_storm) .
 test_the_false_stuck_of_10_27 (tests.test_v1028.Round38LogTests.test_the_false_stuck_of_10_27) ... ok
 test_the_log_is_anonymized (tests.test_v1028.Round38LogTests.test_the_log_is_anonymized) ... ok
 test_two_thugs_one_cut_name (tests.test_v1028.Round38LogTests.test_two_thugs_one_cut_name) ... ok
+test_a1s_changes_came_after_the_fight (tests.test_v1029.Round39LogTests.test_a1s_changes_came_after_the_fight) ... ok
+test_anonymized (tests.test_v1029.Round39LogTests.test_anonymized) ... ok
+test_deaths_name_their_bot_now (tests.test_v1029.Round39LogTests.test_deaths_name_their_bot_now) ... ok
+test_node_spawns_were_never_tied_and_their_kinds_never_known (tests.test_v1029.Round39LogTests.test_node_spawns_were_never_tied_and_their_kinds_never_known) ... ok
+test_story_boss_and_hazards_were_protected (tests.test_v1029.Round39LogTests.test_story_boss_and_hazards_were_protected) ... ok
+test_the_only_replacements_were_amoeboid_sizes (tests.test_v1029.Round39LogTests.test_the_only_replacements_were_amoeboid_sizes) ... ok
+test_the_pub_group_wave_mixes_thugs_and_pirates (tests.test_v1029.Round39LogTests.test_the_pub_group_wave_mixes_thugs_and_pirates) ... ok
+test_a_busy_level_is_followed_without_searching (tests.test_v1029.SimulatorTests.test_a_busy_level_is_followed_without_searching) ... ok
+test_a_group_node_is_tied_by_its_spawn_point_learned_then_changed (tests.test_v1029.SimulatorTests.test_a_group_node_is_tied_by_its_spawn_point_learned_then_changed) ... ok
+test_a_jetpack_spawned_for_a_ground_request_is_not_success (tests.test_v1029.SimulatorTests.test_a_jetpack_spawned_for_a_ground_request_is_not_success) ... ok
+test_a_kind_learned_on_one_planet_changes_the_first_wave_on_the_next_visit (tests.test_v1029.SimulatorTests.test_a_kind_learned_on_one_planet_changes_the_first_wave_on_the_next_visit) ... ok
+test_a_node_listed_after_its_first_spawn_is_tied_on_the_next_listing (tests.test_v1029.SimulatorTests.test_a_node_listed_after_its_first_spawn_is_tied_on_the_next_listing) ... ok
+test_a_pirate_becomes_a_thug_when_the_level_has_one (tests.test_v1029.SimulatorTests.test_a_pirate_becomes_a_thug_when_the_level_has_one) ... ok
+test_a_write_the_game_ignores_is_reported_as_failed (tests.test_v1029.SimulatorTests.test_a_write_the_game_ignores_is_reported_as_failed) ... ok
+test_boss_tier_swaps_only_with_boss_tier_and_story_bosses_never (tests.test_v1029.SimulatorTests.test_boss_tier_swaps_only_with_boss_tier_and_story_bosses_never) ... ok
+test_every_enemy_spawn_is_in_the_ledger_with_its_reason (tests.test_v1029.SimulatorTests.test_every_enemy_spawn_is_in_the_ledger_with_its_reason) ... ok
+test_flyers_for_flyers_and_the_two_thugs_are_two_kinds (tests.test_v1029.SimulatorTests.test_flyers_for_flyers_and_the_two_thugs_are_two_kinds) ... ok
+test_notes_are_queued_and_can_be_switched_off (tests.test_v1029.SimulatorTests.test_notes_are_queued_and_can_be_switched_off) ... ok
+test_regular_enemies_never_get_a_boss (tests.test_v1029.SimulatorTests.test_regular_enemies_never_get_a_boss) ... ok
+test_size_variants_never_replace_each_other (tests.test_v1029.SimulatorTests.test_size_variants_never_replace_each_other) ... ok
+test_switching_the_boss_randomizer_off_keeps_the_enemy_changes (tests.test_v1029.SimulatorTests.test_switching_the_boss_randomizer_off_keeps_the_enemy_changes) ... ok
+test_the_budget_never_drops_a_spawn (tests.test_v1029.SimulatorTests.test_the_budget_never_drops_a_spawn) ... ok
+test_the_note_names_original_replacement_and_result (tests.test_v1029.SimulatorTests.test_the_note_names_original_replacement_and_result) ... ok
+test_the_same_pick_after_every_reload_and_every_run_changed_again (tests.test_v1029.SimulatorTests.test_the_same_pick_after_every_reload_and_every_run_changed_again) ... ok
+test_without_another_species_another_kind_of_the_same_species (tests.test_v1029.SimulatorTests.test_without_another_species_another_kind_of_the_same_species) ... ok
 test_a_long_listing_is_placed_in_slices (tests.test_v81.CatalogTests.test_a_long_listing_is_placed_in_slices) ... ok
 test_a_menu_landing_is_remembered (tests.test_v81.CatalogTests.test_a_menu_landing_is_remembered) ... ok
 test_cordelion_is_placed_by_its_area (tests.test_v81.CatalogTests.test_cordelion_is_placed_by_its_area) ... ok
@@ -768,6 +793,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 744 tests in 151.887s
+Ran 769 tests in 169.609s
 
 OK (skipped=23)

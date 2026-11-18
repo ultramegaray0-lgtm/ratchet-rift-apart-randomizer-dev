@@ -11,6 +11,8 @@ dev 10.12 adds tests/test_v1012.py, 32 - see TEST_REPORT_10.12.md; dev 10.13 add
 dev 10.15 adds tests/test_v1015.py, 32 - TEST_REPORT_10.15.md).
 Dev 10.27: 722 run, 0 failures, 23 skipped (tests/test_v1027.py adds 40 for the Enemy Randomizer's variable route).
 Dev 10.28: 744 run, 0 failures, 23 skipped (tests/test_v1028.py adds 22: round38 real-log facts and the fixes).
+Dev 10.29: 769 run, 0 failures, 23 skipped (tests/test_v1029.py adds 25: 7 on round39's real log, 18 simulator -
+every spawn mechanism, family, the ledger, notes, bosses, checkpoints, planets and a 600-spawn busy level).
 All of these are SIMULATOR tests: none of them is a result from the real game.
 The skipped tests:
 - 9 need PowerShell 7, which could not run on the build machine;
@@ -35,6 +37,25 @@ The skipped tests:
 The older suites pin the settings they were written for (`tests/harness.py`, CLASSIC_TEST_SETTINGS:
 no Coordinates, the game's own order, Raritanium 20-150). Your defaults changed in 8.5.1; test_v90
 runs them, and your kit 04 file, as they are.
+
+## 2-dev16. Dev 10.29 (kit 10.0.18): the Enemy Randomizer overhaul - ONE consolidated test
+
+Build: commit of dev 10.29 on main. Copy `rando_give.dll` (v7) next to RiftApart.exe and the WHOLE `scripts` folder
+(banner "Randomizer dev 10.29"; log `RANDO-ENEMIES variable route loaded (dev 10.29)`). Remove `dev(spawnprobe).lua`
+from the game's scripts folder (its job is done; it costs frame budget). Same save as before is fine.
+Both `-` (Enemy) and `=` (Boss) Randomizers ON (Ctrl+`-` / Ctrl+`=` say so); `enemy_notify = true` (default).
+1. **Zurkon, challenge A1 to the end.** Watch the corner: "[ENEMY RANDOMIZER] SUCCESS - Original: Pirate Robot
+   Shooter -> Replacement: Goons-4-Less Shooter" (or similar) as the waves come. LOOK: thugs where pirates were?
+   At the end press Ctrl+`-`: "N of M enemy spawn(s) here were replaced".
+2. **Zurkon, the pub brawl / a challenge with robomutts and thugs, twice** (load the checkpoint for the second run).
+   Second run: notes for "node Template group", other enemies where robomutts / thugs came?
+3. **Sargasso**, two ordinary fights (wasps, horned toads, thugs). Ctrl+`-` after each.
+4. **Cordelion** (or any planet you have open: Savali, Blizar Prime, Torren IV), one ordinary fight. Ctrl+`-`.
+5. Write down: what you SAW replaced (one or two examples), anything stuck or unbeatable, any challenge that did not
+   finish. Send rivet.log and those notes.
+What the log will answer without you: `SPAWN ... | SUCCESS / NOT CHANGED: <why>` for every enemy spawn,
+`ENEMY SPAWNS on this level: N, replaced R (x%) ... why: ...` at every level end, `level detail: ... spawn points
+indexed N ... spawns given up 0`, `CHANGED AGAIN` (a better pick before the spawner ran), `VERIFY ... node Template group`.
 
 ## 2-dev15. Dev 10.28 (kit 10.0.18): the Enemy Randomizer after round38 - groups, nodes, no false "stuck"
 

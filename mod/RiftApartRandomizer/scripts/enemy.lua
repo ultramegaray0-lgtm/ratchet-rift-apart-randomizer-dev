@@ -63,10 +63,12 @@ function E.key()
   end
   if R.ctrl_down() then
     local st = SP.V.status()
-    R.say(string.format("Enemy Randomizer %s: %d spawner(s) changed here (%d factory, %d node, %d group)", E.enabled() and "ON" or "OFF",
-                        st.changed, st.factory, st.template, st.group),
-          { type = "corner", sub = string.format("%d enemy kind(s) here, %d known; this session %d replaced, %d ignored by the game",
-                                                 st.kinds, st.known, st.ok, st.original), duration = 6 })
+    -- dev 10.29: what happened to this level's enemy spawns, first
+    R.say(string.format("Enemy Randomizer %s: %d of %d enemy spawn(s) here were replaced", E.enabled() and "ON" or "OFF",
+                        st.replaced, st.spawns),
+          { type = "corner", sub = string.format("%d spawner(s) changed now (%d factory, %d node, %d group); %d kind(s) here%s",
+                                                 st.changed, st.factory, st.template, st.group, st.kinds,
+                                                 st.top_reason and ("; most kept: " .. st.top_reason) or ""), duration = 7 })
     return
   end
   E.toggle(R.key("key_enemies"))

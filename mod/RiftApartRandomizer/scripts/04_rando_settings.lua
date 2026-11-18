@@ -70,6 +70,8 @@ RANDO_SETTINGS = {
   enemy_randomizer = true,            -- regular enemies spawned by spawners become other regular enemies loaded on
                                        -- the same level (dev 10.27: the spawner-variable method; needs rando_give.dll v7)
   boss_randomizer = true,              -- boss-tier enemies are shuffled among themselves (story bosses never)
+  enemy_notify = true,                 -- dev 10.29: a corner note "[ENEMY RANDOMIZER] SUCCESS - Original: X -> Replacement: Y"
+                                       -- for every changed spawner's first spawn (false: only rivet.log)
   -- key_enemies = "-",                -- the Enemy Randomizer's key (Ctrl+key: what it changed here)
   -- key_bosses = "=",                 -- the Boss Randomizer's key
   -- CHAOS (chaos.lua, OFF by default): ANY enemy or boss can become ANY other, from any planet, with NO

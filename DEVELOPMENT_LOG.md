@@ -4,6 +4,40 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-18: dev 10.29 (kit 10.0.18): the Enemy Randomizer overhaul (round39: "the enemies were the same")
+
+- Asked: a comprehensive, provable Enemy Randomizer (registry, every spawn mechanism, visible verification, meaningful
+  picks, bosses investigated, performance, tests, a coverage report); no new test until the development side is done.
+- Log: tests/data/round39_rivet.log (dev 10.28 scripts, v7 helper, spawnprobe on; NefCity, Sargasso, Zurkon A1 / A3 /
+  pub, NefCity, Cordelion; game path replaced). Player: "didn't notice any new enemies, but I could be wrong".
+- WHAT ROUND39 PROVES (real game):
+  * The player was right: 3 replacements in the whole session, all Cordelion amoeboid size swaps (C0DE, D3BB, E0F4:
+    small <-> large, VERIFY REPLACEMENT SPAWNED). Zurkon A1's 8 factories were CHANGED within the last lines before
+    A1 ended (EndReason=0): nothing of A1 was replaced. Sargasso: 8 CHANGED, none spawned before the reload.
+  * Cause 1, throughput: "SpawnFactory-0 spawns tied to nothing 513" on one Zurkon visit - 10.28's per-spawn search
+    over node records (portals, cars) let the queue fall minutes behind; factories spawned before being planned.
+  * Cause 2, no node ever tied ("node Template: 116 kind not known yet"): Sargasso's nodes were listed ~40 s after
+    the planet loaded, and 10.28 gave up a spawn point after 3 misses. spawnprobe shows the fix: every node's
+    Location variable (2761897147 = rivet.hash "Location") holds exactly the event's SpawnLocation (8cfa5b53:
+    {1103873} / spawn at 1103873; ede61f1b {1103881}; a33fd482 {1103468}).
+  * Cause 3, the pool: 10.28 picked by hash among the level's kinds - pirates for pirates, amoeboids for amoeboids.
+  * The pub brawl's group wave (1119710-18: thug brawler, thug shooter, robomutt, pirate shooter, pirate brawler) tied
+    to nothing: its spawn points are created at stream-in (handles 1119xxx), after the listing.
+  * BotDeathCompleteEvent names its bot (Cordelion: 66 deaths, 19 of ours); the story Juice boss, pool sharks, miners
+    were protected; template actors still never answer (40 asks, 0).
+- BUILT (16_rando_spawners.lua SP.V; enemy.lua; boss.lua; settings): see CHANGELOG "Dev 10.29". In short: spawn-point
+  index + deferred re-tie; not-enemy spawners skipped; species-first picks, no size variants, re-pick before spawn;
+  asset-name identity + display names; per-spawn ledger, per-level summary, queued corner notes (enemy_notify);
+  re-entrant spawn processing (no drop, no double count); Boss Randomizer on the same engine with boss-tier pools.
+- NOT POSSIBLE with rivet_hook + rando_give.dll v7 (documented in ENEMY_RANDOMIZER_COVERAGE.md): enemies from other
+  planets (template not loaded), enemies without a spawner, split children / projectiles, first spawn of a kind the
+  save never saw, thug brawlers / robomutts as replacements (only inside group variables).
+- Tests: tests/test_v1029.py (25): 7 parse round39; 18 simulator (ledger and reasons, species picks, size variants,
+  notes and their queue, failure reporting, group via spawn point, late listing, flyers, ground vs jetpack thug,
+  checkpoint determinism, two planets, boss tier rules, boss switch, 600-spawn busy level, budget storm). 4 older tests
+  follow the new rules (banner, the new note, Ctrl+- text, boss route). Full suite: 769 run, 0 failures, 23 skipped.
+- Verified in the game: nothing of 10.29. Factory route: IN-GAME VERIFIED (round37-39). Next: TESTING.md 2-dev16.
+
 ## 2026-11-18: dev 10.28 (kit 10.0.18): round38 - the Enemy Randomizer's first real run, four bugs fixed
 
 - Asked: no Boss / Chaos work; perfect the Enemy Randomizer: audit the 10.27 run (Phase 1), then cover every practical

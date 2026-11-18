@@ -50,8 +50,14 @@ if not SP then
   return
 end
 
+-- dev 10.29: the Boss Randomizer runs on the variable route too (16_rando_spawners.lua SP.V, the same engine as the
+-- Enemy Randomizer): a spawner whose original enemy is BOSS TIER (a large bot, or a kind that showed a health bar)
+-- gets another boss-tier kind of the same movement group loaded on the same level. Story bosses (the 8 below; their
+-- bot classes are "story_boss") are never touched, nor anything in a story boss area. enemy_route = "census" or
+-- boss_route = "census" keeps the old census route (the 10.12-10.19 tests).
+local route = (R.config.enemy_route ~= "census" and R.config.boss_route ~= "census") and "vars" or nil
 B.client = SP.register({ name = "boss", role = "boss", label = "Boss Randomizer", state_key = "boss_rando",
-                         config_key = "boss_randomizer", unique = true })
+                         config_key = "boss_randomizer", unique = true, route = route })
 
 function B.enabled() return SP.enabled(B.client) end
 function B.set(on, why) return SP.set(B.client, on, why) end
@@ -59,6 +65,11 @@ function B.toggle(why) return SP.toggle(B.client, why) end
 
 function B.status_text()
   if not B.enabled() then return nil end
+  if B.client.route == "vars" then
+    local n = 0
+    for _, A in ipairs(SP.V.lvl and SP.V.lvl.arms or {}) do if not A.restored and A.role == "boss" then n = n + 1 end end
+    return string.format("bosses ON (%d boss spawner(s) changed here)", n)
+  end
   local st = SP.client_status(B.client)
   return string.format("bosses ON (%d changed here, %d known)", st.slots, st.learned)
 end
@@ -66,6 +77,20 @@ end
 function B.key()
   if not (RANDO_SEED and R.state) then
     R.say("Randomizer: the seed is still being prepared", { type = "corner", duration = 3 }); return
+  end
+  if R.ctrl_down() and B.client.route == "vars" then
+    local n, kinds = 0, {}
+    for _, A in ipairs(SP.V.lvl and SP.V.lvl.arms or {}) do if not A.restored and A.role == "boss" then n = n + 1 end end
+    for _, T in pairs(SP.V.lvl and SP.V.lvl.tpl or {}) do
+      local g, role = SP.V.group_of(T)
+      if g and role == "boss" then kinds[SP.V.short(T.name)] = true end
+    end
+    local k = 0
+    for _ in pairs(kinds) do k = k + 1 end
+    R.say(string.format("Boss Randomizer %s: %d boss spawner(s) changed here", B.enabled() and "ON" or "OFF", n),
+          { type = "corner", sub = string.format("%d boss-tier kind(s) loaded here (2 are needed to swap); the %d story bosses stay as they are",
+                                                 k, #B.STORY), duration = 6 })
+    return
   end
   if R.ctrl_down() then
     local st = SP.client_status(B.client)

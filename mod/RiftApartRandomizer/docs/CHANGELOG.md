@@ -2,6 +2,30 @@
 
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
+## Dev 10.29 (kit 10.0.18; not released): the Enemy Randomizer overhaul
+
+Asked: a comprehensive Enemy Randomizer, provably working, after round39 ("didn't notice any new enemies"). Seeds unchanged.
+
+- Tying (16_rando_spawners.lua V.index_loc / V.tie_one): every node's `Location` variable (2761897147) indexed per
+  listing (groups expanded by rivet.script_node); a SpawnFactory-0 spawn is tied by one lookup; a spawn point no
+  listed node has waits for the next listing once (V.pump's deferred list); not-enemy spawners skip all work.
+- Picks (V.pick / V.repick / V.species / V.base_name): another species first, never a size variant; a change that
+  has not spawned is re-picked when the pool grows ("CHANGED AGAIN"); pick keys survive cut vs full names.
+- Identity (V.asset_name): the spawned actor's full asset name through its component's actor pointer (the method
+  dev(spawnprobe) used in round31-39); V.display gives player-facing names (Goons-4-Less Jetpack, Sargasso Wasp...).
+- Ledger and notes (V.ledger_add / V.note / V.notes_tick): `SPAWN` line per enemy spawn (planet, encounter = the
+  active mission and checkpoint, spawner, original, selected, spawned, result, reason), per-level "ENEMY SPAWNS"
+  summary with reasons and per-kind counts, corner notes queued one per 3 s (4 waiting at most, the rest counted),
+  setting `enemy_notify` (default true). enemy.lua Ctrl+`-`: "N of M enemy spawn(s) here were replaced".
+- Robustness: process_one re-entrant (e.* marks), budget errors keep the spawn for the next frame (60 frames at most,
+  then "spawns given up" in the level detail), queue 1024.
+- Boss Randomizer (boss.lua) on the variable route (`boss_route = "vars"`; "census" or enemy_route = "census" keeps
+  the old one): V.group_of gives boss tier its own pools (boss_walker / boss_flyer / boss_turret); story bosses,
+  friendlies, mounts and unclear classes never; switching one client off puts back only its own changes.
+- docs/ENEMY_RANDOMIZER_COVERAGE.md (new), tools/enemy_census.py (new). Banner dev 10.29.
+- Tests: tests/test_v1029.py (25: 7 real round39 log facts, 18 simulator); 4 older tests follow the new rules.
+  Full suite: 769 run, 0 failures, 23 skipped.
+
 ## Dev 10.28 (kit 10.0.18; not released): round38 fixes for the Enemy Randomizer
 
 Asked: perfect the Enemy Randomizer (no Boss / Chaos work). Log: round38 (the first real run of 10.27). Seeds unchanged.

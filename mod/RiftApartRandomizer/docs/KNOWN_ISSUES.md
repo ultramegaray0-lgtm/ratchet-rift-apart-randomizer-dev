@@ -4,6 +4,27 @@
 comes from your logs of rounds 13-22, from the code, or from the simulator. Each item says which.
 Use this page to tell a known issue from a new one.
 
+## 0v. Dev 10.29 (kit 10.0.18): the Enemy Randomizer overhaul after round39 ("the enemies were the same")
+
+Full table: ENEMY_RANDOMIZER_COVERAGE.md.
+- ROUND39 (dev 10.28, real game): 3 replacements, all Cordelion amoeboid size swaps (same creature). Zurkon A1's
+  factories were changed only as A1 ended: 10.28 searched node records for every ambient spawn (513 untied in one
+  visit) and fell behind. Node spawns never tied (Sargasso: "116 kind not known yet"). The pub's mixed group wave
+  (thugs, robomutt, pirates) tied to nothing. Deaths now name their bot (Cordelion: 19 of 66).
+- FIXED IN 10.29 (simulator only, nothing of 10.29 has run in the game):
+  * spawns tied by their spawn point (the node's `Location` variable = the event's SpawnLocation, round39) in one
+    lookup; spawners known to make no enemy cost nothing; untied spawn points wait for the next listing once.
+  * picks: another species first (pirate -> thug), never a size variant (amoeboid small <-> large); a change not yet
+    spawned is picked again when a kind is learned ("CHANGED AGAIN").
+  * every enemy spawn in a ledger (`SPAWN ...` lines, per-level "ENEMY SPAWNS ... replaced R (x%) ... why"); a corner
+    note per changed spawner (`enemy_notify`); Ctrl+`-` reports "N of M enemy spawns here were replaced".
+  * the spawn pipeline is re-entrant: a frame-budget error no longer drops or double-counts a spawn.
+  * actor identity from the actor asset (full name: "enm_thugs4less_shooter"), plus the bot family.
+  * the Boss Randomizer (`=`) runs on the same engine: boss tier with boss tier only, story bosses protected.
+- STILL NOT POSSIBLE: enemies from another planet (not loaded), enemies placed without a spawner, split children and
+  projectiles, the first wave of a kind the save has never seen, thug brawlers / robomutts as replacements (they only
+  exist inside group variables).
+
 ## 0u. Dev 10.28 (kit 10.0.18): round38 - the Enemy Randomizer works on factories; four 10.27 bugs fixed
 
 - CONFIRMED IN THE GAME (round38, tests/data/round38_rivet.log): factory spawners. 11 of 11 first spawns of changed

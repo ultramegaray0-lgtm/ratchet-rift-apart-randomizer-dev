@@ -1,9 +1,11 @@
 # Enemy Randomizer and Boss Randomizer (dev 10.12, kit 10.0.8)
 
-> **STATUS (dev 10.28, kit 10.0.18):**
-> - **Enemy Randomizer (`-`): WORKS IN THE GAME ON FACTORY SPAWNERS** (round38: 11/11 first spawns were the
->   replacement, Zurkon and Sargasso, walkers and flyers). Group (robomutt / thug) and single-enemy node spawners:
->   not changed yet (KNOWN_ISSUES 0u). Section 0
+> **STATUS (dev 10.29, kit 10.0.18):** per-enemy table in **ENEMY_RANDOMIZER_COVERAGE.md**.
+> - **Enemy Randomizer (`-`): WORKS IN THE GAME ON FACTORY SPAWNERS** (round37-39: 20/20 first spawns of changed
+>   factories were the replacement; Zurkon, Sargasso, Cordelion; walkers and flyers). 10.29 (not yet run): spawns tied
+>   by spawn point (node and group spawners), another species first, a ledger and on-screen notes (KNOWN_ISSUES 0v).
+> - **Boss Randomizer (`=`), 10.29: on the same engine** (boss tier with boss tier, story bosses protected); not yet
+>   run in the game. The paragraph below about the census route describes 10.12-10.28. Section 0
 >   below describes it. Sections 1-8 describe the OLD census route (10.12-10.20), which never found an encounter in
 >   any real log; the Enemy Randomizer only uses it with `enemy_route = "census"` (a test setting).
 > - **Boss Randomizer (`=`): DOES NOT WORK IN THE GAME.** Still the old census route.

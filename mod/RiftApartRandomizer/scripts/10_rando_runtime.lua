@@ -42,7 +42,7 @@ RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.18"   -
 RANDO = RANDO or {}
 local R = RANDO
 R.KIT_VERSION = "10.0.18"
-R.RELEASE = "dev 10.28"               -- the public release this kit belongs to (the start banner)
+R.RELEASE = "dev 10.29"               -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -151,6 +151,8 @@ R.config = {
   -- game); "census" = the old Prius census route of 10.12-10.20 (never found a Templates list in a real game; kept
   -- for the tests of the code the Boss and Chaos Randomizers still use)
   enemy_route = "vars",
+  boss_route = "vars",                -- dev 10.29: the Boss Randomizer on the same engine ("census": the old route)
+  enemy_notify = true,               -- dev 10.29: an on-screen note for every replaced spawner (false: rivet.log only)
   -- dev 10.13: chaos.lua. OFF by default; NO safety guards (docs/CHAOS.md); while ON the two above pause
   chaos_randomizer = false,          -- anything can become anything (the start of a save that never used its key)
   key_chaos = "BACKSPACE",           -- Chaos Randomizer on/off (Ctrl: what it changed here)
