@@ -17,7 +17,7 @@ class EnemyCompatibilityRegressionTests(unittest.TestCase):
     def test_omega_probe_is_hero_scoped_and_contains_no_write_api(self):
         path = ROOT / "mod" / "RiftApartRandomizer" / "dev_scripts" / "dev(omega_inventory_probe).lua"
         source = path.read_text(encoding="utf-8")
-        self.assertIn("local hero = rivet.hero()", source)
+        self.assertIn("local hero = rivet.hero and rivet.hero()", source)
         self.assertIn("pcall(rivet.components, hero)", source)
         self.assertIn("pcall(rivet.component, hero, class)", source)
         self.assertNotIn("rivet.write", source)
