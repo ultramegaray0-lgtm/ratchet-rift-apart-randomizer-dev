@@ -14,6 +14,38 @@ from harness import Game  # noqa: E402
 
 
 class EnemyCompatibilityRegressionTests(unittest.TestCase):
+    def test_armed_spawners_share_one_enable_check_per_role_per_frame(self):
+        game = Game(settings={"enemy_randomizer": True})
+        game.lua.execute("""
+        function repair_v061_role_check_count()
+          local SP = RANDO_SPAWNERS
+          local V = SP.V
+          assert(V.client("enemy") ~= nil, "enemy client was not registered")
+          local old_sp_enabled, old_v_enabled = SP.enabled, V.enabled
+          local old_migrate, old_notes, old_watchdog = V.migrate, V.notes_tick, V.watchdog
+          local calls = 0
+          SP.enabled = function() calls = calls + 1; return true end
+          V.enabled = function() return true end
+          V.migrate = function() end
+          V.notes_tick = function() end
+          V.watchdog = function() end
+          local arms = {}
+          for i = 1, 120 do
+            arms[i] = { restored = false, role = "enemy", rec = { key = "fake-" .. i, tried = true } }
+          end
+          V.lvl = { arms = arms, order = {}, queue = {}, deferred = {}, scans = 0,
+                    next_scan = 1000, dirty = false, arm_running = false }
+          V.job = nil
+          V.pending = {}
+          V.tick(1, true)
+          SP.enabled, V.enabled = old_sp_enabled, old_v_enabled
+          V.migrate, V.notes_tick, V.watchdog = old_migrate, old_notes, old_watchdog
+          return calls
+        end
+        """)
+        calls = game.lua.eval("repair_v061_role_check_count")()
+        self.assertEqual(calls, 1, "120 armed enemy spawners should require one feature-state lookup")
+
     def test_omega_probe_is_hero_scoped_and_contains_no_write_api(self):
         path = ROOT / "mod" / "RiftApartRandomizer" / "dev_scripts" / "dev(omega_inventory_probe).lua"
         source = path.read_text(encoding="utf-8")
