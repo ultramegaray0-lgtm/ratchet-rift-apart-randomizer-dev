@@ -1966,6 +1966,8 @@ V.COMPAT_BUILTIN = {
     "round40: the player could not kill them; 16 spawned, 8 of 8 (run 1) and 7 of 8 (run 2) never died" },
   ["factory|enm_pirate_robot_me/swarmer>enm_pirate_robot_sh/ground"] = { "bad",
     "the same direction as round40's failure (a melee swarmer factory given the robot shooter); round40: the game ignored it once" },
+  ["factory|enm_neo_nefarious_s/swarmer>enm_indigenous_sand/swarmer"] = { "bad",
+    "rivet(3).log: Viceron, Nefarious Swarmer replaced by Indigenous Sandshark; alive 45 s after spawn while 6 other bots died; COMBAT CHECK FAILED" },
 }
 local function compat_t(write)
   local s = vstate()
