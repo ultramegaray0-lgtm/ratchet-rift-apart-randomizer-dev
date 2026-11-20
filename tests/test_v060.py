@@ -193,6 +193,13 @@ class ShuffleOnReturnTests(unittest.TestCase):
                InterplanetaryCheckpointName="CHK_TRANSITION_TO_VICERON")
         self.assertIsNone(H.return_at, [l for l in g.logs() if "RANDO-HUB" in l][-5:])
         self.assertTrue(g.log_has("automatic trip back cancelled"))
+        # Let the old 12-second timer expire while the ship is in flight. It must not
+        # create a hub warp before the accepted Viceron trip lands.
+        before = len(warps(g))
+        g.step(13 * 60 + 60)
+        self.assertEqual(len(warps(g)), before, [l for l in g.logs() if "RANDO-HUB" in l][-8:])
+        go(g, "viceron", frames=1200)
+        self.assertEqual(g.state.current_planet, "viceron", [l for l in g.logs() if "RANDO-HUB" in l][-8:])
 
     def test_a_finished_planet_brings_you_back_to_the_hub(self):
         g = to_hub(hub_game("v060-on", {"hub_return_delay": 12}))
