@@ -4,14 +4,27 @@ These tests exercise the private v0.60-based repair port. They do not claim in-g
 verification for untested enemy pairs or the Omega runtime.
 """
 import os
+import pathlib
 import sys
 import unittest
 
+ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import Game  # noqa: E402
 
 
 class EnemyCompatibilityRegressionTests(unittest.TestCase):
+    def test_omega_probe_is_hero_scoped_and_contains_no_write_api(self):
+        path = ROOT / "mod" / "RiftApartRandomizer" / "dev_scripts" / "dev(omega_inventory_probe).lua"
+        source = path.read_text(encoding="utf-8")
+        self.assertIn("local hero = rivet.hero()", source)
+        self.assertIn("pcall(rivet.components, hero)", source)
+        self.assertIn("pcall(rivet.component, hero, class)", source)
+        self.assertNotIn("rivet.write", source)
+        self.assertNotIn("rivet.set_field", source)
+        self.assertNotIn("rivet.find_component", source)
+
+
     def test_live_censused_templates_are_known_before_their_first_spawn(self):
         game = Game(settings={"enemy_randomizer": True, "enemy_compat": "all"})
         lua = game.lua
