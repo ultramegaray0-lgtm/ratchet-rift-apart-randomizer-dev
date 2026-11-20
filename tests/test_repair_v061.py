@@ -12,6 +12,20 @@ from harness import Game  # noqa: E402
 
 
 class EnemyCompatibilityRegressionTests(unittest.TestCase):
+    def test_live_censused_templates_are_known_before_their_first_spawn(self):
+        game = Game(settings={"enemy_randomizer": True, "enemy_compat": "all"})
+        lua = game.lua
+        cases = {
+            "A947C2837C809670": "enm_indigenous_hornedtoad|swarmer|GameBotMeleeSwarmerJumper|enemy",
+            "BCC5D8017879250F": "enm_thugs4less_shooterjetpack|flyer|GameBotShooterJetPack|enemy",
+            "B55799EA1763D5DE": "enm_neo_nefarious_swarmer|swarmer|GameBotMeleeSwarmer|enemy",
+            "82A9B65DDBA84005": "enm_indigenous_puffoid_blizar|swarmer|GameBotMeleeSwarmer|enemy",
+            "9070B46C6C14744E": "enm_indigenous_sandshark|swarmer|GameBotMeleeSwarmerBurrower|enemy",
+        }
+        for uid, expected in cases.items():
+            got = lua.eval('(RANDO_SPAWNERS.V.REG_BUILTIN["%s"])' % uid)
+            self.assertEqual(got, expected, uid)
+
     def test_viceron_sandshark_pair_is_rejected_even_in_all_mode(self):
         pair = "factory|enm_neo_nefarious_s/swarmer>enm_indigenous_sand/swarmer"
         game = Game(settings={"enemy_randomizer": True, "enemy_compat": "all"})
