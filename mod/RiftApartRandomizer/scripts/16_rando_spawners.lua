@@ -3806,10 +3806,21 @@ function V.tick(frame, ready)
   if not ready then return end
   V.migrate()
   V.notes_tick(frame)
-  -- dev 10.29: one of the two clients switched off: its changes go back (the other's stay)
+  -- dev 10.34: cache feature switches once per role per frame. The old loop called
+  -- V.role_on -> SP.enabled separately for every armed spawner; with 100+ armed variables
+  -- this repeated the same config/state lookup dozens or hundreds of times in one frame.
+  -- rivet(3).log repeatedly hit the 8 ms budget at V.role_on (line 1821) while levels had
+  -- large arm lists. Keep the role decision stable for this tick and only evaluate used roles.
+  local role_enabled = {}
   for _, A in ipairs(lvl.arms) do
-    if not A.restored and not V.role_on(A.role or "enemy") then
-      V.put_back(A, (A.role == "boss" and "Boss" or "Enemy") .. " Randomizer off")
+    local role = A.role or "enemy"
+    local enabled = role_enabled[role]
+    if enabled == nil then
+      enabled = V.role_on(role)
+      role_enabled[role] = enabled
+    end
+    if not A.restored and not enabled then
+      V.put_back(A, (role == "boss" and "Boss" or "Enemy") .. " Randomizer off")
       A.rec.tried = nil
     end
   end
