@@ -1,0 +1,41 @@
+name: Repair branch tests
+
+on:
+  push:
+    branches:
+      - "repair/**"
+  pull_request:
+    branches:
+      - "release-v0.60"
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pip lupa capstone
+      - name: Run targeted repair regressions
+        run: >-
+          python -m unittest
+          tests.test_v060.ShuffleOffReturnTests
+          tests.test_v060.ShuffleOnReturnTests
+          tests.test_v1030.SimulatorTests
+          tests.test_repair_v061
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: repair-branch-test-results
+          path: TEST_RESULTS.txt
+          if-no-files-found: ignore

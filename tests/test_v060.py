@@ -179,6 +179,28 @@ class ShuffleOffReturnTests(unittest.TestCase):
 
 
 class ShuffleOnReturnTests(unittest.TestCase):
+    def test_ship_menu_choice_cancels_pending_return_before_landing(self):
+        # Regression for the Viceron double-trip: with shuffle ON, the menu choice must cancel
+        # the return timer at acceptance, not later when launch_dest runs after landing.
+        g = to_hub(hub_game("v061-menu-return-race", {"hub_return_delay": 12}))
+        g.R.grant("access:savali")
+        g.step(30)
+        choose(g, "savali_1", frames=3000)
+        finish(g, "savali_1")
+        H = g.g.RANDO_HUB
+        self.assertIsNotNone(H.return_at)
+        g.R.grant("access:viceron")
+        g.fire("PlanetMenuAcceptEvent", DestinationCheckpointName="CHK_ZORDOOM_START",
+               InterplanetaryCheckpointName="CHK_TRANSITION_TO_VICERON")
+        self.assertIsNone(H.return_at, [l for l in g.logs() if "RANDO-HUB" in l][-5:])
+        self.assertTrue(g.log_has("automatic trip back cancelled"))
+        # Let the old 12-second timer expire during the flight. The simulator does not
+        # need to land the story destination (Viceron's mission may still be campaign-locked):
+        # this regression only asserts that the stale automatic hub warp never fires.
+        before = len(warps(g))
+        g.step(13 * 60 + 60)
+        self.assertEqual(len(warps(g)), before, [l for l in g.logs() if "RANDO-HUB" in l][-8:])
+
     def test_a_finished_planet_brings_you_back_to_the_hub(self):
         g = to_hub(hub_game("v060-on", {"hub_return_delay": 12}))
         self.assertTrue(g.g.RANDO.planet_shuffle_on())

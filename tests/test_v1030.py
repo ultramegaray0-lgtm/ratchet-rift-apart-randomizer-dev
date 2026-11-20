@@ -408,7 +408,7 @@ class SimulatorTests(unittest.TestCase):
         s.g.press("-", ctrl=True)
         s.g.step(2)
         subs = [(n.opts and n.opts["sub"]) or "" for n in s.g.sim.notes.values()]
-        self.assertTrue(any("combat: 3 pair(s) verified, 2 rejected (verified)" in t for t in subs), subs)
+        self.assertTrue(any("combat: 3 pair(s) verified, 3 rejected (verified)" in t for t in subs), subs)
 
 
 # ---------------------------------------------------------------------------------------------- the install
