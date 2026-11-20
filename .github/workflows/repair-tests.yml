@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - "repair/**"
+  pull_request:
+    branches:
+      - "release-v0.60"
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
