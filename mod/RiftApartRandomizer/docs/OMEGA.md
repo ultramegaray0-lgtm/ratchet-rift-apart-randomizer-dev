@@ -101,3 +101,38 @@ game's Omega flag" and waits; it is set the moment the byte is known.
 - Ms. Zurkon still sells Omega upgrades in Challenge Mode as usual (the slot fields `OmegaPrice` /
   `OmegaOnly` have not been located in memory, so they are not changed). Buying one there is the game's
   own route; a later Omega reward for that weapon is then simply recorded.
+
+
+## 6. v0.61-DEV3 live-log correction (2026-11-21)
+
+The current `rivet(3).log` does **not** identify the Omega flag or prove any successful Omega write:
+
+- `rivet.components` was called with values from `GadgetItemAddedEvent.ItemHandle`,
+  `InventoryHandle` and `WeaponLevelUpEvent.ItemHandle`. The game replied that these
+  handles have no readable component list or are past the end of the scene. They are not
+  valid scene-actor handles for this API.
+- `rivet.find_component("WeaponItem")` fails because **WeaponItem is not a registered live
+  component class**. `WeaponItemPrius` in the DDL dump is a DDL data type; that does not make
+  `"WeaponItem"` a component class name.
+- The log contains 37 `weapons not found` messages, zero `LEARNED` messages and zero confirmed
+  `SET` / read-back results. Base-weapon purchase messages are not evidence that an Omega
+  upgrade was purchased or that its flag changed.
+- The DEV4 diagnostic ZIP's README described it as read-only, but its Lua still had code paths
+  calling `rivet.set_field` and `rivet.write`. Treat that file as **not hard-disabled**. Do not
+  run it as a diagnostic-only build until those paths are gated off.
+
+The rivet_hook API documents `rivet.hero()` as the player's actor handle and
+`rivet.components(handle)` as the way to list that actor's actual live component class names.
+The next safe discovery step is therefore to enumerate components on the **hero handle**, not
+on the event's item handles and not by guessing a DDL type name.
+
+A read-only probe has been added at
+`mod/RiftApartRandomizer/dev_scripts/dev(omega_inventory_probe).lua`. Copy it into the active
+`GAME_FOLDER/scripts/` directory for one run, launch into live gameplay with the hero present,
+then inspect `RANDO-OMEGA-PROBE` lines in `rivet.log`. It logs the hero's component class list
+and metadata / first Prius bytes for component names containing item, inventory, weapon, equip
+or loadout. It has no `rivet.write` or `rivet.set_field` call.
+
+**No Omega runtime fix is claimed yet.** A component class and a record layout must be identified
+from the live game before the flag can be safely read, much less written. The Omega memory
+layout in the simulator is invented, not in-game evidence.
