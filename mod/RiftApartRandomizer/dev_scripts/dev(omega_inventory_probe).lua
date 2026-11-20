@@ -1,7 +1,7 @@
 -- DEVELOPER TOOL - safe Omega inventory discovery; NOT part of a player release.
 -- Copy this file to GAME_FOLDER/scripts/ for one diagnostic run, then remove it.
--- It ONLY inspects the live hero's component class names and metadata. It does not write memory,
--- call rivet.find_component, or treat an event ItemHandle as an actor handle.
+-- It only inspects the live hero's component class names and metadata. No game state is mutated,
+-- and event ItemHandle values are never treated as scene-actor handles.
 RANDO_OMEGA_PROBE = RANDO_OMEGA_PROBE or {}
 local P = RANDO_OMEGA_PROBE
 
