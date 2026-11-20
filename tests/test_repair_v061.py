@@ -15,9 +15,8 @@ class EnemyCompatibilityRegressionTests(unittest.TestCase):
     def test_viceron_sandshark_pair_is_rejected_even_in_all_mode(self):
         pair = "factory|enm_neo_nefarious_s/swarmer>enm_indigenous_sand/swarmer"
         game = Game(settings={"enemy_randomizer": True, "enemy_compat": "all"})
-        V = game.lua.eval("RANDO_SPAWNERS.V")
-
-        self.assertEqual(V.compat_status(pair), "rejected")
+        status = game.lua.eval('(RANDO_SPAWNERS.V.compat_status("%s"))' % pair)
+        self.assertEqual(status, "rejected")
 
         game.lua.execute("""
         function repair_v061_pair_check()
