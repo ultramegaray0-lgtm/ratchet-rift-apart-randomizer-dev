@@ -1602,7 +1602,7 @@ function H.on_menu_accept(f)
   -- the timer could expire during the flight and send the player to the hub first (a double trip).
   if H.return_at and pid and pid ~= H.plan().planet then
     H.return_at = nil
-    log("planet menu accepted during pending return -> " .. tostring(pid) .. "; automatic trip back cancelled")
+    log("planet menu while the trip back waited -> " .. tostring(pid) .. "; automatic trip back cancelled")
   end
   -- dev 10.11: a visit not made active yet is made active now, while the ship is in the tunnel
   local s = S()
