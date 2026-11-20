@@ -189,6 +189,7 @@ class ShuffleOnReturnTests(unittest.TestCase):
         finish(g, "savali_1")
         H = g.g.RANDO_HUB
         self.assertIsNotNone(H.return_at)
+        g.R.grant("access:viceron")
         g.fire("PlanetMenuAcceptEvent", DestinationCheckpointName="CHK_ZORDOOM_START",
                InterplanetaryCheckpointName="CHK_TRANSITION_TO_VICERON")
         self.assertIsNone(H.return_at, [l for l in g.logs() if "RANDO-HUB" in l][-5:])
