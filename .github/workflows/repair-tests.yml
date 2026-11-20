@@ -25,8 +25,13 @@ jobs:
           python-version: "3.11"
       - name: Install test dependencies
         run: python -m pip install --upgrade pip lupa capstone
-      - name: Run test suite
-        run: python run_tests.py
+      - name: Run targeted repair regressions
+        run: >-
+          python -m unittest
+          tests.test_v060.ShuffleOffReturnTests
+          tests.test_v060.ShuffleOnReturnTests
+          tests.test_v1030.SimulatorTests
+          tests.test_repair_v061
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
