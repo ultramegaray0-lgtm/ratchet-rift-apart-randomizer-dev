@@ -46,13 +46,13 @@ jobs:
               raise SystemExit("runtime kit version does not match expected 10.0.24")
           tags = {}
           for path in sorted(scripts.glob("*.lua")):
-              match = re.search(r'RANDO_FILES\\["[^"]+"\\]\\s*=\\s*"([^"]+)"', path.read_text())
+              match = re.search(r'RANDO_FILES\["[^"]+"\]\s*=\s*"([^"]+)"', path.read_text())
               if match:
                   tags[path.name] = match.group(1)
           bad = {name: version for name, version in tags.items() if version != expected}
           if bad or not tags:
               raise SystemExit(f"script version mismatch: {bad or 'no version tags found'}")
-          if not re.search(r"boss_randomizer\\s*=\\s*false", settings):
+          if not re.search(r"boss_randomizer\s*=\s*false", settings):
               raise SystemExit("DEV4 package must default the Boss Randomizer OFF")
           if "chaos_randomizer = false" not in settings:
               raise SystemExit("Chaos Randomizer must remain OFF")
