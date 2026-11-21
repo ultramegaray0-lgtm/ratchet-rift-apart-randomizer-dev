@@ -46,6 +46,9 @@ INSTALL FOR DEVELOPMENT
        RANDO-KIT release v0.60 (kit 10.0.24)
        RANDO-KIT all required scripts are 10.0.24
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
+     HARD STOP: if the banner says kit 10.0.23 or any version other than 10.0.24, do NOT continue;
+     that is not this package. This artifact is one directly extractable ZIP; do not combine it
+     with an older folder or nested ZIP.
 
 ENEMY RANDOMIZER (dev 10.33)
   enemy_compat = "all" in scripts\04_rando_settings.lua (the default): every regular enemy LOADED ON THE LEVEL can become
