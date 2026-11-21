@@ -60,10 +60,10 @@ jobs:
               shutil.rmtree(output)
           shutil.copytree(source, output)
           (output / "VERSION.txt").write_text(
-              "Ratchet & Clank: Rift Apart Randomizer v0.62-DEV4\\n"
-              "Kit version: 10.0.24\\n"
-              f"Source commit: {os.environ['SOURCE_SHA']}\\n"
-              "Development kit only; not a public release.\\n",
+              "Ratchet & Clank: Rift Apart Randomizer v0.62-DEV4\n"
+              "Kit version: 10.0.24\n"
+              f"Source commit: {os.environ['SOURCE_SHA']}\n"
+              "Development kit only; not a public release.\n",
               encoding="utf-8")
           print(f"Validated {len(tags)} version-tagged scripts; packaged {output}")
           PY
