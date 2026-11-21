@@ -35,9 +35,10 @@ class SpawnFactoryEventQueueTests(unittest.TestCase):
           order[#order + 1] = "factory:" .. tostring(fac)
           return { kind = "factory", var = { idx = 1, gen = 1 } }
         end
-        V.read_one_orig = function(sc, r)
-          order[#order + 1] = "read"
-          r.orig = { uid = "0", actors = 0, single = false, group = false }
+        -- Supply a minimal, valid SceneManager variable result; this test checks queue ordering,
+        -- not native process memory access.
+        V.var = function(sc, idx, gen)
+          return { uid = "0", actors = 0, single = false, group = false }
         end
         V.plan_rec = function(sc, r) order[#order + 1] = "plan" end
         V.scan = function(sc) order[#order + 1] = "full-scan"; V.lvl.scans = 1 end
