@@ -26,13 +26,7 @@ jobs:
       - name: Install test dependencies
         run: python -m pip install --upgrade pip lupa capstone
       - name: Run targeted repair regressions
-        run: >-
-          python -m unittest
-          tests.test_v060.ShuffleOffReturnTests
-          tests.test_v060.ShuffleOnReturnTests
-          tests.test_v1030.SimulatorTests
-          tests.test_repair_v061
-          tests.test_round45
+        run: python -m unittest tests.test_v060.ShuffleOffReturnTests tests.test_v060.ShuffleOnReturnTests tests.test_v1030.SimulatorTests tests.test_repair_v061 tests.test_round45
       - name: Package DEV4 development kit
         run: |
           python - <<'PY'
