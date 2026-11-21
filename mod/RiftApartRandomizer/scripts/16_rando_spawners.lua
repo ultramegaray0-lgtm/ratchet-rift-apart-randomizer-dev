@@ -2726,7 +2726,7 @@ function V.drain_factory_queue(sc)
     lvl.fac_queued[fac] = nil
     local r = V.factory_rec(fac)
     if r then
-      read_one_orig(sc, r)
+      V.read_one_orig(sc, r)
       if r.orig then vguard(V.plan_rec, sc, r) end
     end
     t0 = vpace(t0)
