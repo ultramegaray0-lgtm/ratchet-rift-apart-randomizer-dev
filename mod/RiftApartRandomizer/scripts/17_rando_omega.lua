@@ -126,6 +126,46 @@ local function valid_ptr(p) return p and p > 0x10000 and p < 0x7FFFFFFFFFFF and 
 local function gcd(a, b) while b ~= 0 do a, b = b, a % b end; return a end
 
 -- ---- 1 + 2: the inventory component and its weapon records ------------------------------------
+-- If the known inventory names are absent, enumerate the live hero once. This is diagnostic
+-- only: a similarly named component is never treated as the inventory until its layout is proven.
+function O.component_diagnostic(hero)
+  if O.component_diag_done then return end
+  O.component_diag_done = true
+  local ok, classes = pcall(rivet.components, hero)
+  if not ok or type(classes) ~= "table" then
+    log("hero component enumeration failed:", tostring(classes))
+    return
+  end
+  table.sort(classes)
+  log("hero component enumeration:", #classes, "component(s)")
+  log("hero component classes:", table.concat(classes, ", "))
+  local relevant = 0
+  for _, class in ipairs(classes) do
+    local name = tostring(class):lower()
+    if name:find("item", 1, true) or name:find("invent", 1, true)
+      or name:find("weapon", 1, true) or name:find("equip", 1, true)
+      or name:find("loadout", 1, true) then
+      relevant = relevant + 1
+      local okc, c = pcall(rivet.component, hero, class)
+      if okc and type(c) == "table" then
+        log("hero component candidate", tostring(class), "address", tostring(c.address),
+            "size", tostring(c.size), "prius", tostring(c.prius), "prius_size", tostring(c.prius_size),
+            "prius_behavior", tostring(c.prius_behavior))
+        local size = math.tointeger(tonumber(c.prius_size)) or 0
+        if c.prius and size > 0 then
+          local n = math.min(size, 0x80, 512)
+          local okr, bytes = pcall(rivet.read, tostring(c.prius), n)
+          if okr and bytes then log("hero component Prius bytes", tostring(class), tostring(bytes))
+          else log("hero component Prius read unavailable", tostring(class), tostring(bytes)) end
+        end
+      else
+        log("hero component candidate metadata unavailable", tostring(class), tostring(c))
+      end
+    end
+  end
+  log("hero component candidates:", relevant, "(read-only; no game writes)")
+end
+
 function O.component()
   local hero = rivet.hero and rivet.hero()
   if not hero then return nil, "no hero" end
@@ -136,6 +176,7 @@ function O.component()
       if a then return a, cls end
     end
   end
+  O.component_diagnostic(hero)
   return nil, "the hero has no component " .. table.concat(O.CLASSES, " / ")
 end
 -- an array of pointers to item objects: the id's offset in the objects is the one most agree on
