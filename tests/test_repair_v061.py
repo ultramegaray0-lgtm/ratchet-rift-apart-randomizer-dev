@@ -33,7 +33,7 @@ class EnemyCompatibilityRegressionTests(unittest.TestCase):
           for i = 1, 120 do
             arms[i] = { restored = false, role = "enemy", rec = { key = "fake-" .. i, tried = true } }
           end
-          V.lvl = { arms = arms, order = {}, queue = {}, deferred = {}, scans = 0,
+          V.lvl = { arms = arms, order = {}, queue = {}, fac_queue = {}, fac_queued = {}, deferred = {}, scans = 0,
                     next_scan = 1000, dirty = false, arm_running = false }
           V.job = nil
           V.pending = {}

@@ -136,3 +136,13 @@ or loadout. It has no `rivet.write` or `rivet.set_field` call.
 **No Omega runtime fix is claimed yet.** A component class and a record layout must be identified
 from the live game before the flag can be safely read, much less written. The Omega memory
 layout in the simulator is invented, not in-game evidence.
+
+
+## 10.0.24 follow-up: hero component discovery
+
+The runtime now falls back to one read-only enumeration of the live hero's component classes when
+none of ItemInventory, ItemInventoryPrius, GridInventory, or GridInventoryPrius exists. It logs the
+full class list and metadata / first Prius bytes for item, inventory, weapon, equipment, and loadout
+candidates. A candidate is **not** automatically accepted as the inventory, and no memory is written
+by this diagnostic. Omega flag discovery and actual Omega writes remain unverified and disabled
+until the real inventory record and Omega byte are identified in-game.

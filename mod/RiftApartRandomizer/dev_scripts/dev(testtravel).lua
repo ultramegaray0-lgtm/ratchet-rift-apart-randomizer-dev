@@ -19,7 +19,7 @@
 -- the ones seen in your logs, then the checkpoint catalog (14_rando_travel.lua: every checkpoint
 -- rivet.checkpoints() lists, placed on its planet and scored, landing pads first).
 -- rivet.log lines start with RANDO-TEST.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(testtravel)"] = "10.0.23"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(testtravel)"] = "10.0.24"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_TEST_TRAVEL = RANDO_TEST_TRAVEL or {}
 local TT = RANDO_TEST_TRAVEL
