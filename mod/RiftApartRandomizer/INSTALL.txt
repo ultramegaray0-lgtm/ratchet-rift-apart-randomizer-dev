@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.61-DEV4)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV4)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
@@ -44,7 +44,7 @@ INSTALL FOR DEVELOPMENT
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
        RANDO-KIT release v0.60 (kit 10.0.24)
-       RANDO-KIT all 12 required scripts are 10.0.24
+       RANDO-KIT all required scripts are 10.0.24
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
 
 ENEMY RANDOMIZER (dev 10.33)
