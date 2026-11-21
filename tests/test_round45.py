@@ -38,6 +38,7 @@ class SpawnFactoryEventQueueTests(unittest.TestCase):
         -- Supply a minimal, valid SceneManager variable result; this test checks queue ordering,
         -- not native process memory access.
         V.var = function(sc, idx, gen)
+          order[#order + 1] = "read"
           return { uid = "0", actors = 0, single = false, group = false }
         end
         V.plan_rec = function(sc, r) order[#order + 1] = "plan" end
