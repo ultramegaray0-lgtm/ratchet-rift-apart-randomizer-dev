@@ -1,4 +1,4 @@
-# Omega weapons (dev 10.15, kit 10.0.11)
+# Omega weapons (dev 10.15, kit 10.0.24)
 
 Challenge Mode (New Game+) sells an **Omega** version of every weapon: it raises the weapon's level
 cap from 5 to 10 and opens new upgrade nodes. The private dev kit now sets `omega_weapons = true` by default, so the seed has the 20 Omega
