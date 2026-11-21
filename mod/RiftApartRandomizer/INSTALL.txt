@@ -61,7 +61,7 @@ ENEMY RANDOMIZER (dev 10.33)
 
 KEYS
   Players: 0 planet shuffle on/off (off by default), Ctrl+0 twice gives randomizer items back.
-           - Enemy Randomizer on/off, = Boss Randomizer on/off (both ON in this dev kit's 04 file; the
+           - Enemy Randomizer on/off, = Boss Randomizer on/off (Enemy ON; Boss OFF by default in this dev kit; the
            save remembers them). Ctrl+- / Ctrl+= show what each changed here. dev 10.27: only the Enemy
            Randomizer changes enemies in the game (it needs this rando_give.dll, v7).
            BACKSPACE Chaos Randomizer on/off (off by default; no protection; while on, the
