@@ -2533,7 +2533,7 @@ V.session = V.session or { said_blocked = false, said_ok = false, said_off = {},
 V.pending = V.pending or {}       -- dev 10.28: put-backs a frame-budget error interrupted (done first, before any read)
 
 function V.new_level(why)
-  V.lvl = { why = why, scans = 0, fac = {}, nodes = {}, order = {}, users = {}, tpl = {}, tpl_uid = {}, fac_spawns = {},
+  V.lvl = { why = why, scans = 0, fac = {}, nodes = {}, order = {}, users = {}, tpl = {}, tpl_uid = {}, fac_spawns = {}, fac_queue = {}, fac_queued = {},
             started = {}, arms = {}, queue = {}, spawned = {}, reg_checked = false, probe = { tried = 0, ok = 0 },
             logged = 0, next_scan = (SP.frame or 0) + V.FIRST_SCAN, frame0 = SP.frame or 0,
             -- dev 10.28
@@ -2688,22 +2688,48 @@ local function list_nodes(class)
 end
 
 -- the original value of spawner records still without one (kind: only those of that kind)
+local function read_one_orig(sc, r)
+  if r.orig or (r.reads or 0) >= 5 then return end
+  r.reads = (r.reads or 0) + 1
+  vguard(function()
+    local v = V.var(sc, r.var.idx, r.var.gen)
+    if v then
+      r.orig = { uid = v.uid, actors = v.actors, single = v.single, group = v.group }
+      V.lvl.dirty = true
+      if r.kind == "template" and v.group then r.kind = "group" end
+      if v.single then V.probe(V.tpl_of(v.actors, v.uid)) end
+    end
+  end)
+end
+V.read_one_orig = read_one_orig
+
 local function read_origs(sc, kind, t0)
   local lvl = V.lvl
   for _, r in ipairs(lvl.order) do
     if (kind == nil or r.kind == kind) and not r.orig and (r.reads or 0) < 5 then
-      r.reads = (r.reads or 0) + 1
-      vguard(function()
-        local v = V.var(sc, r.var.idx, r.var.gen)
-        if v then
-          r.orig = { uid = v.uid, actors = v.actors, single = v.single, group = v.group }
-          lvl.dirty = true
-          if r.kind == "template" and v.group then r.kind = "group" end
-          if v.single then V.probe(V.tpl_of(v.actors, v.uid)) end
-        end
-      end)
+      read_one_orig(sc, r)
       t0 = vpace(t0)
     end
+  end
+  return t0
+end
+
+-- dev 10.35: a SpawnFactory handle is already supplied by SpawnerSpawnEvent. Discover that one
+-- factory immediately instead of waiting for the next whole-level node listing. Its first spawn
+-- has happened (the event is post-spawn), but in enemy_compat=all mode this can still arm the
+-- factory for later waves. It never changes the actor that just spawned.
+function V.drain_factory_queue(sc)
+  local lvl = V.lvl
+  local t0 = clock_()
+  while #lvl.fac_queue > 0 do
+    local fac = table.remove(lvl.fac_queue, 1)
+    lvl.fac_queued[fac] = nil
+    local r = V.factory_rec(fac)
+    if r then
+      read_one_orig(sc, r)
+      if r.orig then vguard(V.plan_rec, sc, r) end
+    end
+    t0 = vpace(t0)
   end
   return t0
 end
@@ -3187,10 +3213,19 @@ function V.on_spawn_seen(f)
   if not lvl then return end
   local h = math.tointeger(tonumber(f.SpawnedHandle))
   local fac = math.tointeger(tonumber(f.SpawnFactory)) or 0
-  if fac ~= 0 then lvl.fac_spawns[fac] = (lvl.fac_spawns[fac] or 0) + 1 end
+  local enabled = V.enabled()
+  if fac ~= 0 then
+    lvl.fac_spawns[fac] = (lvl.fac_spawns[fac] or 0) + 1
+    -- The event provides the factory actor handle directly. Deduplicate it and defer all memory
+    -- reads/writes to V.pump, never inside the event callback.
+    if enabled and lvl.fac[fac] == nil and not lvl.fac_queued[fac] then
+      lvl.fac_queued[fac] = true
+      lvl.fac_queue[#lvl.fac_queue + 1] = fac
+    end
+  end
   if not h or lvl.spawned[h] then return end
   lvl.spawned[h] = true
-  if V.enabled() and #lvl.queue < V.QUEUE_CAP then
+  if enabled and #lvl.queue < V.QUEUE_CAP then
     lvl.queue[#lvl.queue + 1] = { h = h, fac = fac, loc = math.tointeger(tonumber(f.SpawnLocation)), idx = math.tointeger(tonumber(f.SpawnIndex)) }
   end
 end
@@ -3723,6 +3758,9 @@ function V.pump(sc)
   if not V.drain_pending() then return end                                 -- put-backs first: nothing is read before
   local lvl = V.lvl
   local t0 = clock_()
+  -- Process event-discovered factories before the expensive full-level listing. The spawn event
+  -- is already after one spawn, but later spawns from a multi-wave factory can now be randomized.
+  if #lvl.fac_queue > 0 then V.drain_factory_queue(sc); t0 = clock_() end
   if lvl.scan_due then
     V.scan(sc)                                                              -- memoized: a restart continues it
     lvl.scan_due = false
@@ -3800,7 +3838,7 @@ function V.tick(frame, ready)
     V.job = nil
     if #lvl.arms > 0 then V.put_back_all("Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
     if #V.pending > 0 and ready then pcall(V.drain_pending) end
-    lvl.queue = {}
+    lvl.queue, lvl.fac_queue, lvl.fac_queued = {}, {}, {}
     return
   end
   if not ready then return end
@@ -3852,7 +3890,7 @@ function V.tick(frame, ready)
     return
   end
   local due = frame >= lvl.next_scan
-  local work = due or #V.pending > 0 or (lvl.scans > 0 and (#lvl.queue > 0 or lvl.dirty or lvl.arm_running))
+  local work = due or #V.pending > 0 or #lvl.fac_queue > 0 or (lvl.scans > 0 and (#lvl.queue > 0 or lvl.dirty or lvl.arm_running))
                or (#lvl.deferred > 0 and frame >= lvl.next_scan)
   if not work then return end
   local sc, why = V.scene()
