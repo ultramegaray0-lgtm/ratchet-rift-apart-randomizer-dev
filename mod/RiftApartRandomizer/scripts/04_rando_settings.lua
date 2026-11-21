@@ -4,7 +4,7 @@
 -- NEW seed with its own progress: start it with New Game. Lines starting with -- are notes; to
 -- change an option, remove the -- in front of it and edit the value. A wrong value is reported in
 -- rivet.log (search RANDO-SETTINGS) and the default is used instead.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.24"   -- version check (do not edit)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.25"   -- version check (do not edit)
 RANDO_SETTINGS = {
   -- THE SEED: "random" = the companion picks one and remembers it. Any other text is a fixed seed
   -- (the same text and settings give the same seed on every PC), e.g. "lombax-ryno-2026".
@@ -32,8 +32,14 @@ RANDO_SETTINGS = {
                                        -- false = never (true = always: ONLY if you have that mod)
   -- gadgets = true,                   -- Box Breaker, Omniglove and Glitch are rewards
   -- armor = true,                     -- armor pieces are rewards; armor pods give random items
-  -- shop = "shuffle",                 -- "shuffle": Ms. Zurkon sells the seed's weapons | "vanilla": her usual ones
+  shop = "vanilla",                    -- DEV DEFAULT (v0.62-DEV5): "vanilla" = Ms. Zurkon sells her usual weapons and
+                                       -- none of them is ever a Gold Bolt / mission reward. "shuffle" = she sells the
+                                       -- seed's weapons and her other weapons become rewards - BUT her slots have never
+                                       -- been changed in the game (rounds 17-45), so with "shuffle" she still offers
+                                       -- weapons the seed put on Gold Bolts (docs/SHOP.md).
   -- exclude = "",                     -- items never randomized, e.g. "weapon:ryno_8,armor:pirate_head"
+  start_omega = 1,                     -- DEV DEFAULT (v0.62-DEV5): start with this many random Omega versions (0-20),
+                                       -- so every new game tests the Omega route (its weapon is given with it)
   omega_weapons = true,                -- DEV DEFAULT ON: CHALLENGE MODE (New Game+), 20 Omega versions are rewards
                                        -- of their own ("omega:burst_pistol" ...). An Omega found first also gives
                                        -- its weapon; the weapon found later never undoes the Omega (docs/OMEGA.md)

@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.24"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.25"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.24"
-R.RELEASE = "v0.60"                   -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.25"
+R.RELEASE = "v0.62-DEV5"                  -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -285,7 +285,8 @@ local STATE_TABLES = { "collected", "paid", "banked", "access", "inventory", "st
                        "bolts_seen", "armor_found", "armor_sets_done", "collectibles", "visited",
                        "history", "real", "real_nodes", "tracked", "gadgets_seen", "weapons", "gadgets",
                        "armor_sources", "currency_queue", "shop_given",
-                       "omega", "omega_prereq" }           -- dev 10.15: Omega tier per weapon, prerequisites given
+                       "omega", "omega_prereq",
+                       "collectible_ids" }                 -- v0.62-DEV5: Spybot / Lorb ids already paid this run           -- dev 10.15: Omega tier per weapon, prerequisites given
 local function fill_defaults(s)
   for _, k in ipairs(STATE_TABLES) do s[k] = s[k] or {} end
   s.planets_done = s.planets_done or 0
@@ -703,7 +704,24 @@ end
 -- armor: 13_rando_armor.lua (armor sources, and the vanity_owns polling fallback)
 
 -- collectibles bound in 05_rando_bindings.lua: { spybot = { class = "<event class>" }, ... }
-function R.on_collectible(kind)
+-- v0.62-DEV5: id = the event's own id of that collectible (RynoId / RuinId): one Spybot pays once per run, however
+-- many events the game sends for it (RYNOPlayPickedUpEvent and RYNOScriptPickupEvent can both come). Without an id,
+-- a second event of the same kind within R.COLLECT_DEBOUNCE frames is the same pickup.
+R.COLLECT_DEBOUNCE = 90
+local last_collect = {}
+function R.on_collectible(kind, id, from_event)
+  if id ~= nil and id ~= "" and id ~= 0 then
+    local key = tostring(id)
+    if key == "None" or key == "245637737" then return end              -- the enums' None (0x0EB42269)
+    S.collectible_ids[kind] = S.collectible_ids[kind] or {}
+    if S.collectible_ids[kind][key] then return end
+    S.collectible_ids[kind][key] = true
+  elseif from_event then
+    local f = rivet.frame and rivet.frame() or 0
+    if last_collect[kind] and f - last_collect[kind] < R.COLLECT_DEBOUNCE then return end
+    last_collect[kind] = f
+  end
+  log("RANDO-COLLECTIBLE", kind, tostring(id or "-"))
   S.collectibles[kind] = (S.collectibles[kind] or 0) + 1
   changed()
   local n = S.collectibles[kind]
@@ -1215,10 +1233,15 @@ end)
 -- collectibles bound by event class (05_rando_bindings.lua)
 for _, kind in ipairs(GEN.sorted_keys(BIND.collectible_events)) do
   local b = BIND.collectible_events[kind]
-  if type(b) == "table" and type(b.class) == "string" then
-    on(b.class, function(ev)
-      if b.field and b.value ~= nil and (ev.fields or {})[b.field] ~= b.value then return end
-      R.on_collectible(kind)
+  -- v0.62-DEV5: b.classes (several event classes for one pickup) and b.id_field (dedupe by the collectible's id)
+  local classes = {}
+  if type(b) == "table" and type(b.class) == "string" then classes[1] = b.class end
+  if type(b) == "table" and type(b.classes) == "table" then for _, c in ipairs(b.classes) do classes[#classes + 1] = c end end
+  for _, cls in ipairs(classes) do
+    on(cls, function(ev)
+      local f = ev.fields or {}
+      if b.field and b.value ~= nil and f[b.field] ~= b.value then return end
+      R.on_collectible(kind, b.id_field and f[b.id_field] or nil, true)
     end)
   end
 end

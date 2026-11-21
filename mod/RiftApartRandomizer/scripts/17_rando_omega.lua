@@ -31,7 +31,7 @@
 -- Until 3. has happened nothing is ever written: an Omega reward stays "pending" (state.omega) and is
 -- set the moment the offset is known. omega_runtime = false: never written at all.
 -- NOTHING OF THIS HAS RUN IN THE GAME. Simulator only (tests/test_v1015.py).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.24"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.25"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_OMEGA = RANDO_OMEGA or {}
 local O = RANDO_OMEGA
@@ -46,7 +46,14 @@ local function cfg(k) return RANDO and RANDO.config and RANDO.config[k] end
 local function hexaddr(n) return string.format("%X", n) end
 
 O.CLASSES = { "ItemInventory", "ItemInventoryPrius", "GridInventory", "GridInventoryPrius" }
+-- v0.62-DEV5: round45 (kit 10.0.24, the hero component enumeration): the live hero has NONE of the four names above;
+-- its item / weapon components are GameInventoryManager (8552 bytes), HeroWeaponManagerLocal (2080),
+-- GameEquipManager (872) and VanityInventoryManager (17640, armor). Rounds 27-45 all logged "inventory not found".
+-- These are searched next, the whole component (O.MAX_HEADER at most), for the same proof as before: an array whose
+-- elements hold the 64-bit item ids of the weapons. Nothing is written until the Omega byte is learned (step 3).
+O.CLASSES_LIVE = { "GameInventoryManager", "HeroWeaponManagerLocal", "GameEquipManager" }
 O.HEADER = 0x200                 -- component bytes searched for the record array
+O.MAX_HEADER = 0x2200            -- v0.62-DEV5: at most this much of a live component (GameInventoryManager: 0x2168)
 O.OBJ = 0x60                     -- bytes of one item object searched for its id (pointer layout)
 O.SPAN = 0x180                   -- bytes of a record read from its id on (the Omega byte must be in them)
 O.MAX_COUNT = 512
@@ -167,17 +174,27 @@ function O.component_diagnostic(hero)
 end
 
 function O.component()
+  local list = O.components()
+  if list[1] then return list[1].addr, list[1].class, list[1].size end
+  return nil, "the hero has no component " .. table.concat(O.CLASSES, " / ") .. " / " .. table.concat(O.CLASSES_LIVE, " / ")
+end
+-- v0.62-DEV5: every inventory candidate of the live hero, in order: { addr, class, size }
+function O.components()
+  local out = {}
   local hero = rivet.hero and rivet.hero()
-  if not hero then return nil, "no hero" end
-  for _, cls in ipairs(O.CLASSES) do
+  if not hero then return out end
+  local function add(cls, header)
     local ok, c = pcall(rivet.component, hero, cls)
     if ok and type(c) == "table" and c.address then
       local a = tonumber(tostring(c.address), 16)
-      if a then return a, cls end
+      local size = math.tointeger(tonumber(c.size or 0)) or 0
+      if a then out[#out + 1] = { addr = a, class = cls, size = header or math.max(O.HEADER, math.min(size, O.MAX_HEADER)) } end
     end
   end
-  O.component_diagnostic(hero)
-  return nil, "the hero has no component " .. table.concat(O.CLASSES, " / ")
+  for _, cls in ipairs(O.CLASSES) do add(cls, O.HEADER) end
+  for _, cls in ipairs(O.CLASSES_LIVE) do add(cls) end
+  if #out == 0 then O.component_diagnostic(hero) end
+  return out
 end
 -- an array of pointers to item objects: the id's offset in the objects is the one most agree on
 local function records_pointers(ptr, count)
@@ -224,10 +241,23 @@ local function records_inline(ptr, count)
   return recs, n
 end
 function O.find_records()
-  local comp, cls = O.component()
-  if not comp then return nil, cls end
-  local head = read(comp, O.HEADER)
-  if #head < 0x40 then return nil, "inventory component not readable" end
+  local list = O.components()
+  if #list == 0 then
+    return nil, "the hero has no component " .. table.concat(O.CLASSES, " / ") .. " / " .. table.concat(O.CLASSES_LIVE, " / ")
+  end
+  local best, why = nil, nil
+  for _, c in ipairs(list) do
+    local r, w = O.find_records_in(c.addr, c.class, c.size)
+    if r and (not best or r.count > best.count) then best = r end
+    if not r then why = (why and (why .. "; ") or "") .. tostring(w) end
+  end
+  if best then return best end
+  return nil, why
+end
+function O.find_records_in(comp, cls, header)
+  header = header or O.HEADER
+  local head = read(comp, header)
+  if #head < 0x40 then return nil, "inventory component not readable (" .. cls .. ")" end
   local best, bn = nil, 0
   for o = 1, #head - 15, 8 do
     local ptr = tonumber(hex64(head, o) or "0", 16)
@@ -239,15 +269,29 @@ function O.find_records()
     end
   end
   if not best then
-    if not O.dumped then
-      O.dumped = true
+    O.dumped = O.dumped or {}
+    if not O.dumped[cls] then
+      O.dumped[cls] = true
       local hx = {}
       for i = 1, math.min(#head, 0x100) do hx[#hx + 1] = string.format("%02X", head[i]) end
-      log(string.format("no weapon record in the first 0x%X bytes of %s at %X; its first bytes:", O.HEADER, cls, comp), table.concat(hx, " "))
+      log(string.format("no weapon record in the first 0x%X bytes of %s at %X; its first bytes:", header, cls, comp), table.concat(hx, " "))
     end
     return nil, "no array of weapon records in " .. cls
   end
   return best
+end
+
+-- v0.62-DEV5: once per session, every weapon record's first O.SPAN bytes (from its id on) - the evidence a developer
+-- needs to find the Omega byte from a save that already owns an Omega (compare its record with the others)
+function O.dump_records(inv)
+  if O.records_dumped then return end
+  O.records_dumped = true
+  for _, w in ipairs(GEN.sorted_keys(inv.records)) do
+    local b = read(inv.records[w].id_at, O.SPAN)
+    local hx = {}
+    for i = 1, #b do hx[#hx + 1] = string.format("%02X", b[i]) end
+    log("record", w, table.concat(hx, " "))
+  end
 end
 
 -- ---- 3: the Omega byte ------------------------------------------------------------------------
@@ -482,6 +526,7 @@ function O.tick(frames, ready)
       if inv then
         O.inv = inv
         log(string.format("inventory: %d weapon record(s) in %s (array at +0x%X)", inv.count, inv.class, inv.array_at))
+        O.dump_records(inv)
         O.read_game_omega()
         O.pass("after a load")
         O.next_keep = O.frame + O.KEEP_EVERY

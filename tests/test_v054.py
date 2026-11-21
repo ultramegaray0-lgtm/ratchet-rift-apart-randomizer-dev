@@ -379,7 +379,7 @@ class RestoreTests(unittest.TestCase):
 class BannerTests(unittest.TestCase):
     def test_the_banner_names_the_release_and_the_kit(self):
         g = to_hub(hub_game("v054-banner"))
-        self.assertTrue(g.note_has("Randomizer v0.60 - seed"))
+        self.assertTrue(g.note_has("Randomizer v0.62-DEV5 - seed"))
         self.assertTrue(g.log_has("planet shuffle 0"))       # RANDO-KEYS lists the new key
 
 

@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV4)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV5)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
@@ -18,6 +18,10 @@ LAYOUT
                        reward, docs/OMEGA.md; never in a player package until it has run in the game)
   dev_scripts\     dev 10.35: OPTIONAL developer diagnostics, never in a release and never needed to play
                    (named dev(name).lua; copy one into <game>\scripts only for a test that asks for it):
+                     dev(debug)       v0.62-DEV5: EVERY tool below in ONE file, plus WARP ANYWHERE / UNSTUCK
+                                      (HOME planet, PAGEUP/PAGEDOWN room, END warp, INSERT unstuck, DELETE where am I,
+                                      NUMPAD1/2 Omega record compare; see the top of the file). Copy only this one.
+                                      Built by tools/build_dev_debug.py from the single files.
                      dev(keys)        the developer keys ; ] [ / ' and the old F keys
                      dev(testtravel)  test travel (keys . and , with test_travel = true)
                      dev(testmode)    F10 / F11 fake progress, Ctrl+F10 x2 reset, the mission lab
@@ -27,6 +31,7 @@ LAYOUT
                      dev(spawnprobe)  read-only spawner evidence (RANDO-SPAWNPROBE lines; dev 10.20)
                      dev(spawnproof)  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF lines; v6, dev 10.26;
                                       dev 10.27: stands down while the Enemy Randomizer is ON)
+                     dev(omega_inventory_probe)  read-only hero component listing (RANDO-OMEGA-PROBE lines)
   rivet.toml       rivet_hook settings (copy next to RiftApart.exe)
   rando_give.dll   the native helper (copy next to RiftApart.exe); rando_give_source\ rebuilds it
                    dev 10.24: this IS v7 (it publishes the SceneManager dev(spawnproof) needs; it ran in your game
@@ -43,10 +48,10 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release v0.60 (kit 10.0.24)
+       RANDO-KIT release v0.62-DEV5 (kit 10.0.25)
        RANDO-KIT all required scripts are 10.0.24
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
-     HARD STOP: if the banner says kit 10.0.23 or any version other than 10.0.24, do NOT continue;
+     HARD STOP: if the banner says any kit other than 10.0.25, do NOT continue;
      that is not this package. This artifact is one directly extractable ZIP; do not combine it
      with an older folder or nested ZIP.
 
@@ -86,3 +91,22 @@ DEV4 FOLLOW-UP (10.0.24)
     flag writes are enabled by this diagnostic.
   - Remove every old dev(*).lua from <game>\scripts. In particular, dev(spawnprobe).lua is not
     needed for normal play and can exceed the 8 ms frame budget. Keep diagnostics in dev_scripts\.
+
+
+DEV5 (10.0.25) - round45 (the DEV4 log)
+  - Enemy Randomizer: 53 more enemy template ids from your logs are built in (round45's Ardolis bladeballs, robot
+    shooters, crabs, puffoids, pool sharks ...): 49 of Ardolis' 51 unchanged spawns were "kind not known yet". A
+    template that answers only its name is classified by that name. Pool sharks are never a replacement (they live in
+    water) and their spawners only take flyers.
+  - Omega: the live hero's GameInventoryManager / HeroWeaponManagerLocal / GameEquipManager are searched for the weapon
+    records (round45: none of the four old names exists). start_omega = 1 (dev settings) starts every new game with one
+    random Omega version and its weapon. The Omega FLAG is still only written once its byte is known: buy two Omegas
+    at Ms. Zurkon in Challenge Mode, or use dev(debug).lua's NUMPAD1 / NUMPAD2 (docs/OMEGA.md).
+  - Spybots and Lorbs pay their rewards: RYNOPlayPickedUpEvent / RYNOScriptPickupEvent (Spybot = "RYNO plan") and
+    RuinPlayPickedUpEvent (Lorb = "Ruin token"), names from the game's own type data. Not seen in a log yet.
+  - Shop: the dev settings use shop = "vanilla": Ms. Zurkon's slots were never changed in the game (rounds 17-45), so
+    "shuffle" let her sell weapons that were also Gold Bolt rewards. With "vanilla" none of her weapons is a reward.
+    A read-only "RANDO-SHOP PROBE vendor config" line shows what rivet.config() answers for her config.
+  - Travel: choosing a planet in the ship's menu while the 12 s trip back to Nefarious City waited no longer warps you
+    back when the destination's planet could not be named (the v0.61 repair needed a known planet).
+

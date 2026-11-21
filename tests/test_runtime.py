@@ -39,7 +39,7 @@ class LoadingTests(unittest.TestCase):
             g = Game(test_mode=test_mode, dev_tools=dev)
             self.assertEqual(g.load_errors, [], (test_mode, dev))
             g.ready()
-            self.assertTrue(g.log_has("events subscribed 20/20"), g.logs())
+            self.assertTrue(g.log_has("events subscribed 23/23"), g.logs())
             self.assertFalse(any("RANDO-ERROR" in l or "[sim]" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_play_folder(self):
@@ -55,8 +55,8 @@ class LoadingTests(unittest.TestCase):
             want -= set(PLAYER_EXCLUDED)
         self.assertEqual(names, want)
         dev = {p.name for p in DEV_DIR.glob("*.lua") if is_dev(p.name)}
-        self.assertEqual(dev, {"dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua", "dev(spawnprobe).lua", "dev(spawnproof).lua",
-                               "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"})
+        self.assertEqual(dev, {"dev(debug).lua", "dev(item_ids).lua", "dev(keys).lua", "dev(omega_inventory_probe).lua", "dev(probe).lua",
+                               "dev(spawnprobe).lua", "dev(spawnproof).lua", "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"})
         g = Game(settings_file=True)
         self.assertEqual(g.load_errors, [])
         self.assertIsNone(g.g.RANDO_TEST_MODE)
@@ -67,7 +67,7 @@ class LoadingTests(unittest.TestCase):
         self.assertTrue(g.log_has("will be retried"))
         g.sim.events_unavailable = False
         g.step(31)
-        self.assertTrue(g.log_has("events subscribed 35/35"), g.logs()[-5:])   # dev 10.15: + 7 of 17_rando_omega
+        self.assertTrue(g.log_has("events subscribed 38/38"), g.logs()[-5:])   # dev 10.15: + 7 of 17_rando_omega; DEV5: + 3 pickups
         g.ready()
         g.fire("MissionStateChangedEvent", MissionName="MIS_NEFCITY_01_X", MissionState=4)
         self.assertTrue(g.state.collected["planet:nefarious_city"])

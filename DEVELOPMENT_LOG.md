@@ -4,6 +4,33 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-22: v0.62-DEV5 (kit 10.0.25) - branch fix/v0.62-dev5 (from fix/v0.62-verified-dev-package = the DEV4 kit)
+
+Log: tests/data/round45_rivet.log (the player's DEV4 kit in the game; game path replaced). Read in full. The same log
+was uploaded to `main` as `rivet.log` with the player's Windows user path in its second line - not touched here (no
+history rewrite); it should be replaced on `main` by the anonymised copy.
+
+- ROUND45 (real game, kit 10.0.24): run 1 = a finished save (NefCity -> Ardolis, shuffle off), run 2 = New Game with
+  planet shuffle on (parade -> hub -> NefCity story; the bazaar reloaded ~8 times). Enemy Randomizer: Ardolis 6 of 68
+  spawns replaced (9%); unchanged: 49 "kind not known yet", 2 "Boss Randomizer off"; NefCity bazaar 0 of 5 per visit
+  ("no other walker kind known on this level" / "spawned before the randomizer read its spawner"); pool sharks were made
+  replacements of crabs and pirates; one encounter put back as stuck (180 s). Omega: "inventory not found" on every
+  load; the enumeration names GameInventoryManager / HeroWeaponManagerLocal / GameEquipManager / VanityInventoryManager.
+  Shop: "only 0 vendor weapon(s) in the array at +0x48" x5 -> "Ms. Zurkon could not be changed". No Spybot event bound.
+  ARSENAL_RESTORED: loaded as mods/ARSENAL_RESTORED.stage, yet the companion reported it "not installed" (not changed
+  here: the companion's path test should match the .stage name - needs a Windows run to see why it did not).
+- BUILT: see mod/RiftApartRandomizer/docs/CHANGELOG.md "v0.62-DEV5": registry harvest (tools/harvest_enemy_uids.py,
+  +53 uids), V.kind_by_name, V.SOURCE_ONLY (pool sharks), Omega live components + record dump + start_omega, Spybot /
+  Lorb bindings (DDL names: RYNOPlayPickedUpEvent / RYNOScriptPickupEvent { RynoId }, RuinPlayPickedUpEvent
+  { RuinId }), dev shop = "vanilla" + read-only vendor config probe, H.on_menu_accept cancel fixed (regression of the
+  v0.61 repair: test_v060 / test_v055 failed on DEV4), dev(debug).lua (tools/build_dev_debug.py; warp / unstuck), kit
+  10.0.25 / v0.62-DEV5 everywhere (DEV4 had left tests and tools at 10.0.23).
+- Tests: DEV4 as uploaded: 850 run, 55 failures (version pins, stale lists, the hub regression). Now: 876 run, 0
+  failures, 22 skipped (10 need PowerShell 7, 12 need commits this clone does not have). New: tests/test_v062_dev5.py (26).
+- VERIFIED IN THE GAME: nothing of DEV5. Simulator only: every item above. Next test (round46): New Game with the DEV5
+  kit + dev(debug).lua only; Ardolis or Zurkon fights (Ctrl+-); pick up a Spybot; watch for "RANDO-OMEGA inventory:" /
+  "record" lines; one HOME / PAGEDOWN / END warp; send rivet.log.
+
 ## 2026-11-19: Public Release v0.60 (beta, kit 10.0.23) - branch release-v0.60
 
 Built on the player's dev 10.33 kit (imported from RiftApartRandomizer_dev10.33.zip: the 10.31-10.33 scripts never

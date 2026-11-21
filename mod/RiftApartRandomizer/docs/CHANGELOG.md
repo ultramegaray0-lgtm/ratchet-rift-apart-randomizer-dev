@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.62-DEV5 (kit 10.0.25; dev kit, not released): round45 (the DEV4 log)
+
+Asked: randomize every enemy that can be randomized (round45: 7%), Omega in the pool and one Omega at the start, Spybots
+give items, the shop sells weapons that are Gold Bolt rewards, check planet travel again, a dev(debug).lua that warps to
+any planet / room and holds every developer tool, upload to the private repo. Log: tests/data/round45_rivet.log.
+
+- ENEMY RANDOMIZER (16_rando_spawners.lua): round45 Ardolis replaced 6 of 68 spawns; 49 of the 51 unchanged were "kind
+  not known yet" - their template uids were not in V.REG_BUILTIN. tools/harvest_enemy_uids.py takes every enemy / boss
+  uid any log named in a "learned template" line (one kind in every log, never MIXED) and V.REG_BUILTIN now has them
+  (+53: 29 pool sharks, 11 swarmers, 4 robot shooters, 3 amoeboids, 2 Grunthors, 2 transports, ...). A template actor
+  that answers only rivet.name is classified by that name when every known template of the name has one kind
+  (V.kind_by_name). V.SOURCE_ONLY: a pool shark (GameBotPoolShark) is never a replacement - round45 put pool sharks at
+  crab / pirate spawns - and its spawners take flyers only.
+- OMEGA (17_rando_omega.lua): the live hero has none of ItemInventory / ItemInventoryPrius / GridInventory(Prius)
+  (round45's enumeration); GameInventoryManager, HeroWeaponManagerLocal and GameEquipManager are now searched (whole
+  component, up to 0x2200 bytes) for the weapon records, and once found every record's bytes are logged once
+  (RANDO-OMEGA record ...). New setting start_omega (0-20, own random stream; 0 keeps every seed): the dev settings
+  start every new game with one random Omega and its weapon. The flag is still written only once its byte is known.
+- SPYBOTS / LORBS (05_rando_bindings.lua, 10_rando_runtime.lua): from neptuwunium/rivet's DDL - a Spybot is a RYNO plan
+  (enum 0x81D3E717, 10 plans), picked up with RYNOPlayPickedUpEvent { RynoId } (RYNOScriptPickupEvent for a scripted
+  one); a Lorb is a Ruin token (enum 0xECCC3486, Lorb_01..12), RuinPlayPickedUpEvent { RuinId }. Bound with the id: one
+  plan pays once per run whichever event comes.
+- SHOP: rounds 17-45 never found the vendor's slot array, so with shop = "shuffle" Ms. Zurkon sold her usual weapons -
+  also those the seed put on Gold Bolts. The dev settings now say shop = "vanilla" (none of her weapons is a reward).
+  12_rando_shop.lua logs once, read-only, what rivet.config() answers for each VendorConfig (RANDO-SHOP PROBE).
+- TRAVEL (15_rando_hub.lua H.on_menu_accept): the v0.61 repair cancelled the waiting trip back only for a menu
+  destination placed on a known planet; an unplaced landing checkpoint kept the 12 s timer and warped the player back
+  to Nefarious City after landing where they chose (test_v060 / test_v055 "the game's order with shuffle off" failed
+  on DEV4). Any menu flight that is not to the trip's own planet cancels it again.
+- dev(debug).lua (tools/build_dev_debug.py): every dev(*).lua in one file (sections, switchable) plus WARP ANYWHERE /
+  UNSTUCK (HOME, PAGEUP/PAGEDOWN, END, INSERT, DELETE) and an Omega record compare (NUMPAD1 / NUMPAD2 / Ctrl+NUMPAD2).
+- Kit 10.0.25, release label v0.62-DEV5 everywhere (DEV4 had left tests and tools at 10.0.23: 55 failures).
+- Tests: tests/test_v062_dev5.py (26). Full suite 876 run, 0 failures, 22 skipped. NOTHING of DEV5 has run in the game.
+
+
 Newest first. 8.4 and 8.5 are stabilization releases: no new features, the same seeds as 8.3.
 
 ## Public Release v0.60 (beta, kit 10.0.23; dev 10.33 + the shuffle-independent trip back)

@@ -146,3 +146,20 @@ full class list and metadata / first Prius bytes for item, inventory, weapon, eq
 candidates. A candidate is **not** automatically accepted as the inventory, and no memory is written
 by this diagnostic. Omega flag discovery and actual Omega writes remain unverified and disabled
 until the real inventory record and Omega byte are identified in-game.
+
+
+## v0.62-DEV5 (kit 10.0.25): the live components, start_omega, a developer compare
+
+- Round45 listed the live hero's item components: GameInventoryManager (8552 bytes), HeroWeaponManagerLocal (2080),
+  GameEquipManager (872), VanityInventoryManager (17640). `O.CLASSES_LIVE` searches the first three (after the four
+  old names) for the same proof as before: an array whose elements hold the weapons' 64-bit item ids. The search reads
+  the whole component (at most `O.MAX_HEADER` = 0x2200 bytes) in a job, never in one frame.
+- When records are found, each one's first 0x180 bytes are logged once (`RANDO-OMEGA record <weapon> ...`): a save that
+  already owns an Omega weapon shows its byte as 01 where the others hold 00.
+- `start_omega = 1` (dev settings): every new game starts with one random Omega version, its weapon given first. The
+  reward waits ("recorded") until the flag's byte is known; then it is set at once.
+- Learning the byte: two Omega purchases at Ms. Zurkon (Challenge Mode), as before, OR dev(debug).lua: NUMPAD1 reads
+  every record, make ONE weapon Omega (buy it), NUMPAD2 lists the bytes that went 0 -> 1, Ctrl+NUMPAD2 takes a single
+  candidate as this save's flag. Or set `omega_flag_offset` in 04 once the byte is known.
+- Still not seen in the game: whether one of these components holds the records, and whether the game honours a flag
+  set from outside (levels 6-10, the Omega name).

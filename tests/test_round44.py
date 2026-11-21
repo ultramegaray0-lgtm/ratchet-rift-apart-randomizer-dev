@@ -112,7 +112,7 @@ class SimulatorTests(unittest.TestCase):
     def test_the_built_in_registry_knows_the_logged_kinds_on_a_new_save(self):
         g = Game(settings={"enemy_randomizer": True})
         V = "RANDO_SPAWNERS.V"
-        self.assertEqual(g.lua.eval("(function() local n = 0 for _ in pairs(%s.REG_BUILTIN) do n = n + 1 end return n end)()" % V), 17)
+        self.assertEqual(g.lua.eval("(function() local n = 0 for _ in pairs(%s.REG_BUILTIN) do n = n + 1 end return n end)()" % V) >= 17, True)   # 10.33: 17; DEV3: +112; DEV5: +53 (round45 harvest)
         self.assertEqual(g.lua.eval(V + '.reg_get("D5C79D3A26DF1EB9").name'), "enm_amoeboid_small_ps4")
         self.assertEqual(g.lua.eval(V + '.reg_get("A49ABC9129557DC6").name'), "enm_indigenous_puffoid")
 

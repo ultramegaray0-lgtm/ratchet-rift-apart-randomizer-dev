@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.60 release branch (build 10.0.23) - test run 2026-11-18 22:28 UTC
+Rift Apart Randomizer v0.62-DEV5 dev branch (build 10.0.25) - test run 2026-11-21 21:31 UTC
 Python 3.13.18 on Linux
-ran 842, failures 0, errors 0, skipped 22
+ran 876, failures 0, errors 0, skipped 22
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -135,6 +135,10 @@ test_no_player_facing_file_mentions_an_excluded_randomizer (tests.test_release_v
 test_the_dll_is_v7_and_the_settings_are_the_players (tests.test_release_v060.PackageTests.test_the_dll_is_v7_and_the_settings_are_the_players) ... ok
 test_the_same_inputs_give_the_same_zip (tests.test_release_v060.PackageTests.test_the_same_inputs_give_the_same_zip) ... ok
 test_a_new_game_with_the_players_settings (tests.test_release_v060.PublicDefaultsTests.test_a_new_game_with_the_players_settings) ... ok
+test_armed_spawners_share_one_enable_check_per_role_per_frame (tests.test_repair_v061.EnemyCompatibilityRegressionTests.test_armed_spawners_share_one_enable_check_per_role_per_frame) ... ok
+test_live_censused_templates_are_known_before_their_first_spawn (tests.test_repair_v061.EnemyCompatibilityRegressionTests.test_live_censused_templates_are_known_before_their_first_spawn) ... ok
+test_omega_probe_is_hero_scoped_and_contains_no_write_api (tests.test_repair_v061.EnemyCompatibilityRegressionTests.test_omega_probe_is_hero_scoped_and_contains_no_write_api) ... ok
+test_viceron_sandshark_pair_is_rejected_even_in_all_mode (tests.test_repair_v061.EnemyCompatibilityRegressionTests.test_viceron_sandshark_pair_is_rejected_even_in_all_mode) ... ok
 test_10_33_kills_without_death_events_verified_b3s_pairs (tests.test_round44.Round44LogTests.test_10_33_kills_without_death_events_verified_b3s_pairs) ... ok
 test_10_33_late_changes_stayed_armed (tests.test_round44.Round44LogTests.test_10_33_late_changes_stayed_armed) ... ok
 test_10_33_never_used_the_robot_shooter_as_a_replacement (tests.test_round44.Round44LogTests.test_10_33_never_used_the_robot_shooter_as_a_replacement) ... ok
@@ -146,6 +150,9 @@ test_a_kind_rejected_for_two_originals_is_banned_for_the_save (tests.test_round4
 test_a_replaced_bot_gone_soon_after_its_spawn_counts_as_killed (tests.test_round44.SimulatorTests.test_a_replaced_bot_gone_soon_after_its_spawn_counts_as_killed) ... ok
 test_the_built_in_registry_knows_the_logged_kinds_on_a_new_save (tests.test_round44.SimulatorTests.test_the_built_in_registry_knows_the_logged_kinds_on_a_new_save) ... ok
 test_the_robot_shooter_is_never_a_replacement (tests.test_round44.SimulatorTests.test_the_robot_shooter_is_never_a_replacement) ... ok
+test_event_discovered_factory_is_processed_before_full_scan (tests.test_round45.SpawnFactoryEventQueueTests.test_event_discovered_factory_is_processed_before_full_scan) ... ok
+test_omega_component_fallback_only_enumerates_and_reads (tests.test_round45.SpawnFactoryEventQueueTests.test_omega_component_fallback_only_enumerates_and_reads) ... ok
+test_spawn_event_queues_each_factory_once_and_counts_spawns (tests.test_round45.SpawnFactoryEventQueueTests.test_spawn_event_queues_each_factory_once_and_counts_spawns) ... ok
 test_armor_rewards_go_through_the_armor_code (tests.test_runtime.ArmorTests.test_armor_rewards_go_through_the_armor_code) ... ok
 test_intercepted_source_pays_its_location_once (tests.test_runtime.ArmorTests.test_intercepted_source_pays_its_location_once) ... ok
 test_interception_can_be_switched_off (tests.test_runtime.ArmorTests.test_interception_can_be_switched_off) ... ok
@@ -341,7 +348,34 @@ test_the_games_own_travel_to_a_revisit_still_brings_you_back (tests.test_v060.Sh
 test_travel_already_on_is_left_alone_and_never_counted_as_ours (tests.test_v060.ShuffleOffReturnTests.test_travel_already_on_is_left_alone_and_never_counted_as_ours) ... ok
 test_your_own_planet_menu_flight_replaces_the_trip_back (tests.test_v060.ShuffleOffReturnTests.test_your_own_planet_menu_flight_replaces_the_trip_back) ... ok
 test_a_finished_planet_brings_you_back_to_the_hub (tests.test_v060.ShuffleOnReturnTests.test_a_finished_planet_brings_you_back_to_the_hub) ... ok
+test_ship_menu_choice_cancels_pending_return_before_landing (tests.test_v060.ShuffleOnReturnTests.test_ship_menu_choice_cancels_pending_return_before_landing) ... ok
 test_the_same_planet_finished_with_shuffle_off_returns_the_same_way (tests.test_v060.ShuffleOnReturnTests.test_the_same_planet_finished_with_shuffle_off_returns_the_same_way) ... ok
+test_a_lorb_pickup_pays (tests.test_v062_dev5.CollectibleTests.test_a_lorb_pickup_pays) ... ok
+test_a_spybot_pickup_pays_once_per_plan (tests.test_v062_dev5.CollectibleTests.test_a_spybot_pickup_pays_once_per_plan) ... ok
+test_the_none_id_pays_nothing (tests.test_v062_dev5.CollectibleTests.test_the_none_id_pays_nothing) ... ok
+test_a_single_file_next_to_it_stands_down (tests.test_v062_dev5.DevDebugTests.test_a_single_file_next_to_it_stands_down) ... ok
+test_it_is_built_from_the_single_files (tests.test_v062_dev5.DevDebugTests.test_it_is_built_from_the_single_files) ... ok
+test_it_loads_with_its_sections_and_names_one_developer_file (tests.test_v062_dev5.DevDebugTests.test_it_loads_with_its_sections_and_names_one_developer_file) ... ok
+test_unstuck_warps_back_to_the_last_checkpoint (tests.test_v062_dev5.DevDebugTests.test_unstuck_warps_back_to_the_last_checkpoint) ... ok
+test_warp_to_any_planet_and_room (tests.test_v062_dev5.DevDebugTests.test_warp_to_any_planet_and_room) ... ok
+test_one_version_everywhere (tests.test_v062_dev5.KitTests.test_one_version_everywhere) ... ok
+test_the_banner (tests.test_v062_dev5.KitTests.test_the_banner) ... ok
+test_start_omega_0_keeps_the_seed (tests.test_v062_dev5.OmegaTests.test_start_omega_0_keeps_the_seed) ... ok
+test_start_omega_starts_one_omega_and_its_seed_is_valid (tests.test_v062_dev5.OmegaTests.test_start_omega_starts_one_omega_and_its_seed_is_valid) ... ok
+test_the_dev_settings_start_with_an_omega (tests.test_v062_dev5.OmegaTests.test_the_dev_settings_start_with_an_omega) ... ok
+test_the_live_components_are_searched (tests.test_v062_dev5.OmegaTests.test_the_live_components_are_searched) ... ok
+test_a_pool_shark_is_never_a_replacement_and_its_spawner_takes_only_flyers (tests.test_v062_dev5.RegistryTests.test_a_pool_shark_is_never_a_replacement_and_its_spawner_takes_only_flyers) ... ok
+test_a_template_answering_only_its_name_is_classified (tests.test_v062_dev5.RegistryTests.test_a_template_answering_only_its_name_is_classified) ... ok
+test_every_logged_enemy_uid_is_built_in (tests.test_v062_dev5.RegistryTests.test_every_logged_enemy_uid_is_built_in) ... ok
+test_round45_ardolis_templates_are_known_on_a_new_save (tests.test_v062_dev5.RegistryTests.test_round45_ardolis_templates_are_known_on_a_new_save) ... ok
+test_ardolis_replaced_6_of_68_and_kind_not_known_was_the_reason (tests.test_v062_dev5.Round45LogTests.test_ardolis_replaced_6_of_68_and_kind_not_known_was_the_reason) ... ok
+test_pool_sharks_were_put_where_walkers_spawn (tests.test_v062_dev5.Round45LogTests.test_pool_sharks_were_put_where_walkers_spawn) ... ok
+test_the_hero_has_the_live_inventory_components (tests.test_v062_dev5.Round45LogTests.test_the_hero_has_the_live_inventory_components) ... ok
+test_the_log_is_the_dev4_kit_and_anonymised (tests.test_v062_dev5.Round45LogTests.test_the_log_is_the_dev4_kit_and_anonymised) ... ok
+test_the_vendor_was_never_changed (tests.test_v062_dev5.Round45LogTests.test_the_vendor_was_never_changed) ... ok
+test_a_vanilla_shop_seed_never_places_a_vendor_weapon (tests.test_v062_dev5.ShopTests.test_a_vanilla_shop_seed_never_places_a_vendor_weapon) ... ok
+test_the_dev_settings_sell_the_vendors_own_weapons (tests.test_v062_dev5.ShopTests.test_the_dev_settings_sell_the_vendors_own_weapons) ... ok
+test_the_vendor_config_is_probed_read_only (tests.test_v062_dev5.ShopTests.test_the_vendor_config_is_probed_read_only) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -866,6 +900,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 842 tests in 188.529s
+Ran 876 tests in 210.942s
 
 OK (skipped=22)

@@ -103,3 +103,16 @@ If the log says the slots were changed but the vendor screen still shows the usu
 vendor copies its stock somewhere else when a level loads. If the screen shows one weapon and
 buying gives another, the slot keeps a second reference. Either way, send that rivet.log and set
 `shop_runtime = false` meanwhile (the seed stays the same; Pixelizer and Bouncer are given).
+
+
+## v0.62-DEV5: why the dev kit uses shop = "vanilla"
+
+Every round from 17 to 45 logged "only 0 vendor weapon(s) in the array at +0x48" (inline and pointer layouts both
+tried) and then "Ms. Zurkon could not be changed". With shop = "shuffle" the seed still made some of her weapons
+rewards (Gold Bolts, missions), and she kept selling them: the same weapon could be bought AND found. The dev settings
+now use shop = "vanilla": she sells her usual weapons and none of them is ever placed as a reward, so every weapon has
+exactly one route. "shuffle" stays available for when the slot array is found.
+
+For that, 12_rando_shop.lua logs once per vendor config and session what rivet.config() answers (field names, types,
+the first entry of any list): `RANDO-SHOP PROBE vendor config <id> VendorConfig fields: ...`. If ItemDatas shows up as
+a list of entries with an Item field, rivet.config_set may reach the slots by path without any memory offset.

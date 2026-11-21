@@ -980,7 +980,7 @@ function S.step(n)
 end
 -- 8.3: keyboard keys the randomizer maps itself (Windows virtual-key codes; rivet.key() above
 -- knows only rivet_hook-style names, as the real one may)
-S.KEYS = { BACKSPACE = 0x08, [";"] = 0xBA, ["="] = 0xBB, [","] = 0xBC, ["-"] = 0xBD, ["."] = 0xBE, ["/"] = 0xBF, ["`"] = 0xC0,
+S.KEYS = { BACKSPACE = 0x08, HOME = 0x24, ["END"] = 0x23, PAGEUP = 0x21, PAGEDOWN = 0x22, INSERT = 0x2D, DELETE = 0x2E, [";"] = 0xBA, ["="] = 0xBB, [","] = 0xBC, ["-"] = 0xBD, ["."] = 0xBE, ["/"] = 0xBF, ["`"] = 0xC0,
            ["["] = 0xDB, ["\\"] = 0xDC, ["]"] = 0xDD, ["'"] = 0xDE }
 for c = string.byte("A"), string.byte("Z") do S.KEYS[string.char(c)] = c end
 for i = 0, 9 do S.KEYS[tostring(i)] = 0x30 + i end

@@ -1,7 +1,9 @@
--- DEVELOPER TOOL - safe Omega inventory discovery; NOT part of a player release.
+-- DEVELOPER TOOL - not part of a release. Safe Omega inventory discovery (dev(debug).lua holds it too).
 -- Copy this file to GAME_FOLDER/scripts/ for one diagnostic run, then remove it.
 -- It only inspects the live hero's component class names and metadata. No game state is mutated,
 -- and event ItemHandle values are never treated as scene-actor handles.
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(omega_inventory_probe)"] = "10.0.25"   -- the kit check (10_rando_runtime.lua)
+if RANDO_DEV_DEBUG and RANDO_DEV_DEBUG.ran and RANDO_DEV_DEBUG.ran["omega_probe"] then return end   -- v0.62-DEV5: dev(debug).lua already holds it
 RANDO_OMEGA_PROBE = RANDO_OMEGA_PROBE or {}
 local P = RANDO_OMEGA_PROBE
 

@@ -52,7 +52,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.24"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.25"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -1597,6 +1597,11 @@ V.ADAPTER_LABEL = { factory = "factory Templates", template = "node Template", g
 V.FAMILY_GROUP = { ground = "walker", swarmer = "walker", turret = "turret", flyer = "flyer" }
 -- names that are never an enemy to change or to use, whatever their bot class says
 V.NAME_EXCLUDE = { "npc_", "boss", "ally", "friend", "civ_", "vendor", "dummy", "test_", "infobot", "sheep", "lemming" }
+-- v0.62-DEV5: bot classes whose SPAWNERS may change but which are never a REPLACEMENT, with the movement group their
+-- spawn points can take. Round45 (Ardolis): pool sharks became walkers' replacements ("enm_indigenous_crab ->
+-- enm_indigenous_poolshark") - a pool shark lives in water; on a walkway it cannot reach the player (the encounter at
+-- CE7854747136D250 went "stuck" 180 s). A pool shark's spawn point is over water: only a flyer is safe there.
+V.SOURCE_ONLY = { GameBotPoolShark = "flyer" }
 
 local function u16(b, i) if not (b and b[i + 1]) then return nil end return b[i] + b[i + 1] * 0x100 end
 local function le32(v) return string.format("%02X %02X %02X %02X", v & 0xFF, (v >> 8) & 0xFF, (v >> 16) & 0xFF, (v >> 24) & 0xFF) end
@@ -1981,6 +1986,63 @@ V.REG_BUILTIN = {
   ["FB1279838DDB29CD"] = "enm_pirate_robot_shooter|ground|GameBotShooter|enemy",
   ["FE024E8760FC8A26"] = "enm_pirate_robot_melee|swarmer|GameBotMeleeSwarmer|enemy",
   ["FFE6B3449B65FCC4"] = "enm_neo_nefarious_hover|flyer|GameBotShooterJetPack|enemy",
+  -- v0.62-DEV5: every further enemy / boss template uid of the logs in tests/data (round45 included), harvested by
+  -- tools/harvest_enemy_uids.py (one kind in every log, never MIXED). Round45 changed 6 of 68 Ardolis spawns: 49 were
+  -- "kind not known yet" - the pool sharks, bladeballs, robot shooters and crabs of THESE uids. Pool sharks are
+  -- classified so their spawners are known (they only take flyers and are never a replacement: V.SOURCE_ONLY).
+  ["843893C844A302DD"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["89E24906DAD1B2CD"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["8E76954EEF111DD6"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["904A55B56664D80C"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["948B38F1D65C42B1"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["94C4FB44D9DFA996"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["956444556E03E7DF"] = "enm_indigenous_poolsh|unclear|GameBotPoolShark|enemy",
+  ["99CBD30445460E36"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["9D63B938DA263103"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["A37714DFEE07879D"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["A61554865DA41264"] = "enm_indigenous_grun|large|GameBotGrunthor|boss",
+  ["A7D580A815B5D5E1"] = "enm_neo_nefarious_shooter|ground|GameBotShooterNoFiring|enemy",
+  ["A87D764ABCB45594"] = "enm_indigenous_puffoid|swarmer|GameBotMeleeSwarmer|enemy",
+  ["A96882656E9DC244"] = "veh_thug_dropship|large|GameBotShooterArmoredTransport|boss",
+  ["B0E48C76F60DA71C"] = "enm_pirate_robot_melee|swarmer|GameBotMeleeSwarmer|enemy",
+  ["B255B66433EE387C"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["B2C408D5A297EC03"] = "enm_indigenous_puffoid|swarmer|GameBotMeleeSwarmer|enemy",
+  ["B4B1F7CBBF8ADB27"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["B69126A98EF2E190"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["BA312C9E31A934D2"] = "enm_pirate_robot_melee|swarmer|GameBotMeleeSwarmer|enemy",
+  ["BF3586A9B2237B4D"] = "enm_pirate_robot_shielded|swarmer|GameBotMeleeSwarmer|enemy",
+  ["C300DE595CD2CF66"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["C3AAA6FCDD0D17AE"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["C76256DD782A0A50"] = "enm_amoeboid_large_ps4|swarmer|GameBotAmoeboid|enemy",
+  ["C7EA08EF4FE58B6D"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["CFC26C21F2B461B9"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["D1086548D13C6A86"] = "enm_pirate_robot_shooter|ground|GameBotShooter|enemy",
+  ["D573FD6C7356185A"] = "enm_pirate_bladeball|swarmer|GameBotMeleeSwarmer|enemy",
+  ["D5C46DE36F6BB88E"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["D78BDDE784EF233E"] = "enm_amoeboid_medium_ps4|swarmer|GameBotAmoeboid|enemy",
+  ["D883EE626BDCB8A5"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["D8FB0C5791010A9A"] = "enm_indigenous_grun|large|GameBotGrunthor|boss",
+  ["DA549D2B38D986A2"] = "enm_indigenous_crab|swarmer|GameBotMeleeSwarmer|enemy",
+  ["DB45C9F28C55DD1C"] = "enm_amoeboid_small_ps4|swarmer|GameBotAmoeboid|enemy",
+  ["DBFB087A6A1FD873"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["DCD7D4C55E86C304"] = "enm_pirate_robot_shooter|ground|GameBotShooter|enemy",
+  ["E2E11A6AE8D3D2BA"] = "enm_indigenous_poolsh|unclear|GameBotPoolShark|enemy",
+  ["E56BC39B2417709E"] = "enm_pirate_robot_melee|swarmer|GameBotMeleeSwarmer|enemy",
+  ["E5A69D6EE6EE88DE"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["EB73797E03E49D93"] = "enm_indigenous_poolsh|unclear|GameBotPoolShark|enemy",
+  ["EC937BD706908861"] = "enm_pirate_robot_shooter|ground|GameBotShooter|enemy",
+  ["EE401CEA09A21400"] = "enm_indigenous_poolsh|unclear|GameBotPoolShark|enemy",
+  ["EE639E87045E1858"] = "veh_p|large|GameBotShooterArmoredTransport|boss",
+  ["EF341335937C5543"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["F04A2D2555D771D9"] = "enm_thugs4less_shoo|flyer|GameBotShooterJetPack|enemy",
+  ["F2DBBF9820F4583C"] = "enm_thugs4less_shoo|ground|GameBotShooter|enemy",
+  ["F3F37777F90C5D3D"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["F58BC7AEB0CEAC97"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["F59DA44E48BF9954"] = "enm_indigenous_puffoid|swarmer|GameBotMeleeSwarmer|enemy",
+  ["F769B1C21E48ADB3"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["FB26C03A606561EA"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
+  ["FCF742C70CB0FC98"] = "enm_indigenous_crab|swarmer|GameBotMeleeSwarmer|enemy",
+  ["FF3A1B8465229CC2"] = "enm_pirate_bladeball|swarmer|GameBotMeleeSwarmer|enemy",
 }
 -- every uid the registry knows (the save's and the built-in ones)
 function V.reg_uids()
@@ -2015,6 +2077,7 @@ function V.reg_put(uid, T)
     if n >= V.REG_CAP then return end
   end
   R_[uid] = v
+  V._reg_n = (V._reg_n or 0) + 1                                           -- v0.62-DEV5: V.kind_by_name rebuilds
   if RANDO and RANDO.mark_changed then RANDO.mark_changed() end
 end
 
@@ -2672,11 +2735,46 @@ function V.probe(T)
   lvl.probe.tried = lvl.probe.tried + 1
   ss.probe_tried = ss.probe_tried + 1
   local a = V.actor(T.handle)
+  -- v0.62-DEV5: a template actor that answers only its NAME (no components before it is spawned) is classified by
+  -- that name when every known template of that name has one kind (V.kind_by_name; "enm_thugs4less_shoo" - ground
+  -- and jetpack thug - stays unknown). Round45: 40 asked, 0 answered with a bot class.
+  if a and a.name and not a.family then
+    local k = V.kind_by_name(a.name)
+    if k then a.family, a.class = k.family, k.class; ss.probe_named = (ss.probe_named or 0) + 1 end
+  end
   if a and a.family and a.name then
     lvl.probe.ok = lvl.probe.ok + 1
     ss.probe_ok = ss.probe_ok + 1
     V.learn(T, a, "template actor")
   end
+end
+-- v0.62-DEV5: name -> kind of every template the registry knows (built-in and the save's), only where unambiguous
+function V.kind_by_name(name)
+  local n = V.short(name); if not n or #n < 8 then return nil end
+  n = n:lower()
+  if not V._names or V._names_n ~= (V._reg_n or 0) then
+    local map = {}
+    for _, uid in ipairs(V.reg_uids()) do
+      local e = V.reg_get(uid)
+      if e and e.name and e.family and not e.mixed then
+        local key = V.short(e.name):lower()
+        local old = map[key]
+        if old == nil then map[key] = { family = e.family, class = e.class, name = e.name }
+        elseif old and old.family ~= e.family then map[key] = false end
+      end
+    end
+    V._names, V._names_n = map, (V._reg_n or 0)
+  end
+  local hit = V._names[n]
+  if hit ~= nil then return hit or nil end
+  local found
+  for key, v in pairs(V._names) do
+    if v and V.same_name(key, n) then
+      if found and found.family ~= v.family then return nil end
+      found = v
+    end
+  end
+  return found
 end
 
 -- ---- the listing ---------------------------------------------------------------------------------------
@@ -2837,7 +2935,7 @@ function V.pool(group, excl, need_uid)
   local groups = V.groups_for(group)                                       -- dev 10.31: mixed movement in "all"
   for _, T in pairs(V.lvl.tpl) do
     local g = V.group_of(T)
-    if g and groups[g] and (T.uid or not need_uid) then
+    if g and groups[g] and (T.uid or not need_uid) and not (T.class and V.SOURCE_ONLY[T.class]) then
       local ok = true
       for _, n in ipairs(excl or {}) do if V.same_name(T.name, n) then ok = false end end
       if ok then out[#out + 1] = T end
@@ -2978,6 +3076,7 @@ function V.plan_rec(sc, r)
     if not (orig_T and orig_T.family) then return note_why(r, "kind not known yet (learned from its first spawn)") end
     group, role = V.group_of(orig_T)
     if not group then return note_why(r, "protected: " .. tostring(role)) end
+    if orig_T.class and V.SOURCE_ONLY[orig_T.class] then group = V.SOURCE_ONLY[orig_T.class] end   -- v0.62-DEV5
     excl[1] = orig_T.name
   end
   if not group then return end
