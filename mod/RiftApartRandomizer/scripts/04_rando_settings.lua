@@ -69,7 +69,7 @@ RANDO_SETTINGS = {
   -- These only decide the start of a save that has never used the keys; they do not change the seed.
   enemy_randomizer = true,            -- regular enemies spawned by spawners become other regular enemies loaded on
                                        -- the same level (dev 10.27: the spawner-variable method; needs rando_give.dll v7)
-  boss_randomizer = true,              -- boss-tier enemies are shuffled among themselves (story bosses never)
+  boss_randomizer = false,              -- boss-tier enemies are shuffled among themselves (story bosses never)
   enemy_notify = true,                 -- dev 10.29: a corner note "[ENEMY RANDOMIZER] SUCCESS - Original: X -> Replacement: Y"
                                        -- for every changed spawner's first spawn (false: only rivet.log)
   enemy_compat = "all",                -- dev 10.31: "all" = EVERY regular enemy can become every other loaded on the level
@@ -91,6 +91,6 @@ RANDO_SETTINGS = {
   -- chaos_cross_planet = true,        -- false: only this planet's enemies
 }
 -- In the game, the 0 key turns PLANET SHUFFLE on or off (off by default; it is remembered).
--- The - key turns the ENEMY RANDOMIZER on or off, the = key the BOSS RANDOMIZER (both ON by default in this dev kit; remembered).
+-- The - key turns the ENEMY RANDOMIZER on or off, the = key the BOSS RANDOMIZER (Enemy ON and Boss OFF by default in this dev kit; remembered).
 -- BACKSPACE turns the CHAOS RANDOMIZER on or off (off by default; remembered; no protection at all).
 -- Ctrl+0 pressed twice sends your randomizer items again if some went missing.
