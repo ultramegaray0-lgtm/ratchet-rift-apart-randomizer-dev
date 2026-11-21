@@ -2434,7 +2434,8 @@ end
 
 -- one variable, checked against the plug's generation: { addr, uid, actors, type, gen, single, group }
 function V.var(sc, idx, gen)
-  if not (sc and idx and gen) or gen == 0 or idx >= sc.max then return nil, "no such variable" end
+  if type(sc) ~= "table" or type(idx) ~= "number" or type(gen) ~= "number" or type(sc.max) ~= "number" then return nil, "no such variable" end
+  if gen == 0 or idx < 0 or idx >= sc.max then return nil, "no such variable" end
   local addr = sc.base + idx * V.VAR_SIZE
   local b = read_bytes(addr, V.VAR_SIZE)
   if not b or #b < V.VAR_SIZE then return nil, "unreadable" end
