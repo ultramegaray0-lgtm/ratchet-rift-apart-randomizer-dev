@@ -181,3 +181,11 @@ DEV7 ran in the game, but the hero's component walk was killed 19 times by rivet
 The search now runs only in frames with room (`O.FRAME_ROOM`), in 1.5 ms slices (`O.SLICE_SECONDS`), and the walk resumes
 where it stopped (`O.wstate`). Omega weapons are sold only in Challenge Mode: teaching the byte needs a Challenge Mode
 save. The learned byte is stored in state and used in later games, including normal ones.
+
+
+## v0.62-DEV9 (kit 10.0.29): round49 - inventories by handle through the SceneManager
+
+DEV8's walk finished in the game (141 components), but the inventories that InventoryChangedEvent names on the hero
+are not in the hero's component list. They are now resolved by handle through the SceneManager (rando_give.dll v7,
+`O.resolve`), searched first, and arrays of u32 item handles are read as well (`O.records_handles`). The first few items
+GadgetItemAddedEvent names are logged with their class and first bytes (`O.probe_item`) to learn the item layout.

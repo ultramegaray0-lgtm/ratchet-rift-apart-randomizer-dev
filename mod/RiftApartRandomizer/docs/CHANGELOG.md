@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.62-DEV9 (kit 10.0.29; dev kit, not released): round49 - the inventories are outside the hero's list
+
+tests/data/round49_rivet.log: "RANDO-KIT release v0.62-DEV8 (kit 10.0.28)", installed whole. VERIFIED IN THE GAME: the
+DEV8 budget fix - the component walk finished ("hero component list walked: 141 components"), no search was killed.
+Still no weapon records: the five candidates were all picked by class name (GameInventoryManager, GameEquipManager,
+HeroWeaponManagerLocal, HeroWeaponStateIdleReady(Local)). The inventories the events name on the hero
+(InventoryChangedEvent { Actor = 1072366, Component = 2129937 / 2129951 / 2129975 / 2129997 / 2129999 },
+GadgetItemAddedEvent { InventoryHandle = 2129937 / 2129997 }) are NOT in the hero's component list (their handles are
+below the hero's own components). 17_rando_omega.lua:
+- resolves a component handle through the SceneManager the way the game does (rivet_hook src/game/scene_manager.hpp:
+  handle = id:20 | generation:12; +0x1398 components { Component*, generation, lookupIndex }, +0x13C8 lookups
+  { Component*, ComponentInfo* }); the SceneManager comes from rando_give.dll v7 via 16_rando_spawners.lua (the same
+  one the Enemy Randomizer used in this log). Those inventories are searched first ("..., by handle");
+- also reads arrays of u32 item HANDLES (each item resolved, the weapon id looked for in the item and its prius data);
+- logs the class and first bytes of the first 4 items GadgetItemAddedEvent names ("item handle N: <class> ...") - the
+  item layout for the next round;
+- an unresolvable handle is logged once with its reason (e.g. "rando_give.dll is v5, v7 is needed").
+dev(debug).lua: END before HOME no longer only says "press HOME first" (round49 pressed it five times): it chooses the
+planet you are on and shows its room; END again warps there.
+Other round49 facts: all five purchases (Pixelizer, Glove of Doom, Bouncer, CarpetBomber, Gooner) were new weapons -
+no Challenge Mode, no Omega for sale. HeroWeaponManagerLocal holds u32 weapon types (1002 / 1011 / 1012 = the
+WeaponAddedEvent WeaponType numbers). One spawner scan was cut by the budget (16_rando_spawners.lua:274) and retried.
+Tests 901 run, 0 failures, 22 skipped (new: tests/test_v062_dev9.py; the SceneManager inventory in the simulator,
+SIM.inv_scene, is synthetic).
+
 ## v0.62-DEV8 (kit 10.0.28; dev kit, not released): round48 - the Omega search was killed by the frame budget
 
 tests/data/round48_rivet.log: "RANDO-KIT release v0.62-DEV7 (kit 10.0.27)" - the whole kit was installed this time.

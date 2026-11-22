@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.62-DEV8 dev branch (build 10.0.28) - test run 2026-11-22 19:06 UTC
+Rift Apart Randomizer v0.62-DEV9 dev branch (build 10.0.29) - test run 2026-11-22 19:22 UTC
 Python 3.13.18 on Linux
-ran 891, failures 0, errors 0, skipped 22
+ran 901, failures 0, errors 0, skipped 22
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -391,6 +391,16 @@ test_a_walk_killed_by_the_budget_continues_and_finishes (tests.test_v062_dev6.Ro
 test_no_job_runs_in_a_busy_frame (tests.test_v062_dev6.Round48BudgetTests.test_no_job_runs_in_a_busy_frame) ... ok
 test_the_log_shows_the_walk_killed (tests.test_v062_dev6.Round48BudgetTests.test_the_log_shows_the_walk_killed) ... ok
 test_every_round46_vendor_name_maps_to_the_weapon_its_purchase_named (tests.test_v062_dev6.VendorNameTests.test_every_round46_vendor_name_maps_to_the_weapon_its_purchase_named) ... ok
+test_end_before_home_chooses_this_planet_and_end_again_warps (tests.test_v062_dev9.DebugEndKeyTests.test_end_before_home_chooses_this_planet_and_end_again_warps) ... ok
+test_dev8_was_installed_whole_and_the_walk_finished (tests.test_v062_dev9.Round49LogTests.test_dev8_was_installed_whole_and_the_walk_finished) ... ok
+test_every_purchase_was_a_new_weapon_and_no_challenge_mode (tests.test_v062_dev9.Round49LogTests.test_every_purchase_was_a_new_weapon_and_no_challenge_mode) ... ok
+test_the_event_named_inventories_are_not_in_the_hero_list (tests.test_v062_dev9.Round49LogTests.test_the_event_named_inventories_are_not_in_the_hero_list) ... ok
+test_the_game_path_is_anonymised (tests.test_v062_dev9.Round49LogTests.test_the_game_path_is_anonymised) ... ok
+test_an_unresolvable_handle_is_logged_once_with_its_reason (tests.test_v062_dev9.SceneInventoryTests.test_an_unresolvable_handle_is_logged_once_with_its_reason) ... ok
+test_the_first_item_handles_are_probed_once (tests.test_v062_dev9.SceneInventoryTests.test_the_first_item_handles_are_probed_once) ... ok
+test_the_inventory_is_resolved_by_handle_and_its_item_handles_read (tests.test_v062_dev9.SceneInventoryTests.test_the_inventory_is_resolved_by_handle_and_its_item_handles_read) ... ok
+test_two_omega_purchases_teach_the_byte_through_item_handles (tests.test_v062_dev9.SceneInventoryTests.test_two_omega_purchases_teach_the_byte_through_item_handles) ... ok
+test_without_the_v7_helper_it_says_why_and_still_walks (tests.test_v062_dev9.SceneInventoryTests.test_without_the_v7_helper_it_says_why_and_still_walks) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -915,6 +925,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 891 tests in 236.128s
+Ran 901 tests in 218.173s
 
 OK (skipped=22)

@@ -4,6 +4,15 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-22: v0.62-DEV9 (kit 10.0.29) - round49: inventories outside the hero's component list
+
+tests/data/round49_rivet.log (DEV8 installed whole, game path replaced). VERIFIED IN THE GAME: DEV8's budget fix (walk
+of 141 components finished, no killed search). Found: the event-named inventories (2129937 ...) are not in the hero's
+list; HeroWeaponManagerLocal holds u32 weapon types. 17_rando_omega.lua resolves handles through the SceneManager
+(scene_manager.hpp layout, rando_give.dll v7 via RANDO_SPAWNERS.V.scene), reads u32 item-handle arrays, probes the first
+item objects. dev(debug).lua END before HOME picks the current planet. Simulator only for DEV9 (SIM.inv_scene is
+synthetic). Suite 901 run, 0 failures, 22 skipped.
+
 ## 2026-11-22: v0.62-DEV8 (kit 10.0.28) - round48: Omega search killed by the frame budget
 
 tests/data/round48_rivet.log (DEV7 installed whole, game path replaced): the component-list walk was killed 19 times

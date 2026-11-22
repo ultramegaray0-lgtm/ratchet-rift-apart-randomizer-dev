@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV8)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV9)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
@@ -48,7 +48,7 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release v0.62-DEV8 (kit 10.0.28)
+       RANDO-KIT release v0.62-DEV9 (kit 10.0.29)
        RANDO-KIT all required scripts are 10.0.24
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
      HARD STOP: if the banner says any kit other than 10.0.27, do NOT continue;
@@ -147,3 +147,14 @@ DEV8 (10.0.28) - round48: the Omega search was stopped by rivet_hook's frame bud
     then dev_scripts\dev(debug).lua. rivet.log must show "RANDO-KIT release v0.62-DEV8 (kit 10.0.28)" and
     "all 12 required scripts are 10.0.28". Look for "RANDO-OMEGA hero component list walked" and
     "RANDO-OMEGA inventory: N weapon record(s)".
+
+DEV9 (10.0.29) - round49: the inventories are not in the hero's component list
+  - Round49 confirmed the DEV8 fix in the game: the walk finished (141 components) and nothing was stopped by the
+    frame budget. But the inventories the game names by handle are not in that list, so DEV9 looks them up through
+    the SceneManager (needs the kit's rando_give.dll v7 next to RiftApart.exe - the Enemy Randomizer uses it too).
+  - Look for "RANDO-OMEGA inventory candidate ... (InventoryChangedEvent, by handle)", "item handle N: ..." and
+    "inventory: N weapon record(s)". If a line says "inventory handle ... not resolved", send the log.
+  - dev(debug).lua: END without HOME now picks the planet you are on; press END again to warp to the room shown.
+  - Teaching the Omega byte still needs a Challenge Mode save (two Omega purchases of different weapons).
+  - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
+    then dev_scripts\dev(debug).lua. rivet.log must show "RANDO-KIT release v0.62-DEV9 (kit 10.0.29)".

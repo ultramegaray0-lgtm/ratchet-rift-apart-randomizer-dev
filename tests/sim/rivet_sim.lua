@@ -638,6 +638,7 @@ function S.live_layout()
     { name = S.LIVE_INV_NAME, size = 0x200, handle = S.LIVE_INV_HANDLE, addr = S.inv_comp },
     { name = "VanityInventoryManager", size = 17640, handle = 2130078 },
   }
+  if S.inv_scene then table.remove(comps, 4) end   -- v0.62-DEV9: round49 - not in the list
   local list = base + 0x1000
   S.map(list, #comps * 0x10)
   S.put_u64(actor + 0x68, list)
@@ -659,6 +660,60 @@ function S.live_layout()
     S.put_u64(list + (i - 1) * 0x10, info)
     S.put_u64(list + (i - 1) * 0x10 + 8, c.addr)
     if c.name ~= S.LIVE_INV_NAME then S.live_by_name[c.name] = c end
+  end
+  if S.inv_scene then S.scene_layout() end
+end
+-- v0.62-DEV9 (round49, tests/data/round49_rivet.log): the inventories the events name are NOT in the hero's component
+-- list. SIMULATED: with S.inv_scene, the inventory leaves the list, it is reached only through the SceneManager
+-- (rivet_hook src/game/scene_manager.hpp: +0x1398 components { Component*, u32 generation, s32 lookupIndex },
+-- +0x13B8 componentMax, +0x13C8 lookups { Component*, ComponentInfo* }, +0x13EC lookup count; handle = id:20 |
+-- generation:12), and its array holds u32 item HANDLES; each item is a component whose prius data (+0x08) holds the
+-- weapon id (the record bytes from the id on, as in S.inv_records). The real layout is not known yet.
+S.SCENE_AT = 0x5800000000
+function S.scene_layout()
+  local sc = S.SCENE_AT
+  local comps, looks = sc + 0x100000, sc + 0x200000
+  S.map(sc + 0x1380, 0x80)
+  S.map(looks, 0x40 * 0x10)
+  S.put_u64(sc + 0x1398, comps); S.put_u32(sc + 0x13B8, 0x10000)
+  S.put_u64(sc + 0x13C8, looks); S.put_u32(sc + 0x13EC, 0x40)
+  S.put_u64(S.MB + 0x128, sc); S.put_u32(S.MB + 0x130, 1)
+  if not S.get_u64(sc + 0x75A0) or S.get_u64(sc + 0x75A0) == 0 then      -- the spawners' script variables
+    S.map(sc + 0x7500, 0x100); S.map(sc + 0x900000, 0x40 * 4)
+    S.put_u64(sc + 0x75A0, sc + 0x900000); S.put_u32(sc + 0x75BC, 4)
+  end
+  local nlook = 0
+  local function slot(h, addr, name, size)
+    local id, gen = h & 0xFFFFF, h >> 20
+    S.map(comps + id * 0x10, 0x10)
+    S.put_u64(comps + id * 0x10, addr); S.put_u32(comps + id * 0x10 + 8, gen); S.put_u32(comps + id * 0x10 + 12, nlook)
+    local info, name_at = sc + 0x300000 + nlook * 0x100, sc + 0x400000 + nlook * 0x40
+    S.map(info, 0x100); S.map(name_at, 0x40)
+    for k = 1, #name do S.mem[name_at + k - 1] = name:byte(k) end
+    S.put_u64(info + 0x60, name_at); S.put_u32(info + 0x78, size)
+    S.put_u64(looks + nlook * 0x10, addr); S.put_u64(looks + nlook * 0x10 + 8, info)
+    S.put_u32(addr + 0x1C, h)
+    nlook = nlook + 1
+  end
+  -- the inventory: its array of u32 item handles at +0x40 { ptr, count, cap }
+  local inv = S.inv_comp
+  local arr = inv + 0x1000
+  local n = #S.inv_order
+  S.map(arr, math.max(8, n * 8) + 0x40)
+  for k = 0, n * 8 + 0x3F do S.mem[arr + k] = 0 end
+  S.put_u64(inv + 0x40, arr); S.put_u32(inv + 0x48, n); S.put_u32(inv + 0x4C, n + 8)
+  slot(S.LIVE_INV_HANDLE, inv, S.LIVE_INV_NAME, 0x200)
+  S.item_handle = {}
+  for i, id in ipairs(S.inv_order) do
+    local h = 0x200000 + 0x9000 + i                  -- generation 2, slot 0x9000 + i
+    local item = 0x5A000000 + i * 0x1000
+    S.map(item, 0x80)
+    for k = 0, 0x7F do S.mem[item + k] = 0 end
+    S.put_u64(item, 0x7FF6C4C00000)
+    S.put_u64(item + 0x08, S.inv_records[id] + 0x10)   -- prius data: the record from the weapon id on
+    S.put_u32(arr + (i - 1) * 4, h)
+    slot(h, item, "WeaponItemX", 0x80)
+    S.item_handle[id] = h
   end
 end
 -- round46: an Omega purchase sends VendorPurchaseEvent alone (no PurchaseWeaponEvent, no EnteredVendorEvent)

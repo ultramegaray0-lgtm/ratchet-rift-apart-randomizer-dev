@@ -31,7 +31,7 @@
 -- Until 3. has happened nothing is ever written: an Omega reward stays "pending" (state.omega) and is
 -- set the moment the offset is known. omega_runtime = false: never written at all.
 -- NOTHING OF THIS HAS RUN IN THE GAME. Simulator only (tests/test_v1015.py).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.28"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.29"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_OMEGA = RANDO_OMEGA or {}
 local O = RANDO_OMEGA
@@ -279,6 +279,79 @@ function O.walk()
   end
   return out
 end
+
+-- v0.62-DEV9: round49 (tests/data/round49_rivet.log, DEV8 in the game): the walk finished (141 components), but none
+-- of the inventories the events name (InventoryChangedEvent { Actor = hero, Component = 2129937 / 2129951 / 2129975 /
+-- 2129997 / 2129999 }) is in the hero's component list - their handles are below the hero's own (2130019 ...). So a
+-- handle is resolved the way the game does it (rivet_hook src/game/scene_manager.hpp, ResolveComponent):
+--   handle = { id : 20 bits, generation : 12 bits };
+--   SceneManager +0x1398 SceneComponent* components { Component*, u32 generation, s32 lookupIndex } (0x10 each),
+--   +0x13B8 componentMax, +0x13C8 ComponentLookup* { Component*, ComponentInfo* type } (0x10 each), +0x13EC count.
+-- The SceneManager comes from rando_give.dll v7 through 16_rando_spawners.lua (RANDO_SPAWNERS.scene, the same one the
+-- Enemy Randomizer reads its spawner variables through). Read only.
+O.SCENE_COMPONENTS = 0x1398
+function O.scene()
+  local V = RANDO_SPAWNERS and RANDO_SPAWNERS.V
+  if not (V and V.scene) then return nil, "16_rando_spawners.lua is not installed (it finds the SceneManager)" end
+  local ok, sc, why = pcall(V.scene)
+  if not ok then return nil, tostring(sc) end
+  if type(sc) ~= "table" or not valid_ptr(sc.scene) then return nil, tostring(why or "no SceneManager") end
+  return sc.scene
+end
+O.handle_cache = {}                     -- handle -> { addr, name, size, handle } of this load
+function O.resolve(h)
+  h = math.tointeger(tonumber(h))
+  if not h or h <= 0 or h >= 0xFFFFFFFF then return nil, "not a handle" end
+  if O.handle_cache[h] then return O.handle_cache[h] end
+  local scene, why = O.scene()
+  if not scene then return nil, why end
+  local hb = read(scene + O.SCENE_COMPONENTS, 0x58)
+  if #hb < 0x58 then return nil, "the SceneManager's component table is not readable" end
+  local comps, max = tonumber(hex64(hb, 1), 16), s32(hb, 0x21)
+  local lookups, lcount = tonumber(hex64(hb, 0x31), 16), s32(hb, 0x55)
+  if not valid_ptr(comps) or max < 1 or max > 0x100000 then return nil, string.format("component table %s, max %d", tostring(comps), max) end
+  local id, gen = h & 0xFFFFF, h >> 20
+  if id >= max then return nil, string.format("handle %d: slot %d past the table (%d)", h, id, max) end
+  local e = read(comps + id * 0x10, 0x10)
+  if #e < 0x10 then return nil, "slot not readable" end
+  local addr, egen, li = tonumber(hex64(e, 1), 16), u32(e, 9), s32(e, 13)
+  if egen ~= gen then return nil, string.format("handle %d: slot generation %d, the handle's %d (gone)", h, egen, gen) end
+  if not valid_ptr(addr) then return nil, string.format("handle %d: no component in its slot", h) end
+  local ib = read(addr + 0x18, 0x08)
+  if #ib < 8 or u32(ib, 5) ~= h then return nil, string.format("handle %d: the component at %X has handle %s", h, addr, tostring(#ib >= 8 and u32(ib, 5))) end
+  local name, size = "?", 0
+  if valid_ptr(lookups) and li >= 0 and li < lcount then
+    local l = read(lookups + li * 0x10, 0x10)
+    local lc, tp = #l == 0x10 and tonumber(hex64(l, 1), 16), #l == 0x10 and tonumber(hex64(l, 9), 16)
+    if lc == addr and valid_ptr(tp) then
+      local tb = read(tp + 0x60, 0x20)
+      local np = #tb >= 0x1C and tonumber(hex64(tb, 1), 16)
+      if valid_ptr(np) then
+        local nb = read(np, 0x50)
+        if #nb == 0 then nb = read(np, 0x20) end
+        if #nb == 0 then nb = read(np, 0x10) end
+        name = cstr(nb) or "?"
+      end
+      size = #tb >= 0x1C and s32(tb, 0x19) or 0
+    end
+  end
+  local c = { addr = addr, name = name, size = size, handle = h }
+  O.handle_cache[h] = c
+  return c
+end
+-- v0.62-DEV9: an item the game named by handle (GadgetItemAddedEvent ItemHandle): its class and first bytes, and the
+-- first bytes of its prius data (+0x08), once each for a few items - the layout of an item object, for the next round
+O.ITEM_PROBES = 4
+O.item_probe_queue, O.item_probed = {}, 0
+function O.probe_item(h)
+  local c, why = O.resolve(h)
+  if not c then log("item", h, "not resolved:", why); return end
+  local function hx(b) local t = {}; for i = 1, #b do t[#t + 1] = string.format("%02X", b[i]) end; return table.concat(t, " ") end
+  local b = read(c.addr, 0x80)
+  log(string.format("item handle %d: %s size=%d at %X; its first bytes:", h, c.name, c.size, c.addr), hx(b))
+  local pp = #b >= 16 and tonumber(hex64(b, 9), 16)
+  if valid_ptr(pp) then log(string.format("item handle %d: prius data at %X:", h, pp), hx(read(pp, 0x60))) end
+end
 -- v0.62-DEV5: every inventory candidate of the live hero, in order: { addr, class, size }
 -- v0.62-DEV6: first the components an inventory event named (by handle), then every walked component whose class
 -- name looks like an inventory, then the DEV5 names
@@ -298,6 +371,15 @@ function O.components()
         O.cand_logged = O.cand_logged or {}
         O.cand_logged[c.addr] = true
         log(string.format("inventory candidate %s handle=%d size=%d at %X (%s)", c.name, c.handle, c.size or -1, c.addr, tag))
+      end
+    end
+    -- v0.62-DEV9: the inventories the events named, resolved through the SceneManager (they are not in the list)
+    for _, h in ipairs(GEN.sorted_keys(O.inv_handles)) do
+      local c, why = O.resolve(h)
+      if c then take(c, O.inv_handles[h] .. ", by handle")
+      else
+        O.unresolved = O.unresolved or {}
+        if O.unresolved[h] ~= why then O.unresolved[h] = why; log("inventory handle", h, "(" .. O.inv_handles[h] .. ") not resolved:", why) end
       end
     end
     for _, c in ipairs(walked) do if O.inv_handles[c.handle] then take(c, O.inv_handles[c.handle]) end end
@@ -380,6 +462,41 @@ local function records_inline(ptr, count)
   end
   return recs, n
 end
+-- v0.62-DEV9: an array of u32 item handles: each one resolved through the SceneManager, the weapon id looked for in the
+-- item object and in its prius data (+0x08); the id's offset is the one most items agree on
+function O.records_handles(ptr, count)
+  if not O.scene() then return nil end
+  local raw = read(ptr, count * 4)
+  if #raw < count * 4 then return nil end
+  local hits, votes = {}, {}
+  for e = 0, count - 1 do
+    local h = u32(raw, e * 4 + 1)
+    local c = (h ~= 0 and h ~= 0xFFFFFFFF) and O.resolve(h) or nil
+    if c then
+      local b = read(c.addr, O.OBJ)
+      for i = 1, #b - 7, 8 do
+        local w = O.BY_ID[hex64(b, i) or ""]
+        if w then hits[#hits + 1] = { w = w, at = c.addr + i - 1, off = i - 1 }; votes[i - 1] = (votes[i - 1] or 0) + 1 end
+      end
+      local q = #b >= 16 and tonumber(hex64(b, 9) or "0", 16) or nil
+      if q and valid_ptr(q) then
+        local b2 = read(q, 0x80)
+        for i = 1, #b2 - 7, 8 do
+          local w = O.BY_ID[hex64(b2, i) or ""]
+          if w then hits[#hits + 1] = { w = w, at = q + i - 1, off = 0x10000 + i - 1 }; votes[0x10000 + i - 1] = (votes[0x10000 + i - 1] or 0) + 1 end
+        end
+      end
+    end
+  end
+  local off, nv = nil, 0
+  for o, v in pairs(votes) do if v > nv or (v == nv and off and o < off) then off, nv = o, v end end
+  if not off then return nil end
+  local recs, n = {}, 0
+  for _, h in ipairs(hits) do
+    if h.off == off and not recs[h.w] then recs[h.w] = { id_at = h.at }; n = n + 1 end
+  end
+  return recs, n
+end
 function O.find_records()
   local list = O.components()
   if #list == 0 then
@@ -406,6 +523,7 @@ function O.find_records_in(comp, cls, header)
     if valid_ptr(ptr) and count >= 1 and count <= O.MAX_COUNT and cap >= count and cap <= 8192 then
       local recs, n = records_pointers(ptr, count)
       if not recs then recs, n = records_inline(ptr, count) end
+      if not recs then recs, n = O.records_handles(ptr, count) end   -- v0.62-DEV9
       if recs and n > bn then best, bn = { comp = comp, class = cls, array_at = o - 1, records = recs, count = n }, n end
     end
   end
@@ -701,6 +819,7 @@ end
 function O.forget(why)
   O.inv, O.snap, O.jobs = nil, nil, {}
   O.walked, O.inv_handles, O.cand_logged, O.wstate = nil, {}, nil, nil   -- v0.62-DEV6: handles change with every load
+  O.handle_cache, O.unresolved = {}, nil                                  -- v0.62-DEV9
   O.next_search = O.frame + O.SETTLE
   O.inv_why = why
 end
@@ -715,6 +834,12 @@ function O.tick(frames, ready)
   if not ready or cfg("omega_runtime") == false then return end    -- (nothing is read while loading)
   if RANDO and RANDO.frame_t0 and clock() - RANDO.frame_t0 > O.FRAME_ROOM then return end   -- v0.62-DEV8: a busy frame
   if O.jobs[1] then run_job(); return end
+  if O.item_probe_queue[1] then                                       -- v0.62-DEV9: one item probe per job
+    local h = table.remove(O.item_probe_queue, 1)
+    O.item_probed = O.item_probed + 1
+    O.start_job("probe", function() O.probe_item(h) end)
+    return
+  end
   local s = S()
   if not (s and RANDO_SEED) then return end
   if O.inv and O.refresh and O.frame >= O.next_search then
@@ -778,6 +903,8 @@ if RANDO and RANDO.subscribe then
   on("GadgetItemAddedEvent", function(f)
     local h = math.tointeger(tonumber(f.InventoryHandle))
     if h and not O.inv_handles[h] then O.inv_handles[h] = "GadgetItemAddedEvent"; O.walked = nil end
+    local ih = math.tointeger(tonumber(f.ItemHandle))
+    if ih and O.item_probed + #O.item_probe_queue < O.ITEM_PROBES then O.item_probe_queue[#O.item_probe_queue + 1] = ih end
   end)
   on("PlanetChangedEvent", function() O.forget("a planet load") end)
   on("LevelLoadedEvent", function() O.forget("a level load") end)
