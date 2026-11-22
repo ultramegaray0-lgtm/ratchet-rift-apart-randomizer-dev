@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.62-DEV5 dev branch (build 10.0.25) - test run 2026-11-21 21:31 UTC
+Rift Apart Randomizer v0.62-DEV6 dev branch (build 10.0.26) - test run 2026-11-22 18:33 UTC
 Python 3.13.18 on Linux
-ran 876, failures 0, errors 0, skipped 22
+ran 886, failures 0, errors 0, skipped 22
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -376,6 +376,16 @@ test_the_vendor_was_never_changed (tests.test_v062_dev5.Round45LogTests.test_the
 test_a_vanilla_shop_seed_never_places_a_vendor_weapon (tests.test_v062_dev5.ShopTests.test_a_vanilla_shop_seed_never_places_a_vendor_weapon) ... ok
 test_the_dev_settings_sell_the_vendors_own_weapons (tests.test_v062_dev5.ShopTests.test_the_dev_settings_sell_the_vendors_own_weapons) ... ok
 test_the_vendor_config_is_probed_read_only (tests.test_v062_dev5.ShopTests.test_the_vendor_config_is_probed_read_only) ... ok
+test_buying_a_new_weapon_teaches_nothing (tests.test_v062_dev6.LiveInventoryTests.test_buying_a_new_weapon_teaches_nothing) ... ok
+test_the_debug_compare_finds_the_byte (tests.test_v062_dev6.LiveInventoryTests.test_the_debug_compare_finds_the_byte) ... ok
+test_the_walk_finds_the_records_in_the_component_the_event_named (tests.test_v062_dev6.LiveInventoryTests.test_the_walk_finds_the_records_in_the_component_the_event_named) ... ok
+test_two_vendor_purchase_omegas_teach_the_byte_and_the_start_omega_is_set (tests.test_v062_dev6.LiveInventoryTests.test_two_vendor_purchase_omegas_teach_the_byte_and_the_start_omega_is_set) ... ok
+test_no_records_in_the_three_live_components (tests.test_v062_dev6.Round46LogTests.test_no_records_in_the_three_live_components) ... ok
+test_omega_purchases_send_vendor_purchase_alone (tests.test_v062_dev6.Round46LogTests.test_omega_purchases_send_vendor_purchase_alone) ... ok
+test_the_header_loop_overran_the_budget (tests.test_v062_dev6.Round46LogTests.test_the_header_loop_overran_the_budget) ... ok
+test_the_inventories_are_named_by_handle_on_the_hero (tests.test_v062_dev6.Round46LogTests.test_the_inventories_are_named_by_handle_on_the_hero) ... ok
+test_the_log_is_dev5_and_anonymised (tests.test_v062_dev6.Round46LogTests.test_the_log_is_dev5_and_anonymised) ... ok
+test_every_round46_vendor_name_maps_to_the_weapon_its_purchase_named (tests.test_v062_dev6.VendorNameTests.test_every_round46_vendor_name_maps_to_the_weapon_its_purchase_named) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -900,6 +910,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 876 tests in 210.942s
+Ran 886 tests in 224.764s
 
 OK (skipped=22)

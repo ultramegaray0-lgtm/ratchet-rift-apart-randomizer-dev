@@ -1,5 +1,9 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+**v0.62-DEV6 (kit 10.0.26):** round46 - Omega purchases now register: the hero's inventory components are found by
+walking its component list (the inventory events name them by handle), and an Omega purchase is recognised from
+VendorPurchaseEvent alone. Simulator only.
+
 **v0.62-DEV5 (kit 10.0.25, branch `fix/v0.62-dev5`):** round45 (the DEV4 log). Enemy template registry harvested from
 every log (+53 uids; round45 Ardolis: 49 of 51 unchanged spawns were "kind not known yet"), name-based template
 classification, pool sharks never a replacement; Omega searched in the live hero components and `start_omega`; Spybot /

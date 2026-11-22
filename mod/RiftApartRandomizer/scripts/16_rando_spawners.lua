@@ -52,7 +52,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.25"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.26"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -2043,6 +2043,22 @@ V.REG_BUILTIN = {
   ["FB26C03A606561EA"] = "enm_indigenous_poolshark|unclear|GameBotPoolShark|enemy",
   ["FCF742C70CB0FC98"] = "enm_indigenous_crab|swarmer|GameBotMeleeSwarmer|enemy",
   ["FF3A1B8465229CC2"] = "enm_pirate_bladeball|swarmer|GameBotMeleeSwarmer|enemy",
+  -- v0.62-DEV6: round46 (DEV5 in the game, Nefarious City story) - tools/harvest_enemy_uids.py
+  ["821C3FE9B6442A4C"] = "enm_neo_nefarious_swarmer|swarmer|GameBotMeleeSwarmer|enemy",
+  ["94CF97FD0E5A889C"] = "enm_neo_nefarious_melee|swarmer|GameBotMeleeSwarmer|enemy",
+  ["9871F2E07574465B"] = "enm_thugs4less_melee|swarmer|GameBotMeleeSwarmer|enemy",
+  ["9A80C9973BC5E67A"] = "enm_neo_nefarious_swarmer|swarmer|GameBotMeleeSwarmer|enemy",
+  ["A622B1F52B78F34B"] = "enm_indigenous_sandshark|swarmer|GameBotMeleeSwarmerBurrower|enemy",
+  ["ADDEDA2F8C84551E"] = "enm_neo_nefarious_shooter|ground|GameBotShooterNoFiring|enemy",
+  ["B2425BABFAF8773A"] = "enm_neo_nefarious_shooter|ground|GameBotShooterNoFiring|enemy",
+  ["B35EB0CF8C7ABC93"] = "enm_neo_nefarious_swarmer|swarmer|GameBotMeleeSwarmer|enemy",
+  ["C902F57609DFC35D"] = "enm_thugs4less_shooter|ground|GameBotShooter|enemy",
+  ["CA3F1B7506A93E9E"] = "enm_thugs4less_shooter|ground|GameBotShooter|enemy",
+  ["CB9B101E739C0B0A"] = "enm_neo_nefarious_melee|swarmer|GameBotMeleeSwarmer|enemy",
+  ["D45AF4FCC5A6FF82"] = "veh_thug_dropship|large|GameBotShooterArmoredTransport|boss",
+  ["D64B49443C3246E4"] = "veh_thug_dropship_shooter|large|GameBotShooterArmoredTransport|boss",
+  ["F04DE470088CD346"] = "enm_neo_nefarious_shooter|ground|GameBotShooterNoFiring|enemy",
+  ["FBEC48BA70BCAB89"] = "veh_thug_dropship|large|GameBotShooterArmoredTransport|boss",
 }
 -- every uid the registry knows (the save's and the built-in ones)
 function V.reg_uids()

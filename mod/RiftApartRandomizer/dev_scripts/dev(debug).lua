@@ -29,7 +29,7 @@
 --   probe       script-node probe (NUMPAD3-9) with its data (vtables, item ids)              OFF: research only
 --   spawnprobe  read-only spawner evidence (RANDO-SPAWNPROBE)            OFF: it can exceed the 8 ms frame budget
 --   spawnproof  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF) OFF: stands down while the Enemy Randomizer is on
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(debug)"] = "10.0.25"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(debug)"] = "10.0.26"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_DEV_DEBUG = RANDO_DEV_DEBUG or {}
 local DBG = RANDO_DEV_DEBUG
@@ -410,7 +410,7 @@ local function pname(pid) return (RANDO and RANDO.planet_name and RANDO.planet_n
 local function now() return (rivet.time and rivet.time()) or 0 end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 
-TT.VERSION = "10.0.25"
+TT.VERSION = "10.0.26"
 local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 TT.WINDOW = 180              -- seconds a trip waits for its landing
 TT.POINTS = 12               -- landing points offered per planet (catalog)

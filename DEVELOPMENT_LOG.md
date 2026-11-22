@@ -4,6 +4,17 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-22: v0.62-DEV6 (kit 10.0.26) - branch fix/v0.62-dev5 (continued)
+
+Log: tests/data/round46_rivet.log (DEV5 in the game, anonymised). Player report: "bought Omegas and used NUMPAD1/2,
+nothing registers". Confirmed from the log: no weapon records found in any searched component (so the NUMPAD tools
+could not work either), Omega purchases send VendorPurchaseEvent alone, EnteredVendorEvent never fires, the search
+overran the frame budget. Fixed in 17_rando_omega.lua (component-list walk + handles from inventory events, learning
+from VendorPurchaseEvent, periodic reads, pauses); details in docs/CHANGELOG.md. Other round46 facts: Enemy Randomizer
+changed Nefarious City story factories (e.g. 18 in one scan; 15 new uids harvested), the start Omega (Ricochet) was
+received and given its weapon, collectibles: no Spybot pickup in this log. VERIFIED IN THE GAME: nothing of DEV6.
+Suite 886 run, 0 failures, 22 skipped.
+
 ## 2026-11-22: v0.62-DEV5 (kit 10.0.25) - branch fix/v0.62-dev5 (from fix/v0.62-verified-dev-package = the DEV4 kit)
 
 Log: tests/data/round45_rivet.log (the player's DEV4 kit in the game; game path replaced). Read in full. The same log

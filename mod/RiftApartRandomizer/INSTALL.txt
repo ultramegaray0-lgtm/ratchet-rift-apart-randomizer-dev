@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV5)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV6)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
@@ -48,10 +48,10 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release v0.62-DEV5 (kit 10.0.25)
+       RANDO-KIT release v0.62-DEV6 (kit 10.0.26)
        RANDO-KIT all required scripts are 10.0.24
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
-     HARD STOP: if the banner says any kit other than 10.0.25, do NOT continue;
+     HARD STOP: if the banner says any kit other than 10.0.26, do NOT continue;
      that is not this package. This artifact is one directly extractable ZIP; do not combine it
      with an older folder or nested ZIP.
 
@@ -110,3 +110,17 @@ DEV5 (10.0.25) - round45 (the DEV4 log)
   - Travel: choosing a planet in the ship's menu while the 12 s trip back to Nefarious City waited no longer warps you
     back when the destination's planet could not be named (the v0.61 repair needed a known planet).
 
+
+DEV6 (10.0.26) - round46 (the DEV5 log): Omega purchases now register
+  - Why nothing registered in DEV5: (1) the weapon records were searched in GameInventoryManager /
+    HeroWeaponManagerLocal / GameEquipManager and are in none of them - your log names the real inventories only by
+    handle (InventoryChangedEvent Component=2129937 ...), so NUMPAD1 / NUMPAD2 answered "no weapon records" too;
+    (2) an Omega purchase sends only VendorPurchaseEvent (no PurchaseWeaponEvent, which the learning listened to);
+    (3) EnteredVendorEvent never comes, so the "before" read was never taken; (4) the search overran the frame budget.
+  - Now: the hero's own component list is walked (read only) and the components the inventory events name are
+    searched first; the records are read as soon as they are found and every few seconds; a VendorPurchaseEvent of a
+    weapon you already own (no PurchaseWeaponEvent after it) is an Omega purchase and is compared with that read.
+  - To teach it: buy Omegas of TWO different weapons at Ms. Zurkon, a few seconds apart. rivet.log shows
+    "RANDO-OMEGA inventory: N weapon record(s) in ...", "Omega purchase seen: ...", "Omega purchase 1 of 2 ..." and
+    "LEARNED: the Omega flag is the byte at +0x..". Or with dev(debug).lua: NUMPAD1, buy one Omega, NUMPAD2,
+    Ctrl+NUMPAD2 (wait for "N weapon records read" after NUMPAD1).

@@ -562,6 +562,13 @@ function rivet.component(actor, class)
   if cls and cls == class then
     return { address = string.format("%X", 0x30000000 + actor * 0x100), size = 0x400, handle = actor * 10 }
   end
+  -- v0.62-DEV6: round46's live hero (S.inv_live): no inventory by name; GameInventoryManager answers (the anchor)
+  if S.inv_live and actor == S.hero_handle then
+    S.live_layout()
+    local c = S.live_by_name[class]
+    if c then return { address = string.format("%X", c.addr), size = c.size, handle = c.handle } end
+    return nil
+  end
   -- dev 10.15: the hero's inventory component
   if S.inventory_component and actor == S.hero_handle and class == S.INV_CLASS then
     S.inv_layout()
@@ -613,6 +620,58 @@ function S.inv_layout()
     local obj = S.inv_records[id]
     S.put_u64(arr + (i - 1) * 8, obj)
   end
+end
+-- v0.62-DEV6: the live layout (rivet_hook src/game/actor.hpp + ddl.hpp): an Actor with a ComponentPointer list
+-- { ComponentInfo*, Component* }, ComponentInfo +0x60 name / +0x78 size, Component +0x10 actor / +0x1C handle.
+-- The weapon records live in a component whose class name the randomizer does not know (SIMULATED name
+-- "HeroItemInventoryX"); InventoryChangedEvent names its handle. Records: the inventory array as in S.inv_layout.
+S.LIVE_INV_NAME, S.LIVE_INV_HANDLE = "HeroItemInventoryX", 2129937
+function S.live_layout()
+  S.inv_layout()
+  local base = 0x52000000
+  local actor = base
+  S.map(actor, 0x100)
+  local comps = {
+    { name = "AimAngleGeneratorLocal", size = 0x80, handle = 2129930 },
+    { name = "GameInventoryManager", size = 8552, handle = 2130064 },
+    { name = "HeroWeaponManagerLocal", size = 2080, handle = 2130073 },
+    { name = S.LIVE_INV_NAME, size = 0x200, handle = S.LIVE_INV_HANDLE, addr = S.inv_comp },
+    { name = "VanityInventoryManager", size = 17640, handle = 2130078 },
+  }
+  local list = base + 0x1000
+  S.map(list, #comps * 0x10)
+  S.put_u64(actor + 0x68, list)
+  S.mem[actor + 0x70], S.mem[actor + 0x71] = #comps, 0
+  S.live_by_name = {}
+  for i, c in ipairs(comps) do
+    local info = base + 0x2000 + i * 0x100
+    S.map(info, 0x100)
+    local name_at = base + 0x8000 + i * 0x40
+    S.map(name_at, 0x40)
+    for k = 1, #c.name do S.mem[name_at + k - 1] = c.name:byte(k) end
+    S.put_u64(info + 0x60, name_at)
+    S.put_u32(info + 0x78, c.size)
+    if not c.addr then c.addr = base + 0x10000 + i * 0x4000; S.map(c.addr, math.min(c.size, 0x2200)) end
+    if c.addr ~= S.inv_comp then S.map(c.addr, math.min(c.size, 0x2200)) end
+    S.map(c.addr, 0x48)
+    S.put_u64(c.addr + 0x10, actor)
+    S.put_u32(c.addr + 0x1C, c.handle)
+    S.put_u64(list + (i - 1) * 0x10, info)
+    S.put_u64(list + (i - 1) * 0x10 + 8, c.addr)
+    if c.name ~= S.LIVE_INV_NAME then S.live_by_name[c.name] = c end
+  end
+end
+-- round46: an Omega purchase sends VendorPurchaseEvent alone (no PurchaseWeaponEvent, no EnteredVendorEvent)
+function S.inv_event()
+  if S.inv_live then return { Actor = S.hero_handle, Component = S.LIVE_INV_HANDLE } end
+  return {}
+end
+function S.buy_omega_live(id, vendor_name)
+  if not S.weapons_owned[id] then return false end
+  S.set_omega(id, 1)
+  S.emit("VendorPurchaseEvent", { ShowRemapTutorial = false, WeaponName = vendor_name })
+  S.step(1)
+  return true
 end
 function S.inv_add(id)
   if S.inv_records[id] then return end
@@ -710,25 +769,25 @@ function S.apply_give(id)
   if kind == "weapon" then
     if S.weapons_owned[id] then
       if S.give_resets_omega and S.inv_records[id] then S.set_omega(id, 0) end   -- dev 10.15: worst case (SIMULATED)
-      if S.inv_changed_on_owned then S.emit("InventoryChangedEvent", {}) end
+      if S.inv_changed_on_owned then S.emit("InventoryChangedEvent", S.inv_event()) end
       return "owned"
     end
     S.weapons_owned[id] = true
     S.inv_add(id)
     S.emit("WeaponAddedEvent", { WeaponType = S.weapon_type_of(id) })
-    S.emit("InventoryChangedEvent", {})
+    S.emit("InventoryChangedEvent", S.inv_event())
     return "added"
   elseif kind == "gadget" then
     if S.gadgets_owned[id] then return "owned" end
     S.gadgets_owned[id] = true
     S.emit("GadgetItemAddedEvent", { ConfigTypeHash = S.gadget_type[id], InventoryHandle = 77, ItemHandle = 9000 + #S.give_log })
-    S.emit("InventoryChangedEvent", {})
+    S.emit("InventoryChangedEvent", S.inv_event())
     return "added"
   elseif kind == "currency" then
     local n = S.last_count or 1
     S.currency[id] = (S.currency[id] or 0) + n
     S.emit(S.currency_event and S.currency_event[id] or "GainBoltEvent", { NewBolts = n })
-    S.emit("InventoryChangedEvent", {})
+    S.emit("InventoryChangedEvent", S.inv_event())
     return "added"
   end
   return "unknown"

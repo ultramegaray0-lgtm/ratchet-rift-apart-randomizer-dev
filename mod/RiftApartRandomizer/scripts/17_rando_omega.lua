@@ -31,7 +31,7 @@
 -- Until 3. has happened nothing is ever written: an Omega reward stays "pending" (state.omega) and is
 -- set the moment the offset is known. omega_runtime = false: never written at all.
 -- NOTHING OF THIS HAS RUN IN THE GAME. Simulator only (tests/test_v1015.py).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.25"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.26"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_OMEGA = RANDO_OMEGA or {}
 local O = RANDO_OMEGA
@@ -130,6 +130,7 @@ local function s32(b, i)
   return v
 end
 local function valid_ptr(p) return p and p > 0x10000 and p < 0x7FFFFFFFFFFF and p % 8 == 0 end
+O.hex64, O.valid_ptr = hex64, valid_ptr
 local function gcd(a, b) while b ~= 0 do a, b = b, a % b end; return a end
 
 -- ---- 1 + 2: the inventory component and its weapon records ------------------------------------
@@ -178,11 +179,121 @@ function O.component()
   if list[1] then return list[1].addr, list[1].class, list[1].size end
   return nil, "the hero has no component " .. table.concat(O.CLASSES, " / ") .. " / " .. table.concat(O.CLASSES_LIVE, " / ")
 end
+-- v0.62-DEV6: round46 (tests/data/round46_rivet.log, DEV5 in the game): none of GameInventoryManager /
+-- HeroWeaponManagerLocal / GameEquipManager holds the weapon records, and the hero's real inventories are components
+-- the name list never reached: InventoryChangedEvent { Actor = hero, Component = 2129937 / 2129951 / 2129975 /
+-- 2129997 } and GadgetItemAddedEvent { InventoryHandle = 2129937 } name them by HANDLE (the probe saw 47 of the
+-- hero's 132 component names: rivet.log cut the line). So the hero's own component list is walked, the way
+-- rivet_hook itself does it (src/game/actor.hpp, src/game/ddl.hpp, develop branch):
+--   component instance +0x10 = its Actor*, +0x1C = its handle, +0x25 = flags (2 = destroyed);
+--   Actor +0x68 = ComponentPointer* { ComponentInfo* type, Component* instance } (0x10 each), +0x70 = count (u16);
+--   ComponentInfo +0x60 = char* name, +0x78 = int32 instance size.
+-- It starts from a component rivet.component() answers (GameInventoryManager), reads only, and checks that the walk
+-- finds that same component again. Its result: every component's class, handle, address and size.
+O.WALK_ANCHORS = { "GameInventoryManager", "GameEquipManager", "HeroWeaponManagerLocal" }
+O.COMP_HINT = { "Inventor", "Item", "Weapon", "Loadout", "Equip", "Ammo" }
+O.COMP_SKIP = { "Vanity", "Anim", "StateMap", "Aim", "Damage", "Camera" }
+O.inv_handles = O.inv_handles or {}   -- component handle -> why (an inventory event named it on the hero)
+O.walked = nil                        -- the walk of this load: { [i] = { name, addr, size, handle } }
+local function u16(b, i) return b[i] + b[i + 1] * 0x100 end
+local function u32(b, i) return b[i] + b[i + 1] * 0x100 + b[i + 2] * 0x10000 + b[i + 3] * 0x1000000 end
+local function cstr(b)
+  local t = {}
+  for i = 1, #b do
+    if b[i] == 0 then break end
+    if b[i] < 32 or b[i] > 126 then return nil end
+    t[#t + 1] = string.char(b[i])
+  end
+  return #t > 0 and table.concat(t) or nil
+end
+function O.walk()
+  if O.walked then return O.walked end
+  local hero = rivet.hero and rivet.hero()
+  if not hero then return nil, "no hero" end
+  local anchor
+  for _, cls in ipairs(O.WALK_ANCHORS) do
+    local ok, c = pcall(rivet.component, hero, cls)
+    if ok and type(c) == "table" and c.address then anchor = tonumber(tostring(c.address), 16); if anchor then break end end
+  end
+  if not anchor then return nil, "no anchor component" end
+  local hexp = function(b, i) local h = O.hex64(b, i); return h and tonumber(h, 16) end
+  local ab = read(anchor + 0x10, 8)
+  local actor = #ab == 8 and hexp(ab, 1)
+  if not O.valid_ptr(actor) then return nil, "the anchor's actor pointer is not readable" end
+  local hb = read(actor + 0x68, 0x10)
+  if #hb < 0x10 then return nil, "the actor's component list is not readable" end
+  local list, count = hexp(hb, 1), u16(hb, 9)
+  if not O.valid_ptr(list) or count < 1 or count > 1024 then return nil, string.format("component list %s, count %d", tostring(list), count) end
+  local arr = read(list, count * 0x10)
+  local out, seen_anchor = {}, false
+  for k = 0, count - 1 do
+    local tp, inst = hexp(arr, k * 16 + 1), hexp(arr, k * 16 + 9)
+    if O.valid_ptr(tp) and O.valid_ptr(inst) then
+      local tb = read(tp + 0x60, 0x20)
+      local np = #tb >= 0x1C and hexp(tb, 1)
+      local name = nil
+      if O.valid_ptr(np) then                        -- a short name at the end of readable memory: try shorter reads
+        local nb = read(np, 0x50)
+        if #nb == 0 then nb = read(np, 0x20) end
+        if #nb == 0 then nb = read(np, 0x10) end
+        name = cstr(nb)
+      end
+      local ib = read(inst + 0x18, 0x10)
+      if name and #ib >= 0x0E then
+        local destroyed = (ib[0x0E] or 0) & 2 ~= 0
+        if not destroyed then
+          out[#out + 1] = { name = name, addr = inst, size = s32(tb, 0x19), handle = u32(ib, 5) }
+          if inst == anchor then seen_anchor = true end
+        end
+      end
+    end
+    O.pause()
+  end
+  if not seen_anchor then return nil, "the walk did not find its own anchor again - layout differs; nothing used" end
+  O.walked = out
+  if not O.walk_logged then
+    O.walk_logged = true
+    log(string.format("hero component list walked: %d components (actor %X)", #out, actor))
+    local line = {}
+    for i, c in ipairs(out) do
+      line[#line + 1] = c.name
+      if #line == 12 or i == #out then log("hero components:", table.concat(line, ", ")); line = {} end
+    end
+  end
+  return out
+end
 -- v0.62-DEV5: every inventory candidate of the live hero, in order: { addr, class, size }
+-- v0.62-DEV6: first the components an inventory event named (by handle), then every walked component whose class
+-- name looks like an inventory, then the DEV5 names
 function O.components()
   local out = {}
   local hero = rivet.hero and rivet.hero()
   if not hero then return out end
+  local have = {}
+  local walked, why = O.walk()
+  if walked then
+    local function take(c, tag)
+      if have[c.addr] then return end
+      have[c.addr] = true
+      local size = math.max(O.HEADER, math.min(c.size or 0, O.MAX_HEADER))
+      out[#out + 1] = { addr = c.addr, class = c.name .. "#" .. c.handle, size = size }
+      if not (O.cand_logged or {})[c.addr] then
+        O.cand_logged = O.cand_logged or {}
+        O.cand_logged[c.addr] = true
+        log(string.format("inventory candidate %s handle=%d size=%d at %X (%s)", c.name, c.handle, c.size or -1, c.addr, tag))
+      end
+    end
+    for _, c in ipairs(walked) do if O.inv_handles[c.handle] then take(c, O.inv_handles[c.handle]) end end
+    for _, c in ipairs(walked) do
+      local hit, skip = false, false
+      for _, h in ipairs(O.COMP_HINT) do if c.name:find(h, 1, true) then hit = true end end
+      for _, k in ipairs(O.COMP_SKIP) do if c.name:find(k, 1, true) then skip = true end end
+      if hit and not skip then take(c, "its class name") end
+    end
+  elseif why and why ~= O.walk_why then
+    O.walk_why = why
+    log("hero component list not walked:", why)
+  end
   local function add(cls, header)
     local ok, c = pcall(rivet.component, hero, cls)
     if ok and type(c) == "table" and c.address then
@@ -191,8 +302,10 @@ function O.components()
       if a then out[#out + 1] = { addr = a, class = cls, size = header or math.max(O.HEADER, math.min(size, O.MAX_HEADER)) } end
     end
   end
-  for _, cls in ipairs(O.CLASSES) do add(cls, O.HEADER) end
-  for _, cls in ipairs(O.CLASSES_LIVE) do add(cls) end
+  if #out == 0 then
+    for _, cls in ipairs(O.CLASSES) do add(cls, O.HEADER) end
+    for _, cls in ipairs(O.CLASSES_LIVE) do add(cls) end
+  end
   if #out == 0 then O.component_diagnostic(hero) end
   return out
 end
@@ -206,9 +319,19 @@ local function records_pointers(ptr, count)
     if p and p ~= 0 then
       if not valid_ptr(p) then return nil end
       local b = read(p, O.OBJ)
+      local found = false
       for i = 1, #b - 7, 8 do
         local w = O.BY_ID[hex64(b, i) or ""]
-        if w then hits[#hits + 1] = { w = w, at = p + i - 1, off = i - 1 }; votes[i - 1] = (votes[i - 1] or 0) + 1 end
+        if w then hits[#hits + 1] = { w = w, at = p + i - 1, off = i - 1 }; votes[i - 1] = (votes[i - 1] or 0) + 1; found = true end
+      end
+      -- v0.62-DEV6: an item object whose id is in the prius data it points to (+0x08, like every component)
+      local q = (not found) and #b >= 16 and tonumber(hex64(b, 9) or "0", 16) or nil
+      if q and valid_ptr(q) then
+        local b2 = read(q, 0x40)
+        for i = 1, #b2 - 7, 8 do
+          local w = O.BY_ID[hex64(b2, i) or ""]
+          if w then hits[#hits + 1] = { w = w, at = q + i - 1, off = 0x10000 + i - 1 }; votes[0x10000 + i - 1] = (votes[0x10000 + i - 1] or 0) + 1 end
+        end
       end
     end
   end
@@ -260,6 +383,7 @@ function O.find_records_in(comp, cls, header)
   if #head < 0x40 then return nil, "inventory component not readable (" .. cls .. ")" end
   local best, bn = nil, 0
   for o = 1, #head - 15, 8 do
+    if o % 64 == 1 then O.pause() end                -- v0.62-DEV6: round46 overran the budget here 60+ times
     local ptr = tonumber(hex64(head, o) or "0", 16)
     local count, cap = s32(head, o + 8), s32(head, o + 12)
     if valid_ptr(ptr) and count >= 1 and count <= O.MAX_COUNT and cap >= count and cap <= 8192 then
@@ -325,9 +449,9 @@ function O.on_vendor_entered()
   end)
 end
 -- a purchase of a weapon already owned when you entered: an Omega (learn the byte from it)
-function O.on_purchase(weapon_name)
-  local item = RANDO_REAL and RANDO_REAL.weapon_item and RANDO_REAL.weapon_item(weapon_name)
-  local w = item and item:sub(8)
+function O.on_purchase(weapon_name, known_w)
+  local item = (not known_w) and RANDO_REAL and RANDO_REAL.weapon_item and RANDO_REAL.weapon_item(weapon_name)
+  local w = known_w or (item and item:sub(8))
   local snap = O.snap
   if not (w and snap and snap.bytes[w]) then return end
   O.start_job("learn", function()
@@ -352,8 +476,65 @@ function O.on_purchase(weapon_name)
     end
     snap.bytes[w] = after                              -- a second purchase in the same visit compares to this
     O.learn(w, cands)
+    O.next_resnap = O.frame + O.OMEGA_WAIT
   end)
 end
+-- v0.62-DEV6: round46 (DEV5 in the game): an Omega purchase at Ms. Zurkon sends ONLY VendorPurchaseEvent
+-- { WeaponName = "MagShield" } (and "Warmonger") - no PurchaseWeaponEvent, no WeaponAddedEvent - and
+-- EnteredVendorEvent never came in 20 purchases. So: the records are read (O.snap) as soon as they are found and
+-- again after every check and purchase, and a VendorPurchaseEvent for a weapon that is already in that read and
+-- brings no PurchaseWeaponEvent within O.OMEGA_WAIT frames is an Omega purchase.
+O.OMEGA_WAIT = 20
+O.VENDOR_ALIAS = { GOONER = "sheepinator", MRZURKON = "zurkon" }  -- round46 pairs VendorPurchase -> PurchaseWeapon
+O.vendor_pending = {}
+local function norm(t) return (tostring(t or "")):upper():gsub("[^%w]", "") end
+O.BY_VENDOR = {}
+for w in pairs(O.ID_OF) do
+  local it = DB.items["weapon:" .. w]
+  local base = it and it.config and it.config:match("wpn_(.-)_item%.config")
+  if base then O.BY_VENDOR[norm(base)] = w end
+  O.BY_VENDOR[norm(w)] = O.BY_VENDOR[norm(w)] or w
+end
+function O.weapon_of_vendor_name(name)
+  local n = norm(name)
+  local alias = O.VENDOR_ALIAS[n]
+  if alias and O.ID_OF[alias] then return alias end
+  return O.BY_VENDOR[n]
+end
+function O.on_vendor_purchase(name)
+  local w = O.weapon_of_vendor_name(name)
+  if not w then return end
+  O.vendor_pending[w] = { at = O.frame, name = name }
+end
+function O.on_weapon_purchase(weapon_name)
+  -- a weapon bought (not an Omega): forget the pending vendor purchase of it, read the records again later
+  local item = RANDO_REAL and RANDO_REAL.weapon_item and RANDO_REAL.weapon_item(weapon_name)
+  local w = item and item:sub(8)
+  if w then O.vendor_pending[w] = nil end
+  for k, v in pairs(O.vendor_pending) do if O.frame - v.at <= O.OMEGA_WAIT then O.vendor_pending[k] = nil end end
+end
+function O.vendor_tick()
+  for w, v in pairs(O.vendor_pending) do
+    if O.frame - v.at >= O.OMEGA_WAIT then
+      O.vendor_pending[w] = nil
+      if O.snap and O.snap.bytes[w] then
+        log("Omega purchase seen: " .. tostring(v.name) .. " (" .. w .. ") - its record is compared with the read before it")
+        O.on_purchase(nil, w)
+      else
+        log("a purchase of " .. tostring(v.name) .. " without a weapon record read before it - nothing learned" ..
+            (O.inv and "" or " (the weapon records are not found yet)"))
+      end
+    end
+  end
+end
+function O.take_snapshot(why)
+  if not O.inv then return end
+  O.start_job("snapshot", function()
+    if not O.inv then return end
+    O.snap = { inv = O.inv, bytes = snapshot(O.inv), why = why }
+  end)
+end
+
 function O.learn(w, cands)
   local s = S(); if not s then return end
   local prev = type(s.omega_cal) == "table" and s.omega_cal or nil
@@ -498,6 +679,7 @@ end
 
 function O.forget(why)
   O.inv, O.snap, O.jobs = nil, nil, {}
+  O.walked, O.inv_handles, O.cand_logged = nil, {}, nil   -- v0.62-DEV6: handles change with every load
   O.next_search = O.frame + O.SETTLE
   O.inv_why = why
 end
@@ -527,6 +709,7 @@ function O.tick(frames, ready)
         O.inv = inv
         log(string.format("inventory: %d weapon record(s) in %s (array at +0x%X)", inv.count, inv.class, inv.array_at))
         O.dump_records(inv)
+        O.snap = { inv = inv, bytes = snapshot(inv), why = "found" }   -- v0.62-DEV6: the read an Omega purchase is compared with
         O.read_game_omega()
         O.pass("after a load")
         O.next_keep = O.frame + O.KEEP_EVERY
@@ -540,6 +723,12 @@ function O.tick(frames, ready)
   if O.frame >= O.next_keep and O.offset() then
     O.next_keep = O.frame + O.KEEP_EVERY
     O.start_job("keep", function() O.pass("check") end)
+  end
+  -- v0.62-DEV6: Omega purchases (VendorPurchaseEvent alone) and a fresh read of the records for the next one
+  if next(O.vendor_pending) then O.vendor_tick(); return end
+  if not O.offset() and (O.frame >= (O.next_resnap or 0)) then
+    O.next_resnap = O.frame + O.KEEP_EVERY // 2
+    O.take_snapshot("periodic")
   end
 end
 
@@ -560,14 +749,28 @@ if RANDO and RANDO.subscribe then
     end)
   end
   on("EnteredVendorEvent", function() O.on_vendor_entered() end)
-  on("ExitedVendorEvent", function() O.snap = nil end)
-  on("PurchaseWeaponEvent", function(f) O.on_purchase(f.WeaponName) end)
+  -- v0.62-DEV6: leaving the vendor no longer drops the read (EnteredVendorEvent never came in round46)
+  on("PurchaseWeaponEvent", function(f) O.on_weapon_purchase(f.WeaponName); O.on_purchase(f.WeaponName) end)
+  on("VendorPurchaseEvent", function(f) O.on_vendor_purchase(f.WeaponName) end)
+  -- v0.62-DEV6: the hero's inventories by handle (round46: Component 2129937 ... on the hero, never by name)
+  on("GadgetItemAddedEvent", function(f)
+    local h = math.tointeger(tonumber(f.InventoryHandle))
+    if h and not O.inv_handles[h] then O.inv_handles[h] = "GadgetItemAddedEvent"; O.walked = nil end
+  end)
   on("PlanetChangedEvent", function() O.forget("a planet load") end)
   on("LevelLoadedEvent", function() O.forget("a level load") end)
   -- a weapon added: its record is new, so the records are searched again (soon, not in the event)
   on("WeaponAddedEvent", function() O.refresh = true; O.next_search = math.min(O.next_search, O.frame + O.REFRESH) end)
   -- the inventory changed (a give of a weapon you own reports only this): look at the flags soon
-  on("InventoryChangedEvent", function() O.next_keep = math.min(O.next_keep, O.frame + O.REFRESH) end)
+  on("InventoryChangedEvent", function(f)
+    O.next_keep = math.min(O.next_keep, O.frame + O.REFRESH)
+    local hero = rivet.hero and rivet.hero()
+    local h = math.tointeger(tonumber(f.Component))
+    if h and hero and math.tointeger(tonumber(f.Actor)) == hero and not O.inv_handles[h] then
+      O.inv_handles[h] = "InventoryChangedEvent"
+      if not O.inv then O.next_search = math.min(O.next_search, O.frame + O.REFRESH) end
+    end
+  end)
   log("loaded (Omega flag " .. (O.offset() and "known" or "not learned yet") .. ")")
 else
   log("RANDO-ERROR 10_rando_runtime.lua is missing: Omega versions stay records only")

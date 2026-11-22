@@ -163,3 +163,13 @@ until the real inventory record and Omega byte are identified in-game.
   candidate as this save's flag. Or set `omega_flag_offset` in 04 once the byte is known.
 - Still not seen in the game: whether one of these components holds the records, and whether the game honours a flag
   set from outside (levels 6-10, the Omega name).
+
+
+## v0.62-DEV6 (kit 10.0.26): why round46's purchases taught nothing, and what changed
+
+See CHANGELOG "v0.62-DEV6". In short: wrong components searched (the inventories are found by handle now, through the
+hero's own component list), the wrong purchase event (Omega = VendorPurchaseEvent alone), a "before" read that was never
+taken (EnteredVendorEvent does not come; the read is taken when the records are found and refreshed), and a search that
+overran the frame budget. To teach the byte: buy Omegas of two different weapons, a few seconds apart, and look for
+"RANDO-OMEGA LEARNED". If rivet.log still says "inventory not found", send it: it now lists every hero component
+("hero components: ...", 12 per line) and each searched candidate with its handle.

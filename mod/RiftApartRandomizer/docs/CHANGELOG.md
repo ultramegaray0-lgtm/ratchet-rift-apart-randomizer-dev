@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.62-DEV6 (kit 10.0.26; dev kit, not released): round46 - Omega purchases did not register
+
+Log: tests/data/round46_rivet.log (DEV5 in the game). The player bought Omega MagShield and Omega Warmonger and used
+dev(debug).lua NUMPAD1 / NUMPAD2 many times; nothing was learned. Four causes, all in the log:
+1. "no array of weapon records" in GameInventoryManager / HeroWeaponManagerLocal / GameEquipManager on every load (and so
+   "[DEBUG] Omega: no weapon records" on every NUMPAD press). The hero's real inventories are named only by handle:
+   InventoryChangedEvent { Actor = 1072366 = the hero, Component = 2129937 / 2129951 / 2129975 / 2129997 / 2129999 },
+   GadgetItemAddedEvent { InventoryHandle = 2129937 }; the probe's name list was cut by rivet.log after 47 of 132.
+2. An Omega purchase sends ONLY VendorPurchaseEvent { WeaponName = "MagShield" } - no PurchaseWeaponEvent, which
+   O.on_purchase listened to.
+3. EnteredVendorEvent never came (20 purchases), so the "before" read was never taken.
+4. The search's header loop overran the 8 ms budget 60+ times (17_rando_omega.lua:263), killing the job.
+Fixes (17_rando_omega.lua): O.walk() reads the hero's own component list with rivet_hook's documented layout
+(Component +0x10 Actor*, +0x1C handle, +0x25 flags; Actor +0x68 list / +0x70 count; ComponentInfo +0x60 name /
++0x78 size), from an anchor rivet.component() answers and only if the walk finds that anchor again; the components the
+inventory events name are searched first, then every walked class name that looks like an inventory; a second pointer
+hop (item object -> its prius data at +0x08). Learning: the records are read when found and every ~5 s while the flag is
+unknown; a VendorPurchaseEvent of an owned weapon with no PurchaseWeaponEvent within 20 frames is an Omega purchase
+(O.weapon_of_vendor_name maps the vendor's names; round46's pairs are a test). The header loop pauses.
+Also: +15 enemy template uids from round46. Tests: tests/test_v062_dev6.py (10; a simulated live layout with an
+INVENTED inventory class name). Suite 886 run, 0 failures, 22 skipped. Not run in the game.
+
+
 ## v0.62-DEV5 (kit 10.0.25; dev kit, not released): round45 (the DEV4 log)
 
 Asked: randomize every enemy that can be randomized (round45: 7%), Omega in the pool and one Omega at the start, Spybots

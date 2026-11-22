@@ -4,7 +4,7 @@
 -- NEW seed with its own progress: start it with New Game. Lines starting with -- are notes; to
 -- change an option, remove the -- in front of it and edit the value. A wrong value is reported in
 -- rivet.log (search RANDO-SETTINGS) and the default is used instead.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.25"   -- version check (do not edit)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.26"   -- version check (do not edit)
 RANDO_SETTINGS = {
   -- THE SEED: "random" = the companion picks one and remembers it. Any other text is a fixed seed
   -- (the same text and settings give the same seed on every PC), e.g. "lombax-ryno-2026".
