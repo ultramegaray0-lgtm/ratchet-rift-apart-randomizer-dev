@@ -31,7 +31,7 @@
 -- Until 3. has happened nothing is ever written: an Omega reward stays "pending" (state.omega) and is
 -- set the moment the offset is known. omega_runtime = false: never written at all.
 -- NOTHING OF THIS HAS RUN IN THE GAME. Simulator only (tests/test_v1015.py).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.26"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.27"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_OMEGA = RANDO_OMEGA or {}
 local O = RANDO_OMEGA

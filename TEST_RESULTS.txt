@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.62-DEV6 dev branch (build 10.0.26) - test run 2026-11-22 18:33 UTC
+Rift Apart Randomizer v0.62-DEV7 dev branch (build 10.0.27) - test run 2026-11-22 18:47 UTC
 Python 3.13.18 on Linux
-ran 886, failures 0, errors 0, skipped 22
+ran 888, failures 0, errors 0, skipped 22
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -385,6 +385,8 @@ test_omega_purchases_send_vendor_purchase_alone (tests.test_v062_dev6.Round46Log
 test_the_header_loop_overran_the_budget (tests.test_v062_dev6.Round46LogTests.test_the_header_loop_overran_the_budget) ... ok
 test_the_inventories_are_named_by_handle_on_the_hero (tests.test_v062_dev6.Round46LogTests.test_the_inventories_are_named_by_handle_on_the_hero) ... ok
 test_the_log_is_dev5_and_anonymised (tests.test_v062_dev6.Round46LogTests.test_the_log_is_dev5_and_anonymised) ... ok
+test_a_newer_developer_file_names_the_old_scripts_folder (tests.test_v062_dev6.Round47MixedInstallTests.test_a_newer_developer_file_names_the_old_scripts_folder) ... ok
+test_the_log_is_a_mixed_install (tests.test_v062_dev6.Round47MixedInstallTests.test_the_log_is_a_mixed_install) ... ok
 test_every_round46_vendor_name_maps_to_the_weapon_its_purchase_named (tests.test_v062_dev6.VendorNameTests.test_every_round46_vendor_name_maps_to_the_weapon_its_purchase_named) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
@@ -910,6 +912,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 886 tests in 224.764s
+Ran 888 tests in 237.448s
 
 OK (skipped=22)

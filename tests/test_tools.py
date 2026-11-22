@@ -29,7 +29,7 @@ class SummarizeLogTests(unittest.TestCase):
         g.sim.new_game(); g.step(60)
         g.fire("MissionStateChangedEvent", MissionName="MIS_MEGA_FINALE", MissionState=4)
         s = summarize_log.summarize(["[script] " + l for l in g.logs()])
-        self.assertEqual(s["kit"], "10.0.26")
+        self.assertEqual(s["kit"], "10.0.27")
         self.assertTrue(s["prices"])                                 # 7.0: the vendor's prices were found
         self.assertIn("test-seed-2", s["seed"])
         self.assertIn("weapon:headhunter", s["confirmed"])

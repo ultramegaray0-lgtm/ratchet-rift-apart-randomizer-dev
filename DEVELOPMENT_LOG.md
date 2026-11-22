@@ -4,6 +4,12 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-22: v0.62-DEV7 (kit 10.0.27) - round47 was a mixed install
+
+tests/data/round47_rivet.log: DEV5 scripts (10.0.25) + DEV6 dev(debug).lua (10.0.26); DEV6's Omega changes never ran.
+Kit check now names a newer developer file as an old scripts folder. Shop probe: VendorConfig exposes no ItemDatas to
+rivet.config (plain numbers only). Nothing new verified in the game.
+
 ## 2026-11-22: v0.62-DEV6 (kit 10.0.26) - branch fix/v0.62-dev5 (continued)
 
 Log: tests/data/round46_rivet.log (DEV5 in the game, anonymised). Player report: "bought Omegas and used NUMPAD1/2,

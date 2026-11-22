@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.62-DEV7 (kit 10.0.27; dev kit, not released): round47 - a mixed install
+
+tests/data/round47_rivet.log: "RANDO-KIT release v0.62-DEV5 (kit 10.0.25)" with dev(debug).lua and
+dev(omega_inventory_probe).lua of 10.0.26 - only the developer file of DEV6 was copied, so DEV6's Omega code never ran
+(DEV5's search overran the budget at 17_rando_omega.lua:263 again; the four purchases were all new weapons with
+PurchaseWeaponEvent, not Omegas). The kit check called the NEWER file "an old developer file" to delete. 10_rando_runtime.lua
+now reports a developer file newer than the kit as "the scripts folder is OLDER ... copy the WHOLE scripts folder".
+Shop: the read-only probe shows rivet.config(VendorConfig) answers only plain numbers (ID, IdleVOTriggerTime,
+PurchaseWeaponHoldTime, TabChangeDelayDuration, Type, UpgradeCell*) - no ItemDatas, so config_set cannot reach the
+slots; shop = "vanilla" stays. Tests 888 run, 0 failures, 22 skipped.
+
+
 ## v0.62-DEV6 (kit 10.0.26; dev kit, not released): round46 - Omega purchases did not register
 
 Log: tests/data/round46_rivet.log (DEV5 in the game). The player bought Omega MagShield and Omega Warmonger and used

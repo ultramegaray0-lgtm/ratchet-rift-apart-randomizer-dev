@@ -28,7 +28,7 @@ jobs:
         run: python -m pip install --upgrade pip lupa capstone
       - name: Run targeted repair regressions
         run: python -m unittest tests.test_v060 tests.test_v1030.SimulatorTests tests.test_v062_dev5 tests.test_v062_dev6
-      - name: Build and validate v0.62 DEV6 kit
+      - name: Build and validate v0.62 DEV7 kit
         env:
           SOURCE_SHA: ${{ github.sha }}
         run: |
@@ -37,13 +37,13 @@ jobs:
           from pathlib import Path
 
           source = Path("mod/RiftApartRandomizer")
-          output = Path("dist/Ratchet_Rift_Apart_Randomizer_v0.62-DEV6_Kit")
+          output = Path("dist/Ratchet_Rift_Apart_Randomizer_v0.62-DEV7_Kit")
           scripts = source / "scripts"
-          expected = "10.0.26"
+          expected = "10.0.27"
           runtime = (scripts / "10_rando_runtime.lua").read_text()
           settings = (scripts / "04_rando_settings.lua").read_text()
           if f'R.KIT_VERSION = "{expected}"' not in runtime:
-              raise SystemExit("runtime kit version does not match expected 10.0.26")
+              raise SystemExit("runtime kit version does not match expected 10.0.27")
           tags = {}
           for path in sorted(scripts.glob("*.lua")):
               match = re.search(r'RANDO_FILES\["[^"]+"\]\s*=\s*"([^"]+)"', path.read_text())
@@ -53,25 +53,25 @@ jobs:
           if bad or not tags:
               raise SystemExit(f"script version mismatch: {bad or 'no version tags found'}")
           if not re.search(r"boss_randomizer\s*=\s*false", settings):
-              raise SystemExit("DEV6 package must default the Boss Randomizer OFF")
+              raise SystemExit("DEV7 package must default the Boss Randomizer OFF")
           if "chaos_randomizer = false" not in settings:
               raise SystemExit("Chaos Randomizer must remain OFF")
           if output.exists():
               shutil.rmtree(output)
           shutil.copytree(source, output)
           (output / "VERSION.txt").write_text(
-              "Ratchet & Clank: Rift Apart Randomizer v0.62-DEV6\n"
-              "Kit version: 10.0.26\n"
+              "Ratchet & Clank: Rift Apart Randomizer v0.62-DEV7\n"
+              "Kit version: 10.0.27\n"
               f"Source commit: {os.environ['SOURCE_SHA']}\n"
               "Development kit only; not a public release.\n",
               encoding="utf-8")
           print(f"Validated {len(tags)} version-tagged scripts; packaged {output}")
           PY
-      - name: Upload v0.62 DEV6 development kit (single extraction)
+      - name: Upload v0.62 DEV7 development kit (single extraction)
         uses: actions/upload-artifact@v4
         with:
-          name: Ratchet-Rift-Apart-Randomizer-v0.62-DEV6-Kit
-          path: dist/Ratchet_Rift_Apart_Randomizer_v0.62-DEV6_Kit/
+          name: Ratchet-Rift-Apart-Randomizer-v0.62-DEV7-Kit
+          path: dist/Ratchet_Rift_Apart_Randomizer_v0.62-DEV7_Kit/
           if-no-files-found: error
       - name: Upload test report
         if: always()

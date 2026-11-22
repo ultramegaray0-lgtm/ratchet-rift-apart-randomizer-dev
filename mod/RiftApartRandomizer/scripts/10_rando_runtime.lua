@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.26"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.27"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.26"
-R.RELEASE = "v0.62-DEV6"                  -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.27"
+R.RELEASE = "v0.62-DEV7"                  -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -1389,6 +1389,27 @@ function R.kit_check()
   end
   table.sort(dev); table.sort(stale)
   if #dev > 0 then log("RANDO-KIT developer files loaded (diagnostics, not part of a release - remove them for normal play): " .. table.concat(dev, ", ")) end
+  -- v0.62-DEV7: round47 copied DEV6's dev(debug).lua (10.0.26) but kept DEV5's scripts (10.0.25) and was told to delete
+  -- the NEW file. A developer file newer than the scripts means the scripts folder was not replaced.
+  local function newer(v)
+    local a, b = {}, {}
+    for n in tostring(v or ""):gmatch("%d+") do a[#a + 1] = tonumber(n) end
+    for n in tostring(R.KIT_VERSION):gmatch("%d+") do b[#b + 1] = tonumber(n) end
+    for i = 1, math.max(#a, #b) do
+      if (a[i] or 0) ~= (b[i] or 0) then return (a[i] or 0) > (b[i] or 0) end
+    end
+    return false
+  end
+  local newest
+  for f, v in pairs(files) do if f:sub(1, 4) == "dev(" and newer(v) and (not newest or newer(v)) then newest = v end end
+  if newest then
+    log("RANDO-ERROR RANDO-KIT the scripts folder is OLDER than its developer file(s): kit " .. R.KIT_VERSION ..
+        ", developer file " .. tostring(newest) .. " - copy the WHOLE scripts folder of kit " .. tostring(newest) ..
+        " over this one (only dev(debug).lua was replaced)")
+    say("Randomizer: your scripts are kit " .. R.KIT_VERSION .. " but dev(debug).lua is " .. tostring(newest) ..
+        " - copy the whole new scripts folder", { type = "center", duration = 12 })
+    stale = {}
+  end
   if #stale > 0 then
     log("RANDO-ERROR RANDO-KIT delete from the scripts folder: " .. table.concat(stale, ", ") ..
         " - an old developer file (developer tools are in the kit's dev_scripts folder now and never needed to play)")

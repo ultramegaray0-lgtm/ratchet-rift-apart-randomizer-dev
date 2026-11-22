@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV6)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV7)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
@@ -48,10 +48,10 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release v0.62-DEV6 (kit 10.0.26)
+       RANDO-KIT release v0.62-DEV7 (kit 10.0.27)
        RANDO-KIT all required scripts are 10.0.24
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
-     HARD STOP: if the banner says any kit other than 10.0.26, do NOT continue;
+     HARD STOP: if the banner says any kit other than 10.0.27, do NOT continue;
      that is not this package. This artifact is one directly extractable ZIP; do not combine it
      with an older folder or nested ZIP.
 
@@ -124,3 +124,14 @@ DEV6 (10.0.26) - round46 (the DEV5 log): Omega purchases now register
     "RANDO-OMEGA inventory: N weapon record(s) in ...", "Omega purchase seen: ...", "Omega purchase 1 of 2 ..." and
     "LEARNED: the Omega flag is the byte at +0x..". Or with dev(debug).lua: NUMPAD1, buy one Omega, NUMPAD2,
     Ctrl+NUMPAD2 (wait for "N weapon records read" after NUMPAD1).
+
+DEV7 (10.0.27) - round47: a mixed install
+  - Round47 ran DEV5's scripts (kit 10.0.25) with DEV6's dev(debug).lua (10.0.26): only dev(debug).lua had been
+    copied, so the Omega fixes of DEV6 never ran (the log still shows DEV5's search and its frame-budget errors), and
+    the kit check told you to delete the NEW dev(debug).lua. It now says the scripts folder is older and must be
+    replaced as a whole.
+  - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
+    then dev_scripts\dev(debug).lua. rivet.log must show "RANDO-KIT release v0.62-DEV7 (kit 10.0.27)" and
+    "all 12 required scripts are 10.0.27".
+  - Shop evidence: rivet.config() answers only VendorConfig's plain numbers (ID, IdleVOTriggerTime, ...,
+    UpgradeCellYOffset) - no ItemDatas list, so rivet.config_set cannot reach Ms. Zurkon's slots. shop = "vanilla" stays.

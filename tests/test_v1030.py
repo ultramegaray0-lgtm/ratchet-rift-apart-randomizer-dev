@@ -418,14 +418,14 @@ class KitTests(unittest.TestCase):
         self.assertFalse([n for n in names if n.startswith("dev(")])
         for p in (MOD / "scripts").glob("*.lua"):
             tags = re.findall(r'RANDO_FILES\["[^"]+"\] = "([^"]+)"', p.read_text(encoding="utf-8"))
-            self.assertEqual(tags, ["10.0.26"], p.name)
+            self.assertEqual(tags, ["10.0.27"], p.name)
         self.assertTrue((MOD / "dev_scripts" / "dev(spawnprobe).lua").exists())
 
     def test_the_release_label_is_one(self):
         g = Game(settings={"enemy_randomizer": True})
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT release v0.62-DEV6 (kit 10.0.26)"), [l for l in g.logs() if "KIT" in l])
-        self.assertTrue(g.log_has("variable route loaded (v0.62-DEV6, kit 10.0.26)"))
+        self.assertTrue(g.log_has("RANDO-KIT release v0.62-DEV7 (kit 10.0.27)"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("variable route loaded (v0.62-DEV7, kit 10.0.27)"))
 
     def test_an_old_developer_file_left_in_the_scripts_folder_is_named_for_deletion(self):
         g = Game(files=script_files(), spawnprobe=True)
@@ -434,7 +434,7 @@ class KitTests(unittest.TestCase):
         self.assertTrue(g.log_has("RANDO-ERROR RANDO-KIT delete from the scripts folder: dev(spawnprobe).lua (10.0.18)"),
                         [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.note_has("delete the old developer file(s)"))
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.26"))   # the release itself is whole
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.27"))   # the release itself is whole
 
     def test_the_dll_is_unchanged_v7(self):
         import hashlib

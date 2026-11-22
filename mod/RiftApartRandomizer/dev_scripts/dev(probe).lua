@@ -14,7 +14,7 @@
 -- Removed in v7: the bolt-counter scan (the count is not stored where it searched), the
 -- AmmoCost weapon lock (no effect) and the component-index search (exceeded the frame budget).
 
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(probe)"] = "10.0.26"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(probe)"] = "10.0.27"   -- the kit check (10_rando_runtime.lua)
 if RANDO_DEV_DEBUG and RANDO_DEV_DEBUG.ran and RANDO_DEV_DEBUG.ran["probe"] then return end   -- v0.62-DEV5: dev(debug).lua already holds it
 RANDO_PROBE = RANDO_PROBE or {}
 local P = RANDO_PROBE

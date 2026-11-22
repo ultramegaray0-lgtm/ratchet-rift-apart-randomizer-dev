@@ -164,3 +164,32 @@ class LiveInventoryTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Round47MixedInstallTests(unittest.TestCase):
+    """round47 (tests/data/round47_rivet.log): DEV5 scripts + DEV6 dev(debug).lua; the kit check said to delete the new file"""
+
+    def test_the_log_is_a_mixed_install(self):
+        with open(os.path.join(ROOT, "tests", "data", "round47_rivet.log"), encoding="utf-8") as f:
+            text = f.read()
+        self.assertIn("RANDO-KIT release v0.62-DEV5 (kit 10.0.25)", text)
+        self.assertIn("delete from the scripts folder: dev(debug).lua (10.0.26)", text)
+        self.assertIn("17_rando_omega.lua:263: ran past the 8 ms frame budget", text)   # DEV5's search still ran
+        # the vendor config answers only plain numbers: no ItemDatas for rivet.config_set
+        self.assertIn("UpgradeCellYOffset number=31.0", text)
+        self.assertNotIn("ItemDatas", text)
+
+    def test_a_newer_developer_file_names_the_old_scripts_folder(self):
+        import tempfile, pathlib
+        from harness import DEV_DIR, script_files
+        src = (DEV_DIR / "dev(debug).lua").read_text(encoding="utf-8").replace('RANDO_FILES["dev(debug)"] = "10.0.27"',
+                                                                             'RANDO_FILES["dev(debug)"] = "10.0.99"')
+        d = pathlib.Path(tempfile.mkdtemp())
+        p = d / "dev(debug).lua"
+        p.write_text(src, encoding="utf-8")
+        g = Game(files=sorted(script_files(release=True) + [p], key=lambda q: q.name))
+        g.ready()
+        self.assertTrue(g.log_has("the scripts folder is OLDER than its developer file(s): kit 10.0.27, developer file 10.0.99"),
+                        [l for l in g.logs() if "KIT" in l])
+        self.assertFalse(g.log_has("delete from the scripts folder"))
+        self.assertTrue(g.note_has("copy the whole new scripts folder"))
