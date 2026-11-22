@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.62-DEV8 (kit 10.0.28; dev kit, not released): round48 - the Omega search was killed by the frame budget
+
+tests/data/round48_rivet.log: "RANDO-KIT release v0.62-DEV7 (kit 10.0.27)" - the whole kit was installed this time.
+The new component-list walk never finished: rivet_hook killed the search job 19 times ("RANDO-ERROR search: ran past
+the 8 ms frame budget" at 17_rando_omega.lua:23, the walk's reads). rivet_hook arms ONE 8 ms deadline per callback and
+its instruction-count hook also runs inside coroutines, so a job that yields after every read still dies when the
+frame is already busy. The four purchases of the run were all new weapons (VendorPurchaseEvent + PurchaseWeaponEvent):
+no Omega was bought, because Ms. Zurkon sells Omegas only in Challenge Mode.
+17_rando_omega.lua:
+- jobs run only in a frame with room: 10_rando_runtime.lua stamps R.frame_t0 at the start of each on_frame, and the
+  Omega job is skipped when more than O.FRAME_ROOM (3 ms) of the frame has gone already;
+- reads are time-sliced (O.SLICE_SECONDS = 1.5 ms per resume) instead of one fixed yield per read;
+- the walk keeps its place (O.wstate): a killed job continues at the next component instead of starting over;
+- a search killed by an error is taken up again after 30 frames (was: the normal search interval).
+Tests 891 run, 0 failures, 22 skipped (new: Round48BudgetTests in tests/test_v062_dev6.py).
+
 ## v0.62-DEV7 (kit 10.0.27; dev kit, not released): round47 - a mixed install
 
 tests/data/round47_rivet.log: "RANDO-KIT release v0.62-DEV5 (kit 10.0.25)" with dev(debug).lua and

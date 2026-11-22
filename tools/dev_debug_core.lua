@@ -29,7 +29,7 @@
 --   probe       script-node probe (NUMPAD3-9) with its data (vtables, item ids)              OFF: research only
 --   spawnprobe  read-only spawner evidence (RANDO-SPAWNPROBE)            OFF: it can exceed the 8 ms frame budget
 --   spawnproof  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF) OFF: stands down while the Enemy Randomizer is on
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(debug)"] = "10.0.27"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(debug)"] = "10.0.28"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_DEV_DEBUG = RANDO_DEV_DEBUG or {}
 local DBG = RANDO_DEV_DEBUG

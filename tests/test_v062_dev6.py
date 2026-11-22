@@ -182,14 +182,57 @@ class Round47MixedInstallTests(unittest.TestCase):
     def test_a_newer_developer_file_names_the_old_scripts_folder(self):
         import tempfile, pathlib
         from harness import DEV_DIR, script_files
-        src = (DEV_DIR / "dev(debug).lua").read_text(encoding="utf-8").replace('RANDO_FILES["dev(debug)"] = "10.0.27"',
+        src = (DEV_DIR / "dev(debug).lua").read_text(encoding="utf-8").replace('RANDO_FILES["dev(debug)"] = "10.0.28"',
                                                                              'RANDO_FILES["dev(debug)"] = "10.0.99"')
         d = pathlib.Path(tempfile.mkdtemp())
         p = d / "dev(debug).lua"
         p.write_text(src, encoding="utf-8")
         g = Game(files=sorted(script_files(release=True) + [p], key=lambda q: q.name))
         g.ready()
-        self.assertTrue(g.log_has("the scripts folder is OLDER than its developer file(s): kit 10.0.27, developer file 10.0.99"),
+        self.assertTrue(g.log_has("the scripts folder is OLDER than its developer file(s): kit 10.0.28, developer file 10.0.99"),
                         [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.log_has("delete from the scripts folder"))
         self.assertTrue(g.note_has("copy the whole new scripts folder"))
+
+
+class Round48BudgetTests(unittest.TestCase):
+    """round48 (tests/data/round48_rivet.log, DEV7): the search job was killed 19 times by rivet_hook's frame budget at
+    the walk's reads, and the walk never finished. DEV8: jobs only run in frames with room, the walk resumes."""
+
+    def test_the_log_shows_the_walk_killed(self):
+        with open(os.path.join(ROOT, "tests", "data", "round48_rivet.log"), encoding="utf-8") as f:
+            text = f.read()
+        self.assertIn("RANDO-KIT release v0.62-DEV7 (kit 10.0.27)", text)
+        self.assertGreaterEqual(text.count("search:\tscripts\\17_rando_omega.lua:23"), 15)
+        self.assertNotIn("hero component list walked", text)
+        # every purchase of this run was a new weapon (PurchaseWeaponEvent follows): no Omega for sale outside Challenge Mode
+        self.assertEqual(text.count("VendorPurchaseEvent"), text.count("PurchaseWeaponEvent"))
+
+    def test_a_walk_killed_by_the_budget_continues_and_finishes(self):
+        g = live_game()
+        # the first six times, every 7th pause raises the budget error inside the job (what rivet_hook's count hook does)
+        g.lua.execute("""
+          RANDO_OMEGA.walked, RANDO_OMEGA.walk_logged = nil, nil
+          local orig, n = RANDO_OMEGA.pause, 0
+          RANDO_OMEGA.pause = function()
+            n = n + 1
+            if n % 7 == 0 and n <= 42 then error("ran past the 8 ms frame budget", 0) end
+            return orig()
+          end""")
+        for w in ("enforcer", "mr_fungi"):
+            g.R.grant("weapon:" + w)
+        g.step(4000)
+        self.assertGreaterEqual(sum("ran past the 8 ms frame budget" in l for l in g.logs()), 3)   # it was killed
+        self.assertTrue(g.log_has("hero component list walked: 5 components"), [l for l in g.logs() if "OMEGA" in l][-6:])
+        self.assertTrue(g.log_has("RANDO-OMEGA\tinventory:"))
+
+    def test_no_job_runs_in_a_busy_frame(self):
+        g = Game(before_scripts=lambda gg: gg.lua.execute("SIM.inv_live = true; SIM.inventory_component = false"))
+        g.lua.execute("RANDO_OMEGA.FRAME_ROOM = -1")                        # every frame counts as busy
+        g.ready()
+        g.R.grant("weapon:enforcer")
+        g.step(2000)
+        self.assertFalse(g.log_has("hero component list walked"))
+        g.lua.execute("RANDO_OMEGA.FRAME_ROOM = 0.003")
+        g.step(1500)
+        self.assertTrue(g.log_has("hero component list walked"))

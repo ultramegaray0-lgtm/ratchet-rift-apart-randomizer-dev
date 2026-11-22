@@ -31,7 +31,7 @@
 -- Until 3. has happened nothing is ever written: an Omega reward stays "pending" (state.omega) and is
 -- set the moment the offset is known. omega_runtime = false: never written at all.
 -- NOTHING OF THIS HAS RUN IN THE GAME. Simulator only (tests/test_v1015.py).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.27"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.28"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_OMEGA = RANDO_OMEGA or {}
 local O = RANDO_OMEGA
@@ -58,7 +58,15 @@ O.OBJ = 0x60                     -- bytes of one item object searched for its id
 O.SPAN = 0x180                   -- bytes of a record read from its id on (the Omega byte must be in them)
 O.MAX_COUNT = 512
 O.CHUNK = 0x100                  -- bytes per rivet.read
-O.SLICE_SECONDS = 0.002          -- the whole randomizer shares rivet_hook's 8 ms frame budget
+O.SLICE_SECONDS = 0.0015         -- the whole randomizer shares rivet_hook's 8 ms frame budget
+-- v0.62-DEV8: round48 (DEV7 in the game): the search job was killed 19 times ("ran past the 8 ms frame budget" at the
+-- walk's reads) and the walk never finished. rivet_hook (src/scripting.cpp) arms ONE 8 ms deadline per callback - the
+-- randomizer's whole frame, Enemy Randomizer included - and checks it from a count hook every 10,000 instructions. A
+-- job coroutine inherits that hook with its OWN counter, which carries over from frame to frame, so it is the code that
+-- happens to be running when a busy frame is checked. Now: a job runs only when the frame so far has used less than
+-- O.FRAME_ROOM (R.frame_t0, set by 10_rando_runtime.lua's frame callback), its slice is short, and a killed walk
+-- continues where it stopped (O.wstate) instead of starting over.
+O.FRAME_ROOM = 0.003
 O.SETTLE = 150                   -- frames after a load before the inventory is searched
 O.KEEP_EVERY = 600               -- frames between keep checks
 O.REFRESH = 30                   -- frames after a weapon was added before its record is looked for
@@ -115,7 +123,7 @@ local function read(addr, len)
     table.move(b, 1, #b, #out + 1, out)
     if #b < n then break end
     at = at + n
-    if coroutine.isyieldable() then coroutine.yield(); slice_t0 = clock() end
+    O.pause()                                         -- v0.62-DEV8: time-sliced (was: one read per frame)
   end
   return out
 end
@@ -217,16 +225,23 @@ function O.walk()
   end
   if not anchor then return nil, "no anchor component" end
   local hexp = function(b, i) local h = O.hex64(b, i); return h and tonumber(h, 16) end
-  local ab = read(anchor + 0x10, 8)
-  local actor = #ab == 8 and hexp(ab, 1)
-  if not O.valid_ptr(actor) then return nil, "the anchor's actor pointer is not readable" end
-  local hb = read(actor + 0x68, 0x10)
-  if #hb < 0x10 then return nil, "the actor's component list is not readable" end
-  local list, count = hexp(hb, 1), u16(hb, 9)
-  if not O.valid_ptr(list) or count < 1 or count > 1024 then return nil, string.format("component list %s, count %d", tostring(list), count) end
-  local arr = read(list, count * 0x10)
-  local out, seen_anchor = {}, false
-  for k = 0, count - 1 do
+  local W = O.wstate
+  if not (W and W.anchor == anchor) then
+    local ab = read(anchor + 0x10, 8)
+    local actor = #ab == 8 and hexp(ab, 1)
+    if not O.valid_ptr(actor) then return nil, "the anchor's actor pointer is not readable" end
+    local hb = read(actor + 0x68, 0x10)
+    if #hb < 0x10 then return nil, "the actor's component list is not readable" end
+    local list, count = hexp(hb, 1), u16(hb, 9)
+    if not O.valid_ptr(list) or count < 1 or count > 1024 then return nil, string.format("component list %s, count %d", tostring(list), count) end
+    local arr = read(list, count * 0x10)
+    if #arr < count * 0x10 then return nil, "the actor's component list is not readable" end
+    W = { anchor = anchor, actor = actor, count = count, arr = arr, k = 0, out = {}, seen_anchor = false }
+    O.wstate = W
+  end
+  local actor, count, arr, out = W.actor, W.count, W.arr, W.out
+  while W.k < count do
+    local k = W.k
     local tp, inst = hexp(arr, k * 16 + 1), hexp(arr, k * 16 + 9)
     if O.valid_ptr(tp) and O.valid_ptr(inst) then
       local tb = read(tp + 0x60, 0x20)
@@ -243,13 +258,15 @@ function O.walk()
         local destroyed = (ib[0x0E] or 0) & 2 ~= 0
         if not destroyed then
           out[#out + 1] = { name = name, addr = inst, size = s32(tb, 0x19), handle = u32(ib, 5) }
-          if inst == anchor then seen_anchor = true end
+          if inst == anchor then W.seen_anchor = true end
         end
       end
     end
+    W.k = k + 1                                       -- v0.62-DEV8: a killed job continues from here
     O.pause()
   end
-  if not seen_anchor then return nil, "the walk did not find its own anchor again - layout differs; nothing used" end
+  O.wstate = nil
+  if not W.seen_anchor then return nil, "the walk did not find its own anchor again - layout differs; nothing used" end
   O.walked = out
   if not O.walk_logged then
     O.walk_logged = true
@@ -657,7 +674,11 @@ local function run_job()
   local ok, err = coroutine.resume(j.co)
   if coroutine.status(j.co) == "dead" then
     if O.jobs[1] == j then table.remove(O.jobs, 1) end
-    if not ok then log("RANDO-ERROR", j.kind .. ":", tostring(err)) end
+    if not ok then
+      log("RANDO-ERROR", j.kind .. ":", tostring(err))
+      -- v0.62-DEV8: a search killed by the frame budget is taken up again soon (the walk continues from O.wstate)
+      if j.kind == "search" then O.next_search = math.min(O.next_search, O.frame + 30) end
+    end
   end
 end
 O.run_job = run_job
@@ -679,7 +700,7 @@ end
 
 function O.forget(why)
   O.inv, O.snap, O.jobs = nil, nil, {}
-  O.walked, O.inv_handles, O.cand_logged = nil, {}, nil   -- v0.62-DEV6: handles change with every load
+  O.walked, O.inv_handles, O.cand_logged, O.wstate = nil, {}, nil, nil   -- v0.62-DEV6: handles change with every load
   O.next_search = O.frame + O.SETTLE
   O.inv_why = why
 end
@@ -692,6 +713,7 @@ function O.after_restore() O.next_keep = 0 end
 function O.tick(frames, ready)
   O.frame = O.frame + 1
   if not ready or cfg("omega_runtime") == false then return end    -- (nothing is read while loading)
+  if RANDO and RANDO.frame_t0 and clock() - RANDO.frame_t0 > O.FRAME_ROOM then return end   -- v0.62-DEV8: a busy frame
   if O.jobs[1] then run_job(); return end
   local s = S()
   if not (s and RANDO_SEED) then return end

@@ -37,13 +37,13 @@ jobs:
           from pathlib import Path
 
           source = Path("mod/RiftApartRandomizer")
-          output = Path("dist/Ratchet_Rift_Apart_Randomizer_v0.62-DEV7_Kit")
+          output = Path("dist/Ratchet_Rift_Apart_Randomizer_v0.62-DEV8_Kit")
           scripts = source / "scripts"
-          expected = "10.0.27"
+          expected = "10.0.28"
           runtime = (scripts / "10_rando_runtime.lua").read_text()
           settings = (scripts / "04_rando_settings.lua").read_text()
           if f'R.KIT_VERSION = "{expected}"' not in runtime:
-              raise SystemExit("runtime kit version does not match expected 10.0.27")
+              raise SystemExit("runtime kit version does not match expected 10.0.28")
           tags = {}
           for path in sorted(scripts.glob("*.lua")):
               match = re.search(r'RANDO_FILES\["[^"]+"\]\s*=\s*"([^"]+)"', path.read_text())
@@ -60,8 +60,8 @@ jobs:
               shutil.rmtree(output)
           shutil.copytree(source, output)
           (output / "VERSION.txt").write_text(
-              "Ratchet & Clank: Rift Apart Randomizer v0.62-DEV7\n"
-              "Kit version: 10.0.27\n"
+              "Ratchet & Clank: Rift Apart Randomizer v0.62-DEV8\n"
+              "Kit version: 10.0.28\n"
               f"Source commit: {os.environ['SOURCE_SHA']}\n"
               "Development kit only; not a public release.\n",
               encoding="utf-8")
@@ -70,8 +70,8 @@ jobs:
       - name: Upload v0.62 DEV7 development kit (single extraction)
         uses: actions/upload-artifact@v4
         with:
-          name: Ratchet-Rift-Apart-Randomizer-v0.62-DEV7-Kit
-          path: dist/Ratchet_Rift_Apart_Randomizer_v0.62-DEV7_Kit/
+          name: Ratchet-Rift-Apart-Randomizer-v0.62-DEV8-Kit
+          path: dist/Ratchet_Rift_Apart_Randomizer_v0.62-DEV8_Kit/
           if-no-files-found: error
       - name: Upload test report
         if: always()

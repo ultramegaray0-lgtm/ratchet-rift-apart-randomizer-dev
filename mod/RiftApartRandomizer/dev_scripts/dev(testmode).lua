@@ -6,7 +6,7 @@
 --   Ctrl+'  (Ctrl+F12 with legacy_f_keys)   the mission lab: read every mission's state (read only)
 --   Ctrl+F11       the mission lab: start / complete / replay a mission on this spare save
 -- Delete this file for normal play.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(testmode)"] = "10.0.27"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(testmode)"] = "10.0.28"   -- the kit check (10_rando_runtime.lua)
 if RANDO_DEV_DEBUG and RANDO_DEV_DEBUG.ran and RANDO_DEV_DEBUG.ran["testmode"] then return end   -- v0.62-DEV5: dev(debug).lua already holds it
 RANDO_TEST_MODE = true
 

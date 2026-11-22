@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.27"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.28"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.27"
-R.RELEASE = "v0.62-DEV7"                  -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.28"
+R.RELEASE = "v0.62-DEV8"                  -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -1532,6 +1532,7 @@ local function frame(dt)
 end
 local frame_errors = 0
 pcall(rivet.on_frame, function(dt)
+  R.frame_t0 = (os and os.clock and os.clock()) or 0     -- v0.62-DEV8: how much of the 8 ms budget is left (17_rando_omega.lua)
   local ok, err = pcall(frame, dt)
   if not ok then
     frame_errors = frame_errors + 1

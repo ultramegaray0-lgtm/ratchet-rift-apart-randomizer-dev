@@ -1,0 +1,1187 @@
+[rivet] init
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
+[rivet] game version mismatch, invalidating pointers
+[loader] mod path mods/default does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED does not exist! skipping.
+[loader] mod path mods/ARSENAL_RESTORED.stage is overstrike stage format.
+[loader] B2B746D0573FD296 resolved to asset id b2b746d0573fd296, type 0, language 0
+[loader] BE097E4CF400C6EC resolved to asset id be097e4cf400c6ec, type 0, language 0
+[loader] BFBF34400EB134D7 resolved to asset id bfbf34400eb134d7, type 0, language 0
+[loader] characters\ambient\amb_uwb_jellyfish\amb_uwb_jellyfish.animset resolved to asset id 9bc6e16e94226fed, type 0, language 0
+[loader] characters\ambient\amb_uwb_jellyfish\amb_uwb_jellyfish.model resolved to asset id 9b648c07363924af, type 0, language 0
+[loader] characters\enemy\enm_antara_swarmer\enm_antara_swarmer.animset resolved to asset id be78516c45c41088, type 0, language 0
+[loader] characters\enemy\enm_antara_swarmer\enm_antara_swarmer.model resolved to asset id 84220c2c235f5624, type 0, language 0
+[loader] characters\enemy\enm_darter_bat_ps4\enm_darter_bat_ps4.animset resolved to asset id adf50c92533c075d, type 0, language 0
+[loader] characters\enemy\enm_darter_bat_ps4\enm_darter_bat_ps4.model resolved to asset id a6263c24790d7c76, type 0, language 0
+[loader] configs\equipment\equip_loadout_allweapons.config resolved to asset id b44f9479be5c766b, type 0, language 0
+[loader] configs\equipment\equip_loadout_allweapons_v5.config resolved to asset id b3ecb318d034e7f8, type 0, language 0
+[loader] configs\equipment\equip_loadout_finale.config resolved to asset id a0bb27681322ddac, type 0, language 0
+[loader] configs\equipment\equip_loadout_ratchet_allweapons.config resolved to asset id 838c29827674a544, type 0, language 0
+[loader] configs\equipment\wpn_predator_launcher_weapon.config resolved to asset id 9a65e33f75221b90, type 0, language 0
+[loader] configs\equipment\wpn_schrodinger_weapon.config resolved to asset id 9a790f8c1dfab119, type 0, language 0
+[loader] configs\equipment\wpn_volcaniceruptor_subshot.config resolved to asset id bbecbb36071f2ffd, type 0, language 0
+[loader] configs\equipment\wpn_volcaniceruptor_weapon.config resolved to asset id 86f63fc43d59eb15, type 0, language 0
+[loader] configs\masterweaponlist\masterweaponlist.config resolved to asset id 8a6fccd73fcf10cc, type 0, language 0
+[loader] configs\other\test\mdaly\test1.config resolved to asset id 9832f07483740510, type 0, language 0
+[loader] configs\other\test\mdaly\test2.config resolved to asset id a77434027a95fac1, type 0, language 0
+[loader] configs\other\test\mdaly\test3.config resolved to asset id 91db91698b742d11, type 0, language 0
+[loader] configs\system\system_localizationswapsystem.config resolved to asset id 81e803087bd7a281, type 0, language 0
+[loader] coretest\textures\default_pink_shader\default_pink_shader_c.texture resolved to asset id bcaeafe4dd3b1308, type 0, language 0
+[loader] coretest\textures\default_pink_shader\default_pink_shader_g.texture resolved to asset id bc74117172fc9457, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_a_m.texture resolved to asset id 899194b9d31e6cdc, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_b1_m.texture resolved to asset id a2ee163b2536ffb5, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_c_m.texture resolved to asset id 8d446c34ad4f04b7, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_d_m.texture resolved to asset id 825099e59094083e, type 0, language 0
+[loader] equipment\weapon\wpn_magnamissile\wpn_magnamissile.actor resolved to asset id b58498c9464262f1, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_c.texture resolved to asset id 80a5c3b83651c3b9, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_g.texture resolved to asset id 807f7d2d999644e6, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_c.texture resolved to asset id aaa4eaec4fcb0f0d, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_g.texture resolved to asset id aa7e5479e00c8852, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_m.texture resolved to asset id 99fd63fd1d818693, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_n.texture resolved to asset id b2d00c056e8286d3, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_m.texture resolved to asset id b3fc4aa9641b4a27, type 0, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_n.texture resolved to asset id 98d1255117184a67, type 0, language 0
+[loader] equipment\weapon\wpn_predator_launcher\textures\wpn_predator_rocket_launcher_upgrade_n.texture resolved to asset id b65c66cd3067f4f8, type 0, language 0
+[loader] equipment\weapon\wpn_predator_launcher\wpn_predator_launcher.model resolved to asset id a68394f2a16a9879, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\default_pink_shader\Predator_Launcher_V5_c.texture resolved to asset id 9de69270b549a1f3, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\default_pink_shader\Predator_Launcher_V5_g.texture resolved to asset id 9d3c2ce51a8e26ac, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\default_pink_shader\Predator_Launcher_V5_m.texture resolved to asset id aebf1b61e703286d, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_c.texture resolved to asset id b7f202338cf96a8e, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_g.texture resolved to asset id b728bca6233eedd1, type 0, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_m.texture resolved to asset id 84ab8b22deb3e310, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_c.texture resolved to asset id b06214ffd49eb618, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_g.texture resolved to asset id b0b8aa6a7b593147, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_m.texture resolved to asset id 833b9dee86d43f86, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_n.texture resolved to asset id a816f216f5d73fc6, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\wpn_schrodinger.actor resolved to asset id 9409674d67fb6102, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_c.texture resolved to asset id 833fca5d14450ea2, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_g.texture resolved to asset id 83e574c8bb8289fd, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_m.texture resolved to asset id b066434c460f873c, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_n.texture resolved to asset id 9b4b2cb4350c877c, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\wpn_sheepinator.actor resolved to asset id 8e30fa59d573cbef, type 0, language 0
+[loader] material\equipment\weapon\wpn_combuster\wpn_combuster.material resolved to asset id 8adb1504dd49679b, type 0, language 0
+[loader] material\equipment\weapon\wpn_combuster_hoses\wpn_combuster_hoses.material resolved to asset id b6013a90302b0d10, type 0, language 0
+[loader] material\equipment\weapon\wpn_combuster_v5\wpn_combuster_v5.material resolved to asset id a107c276d6568f05, type 0, language 0
+[loader] material\equipment\weapon\wpn_predator_launcher_base\wpn_predator_launcher_base.material resolved to asset id 8fc853823b0642fc, type 0, language 0
+[loader] material\equipment\weapon\wpn_predator_launcher_projectile\wpn_predator_launcher_shared_base.material resolved to asset id b331fed256c82b9e, type 0, language 0
+[loader] material\equipment\weapon\wpn_predator_launcher_upgrade\wpn_predator_launcher_upgrade.material resolved to asset id 88f1df221ecab0d0, type 0, language 0
+[loader] material\equipment\weapon\wpn_predator_launcher_upgrade\wpn_predator_launcher_upgrade2.material resolved to asset id ba034667f4ea272f, type 0, language 0
+[loader] material\equipment\weapon\wpn_schrodinger\wpn_schrodinger.material resolved to asset id aef05986578a96bb, type 0, language 0
+[loader] material\equipment\weapon\wpn_sheepinator_base\wpn_sheepinator_base.material resolved to asset id bfc2b17aa3b4ce86, type 0, language 0
+[loader] materialgraph\visualeffect\global\gbl_sparks\gbl_sparks_random.materialgraph resolved to asset id 889b9797a6fd82ed, type 0, language 0
+[loader] movies\corv\010_parade_090_courtyard.movie resolved to asset id 9da1f43eee421e29, type 0, language 0
+[loader] movies\gp_a1\nefnews\nefnews.movie resolved to asset id bdf527e91569c8d6, type 0, language 0
+[loader] movies\zurkies\120_zurkies3_010_themap.movie resolved to asset id 9f7802d07e6c56c0, type 0, language 0
+[loader] sound\banks\events.wwiselookup_vanilla resolved to asset id a6f3bc1403e8a46d, type 0, language 0
+[loader] sound\banks\wpn_sheepinator.bnk resolved to asset id 8f8f406944477012, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\galleryjellyfish.texture resolved to asset id 85088411d9888d68, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\gallerypiratebladeball.texture resolved to asset id 9a2a978061916fd2, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\gallerypiratemelee01.texture resolved to asset id 8c9f99f48bd36a02, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\gallerypirateshooter01.texture resolved to asset id a8181e7dda217b0e, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\vendor_new_predatorlauncher.texture resolved to asset id 9a73558a3c5a480c, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\vendor_new_predatorlauncher_v5.texture resolved to asset id 982eaa4497d0618f, type 0, language 0
+[loader] ui\loaded\authored\_art\textures\vendor_new_sheepinator.texture resolved to asset id 9c71cacdb9a75874, type 0, language 0
+[loader] characters\npc\npc_junktrader\textures\npc_junktrader_backpack_04_c.texture resolved to asset id b9d6b47108828128, type 1, language 0
+[loader] characters\npc\npc_junktrader\textures\npc_junktrader_backpack_04_g.texture resolved to asset id b90c0ae4a7450677, type 1, language 0
+[loader] characters\npc\npc_junktrader\textures\npc_junktrader_backpack_04_n.texture resolved to asset id a1a2529829cb08f6, type 1, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_a_m.texture resolved to asset id 899194b9d31e6cdc, type 1, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_b1_m.texture resolved to asset id a2ee163b2536ffb5, type 1, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_c_m.texture resolved to asset id 8d446c34ad4f04b7, type 1, language 0
+[loader] equipment\weapon\wpn_dimensionator\textures\zdim_d_m.texture resolved to asset id 825099e59094083e, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_c.texture resolved to asset id 80a5c3b83651c3b9, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_g.texture resolved to asset id 807f7d2d999644e6, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_c.texture resolved to asset id aaa4eaec4fcb0f0d, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_g.texture resolved to asset id aa7e5479e00c8852, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_m.texture resolved to asset id 99fd63fd1d818693, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_lvl5_n.texture resolved to asset id b2d00c056e8286d3, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_m.texture resolved to asset id b3fc4aa9641b4a27, type 1, language 0
+[loader] equipment\weapon\wpn_PredatorLauncher\textures\wpn_Predator_Luncher_n.texture resolved to asset id 98d1255117184a67, type 1, language 0
+[loader] equipment\weapon\wpn_predator_launcher\textures\wpn_predator_rocket_launcher_upgrade_n.texture resolved to asset id b65c66cd3067f4f8, type 1, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_c.texture resolved to asset id b7f202338cf96a8e, type 1, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_g.texture resolved to asset id b728bca6233eedd1, type 1, language 0
+[loader] equipment\weapon\wpn_Predator_Launcher_v5\Predator_Launcher_V5_m.texture resolved to asset id 84ab8b22deb3e310, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_c.texture resolved to asset id b06214ffd49eb618, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_g.texture resolved to asset id b0b8aa6a7b593147, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_m.texture resolved to asset id 833b9dee86d43f86, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_n.texture resolved to asset id a816f216f5d73fc6, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_c.texture resolved to asset id 833fca5d14450ea2, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_g.texture resolved to asset id 83e574c8bb8289fd, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_m.texture resolved to asset id b066434c460f873c, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_n.texture resolved to asset id 9b4b2cb4350c877c, type 1, language 0
+[loader] conduit\equipment\weapon\wpn_sheepinator_vfx\wpn_sheepinator_vfx.conduit resolved to asset id 829ce9dc640e815c, type 0, language 0
+[loader] equipment\weapon\wpn_blaster_combuster\wpn_blaster_combuster.model resolved to asset id bd736cd30f17fe36, type 0, language 0
+[loader] equipment\weapon\wpn_blaster_combuster\wpn_blaster_combuster.ascii resolved to asset id 8c73a9e679a1af7d, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\wpn_schrodinger_weapon.model resolved to asset id 8be46ab82b8833e6, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_blaster_aud\wpn_blaster_aud.conduit resolved to asset id 95c95f5a5524806a, type 0, language 0
+[loader] sound\banks\wpn_blaster.soundbank resolved to asset id 8740410be42410e9, type 0, language 0
+[loader] sound\banks\wpn_magna_missile.soundbank resolved to asset id b7539ed3d3c7537b, type 0, language 0
+[loader] sound\banks\wpn_predatorlauncher1.soundbank resolved to asset id 999ddb60b60e86d1, type 0, language 0
+[loader] material\equipment\weapon\wpn_Sheepinator_Internal_Energy\wpn_Sheepinator_Internal_Energy1.material resolved to asset id 8cf5bf64bcd4d67f, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_c.texture resolved to asset id b4aabc2a53db9ade, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_m.texture resolved to asset id 87f3353b01911340, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_n.texture resolved to asset id acde5ac372921300, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_c.texture resolved to asset id b4aabc2a53db9ade, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_m.texture resolved to asset id 87f3353b01911340, type 1, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\v5\wpn_sheepinator_n.texture resolved to asset id acde5ac372921300, type 1, language 0
+[loader] textures\character\npc\Sheep\npc_Sheep_BLACK_c.texture resolved to asset id af4fbb7daa31faea, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_Sheep_BLACK_c.texture resolved to asset id af4fbb7daa31faea, type 1, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_c.texture resolved to asset id 80ab88ab15c6fc48, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_g.texture resolved to asset id 8071363eba017b17, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_fursg_fur_control.texture resolved to asset id 9c767603181b7bde, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_n.texture resolved to asset id 98df6e42348f7596, type 0, language 0
+[loader] textures\character\npc\Sheep\npc_sheep_fursg_c.texture resolved to asset id 9101c150ed4e5d80, type 1, language 0
+[loader] characters\npc\npc_sheep\textures\npc_sheep_fursg_c.texture resolved to asset id 881eab94fe48d811, type 1, language 0
+[loader] characters\npc\npc_sheep\textures\sheep_fur_black.material resolved to asset id a82873d63d6e08ff, type 0, language 0
+[loader] material\character\npc\npc_sheep\sheep_fur_black.material resolved to asset id 9bc63c17c574d422, type 0, language 0
+[loader] characters\npc\npc_sheep\textures\npc_V5_c2.texture resolved to asset id bc24c156d1d4dcda, type 0, language 0
+[loader] configs\ally\ally_sheep_v2_movement.config resolved to asset id 82b4b386e2d56a1c, type 0, language 0
+[loader] textures\character\npc\Sheep\v5_horns_c.texture resolved to asset id 85c5b0679cf2ce01, type 0, language 0
+[loader] textures\character\npc\Sheep\v5_horns_c.texture resolved to asset id 85c5b0679cf2ce01, type 1, language 0
+[loader] textures\character\npc\Sheep\v5_horns_n.texture resolved to asset id 9db1568ebdbb47df, type 0, language 0
+[loader] textures\character\npc\Sheep\v5_horns_g.texture resolved to asset id 851f0ef23335495e, type 0, language 0
+[loader] textures\character\npc\Sheep\v5_horns_g.texture resolved to asset id 851f0ef23335495e, type 1, language 0
+[loader] textures\character\npc\Sheep\v5_horns_n.texture resolved to asset id 9db1568ebdbb47df, type 1, language 0
+[loader] configs\ally\ally_sheep_movement.config resolved to asset id a997696ca0151bec, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_c.texture resolved to asset id b26c402d149979aa, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_c.texture resolved to asset id b26c402d149979aa, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_g.texture resolved to asset id b2b6feb8bb5efef5, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_g.texture resolved to asset id b2b6feb8bb5efef5, type 1, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_m.texture resolved to asset id 8135c93c46d3f034, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\textures\wpn_schrodinger_glass_m.texture resolved to asset id 8135c93c46d3f034, type 1, language 0
+[loader] material\equipment\weapon\wpn_schrodinger\wpn_schrodinger_glass.material resolved to asset id 89d49db44c52518a, type 0, language 0
+[loader] visualeffect\character\enemy\enm_snagglebeast_lava_fissure\wpn_volcanic_eruptor_geyser_01.visualeffect resolved to asset id 87fdfe4671a1d1bc, type 0, language 0
+[loader] visualeffect\character\enemy\enm_snagglebeast_lava_fissure\wpn_volcanic_eruptor_geyser_01_source.visualeffect resolved to asset id 8f9ccb82fd4e4433, type 0, language 0
+[loader] equipment\projectile\proj_volcaniceruptor\volcaniceruptorgeyser.actor resolved to asset id 8de30c6793eb7d8b, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_volcanic_eruptor_geyser\wpn_volcanic_eruptor_projectile.conduit resolved to asset id 84c0a17fb9d8c591, type 0, language 0
+[loader] materialgraph\characters\npc\npc_nefarious_polish_tubefx\volcanic_eruptor_glove_lava.materialgraph resolved to asset id 8bff4c9344ca350b, type 0, language 0
+[loader] material\characters\hero\hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava\hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava.material resolved to asset id 8f8e339e40013c4e, type 0, language 0
+[loader] material\characters\hero\hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava_red\hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava_red.material resolved to asset id b1aa25370a00a6c7, type 0, language 0
+[loader] visualeffect\character\enemy\enm_zurkn_blaster_projectile_fx\enm_zurkn_blaster_projectile_fx.visualeffect resolved to asset id 93e581949f378ed7, type 0, language 0
+[loader] visualeffect\character\enemy\enm_zurkn_v1_trooper_projectile_impact\enm_zurkn_v1_trooper_projectile_impact.visualeffect resolved to asset id a0981d4774da58ca, type 0, language 0
+[loader] visualeffect\character\global\gbl_projectile_shape_zrk\gbl_projectile_shape_zrk.model resolved to asset id 85127a4d716e10e6, type 0, language 0
+[loader] equipment\weapon\wpn_mr_zurkon\wpn_mr_zurkon.model resolved to asset id bf8509a0f8b0a90b, type 0, language 0
+[loader] equipment\weapon\wpn_zurkon\wpn_zurkon.actor resolved to asset id 82cc8aa220f51b6a, type 0, language 0
+[loader] equipment\projectile\proj_zurkon_shot\proj_zurkon_shot.actor resolved to asset id 91435a9a06273865, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_grid.config resolved to asset id a925ce5a6686fa95, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_mod.config resolved to asset id 96625742c69a7259, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_shot.config resolved to asset id a8fc6fae053eda1e, type 0, language 0
+[loader] conduit\equipment\projectile\proj_warbot_vfx\proj_zurkn_trooper_vfx.conduit resolved to asset id a4e60401d35d8f09, type 0, language 0
+[loader] visualeffect\global\gbl_projectile_shape_zrk\gbl_projectile_shape_zrk.model resolved to asset id 820cef88891e6869, type 0, language 0
+[loader] visualeffect\character\enemy\enm_evil_zurkon_teleport\enm_evil_zurkon_teleport.visualeffect resolved to asset id 91745a97cf2a1374, type 0, language 0
+[loader] visualeffect\equipment\weapon\wpn_mr_zurkon_jetpack_flare\wpn_mr_zurkon_jetpack_flare.visualeffect resolved to asset id bb60e9917a2abc6b, type 0, language 0
+[loader] sound\banks\wep_mr_zurkon.soundbank resolved to asset id ac67497a40c9abe4, type 0, language 0
+[loader] sound\banks\zurk_emergent.soundbank resolved to asset id bfe09d7ed64d5b61, type 0, language 0
+[loader] sound\banks\zurk_emergent.soundbank resolved to asset id bfe09d7ed64d5b61, type 0, language 8
+[loader] sound\banks\zurk_emergent.soundbank resolved to asset id bfe09d7ed64d5b61, type 0, language 1
+[loader] configs\emergentvo\zurkon_emergentvo.config resolved to asset id b70f719ba0cde1c1, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_emergentvo.config resolved to asset id b142fa4543243441, type 0, language 0
+[loader] equipment\weapon\wpn_zurkon_jr\wpn_zurkon_jr.actor resolved to asset id 97a48dfa55bac936, type 0, language 0
+[loader] sound\banks\zrkj_emergent.soundbank resolved to asset id a9589c6c0f208682, type 0, language 0
+[loader] sound\banks\zrkj_emergent.soundbank resolved to asset id a9589c6c0f208682, type 0, language 8
+[loader] sound\banks\zrkj_emergent.soundbank resolved to asset id a9589c6c0f208682, type 0, language 1
+[loader] equipment\weapon\wpn_zurkon_jr\wpn_zurkon_jr.model resolved to asset id 86e888d837df67f2, type 0, language 0
+[loader] configs\emergentvo\bot_emergentvo.config resolved to asset id bb876cac4c37b181, type 0, language 0
+[loader] configs\loot\loot_list_ammo_crate.config resolved to asset id a229cdcb15211400, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_weapon.config resolved to asset id 86b4ab7e64a862ae, type 0, language 0
+[loader] configs\equipment\wpn_thumper_weapon.config resolved to asset id b8ec8c05816e61ee, type 0, language 0
+[loader] equipment\projectile\proj_thumper\proj_thumper.actor resolved to asset id aa942e947ef85479, type 0, language 0
+[loader] equipment\weapon\wpn_thumper\wpn_thumper.actor resolved to asset id 96a91a59cbc75e75, type 0, language 0
+[loader] equipment\weapon\wpn_thumper\wpn_thumper.model resolved to asset id 87e51f7ba9a2f0b1, type 0, language 0
+[loader] sound\banks\wpn_thumper.soundbank resolved to asset id a8d814ac6281976d, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_core_sparks\proj_thumper_core_sparks.visualeffect resolved to asset id 9b15c2eb3609191e, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_activated\proj_thumper_activated.visualeffect resolved to asset id 96ab51eaec16670b, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_core\proj_thumper_core.visualeffect resolved to asset id bb192755691975b0, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_core_pop\proj_thumper_core_pop.visualeffect resolved to asset id 9f37012297319292, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_deactivate\proj_thumper_deactivate.visualeffect resolved to asset id 8274c7751db974f6, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_thump\proj_thumper_thump.visualeffect resolved to asset id ac00b271426a1087, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_arc_strike\proj_thumper_arc_strike.visualeffect resolved to asset id aea13061cad413f4, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_core_arcs\proj_thumper_core_arcs.visualeffect resolved to asset id a8f4d54e0005bf80, type 0, language 0
+[loader] equipment\projectile\proj_thumper_shockwave\proj_thumper_shockwave.model resolved to asset id a5c541ec3fe51797, type 0, language 0
+[loader] material\equipment\projectile\proj_thumper_field\thumper_ps4_shockw.material resolved to asset id aee2abd7505bccb7, type 0, language 0
+[loader] conduit\equipment\projectile\proj_thumper_shockwave_vfx\proj_thumper_shockwave_vfx.conduit resolved to asset id bdd3cfbb466e8e92, type 0, language 0
+[loader] conduit\equipment\projectile\proj_thumper_vfx\proj_thumper_vfx.conduit resolved to asset id bb87dedb047dee0d, type 0, language 0
+[loader] equipment\projectile\proj_thumper_shockwave\proj_thumper_shocknull.model resolved to asset id 80d1522dba040dc5, type 0, language 0
+[loader] equipment\projectile\proj_thumper_shockwave\proj_thumper_shockwave.actor resolved to asset id b48944ce5d80b953, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_thumper_thump_ring\proj_thumper_thump_ring.visualeffect resolved to asset id 9c59ddb0346508c0, type 0, language 0
+[loader] movies\weaponvids\wpn_mr_zurkon\wpn_mr_zurkon.movie resolved to asset id b61dbc3eb7e125d9, type 0, language 0
+[loader] movies\weaponvids\wpn_mr_zurkon\wpn_mr_zurkon.movie resolved to asset id b61dbc3eb7e125d9, type 0, language 8
+[loader] configs\video\wpn_mr_zurkon_video.config resolved to asset id 9f7c0699833ad216, type 0, language 0
+[loader] configs\equipment\wpn_mr_zurkon_item.config resolved to asset id b9cbad67f39ccc3f, type 0, language 0
+[loader] configs\other\test\mdaly\test4.config resolved to asset id bd4f9725629582c2, type 0, language 0
+[loader] movies\boot\bootsequence_china.movie resolved to asset id 851735c03e050852, type 0, language 8
+[loader] movies\boot\bootsequence_china.movie resolved to asset id 851735c03e050852, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\textures\wpn_sheepinator_liquid.texture resolved to asset id a0ec25697b6153e4, type 0, language 0
+[loader] material\equipment\weapon\wpn_sheepinator_internal_energy\wpn_sheepinator_internal_energy.material resolved to asset id 968d30ff1412ee0a, type 0, language 0
+[loader] material\equipment\weapon\wpn_sheepinator_liquid\wpn_sheepinator_liquid.material resolved to asset id b294c0b5c763d6d7, type 0, language 0
+[loader] configs\ally\ally_sheep_awareness.config resolved to asset id b81591eab36651df, type 0, language 0
+[loader] configs\ally\ally_sheep_v5_firing.config resolved to asset id 964626580b2df749, type 0, language 0
+[loader] equipment\weapon\wpn_schrodinger\wpn_sheepinator.model resolved to asset id bd551220c60f1abc, type 0, language 0
+[loader] equipment\weapon\wpn_sheepinator\wpn_sheepinator.model resolved to asset id 9f7cff7bb716652b, type 0, language 0
+[loader] characters\npc\npc_sheep_v2\npc_sheep_v2.actor resolved to asset id 85558e97661fbc42, type 0, language 0
+[loader] conduit\equipment\projectile\proj_combust_vfx\proj_combust_vfx.conduit resolved to asset id 9666f56da5c2b206, type 0, language 0
+[loader] configs\equipment\wpn_blaster_weapon.config resolved to asset id 8a5cae2261550ee1, type 0, language 0
+[loader] equipment\projectile\proj_combust\proj_combust.actor resolved to asset id a38d95743f8209a5, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_combust\proj_combust.visualeffect resolved to asset id b27ef8c2680722cc, type 0, language 0
+[loader] visualeffect\equipment\projectile\proj_combuster_ps4_impact_effect\proj_combuster_ps4_impact_effect.visualeffect resolved to asset id ada9e24f2ebed24f, type 0, language 0
+[loader] conduit\character\npc\npc_sheep_aud\npc_sheep_aud.conduit resolved to asset id abd7f319fd3e55e7, type 0, language 0
+[loader] conduit\equipment\projectile\proj_predator_launcher_aud\proj_predator_launcher_aud.conduit resolved to asset id 996e22f8f8ef2050, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_predator_launcher_aud\wpn_predator_launcher_aud.conduit resolved to asset id 972c916cef20a5b4, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_sheepinator_aud\wpn_sheepinator_aud.conduit resolved to asset id ae553bf73892532f, type 0, language 0
+[loader] sound\banks\events.wwiselookup resolved to asset id a81ab0a616889cc2, type 0, language 0
+[loader] sound\banks\wpn_predatorlauncher.soundbank resolved to asset id a14aa30042e0be0c, type 0, language 0
+[loader] configs\equipment\wpn_blaster_mod.config resolved to asset id b096ce6a56f894a0, type 0, language 0
+[loader] configs\equipment\wpn_fusion_grenade_mod.config resolved to asset id 8f7f55cd7f5978b9, type 0, language 0
+[loader] configs\equipment\wpn_magnamissile_mod.config resolved to asset id acda75d68e2d3a18, type 0, language 0
+[loader] configs\equipment\wpn_predator_launcher_mod.config resolved to asset id b42677887b8713c2, type 0, language 0
+[loader] configs\equipment\wpn_schrodinger_mod.config resolved to asset id 9e913e2fbe76156e, type 0, language 0
+[loader] configs\equipment\wpn_volcaniceruptor_mod.config resolved to asset id 8eb61ba104d1ec4e, type 0, language 0
+[loader] configs\equipment\wpn_thumper_mod.config resolved to asset id 83142d5e65db3f6e, type 0, language 0
+[loader] configs\equipment\wpn_sheepinator_mod.config resolved to asset id 8a9e265619088f91, type 0, language 0
+[loader] ui\loaded\authored\_art\icons\kmovementspread.svg resolved to asset id a8bcd57cabf4cfce, type 0, language 0
+[loader] conduit\equipment\projectile\proj_fusion_grenade_subshot_aud\proj_fusion_grenade_subshot_aud.conduit resolved to asset id 9608168b578e12ac, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_fusion_grenade_aud\wpn_fusion_grenade_aud.conduit resolved to asset id a62e84b8966b4d7b, type 0, language 0
+[loader] equipment\projectile\proj_fusion_grenade\proj_fusion_grenade.actor resolved to asset id 817de8c22b46cc9b, type 0, language 0
+[loader] sound\banks\wpn_fusiongrenade.soundbank resolved to asset id b38d870739a77774, type 0, language 0
+[loader] configs\equipment\wpn_fusiongrenade_subshotconfig.config resolved to asset id 8221f07ab2c82c9d, type 0, language 0
+[loader] equipment\weapon\wpn_volcaniceruptor\wpn_volcaniceruptor.actor resolved to asset id 967227bf8fadf270, type 0, language 0
+[loader] equipment\projectile\proj_volcaniceruptor\proj_volcaniceruptor.model resolved to asset id 9973f92a0b4366cc, type 0, language 0
+[loader] equipment\weapon\wpn_volcaniceruptor\display_volcanic_eruptor.actor resolved to asset id 8f87dfec38da03cb, type 0, language 0
+[loader] sound\banks\wpn_sheepinator.soundbank resolved to asset id 98f5d2e4a9c2a074, type 0, language 0
+[loader] configs\equipment\wpn_blaster_item.config resolved to asset id a348b82e699e1784, type 0, language 0
+[loader] configs\equipment\wpn_fusion_grenade_item.config resolved to asset id a74236af892d1b3e, type 0, language 0
+[loader] configs\equipment\wpn_magnamissile_item.config resolved to asset id b6efbb1e32ce5336, type 0, language 0
+[loader] configs\equipment\wpn_predator_launcher_item.config resolved to asset id 8034ef9f017cd311, type 0, language 0
+[loader] configs\equipment\wpn_schrodinger_item.config resolved to asset id 8204eb5b857474bc, type 0, language 0
+[loader] configs\equipment\wpn_sheepinator_item.config resolved to asset id ba3b8c1f25cac5f0, type 0, language 0
+[loader] configs\equipment\wpn_thumper_item.config resolved to asset id bf3863dd1ebff180, type 0, language 0
+[loader] configs\equipment\wpn_volcaniceruptor_item.config resolved to asset id 8d6ed40e943f3883, type 0, language 0
+[loader] configs\equipment\wpn_fusion_grenade_weapon.config resolved to asset id b9c868f9888356da, type 0, language 0
+[loader] configs\equipment\wpn_magnamissile_weapon.config resolved to asset id 972794263a3ef5fa, type 0, language 0
+[loader] configs\equipment\wpn_sheepinator_weapon.config resolved to asset id b17794ba3892355a, type 0, language 0
+[loader] configs\vendor\ven_weapon_vendor.config resolved to asset id ae5ce1e22662e244, type 0, language 0
+[loader] configs\uiconfig\uiicons.config resolved to asset id b745c3b9be03eb55, type 0, language 0
+[loader] configs\uiconfig\uiobjectdisplayer.config resolved to asset id abdf0fc34d26854b, type 0, language 0
+[loader] localization\localization_all.localization resolved to asset id be55d94f171bf8de, type 0, language 0
+[loader] localization\localization_all.localization resolved to asset id be55d94f171bf8de, type 0, language 1
+[loader] localization\localization_all.localization resolved to asset id be55d94f171bf8de, type 0, language 8
+[loader] characters\npc\npc_emperor_nefarious\animations\dimmodblizar_portal_out_nefarious_boss_wpn_dimensionator.animclip resolved to asset id 99777a24dbcb0a8e, type 0, language 0
+[loader] characters\npc\npc_emperor_nefarious\animations\dimmodidle_hover_dimensionator_nefarious_boss_wpn_dimensionator.animclip resolved to asset id ba13703a7b5f2882, type 0, language 0
+[loader] characters\npc\npc_emperor_nefarious\animations\dimmod_dimensionator_wpn_dimensionator.animclip resolved to asset id a0a993b757626b04, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_dimensionator\dim_proj_aud.conduit resolved to asset id a333e0d956e8398a, type 0, language 0
+[loader] conduit\equipment\weapon\wpn_dimensionator\dim_proj_vfx.conduit resolved to asset id a1ad35af5e1548ca, type 0, language 0
+[loader] configs\equipment\wpn_dimensionator_item.config resolved to asset id a6d296288aeb581b, type 0, language 0
+[loader] configs\equipment\wpn_dimensionator_weapon.config resolved to asset id 86a4a897616ca6eb, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_dimensionator.animset resolved to asset id 988ac738a93aa80a, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_dimensionator.model resolved to asset id be5afadcf91a2542, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_proj.actor resolved to asset id ad9127942d4a3b04, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_closed_a.actor resolved to asset id af035e9c14bfadb3, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_closed_b.actor resolved to asset id b6cf1b66c3fd46fe, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_in.actor resolved to asset id b73f55ddcfc449a0, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_portal.actor resolved to asset id a639f30b10c3e7ca, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_shift.actor resolved to asset id 816a0dc4ee72fb6e, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\dim_rift_tell.actor resolved to asset id 8dc7c8a3e136aef6, type 0, language 0
+[loader] equipment\weapon\wpn_dimensionator\wpn_dimensionator_hand.actor resolved to asset id 9b6b1a3eab284bad, type 0, language 0
+[loader] ui\loaded\authored\_art\icons\wpndimensionator.svg resolved to asset id 92c22629d131b832, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_0.json resolved to asset id 9e1febbd584dcea0, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_1.json resolved to asset id 867edeea84c95751, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_2.json resolved to asset id aedd8112e144fd43, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_3.json resolved to asset id b6bcb4453dc064b2, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_4.json resolved to asset id 9b2d1528c19c2ec7, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_5.json resolved to asset id 834c207f1d18b736, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_6.json resolved to asset id abef7f8778951d24, type 0, language 0
+[loader] ui/loaded/exported/hud/mm_7.json resolved to asset id b38e4ad0a41184d5, type 0, language 0
+[loader] registered 8 ui slots of 1024 bytes
+[events] event system at 00007FF6AF60A8C0, QueueEvent at 00007FF6AA406A60
+[time] time scale system at 00007FF6AE8502E0
+[camera] fov scale at 00007FF6AE68EEC8
+[camera] camera system at 00007FF6AE68EDE0
+[hud] ShowMessage at 00007FF6A99CD160
+[vanity] EquipBundle at 00007FF6A9C2A8E0
+[hero_look] HandleTransformationEvent at 00007FF6A98D8D40, OnTransformationPostActivate at 00007FF6A9AE63F0
+[configs] config asset manager at 00007FF6AE69BFE0
+[script] signal queue at 00007FF6AFAFFB00
+[travel] checkpoints at load system +0xe08d0, warp request at 00007FF6A9AF3900
+[rivet] scripts and the bridge pump on the game thread
+[script] enabled, loading from scripts on the first frame
+[rivet] starting ddl thread
+[rivet] loading renderdoc
+[rivet] loaded "rando_give.dll"
+[rivet] init complete
+[overlay] loading dxgi and d3d12...
+[bridge] listening on \\.\pipe\rivet_hook
+[overlay] overwriting D3D12CommandQueue vtable...
+[overlay] overwriting DXGISwapChain vtable...
+[overlay] finished
+[events] 2197 event classes registered
+[script] [rando]	RANDO-REAL	loaded:	on	(weapons and gadgets)	
+[script] [rando]	RANDO-REAL	direct delivery: helper at 7FEF00000000: ready
+[script] [rando]	RANDO-KEYS	keyboard keys on	| planet shuffle 0, give items back Ctrl+0 twice
+[script] [rando]	Randomizer 10.0.27 loaded (data 5.1.0, generator 10.11.0)
+[script] [rando]	RANDO-STATUS events subscribed 23/23
+[script] [rando]	RANDO-CAMPAIGN director loaded	capabilities: none verified yet
+[script] [rando]	RANDO-SHOP	loaded (15 vendor weapons)
+[script] [rando]	RANDO-ARMOR	loaded (21 armor pieces, interception needs rando_give.dll v5)
+[script] [rando]	RANDO-TRAVEL	loaded
+[script] [rando]	RANDO-HUB	loaded (10.0.27)
+[script] [rando]	RANDO-SPAWNERS	spawner layer loaded (SpawnerScriptAction Templates; families 48 bot classes)
+[script] [rando]	RANDO-ENEMIES	variable route loaded (v0.62-DEV7, kit 10.0.27): factory Templates, node Template, node Template group; plugs Templates 3990217346 Template 1835115251; combat compatibility all; ALL enemies (movement kept, spent spawners change too, Nefarious troopers included)
+[script] [rando]	RANDO-OMEGA	loaded (Omega flag not learned yet)
+[script] [rando]	RANDO-SPAWNERS	Boss Randomizer	is installed (	boss-tier enemies	)
+[script] [rando]	RANDO-BOSS	installed (OFF until the save says otherwise) - = turns it on / off, Ctrl+= shows what it changed; 8 story boss fights are kept as they are
+[script] [rando]	RANDO-BOSS	combat compatibility: all - boss-tier enemies swap among themselves (watched; story bosses stay)
+[script] [rando]	RANDO-SPAWNERS	Chaos Randomizer	is installed (	every enemy and boss, priority, no guards	)
+[script] [rando]	RANDO-CHAOS	installed (OFF until the save says otherwise) - BACKSPACE turns it on / off, Ctrl+BACKSPACE shows what it changed. NO safety guards; priority over the Enemy and Boss Randomizers while ON
+[script] [rando]	RANDO-DEBUG	warp loaded: HOME planet, PAGEUP/PAGEDOWN room, END warp (Ctrl fly), INSERT unstuck (Ctrl landing point), DELETE where am I, NUMPAD1/2 Omega
+[script] [rando]	RANDO-KEYS developer keys:	status ; | hub ] | stay [ | story / | campaign ' | old F keys too
+[script] [rando]	RANDO-TEST	loaded (10.0.27) - off
+[script] [rando]	RANDO-STATUS TEST MODE on: F10 story mission, F11 Gold Bolt, Ctrl+F10 twice resets, Ctrl+' lab read, Ctrl+F11 lab try
+[script] [rando]	RANDO-OMEGA-PROBE	loaded - waiting for the live hero; read-only
+[script] [rando]	RANDO-DEBUG	section	probe	off
+[script] [rando]	RANDO-DEBUG	section	spawnprobe	off
+[script] [rando]	RANDO-DEBUG	section	spawnproof	off
+[script] [rando]	RANDO-DEBUG	dev(debug).lua loaded - sections on:	keys, omega_probe, testmode, testtravel, warp
+[script] [rando]	RANDO-SPAWNERS	Enemy Randomizer	is installed (	regular enemies	)
+[script] [rando]	RANDO-ENEMY	installed (ON until the save says otherwise) - - turns it on / off, Ctrl+- shows what it changed
+[script] loaded 19 of 19 scripts, 4 frame and 30 key callbacks
+[script] [rando]	RANDO-KIT developer files loaded (diagnostics, not part of a release - remove them for normal play): dev(debug)
+[script] [rando]	RANDO-KIT release v0.62-DEV7 (kit 10.0.27)
+[script] [rando]	RANDO-KIT all 12 required scripts are 10.0.27
+[script] [rando]	RANDO-SEED ARSENAL_RESTORED is installed: its 9 weapons are in the pool (the companion checked rivet.toml and the game's toc)
+[script] [rando]	RANDO-SEED generating seed	ardolis-qwark-viceron-393	(random seed from the companion)
+[script] [rando]	RANDO-SETTINGS	raritanium_budget 2000 is below 17 rewards x raritanium_min 120: every raritanium reward gives 120
+[script] [rando]	RANDO-SEED ready	ardolis-qwark-viceron-393	defa36d4fc9e	preset balanced	attempt 1
+[script] [rando]	RANDO-SEED share code	RA10|ardolis-qwark-viceron-393|balanced|distribution=goldbolts_first,include_arsenal_restored=true,omega_weapons=true,shop=vanilla,start_omega=1,travel_lock=true
+[script] [rando]	RANDO-SAVE restored:	Gold Bolts 0/25 | rewards 1/99 | planets open 4/10 | hub 1/14 done, 3 open | at nefcity_1 | planets 0 | in inventory 24 | armor sources 0/27 | Omega 0/1 (flag not learned) | enemies ON (0 spawner(s) changed here, 190 enemy kind(s) known)
+[script] [rando]	notify failed:	the player hud is not loaded
+[built] invalid path 87821287ddaab515
+[built] skipped 87821287ddaab515
+[built] invalid path 982d1a247d597d03
+[built] skipped 982d1a247d597d03
+[built] invalid path 9dda6842c0d4815d
+[built] skipped 9dda6842c0d4815d
+[built] invalid path aa161bdb69c544bb
+[built] skipped aa161bdb69c544bb
+[built] invalid path b4550dbac69d5518
+[built] skipped b4550dbac69d5518
+[built] invalid path 88e9d90192dbe238
+[built] skipped 88e9d90192dbe238
+[built] invalid path ab0509479b54be89
+[built] skipped ab0509479b54be89
+[built] invalid path b2a34a0357e2a969
+[built] skipped b2a34a0357e2a969
+[built] invalid path b3536b2367f87fd0
+[built] skipped b3536b2367f87fd0
+[built] invalid path b7b74fe72d108776
+[built] skipped b7b74fe72d108776
+[built] invalid path aee7e54cfd243abc
+[built] skipped aee7e54cfd243abc
+[built] invalid path b53bca27a3789bfd
+[built] skipped b53bca27a3789bfd
+[built] invalid path b445dc337c907642
+[built] skipped b445dc337c907642
+[built] invalid path b712936aef2e71de
+[built] skipped b712936aef2e71de
+[built] invalid path a9e67385715fac0e
+[built] skipped a9e67385715fac0e
+[built] invalid path a377d6de6d0bdaf6
+[built] skipped a377d6de6d0bdaf6
+[built] invalid path 91b1cd860d770c1c
+[built] skipped 91b1cd860d770c1c
+[built] invalid path 8e0dd587d53e37c1
+[built] skipped 8e0dd587d53e37c1
+[built] invalid path b0d2dba5fbd0098d
+[built] skipped b0d2dba5fbd0098d
+[built] invalid path b52cb4fb30e68f84
+[built] skipped b52cb4fb30e68f84
+[DDL] indexed 2013 types for struct walking
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=813750 TotalBolts=813750
+[script] [rando]	RANDO-DISCOVER	GainRaritaniumEvent	NewRaritanium=132.0 TotalRaritanium=132.0
+[script] [rando]	RANDO-DISCOVER	LevelLoadedEvent	
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_HAX_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_ARENA_CHALLENGE_EMPTY MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_POCKET_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_CLANK_DEFAULT MissionState=1 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_RYNO_PLANS MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=7828F0971DA74C95C4DB266F0AA4A215
+[script] [rando]	RANDO-DISCOVER	MissionStateChangedEvent	MissionName=MIS_INTRO MissionState=2 PreviousState=0
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=E3484232B7A47262FA49AF6517753145
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_RYNO_PLANS ObjectiveName=OBJ_RYNO_PLANS ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	ObjectiveStateChangedEvent	MissionName=MIS_INTRO ObjectiveName=OBJ_INTRO_PROLOGUE ObjectiveState=1
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	NewPlanetName=NefCity
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072360 Component=2129941
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072362 Component=2129965
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 3 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-ARMOR	helper: armor give verified, armor sources on
+[script] [rando]	RANDO-NOTIFY	Randomizer v0.62-DEV7 - seed ardolis-qwark-viceron-393 (defa36d4fc9e)
+[script] [rando]	RANDO-OMEGA-PROBE	hero handle	1072366	component count	132
+[script] [rando]	RANDO-OMEGA-PROBE	hero components:	AimAngleGeneratorLocal, AnimControllerComponent, AnimMaterialComponent, AttachmentList, AttackImmunityManager, AutoCheckpoint, CVCCollData, CVCGatherer, CVCMoveData, CVCResolver, CameraShakeListener, CameraSyncSystemHelper, CameraTargetManual, CineVanityManager, CommonComponentStash, Condition, ConduitComponent, CooldownComponent, CritterPanicAreaHelper, DamageModifierConditionDamageHash, DamageModifierFromLocalPlayer, DamageModifierGlobalEnemyPercent, DamageModifierGlobalHazardPercent, DamageModifierMeleeHit, DamageModifierMinMax, DamageModifierOneHitKill, DepthOfFieldProcessorGame, Dialog, DifficultyMods, DropoffHunter, EmergentVOManagerHero, GameEquipManager, GameInventoryManager, GimpMaster, GravityBlender, GroundResponseSlippery, HeightMapComponent, HeroAbilityLock, HeroAccessibilityHighlightComponent, HeroAimLogger, HeroAimManagerLocal, HeroAimManagerPostCameraUpdateDebug, HeroAttackImmunity, HeroAwarenessManager, HeroButtonCache, HeroCameraAnimator, HeroCamer
+[script] [rando]	RANDO-OMEGA-PROBE	component GameEquipManager address=000001e4ad6f1100 size=872 handle=2130065 prius=nil prius_size=nil prius_behavior=ReadWrite shared=false
+[script] [rando]	RANDO-OMEGA-PROBE	component GameInventoryManager address=000001e4a8d5e4f0 size=8552 handle=2130064 prius=nil prius_size=nil prius_behavior=ReadWrite shared=false
+[script] [rando]	RANDO-OMEGA-PROBE	component HeroWeaponManagerLocal address=000001e4a8b59b40 size=2080 handle=2130073 prius=nil prius_size=nil prius_behavior=ReadWrite shared=false
+[script] [rando]	RANDO-OMEGA-PROBE	component StateMapHeroWeapon address=000001e4ad6f46a0 size=72 handle=2130076 prius=nil prius_size=nil prius_behavior=ReadWrite shared=false
+[script] [rando]	RANDO-OMEGA-PROBE	component VanityInventoryManager address=000001e4a8d7b0a0 size=17640 handle=2130078 prius=nil prius_size=nil prius_behavior=ReadWrite shared=false
+[script] [rando]	RANDO-OMEGA-PROBE	component WeaponAnimationManager address=000001e4ad6f4640 size=88 handle=2130074 prius=nil prius_size=nil prius_behavior=ReadWrite shared=false
+[script] [rando]	RANDO-OMEGA-PROBE	relevant hero components:	6	(item / inventory / weapon / equip / loadout)
+[script] [rando]	RANDO-OMEGA-PROBE	diagnostic complete - read-only; no memory writes were attempted
+[script] [rando]	RANDO-NOTIFY	Randomizer progress restored: Gold Bolts 0/25 | rewards 1/99 | planets open 4/10 | hub 1/14 done, 3 open | at nefcity_1 | planets 0 | in inventory 24 | armor sources 0/27 | Omega 0/1 (flag not learned) | enemies ON (0 spawner(s) changed here, 190 enemy kind(s) known)
+[script] [rando]	RANDO-ARMOR	intercepting 21 armor source(s)
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129999
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2129937 ItemHandle=2130324
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129937
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2129997 ItemHandle=2130325
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129997
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2129937 ItemHandle=2130326
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2129997 ItemHandle=2130327
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2129937 ItemHandle=2130331
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1001
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129951
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072366 Component=2129975
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072360 Component=2129942
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1072362 Component=2129966
+[script] [rando]	RANDO-DISCOVER	SaveDataAppliedEvent	
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123493
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060937 SpawnIndex=0 SpawnLocation=1060891 SpawnedHandle=1073499
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1061482 SpawnedHandle=1073500
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067842 SpawnIndex=0 SpawnLocation=1063397 SpawnedHandle=1073501
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067832 SpawnIndex=0 SpawnLocation=1063399 SpawnedHandle=1073502
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=0 SpawnLocation=1060733 SpawnedHandle=1073503
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=0 SpawnLocation=1060727 SpawnedHandle=1073504
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=0 SpawnLocation=1060715 SpawnedHandle=1073505
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=0 SpawnLocation=1060739 SpawnedHandle=1073506
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=0 SpawnLocation=1060721 SpawnedHandle=1073507
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=0 SpawnLocation=1060745 SpawnedHandle=1073508
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1062096 SpawnIndex=0 SpawnLocation=1061079 SpawnedHandle=1073509
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1062095 SpawnIndex=0 SpawnLocation=1061088 SpawnedHandle=1073510
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1061483 SpawnedHandle=1073511
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067845 SpawnIndex=0 SpawnLocation=1063400 SpawnedHandle=1073512
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1067840 SpawnIndex=0 SpawnLocation=1063398 SpawnedHandle=1073513
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070667 SpawnIndex=0 SpawnLocation=1070543 SpawnedHandle=1073514
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070671 SpawnIndex=0 SpawnLocation=1070538 SpawnedHandle=1073515
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070671 SpawnIndex=1 SpawnLocation=1070536 SpawnedHandle=1073516
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070670 SpawnIndex=0 SpawnLocation=1070531 SpawnedHandle=1073517
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070662 SpawnIndex=0 SpawnLocation=1070602 SpawnedHandle=1073518
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070674 SpawnIndex=0 SpawnLocation=1070524 SpawnedHandle=1073519
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1070627 SpawnedHandle=1073520
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=0 SpawnLocation=1070606 SpawnedHandle=1073521
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=0 SpawnLocation=1070588 SpawnedHandle=1073522
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071159 SpawnIndex=0 SpawnLocation=1071057 SpawnedHandle=1073523
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071162 SpawnIndex=0 SpawnLocation=1071037 SpawnedHandle=1073524
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071163 SpawnIndex=0 SpawnLocation=1071034 SpawnedHandle=1073525
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2124799
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123487
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123465
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116222
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116212
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106699
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106689
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116240
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2116220
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071166 SpawnIndex=0 SpawnLocation=1071065 SpawnedHandle=1073526
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071156 SpawnIndex=0 SpawnLocation=1071042 SpawnedHandle=1073527
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071161 SpawnIndex=0 SpawnLocation=1071116 SpawnedHandle=1073528
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070268 SpawnIndex=0 SpawnLocation=1070248 SpawnedHandle=1073529
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060940 SpawnIndex=0 SpawnLocation=1060841 SpawnedHandle=1073530
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060928 SpawnIndex=0 SpawnLocation=1060790 SpawnedHandle=1073531
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1070597 SpawnedHandle=1073746
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070664 SpawnIndex=1 SpawnLocation=1070565 SpawnedHandle=1073747
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1070623 SpawnedHandle=1073748
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070674 SpawnIndex=1 SpawnLocation=1070523 SpawnedHandle=1073749
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070670 SpawnIndex=1 SpawnLocation=1070530 SpawnedHandle=1073750
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=0 SpawnIndex=1 SpawnLocation=1061481 SpawnedHandle=1073751
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071162 SpawnIndex=1 SpawnLocation=1071039 SpawnedHandle=1073752
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071163 SpawnIndex=1 SpawnLocation=1071033 SpawnedHandle=1073753
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060929 SpawnIndex=1 SpawnLocation=1060750 SpawnedHandle=1073754
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060920 SpawnIndex=1 SpawnLocation=1060726 SpawnedHandle=1073755
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060918 SpawnIndex=1 SpawnLocation=1060744 SpawnedHandle=1073756
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060916 SpawnIndex=1 SpawnLocation=1060720 SpawnedHandle=1073757
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060923 SpawnIndex=1 SpawnLocation=1060732 SpawnedHandle=1073758
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060927 SpawnIndex=1 SpawnLocation=1060738 SpawnedHandle=1073759
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071166 SpawnIndex=1 SpawnLocation=1071040 SpawnedHandle=1073760
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071156 SpawnIndex=1 SpawnLocation=1071058 SpawnedHandle=1073761
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071161 SpawnIndex=1 SpawnLocation=1071121 SpawnedHandle=1073762
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1070268 SpawnIndex=1 SpawnLocation=1070242 SpawnedHandle=1073763
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060940 SpawnIndex=1 SpawnLocation=1060792 SpawnedHandle=1073764
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060928 SpawnIndex=1 SpawnLocation=1060836 SpawnedHandle=1073765
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1060932 SpawnIndex=0 SpawnLocation=1060779 SpawnedHandle=1073766
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071154 SpawnIndex=0 SpawnLocation=1071126 SpawnedHandle=1073767
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071160 SpawnIndex=0 SpawnLocation=1071095 SpawnedHandle=1073768
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071158 SpawnIndex=0 SpawnLocation=1071092 SpawnedHandle=1073769
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071158 SpawnIndex=1 SpawnLocation=1071066 SpawnedHandle=1073770
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071160 SpawnIndex=1 SpawnLocation=1071067 SpawnedHandle=1073771
+[script] [rando]	RANDO-DISCOVER	SpawnerSpawnEvent	SpawnFactory=1071154 SpawnIndex=1 SpawnLocation=1071117 SpawnedHandle=1073772
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2106717
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105426
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105440
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105436
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105430
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105444
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105422
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105392
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105396
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105404
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105416
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105428
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105418
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122720
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122716
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105414
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105412
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105410
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105402
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105398
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123473
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105406
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105442
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105434
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105394
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2122718
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105408
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105432
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105400
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123477
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105438
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2123491
+[script] [rando]	RANDO-SHOP	PROBE vendor config	AE5CE1E22662E244	VendorConfig	fields:	ID number=1.256416542188e+19 | IdleVOTriggerTime number=20.0 | PurchaseWeaponHoldTime number=1.0 | TabChangeDelayDuration number=0.60000002384186 | Type number=0 | UpgradeCellHeight number=62.0 | UpgradeCellHoldTime number=0.5 | UpgradeCellWidth number=53.0 | UpgradeCellYOffset number=31.0 | _type string=VendorConfig
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2105424
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:239: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:239: ran past the 8 ms frame budget
+[script] [rando]	RANDO-CAMPAIGN mission helper:	ready (rando_give.dll v4, mission code matches this exe)
+[script] [rando]	RANDO-CAMPAIGN mission system 2: MIS_INTRO is active (done)
+[script] [rando]	RANDO-HUB	planetary travel and level bits left to the game while	nefcity_1	runs (its own rifts)	(at the hub)
+[script] [rando]	RANDO-TRAVEL	checkpoint catalog:	corson_v 116=CHK_DEMO_START, nefarious_city 90=CHK_NEFCITY_START, sargasso 112=CHK_SARG_GELFACTORY_LANDINGPAD, scarstu 56=CHK_ZURK_LANDING_SHIP, savali 60=CHK_SAV_01_START, blizar_prime 109=CHK_BLIZAR_A_LANDINGPAD, torren_iv 55=CHK_MOL_START, cordelion 45=CHK_CORD_A_START, ardolis 46=CHK_ARD_START, viceron 52=CHK_ZORDOOM_START
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 867CABCCA160D639 (actor 1067833, variable 1931): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1062549 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 8CB9AA3563D4C389 (actor 1067834, variable 2726): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1062537 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 924E22C81CABE2B6 (actor 1067835, variable 3787): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1062537 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 930FB6A1C7EF6858 (actor 1067836, variable 1929): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1062550 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9AD5AEC72FB2D1FC (actor 1067837, variable 2664): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1062549 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9F1983AEB3F5ECE8 (actor 1067838, variable 5148): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1062550 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A13F4494E8DB17F6 (actor 1067839, variable 4283): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1062549 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A6431F8AF3DDE6C9 (actor 1067841, variable 4329): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1062550 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates AEF388A2160CD6A5 (actor 1067843, variable 2661): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1062537 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates B036C15805B081F3 (actor 1067844, variable 4327): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1062549 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C277F55CE4BB7910 (actor 1067846, variable 4151): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1062537 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C7C4FE2578B29EE5 (actor 1067847, variable 2620): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1062537 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates CC08A5EB5E18FE44 (actor 1067848, variable 4380): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1062549 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates D2C9AD3A15106420 (actor 1067849, variable 5589): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1062537 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E34F1EE09AE483A9 (actor 1067850, variable 4478): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1062550 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E46F1110DB236EDA (actor 1067851, variable 5360): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1062550 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F08591CE106244D5 (actor 1067852, variable 3650): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1062550 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F0D2AFEEC7CCE44A (actor 1067853, variable 2864): enm_neo_nefarious_swarmer -> enm_neo_nefarious_melee [template 1062537 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates FC045E865635D879 (actor 1067854, variable 2867): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1062549 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates FE49214C4ECD0C27 (actor 1067855, variable 3517): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1062549 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A06820B5010A0236 (actor 1070665, variable 6610): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1062549 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	scan 2 on nefarious_city: 116 spawner variable(s) (64 new): 88 factory Templates, 26 node Template, 2 node Template group; 4 enemy kind(s) known here; template actors asked before a spawn: 17, answered 0
+[script] [rando]	RANDO-REAL	weapon replay seen (2 weapons) - late answers can be recognised now
+[script] [rando]	RANDO-DISCOVER	PlanetChangedEvent	OldPlanetName=NefCity
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 867CABCCA160D639: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 8CB9AA3563D4C389: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 924E22C81CABE2B6: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 930FB6A1C7EF6858: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 9AD5AEC72FB2D1FC: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 9F1983AEB3F5ECE8: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates A13F4494E8DB17F6: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates A6431F8AF3DDE6C9: OK
+[script] [rando]	RANDO-ENEMIES	21 changed spawner(s) put back: leaving NefCity
+[script] [rando]	RANDO-ENEMIES	level summary (planet NefCity): 116 spawner variable(s), 21 changed (0 still), budget retries 0 | session factory: on, 21 changed, 0 replaced, 0 original, 0 other | template: on, 0 changed, 0 replaced, 0 original, 0 other | group: on, 0 changed, 0 replaced, 0 original, 0 other
+[script] [rando]	RANDO-ENEMIES	level detail: factory Templates: 21 CHANGED, 24 empty, 4 kind not known yet (learned from its first spawn), 25 protected: never, 14 protected: nil | node Template: 24 kind not known yet (learned from its first spawn), 2 spawns no enemy | node Template group: 2 a member is no regular enemy | SpawnFactory-0 spawns tied to nothing 13 | deaths seen 0 (of our bots 0), bots gone 0 | stalls 0 | jobs dropped 0 | spawns given up 0 | spawn points indexed 46 | species Nefarious troopers
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090783 Component=2192618
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090783 Component=2192619
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090783 Component=2192620
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=2192618 ItemHandle=2192767
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=2192618 ItemHandle=2192771
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=2192618 ItemHandle=2192773
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1002
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1003
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1004
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1005
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1006
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1007
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1008
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1009
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1010
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1011
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1012
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1013
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1014
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1015
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1016
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1017
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1018
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1019
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1020
+[script] [rando]	RANDO-DISCOVER	WeaponAddedEvent	WeaponType=1021
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090783 Component=2192558
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090783 Component=2192559
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090777 Component=2192560
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090783 Component=2192561
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090777 Component=2192562
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090777 Component=2192563
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=2192558 ItemHandle=2193057
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=2192558 ItemHandle=2193058
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=2192558 ItemHandle=2193059
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=2192558 ItemHandle=2193060
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=2192558 ItemHandle=2193061
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090779 Component=2192582
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090779 Component=2192583
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090779 Component=2192584
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090779 Component=2192585
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090779 Component=2192586
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090779 Component=2192587
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090778 Component=2192570
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090778 Component=2192571
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090778 Component=2192572
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090778 Component=2192573
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090778 Component=2192574
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090778 Component=2192575
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090780 Component=2192594
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090780 Component=2192595
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090780 Component=2192596
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090780 Component=2192597
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090780 Component=2192598
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1090780 Component=2192599
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 3 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2187138
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2187154
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2186241
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2186233
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2187148
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185143
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185149
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185147
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185145
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2185151
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2177811
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2177791
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2177793
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2177783
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2165792
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2165782
+[script] [rando]	RANDO-DISCOVER	SpawnerStoppedEvent	SpawnerComponentHandle=2186219
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 867CABCCA160D639 (actor 1085074, variable 9843): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 8CB9AA3563D4C389 (actor 1085075, variable 10638): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 924E22C81CABE2B6 (actor 1085076, variable 11699): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 930FB6A1C7EF6858 (actor 1085077, variable 9841): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9AD5AEC72FB2D1FC (actor 1085078, variable 10576): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9F1983AEB3F5ECE8 (actor 1085079, variable 13060): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A13F4494E8DB17F6 (actor 1085080, variable 12195): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A6431F8AF3DDE6C9 (actor 1085082, variable 12241): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates AEF388A2160CD6A5 (actor 1085084, variable 10573): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates B036C15805B081F3 (actor 1085085, variable 12239): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C277F55CE4BB7910 (actor 1085087, variable 12063): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C7C4FE2578B29EE5 (actor 1085088, variable 10532): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates CC08A5EB5E18FE44 (actor 1085089, variable 12292): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates D2C9AD3A15106420 (actor 1085090, variable 13501): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E34F1EE09AE483A9 (actor 1085091, variable 12390): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E46F1110DB236EDA (actor 1085092, variable 13272): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F08591CE106244D5 (actor 1085093, variable 11562): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F0D2AFEEC7CCE44A (actor 1085094, variable 10776): enm_neo_nefarious_swarmer -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates FC045E865635D879 (actor 1085095, variable 10779): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates FE49214C4ECD0C27 (actor 1085096, variable 11429): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 859AA9AB1FF83247 (actor 1088428, variable 15081): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 86A179548DD539DE (actor 1088429, variable 14972): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 972EE4037E3D0793 (actor 1088431, variable 15133): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9C49B3B5A57FB512 (actor 1088432, variable 14447): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 807B7DA9C7ACADB2 (actor 1088750, variable 15345): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 8571C3370188D564 (actor 1088751, variable 15311): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 909114B422FA7C60 (actor 1088752, variable 15401): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9154877B35268DA1 (actor 1088753, variable 15244): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 94C158B7FB4BB73C (actor 1088754, variable 15281): enm_neo_nefarious_swarmer -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 994754287B28C191 (actor 1088755, variable 15309): enm_neo_nefarious_swarmer -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED (late: it had spawned, its next spawns) factory Templates 9A722F25F73476B1 (actor 1088756, variable 15347): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9D4FE51D3C083B7E (actor 1088757, variable 15181): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates AE1751DFE8462F63 (actor 1088758, variable 15405): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates B0FB32435F3A9386 (actor 1088759, variable 15385): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates B2E957B61896BB96 (actor 1088760, variable 15372): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C09A1DCA5197B06D (actor 1088762, variable 15255): enm_neo_nefarious_melee -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED (late: it had spawned, its next spawns) factory Templates CA7611BEC31B14D7 (actor 1088765, variable 15269): enm_neo_nefarious_melee -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates D649390E52DB861D (actor 1088766, variable 15249): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E2B70C9A45A53C82 (actor 1088767, variable 15397): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1079775 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates EB2F263E540409D6 (actor 1088768, variable 15160): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates EC2BD1AE2BD80347 (actor 1088769, variable 15394): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1079788 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F43A9D127C1D9622 (actor 1088770, variable 15415): enm_neo_nefarious_melee -> enm_neo_nefarious_swarmer [template 1079787 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	scan 1 on nefarious_city: 143 spawner variable(s) (143 new): 110 factory Templates, 33 node Template, 0 node Template group; 8 enemy kind(s) known here; template actors asked before a spawn: 22, answered 0
+[script] [rando]	RANDO-HUB	planetary travel and level bits left to the game while	nefcity_1	runs (its own rifts)	(at the hub)
+[script] [rando]	RANDO-ENEMIES	ASSET enm_neo_nefarious_melee (swarmer, GameBotMeleeSwarmer): characters\enemy\enm_neo_nefarious_melee\enm_neo_nefarious_melee.actor
+[script] [rando]	RANDO-ENEMIES	SPAWN 1093589 | nefarious_city | - | factory Templates CA7611BEC31B14D7 | original enm_neo_nefarious_melee | selected enm_neo_nefarious_swarmer | spawned enm_neo_nefarious_melee (swarmer) | ORIGINAL: the game spawned something else than the variable held
+[script] [rando]	RANDO-ENEMIES	spawn 1093589 of changed factory Templates CA7611BEC31B14D7: enm_neo_nefarious_melee
+[script] [rando]	RANDO-ENEMIES	VERIFY factory Templates CA7611BEC31B14D7: late change - the factory still makes the enemies it queued before; the change stays for its next run
+[script] [rando]	RANDO-ENEMIES	ASSET enm_neo_nefarious_shooter (ground, GameBotShooterNoFiring): characters\enemy\enm_neo_nefarious_shooter\enm_neo_nefarious_shooter.actor
+[script] [rando]	RANDO-ENEMIES	SPAWN 1093590 | nefarious_city | - | factory Templates 9A722F25F73476B1 | original enm_neo_nefarious_shooter | selected enm_neo_nefarious_swarmer | spawned enm_neo_nefarious_shooter (ground) | ORIGINAL: the game spawned something else than the variable held
+[script] [rando]	RANDO-ENEMIES	spawn 1093590 of changed factory Templates 9A722F25F73476B1: enm_neo_nefarious_shooter
+[script] [rando]	RANDO-ENEMIES	VERIFY factory Templates 9A722F25F73476B1: late change - the factory still makes the enemies it queued before; the change stays for its next run
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-ENEMIES	SPAWN 1093824 | nefarious_city | - | factory Templates CA7611BEC31B14D7 | original enm_neo_nefarious_melee | selected enm_neo_nefarious_swarmer | spawned enm_neo_nefarious_melee (swarmer) | ORIGINAL: the game spawned something else than the variable held
+[script] [rando]	RANDO-ENEMIES	spawn 1093824 of changed factory Templates CA7611BEC31B14D7: enm_neo_nefarious_melee
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 867CABCCA160D639: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 8CB9AA3563D4C389: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 924E22C81CABE2B6: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 930FB6A1C7EF6858: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 9AD5AEC72FB2D1FC: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 9F1983AEB3F5ECE8: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates A13F4494E8DB17F6: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates A6431F8AF3DDE6C9: OK
+[script] [rando]	RANDO-ENEMIES	42 changed spawner(s) put back: leaving NefCity (1 finish next frame)
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=970.46667480469 MissionName=MIS_INTRO MissionSegmentId=8CFCF38CF7171611CDF1AB20B64955FC
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=916.10168457031 MissionName=MIS_NEFCITY_01 MissionSegmentId=C8DA351F83C6AD67DC92760B39D759FA
+[script] [rando]	RANDO-DISCOVER	EndMissionDevstatsEvent	EndReason=4 IsReplay=false MissionDuration=970.46667480469 MissionName=MIS_RYNO_PLANS MissionSegmentId=49E0EF16489F8FE59299C3759C410A91
+[script] [rando]	RANDO-ENEMIES	1 changed spawner(s) put back: level loaded (1 finish next frame)
+[script] [rando]	RANDO-ENEMIES	level summary (planet NefCity): 143 spawner variable(s), 42 changed (0 still), budget retries 0 | session factory: on, 63 changed, 0 replaced, 0 original, 0 other | template: on, 0 changed, 0 replaced, 0 original, 0 other | group: on, 0 changed, 0 replaced, 0 original, 0 other
+[script] [rando]	RANDO-ENEMIES	level detail: factory Templates: 42 CHANGED, 16 empty, 6 kind not known yet (learned from its first spawn), 33 protected: never, 13 protected: nil | node Template: 29 kind not known yet (learned from its first spawn), 4 spawns no enemy | SpawnFactory-0 spawns tied to nothing 2 | deaths seen 0 (of our bots 0), bots gone 0 | stalls 0 | jobs dropped 0 | spawns given up 0 | spawn points indexed 36 | species Nefarious troopers
+[script] [rando]	RANDO-ENEMIES	ENEMY SPAWNS on this level: 3, replaced 0 (0%), original despite a change 3, something else 0, not changed 0 | by kind (replaced/spawned): enm_neo_nefarious_melee/swarmer 0/2, enm_neo_nefarious_shooter/ground 0/1
+[script] [rando]	RANDO-REAL	weapon replay with	7	types new to this session - none taken as a late answer
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_RYNO_PLANS MissionSegmentId=E0F45CA98FEBB89028A2AD11CA4ED487
+[script] [rando]	RANDO-DISCOVER	StartMissionDevstatsEvent	IsReplay=false MissionName=MIS_INTRO MissionSegmentId=8028BB70D552DADD5A9912EE8DA0CFC0
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 3 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106890 Component=4226716
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4226654 ItemHandle=4226897
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106890 Component=4226654
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4226714 ItemHandle=4226898
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106890 Component=4226714
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4226654 ItemHandle=4226899
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4226714 ItemHandle=4226900
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4226654 ItemHandle=4226904
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106890 Component=4226668
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106890 Component=4226692
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106884 Component=4226659
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106886 Component=4226683
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106884 Component=4226658
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=1106886 Component=4226682
+[script] [rando]	RANDO-ENEMIES	template actors never answered before a spawn (40 asked): asking stops for this session; a kind not in the save is learned from its first spawn
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 867CABCCA160D639 (actor 1102357, variable 18386): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1097073 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 8CB9AA3563D4C389 (actor 1102358, variable 19181): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1097061 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 924E22C81CABE2B6 (actor 1102359, variable 20242): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1097061 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 930FB6A1C7EF6858 (actor 1102360, variable 18384): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1097074 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9AD5AEC72FB2D1FC (actor 1102361, variable 19119): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1097073 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9F1983AEB3F5ECE8 (actor 1102362, variable 21603): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1097074 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A13F4494E8DB17F6 (actor 1102363, variable 20738): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1097073 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A6431F8AF3DDE6C9 (actor 1102365, variable 20784): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1097074 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates AEF388A2160CD6A5 (actor 1102367, variable 19116): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1097061 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates B036C15805B081F3 (actor 1102368, variable 20782): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1097073 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C277F55CE4BB7910 (actor 1102370, variable 20606): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1097061 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C7C4FE2578B29EE5 (actor 1102371, variable 19075): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1097061 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates CC08A5EB5E18FE44 (actor 1102372, variable 20835): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1097073 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates D2C9AD3A15106420 (actor 1102373, variable 22044): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1097061 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E34F1EE09AE483A9 (actor 1102374, variable 20933): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1097074 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E46F1110DB236EDA (actor 1102375, variable 21815): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1097074 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F08591CE106244D5 (actor 1102376, variable 20105): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1097074 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F0D2AFEEC7CCE44A (actor 1102377, variable 19319): enm_neo_nefarious_swarmer -> enm_neo_nefarious_melee [template 1097061 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates FC045E865635D879 (actor 1102378, variable 19322): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1097073 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates FE49214C4ECD0C27 (actor 1102379, variable 19972): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1097073 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A06820B5010A0236 (actor 1105190, variable 23065): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1097073 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	scan 1 on nefarious_city: 116 spawner variable(s) (116 new): 88 factory Templates, 26 node Template, 2 node Template group; 4 enemy kind(s) known here; template actors asked before a spawn: 1, answered 0
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:232: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:239: ran past the 8 ms frame budget
+[script] [rando]	RANDO-HUB	planetary travel and level bits left to the game while	nefcity_1	runs (its own rifts)	(at the hub)
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 867CABCCA160D639: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 8CB9AA3563D4C389: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 924E22C81CABE2B6: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 930FB6A1C7EF6858: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 9AD5AEC72FB2D1FC: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates 9F1983AEB3F5ECE8: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates A13F4494E8DB17F6: OK
+[script] [rando]	RANDO-ENEMIES	put back (leaving NefCity): factory Templates A6431F8AF3DDE6C9: OK
+[script] [rando]	RANDO-ENEMIES	21 changed spawner(s) put back: leaving NefCity
+[script] [rando]	RANDO-ENEMIES	level summary (planet NefCity): 116 spawner variable(s), 21 changed (0 still), budget retries 0 | session factory: on, 84 changed, 0 replaced, 0 original, 0 other | template: on, 0 changed, 0 replaced, 0 original, 0 other | group: on, 0 changed, 0 replaced, 0 original, 0 other
+[script] [rando]	RANDO-ENEMIES	level detail: factory Templates: 21 CHANGED, 24 empty, 4 kind not known yet (learned from its first spawn), 25 protected: never, 14 protected: nil | node Template: 24 kind not known yet (learned from its first spawn), 2 spawns no enemy | node Template group: 2 a member is no regular enemy | SpawnFactory-0 spawns tied to nothing 13 | deaths seen 0 (of our bots 0), bots gone 0 | stalls 0 | jobs dropped 0 | spawns given up 0 | spawn points indexed 46 | species Nefarious troopers
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110301 Component=4292896
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110301 Component=4292897
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110301 Component=4292898
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1705612936 InventoryHandle=4292896 ItemHandle=4293045
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3505658055 InventoryHandle=4292896 ItemHandle=4293049
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=597851141 InventoryHandle=4292896 ItemHandle=4293051
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110301 Component=4292836
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110301 Component=4292837
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110295 Component=4292838
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110301 Component=4292839
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110295 Component=4292840
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110295 Component=4292841
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=1700739470 InventoryHandle=4292836 ItemHandle=4293335
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=565053540 InventoryHandle=4292836 ItemHandle=4293336
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=3984731671 InventoryHandle=4292836 ItemHandle=4293337
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2681061161 InventoryHandle=4292836 ItemHandle=4293338
+[script] [rando]	RANDO-DISCOVER	GadgetItemAddedEvent	ConfigTypeHash=2983765807 InventoryHandle=4292836 ItemHandle=4293339
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110297 Component=4292860
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110297 Component=4292861
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110297 Component=4292862
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110297 Component=4292863
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110297 Component=4292864
+[script] [rando]	RANDO-DISCOVER	InventoryChangedEvent	Actor=2110297 Component=4292865
+[script] [rando]	RANDO-PLANET	NefCity	nefarious_city	rewards unlocked
+[script] [rando]	RANDO-NOTIFY	Nefarious City: 3 destination(s) open - ] next, Ctrl+] go
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 859AA9AB1FF83247 (actor 2121734, variable 31536): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 86A179548DD539DE (actor 2121735, variable 31427): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 972EE4037E3D0793 (actor 2121737, variable 31588): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9C49B3B5A57FB512 (actor 2121738, variable 30902): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 807B7DA9C7ACADB2 (actor 2122288, variable 31800): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 8571C3370188D564 (actor 2122289, variable 31766): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 909114B422FA7C60 (actor 2122290, variable 31856): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9154877B35268DA1 (actor 2122291, variable 31699): enm_neo_nefarious_melee -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 94C158B7FB4BB73C (actor 2122292, variable 31736): enm_neo_nefarious_swarmer -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 994754287B28C191 (actor 2122293, variable 31764): enm_neo_nefarious_swarmer -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED (late: it had spawned, its next spawns) factory Templates 9A722F25F73476B1 (actor 2122294, variable 31802): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9D4FE51D3C083B7E (actor 2122295, variable 31636): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates AE1751DFE8462F63 (actor 2122296, variable 31860): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates B0FB32435F3A9386 (actor 2122297, variable 31840): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates B2E957B61896BB96 (actor 2122298, variable 31827): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C09A1DCA5197B06D (actor 2122300, variable 31710): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED (late: it had spawned, its next spawns) factory Templates CA7611BEC31B14D7 (actor 2122303, variable 31724): enm_neo_nefarious_melee -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates D649390E52DB861D (actor 2122304, variable 31704): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E2B70C9A45A53C82 (actor 2122305, variable 31852): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates EB2F263E540409D6 (actor 2122306, variable 31615): enm_neo_nefarious_melee -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates EC2BD1AE2BD80347 (actor 2122307, variable 31849): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F43A9D127C1D9622 (actor 2122308, variable 31870): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 867CABCCA160D639 (actor 1119599, variable 26298): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 8CB9AA3563D4C389 (actor 1119600, variable 27093): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 924E22C81CABE2B6 (actor 1119601, variable 28154): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 930FB6A1C7EF6858 (actor 1119602, variable 26296): enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9AD5AEC72FB2D1FC (actor 1119603, variable 27031): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates 9F1983AEB3F5ECE8 (actor 1119604, variable 29515): enm_neo_nefarious_melee -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A13F4494E8DB17F6 (actor 1119605, variable 28650): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates A6431F8AF3DDE6C9 (actor 1119607, variable 28696): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates AEF388A2160CD6A5 (actor 1119609, variable 27028): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates B036C15805B081F3 (actor 1119610, variable 28694): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C277F55CE4BB7910 (actor 1119612, variable 28518): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates C7C4FE2578B29EE5 (actor 1119613, variable 26987): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates CC08A5EB5E18FE44 (actor 1119614, variable 28747): enm_neo_nefarious_shooter -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates D2C9AD3A15106420 (actor 1119615, variable 29956): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E34F1EE09AE483A9 (actor 1119616, variable 28845): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates E46F1110DB236EDA (actor 1119617, variable 29727): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F08591CE106244D5 (actor 1119618, variable 28017): enm_neo_nefarious_melee -> enm_neo_nefarious_shooter [template 1114316 uid F04DE470088CD346 from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates F0D2AFEEC7CCE44A (actor 1119619, variable 27231): enm_neo_nefarious_swarmer -> enm_neo_nefarious_melee [template 1114303 uid 94CF97FD0E5A889C from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates FC045E865635D879 (actor 1119620, variable 27234): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-ENEMIES	CHANGED factory Templates FE49214C4ECD0C27 (actor 1119621, variable 27884): enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer [template 1114315 uid 9A80C9973BC5E67A from save; enemy_compat = all: not combat-verified yet, watched (a death verifies it)]
+[script] [rando]	RANDO-HUB	planetary travel and level bits left to the game while	nefcity_1	runs (its own rifts)	(at the hub)
+[script] [rando]	RANDO-ENEMIES	scan 1 on nefarious_city: 154 spawner variable(s) (154 new): 110 factory Templates, 44 node Template, 0 node Template group; 8 enemy kind(s) known here; template actors asked before a spawn: 0, answered 0
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-ENEMIES	SPAWN 2113505 | nefarious_city | - | factory Templates CA7611BEC31B14D7 | original enm_neo_nefarious_melee | selected enm_neo_nefarious_swarmer | spawned enm_neo_nefarious_melee (swarmer) | ORIGINAL: the game spawned something else than the variable held
+[script] [rando]	RANDO-ENEMIES	spawn 2113505 of changed factory Templates CA7611BEC31B14D7: enm_neo_nefarious_melee
+[script] [rando]	RANDO-ENEMIES	VERIFY factory Templates CA7611BEC31B14D7: late change - the factory still makes the enemies it queued before; the change stays for its next run
+[script] [rando]	RANDO-ENEMIES	SPAWN 2113506 | nefarious_city | - | factory Templates 9A722F25F73476B1 | original enm_neo_nefarious_shooter | selected enm_neo_nefarious_swarmer | spawned enm_neo_nefarious_shooter (ground) | ORIGINAL: the game spawned something else than the variable held
+[script] [rando]	RANDO-ENEMIES	spawn 2113506 of changed factory Templates 9A722F25F73476B1: enm_neo_nefarious_shooter
+[script] [rando]	RANDO-ENEMIES	VERIFY factory Templates 9A722F25F73476B1: late change - the factory still makes the enemies it queued before; the change stays for its next run
+[script] [rando]	RANDO-ENEMIES	SPAWN 2113737 | nefarious_city | - | factory Templates CA7611BEC31B14D7 | original enm_neo_nefarious_melee | selected enm_neo_nefarious_swarmer | spawned enm_neo_nefarious_melee (swarmer) | ORIGINAL: the game spawned something else than the variable held
+[script] [rando]	RANDO-ENEMIES	spawn 2113737 of changed factory Templates CA7611BEC31B14D7: enm_neo_nefarious_melee
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:232: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	GainBoltEvent	NewBolts=862000 TotalBolts=6109903
+[script] [rando]	RANDO-DISCOVER	VendorPurchaseEvent	ShowRemapTutorial=false WeaponName=Bouncer
+[script] [rando]	RANDO-DISCOVER	PurchaseWeaponEvent	WeaponConfig=9365845817522225152 WeaponName=WEAPON_BOUNCER
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-DISCOVER	VendorPurchaseEvent	ShowRemapTutorial=false WeaponName=Pixelizer
+[script] [rando]	RANDO-DISCOVER	PurchaseWeaponEvent	WeaponConfig=10047859372339888128 WeaponName=WEAPON_PIXELIZER
+[script] [rando]	RANDO-KEY	END		debug END
+[script] [rando]	RANDO-NOTIFY	[DEBUG] press HOME first to choose a planet
+[script] [rando]	RANDO-KEY	END		debug END
+[script] [rando]	RANDO-NOTIFY	[DEBUG] press HOME first to choose a planet
+[script] [rando]	RANDO-DISCOVER	VendorPurchaseEvent	ShowRemapTutorial=false WeaponName=Tunneler
+[script] [rando]	RANDO-DISCOVER	PurchaseWeaponEvent	WeaponConfig=13473570788164249600 WeaponName=WEAPON_TUNNELER
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	search:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[script] [rando]	RANDO-KEY	NUMPAD1		debug NUMPAD1
+[script] [rando]	RANDO-KEY	NUMPAD2		debug NUMPAD2
+[script] [rando]	RANDO-KEY	END		debug END
+[script] [rando]	RANDO-NOTIFY	[DEBUG] press HOME first to choose a planet
+[script] [rando]	RANDO-DISCOVER	VendorPurchaseEvent	ShowRemapTutorial=false WeaponName=BuzzBlades
+[script] [rando]	RANDO-DISCOVER	PurchaseWeaponEvent	WeaponConfig=10016469848382568448 WeaponName=WEAPON_BUZZ_BLADES
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	debug_read:	scripts\17_rando_omega.lua:239: ran past the 8 ms frame budget
+[script] [rando]	RANDO-OMEGA	RANDO-ERROR	debug_compare:	scripts\17_rando_omega.lua:236: ran past the 8 ms frame budget
+[rivet] fini
+[rivet] unloading renderdoc
+[rivet] Overlay fini
+[rivet] AssetLoader fini
+[loader] closing 0/configs/equipment/wpn_fusion_grenade_weapon.config
+[loader] closing 0/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_g.texture
+[loader] closing 0/configs/other/test/mdaly/test3.config
+[loader] closing 0/configs/uiconfig/uiobjectdisplayer.config
+[loader] closing 0/B2B746D0573FD296
+[loader] closing 0/BE097E4CF400C6EC
+[loader] closing 0/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_g.texture
+[loader] closing 0/characters/ambient/amb_uwb_jellyfish/amb_uwb_jellyfish.model
+[loader] closing 0/material/equipment/weapon/wpn_predator_launcher_upgrade/wpn_predator_launcher_upgrade.material
+[loader] closing 0/BFBF34400EB134D7
+[loader] closing 0/characters/ambient/amb_uwb_jellyfish/amb_uwb_jellyfish.animset
+[loader] closing 0/equipment/weapon/wpn_dimensionator/textures/zdim_d_m.texture
+[loader] closing 0/configs/equipment/equip_loadout_finale.config
+[loader] closing ui/loaded/exported/hud/mm_5.json
+[loader] closing 0/characters/enemy/enm_antara_swarmer/enm_antara_swarmer.animset
+[loader] closing 0/characters/enemy/enm_antara_swarmer/enm_antara_swarmer.model
+[loader] closing 0/characters/enemy/enm_darter_bat_ps4/enm_darter_bat_ps4.animset
+[loader] closing 0/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_g.texture
+[loader] closing 0/characters/enemy/enm_darter_bat_ps4/enm_darter_bat_ps4.model
+[loader] closing 0/material/equipment/weapon/wpn_schrodinger/wpn_schrodinger.material
+[loader] closing 0/configs/equipment/wpn_mr_zurkon_grid.config
+[loader] closing 0/material/equipment/weapon/wpn_predator_launcher_projectile/wpn_predator_launcher_shared_base.material
+[loader] closing 0/configs/equipment/equip_loadout_allweapons.config
+[loader] closing 0/configs/equipment/equip_loadout_allweapons_v5.config
+[loader] closing 0/textures/character/npc/Sheep/v5_horns_g.texture
+[loader] closing 0/configs/equipment/equip_loadout_ratchet_allweapons.config
+[loader] closing 0/configs/equipment/wpn_predator_launcher_weapon.config
+[loader] closing 0/configs/equipment/wpn_schrodinger_weapon.config
+[loader] closing 0/configs/equipment/wpn_volcaniceruptor_subshot.config
+[loader] closing 0/material/equipment/weapon/wpn_predator_launcher_upgrade/wpn_predator_launcher_upgrade2.material
+[loader] closing 0/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_c.texture
+[loader] closing 0/equipment/weapon/wpn_Predator_Launcher_v5/Predator_Launcher_V5_m.texture
+[loader] closing 0/configs/other/test/mdaly/test1.config
+[loader] closing 0/configs/masterweaponlist/masterweaponlist.config
+[loader] closing 0/material/equipment/weapon/wpn_sheepinator_base/wpn_sheepinator_base.material
+[loader] closing 0/ui/loaded/authored/_art/icons/wpndimensionator.svg
+[loader] closing 0/configs/equipment/wpn_volcaniceruptor_weapon.config
+[loader] closing 0/configs/other/test/mdaly/test2.config
+[loader] closing 0/equipment/weapon/wpn_sheepinator/wpn_sheepinator.actor
+[loader] closing 0/equipment/weapon/wpn_predator_launcher/wpn_predator_launcher.model
+[loader] closing 0/coretest/textures/default_pink_shader/default_pink_shader_g.texture
+[loader] closing 0/configs/system/system_localizationswapsystem.config
+[loader] closing 0/material/equipment/weapon/wpn_sheepinator_internal_energy/wpn_sheepinator_internal_energy.material
+[loader] closing 0/coretest/textures/default_pink_shader/default_pink_shader_c.texture
+[loader] closing 0/equipment/weapon/wpn_dimensionator/textures/zdim_a_m.texture
+[loader] closing 0/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_n.texture
+[loader] closing 0/equipment/weapon/wpn_dimensionator/textures/zdim_b1_m.texture
+[loader] closing 0/equipment/weapon/wpn_dimensionator/textures/zdim_c_m.texture
+[loader] closing 0/equipment/weapon/wpn_magnamissile/wpn_magnamissile.actor
+[loader] closing 0/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_c.texture
+[loader] closing 0/equipment/weapon/wpn_Predator_Launcher_v5/default_pink_shader/Predator_Launcher_V5_m.texture
+[loader] closing 0/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_m.texture
+[loader] closing 0/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_lvl5_c.texture
+[loader] closing 0/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_n.texture
+[loader] closing 0/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_lvl5_g.texture
+[loader] closing 0/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_lvl5_m.texture
+[loader] closing 0/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_n.texture
+[loader] closing 0/sound/banks/wpn_sheepinator.soundbank
+[loader] closing 0/equipment/weapon/wpn_Predator_Launcher_v5/Predator_Launcher_V5_g.texture
+[loader] closing 0/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_lvl5_n.texture
+[loader] closing 0/textures/character/npc/Sheep/v5_horns_c.texture
+[loader] closing 0/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_m.texture
+[loader] closing 0/equipment/weapon/wpn_predator_launcher/textures/wpn_predator_rocket_launcher_upgrade_n.texture
+[loader] closing 0/material/equipment/weapon/wpn_combuster_hoses/wpn_combuster_hoses.material
+[loader] closing 0/equipment/weapon/wpn_Predator_Launcher_v5/default_pink_shader/Predator_Launcher_V5_c.texture
+[loader] closing 0/equipment/weapon/wpn_Predator_Launcher_v5/default_pink_shader/Predator_Launcher_V5_g.texture
+[loader] closing 0/equipment/weapon/wpn_Predator_Launcher_v5/Predator_Launcher_V5_c.texture
+[loader] closing 0/equipment/weapon/wpn_blaster_combuster/wpn_blaster_combuster.model
+[loader] closing 0/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_c.texture
+[loader] closing 0/equipment/weapon/wpn_schrodinger/wpn_schrodinger.actor
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_thump_ring/proj_thumper_thump_ring.visualeffect
+[loader] closing 0/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_m.texture
+[loader] closing 0/material/equipment/weapon/wpn_combuster/wpn_combuster.material
+[loader] closing 0/material/equipment/weapon/wpn_combuster_v5/wpn_combuster_v5.material
+[loader] closing 0/material/equipment/weapon/wpn_predator_launcher_base/wpn_predator_launcher_base.material
+[loader] closing 0/materialgraph/visualeffect/global/gbl_sparks/gbl_sparks_random.materialgraph
+[loader] closing 0/movies/corv/010_parade_090_courtyard.movie
+[loader] closing 0/movies/gp_a1/nefnews/nefnews.movie
+[loader] closing 0/visualeffect/global/gbl_projectile_shape_zrk/gbl_projectile_shape_zrk.model
+[loader] closing 0/movies/zurkies/120_zurkies3_010_themap.movie
+[loader] closing 0/sound/banks/events.wwiselookup_vanilla
+[loader] closing 0/configs/equipment/wpn_magnamissile_mod.config
+[loader] closing 0/sound/banks/wpn_sheepinator.bnk
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_rift_tell.actor
+[loader] closing 0/ui/loaded/authored/_art/textures/galleryjellyfish.texture
+[loader] closing 0/ui/loaded/authored/_art/textures/gallerypiratebladeball.texture
+[loader] closing 0/ui/loaded/authored/_art/textures/gallerypiratemelee01.texture
+[loader] closing 0/ui/loaded/authored/_art/textures/gallerypirateshooter01.texture
+[loader] closing 0/ui/loaded/authored/_art/textures/vendor_new_predatorlauncher.texture
+[loader] closing 0/ui/loaded/authored/_art/textures/vendor_new_predatorlauncher_v5.texture
+[loader] closing 0/equipment/projectile/proj_combust/proj_combust.actor
+[loader] closing 0/ui/loaded/authored/_art/textures/vendor_new_sheepinator.texture
+[loader] closing 0/conduit/equipment/weapon/wpn_sheepinator_vfx/wpn_sheepinator_vfx.conduit
+[loader] closing 0/equipment/weapon/wpn_zurkon/wpn_zurkon.actor
+[loader] closing 0/equipment/weapon/wpn_blaster_combuster/wpn_blaster_combuster.ascii
+[loader] closing 0/equipment/weapon/wpn_schrodinger/wpn_schrodinger_weapon.model
+[loader] closing 0/conduit/equipment/weapon/wpn_blaster_aud/wpn_blaster_aud.conduit
+[loader] closing 0/sound/banks/wpn_blaster.soundbank
+[loader] closing 0/equipment/weapon/wpn_schrodinger/wpn_sheepinator.model
+[loader] closing 0/sound/banks/wpn_magna_missile.soundbank
+[loader] closing 0/sound/banks/wpn_predatorlauncher1.soundbank
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_rift_portal.actor
+[loader] closing 0/material/equipment/weapon/wpn_Sheepinator_Internal_Energy/wpn_Sheepinator_Internal_Energy1.material
+[loader] closing 0/equipment/weapon/wpn_sheepinator/textures/v5/wpn_sheepinator_c.texture
+[loader] closing 0/characters/npc/npc_emperor_nefarious/animations/dimmod_dimensionator_wpn_dimensionator.animclip
+[loader] closing 0/ui/loaded/authored/_art/icons/kmovementspread.svg
+[loader] closing 0/equipment/weapon/wpn_sheepinator/textures/v5/wpn_sheepinator_m.texture
+[loader] closing 0/equipment/weapon/wpn_sheepinator/textures/v5/wpn_sheepinator_n.texture
+[loader] closing 0/visualeffect/character/enemy/enm_snagglebeast_lava_fissure/wpn_volcanic_eruptor_geyser_01.visualeffect
+[loader] closing 0/textures/character/npc/Sheep/npc_Sheep_BLACK_c.texture
+[loader] closing 0/textures/character/npc/Sheep/npc_sheep_c.texture
+[loader] closing 0/textures/character/npc/Sheep/npc_sheep_g.texture
+[loader] closing 0/textures/character/npc/Sheep/npc_sheep_fursg_fur_control.texture
+[loader] closing 0/textures/character/npc/Sheep/npc_sheep_n.texture
+[loader] closing 0/characters/npc/npc_sheep/textures/sheep_fur_black.material
+[loader] closing 0/conduit/equipment/weapon/wpn_fusion_grenade_aud/wpn_fusion_grenade_aud.conduit
+[loader] closing 0/configs/loot/loot_list_ammo_crate.config
+[loader] closing 0/material/character/npc/npc_sheep/sheep_fur_black.material
+[loader] closing 0/characters/npc/npc_sheep/textures/npc_V5_c2.texture
+[loader] closing 0/configs/ally/ally_sheep_v2_movement.config
+[loader] closing 0/textures/character/npc/Sheep/v5_horns_n.texture
+[loader] closing 0/configs/ally/ally_sheep_movement.config
+[loader] closing 0/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_glass_c.texture
+[loader] closing 0/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_glass_g.texture
+[loader] closing 0/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_glass_m.texture
+[loader] closing 0/material/equipment/weapon/wpn_schrodinger/wpn_schrodinger_glass.material
+[loader] closing 0/visualeffect/character/enemy/enm_snagglebeast_lava_fissure/wpn_volcanic_eruptor_geyser_01_source.visualeffect
+[loader] closing 0/equipment/projectile/proj_volcaniceruptor/volcaniceruptorgeyser.actor
+[loader] closing 0/conduit/equipment/weapon/wpn_volcanic_eruptor_geyser/wpn_volcanic_eruptor_projectile.conduit
+[loader] closing 0/equipment/projectile/proj_thumper_shockwave/proj_thumper_shockwave.model
+[loader] closing 0/configs/emergentvo/bot_emergentvo.config
+[loader] closing 0/materialgraph/characters/npc/npc_nefarious_polish_tubefx/volcanic_eruptor_glove_lava.materialgraph
+[loader] closing 0/material/characters/hero/hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava/hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava.material
+[loader] closing 0/material/characters/hero/hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava_red/hero_ratchet_bangle_glove_rt_volcanic_eruptor_lava_red.material
+[loader] closing 0/visualeffect/character/enemy/enm_zurkn_blaster_projectile_fx/enm_zurkn_blaster_projectile_fx.visualeffect
+[loader] closing 0/visualeffect/character/enemy/enm_zurkn_v1_trooper_projectile_impact/enm_zurkn_v1_trooper_projectile_impact.visualeffect
+[loader] closing 0/configs/equipment/wpn_sheepinator_weapon.config
+[loader] closing 0/visualeffect/character/global/gbl_projectile_shape_zrk/gbl_projectile_shape_zrk.model
+[loader] closing 0/equipment/weapon/wpn_mr_zurkon/wpn_mr_zurkon.model
+[loader] closing 0/equipment/projectile/proj_zurkon_shot/proj_zurkon_shot.actor
+[loader] closing 0/configs/equipment/wpn_mr_zurkon_mod.config
+[loader] closing 0/configs/equipment/wpn_mr_zurkon_shot.config
+[loader] closing 0/sound/banks/wpn_thumper.soundbank
+[loader] closing 0/conduit/equipment/projectile/proj_warbot_vfx/proj_zurkn_trooper_vfx.conduit
+[loader] closing 0/visualeffect/character/enemy/enm_evil_zurkon_teleport/enm_evil_zurkon_teleport.visualeffect
+[loader] closing 0/visualeffect/equipment/weapon/wpn_mr_zurkon_jetpack_flare/wpn_mr_zurkon_jetpack_flare.visualeffect
+[loader] closing 0/sound/banks/wep_mr_zurkon.soundbank
+[loader] closing 0/configs/equipment/wpn_thumper_item.config
+[loader] closing 0/sound/banks/zurk_emergent.soundbank
+[loader] closing 0/configs/emergentvo/zurkon_emergentvo.config
+[loader] closing 0/configs/equipment/wpn_mr_zurkon_emergentvo.config
+[loader] closing 0/equipment/projectile/proj_thumper_shockwave/proj_thumper_shockwave.actor
+[loader] closing 0/equipment/weapon/wpn_zurkon_jr/wpn_zurkon_jr.actor
+[loader] closing 0/sound/banks/zrkj_emergent.soundbank
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_core_pop/proj_thumper_core_pop.visualeffect
+[loader] closing 0/equipment/weapon/wpn_zurkon_jr/wpn_zurkon_jr.model
+[loader] closing 0/configs/equipment/wpn_mr_zurkon_weapon.config
+[loader] closing 0/configs/equipment/wpn_thumper_weapon.config
+[loader] closing 0/equipment/projectile/proj_thumper/proj_thumper.actor
+[loader] closing 0/equipment/weapon/wpn_thumper/wpn_thumper.actor
+[loader] closing ui/loaded/exported/hud/mm_3.json
+[loader] closing 0/equipment/weapon/wpn_thumper/wpn_thumper.model
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_core_sparks/proj_thumper_core_sparks.visualeffect
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_activated/proj_thumper_activated.visualeffect
+[loader] closing ui/loaded/exported/hud/mm_7.json
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_core/proj_thumper_core.visualeffect
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_deactivate/proj_thumper_deactivate.visualeffect
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_thump/proj_thumper_thump.visualeffect
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_arc_strike/proj_thumper_arc_strike.visualeffect
+[loader] closing 0/visualeffect/equipment/projectile/proj_thumper_core_arcs/proj_thumper_core_arcs.visualeffect
+[loader] closing 0/material/equipment/projectile/proj_thumper_field/thumper_ps4_shockw.material
+[loader] closing 0/conduit/equipment/projectile/proj_thumper_shockwave_vfx/proj_thumper_shockwave_vfx.conduit
+[loader] closing 0/conduit/equipment/projectile/proj_thumper_vfx/proj_thumper_vfx.conduit
+[loader] closing 0/equipment/projectile/proj_thumper_shockwave/proj_thumper_shocknull.model
+[loader] closing 0/movies/weaponvids/wpn_mr_zurkon/wpn_mr_zurkon.movie
+[loader] closing 0/configs/video/wpn_mr_zurkon_video.config
+[loader] closing 0/configs/equipment/wpn_mr_zurkon_item.config
+[loader] closing 0/configs/other/test/mdaly/test4.config
+[loader] closing 0/movies/boot/bootsequence_china.movie
+[loader] closing 0/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_liquid.texture
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_dimensionator.animset
+[loader] closing 0/material/equipment/weapon/wpn_sheepinator_liquid/wpn_sheepinator_liquid.material
+[loader] closing 0/configs/ally/ally_sheep_awareness.config
+[loader] closing 0/configs/ally/ally_sheep_v5_firing.config
+[loader] closing 0/equipment/weapon/wpn_sheepinator/wpn_sheepinator.model
+[loader] closing 0/characters/npc/npc_sheep_v2/npc_sheep_v2.actor
+[loader] closing 0/configs/equipment/wpn_blaster_item.config
+[loader] closing 0/conduit/equipment/projectile/proj_combust_vfx/proj_combust_vfx.conduit
+[loader] closing 0/configs/equipment/wpn_blaster_weapon.config
+[loader] closing 0/visualeffect/equipment/projectile/proj_combust/proj_combust.visualeffect
+[loader] closing 0/visualeffect/equipment/projectile/proj_combuster_ps4_impact_effect/proj_combuster_ps4_impact_effect.visualeffect
+[loader] closing 0/localization/localization_all.localization
+[loader] closing 0/conduit/character/npc/npc_sheep_aud/npc_sheep_aud.conduit
+[loader] closing 0/conduit/equipment/projectile/proj_predator_launcher_aud/proj_predator_launcher_aud.conduit
+[loader] closing 0/conduit/equipment/weapon/wpn_predator_launcher_aud/wpn_predator_launcher_aud.conduit
+[loader] closing 0/configs/uiconfig/uiicons.config
+[loader] closing 0/conduit/equipment/weapon/wpn_sheepinator_aud/wpn_sheepinator_aud.conduit
+[loader] closing 0/sound/banks/events.wwiselookup
+[loader] closing 0/sound/banks/wpn_predatorlauncher.soundbank
+[loader] closing 0/configs/equipment/wpn_blaster_mod.config
+[loader] closing 0/configs/equipment/wpn_fusion_grenade_mod.config
+[loader] closing 0/configs/equipment/wpn_predator_launcher_mod.config
+[loader] closing 0/configs/equipment/wpn_schrodinger_mod.config
+[loader] closing 0/configs/equipment/wpn_volcaniceruptor_mod.config
+[loader] closing 0/configs/equipment/wpn_thumper_mod.config
+[loader] closing 0/configs/equipment/wpn_sheepinator_mod.config
+[loader] closing 0/conduit/equipment/projectile/proj_fusion_grenade_subshot_aud/proj_fusion_grenade_subshot_aud.conduit
+[loader] closing 0/equipment/projectile/proj_fusion_grenade/proj_fusion_grenade.actor
+[loader] closing 0/sound/banks/wpn_fusiongrenade.soundbank
+[loader] closing 0/configs/equipment/wpn_fusiongrenade_subshotconfig.config
+[loader] closing 0/equipment/weapon/wpn_volcaniceruptor/wpn_volcaniceruptor.actor
+[loader] closing 0/equipment/projectile/proj_volcaniceruptor/proj_volcaniceruptor.model
+[loader] closing 0/equipment/weapon/wpn_volcaniceruptor/display_volcanic_eruptor.actor
+[loader] closing 0/configs/equipment/wpn_fusion_grenade_item.config
+[loader] closing 0/configs/equipment/wpn_magnamissile_item.config
+[loader] closing 0/configs/equipment/wpn_predator_launcher_item.config
+[loader] closing 0/configs/equipment/wpn_schrodinger_item.config
+[loader] closing 0/configs/equipment/wpn_sheepinator_item.config
+[loader] closing 0/configs/equipment/wpn_volcaniceruptor_item.config
+[loader] closing 0/configs/equipment/wpn_magnamissile_weapon.config
+[loader] closing 0/configs/vendor/ven_weapon_vendor.config
+[loader] closing 0/characters/npc/npc_emperor_nefarious/animations/dimmodblizar_portal_out_nefarious_boss_wpn_dimensionator.animclip
+[loader] closing 0/characters/npc/npc_emperor_nefarious/animations/dimmodidle_hover_dimensionator_nefarious_boss_wpn_dimensionator.animclip
+[loader] closing 0/conduit/equipment/weapon/wpn_dimensionator/dim_proj_aud.conduit
+[loader] closing 0/conduit/equipment/weapon/wpn_dimensionator/dim_proj_vfx.conduit
+[loader] closing 0/configs/equipment/wpn_dimensionator_item.config
+[loader] closing 0/configs/equipment/wpn_dimensionator_weapon.config
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_dimensionator.model
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_proj.actor
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_rift_closed_a.actor
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_rift_closed_b.actor
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_rift_in.actor
+[loader] closing 0/equipment/weapon/wpn_dimensionator/dim_rift_shift.actor
+[loader] closing 0/equipment/weapon/wpn_dimensionator/wpn_dimensionator_hand.actor
+[loader] closing ui/loaded/exported/hud/mm_0.json
+[loader] closing ui/loaded/exported/hud/mm_1.json
+[loader] closing ui/loaded/exported/hud/mm_2.json
+[loader] closing ui/loaded/exported/hud/mm_4.json
+[loader] closing ui/loaded/exported/hud/mm_6.json
+[loader] closing 1/characters/npc/npc_junktrader/textures/npc_junktrader_backpack_04_n.texture
+[loader] closing 1/textures/character/npc/Sheep/npc_Sheep_BLACK_c.texture
+[loader] closing 1/characters/npc/npc_junktrader/textures/npc_junktrader_backpack_04_c.texture
+[loader] closing 1/textures/character/npc/Sheep/v5_horns_c.texture
+[loader] closing 1/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_m.texture
+[loader] closing 1/characters/npc/npc_junktrader/textures/npc_junktrader_backpack_04_g.texture
+[loader] closing 1/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_n.texture
+[loader] closing 1/equipment/weapon/wpn_dimensionator/textures/zdim_b1_m.texture
+[loader] closing 1/equipment/weapon/wpn_dimensionator/textures/zdim_c_m.texture
+[loader] closing 1/equipment/weapon/wpn_dimensionator/textures/zdim_a_m.texture
+[loader] closing 1/equipment/weapon/wpn_dimensionator/textures/zdim_d_m.texture
+[loader] closing 1/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_c.texture
+[loader] closing 1/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_g.texture
+[loader] closing 1/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_m.texture
+[loader] closing 1/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_lvl5_c.texture
+[loader] closing 1/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_n.texture
+[loader] closing 1/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_lvl5_g.texture
+[loader] closing 1/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_n.texture
+[loader] closing 1/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_lvl5_m.texture
+[loader] closing 1/equipment/weapon/wpn_Predator_Launcher_v5/Predator_Launcher_V5_g.texture
+[loader] closing 1/equipment/weapon/wpn_PredatorLauncher/textures/wpn_Predator_Luncher_lvl5_n.texture
+[loader] closing 1/equipment/weapon/wpn_sheepinator/textures/v5/wpn_sheepinator_c.texture
+[loader] closing 1/equipment/weapon/wpn_predator_launcher/textures/wpn_predator_rocket_launcher_upgrade_n.texture
+[loader] closing 1/equipment/weapon/wpn_Predator_Launcher_v5/Predator_Launcher_V5_c.texture
+[loader] closing 1/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_c.texture
+[loader] closing 1/equipment/weapon/wpn_Predator_Launcher_v5/Predator_Launcher_V5_m.texture
+[loader] closing 1/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_c.texture
+[loader] closing 1/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_g.texture
+[loader] closing 1/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_g.texture
+[loader] closing 1/equipment/weapon/wpn_sheepinator/textures/wpn_sheepinator_m.texture
+[loader] closing 1/equipment/weapon/wpn_sheepinator/textures/v5/wpn_sheepinator_m.texture
+[loader] closing 1/equipment/weapon/wpn_sheepinator/textures/v5/wpn_sheepinator_n.texture
+[loader] closing 1/textures/character/npc/Sheep/npc_sheep_fursg_c.texture
+[loader] closing 1/characters/npc/npc_sheep/textures/npc_sheep_fursg_c.texture
+[loader] closing 1/textures/character/npc/Sheep/v5_horns_g.texture
+[loader] closing 1/textures/character/npc/Sheep/v5_horns_n.texture
+[loader] closing 1/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_glass_c.texture
+[loader] closing 1/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_glass_g.texture
+[loader] closing 1/equipment/weapon/wpn_schrodinger/textures/wpn_schrodinger_glass_m.texture
+[loader] closing 8/localization/localization_all.localization
+[loader] closing 8/sound/banks/zurk_emergent.soundbank
+[loader] closing 8/sound/banks/zrkj_emergent.soundbank
+[loader] closing 64/localization/localization_all.localization
+[loader] closing 64/sound/banks/zurk_emergent.soundbank
+[loader] closing 64/movies/boot/bootsequence_china.movie
+[loader] closing 64/sound/banks/zrkj_emergent.soundbank
+[loader] closing 64/movies/weaponvids/wpn_mr_zurkon/wpn_mr_zurkon.movie
+[rivet] fini complete

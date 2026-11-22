@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV7)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV8)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
@@ -48,7 +48,7 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release v0.62-DEV7 (kit 10.0.27)
+       RANDO-KIT release v0.62-DEV8 (kit 10.0.28)
        RANDO-KIT all required scripts are 10.0.24
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
      HARD STOP: if the banner says any kit other than 10.0.27, do NOT continue;
@@ -135,3 +135,15 @@ DEV7 (10.0.27) - round47: a mixed install
     "all 12 required scripts are 10.0.27".
   - Shop evidence: rivet.config() answers only VendorConfig's plain numbers (ID, IdleVOTriggerTime, ...,
     UpgradeCellYOffset) - no ItemDatas list, so rivet.config_set cannot reach Ms. Zurkon's slots. shop = "vanilla" stays.
+
+DEV8 (10.0.28) - round48: the Omega search was stopped by rivet_hook's frame budget
+  - Round48 ran the whole DEV7 kit correctly. The new walk of the hero's components was killed 19 times
+    ("ran past the 8 ms frame budget") and never finished, so no weapon record was found yet. The search now runs
+    only in frames with time to spare, in short slices, and continues where it was stopped.
+  - All four purchases in round48 were new weapons. Ms. Zurkon sells Omega weapons ONLY in Challenge Mode, so to
+    teach the Omega byte you need a Challenge Mode save (finish the game, then start Challenge Mode). The learned
+    byte is kept in the randomizer's state and is used for every later game.
+  - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
+    then dev_scripts\dev(debug).lua. rivet.log must show "RANDO-KIT release v0.62-DEV8 (kit 10.0.28)" and
+    "all 12 required scripts are 10.0.28". Look for "RANDO-OMEGA hero component list walked" and
+    "RANDO-OMEGA inventory: N weapon record(s)".

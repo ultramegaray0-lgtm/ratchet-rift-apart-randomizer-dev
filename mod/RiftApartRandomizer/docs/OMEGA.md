@@ -173,3 +173,11 @@ taken (EnteredVendorEvent does not come; the read is taken when the records are 
 overran the frame budget. To teach the byte: buy Omegas of two different weapons, a few seconds apart, and look for
 "RANDO-OMEGA LEARNED". If rivet.log still says "inventory not found", send it: it now lists every hero component
 ("hero components: ...", 12 per line) and each searched candidate with its handle.
+
+
+## v0.62-DEV8 (kit 10.0.28): round48 - the walk was stopped by the frame budget
+
+DEV7 ran in the game, but the hero's component walk was killed 19 times by rivet_hook's 8 ms budget and never finished.
+The search now runs only in frames with room (`O.FRAME_ROOM`), in 1.5 ms slices (`O.SLICE_SECONDS`), and the walk resumes
+where it stopped (`O.wstate`). Omega weapons are sold only in Challenge Mode: teaching the byte needs a Challenge Mode
+save. The learned byte is stored in state and used in later games, including normal ones.

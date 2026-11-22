@@ -4,6 +4,15 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-22: v0.62-DEV8 (kit 10.0.28) - round48: Omega search killed by the frame budget
+
+tests/data/round48_rivet.log (DEV7 installed whole, game path replaced): the component-list walk was killed 19 times
+("ran past the 8 ms frame budget" at the walk's reads) and never logged "hero component list walked". The four
+purchases were new weapons (no Omega for sale outside Challenge Mode). 17_rando_omega.lua: frame-room gate
+(R.frame_t0 from 10_rando_runtime.lua, O.FRAME_ROOM 3 ms), 1.5 ms time slices, resumable walk (O.wstate), quick
+re-search after a killed job. VERIFIED IN THE GAME: nothing of DEV8 yet (simulator only). Suite 891 run, 0 failures,
+22 skipped.
+
 ## 2026-11-22: v0.62-DEV7 (kit 10.0.27) - round47 was a mixed install
 
 tests/data/round47_rivet.log: DEV5 scripts (10.0.25) + DEV6 dev(debug).lua (10.0.26); DEV6's Omega changes never ran.

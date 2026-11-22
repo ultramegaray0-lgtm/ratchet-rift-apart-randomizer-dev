@@ -1,7 +1,7 @@
 -- DEVELOPER TOOL - not part of a release (data for dev(probe).lua).
 -- generated from your RiftApart.exe (3.0630.1.0) by tools/gen_action_vtables.py: script-action class
 -- -> RVA of its primary vtable. Used by the probe to find the exe's load address from any live node.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(vtables)"] = "10.0.27"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(vtables)"] = "10.0.28"   -- the kit check (10_rando_runtime.lua)
 if RANDO_DEV_DEBUG and RANDO_DEV_DEBUG.ran and RANDO_DEV_DEBUG.ran["probe"] then return end   -- v0.62-DEV5: dev(debug).lua already holds it
 RANDO_VTABLES = {
   AbandonMissionAction = 0x2FBD2E8,
