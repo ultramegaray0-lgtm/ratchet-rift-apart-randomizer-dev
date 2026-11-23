@@ -148,7 +148,7 @@ always are.
 |---|---|---|
 | `story_milestones` | true | the second story mission of each planet |
 | `side_locations` | true | Zurkie's cups, Trudi, Blizar chef, Ardolis |
-| `collectibles` | true | dev 10.1: the 10 Spybots and 12 Lorbs give rewards (never in logic; they pay once their pickup event is bound) |
+| `collectibles` | true | dev 10.1: the 10 Spybots and 12 Lorbs give rewards (never in logic). v0.71-DEV1: paid by their pickup events (bound; not seen in a log yet) or by hand (`key_spybot` / `key_lorb`) |
 
 ## Start
 
@@ -179,6 +179,8 @@ reason.
 |---|---|---|
 | `key_status` | `;` | status: Gold Bolts n/25, rewards, planets open, deliveries waiting. **Ctrl+; twice** (locked levels): open the planet you were last sent back from |
 | `key_campaign` | `'` | experimental mission order only (logs a line and does nothing in the game's own order) |
+| `key_spybot` | `F2` | v0.71-DEV1 (dev(keys).lua): Spybots paid / total and the next reward. **Ctrl+F2 twice**: pay a Spybot pickup the game did not report |
+| `key_lorb` | `F3` | v0.71-DEV1 (dev(keys).lua): the same for Lorbs (**Ctrl+F3 twice**) |
 | `legacy_f_keys` | true | the old F7, F8, F9 and F12 keys work as well |
 | `test_travel` | false | **8.4: off in the kit.** true: `.` / `,` go to any planet for testing (TEST_TRAVEL.md) |
 | `real_items`, `real_weapons` | true | put rewards into your real inventory |

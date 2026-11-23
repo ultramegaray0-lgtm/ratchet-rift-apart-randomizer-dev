@@ -4,6 +4,20 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-23: v0.71-DEV1 (kit 10.0.36) - the shop by config pointer, Spybots and Lorbs that pay
+
+- SHOP: rivet.config() hides ItemDatas (rivet_hook values_of() skips struct arrays). The slots are now also matched
+  against the loaded weapon configs' addresses (rando_give.dll kind 7, ~20 lookups per load, now served every frame).
+  Evidence dump when nothing matches. Dev settings shop = "shuffle". A text tie-break bug in the slot-object vote
+  (would have shifted every write by one object) was found by the new tests and fixed. SIMULATOR ONLY: the pointer
+  layout is an assumption (S.vendor_item_pointers).
+- SPYBOTS / LORBS: classes exist in the game (round54 23/23); + RuinScriptPickupEvent, 9 watched-only classes,
+  F2/F3 status and Ctrl+F2/Ctrl+F3 twice to pay by hand (dev(keys).lua). Dev settings collectibles = true.
+  400 dev-settings seeds valid. SIMULATOR ONLY.
+- Suite 922 run, 0 failures, 22 skipped (tests/test_v071_dev1.py, 14).
+- Next round (round55): New Game with DEV1. Check: Ms. Zurkon's screen vs the spoiler's SHOP; pick up a Spybot and a
+  Lorb; die once (RANDO-LOAD lines, no crash).
+
 ## 2026-11-23: v0.70 (kit 10.0.35) - DEV14 released; DEV10-DEV14 brought into the repo
 
 DEV10-DEV14 (kit 10.0.30-10.0.34) were built outside the repo from DEV9 (db42da7); this commit brings DEV14 in and

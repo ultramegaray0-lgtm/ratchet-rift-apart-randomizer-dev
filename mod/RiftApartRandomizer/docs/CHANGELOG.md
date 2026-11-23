@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.71-DEV1 (kit 10.0.36; dev kit, not released): the shop by config pointer, Spybots and Lorbs that pay
+
+SHOP (12_rando_shop.lua, dev settings shop = "shuffle" again). Rounds 17-45 always found an array at +0x48 of
+Ms. Zurkon's VendorConfig but never a weapon's 64-bit id in it or in the objects it points to. Two findings:
+- rivet.config() cannot show ItemDatas at all: rivet_hook 2.0.0's ddl::values_of() skips arrays of structs
+  (src/ddl_visit.cpp), so DEV5's probe (round54: 9 plain numbers) never said anything about the slots.
+- A field naming another config is most likely a POINTER to that loaded config. rando_give.dll kind 7 (the lookup
+  that already finds the vendor) now also gives the address of every weapon the seed can put in a slot, once per
+  load (~20, the Burst Pistol first; 09_rando_real.lua serves kind-7 lookups every frame instead of every 30th).
+  An 8-byte field equal to one of those addresses counts as that weapon, in both layouts (inline elements and
+  slot objects); a write puts the new weapon's config address there and reads it back. Ids are still tried; one
+  form per array, the one with more matches.
+- A slot's new weapon whose config is not loaded keeps the slot's own weapon and is given directly.
+- Neither form found: once per session RANDO-SHOP EVIDENCE logs the config's first 0x100 bytes, the first 0x40 of
+  every array in it and some looked-up addresses - the next round's data.
+- Nothing during a load (10_rando_runtime.lua: the shop tick needs not R.loading; a running search is dropped).
+- Fixed while testing: the slot-object vote tie-break compared "offset:form" as TEXT ("112:ptr" < "16:ptr") and
+  chose the next object's Item (+0x70) - every slot would have been written one object further on. Now numeric.
+NOT VERIFIED IN THE GAME: that Item is a config pointer. The simulator's S.vendor_item_pointers is that ASSUMPTION.
+
+SPYBOTS AND LORBS (dev settings collectibles = true; the generator already placed items there: 400 dev seeds,
+~9.6 non-currency items per seed on the 22 locations, all valid). round54's "events subscribed 23/23" shows the
+bound classes RYNOPlayPickedUpEvent, RYNOScriptPickupEvent and RuinPlayPickedUpEvent exist in the game; no pickup
+has been logged yet.
+- 05_rando_bindings.lua: RuinScriptPickupEvent also pays a Lorb (if the game has it; listed otherwise).
+  collectible_watch: 9 more class names, subscribed log-only - the start lists which exist ("RANDO-COLLECTIBLE event
+  classes watched ... | not in this game: ..."), and the first 5 of each are logged with their fields.
+- 10_rando_runtime.lua: R.collectible_status / R.claim_collectible; RANDO-COLLECTIBLE says "(the game's event)" or
+  "(by hand)"; a claim never goes past the seed's last Spybot / Lorb.
+- dev(keys).lua (and dev(debug).lua): F2 / F3 show Spybots / Lorbs paid and the next reward; Ctrl+F2 / Ctrl+F3
+  twice pay a pickup the game did not report (settings key_spybot / key_lorb).
+- CraiggerBears stay out (no count, no event known).
+Tests: tests/test_v071_dev1.py (14). Suite 922 run, 0 failures, 22 skipped.
+
 ## v0.70 (kit 10.0.35): v0.62-DEV14 released
 
 The public v0.70 package (tools/build_public_release.py) is this kit without developer files, boss.lua or chaos.lua,

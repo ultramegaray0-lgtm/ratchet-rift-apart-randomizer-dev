@@ -4,7 +4,7 @@
 -- NEW seed with its own progress: start it with New Game. Lines starting with -- are notes; to
 -- change an option, remove the -- in front of it and edit the value. A wrong value is reported in
 -- rivet.log (search RANDO-SETTINGS) and the default is used instead.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.35"   -- version check (do not edit)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.36"   -- version check (do not edit)
 RANDO_SETTINGS = {
   -- THE SEED: "random" = the companion picks one and remembers it. Any other text is a fixed seed
   -- (the same text and settings give the same seed on every PC), e.g. "lombax-ryno-2026".
@@ -24,7 +24,9 @@ RANDO_SETTINGS = {
   -- early_weapons = 2,                -- 0-6: weapons placed where you can reach them right at the start
   -- story_milestones = true,          -- each planet's second story mission gives a reward
   -- side_locations = true,            -- Zurkie's cups, Trudi, the Blizar chef and Ardolis give rewards
-  -- collectibles = true,              -- the 10 Spybots and 12 Lorbs give rewards (they pay once their pickup is bound)
+  collectibles = true,                 -- DEV DEFAULT (v0.71-DEV1): the 10 Spybots and 12 Lorbs hold rewards, paid by
+                                       -- their pickup events (bound, not seen in a log yet). F2 / F3 show them;
+                                       -- Ctrl+F2 / Ctrl+F3 twice pay a pickup the game did not report (dev(keys).lua)
 
   -- WHAT IS RANDOMIZED
   -- weapons = true,                   -- weapons are shuffled over the shop, your start and the rewards
@@ -32,11 +34,10 @@ RANDO_SETTINGS = {
                                        -- false = never (true = always: ONLY if you have that mod)
   -- gadgets = true,                   -- Box Breaker, Omniglove and Glitch are rewards
   -- armor = true,                     -- armor pieces are rewards; armor pods give random items
-  shop = "vanilla",                    -- DEV DEFAULT (v0.62-DEV5): "vanilla" = Ms. Zurkon sells her usual weapons and
-                                       -- none of them is ever a Gold Bolt / mission reward. "shuffle" = she sells the
-                                       -- seed's weapons and her other weapons become rewards - BUT her slots have never
-                                       -- been changed in the game (rounds 17-45), so with "shuffle" she still offers
-                                       -- weapons the seed put on Gold Bolts (docs/SHOP.md).
+  shop = "shuffle",                    -- DEV DEFAULT (v0.71-DEV1): Ms. Zurkon sells the seed's weapons. The vendor's slots
+                                       -- are now also looked for as POINTERS to the weapons' configs (docs/SHOP.md);
+                                       -- if they are still not found, the shop's extra weapons are given directly and
+                                       -- rivet.log shows RANDO-SHOP EVIDENCE. "vanilla": her usual weapons, none a reward
   -- exclude = "",                     -- items never randomized, e.g. "weapon:ryno_8,armor:pirate_head"
   start_omega = 1,                     -- DEV DEFAULT (v0.62-DEV5): start with this many random Omega versions (0-20),
                                        -- so every new game tests the Omega route (its weapon is given with it)

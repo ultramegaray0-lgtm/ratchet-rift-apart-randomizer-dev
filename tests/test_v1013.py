@@ -65,7 +65,7 @@ class LoadAndToggleTests(unittest.TestCase):
     def test_loads_off_by_default(self):
         g = game()
         self.assertTrue(g.log_has("RANDO-CHAOS\tinstalled (OFF"))
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.35"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"), [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.R.config.chaos_randomizer)
         self.assertEqual(g.R.config.key_chaos, "BACKSPACE")
         self.assertFalse(g.g.RANDO_CHAOS.enabled())

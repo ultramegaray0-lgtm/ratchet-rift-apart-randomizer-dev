@@ -39,7 +39,7 @@ class LoadingTests(unittest.TestCase):
             g = Game(test_mode=test_mode, dev_tools=dev)
             self.assertEqual(g.load_errors, [], (test_mode, dev))
             g.ready()
-            self.assertTrue(g.log_has("events subscribed 23/23"), g.logs())
+            self.assertTrue(g.log_has("events subscribed 24/24"), g.logs())
             self.assertFalse(any("RANDO-ERROR" in l or "[sim]" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_play_folder(self):
@@ -67,7 +67,7 @@ class LoadingTests(unittest.TestCase):
         self.assertTrue(g.log_has("will be retried"))
         g.sim.events_unavailable = False
         g.step(31)
-        self.assertTrue(g.log_has("events subscribed 39/39"), g.logs()[-5:])   # dev 10.15: + 7 of 17_rando_omega; DEV5: + 3 pickups; DEV6: omega +2 -1
+        self.assertTrue(g.log_has("events subscribed 40/40"), g.logs()[-5:])   # dev 10.15: + 7 of 17_rando_omega; DEV5: + 3 pickups; DEV6: omega +2 -1; v0.71-DEV1: + RuinScriptPickupEvent
         g.ready()
         g.fire("MissionStateChangedEvent", MissionName="MIS_NEFCITY_01_X", MissionState=4)
         self.assertTrue(g.state.collected["planet:nefarious_city"])

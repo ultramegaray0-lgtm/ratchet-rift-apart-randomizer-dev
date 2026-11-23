@@ -34,7 +34,7 @@
 -- v0.62-DEV10: steps 1-3 are replaced by the game's own type data (see "THE WEAPON ITEMS BY THE GAME'S OWN TYPE DATA"
 -- below): the weapon records are the WeaponItemPrius components of the scene, the Omega byte is the live
 -- WeaponItemPrius.Omega offset. Learning from a purchase stays only as the fallback (and as a confirmation).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.35"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_OMEGA = RANDO_OMEGA or {}
 local O = RANDO_OMEGA
@@ -1486,7 +1486,7 @@ if RANDO and RANDO.subscribe then
     end
     RANDO_TRAVEL.on_checkpoint = RANDO_TRAVEL.omega_wrapper
   end
-  log("loaded (10.0.35: Omega from the game's type data; nothing is read while the game loads)")
+  log("loaded (10.0.36: Omega from the game's type data; nothing is read while the game loads)")
 else
   log("RANDO-ERROR 10_rando_runtime.lua is missing: Omega versions stay records only")
 end

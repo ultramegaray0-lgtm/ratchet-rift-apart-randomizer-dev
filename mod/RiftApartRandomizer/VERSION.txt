@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer v0.70
-Kit version: 10.0.35
-Source: private dev repository, branch fix/v0.62-dev5 (release branch release-v0.70)
-v0.70 is v0.62-DEV14 released: the public package is built from this kit without developer files.
+Ratchet & Clank: Rift Apart Randomizer v0.71-DEV1
+Kit version: 10.0.36
+Source: private dev repository, branch fix/v0.62-dev5 (merged into main)
+Development kit only; not a public release (the public release is v0.70, branch release-v0.70).

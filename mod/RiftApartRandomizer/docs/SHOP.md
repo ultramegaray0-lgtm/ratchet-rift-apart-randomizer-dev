@@ -116,3 +116,19 @@ exactly one route. "shuffle" stays available for when the slot array is found.
 For that, 12_rando_shop.lua logs once per vendor config and session what rivet.config() answers (field names, types,
 the first entry of any list): `RANDO-SHOP PROBE vendor config <id> VendorConfig fields: ...`. If ItemDatas shows up as
 a list of entries with an Item field, rivet.config_set may reach the slots by path without any memory offset.
+
+## v0.71-DEV1: the slots as config pointers
+
+`rivet.config()` cannot list `ItemDatas`: rivet_hook's `ddl::values_of()` skips arrays of structs, so the DEV5
+probe only ever showed the nine plain numbers. The search therefore also treats an 8-byte field as a weapon when it
+equals the address of that weapon's loaded `*_item.config` (asked from `rando_give.dll`, kind 7, after every load).
+The dev settings use `shop = "shuffle"` again. What `rivet.log` shows:
+
+- `RANDO-SHOP weapon configs in memory: N of M weapons asked for`
+- `RANDO-SHOP vendor <id> at <addr>: 15 weapon slots, 15 changed (..., Item at +0x.. as a config pointer, ...)`, or
+- `RANDO-SHOP EVIDENCE ...` (once): the config's first bytes, its arrays' first bytes and some looked-up addresses.
+  Send that log: it shows what the slots hold.
+
+If the vendor screen still shows her usual weapons after "changed", the vendor copies its stock when a level loads;
+if it shows one weapon and buying gives another, something else names the item too. `shop = "vanilla"` (or
+`shop_runtime = false`) goes back to her usual weapons.

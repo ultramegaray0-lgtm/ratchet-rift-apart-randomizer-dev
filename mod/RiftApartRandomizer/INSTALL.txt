@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.70)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.71-DEV1)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
@@ -48,10 +48,10 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release v0.70 (kit 10.0.35)
-       RANDO-KIT all 12 required scripts are 10.0.35
+       RANDO-KIT release v0.71-DEV1 (kit 10.0.36)
+       RANDO-KIT all 12 required scripts are 10.0.36
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
-     HARD STOP: if the banner says any kit other than 10.0.35, do NOT continue;
+     HARD STOP: if the banner says any kit other than 10.0.36, do NOT continue;
      that is not this package. This artifact is one directly extractable ZIP; do not combine it
      with an older folder or nested ZIP.
 
@@ -243,3 +243,13 @@ v0.70 (10.0.35) - DEV14 released
     built from this kit without any developer file.
   - The log no longer says "received Omega <weapon>" twice for one Omega reward (it was one reward, two lines).
   - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.70 (kit 10.0.35)".
+
+v0.71-DEV1 (10.0.36) - the shop again, and Spybots / Lorbs that pay
+  - These dev settings make a DIFFERENT SEED than v0.70 (shop = "shuffle", collectibles = true): start a New Game.
+  - SHOP: Ms. Zurkon should sell this seed's weapons. Look in rivet.log for "RANDO-SHOP vendor ... changed (... as a
+    config pointer ...)" and check her screen. If instead you see "RANDO-SHOP EVIDENCE", send that rivet.log.
+  - SPYBOTS / LORBS: they hold items now. Pick one up and look for "RANDO-COLLECTIBLE spybot <id> (the game's event)"
+    and the item on screen. F2 / F3 show Spybots / Lorbs paid and the next reward. If a pickup gives nothing and
+    rivet.log has no RANDO-COLLECTIBLE line, press Ctrl+F2 (Spybot) or Ctrl+F3 (Lorb) twice to pay it by hand -
+    and send the log (its "RANDO-COLLECTIBLE event classes watched" line and any RANDO-DISCOVER line from the pickup).
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.71-DEV1 (kit 10.0.36)".

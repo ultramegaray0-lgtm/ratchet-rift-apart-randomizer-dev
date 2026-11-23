@@ -7,9 +7,11 @@
 --             Ctrl+[ twice  finish the current destination by hand
 --   /         start the story of the planet you are on (hub)
 --   '  (F12)  campaign director: travel to the next visit (experimental mission orders only)
+--   F2        Spybots: paid / total and the next reward   Ctrl+F2 twice  pay a Spybot pickup the game did not report
+--   F3        Lorbs: the same                             Ctrl+F3 twice  pay a Lorb pickup the game did not report
 -- The F keys in brackets work as well while legacy_f_keys = true. Key names are settings
 -- (key_status, key_hub, key_hub_return, key_story, key_campaign in 04_rando_settings.lua).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(keys)"] = "10.0.35"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(keys)"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
 if RANDO_DEV_DEBUG and RANDO_DEV_DEBUG.ran and RANDO_DEV_DEBUG.ran["keys"] then return end   -- v0.62-DEV5: dev(debug).lua already holds it
 
 local R = RANDO
@@ -35,6 +37,28 @@ R.bind_setting("key_campaign", "F12", function()
   if R.ctrl_down() or not RANDO_CAMPAIGN_RT then return end
   RANDO_CAMPAIGN_RT.go()
 end)
+
+-- v0.71-DEV1: Spybots and Lorbs (10_rando_runtime.lua R.claim_collectible). Their pickup events are bound but have not been
+-- seen in a log yet; if you pick one up and rivet.log shows no "RANDO-COLLECTIBLE" line, Ctrl+key twice pays it.
+local claim_armed = {}
+local function collectible_key(setting, legacy, kind, label)
+  R.bind_setting(setting, legacy, function()
+    if not (RANDO_SEED and R.state) then say("Randomizer: the seed is still being prepared"); return end
+    if not R.ctrl_down() then say(R.collectible_status(kind), { type = "corner", duration = 6 }); return end
+    local t = (rivet.time and rivet.time()) or 0
+    if not claim_armed[kind] or t - claim_armed[kind] > 4 then
+      claim_armed[kind] = t
+      say(string.format("Randomizer: press Ctrl+%s again to pay a %s pickup the game did not report", R.config[setting], label),
+          { type = "center", duration = 4 })
+      return
+    end
+    claim_armed[kind] = nil
+    local ok, why = R.claim_collectible(kind)
+    if not ok then say("Randomizer: " .. label .. " not paid - " .. tostring(why), { type = "corner", duration = 5 }) end
+  end)
+end
+collectible_key("key_spybot", nil, "spybot", "Spybot")
+collectible_key("key_lorb", nil, "lorb", "Lorb")
 
 -- the hub (15_rando_hub.lua)
 local function hub_key(setting, legacy, fn)

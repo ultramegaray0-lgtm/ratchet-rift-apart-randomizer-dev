@@ -147,8 +147,8 @@ class PublicDefaultsTests(unittest.TestCase):
     def test_a_new_game_with_the_players_settings(self):
         g = release_game()
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.35"), [l for l in g.logs() if "KIT" in l])
-        self.assertTrue(g.log_has("RANDO-KIT release v0.70 (kit 10.0.35)"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT release v0.71-DEV1 (kit 10.0.36)"))
         # no option the runtime rejects or does not know (the budget note is information, not a complaint)
         complaints = [l for l in g.logs() if "RANDO-SETTINGS" in l and "scaled down to the" not in l]
         self.assertEqual(complaints, [])

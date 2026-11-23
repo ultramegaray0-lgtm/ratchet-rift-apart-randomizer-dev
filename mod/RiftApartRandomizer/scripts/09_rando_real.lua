@@ -46,7 +46,7 @@
 --     from their own queue (G.give_currency); nothing is retried once the game took the message
 --   * G.lookup_config asks the helper where a loaded config lives (kind 7, read only), for the
 --     shop (12_rando_shop.lua)
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["09_rando_real"] = "10.0.35"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["09_rando_real"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_REAL = RANDO_REAL or {}
 local G = RANDO_REAL
@@ -900,6 +900,11 @@ function G.on_frame()
       finish(false)
     end
     return
+  end
+  -- v0.71-DEV1: config lookups (kind 7: the helper only reads) are served every frame, not every 30th - the shop asks for
+  -- ~20 weapon configs after each load (12_rando_shop.lua), which took ~60 frames each at the old pace
+  if not G.busy and ((G.aux_busy and G.aux_busy.kind == 7) or (G.aux_queue[1] and G.aux_queue[1].kind == 7)) then
+    if G.aux_tick() then return end
   end
   if G.frame % 30 ~= 0 then return end
   if not G.enabled then

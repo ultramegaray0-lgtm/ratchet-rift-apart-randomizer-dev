@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.70 dev branch (build 10.0.35) - test run 2026-11-23 16:28 UTC
+Rift Apart Randomizer v0.71-DEV1 dev branch (build 10.0.36) - test run 2026-11-23 16:45 UTC
 Python 3.13.18 on Linux
-ran 908, failures 0, errors 0, skipped 22
+ran 922, failures 0, errors 0, skipped 22
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -374,7 +374,7 @@ test_the_hero_has_the_live_inventory_components (tests.test_v062_dev5.Round45Log
 test_the_log_is_the_dev4_kit_and_anonymised (tests.test_v062_dev5.Round45LogTests.test_the_log_is_the_dev4_kit_and_anonymised) ... ok
 test_the_vendor_was_never_changed (tests.test_v062_dev5.Round45LogTests.test_the_vendor_was_never_changed) ... ok
 test_a_vanilla_shop_seed_never_places_a_vendor_weapon (tests.test_v062_dev5.ShopTests.test_a_vanilla_shop_seed_never_places_a_vendor_weapon) ... ok
-test_the_dev_settings_sell_the_vendors_own_weapons (tests.test_v062_dev5.ShopTests.test_the_dev_settings_sell_the_vendors_own_weapons) ... ok
+test_the_dev_settings_shuffle_the_shop_again (tests.test_v062_dev5.ShopTests.test_the_dev_settings_shuffle_the_shop_again) ... ok
 test_the_vendor_config_is_probed_read_only (tests.test_v062_dev5.ShopTests.test_the_vendor_config_is_probed_read_only) ... ok
 test_buying_a_new_weapon_teaches_nothing (tests.test_v062_dev6.LiveInventoryTests.test_buying_a_new_weapon_teaches_nothing) ... ok
 test_the_debug_compare_finds_the_byte (tests.test_v062_dev6.LiveInventoryTests.test_the_debug_compare_finds_the_byte) ... ok
@@ -408,6 +408,20 @@ test_omega_drops_its_addresses_on_a_load (tests.test_v070.LoadGuardTests.test_om
 test_a_hitch (tests.test_v070.OmegaSimTests.test_a_hitch) ... ok
 test_death_in_the_middle_of_the_census (tests.test_v070.OmegaSimTests.test_death_in_the_middle_of_the_census) ... ok
 test_dev13_modes_unchanged (tests.test_v070.OmegaSimTests.test_dev13_modes_unchanged) ... ok
+test_a_scripted_lorb_pickup_pays (tests.test_v071_dev1.CollectibleTests.test_a_scripted_lorb_pickup_pays) ... ok
+test_a_spybot_event_pays_once_per_id (tests.test_v071_dev1.CollectibleTests.test_a_spybot_event_pays_once_per_id) ... ok
+test_claims_by_hand_stop_at_the_last_location (tests.test_v071_dev1.CollectibleTests.test_claims_by_hand_stop_at_the_last_location) ... ok
+test_developer_keys_show_and_pay_after_a_second_press (tests.test_v071_dev1.CollectibleTests.test_developer_keys_show_and_pay_after_a_second_press) ... ok
+test_the_seed_holds_items_on_spybots_and_lorbs (tests.test_v071_dev1.CollectibleTests.test_the_seed_holds_items_on_spybots_and_lorbs) ... ok
+test_watched_classes_are_listed_and_never_pay (tests.test_v071_dev1.CollectibleTests.test_watched_classes_are_listed_and_never_pay) ... ok
+test_without_collectibles_nothing_is_claimed (tests.test_v071_dev1.CollectibleTests.test_without_collectibles_nothing_is_claimed) ... ok
+test_a_load_drops_a_running_search (tests.test_v071_dev1.ShopPointerTests.test_a_load_drops_a_running_search) ... ok
+test_a_reload_is_applied_again_with_new_lookups (tests.test_v071_dev1.ShopPointerTests.test_a_reload_is_applied_again_with_new_lookups) ... ok
+test_a_weapon_without_a_loaded_config_keeps_its_slot_and_is_given (tests.test_v071_dev1.ShopPointerTests.test_a_weapon_without_a_loaded_config_keeps_its_slot_and_is_given) ... ok
+test_ids_still_work_as_before (tests.test_v071_dev1.ShopPointerTests.test_ids_still_work_as_before) ... ok
+test_inline_elements_with_config_pointers_are_changed (tests.test_v071_dev1.ShopPointerTests.test_inline_elements_with_config_pointers_are_changed) ... ok
+test_nothing_found_logs_the_evidence_once (tests.test_v071_dev1.ShopPointerTests.test_nothing_found_logs_the_evidence_once) ... ok
+test_slot_objects_with_config_pointers_are_changed (tests.test_v071_dev1.ShopPointerTests.test_slot_objects_with_config_pointers_are_changed) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -932,6 +946,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 908 tests in 242.017s
+Ran 922 tests in 255.894s
 
 OK (skipped=22)

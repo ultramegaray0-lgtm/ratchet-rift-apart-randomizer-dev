@@ -163,9 +163,11 @@ class CollectibleTests(unittest.TestCase):
 
 
 class ShopTests(unittest.TestCase):
-    def test_the_dev_settings_sell_the_vendors_own_weapons(self):
+    def test_the_dev_settings_shuffle_the_shop_again(self):
+        # v0.71-DEV1: the vendor's slots are also looked for as config pointers (tests/test_v071_dev1.py), so the dev
+        # settings go back to "shuffle"; "vanilla" stays a setting (test below)
         text = (MOD / "scripts" / "04_rando_settings.lua").read_text(encoding="utf-8")
-        self.assertRegex(text, r'\n  shop = "vanilla",')
+        self.assertRegex(text, r'\n  shop = "shuffle",')
 
     def test_a_vanilla_shop_seed_never_places_a_vendor_weapon(self):
         g = Game(settings={"shop": "vanilla", "seed": "dev5-shop"})
@@ -246,12 +248,12 @@ class KitTests(unittest.TestCase):
     def test_one_version_everywhere(self):
         for p in list((MOD / "scripts").glob("*.lua")) + list(DEV_DIR.glob("*.lua")):
             tags = set(re.findall(r'RANDO_FILES\["[^"]+"\] = "([^"]+)"', p.read_text(encoding="utf-8")))
-            self.assertEqual(tags, {"10.0.35"}, p.name)
+            self.assertEqual(tags, {"10.0.36"}, p.name)
 
     def test_the_banner(self):
         g = Game(settings={"seed": "dev5-banner"})
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT release v0.70 (kit 10.0.35)"))
+        self.assertTrue(g.log_has("RANDO-KIT release v0.71-DEV1 (kit 10.0.36)"))
 
 
 if __name__ == "__main__":

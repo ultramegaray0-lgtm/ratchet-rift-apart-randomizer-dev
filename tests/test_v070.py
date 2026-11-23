@@ -1,4 +1,4 @@
-"""v0.70 (kit 10.0.35 = v0.62-DEV14 released): the crash on death / retry / load.
+"""v0.70 (kit 10.0.36 = v0.62-DEV14 released): the crash on death / retry / load.
 
 round54 (DEV13 in the game): the game died on every death. Cause (rivet_hook 2.0.0 source): during a load the
 scripts are pumped from the render thread while the game frees the level; DEV13's Omega census read the component

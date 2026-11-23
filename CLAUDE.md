@@ -38,5 +38,5 @@ This is the **private development source of truth**. The public player repositor
 - `tests/` — simulator-based test suite (`tests/sim/rivet_sim.lua`), real-log replays.
 
 Current version: v0.70 (kit 10.0.35), the public beta, built from branch `release-v0.70` (= v0.62-DEV14 released).
-The dev line is `fix/v0.62-dev5` (merged into `main`). Player ZIP SHA-256: see `DEVELOPMENT_LOG.md` (v0.70 entry).
+The dev line is `fix/v0.62-dev5` (merged into `main`), now at v0.71-DEV1 (kit 10.0.36). Player ZIP SHA-256: see `DEVELOPMENT_LOG.md` (v0.70 entry).
 Not yet verified in the real game: see `release/KNOWN_ISSUES.md` and `mod/RiftApartRandomizer/docs/KNOWN_ISSUES.md`.

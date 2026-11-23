@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.35"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.35"
-R.RELEASE = "v0.70"                  -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.36"
+R.RELEASE = "v0.71-DEV1"                  -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -103,6 +103,10 @@ function R.update_loading(dt)
     if RANDO_OMEGA and RANDO_OMEGA.on_loading then
       local ok, err = pcall(RANDO_OMEGA.on_loading)
       if not ok then log("RANDO-ERROR omega on_loading:", tostring(err)) end
+    end
+    if RANDO_SHOP and RANDO_SHOP.on_loading then             -- v0.71-DEV1
+      local ok, err = pcall(RANDO_SHOP.on_loading)
+      if not ok then log("RANDO-ERROR shop on_loading:", tostring(err)) end
     end
   elseif R.loading then
     if R.loads_seen <= 40 then log(string.format("RANDO-LOAD the load is over (%d frame(s))", R.load_frames)) end
@@ -230,6 +234,7 @@ R.config = {
   -- developer keys and test travel: only used by the dev(*).lua files
   key_status = ";", key_campaign = "'", key_hub = "]", key_hub_return = "[", key_story = "/",
   key_test_travel = ".", key_test_point = ",", legacy_f_keys = true, test_travel = false,
+  key_spybot = "F2", key_lorb = "F3",   -- v0.71-DEV1 (dev(keys).lua): status; Ctrl+key twice pays a pickup by hand
 }
 R.CHOICES = { hub_trigger = { parade = true, wrench = true, cinematic = true }, hub_levels = { all = true, off = true },
               hub_prologue = { ["end"] = true, keep = true }, hub_prologue_timing = { before = true, after = true } }
@@ -246,7 +251,7 @@ local RETIRED_RUNTIME = {
 local SETTINGS = RANDO_SETTINGS or {}
 local KEY_SETTINGS = { key_status = true, key_campaign = true, key_test_travel = true, key_test_point = true,
                        key_hub = true, key_hub_return = true, key_story = true, key_shuffle = true,
-                       key_enemies = true, key_bosses = true, key_chaos = true }
+                       key_enemies = true, key_bosses = true, key_chaos = true, key_spybot = true, key_lorb = true }
 local GEN_OPTIONS = {}
 for k, v in pairs(SETTINGS) do
   if R.config[k] ~= nil then
@@ -780,12 +785,46 @@ function R.on_collectible(kind, id, from_event)
     if last_collect[kind] and f - last_collect[kind] < R.COLLECT_DEBOUNCE then return end
     last_collect[kind] = f
   end
-  log("RANDO-COLLECTIBLE", kind, tostring(id or "-"))
+  if from_event then R.collectible_events_seen[kind] = (R.collectible_events_seen[kind] or 0) + 1 end
+  log("RANDO-COLLECTIBLE", kind, tostring(id or "-"), from_event and "(the game's event)" or "(by hand)")
   S.collectibles[kind] = (S.collectibles[kind] or 0) + 1
   changed()
   local n = S.collectibles[kind]
   history(kind .. " #" .. n)
   R.collect(kind .. ":" .. n, kind .. " found")
+end
+R.collectible_events_seen = R.collectible_events_seen or {}
+
+-- v0.71-DEV1: how many locations of a collectible kind this seed has (spybot:1..10, lorb:1..12)
+function R.collectible_total(kind)
+  local n = 0
+  for lid in pairs(SEED and SEED.locations or {}) do
+    if DB.locations[lid] and DB.locations[lid].kind == "collectible" and DB.locations[lid].collectible == kind then n = n + 1 end
+  end
+  return n
+end
+function R.collectible_status(kind)
+  local label = kind == "spybot" and "Spybots" or kind == "lorb" and "Lorbs" or kind
+  local total = R.collectible_total(kind)
+  if total == 0 then return label .. ": not reward locations in this seed (collectibles = false)" end
+  local got = (S and S.collectibles and S.collectibles[kind]) or 0
+  local nxt = got < total and SEED.locations[kind .. ":" .. (got + 1)]
+  local item = nxt and nxt.item
+  return string.format("%s %d/%d paid (the game's event: %d this session)%s", label, got, total,
+                       R.collectible_events_seen[kind] or 0,
+                       item and (" - next: " .. item_name(item)) or (got >= total and " - all paid" or " - next: currency"))
+end
+-- v0.71-DEV1: a pickup the game did not report (developer key, dev(keys).lua): pays the next location of that kind,
+-- never past the last one. The event route still dedupes by id, so a later event for the same pickup pays the NEXT
+-- location - use this only when rivet.log shows no RANDO-COLLECTIBLE line for a pickup you made.
+function R.claim_collectible(kind)
+  if not (SEED and S) then return false, "the seed is still being prepared" end
+  local total = R.collectible_total(kind)
+  local got = (S.collectibles and S.collectibles[kind]) or 0
+  if total == 0 then return false, "this seed has no " .. kind .. " locations (collectibles = false)" end
+  if got >= total then return false, string.format("all %d already paid", total) end
+  R.on_collectible(kind, nil, false)
+  return true
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -1304,6 +1343,26 @@ for _, kind in ipairs(GEN.sorted_keys(BIND.collectible_events)) do
     end)
   end
 end
+-- v0.71-DEV1: watched-only classes (05_rando_bindings.lua collectible_watch): which exist, and the first fields of each
+do
+  local have, missing = {}, {}
+  R.watch_logged = R.watch_logged or {}
+  for _, cls in ipairs(BIND.collectible_watch or {}) do
+    local ok = pcall(rivet.on_event, cls, function(ev)
+      R.watch_logged[cls] = (R.watch_logged[cls] or 0) + 1
+      if R.watch_logged[cls] > 5 then return end
+      local parts = {}
+      for k, v in pairs(ev.fields or {}) do parts[#parts + 1] = tostring(k) .. "=" .. tostring(v) end
+      table.sort(parts)
+      log("RANDO-COLLECTIBLE watched", cls, table.concat(parts, " "))
+    end)
+    if ok then have[#have + 1] = cls else missing[#missing + 1] = cls end
+  end
+  if #have + #missing > 0 then
+    log("RANDO-COLLECTIBLE event classes watched (logged, never paid):", #have > 0 and table.concat(have, ", ") or "none",
+        "| not in this game:", #missing > 0 and table.concat(missing, ", ") or "none")
+  end
+end
 -- 10.0: checkpoints are named (14_rando_travel.lua: the engine's CRC-32 of every listed name)
 on("CheckpointTriggeredEvent", function(ev)
   local f = ev.fields or {}
@@ -1568,7 +1627,7 @@ local function frame(dt)
     local oka, ea = pcall(RANDO_ARMOR.tick, frames)
     if not oka then log("RANDO-ERROR armor:", tostring(ea)) end
   end
-  if ready and RANDO_SHOP then
+  if ready and not R.loading and RANDO_SHOP then           -- v0.71-DEV1: not during a load
     local okv, ev = pcall(RANDO_SHOP.tick, frames)
     if not okv then log("RANDO-ERROR shop:", tostring(ev)) end
   end

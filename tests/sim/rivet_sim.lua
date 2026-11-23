@@ -95,6 +95,7 @@ function S.reset()
   S.vanity_gives = {}              -- bundles the game's armor code added (5.0)
   S.currency = {}                  -- currency item id -> amount received (5.0)
   S.config_objects = {}            -- config id -> object address (5.0, kind 7)
+  S.item_cfg, S.item_cfg_n = {}, 0 -- v0.71-DEV1: item config objects (S.vendor_item_pointers)
   S.vendor_mem = {}                -- config id -> { obj, data, authored = { id... } }
   S.armor_hook = true              -- v5 hook installed (MB_ARMOR_HOOK = 1)
   -- dev 10.15: the inventory records (INVENTED layout, see the top of this file)
@@ -173,7 +174,7 @@ function S.reload_configs()
   for id, c in pairs(S.configs) do
     if c.type == "VendorConfig" then for k, v in pairs(VENDOR_DEFAULTS) do c.fields[k] = v end end
     local vm = S.vendor_mem[id]
-    if vm then for i, item in ipairs(vm.authored) do S.put_hex_id(vm.slot(i) + 0x10, item) end end
+    if vm then for i, item in ipairs(vm.authored) do S.put_item(vm.slot(i) + 0x10, item) end end
   end
 end
 -- 5.0: the vendor's stock in memory (INVENTED layout, see the top of this file).
@@ -181,6 +182,26 @@ end
 -- rivet's VendorConfig.cs): an array of POINTERS, with the slot objects allocated right after the
 -- array - which is why 7.0-8.3 found the ids "past the end of the array" (rounds 18-20)
 S.VENDOR_OBJ = 0x23400000
+-- v0.71-DEV1 (SIMULATED, an assumption under test, not seen in the game): S.vendor_item_pointers = true makes each slot's
+-- Item a POINTER to the weapon's loaded *_item.config object instead of its 64-bit id. Every item id the vendor sells
+-- gets a config object (kind 7 answers its address), as rivet_hook's config manager holds one per loaded config.
+S.ITEMCFG_OBJ = 0x31200000
+function S.item_config_addr(item)
+  S.item_cfg = S.item_cfg or {}
+  if not S.item_cfg[item] then
+    S.item_cfg_n = (S.item_cfg_n or 0) + 1
+    local a = S.ITEMCFG_OBJ + S.item_cfg_n * 0x100
+    S.map(a, 0x100)
+    S.put_u64(a, 0x7FF6C4B00000)                 -- a vtable pointer
+    S.put_hex_id(a + 0x08, item)                 -- ID, as VendorConfig's
+    S.item_cfg[item] = a
+    S.config_objects[item] = a
+  end
+  return S.item_cfg[item]
+end
+function S.put_item(addr, item)
+  if S.vendor_item_pointers then S.put_u64(addr, S.item_config_addr(item)) else S.put_hex_id(addr, item) end
+end
 function S.install_vendor_memory(id, items, prices)
   local obj = S.VENDOR_OBJ + 0x10000 * (#S.config_objects + (S.vendor_count or 0))
   S.vendor_count = (S.vendor_count or 0) + 1
@@ -203,13 +224,19 @@ function S.install_vendor_memory(id, items, prices)
   for i, item in ipairs(items) do
     local e = slot(i)
     S.put_u64(e + 0x08, 0x40000 + i)              -- some other field
-    S.put_hex_id(e + 0x10, item)
+    S.put_item(e + 0x10, item)
     S.put_u32(e + 0x18, (prices and prices[i]) or 1000 * i)  -- Price (7.0: the weapon's vanilla price when given)
   end
   S.vendor_mem[id] = { obj = obj, data = data, authored = items, slot = slot }
   S.config_objects[id] = obj
 end
-function S.vendor_slot_item(id, i) return S.get_hex_id(S.vendor_mem[id].slot(i) + 0x10) end
+function S.vendor_slot_item(id, i)
+  local v = S.get_hex_id(S.vendor_mem[id].slot(i) + 0x10)
+  if S.vendor_item_pointers then                 -- the config object the slot points to names the weapon
+    for item, a in pairs(S.item_cfg or {}) do if string.format("%016X", a) == v then return item end end
+  end
+  return v
+end
 function S.vendor_slot_price(id, i)
   local a = S.vendor_mem[id].slot(i) + 0x18
   return S.mem[a] + S.mem[a + 1] * 0x100 + S.mem[a + 2] * 0x10000 + S.mem[a + 3] * 0x1000000
