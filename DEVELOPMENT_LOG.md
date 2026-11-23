@@ -4,6 +4,143 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-23: v0.71-DEV1 (kit 10.0.36) - the shop by config pointer, Spybots and Lorbs that pay
+
+- SHOP: rivet.config() hides ItemDatas (rivet_hook values_of() skips struct arrays). The slots are now also matched
+  against the loaded weapon configs' addresses (rando_give.dll kind 7, ~20 lookups per load, now served every frame).
+  Evidence dump when nothing matches. Dev settings shop = "shuffle". A text tie-break bug in the slot-object vote
+  (would have shifted every write by one object) was found by the new tests and fixed. SIMULATOR ONLY: the pointer
+  layout is an assumption (S.vendor_item_pointers).
+- SPYBOTS / LORBS: classes exist in the game (round54 23/23); + RuinScriptPickupEvent, 9 watched-only classes,
+  F2/F3 status and Ctrl+F2/Ctrl+F3 twice to pay by hand (dev(keys).lua). Dev settings collectibles = true.
+  400 dev-settings seeds valid. SIMULATOR ONLY.
+- Suite 922 run, 0 failures, 22 skipped (tests/test_v071_dev1.py, 14).
+- Next round (round55): New Game with DEV1. Check: Ms. Zurkon's screen vs the spoiler's SHOP; pick up a Spybot and a
+  Lorb; die once (RANDO-LOAD lines, no crash).
+
+## 2026-11-23: v0.70 (kit 10.0.35) - DEV14 released; DEV10-DEV14 brought into the repo
+
+DEV10-DEV14 (kit 10.0.30-10.0.34) were built outside the repo from DEV9 (db42da7); this commit brings DEV14 in and
+labels it v0.70, the public release. tests/data/round54_rivet.log (DEV13 in the game, game path replaced):
+- VERIFIED IN THE GAME (round54): Omega Ricochet set and read back ("weapon records: 29 of 29 ... layout TRUSTED",
+  then ricochet Omega 1); the hub start, the city's first story steps; "events subscribed 23/23" (so the Spybot / Lorb
+  event classes RYNOPlayPickedUpEvent, RYNOScriptPickupEvent, RuinPlayPickedUpEvent exist in the game).
+- The crash on death / retry / load (round54's log stops at the death's reload): rivet_hook 2.0.0 pumps the scripts
+  from the render thread during a load while the game frees the level; DEV13's Omega census read the component index
+  then. DEV14: R.loading_now() (rivet.script_node(0) refuses off the game thread) + a 0.25 s frame gap; Omega, the
+  spawner layer and the shop read/write nothing during a load, deliveries wait for its end. SIMULATOR ONLY so far.
+- v0.70 adds: one "received" line per Omega reward (it was logged twice; one reward).
+- The suite had never run on DEV10-DEV14: 63 failures. Version pins bumped, stale expectations updated where
+  DEV10-DEV13 changed behaviour on purpose (omega_weapons on by default, Omega status found/total, VERSION.txt, the
+  starvation guard), rivet_sim models script_node during a load, tests/omega_sims/ + tests/test_v070.py added.
+  Suite 908 run, 0 failures, 22 skipped. Public settings: the same seeds as v0.60 (216/216 fingerprints identical
+  over 6 presets x 12 seeds x 3 variants). validate_release 32/32 on the v0.70 zip.
+- Player zip Ratchet_Rift_Apart_Randomizer_v0.70_Player_Release.zip, 298,451 bytes, sha256
+  d3f76981fde3328e6a996d84eda115a9a73aeee90f16ca5c58b2fa45ad22f4f4 (tools/build_public_release.py, deterministic).
+- Branches: fix/v0.62-dev5 is the dev line (DEV9 -> v0.70 -> next), release-v0.70 marks the release, main is merged
+  up to it.
+
+## 2026-11-22: v0.62-DEV9 (kit 10.0.29) - round49: inventories outside the hero's component list
+
+tests/data/round49_rivet.log (DEV8 installed whole, game path replaced). VERIFIED IN THE GAME: DEV8's budget fix (walk
+of 141 components finished, no killed search). Found: the event-named inventories (2129937 ...) are not in the hero's
+list; HeroWeaponManagerLocal holds u32 weapon types. 17_rando_omega.lua resolves handles through the SceneManager
+(scene_manager.hpp layout, rando_give.dll v7 via RANDO_SPAWNERS.V.scene), reads u32 item-handle arrays, probes the first
+item objects. dev(debug).lua END before HOME picks the current planet. Simulator only for DEV9 (SIM.inv_scene is
+synthetic). Suite 901 run, 0 failures, 22 skipped.
+
+## 2026-11-22: v0.62-DEV8 (kit 10.0.28) - round48: Omega search killed by the frame budget
+
+tests/data/round48_rivet.log (DEV7 installed whole, game path replaced): the component-list walk was killed 19 times
+("ran past the 8 ms frame budget" at the walk's reads) and never logged "hero component list walked". The four
+purchases were new weapons (no Omega for sale outside Challenge Mode). 17_rando_omega.lua: frame-room gate
+(R.frame_t0 from 10_rando_runtime.lua, O.FRAME_ROOM 3 ms), 1.5 ms time slices, resumable walk (O.wstate), quick
+re-search after a killed job. VERIFIED IN THE GAME: nothing of DEV8 yet (simulator only). Suite 891 run, 0 failures,
+22 skipped.
+
+## 2026-11-22: v0.62-DEV7 (kit 10.0.27) - round47 was a mixed install
+
+tests/data/round47_rivet.log: DEV5 scripts (10.0.25) + DEV6 dev(debug).lua (10.0.26); DEV6's Omega changes never ran.
+Kit check now names a newer developer file as an old scripts folder. Shop probe: VendorConfig exposes no ItemDatas to
+rivet.config (plain numbers only). Nothing new verified in the game.
+
+## 2026-11-22: v0.62-DEV6 (kit 10.0.26) - branch fix/v0.62-dev5 (continued)
+
+Log: tests/data/round46_rivet.log (DEV5 in the game, anonymised). Player report: "bought Omegas and used NUMPAD1/2,
+nothing registers". Confirmed from the log: no weapon records found in any searched component (so the NUMPAD tools
+could not work either), Omega purchases send VendorPurchaseEvent alone, EnteredVendorEvent never fires, the search
+overran the frame budget. Fixed in 17_rando_omega.lua (component-list walk + handles from inventory events, learning
+from VendorPurchaseEvent, periodic reads, pauses); details in docs/CHANGELOG.md. Other round46 facts: Enemy Randomizer
+changed Nefarious City story factories (e.g. 18 in one scan; 15 new uids harvested), the start Omega (Ricochet) was
+received and given its weapon, collectibles: no Spybot pickup in this log. VERIFIED IN THE GAME: nothing of DEV6.
+Suite 886 run, 0 failures, 22 skipped.
+
+## 2026-11-22: v0.62-DEV5 (kit 10.0.25) - branch fix/v0.62-dev5 (from fix/v0.62-verified-dev-package = the DEV4 kit)
+
+Log: tests/data/round45_rivet.log (the player's DEV4 kit in the game; game path replaced). Read in full. The same log
+was uploaded to `main` as `rivet.log` with the player's Windows user path in its second line - not touched here (no
+history rewrite); it should be replaced on `main` by the anonymised copy.
+
+- ROUND45 (real game, kit 10.0.24): run 1 = a finished save (NefCity -> Ardolis, shuffle off), run 2 = New Game with
+  planet shuffle on (parade -> hub -> NefCity story; the bazaar reloaded ~8 times). Enemy Randomizer: Ardolis 6 of 68
+  spawns replaced (9%); unchanged: 49 "kind not known yet", 2 "Boss Randomizer off"; NefCity bazaar 0 of 5 per visit
+  ("no other walker kind known on this level" / "spawned before the randomizer read its spawner"); pool sharks were made
+  replacements of crabs and pirates; one encounter put back as stuck (180 s). Omega: "inventory not found" on every
+  load; the enumeration names GameInventoryManager / HeroWeaponManagerLocal / GameEquipManager / VanityInventoryManager.
+  Shop: "only 0 vendor weapon(s) in the array at +0x48" x5 -> "Ms. Zurkon could not be changed". No Spybot event bound.
+  ARSENAL_RESTORED: loaded as mods/ARSENAL_RESTORED.stage, yet the companion reported it "not installed" (not changed
+  here: the companion's path test should match the .stage name - needs a Windows run to see why it did not).
+- BUILT: see mod/RiftApartRandomizer/docs/CHANGELOG.md "v0.62-DEV5": registry harvest (tools/harvest_enemy_uids.py,
+  +53 uids), V.kind_by_name, V.SOURCE_ONLY (pool sharks), Omega live components + record dump + start_omega, Spybot /
+  Lorb bindings (DDL names: RYNOPlayPickedUpEvent / RYNOScriptPickupEvent { RynoId }, RuinPlayPickedUpEvent
+  { RuinId }), dev shop = "vanilla" + read-only vendor config probe, H.on_menu_accept cancel fixed (regression of the
+  v0.61 repair: test_v060 / test_v055 failed on DEV4), dev(debug).lua (tools/build_dev_debug.py; warp / unstuck), kit
+  10.0.25 / v0.62-DEV5 everywhere (DEV4 had left tests and tools at 10.0.23).
+- Tests: DEV4 as uploaded: 850 run, 55 failures (version pins, stale lists, the hub regression). Now: 876 run, 0
+  failures, 22 skipped (10 need PowerShell 7, 12 need commits this clone does not have). New: tests/test_v062_dev5.py (26).
+- VERIFIED IN THE GAME: nothing of DEV5. Simulator only: every item above. Next test (round46): New Game with the DEV5
+  kit + dev(debug).lua only; Ardolis or Zurkon fights (Ctrl+-); pick up a Spybot; watch for "RANDO-OMEGA inventory:" /
+  "record" lines; one HOME / PAGEDOWN / END warp; send rivet.log.
+
+## 2026-11-19: Public Release v0.60 (beta, kit 10.0.23) - branch release-v0.60
+
+Built on the player's dev 10.33 kit (imported from RiftApartRandomizer_dev10.33.zip: the 10.31-10.33 scripts never
+reached `main`; their own tests test_round42/43 were not available - this branch adapts the older tests instead) plus
+the round44 log (dev 10.33 in the game, `tests/data/round44_rivet.log`). `main` is untouched.
+
+- ROUND44 (in the game, dev 10.33): Zurkon A1 61/71 replaced, C5 12/16, B3 19/45; 92 replaced bots: 64 died, 28 "gone"
+  (B3's jetpacks/bikers never send BotDeathCompleteEvent - 10.33's gone-proof verified both B3 pairs), alive at the end
+  0, no COMBAT CHECK FAILED, no RANDO-ERROR. The robot shooter was never a replacement (B3's robomutts: "every
+  replacement here is rejected"). Late changes stayed armed. Cordelion: 0/45 (still read too late; the known limit).
+  Omega: "inventory not found" again (rounds 27-44, 89 lines): the flag has never been written in the game.
+- 15 (kit 10.0.23) WARP TO HUB WITHOUT PLANET SHUFFLE (asked): cause - v0.54 made shuffle "off" switch the whole hub
+  off: H.finish returned before setting H.return_at, H.tick returned before running it, H.on_arrival ignored the
+  landing. Now H.returns() / H.returns_after(d) decide the trip back in both modes; H.tick_off runs the timer, the
+  arrival timeout and the retry; H.arrival_off handles the landing (inventory watch, "Back at Nefarious City") and,
+  only when the game has planetary travel off, sets the travel byte (never the level bits: the game's own order).
+  Exceptions in both modes: hub-planet destinations, the parade (kind intro), the finale, the player's own planet-menu
+  flight while the trip waits (H.on_menu_accept), the game's own travel into an open first visit (hub_follow_new).
+  H.on_mission_started (a hook on R.on_mission_state, state 2 - the runtime passes only 3/4 to the hub) takes the
+  travel byte back when one of the city's stories starts (v0.53's round 25 rule).
+- 10: the kit check no longer names boss / chaos as "not installed" (R.DEV_ONLY_OPTIONAL): a player's rivet.log never
+  mentions them. R.RELEASE = "v0.60".
+- Release: tools/build_public_release.py v0.60 - 16 scripts (12 + 15, 16, enemy, 17), EXCLUDED boss.lua / chaos.lua
+  (the build stops if one would go in, or if a player-facing file names them), release/04_rando_settings.lua (the
+  player's defaults: enemy_randomizer on, enemy_notify off, omega_weapons OFF - the player's decision, collectibles OFF
+  - Spybot/Lorb pickups are not bound, 05 collectible_events is empty), rando_give.dll v7 (rebuilt byte-identical:
+  8055703e...), Install-ArsenalRestored.bat/.ps1 restored from release-v0.54 (its script list replaced by name
+  patterns: v0.54's list missed 15_rando_hub and every later file), KNOWN_ISSUES.md in the zip.
+  release_tools/validate_release.py: 32/32. Zip `Ratchet_Rift_Apart_Randomizer_v0.60_Player_Release.zip`, 271,385
+  bytes, sha256 584aab41785646165440b90a5e0429411b00f680c2830a5ae9fd97ccbe55554d (deterministic).
+- Tests: 842 run, 0 failures, 22 skipped (10 need PowerShell 7, 12 need commits this repo does not have). New:
+  test_v060 (13, Warp to Hub ON/OFF), test_round44 (11: 7 real-log, 4 simulator), test_release_v060 (15, the package).
+  Changed for 10.31-10.33 behaviour: test_v1030 (default "all"; the robot-shooter ban list is cleared only for the
+  10.30 trial-mechanics tests; the initialization check is advisory), test_v1029 (no on-screen FAILED note),
+  test_v054 banner, version pins; for v0.60 decisions: test_v1015/test_v1024/test_v055/test_v81 (17 and the Arsenal
+  launcher ship, v7 DLL).
+- NOT verified in the game: the shuffle-off trip back, Omega flag writing, the Arsenal launcher's run on Windows (no
+  pwsh here), Cordelion's first fights.
+
 ## 2026-11-18: dev 10.30 (kit 10.0.19): combat compatibility (round40: "enemies that could not be killed")
 
 - Asked: root cause of unkillable randomized enemies (and "the randomized pirates with guns were unkillable"), a

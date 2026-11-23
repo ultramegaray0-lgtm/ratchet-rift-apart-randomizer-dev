@@ -55,7 +55,17 @@
 -- rivet.read returns is now turned into bytes by one gsub with a lookup table and string.byte (no
 -- Lua loop per byte), reads are smaller, a slice also yields after H.SLICE_SECONDS, and a budget
 -- error makes the next try use half the read size instead of counting against the vendor.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
+-- v0.71-DEV1 ITEM = A POINTER. Rounds 17-45 found an array at +0x48 of the vendor config in every round, but never a
+-- weapon's 64-bit id in it or in the objects it points to (8.4). rivet.config() could not show the array either: rivet_hook's
+-- values_of() skips arrays of structs (ddl_visit.cpp), which is what ItemDatas is - so the DEV5 probe saw only the plain
+-- numbers. In this engine a field that names another config usually holds a POINTER to that loaded config. So the vendor's
+-- weapons are now also looked for as pointers: rando_give.dll (kind 7, the same lookup that finds the vendor) gives the
+-- address of every registry weapon's *_item.config, once per load, and an 8-byte field equal to one of those addresses
+-- counts as that weapon. The layout (inline elements or slot objects, element size, Item offset) is found exactly as for
+-- ids; a write then puts the new weapon's config address there, read back as before. If neither form is found,
+-- rivet.log shows the config's first bytes, the first element and some of the looked-up addresses once per session
+-- (RANDO-SHOP EVIDENCE) - the next round's data. Nothing is read or written during a load (10_rando_runtime.lua).
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SHOP = RANDO_SHOP or {}
 local H = RANDO_SHOP
@@ -85,6 +95,67 @@ for _, key in ipairs(GEN.sorted_keys(DB.items)) do
   if DB.items[key].category == "weapon" then H.VENDOR[DB.items[key].id:upper()] = key end
 end
 H.COMPENSATE_AFTER = 7200      -- frames without a usable helper before the shop's extra weapons are given
+
+-- v0.71-DEV1: the loaded weapon configs' addresses (address -> weapon key, weapon key -> address), per load
+H.PTR, H.PTR_OF = {}, {}
+H.ptr_wait, H.ptr_round, H.ptr_ready_round = 0, -1, -2
+H.PTR_WAIT_FRAMES = 1800       -- ~30 s for the lookups of one load
+local function load_round() return (RANDO and RANDO.loads_seen) or 0 end
+function H.request_pointers(rr)
+  H.PTR, H.PTR_OF = {}, {}
+  H.ptr_wait, H.ptr_failed, H.ptr_round = 0, 0, load_round()
+  local round = H.ptr_round
+  -- only weapons a vendor slot can hold or be given: the seed's weapons and the vendor's special slots (the Burst
+  -- Pistol first: closing a slot needs it). Cut weapons of the registry are never asked for.
+  local want, seen = { H.CLOSE_KEY, "weapon:shatterbomb", "weapon:ryno_8", "weapon:pixelizer", "weapon:bouncer" }, {}
+  local seed = SEED()
+  for _, k in ipairs(GEN.sorted_keys(DB.items)) do
+    local it = DB.items[k]
+    if it.category == "weapon" and (it.vendor or (seed and seed.registry and seed.registry[k])) then want[#want + 1] = k end
+  end
+  for _, key in ipairs(want) do
+    local id = DB.items[key] and DB.items[key].id:upper()
+    if id and not seen[key] then
+    seen[key] = true
+    H.ptr_wait = H.ptr_wait + 1
+    rr.lookup_config(id, function(obj)
+      if round ~= H.ptr_round then return end                -- an older load's answer
+      H.ptr_wait = H.ptr_wait - 1
+      if obj and obj ~= "0000000000000000" then
+        obj = obj:upper()
+        if not H.PTR[obj] then H.PTR[obj] = key; H.PTR_OF[key] = obj end
+      else
+        H.ptr_failed = H.ptr_failed + 1
+      end
+      if H.ptr_wait == 0 then
+        H.ptr_ready_round = round
+        local n = 0
+        for _ in pairs(H.PTR_OF) do n = n + 1 end
+        if not H.ptr_said or H.ptr_said ~= n then
+          H.ptr_said = n
+          log(string.format("weapon configs in memory: %d of %d weapons asked for (the rest are not loaded)",
+                            n, n + H.ptr_failed))
+        end
+      end
+    end)
+    end
+  end
+end
+-- what an 8-byte value names: a registry weapon by id, or by its loaded config's address
+local function match8(v)
+  if not v then return nil end
+  local k = H.VENDOR[v]
+  if k then return k, "id" end
+  k = H.PTR[v]
+  if k then return k, "ptr" end
+  return nil
+end
+H.match8 = match8
+-- the 8-byte value that names weapon `key` in a layout of `mode` (nil: that weapon's config is not loaded)
+function H.value_of(key, mode)
+  if mode == "ptr" then return H.PTR_OF[key] end
+  return DB.items[key] and DB.items[key].id:upper()
+end
 
 -- 10.0: hex text -> bytes without a Lua loop per byte (gsub with a table, then string.byte)
 local HEXB = {}
@@ -169,15 +240,21 @@ function H.discover_pointers(ptr, count, header_at)
     local b = read_span(el.base, H.OBJ)
     el.bytes = b
     for i = 1, #b - 7, 8 do
-      local id = hex64(b, i)
-      if id and H.VENDOR[id] then
-        hits[#hits + 1] = { el = el, off = i - 1, key = H.VENDOR[id] }
-        votes[i - 1] = (votes[i - 1] or 0) + 1
+      local key, mode = match8(hex64(b, i))
+      if key then
+        local vk = (i - 1) .. ":" .. mode                       -- v0.71-DEV1: an offset holds ids OR pointers
+        hits[#hits + 1] = { el = el, off = i - 1, key = key, mode = mode }
+        votes[vk] = (votes[vk] or 0) + 1
       end
     end
   end
-  local off, nv = nil, 0
-  for o, v in pairs(votes) do if v > nv or (v == nv and off and o < off) then off, nv = o, v end end
+  -- the most votes; a tie goes to the SMALLER offset (as numbers: as text "112:ptr" < "16:ptr"), then to ids. A slot
+  -- object read with H.OBJ bytes can reach into the next one, whose Item has as many votes one object further on.
+  local off, mode, nv = nil, nil, 0
+  for vk, v in pairs(votes) do
+    local o, m = tonumber(vk:match("^(%d+)")), vk:match(":(%a+)$")
+    if v > nv or (v == nv and (o < off or (o == off and m == "id"))) then off, mode, nv = o, m, v end
+  end
   if not off then
     -- v0.54: the first slot object's bytes, once per session, so the next round shows its layout
     if not H.dumped_slot and elems[1] and elems[1].bytes and #elems[1].bytes > 0 then
@@ -190,13 +267,14 @@ function H.discover_pointers(ptr, count, header_at)
   end
   local slots, used, seen_key = {}, {}, {}
   for _, m in ipairs(hits) do
-    if m.off == off and not used[m.el.index] and not seen_key[m.key] then
+    if m.off == off and m.mode == mode and not used[m.el.index] and not seen_key[m.key] then
       used[m.el.index] = true; seen_key[m.key] = true
       slots[#slots + 1] = { index = m.el.index, key = m.key, addr = m.el.base + off, base = m.el.base }
     end
   end
   if #slots < 3 then return nil, string.format("only %d vendor weapon(s) in the slot objects of the array at +0x%X", #slots, header_at) end
-  return { data = ptr, stride = H.OBJ, offset = off, slots = slots, count = count, header_at = header_at, pointers = true }
+  return { data = ptr, stride = H.OBJ, offset = off, slots = slots, count = count, header_at = header_at, pointers = true,
+           mode = mode }
 end
 
 -- 3 and 4 above. Returns { data = address, stride, offset, slots = { { index, key, addr, base } },
@@ -220,13 +298,20 @@ function H.discover(obj)
         end
       end
       local data = (not best) and read_span(ptr, math.min(H.MAX_DATA, count * 0x400)) or {}
-      local pos = {}
+      local pos, nmode = {}, {}
       for i = 1, #data - 7, 8 do
-        local id = hex64(data, i)
-        if id and H.VENDOR[id] then pos[#pos + 1] = { at = i - 1, key = H.VENDOR[id] } end
+        local key, mode = match8(hex64(data, i))
+        if key then pos[#pos + 1] = { at = i - 1, key = key, mode = mode }; nmode[mode] = (nmode[mode] or 0) + 1 end
         -- v0.54: round 26 still ran past the 8 ms frame budget on this loop (a smaller READ size does
         -- not shorten it): it now yields every 256 bytes instead of every 512
         if i % 256 == 1 then H.pause(true) end
+      end
+      -- v0.71-DEV1: one form per array - the one with more matches (ids win a tie, as before)
+      local imode = ((nmode.ptr or 0) > (nmode.id or 0)) and "ptr" or "id"
+      do
+        local keep = {}
+        for _, m in ipairs(pos) do if m.mode == imode then keep[#keep + 1] = m end end
+        pos = keep
       end
       if #pos >= 2 then
         local g = 0
@@ -245,7 +330,7 @@ function H.discover(obj)
             end
           end
           if #slots >= 3 and not best then
-            best = { data = ptr, stride = g, offset = off, slots = slots, count = count, header_at = o - 1 }
+            best = { data = ptr, stride = g, offset = off, slots = slots, count = count, header_at = o - 1, mode = imode }
           elseif #slots < 3 then
             why = string.format("only %d vendor weapon(s) in the array at +0x%X", #slots, o - 1)
           end
@@ -258,10 +343,35 @@ function H.discover(obj)
   if not best then
     -- v0.54: both layouts' reasons reach rivet.log (rounds 18-26 only ever showed the inline one)
     if ptr_why and ptr_why ~= why then why = why .. "; as pointers: " .. ptr_why end
+    H.evidence(obj, head)
     return nil, why
   end
   table.sort(best.slots, function(a, b) return a.index < b.index end)
   return best
+end
+
+-- v0.71-DEV1: once per session, what the next round needs to see when neither ids nor pointers matched
+function H.evidence(obj, head)
+  if H.evidence_done then return end
+  H.evidence_done = true
+  local hx = {}
+  for i = 1, math.min(#head, 0x100) do hx[#hx + 1] = string.format("%02X", head[i]) end
+  log(string.format("EVIDENCE vendor config at %X, first %d bytes:", obj, #hx), table.concat(hx, " "))
+  for o = 1, #head - 15, 8 do
+    local p = tonumber(hex64(head, o) or "", 16)
+    local count = s32(head, o + 8)
+    if p and valid_ptr(p) and count >= 2 and count <= 256 then
+      local b = read_span(p, 0x40)
+      local eh = {}
+      for i = 1, #b do eh[#eh + 1] = string.format("%02X", b[i]) end
+      log(string.format("EVIDENCE array at +0x%X (%d entries) at %X, first %d bytes:", o - 1, count, p, #eh), table.concat(eh, " "))
+    end
+  end
+  local some = {}
+  for _, key in ipairs(GEN.sorted_keys(H.PTR_OF)) do
+    if #some < 6 then some[#some + 1] = (key:gsub("^weapon:", "")) .. "=" .. H.PTR_OF[key] end
+  end
+  log("EVIDENCE weapon configs looked up:", #some > 0 and table.concat(some, " ") or "none found (or the lookups had not answered yet)")
 end
 
 H.CLOSE_KEY = "weapon:burst_pistol"   -- 10.0: what a closed slot sells (owned on every save)
@@ -316,9 +426,10 @@ function H.apply(id, obj_hex, v)
   -- (a level load frees the config), else nothing is written and the vendor is tried again.
   -- From here on nothing yields: the check, the writes and the prices happen in one frame.
   reads_in_slice = -1000000
+  local mode = lay.mode or "id"
   for _, sl in ipairs(lay.slots) do
     local now_b = read_span(sl.addr, 8)
-    if hex64(now_b, 1) ~= DB.items[sl.key].id:upper() then
+    if hex64(now_b, 1) ~= H.value_of(sl.key, mode) then
       v.status = "changed while searched: tried again"
       log("vendor", id, "changed while it was searched (a load?) - tried again")
       return false
@@ -352,7 +463,8 @@ function H.apply(id, obj_hex, v)
     log("vendor", id, "sells none of the 15 normal weapons: left alone")
     return false
   end
-  local close_id = DB.items[H.CLOSE_KEY] and DB.items[H.CLOSE_KEY].id:upper()
+  local close_id = H.value_of(H.CLOSE_KEY, mode)
+  if not close_id and close_on then log("vendor", id, "the Burst Pistol's config is not loaded: slots cannot be closed this time") end
   v.closed = 0
   for _, sl in ipairs(lay.slots) do
     local new = map[sl.key]
@@ -360,18 +472,27 @@ function H.apply(id, obj_hex, v)
       if close_on and close_id then new = H.CLOSE_KEY
       elseif not H.dup_said then
         H.dup_said = true
-        log("vendor", id, "slot of", sl.key, "kept (shop_close_slots = false):", closing[sl.key], "- it may come twice")
+        log("vendor", id, "slot of", sl.key, close_on and "kept (the Burst Pistol's config is not loaded, nothing to close it with):"
+            or "kept (shop_close_slots = false):", closing[sl.key], "- it may come twice")
       end
     end
+    local newv = new and H.value_of(new, mode)
+    if new and new ~= sl.key and not newv then
+      -- v0.71-DEV1: the new weapon's config is not loaded, so it cannot be named by pointer: the slot keeps its own
+      -- weapon and the seed's weapon is given directly (below)
+      log("vendor", id, "slot of", sl.key, "kept:", new, "has no loaded config to point to")
+      if map[sl.key] then found[sl.key] = nil; mine = mine - 1 end
+      new = nil
+    end
     if new and new ~= sl.key then
-      local ok, err = pcall(rivet.write, hexaddr(sl.addr), le64(DB.items[new].id:upper()))
+      local ok, err = pcall(rivet.write, hexaddr(sl.addr), le64(newv))
       local back = ok and read_span(sl.addr, 8)
-      if not (ok and back and hex64(back, 1) == DB.items[new].id:upper()) then
+      if not (ok and back and hex64(back, 1) == newv) then
         log("vendor", id, "write failed at slot", sl.index, tostring(err))
         -- put back what was written so far: never leave a half shuffle
         for _, done in ipairs(lay.slots) do
           if done == sl then break end
-          pcall(rivet.write, hexaddr(done.addr), le64(DB.items[done.key].id:upper()))
+          pcall(rivet.write, hexaddr(done.addr), le64(H.value_of(done.key, mode)))
         end
         v.status = "not shuffled: a write failed"
         v.tries = (v.tries or 0) + 1
@@ -406,9 +527,9 @@ function H.apply(id, obj_hex, v)
   v.status = string.format("%d of %d weapon slots changed", wrote, #lay.slots)
   v.applied = (v.applied or 0) + 1
   H.applied_total = (H.applied_total or 0) + 1
-  log(string.format("vendor %s at %s: %d weapon slots, %d changed (%s, Item at +0x%X, array of %d at +0x%X) - %s",
+  log(string.format("vendor %s at %s: %d weapon slots, %d changed (%s, Item at +0x%X as %s, array of %d at +0x%X) - %s",
                     id, obj_hex, #lay.slots, wrote, lay.pointers and "slot objects by pointer" or string.format("element 0x%X bytes", lay.stride),
-                    lay.offset, lay.count, lay.header_at, table.concat(parts, " ")))
+                    lay.offset, mode == "ptr" and "a config pointer" or "an item id", lay.count, lay.header_at, table.concat(parts, " ")))
   if not H.said then
     H.said = true
     say(string.format("Randomizer: Ms. Zurkon's %d weapon slots sell this seed's weapons%s", mine,
@@ -534,6 +655,16 @@ function H.run_job()
   end
 end
 
+-- v0.71-DEV1: called by 10_rando_runtime.lua on every frame of a load: a running search holds the vendor config's
+-- address and the slots' addresses, which the load frees. It is dropped (not counted as a try) and starts again after.
+function H.on_loading()
+  if #H.jobs > 0 then
+    for _, j in ipairs(H.jobs) do j.v.pending = nil end
+    H.jobs = {}
+    log("a load began: the vendor search is dropped and starts again after it")
+  end
+end
+
 -- why the vendor can never be changed in this session, or nil while it still might be
 function H.helper_missing(n)
   n = n or {}
@@ -543,8 +674,54 @@ function H.helper_missing(n)
   return nil
 end
 
+-- v0.62-DEV5: READ-ONLY evidence for a shop route without memory offsets. Rounds 17-45 never found the vendor's slot
+-- array in memory ("only 0 vendor weapon(s) in the array at +0x48"), so Ms. Zurkon always sold her usual weapons -
+-- also the ones the seed placed on Gold Bolts (round45: "Ms. Zurkon could not be changed"). The dev settings now use
+-- shop = "vanilla" (her weapons are bought, never rewards). This logs, once per vendor config and session, what
+-- rivet.config() answers for it (field names, types, and the first entry of any list), so a later build can tell
+-- whether rivet.config_set reaches VendorConfig.ItemDatas by a path. Nothing is written.
+H.probed = H.probed or {}
+function H.probe_configs()
+  if H.probe_done or not (rivet.configs and rivet.config) then return end
+  if RANDO and RANDO.config and RANDO.config.shop_probe == false then H.probe_done = true; return end
+  local ok, list = pcall(rivet.configs, "VendorConfig", 20)
+  if not ok or type(list) ~= "table" then return end
+  if #list == 0 then return end
+  H.probe_done = true
+  for _, c in ipairs(list) do
+    local id = tostring(c.id):upper()
+    if not H.probed[id] then
+      H.probed[id] = true
+      local okc, cfg = pcall(rivet.config, id)
+      if okc and type(cfg) == "table" then
+        local parts = {}
+        for k, v in pairs(cfg) do
+          local d = type(v)
+          if d == "table" then
+            local n, first = 0, nil
+            for _, e in pairs(v) do n = n + 1; first = first or e end
+            d = "table[" .. n .. "]"
+            if type(first) == "table" then
+              local ks = {}
+              for fk, fv in pairs(first) do ks[#ks + 1] = tostring(fk) .. ":" .. type(fv) .. "=" .. tostring(fv):sub(1, 24) end
+              table.sort(ks)
+              d = d .. "{" .. table.concat(ks, ",") .. "}"
+            elseif first ~= nil then d = d .. "{" .. type(first) .. "=" .. tostring(first):sub(1, 24) .. "}" end
+          elseif d ~= "function" then d = d .. "=" .. tostring(v):sub(1, 32) end
+          parts[#parts + 1] = tostring(k) .. " " .. d
+        end
+        table.sort(parts)
+        log("PROBE vendor config", id, tostring(c.type or ""), "fields:", table.concat(parts, " | "))
+      else
+        log("PROBE vendor config", id, "rivet.config answered:", tostring(cfg))
+      end
+    end
+  end
+end
+
 function H.tick(frame)
   H.frame = frame
+  if frame % H.EVERY == 0 then pcall(H.probe_configs) end
   local seed, s = SEED(), S()
   if not (seed and s and s.started and seed.shop and seed.shop.mode == "shuffle" and seed.shop.slots) then return end
   if #H.jobs > 0 then
@@ -586,6 +763,15 @@ function H.tick(frame)
     local mgr, base, sigs = q(0x118), q(0x30), rr.u32_at(n.addr + 0x120)
     local rva = (mgr and base and tonumber(mgr, 16) ~= 0) and string.format("+0x%X", tonumber(mgr, 16) - tonumber(base, 16)) or "-"
     log("helper: config manager at " .. tostring(mgr) .. " (exe " .. rva .. ", rivet_hook's signature matched " .. tostring(sigs) .. "x)")
+  end
+  -- v0.71-DEV1: this load's weapon config addresses first (the vendor's Item may be a pointer); at most
+  -- H.PTR_WAIT_FRAMES, then the search goes on with whatever answered (ids are always tried)
+  local round = load_round()
+  if H.ptr_round ~= round then H.request_pointers(rr); H.ptr_asked = frame; return end
+  if H.ptr_ready_round ~= round then
+    if frame - (H.ptr_asked or frame) < H.PTR_WAIT_FRAMES then return end
+    H.ptr_ready_round = round
+    log("weapon config lookups: " .. tostring(H.ptr_wait) .. " did not answer - searching with the ones that did")
   end
   local ok, list = pcall(rivet.configs, "VendorConfig", 50)
   if not ok or type(list) ~= "table" then

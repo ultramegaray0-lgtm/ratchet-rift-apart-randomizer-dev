@@ -110,7 +110,8 @@ class EvidenceTests(unittest.TestCase):
         # Dev 10.11 (generator 10.11.0, coords_first_visit) changes every seed again
         seed, preset, user = ENG.G.parse_share_code(
             "RA10|kit-bolt-kit-198|balanced|distribution=goldbolts_first,include_arsenal_restored=true,travel_lock=true")
-        s, audit = ENG.generate(seed, py(user), preset)
+        # v0.62-DEV12: omega_weapons is on by default; a seed made before that keeps its fingerprint with it off
+        s, audit = ENG.generate(seed, dict(py(user), omega_weapons=False), preset)
         self.assertEqual(s.fingerprint, "8869cc994ae4")
         self.assertEqual(audit, [])
         for d in py(s)["hub"]["destinations"]:

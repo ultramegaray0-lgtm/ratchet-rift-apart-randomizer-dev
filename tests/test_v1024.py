@@ -60,13 +60,15 @@ class KitDllTests(unittest.TestCase):
     def test_the_kit_dll_is_v7(self):
         self.assertEqual(hashlib.sha256((MOD / "rando_give.dll").read_bytes()).hexdigest(), V7)
 
-    def test_v6_is_kept_for_public_packages(self):
+    def test_v6_is_kept_and_v060_packages_ship_v7(self):
+        # v0.60: the public package ships v7 (the Enemy Randomizer needs it; it ran in the game from round32 on);
+        # the v6 binary of v0.51-v0.55 stays in rando_give_source/release_v6 for reference
         v6 = MOD / "rando_give_source" / "release_v6" / "rando_give.dll"
         self.assertEqual(hashlib.sha256(v6.read_bytes()).hexdigest(), V6)
         import build_public_release as b
         dll = [src for src, dst in b.plan([]) if dst == "GAME_FOLDER/rando_give.dll"]
         self.assertEqual(dll, [b.RELEASE_DLL])
-        self.assertEqual(b.DLL_SHA256, V6)
+        self.assertEqual(b.DLL_SHA256, V7)
 
     def test_no_second_v7_copy_to_forget(self):
         self.assertFalse((MOD / "rando_give_source" / "dev_build").exists())

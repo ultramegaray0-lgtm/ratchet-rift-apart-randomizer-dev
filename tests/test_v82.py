@@ -78,7 +78,7 @@ class TestTravelTests(unittest.TestCase):
     def test_script_loads_and_is_on(self):
         g = test_game()
         self.assertTrue(g.g.RANDO_TEST_TRAVEL.on())
-        self.assertTrue(g.log_has("RANDO-TEST\tloaded (10.0.19) - test travel is ON"))
+        self.assertTrue(g.log_has("RANDO-TEST\tloaded (10.0.36) - test travel is ON"))
         self.assertIn("TEST TRAVEL on", g.R.status_text())
 
     def test_warp_to_a_planet_without_coordinates_stays_there(self):

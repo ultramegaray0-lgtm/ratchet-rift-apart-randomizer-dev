@@ -1,10 +1,12 @@
-# Omega weapons (dev 10.15, kit 10.0.11)
+# Omega weapons (dev 10.15, kit 10.0.24)
 
 Challenge Mode (New Game+) sells an **Omega** version of every weapon: it raises the weapon's level
 cap from 5 to 10 and opens new upgrade nodes. The private dev kit now sets `omega_weapons = true` by default, so the seed has the 20 Omega
 versions as **rewards of their own** (`omega:<weapon>`), next to the weapons themselves.
 
-**Nothing of this has run in the game.** The generator, the ownership logic and the save are tested
+**Verified in the game (round52, DEV11):** the weapon records are found, the Omega byte is +0x88 from the
+weapon's item id in a GameWeaponItem component, the randomizer's write takes effect, and six Omega purchases at
+Ms. Zurkon turned that same byte on. (Older text below: "Nothing of this has run in the game.") The generator, the ownership logic and the save are tested
 offline; setting the game's Omega flag is tested only against the simulator, whose memory layout is
 invented. `17_rando_omega.lua` is therefore held back from player packages.
 
@@ -101,3 +103,133 @@ game's Omega flag" and waits; it is set the moment the byte is known.
 - Ms. Zurkon still sells Omega upgrades in Challenge Mode as usual (the slot fields `OmegaPrice` /
   `OmegaOnly` have not been located in memory, so they are not changed). Buying one there is the game's
   own route; a later Omega reward for that weapon is then simply recorded.
+
+
+## 6. v0.61-DEV3 live-log correction (2026-11-21)
+
+The current `rivet(3).log` does **not** identify the Omega flag or prove any successful Omega write:
+
+- `rivet.components` was called with values from `GadgetItemAddedEvent.ItemHandle`,
+  `InventoryHandle` and `WeaponLevelUpEvent.ItemHandle`. The game replied that these
+  handles have no readable component list or are past the end of the scene. They are not
+  valid scene-actor handles for this API.
+- `rivet.find_component("WeaponItem")` fails because **WeaponItem is not a registered live
+  component class**. `WeaponItemPrius` in the DDL dump is a DDL data type; that does not make
+  `"WeaponItem"` a component class name.
+- The log contains 37 `weapons not found` messages, zero `LEARNED` messages and zero confirmed
+  `SET` / read-back results. Base-weapon purchase messages are not evidence that an Omega
+  upgrade was purchased or that its flag changed.
+- The DEV4 diagnostic ZIP's README described it as read-only, but its Lua still had code paths
+  calling `rivet.set_field` and `rivet.write`. Treat that file as **not hard-disabled**. Do not
+  run it as a diagnostic-only build until those paths are gated off.
+
+The rivet_hook API documents `rivet.hero()` as the player's actor handle and
+`rivet.components(handle)` as the way to list that actor's actual live component class names.
+The next safe discovery step is therefore to enumerate components on the **hero handle**, not
+on the event's item handles and not by guessing a DDL type name.
+
+A read-only probe has been added at
+`mod/RiftApartRandomizer/dev_scripts/dev(omega_inventory_probe).lua`. Copy it into the active
+`GAME_FOLDER/scripts/` directory for one run, launch into live gameplay with the hero present,
+then inspect `RANDO-OMEGA-PROBE` lines in `rivet.log`. It logs the hero's component class list
+and metadata / first Prius bytes for component names containing item, inventory, weapon, equip
+or loadout. It has no `rivet.write` or `rivet.set_field` call.
+
+**No Omega runtime fix is claimed yet.** A component class and a record layout must be identified
+from the live game before the flag can be safely read, much less written. The Omega memory
+layout in the simulator is invented, not in-game evidence.
+
+
+## 10.0.24 follow-up: hero component discovery
+
+The runtime now falls back to one read-only enumeration of the live hero's component classes when
+none of ItemInventory, ItemInventoryPrius, GridInventory, or GridInventoryPrius exists. It logs the
+full class list and metadata / first Prius bytes for item, inventory, weapon, equipment, and loadout
+candidates. A candidate is **not** automatically accepted as the inventory, and no memory is written
+by this diagnostic. Omega flag discovery and actual Omega writes remain unverified and disabled
+until the real inventory record and Omega byte are identified in-game.
+
+
+## v0.62-DEV5 (kit 10.0.25): the live components, start_omega, a developer compare
+
+- Round45 listed the live hero's item components: GameInventoryManager (8552 bytes), HeroWeaponManagerLocal (2080),
+  GameEquipManager (872), VanityInventoryManager (17640). `O.CLASSES_LIVE` searches the first three (after the four
+  old names) for the same proof as before: an array whose elements hold the weapons' 64-bit item ids. The search reads
+  the whole component (at most `O.MAX_HEADER` = 0x2200 bytes) in a job, never in one frame.
+- When records are found, each one's first 0x180 bytes are logged once (`RANDO-OMEGA record <weapon> ...`): a save that
+  already owns an Omega weapon shows its byte as 01 where the others hold 00.
+- `start_omega = 1` (dev settings): every new game starts with one random Omega version, its weapon given first. The
+  reward waits ("recorded") until the flag's byte is known; then it is set at once.
+- Learning the byte: two Omega purchases at Ms. Zurkon (Challenge Mode), as before, OR dev(debug).lua: NUMPAD1 reads
+  every record, make ONE weapon Omega (buy it), NUMPAD2 lists the bytes that went 0 -> 1, Ctrl+NUMPAD2 takes a single
+  candidate as this save's flag. Or set `omega_flag_offset` in 04 once the byte is known.
+- Still not seen in the game: whether one of these components holds the records, and whether the game honours a flag
+  set from outside (levels 6-10, the Omega name).
+
+
+## v0.62-DEV6 (kit 10.0.26): why round46's purchases taught nothing, and what changed
+
+See CHANGELOG "v0.62-DEV6". In short: wrong components searched (the inventories are found by handle now, through the
+hero's own component list), the wrong purchase event (Omega = VendorPurchaseEvent alone), a "before" read that was never
+taken (EnteredVendorEvent does not come; the read is taken when the records are found and refreshed), and a search that
+overran the frame budget. To teach the byte: buy Omegas of two different weapons, a few seconds apart, and look for
+"RANDO-OMEGA LEARNED". If rivet.log still says "inventory not found", send it: it now lists every hero component
+("hero components: ...", 12 per line) and each searched candidate with its handle.
+
+
+## v0.62-DEV8 (kit 10.0.28): round48 - the walk was stopped by the frame budget
+
+DEV7 ran in the game, but the hero's component walk was killed 19 times by rivet_hook's 8 ms budget and never finished.
+The search now runs only in frames with room (`O.FRAME_ROOM`), in 1.5 ms slices (`O.SLICE_SECONDS`), and the walk resumes
+where it stopped (`O.wstate`). Omega weapons are sold only in Challenge Mode: teaching the byte needs a Challenge Mode
+save. The learned byte is stored in state and used in later games, including normal ones.
+
+
+## v0.62-DEV9 (kit 10.0.29): round49 - inventories by handle through the SceneManager
+
+DEV8's walk finished in the game (141 components), but the inventories that InventoryChangedEvent names on the hero
+are not in the hero's component list. They are now resolved by handle through the SceneManager (rando_give.dll v7,
+`O.resolve`), searched first, and arrays of u32 item handles are read as well (`O.records_handles`). The first few items
+GadgetItemAddedEvent names are logged with their class and first bytes (`O.probe_item`) to learn the item layout.
+
+
+## v0.62-DEV10 (kit 10.0.30): round50 - no learning: the game's own type data
+
+Round50 confirmed the DEV9 handle lookup in the game but the search was starved and cut by a level change. DEV10
+stops searching inventories: the weapon records are the scene's components whose class carries the WeaponItemPrius
+type (`O.ddl_find`, through `SceneManager.componentLookups`), and the Omega byte's place is read from that type's live
+field table (`O.weapon_layout`: ItemConfigHash +48, Omega +184 in rivet's DDL dump, +0x88 from the id). So **no
+Challenge Mode purchase is needed**: `O.offset()` answers "the game's type data" as soon as the census has read the
+type, and Omega rewards are written once the weapon is confirmed. Writes need the live field table and a record owned
+by the hero's actor. A purchase now only confirms the byte. `omega_flag_offset` still overrides; learning
+(`state.omega_cal`) is only the fallback when the type-data route finds nothing.
+
+
+## v0.62-DEV11 (kit 10.0.31): round51 - GameWeaponItem, fields in the instance
+
+The DEV10 census ran in the game and found 33 `GameWeaponItem` (and 4 `GameMeleeWeaponItem`) components, whose class
+prius is plain ItemPrius; items keep no prius holder. Weapon items are now taken by class name, the weapon id is found in
+the instance, and the Omega byte (+0x88 from the id, WeaponItemPrius's own order) is trusted only if the neighbouring
+fields check out in (nearly) every weapon record: ItemCount 1, sane ammo floats, a sane Test list, Omega 0/1.
+
+
+## v0.62-DEV12 (kit 10.0.32): round52 - verified
+
+Omega works in the game. The randomizer's Omega Ricochet was applied, and six purchases at Ms. Zurkon confirmed the
+byte. Fixed: the game's own Omegas are forgotten at each load, so another save never inherits them. The status line
+counts the seed's Omega rewards.
+Item pool: `omega_weapons` is ON by default now (G.DEFAULTS), and Omega versions never go to Spybots / Lorbs (their
+pickup events are not bound yet). A seed made with the old default needs `omega_weapons = false` to stay the same.
+
+
+## DEV13 (kit 10.0.33): round53 corrections
+
+- **SelectedCell is not a sanity field.** Weapons with upgrades read 118-216 at id +112; the "< 64" rule made every
+  round53 census untrusted. The trust check is now ItemCount +8 = 1, ammo floats +20/+24, Test list +120, Omega +136
+  = 0/1 (>= 90% of the records, at least 3).
+- **Two sets on the hero.** GameEquipInventory holds the weapons you own; GameOverrideInventory holds copies (ItemCount
+  0 except during some arena challenges). Only GameEquipInventory (else the hero's actor) is written.
+- **Checkpoint loads rebuild item components.** A census or record set from before a `CheckpointTriggeredEvent` with
+  `Loaded=true` is dropped.
+- **Carried-over weapons.** A trusted record with ItemCount 1 and XP > 0 counts as owned: the Omega is set without a
+  prerequisite send.

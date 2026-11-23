@@ -1,10 +1,10 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.55)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.71-DEV1)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
 
 LAYOUT
-  scripts\         the release's Lua scripts (dev 10.30: nothing else). rivet_hook loads scripts\*.lua in
+  scripts\         the release's Lua scripts (dev 10.35: nothing else). rivet_hook loads scripts\*.lua in
                    name order. Release scripts (all go into <game>\scripts):
                      01_rando_data  02_rando_generator  03_rando_campaign  04_rando_settings
                      05_rando_bindings  06_rando_capabilities  09_rando_real  10_rando_runtime
@@ -16,8 +16,12 @@ LAYOUT
                        safety guards; needs 16_rando_spawners; never in a player package)
                      17_rando_omega  (optional, dev 10.15: sets the game's Omega flag for an Omega
                        reward, docs/OMEGA.md; never in a player package until it has run in the game)
-  dev_scripts\     dev 10.30: OPTIONAL developer diagnostics, never in a release and never needed to play
+  dev_scripts\     dev 10.35: OPTIONAL developer diagnostics, never in a release and never needed to play
                    (named dev(name).lua; copy one into <game>\scripts only for a test that asks for it):
+                     dev(debug)       v0.62-DEV5: EVERY tool below in ONE file, plus WARP ANYWHERE / UNSTUCK
+                                      (HOME planet, PAGEUP/PAGEDOWN room, END warp, INSERT unstuck, DELETE where am I,
+                                      NUMPAD1/2 Omega record compare; see the top of the file). Copy only this one.
+                                      Built by tools/build_dev_debug.py from the single files.
                      dev(keys)        the developer keys ; ] [ / ' and the old F keys
                      dev(testtravel)  test travel (keys . and , with test_travel = true)
                      dev(testmode)    F10 / F11 fake progress, Ctrl+F10 x2 reset, the mission lab
@@ -27,6 +31,7 @@ LAYOUT
                      dev(spawnprobe)  read-only spawner evidence (RANDO-SPAWNPROBE lines; dev 10.20)
                      dev(spawnproof)  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF lines; v6, dev 10.26;
                                       dev 10.27: stands down while the Enemy Randomizer is ON)
+                     dev(omega_inventory_probe)  read-only hero component listing (RANDO-OMEGA-PROBE lines)
   rivet.toml       rivet_hook settings (copy next to RiftApart.exe)
   rando_give.dll   the native helper (copy next to RiftApart.exe); rando_give_source\ rebuilds it
                    dev 10.24: this IS v7 (it publishes the SceneManager dev(spawnproof) needs; it ran in your game
@@ -43,13 +48,28 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release dev 10.30 (kit 10.0.19)
-       RANDO-KIT all 12 required scripts are 10.0.19
+       RANDO-KIT release v0.71-DEV1 (kit 10.0.36)
+       RANDO-KIT all 12 required scripts are 10.0.36
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
+     HARD STOP: if the banner says any kit other than 10.0.36, do NOT continue;
+     that is not this package. This artifact is one directly extractable ZIP; do not combine it
+     with an older folder or nested ZIP.
+
+ENEMY RANDOMIZER (dev 10.33)
+  enemy_compat = "all" in scripts\04_rando_settings.lua (the default): every regular enemy LOADED ON THE LEVEL can become
+  every other of its movement group (walkers / flyers / turrets), Nefarious troopers included, and a spawner that already
+  spawned changes for its next spawns. enemy_mix_movement = true also mixes the groups (off since dev 10.32: round42's
+  walkers at flyer spawns could not be killed). A replacement that is still alive after a fight (6 other deaths, 45 s)
+  or while nothing on the level died for 40 s is put back. enemy_compat = "verified" is 10.30's behaviour.
+  The game can only spawn an enemy whose template is loaded on the level: on Cordelion's first fights that is Nefarious
+  troopers only. Ctrl+- names the species loaded where you are. Enemies of OTHER planets need an asset-level swap (not
+  in this kit; rivet.log's "ASSET" lines collect what it needs).
+  dev 10.33: the enemy kinds every log has named are built in, so a new save randomizes from its first fight; the
+  pirate robot shooter is never used as a replacement (it could not be killed as one).
 
 KEYS
   Players: 0 planet shuffle on/off (off by default), Ctrl+0 twice gives randomizer items back.
-           - Enemy Randomizer on/off, = Boss Randomizer on/off (both ON in this dev kit's 04 file; the
+           - Enemy Randomizer on/off, = Boss Randomizer on/off (Enemy ON; Boss OFF by default in this dev kit; the
            save remembers them). Ctrl+- / Ctrl+= show what each changed here. dev 10.27: only the Enemy
            Randomizer changes enemies in the game (it needs this rando_give.dll, v7).
            BACKSPACE Chaos Randomizer on/off (off by default; no protection; while on, the
@@ -60,3 +80,176 @@ TESTS AND RELEASE
   python run_tests.py                         every automated test (needs: pip install lupa capstone)
   python tools/build_public_release.py        the NexusMods zip in dist\ (dev(*).lua is never copied)
   python3 -I release_tools/validate_release.py <zip> <repo> <workdir>   checks the zip
+
+
+DEV4 FOLLOW-UP (10.0.24)
+  - Enemy Randomizer: SpawnFactory handles from spawn events are now queued for targeted discovery
+    before the full-level scan. The spawn that raised the event is never changed; this can arm a
+    multi-wave factory for later spawns. No guarantee for one-shot spawners.
+  - Omega: if the four known inventory component names are absent, the live hero's component
+    classes and relevant component metadata / Prius bytes are logged once. Read-only; no Omega
+    flag writes are enabled by this diagnostic.
+  - Remove every old dev(*).lua from <game>\scripts. In particular, dev(spawnprobe).lua is not
+    needed for normal play and can exceed the 8 ms frame budget. Keep diagnostics in dev_scripts\.
+
+
+DEV5 (10.0.25) - round45 (the DEV4 log)
+  - Enemy Randomizer: 53 more enemy template ids from your logs are built in (round45's Ardolis bladeballs, robot
+    shooters, crabs, puffoids, pool sharks ...): 49 of Ardolis' 51 unchanged spawns were "kind not known yet". A
+    template that answers only its name is classified by that name. Pool sharks are never a replacement (they live in
+    water) and their spawners only take flyers.
+  - Omega: the live hero's GameInventoryManager / HeroWeaponManagerLocal / GameEquipManager are searched for the weapon
+    records (round45: none of the four old names exists). start_omega = 1 (dev settings) starts every new game with one
+    random Omega version and its weapon. The Omega FLAG is still only written once its byte is known: buy two Omegas
+    at Ms. Zurkon in Challenge Mode, or use dev(debug).lua's NUMPAD1 / NUMPAD2 (docs/OMEGA.md).
+  - Spybots and Lorbs pay their rewards: RYNOPlayPickedUpEvent / RYNOScriptPickupEvent (Spybot = "RYNO plan") and
+    RuinPlayPickedUpEvent (Lorb = "Ruin token"), names from the game's own type data. Not seen in a log yet.
+  - Shop: the dev settings use shop = "vanilla": Ms. Zurkon's slots were never changed in the game (rounds 17-45), so
+    "shuffle" let her sell weapons that were also Gold Bolt rewards. With "vanilla" none of her weapons is a reward.
+    A read-only "RANDO-SHOP PROBE vendor config" line shows what rivet.config() answers for her config.
+  - Travel: choosing a planet in the ship's menu while the 12 s trip back to Nefarious City waited no longer warps you
+    back when the destination's planet could not be named (the v0.61 repair needed a known planet).
+
+
+DEV6 (10.0.26) - round46 (the DEV5 log): Omega purchases now register
+  - Why nothing registered in DEV5: (1) the weapon records were searched in GameInventoryManager /
+    HeroWeaponManagerLocal / GameEquipManager and are in none of them - your log names the real inventories only by
+    handle (InventoryChangedEvent Component=2129937 ...), so NUMPAD1 / NUMPAD2 answered "no weapon records" too;
+    (2) an Omega purchase sends only VendorPurchaseEvent (no PurchaseWeaponEvent, which the learning listened to);
+    (3) EnteredVendorEvent never comes, so the "before" read was never taken; (4) the search overran the frame budget.
+  - Now: the hero's own component list is walked (read only) and the components the inventory events name are
+    searched first; the records are read as soon as they are found and every few seconds; a VendorPurchaseEvent of a
+    weapon you already own (no PurchaseWeaponEvent after it) is an Omega purchase and is compared with that read.
+  - To teach it: buy Omegas of TWO different weapons at Ms. Zurkon, a few seconds apart. rivet.log shows
+    "RANDO-OMEGA inventory: N weapon record(s) in ...", "Omega purchase seen: ...", "Omega purchase 1 of 2 ..." and
+    "LEARNED: the Omega flag is the byte at +0x..". Or with dev(debug).lua: NUMPAD1, buy one Omega, NUMPAD2,
+    Ctrl+NUMPAD2 (wait for "N weapon records read" after NUMPAD1).
+
+DEV7 (10.0.27) - round47: a mixed install
+  - Round47 ran DEV5's scripts (kit 10.0.25) with DEV6's dev(debug).lua (10.0.26): only dev(debug).lua had been
+    copied, so the Omega fixes of DEV6 never ran (the log still shows DEV5's search and its frame-budget errors), and
+    the kit check told you to delete the NEW dev(debug).lua. It now says the scripts folder is older and must be
+    replaced as a whole.
+  - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
+    then dev_scripts\dev(debug).lua. rivet.log must show "RANDO-KIT release v0.62-DEV7 (kit 10.0.27)" and
+    "all 12 required scripts are 10.0.27".
+  - Shop evidence: rivet.config() answers only VendorConfig's plain numbers (ID, IdleVOTriggerTime, ...,
+    UpgradeCellYOffset) - no ItemDatas list, so rivet.config_set cannot reach Ms. Zurkon's slots. shop = "vanilla" stays.
+
+DEV8 (10.0.28) - round48: the Omega search was stopped by rivet_hook's frame budget
+  - Round48 ran the whole DEV7 kit correctly. The new walk of the hero's components was killed 19 times
+    ("ran past the 8 ms frame budget") and never finished, so no weapon record was found yet. The search now runs
+    only in frames with time to spare, in short slices, and continues where it was stopped.
+  - All four purchases in round48 were new weapons. Ms. Zurkon sells Omega weapons ONLY in Challenge Mode, so to
+    teach the Omega byte you need a Challenge Mode save (finish the game, then start Challenge Mode). The learned
+    byte is kept in the randomizer's state and is used for every later game.
+  - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
+    then dev_scripts\dev(debug).lua. rivet.log must show "RANDO-KIT release v0.62-DEV8 (kit 10.0.28)" and
+    "all 12 required scripts are 10.0.28". Look for "RANDO-OMEGA hero component list walked" and
+    "RANDO-OMEGA inventory: N weapon record(s)".
+
+DEV9 (10.0.29) - round49: the inventories are not in the hero's component list
+  - Round49 confirmed the DEV8 fix in the game: the walk finished (141 components) and nothing was stopped by the
+    frame budget. But the inventories the game names by handle are not in that list, so DEV9 looks them up through
+    the SceneManager (needs the kit's rando_give.dll v7 next to RiftApart.exe - the Enemy Randomizer uses it too).
+  - Look for "RANDO-OMEGA inventory candidate ... (InventoryChangedEvent, by handle)", "item handle N: ..." and
+    "inventory: N weapon record(s)". If a line says "inventory handle ... not resolved", send the log.
+  - dev(debug).lua: END without HOME now picks the planet you are on; press END again to warp to the room shown.
+  - Teaching the Omega byte still needs a Challenge Mode save (two Omega purchases of different weapons).
+  - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
+    then dev_scripts\dev(debug).lua. rivet.log must show "RANDO-KIT release v0.62-DEV9 (kit 10.0.29)".
+
+DEV10 (10.0.30) - round50: the Omega flag from the game's own type data (no Challenge Mode needed)
+  - Round50 showed the DEV9 handle lookup works in the game, but the search was starved (it runs last in the frame,
+    after the Enemy Randomizer) and the level changed before it read anything.
+  - DEV10 finds the weapons a new way: every component whose class carries the game's WeaponItemPrius type, read from
+    the scene's component index. The Omega byte's place comes from the game's own field table (WeaponItemPrius.Omega),
+    so nothing has to be learned and no Challenge Mode purchase is needed. Omega rewards (and the starting Omega) are
+    written as soon as the weapon is confirmed in your inventory.
+  - Look for, in this order:
+      "RANDO-OMEGA weapon items: reading the scene's component index (N components)"
+      "RANDO-OMEGA WeaponItemPrius layout: WeaponItemPrius from the game's type data: ItemConfigHash +0x30, Omega +0xB8"
+      "RANDO-OMEGA inventory: N weapon record(s) in WeaponItemPrius components"
+      "RANDO-OMEGA the Omega flag: +0x88 ... (the game's type data)"
+    and then "flag set" / "is yours" for an Omega reward. In the game, check the weapon in the weapon wheel / vendor:
+    it should show as Omega (level cap 10).
+  - dev(debug).lua NUMPAD1 now also lists which of your weapons are Omega ("omega: flag +0x88 ...: Omega now: ...").
+  - If a line says "not found" or "nothing is written", send rivet.log.
+  - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
+    then dev_scripts\dev(debug).lua. Keep the kit's rando_give.dll next to RiftApart.exe (the SceneManager comes from it).
+    rivet.log must show "RANDO-KIT release v0.62-DEV10 (kit 10.0.30)".
+
+DEV11 (10.0.31) - round51: the weapons are GameWeaponItem components
+  - Round51: the DEV10 census worked in the game (52,872 components) and found the weapons - "GameWeaponItem
+    (ItemPrius) x33" - but skipped them, because their class's type is plain ItemPrius, not WeaponItemPrius.
+  - DEV11 takes GameWeaponItem / GameMeleeWeaponItem by name, finds each weapon's id inside the component, and checks
+    the WeaponItemPrius fields next to it in every weapon (ItemCount 1, ammo, upgrade list, Omega 0 or 1). Only if
+    they match is the Omega byte (+0x88 from the id) trusted and written.
+  - Each weapon's fields go to rivet.log: "weapon record ricochet: XP ..., ammo 25/25, cell ..., Omega 0". Compare the
+    ammo numbers with the game's HUD - if they match, the layout is right.
+  - NUMPAD1 answers at once now, in the big banner: "searching NN% (~S s)" while the weapons are being read (it takes
+    up to ~20 s after a load), then "Omega: N weapons, M Omega". Details stay in rivet.log.
+  - Look for: "weapon items: ...; the weapon id is at instance+..." , "weapon records: N of N match ... TRUSTED",
+    "inventory: N weapon record(s) in GameWeaponItem components", the banner "Randomizer: Omega ready", then
+    "flag set" / "is yours" for the starting Omega once its weapon is in your inventory.
+  - Give it ~20 s after each load or warp before pressing NUMPAD1 or warping again (each load restarts the search).
+  - INSTALL EVERY TIME as for DEV10; rivet.log must show "RANDO-KIT release v0.62-DEV11 (kit 10.0.31)".
+
+DEV12 (10.0.32) - round52: OMEGA WORKS IN THE GAME
+  - Round52 (DEV11): the weapon records were found and trusted, the starting Omega Ricochet was set ("Omega Ricochet
+    is yours") and every Omega bought at Ms. Zurkon was confirmed on the same byte.
+  - Omega versions are in the item pool (omega_weapons = true, start_omega = 1 in the dev settings): all 20 are
+    rewards of their own; finding one sets your weapon Omega (the weapon is given first if you lack it).
+  - Fixed: Omegas you own in one save are no longer copied to the weapons of another save you load.
+  - The status line now reads "Omega found/total" (e.g. "Omega 1/20").
+  - omega_weapons is ON by default for every seed now, and Omegas are never placed on Spybots / Lorbs. Your seed
+    ardolis-qwark-viceron-393 keeps its fingerprint and items; only its Omega locations moved (none on Spybots/Lorbs).
+    A public player's seed made with the old default needs omega_weapons = false to stay the same seed.
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.62-DEV12 (kit 10.0.32)".
+
+DEV13 (10.0.33) - round53: Omega was never written
+  - Round53 (DEV12, a Challenge Mode run): the weapons were found every time, but "weapon records: N of 25 match ...
+    NOT trusted" and "Omega not trusted yet" - nothing was written, so none of your Omega rewards became Omega.
+    Why: the record check wanted SelectedCell below 64; your upgraded weapons read 118-216 there. SelectedCell is
+    logged only now. With that, both settled reads of your weapons in round53 would have passed (25 of 25).
+  - The hero has two weapon sets: GameEquipInventory (yours) and GameOverrideInventory (copies, ItemCount 0 outside
+    some arena challenges). Two of round53's censuses read the copies. Now only GameEquipInventory is written.
+  - A checkpoint load (death, restart, arena challenge) drops a running search and starts it again: round53's first
+    search ran across three checkpoint loads and read other objects where the weapons had been.
+  - A weapon you already have (carried over, XP above 0) is no longer sent again as an Omega's prerequisite; its
+    Omega is set without waiting for you to equip it.
+  - Look for: "weapon records: 25 of 25 match ... layout TRUSTED", "Randomizer: Omega ready", then "Omega <weapon> is
+    yours" for each Omega reward you have found (round53's seed: Bouncer, Topiary Sprinkler, Cold Snap, Buzz Blades,
+    Void Repulser, Glove of Doom and the start one). NUMPAD1 should say "Omega: N weapons, M Omega" with M > 0.
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.62-DEV13 (kit 10.0.33)".
+
+DEV14 (10.0.34) - round54: the game crashed on death, retry and load
+  - Omega is unchanged (it works: round54 set Omega Ricochet).
+  - The crash: during every load (death, retry, checkpoint, loading a save, travel) rivet runs the scripts on another
+    thread while the game tears the level down. DEV13's Omega search reads tens of thousands of game addresses a
+    frame and restarted right after every checkpoint, so it was reading when you died - and a read of memory the game
+    had just freed kills the game without an error in rivet.log.
+  - Now the randomizer notices a load the moment it starts. Until it is over, Omega and the Enemy Randomizer read
+    and write nothing, Omega forgets every address it held, and no reward is sent; after the load Omega reads your
+    weapons again and keeps your Omegas exactly as before.
+  - Look for, at each death / load: "RANDO-LOAD a load began ..." and "RANDO-LOAD the load is over (N frame(s))",
+    then "Randomizer: Omega ready" again a few seconds later. If it still crashes, send rivet.log: the last
+    RANDO-LOAD line shows whether the crash came during or after the load.
+  - INSTALL EVERY TIME as before (all scripts; dev scripts too if you use them - they are 10.0.34 now);
+    rivet.log must show "RANDO-KIT release v0.62-DEV14 (kit 10.0.34)".
+
+v0.70 (10.0.35) - DEV14 released
+  - The same randomizer as DEV14 (the fix for the crash on death, retry and load). The public v0.70 package is
+    built from this kit without any developer file.
+  - The log no longer says "received Omega <weapon>" twice for one Omega reward (it was one reward, two lines).
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.70 (kit 10.0.35)".
+
+v0.71-DEV1 (10.0.36) - the shop again, and Spybots / Lorbs that pay
+  - These dev settings make a DIFFERENT SEED than v0.70 (shop = "shuffle", collectibles = true): start a New Game.
+  - SHOP: Ms. Zurkon should sell this seed's weapons. Look in rivet.log for "RANDO-SHOP vendor ... changed (... as a
+    config pointer ...)" and check her screen. If instead you see "RANDO-SHOP EVIDENCE", send that rivet.log.
+  - SPYBOTS / LORBS: they hold items now. Pick one up and look for "RANDO-COLLECTIBLE spybot <id> (the game's event)"
+    and the item on screen. F2 / F3 show Spybots / Lorbs paid and the next reward. If a pickup gives nothing and
+    rivet.log has no RANDO-COLLECTIBLE line, press Ctrl+F2 (Spybot) or Ctrl+F3 (Lorb) twice to pay it by hand -
+    and send the log (its "RANDO-COLLECTIBLE event classes watched" line and any RANDO-DISCOVER line from the pickup).
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.71-DEV1 (kit 10.0.36)".

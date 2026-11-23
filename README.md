@@ -1,11 +1,19 @@
 # Rift Apart Randomizer 10.0 (development project)
 
-**Dev 10.30 (kit 10.0.19):** combat compatibility. Round40 showed randomized enemies that spawned but could not be
-killed (pirate robot shooters from a bladeball factory). A replacement is now used only for a spawner kind / original /
-replacement PAIR with in-game evidence that it dies (`enemy_compat = "verified"`, default); every replaced bot is
-watched and a pair whose bots live through a fight is rejected and put back at once. Developer tools moved to
-`mod/RiftApartRandomizer/dev_scripts/`. NOT yet run in the game. `docs/KNOWN_ISSUES.md` 0w, `docs/TESTING.md` 2-dev17,
-`docs/ENEMY_RANDOMIZER_COVERAGE.md` "Combat compatibility".
+**v0.62-DEV6 (kit 10.0.26):** round46 - Omega purchases now register: the hero's inventory components are found by
+walking its component list (the inventory events name them by handle), and an Omega purchase is recognised from
+VendorPurchaseEvent alone. Simulator only.
+
+**v0.62-DEV5 (kit 10.0.25, branch `fix/v0.62-dev5`):** round45 (the DEV4 log). Enemy template registry harvested from
+every log (+53 uids; round45 Ardolis: 49 of 51 unchanged spawns were "kind not known yet"), name-based template
+classification, pool sharks never a replacement; Omega searched in the live hero components and `start_omega`; Spybot /
+Lorb pickups bound (RYNOPlayPickedUpEvent / RuinPlayPickedUpEvent); dev settings `shop = "vanilla"` (the vendor was never
+changed in any round); the planet-menu cancel of the trip back fixed; `dev(debug).lua` = every developer tool + warp
+anywhere / unstuck. Simulator only - see DEVELOPMENT_LOG.md.
+
+**Dev 10.35 (kit 10.0.24, v0.60 follow-up):** the latest uploaded log shows only 6 replacements among 669 eligible enemy spawns; 521 arrived before the full scan had read their factory. The variable-route engine now queues the event's SpawnFactory handle for targeted, next-frame discovery before the full-level scan. This cannot change the spawn that already happened, but it can arm a multi-wave factory for subsequent spawns. A one-shot factory still cannot be randomized after its first spawn. The same update adds a one-time, read-only live-hero component enumeration to Omega diagnostics. This is not an Omega gameplay fix; no guessed inventory class or memory offset is written. The old dev(spawnprobe).lua in the active scripts folder caused repeated 8 ms budget overruns in the uploaded log; remove stale developer files before installing this kit.
+
+
 
 **Dev 10.27 (kit 10.0.18):** the Enemy Randomizer (`-`) is rebuilt on the method round37 proved: it writes another
 regular enemy's template into a spawner's script variable before the spawner runs - SunsetSpawnerFactory `Templates`

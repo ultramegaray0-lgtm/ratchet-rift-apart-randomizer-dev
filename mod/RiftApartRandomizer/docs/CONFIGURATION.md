@@ -80,7 +80,7 @@ seed settings `hub`, `hub_start_coordinates`, `hub_unlocks`, `hub_finale`, `hub_
 | `raritanium` | true | Raritanium rewards at locations without an item |
 | `planet_locks` | false | Coordinates are items. With `travel_lock = false` (6.0's behaviour) a planet's mission rewards wait for them; travel is free |
 | `travel_lock` | false | with `planet_locks`: flying to a planet without its Coordinates sends you back |
-| `omega_weapons` | true (dev kit) | dev 10.15, Challenge Mode: the 20 Omega versions are rewards of their own (`omega:<weapon>`), on locations that would give currency; the rest of the seed stays the same. An Omega found first also gives its weapon; the weapon found later never undoes it (OMEGA.md) |
+| `omega_weapons` | true (v0.62-DEV12) | the 20 Omega versions are rewards of their own (`omega:<weapon>`), on locations that would give currency (never Spybots / Lorbs / Gold Bolts); a seed made with the old default (off) needs `omega_weapons = false` to stay the same seed; the rest of the seed stays the same. An Omega found first also gives its weapon; the weapon found later never undoes it (OMEGA.md) |
 | `omega_runtime` | true | dev 10.15 (17_rando_omega.lua): false = Omega rewards are only recorded, the game's flag is never written |
 | `omega_flag_offset` | -1 | dev 10.15, developers: the Omega flag's byte offset from the weapon's item id in its record; -1 = learned from two Omega purchases (OMEGA.md) |
 
@@ -148,7 +148,7 @@ always are.
 |---|---|---|
 | `story_milestones` | true | the second story mission of each planet |
 | `side_locations` | true | Zurkie's cups, Trudi, Blizar chef, Ardolis |
-| `collectibles` | true | dev 10.1: the 10 Spybots and 12 Lorbs give rewards (never in logic; they pay once their pickup event is bound) |
+| `collectibles` | true | dev 10.1: the 10 Spybots and 12 Lorbs give rewards (never in logic). v0.71-DEV1: paid by their pickup events (bound; not seen in a log yet) or by hand (`key_spybot` / `key_lorb`) |
 
 ## Start
 
@@ -179,6 +179,8 @@ reason.
 |---|---|---|
 | `key_status` | `;` | status: Gold Bolts n/25, rewards, planets open, deliveries waiting. **Ctrl+; twice** (locked levels): open the planet you were last sent back from |
 | `key_campaign` | `'` | experimental mission order only (logs a line and does nothing in the game's own order) |
+| `key_spybot` | `F2` | v0.71-DEV1 (dev(keys).lua): Spybots paid / total and the next reward. **Ctrl+F2 twice**: pay a Spybot pickup the game did not report |
+| `key_lorb` | `F3` | v0.71-DEV1 (dev(keys).lua): the same for Lorbs (**Ctrl+F3 twice**) |
 | `legacy_f_keys` | true | the old F7, F8, F9 and F12 keys work as well |
 | `test_travel` | false | **8.4: off in the kit.** true: `.` / `,` go to any planet for testing (TEST_TRAVEL.md) |
 | `real_items`, `real_weapons` | true | put rewards into your real inventory |

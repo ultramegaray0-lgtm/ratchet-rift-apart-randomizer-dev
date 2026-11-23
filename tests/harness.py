@@ -14,6 +14,9 @@ from lupa import lua54
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MOD = pathlib.Path(os.environ.get("RANDO_MOD_DIR", ROOT / "mod" / "RiftApartRandomizer"))
+# v0.60: the release validator runs suites against an INSTALLED player copy (no boss.lua / chaos.lua, no dev files)
+INSTALLED = "RANDO_MOD_DIR" in os.environ
+PLAYER_EXCLUDED = ("boss.lua", "chaos.lua")
 SIM = ROOT / "tests" / "sim" / "rivet_sim.lua"
 
 # 9.0: the tests were written for the 7.0-8.5 defaults (no Coordinates, the game's own order,

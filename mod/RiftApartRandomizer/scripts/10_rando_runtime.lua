@@ -37,12 +37,12 @@
 --      and planet rewards wait for that planet's Coordinates.
 -- Engine calls are wrapped in pcall; errors are logged as RANDO-ERROR and never switch the
 -- randomizer off.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.19"
-R.RELEASE = "dev 10.30"               -- the public release this kit belongs to (the start banner)
+R.KIT_VERSION = "10.0.36"
+R.RELEASE = "v0.71-DEV1"                  -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
 local BIND = RANDO_BINDINGS or {}
@@ -51,6 +51,69 @@ BIND.mission_prefixes = BIND.mission_prefixes or {}; BIND.collectible_events = B
 
 local function log(...) pcall(rivet.log, "[rando]", ...) end
 R.log = log
+
+-- ---------------------------------------------------------------------------------------
+-- v0.62-DEV14: IS THE GAME LOADING? (the crash on death / retry / load)
+-- rivet_hook runs the scripts mid-frame on the GAME thread. When the game thread stops pumping
+-- for 250 ms - a level load: death, retry, checkpoint, save load, planet travel - rivet_hook
+-- pumps the scripts from the RENDER thread instead (src/game_thread.cpp present_tick, QUIET_MS),
+-- while the game frees and rebuilds the level on its own threads. A read there is checked with
+-- VirtualQuery first, but the game can free the page between that check and the read: a crash
+-- with no error in rivet.log. DEV13 is the first kit whose Omega census walks the whole
+-- component index (tens of thousands of reads per frame) and restarts right after every
+-- checkpoint load - so a death landed in the middle of it. rivet.time_scale() does NOT raise on
+-- the render thread (only setting it does), so 09_rando_real.lua's "loading" check never saw a
+-- load either.
+-- The probe: rivet.script_node(0) answers "nodes can only be read on the game thread, and it is
+-- not pumping (loading?)" off the game thread, before it touches anything; on the game thread
+-- handle 0 is refused at once ("no live component"). Nothing is read or written by it. Builds
+-- without rivet.script_node count as "not loading" (the old behaviour).
+-- A frame that comes 0.25 s or more after the previous one (the render thread taking over, or a
+-- hitch) counts as a load too.
+-- ---------------------------------------------------------------------------------------
+R.LOAD_GAP_SECONDS = 0.25
+R.loading = false                -- this frame: the game thread is not pumping (or just stalled)
+R.load_frames = 0                -- frames of the current load
+R.loads_seen = 0
+R.probe_frame, R.probe_value = -1, false
+function R.loading_now()
+  local f = (rivet.frame and rivet.frame()) or 0
+  if f == R.probe_frame then return R.probe_value end
+  local v = false
+  if type(rivet.script_node) == "function" then
+    local ok, n, why = pcall(rivet.script_node, 0, false)
+    v = ok and n == nil and type(why) == "string" and why:find("game thread", 1, true) ~= nil
+  end
+  R.probe_frame, R.probe_value = f, v
+  return v
+end
+-- once a frame, from the frame callback: sets R.loading and tells the scripts that hold game
+-- addresses across frames (17_rando_omega.lua) to drop them
+function R.update_loading(dt)
+  local now = R.loading_now() or (type(dt) == "number" and dt >= R.LOAD_GAP_SECONDS)
+  if now then
+    if not R.loading then
+      R.loads_seen = R.loads_seen + 1
+      if R.loads_seen <= 40 then
+        log(string.format("RANDO-LOAD a load began (%s) - Omega and the Enemy Randomizer read nothing until it is over",
+            R.loading_now() and "the game thread stopped pumping" or string.format("%.2f s without a frame", dt or 0)))
+      end
+    end
+    R.load_frames = R.load_frames + 1
+    if RANDO_OMEGA and RANDO_OMEGA.on_loading then
+      local ok, err = pcall(RANDO_OMEGA.on_loading)
+      if not ok then log("RANDO-ERROR omega on_loading:", tostring(err)) end
+    end
+    if RANDO_SHOP and RANDO_SHOP.on_loading then             -- v0.71-DEV1
+      local ok, err = pcall(RANDO_SHOP.on_loading)
+      if not ok then log("RANDO-ERROR shop on_loading:", tostring(err)) end
+    end
+  elseif R.loading then
+    if R.loads_seen <= 40 then log(string.format("RANDO-LOAD the load is over (%d frame(s))", R.load_frames)) end
+    R.load_frames = 0
+  end
+  R.loading = now and true or false
+end
 
 -- ---------------------------------------------------------------------------------------
 -- 8.3 keys: ordinary keyboard keys, not only F1-F12. A key setting is a name: one character
@@ -156,7 +219,10 @@ R.config = {
   -- dev 10.30: combat compatibility. "verified": only replacements with in-game evidence that they die (round40: some
   -- that spawned could not be killed); "trial": also unverified ones of the same bot class, one spawner per level,
   -- watched - for developer test rounds; "any": the 10.29 rules, NOT safe (simulator tests of the scheduling)
-  enemy_compat = "verified",
+  -- dev 10.31: "all" (this dev kit's default): every regular enemy can replace every other; only pairs the game showed
+  -- cannot be killed stay out. enemy_mix_movement = true mixes walkers / flyers / turrets in "all" (dev 10.32: off).
+  enemy_compat = "all",
+  enemy_mix_movement = false,        -- dev 10.32: OFF (round42: walkers at flyer spawns could not be killed)
   -- dev 10.13: chaos.lua. OFF by default; NO safety guards (docs/CHAOS.md); while ON the two above pause
   chaos_randomizer = false,          -- anything can become anything (the start of a save that never used its key)
   key_chaos = "BACKSPACE",           -- Chaos Randomizer on/off (Ctrl: what it changed here)
@@ -168,6 +234,7 @@ R.config = {
   -- developer keys and test travel: only used by the dev(*).lua files
   key_status = ";", key_campaign = "'", key_hub = "]", key_hub_return = "[", key_story = "/",
   key_test_travel = ".", key_test_point = ",", legacy_f_keys = true, test_travel = false,
+  key_spybot = "F2", key_lorb = "F3",   -- v0.71-DEV1 (dev(keys).lua): status; Ctrl+key twice pays a pickup by hand
 }
 R.CHOICES = { hub_trigger = { parade = true, wrench = true, cinematic = true }, hub_levels = { all = true, off = true },
               hub_prologue = { ["end"] = true, keep = true }, hub_prologue_timing = { before = true, after = true } }
@@ -184,7 +251,7 @@ local RETIRED_RUNTIME = {
 local SETTINGS = RANDO_SETTINGS or {}
 local KEY_SETTINGS = { key_status = true, key_campaign = true, key_test_travel = true, key_test_point = true,
                        key_hub = true, key_hub_return = true, key_story = true, key_shuffle = true,
-                       key_enemies = true, key_bosses = true, key_chaos = true }
+                       key_enemies = true, key_bosses = true, key_chaos = true, key_spybot = true, key_lorb = true }
 local GEN_OPTIONS = {}
 for k, v in pairs(SETTINGS) do
   if R.config[k] ~= nil then
@@ -282,7 +349,8 @@ local STATE_TABLES = { "collected", "paid", "banked", "access", "inventory", "st
                        "bolts_seen", "armor_found", "armor_sets_done", "collectibles", "visited",
                        "history", "real", "real_nodes", "tracked", "gadgets_seen", "weapons", "gadgets",
                        "armor_sources", "currency_queue", "shop_given",
-                       "omega", "omega_prereq" }           -- dev 10.15: Omega tier per weapon, prerequisites given
+                       "omega", "omega_prereq",
+                       "collectible_ids" }                 -- v0.62-DEV5: Spybot / Lorb ids already paid this run           -- dev 10.15: Omega tier per weapon, prerequisites given
 local function fill_defaults(s)
   for _, k in ipairs(STATE_TABLES) do s[k] = s[k] or {} end
   s.planets_done = s.planets_done or 0
@@ -410,7 +478,7 @@ function R.grant_omega(key, quiet, prefix)
   local wkey = it.weapon
   local w = wkey:sub(8)
   local wname = item_name(wkey)
-  history("received " .. it.name)
+  -- v0.70: grant() (its only caller) has already logged "received <name>" (round54 showed it twice)
   S.inventory[key] = true
   if S.omega[w] then
     changed()
@@ -700,12 +768,63 @@ end
 -- armor: 13_rando_armor.lua (armor sources, and the vanity_owns polling fallback)
 
 -- collectibles bound in 05_rando_bindings.lua: { spybot = { class = "<event class>" }, ... }
-function R.on_collectible(kind)
+-- v0.62-DEV5: id = the event's own id of that collectible (RynoId / RuinId): one Spybot pays once per run, however
+-- many events the game sends for it (RYNOPlayPickedUpEvent and RYNOScriptPickupEvent can both come). Without an id,
+-- a second event of the same kind within R.COLLECT_DEBOUNCE frames is the same pickup.
+R.COLLECT_DEBOUNCE = 90
+local last_collect = {}
+function R.on_collectible(kind, id, from_event)
+  if id ~= nil and id ~= "" and id ~= 0 then
+    local key = tostring(id)
+    if key == "None" or key == "245637737" then return end              -- the enums' None (0x0EB42269)
+    S.collectible_ids[kind] = S.collectible_ids[kind] or {}
+    if S.collectible_ids[kind][key] then return end
+    S.collectible_ids[kind][key] = true
+  elseif from_event then
+    local f = rivet.frame and rivet.frame() or 0
+    if last_collect[kind] and f - last_collect[kind] < R.COLLECT_DEBOUNCE then return end
+    last_collect[kind] = f
+  end
+  if from_event then R.collectible_events_seen[kind] = (R.collectible_events_seen[kind] or 0) + 1 end
+  log("RANDO-COLLECTIBLE", kind, tostring(id or "-"), from_event and "(the game's event)" or "(by hand)")
   S.collectibles[kind] = (S.collectibles[kind] or 0) + 1
   changed()
   local n = S.collectibles[kind]
   history(kind .. " #" .. n)
   R.collect(kind .. ":" .. n, kind .. " found")
+end
+R.collectible_events_seen = R.collectible_events_seen or {}
+
+-- v0.71-DEV1: how many locations of a collectible kind this seed has (spybot:1..10, lorb:1..12)
+function R.collectible_total(kind)
+  local n = 0
+  for lid in pairs(SEED and SEED.locations or {}) do
+    if DB.locations[lid] and DB.locations[lid].kind == "collectible" and DB.locations[lid].collectible == kind then n = n + 1 end
+  end
+  return n
+end
+function R.collectible_status(kind)
+  local label = kind == "spybot" and "Spybots" or kind == "lorb" and "Lorbs" or kind
+  local total = R.collectible_total(kind)
+  if total == 0 then return label .. ": not reward locations in this seed (collectibles = false)" end
+  local got = (S and S.collectibles and S.collectibles[kind]) or 0
+  local nxt = got < total and SEED.locations[kind .. ":" .. (got + 1)]
+  local item = nxt and nxt.item
+  return string.format("%s %d/%d paid (the game's event: %d this session)%s", label, got, total,
+                       R.collectible_events_seen[kind] or 0,
+                       item and (" - next: " .. item_name(item)) or (got >= total and " - all paid" or " - next: currency"))
+end
+-- v0.71-DEV1: a pickup the game did not report (developer key, dev(keys).lua): pays the next location of that kind,
+-- never past the last one. The event route still dedupes by id, so a later event for the same pickup pays the NEXT
+-- location - use this only when rivet.log shows no RANDO-COLLECTIBLE line for a pickup you made.
+function R.claim_collectible(kind)
+  if not (SEED and S) then return false, "the seed is still being prepared" end
+  local total = R.collectible_total(kind)
+  local got = (S.collectibles and S.collectibles[kind]) or 0
+  if total == 0 then return false, "this seed has no " .. kind .. " locations (collectibles = false)" end
+  if got >= total then return false, string.format("all %d already paid", total) end
+  R.on_collectible(kind, nil, false)
+  return true
 end
 
 -- ---------------------------------------------------------------------------------------
@@ -1212,11 +1331,36 @@ end)
 -- collectibles bound by event class (05_rando_bindings.lua)
 for _, kind in ipairs(GEN.sorted_keys(BIND.collectible_events)) do
   local b = BIND.collectible_events[kind]
-  if type(b) == "table" and type(b.class) == "string" then
-    on(b.class, function(ev)
-      if b.field and b.value ~= nil and (ev.fields or {})[b.field] ~= b.value then return end
-      R.on_collectible(kind)
+  -- v0.62-DEV5: b.classes (several event classes for one pickup) and b.id_field (dedupe by the collectible's id)
+  local classes = {}
+  if type(b) == "table" and type(b.class) == "string" then classes[1] = b.class end
+  if type(b) == "table" and type(b.classes) == "table" then for _, c in ipairs(b.classes) do classes[#classes + 1] = c end end
+  for _, cls in ipairs(classes) do
+    on(cls, function(ev)
+      local f = ev.fields or {}
+      if b.field and b.value ~= nil and f[b.field] ~= b.value then return end
+      R.on_collectible(kind, b.id_field and f[b.id_field] or nil, true)
     end)
+  end
+end
+-- v0.71-DEV1: watched-only classes (05_rando_bindings.lua collectible_watch): which exist, and the first fields of each
+do
+  local have, missing = {}, {}
+  R.watch_logged = R.watch_logged or {}
+  for _, cls in ipairs(BIND.collectible_watch or {}) do
+    local ok = pcall(rivet.on_event, cls, function(ev)
+      R.watch_logged[cls] = (R.watch_logged[cls] or 0) + 1
+      if R.watch_logged[cls] > 5 then return end
+      local parts = {}
+      for k, v in pairs(ev.fields or {}) do parts[#parts + 1] = tostring(k) .. "=" .. tostring(v) end
+      table.sort(parts)
+      log("RANDO-COLLECTIBLE watched", cls, table.concat(parts, " "))
+    end)
+    if ok then have[#have + 1] = cls else missing[#missing + 1] = cls end
+  end
+  if #have + #missing > 0 then
+    log("RANDO-COLLECTIBLE event classes watched (logged, never paid):", #have > 0 and table.concat(have, ", ") or "none",
+        "| not in this game:", #missing > 0 and table.concat(missing, ", ") or "none")
   end
 end
 -- 10.0: checkpoints are named (14_rando_travel.lua: the engine's CRC-32 of every listed name)
@@ -1231,7 +1375,10 @@ for _, c in ipairs({ "MissionStartedEvent", "MissionObjectiveCompleteEvent",
                      "MissionDeactivatedEvent", "StartMissionDevstatsEvent", "EndMissionDevstatsEvent",
                      "PurchaseWeaponEvent", "VendorPurchaseEvent", "WeaponAddedEvent",
                      "LevelLoadedEvent", "SaveDataAppliedEvent", "PlanetMenuAcceptEvent",
-                     "GainBoltEvent", "GainRaritaniumEvent" }) do on(c) end
+                     "GainRaritaniumEvent" }) do on(c) end
+-- dev 10.33: bolts drop from killed enemies - the Enemy Randomizer's stall watch takes them as "the fight goes on"
+-- (round43 B3: kills, bolts, and not one BotDeathCompleteEvent). Same subscription as before (it was discovery only).
+on("GainBoltEvent", function(ev) if R.on_gain_bolt then R.on_gain_bolt(ev) end end)
 
 -- bind a key by name; every press is logged (RANDO-KEY), so a key the game never passes on shows
 -- up as missing in rivet.log. Returns true when bound.
@@ -1314,6 +1461,7 @@ R.KIT_FILES = { "01_rando_data", "02_rando_generator", "03_rando_campaign", "04_
                 "06_rando_capabilities", "09_rando_real", "10_rando_runtime", "11_rando_campaign", "12_rando_shop",
                 "13_rando_armor", "14_rando_travel" }
 R.OPTIONAL_FILES = { "15_rando_hub", "16_rando_spawners", "17_rando_omega", "enemy", "boss", "chaos" }
+R.DEV_ONLY_OPTIONAL = { boss = true, chaos = true }   -- v0.60: never in a player package (tools/build_public_release.py)
 -- scripts of older versions that must not be in the folder any more
 R.GONE_FILES = { ["16_rando_testtravel"] = "a developer tool, now dev(testtravel).lua" }
 function R.kit_check()
@@ -1343,7 +1491,10 @@ function R.kit_check()
   end
   local optional = {}
   for _, f in ipairs(R.OPTIONAL_FILES) do
-    if files[f] == nil then optional[#optional + 1] = f .. " not installed" else check(f, files[f]) end
+    -- v0.60: a randomizer that only the developer kit has is not named when it is absent (player packages)
+    if files[f] == nil then
+      if not R.DEV_ONLY_OPTIONAL[f] then optional[#optional + 1] = f .. " not installed" end
+    else check(f, files[f]) end
   end
   -- dev 10.30: developer tools live in dev_scripts\ (not in a release's scripts folder). One of ANOTHER version in the
   -- scripts folder is a leftover (round40: dev(spawnprobe).lua of an older round still loaded, its listener the source
@@ -1356,6 +1507,27 @@ function R.kit_check()
   end
   table.sort(dev); table.sort(stale)
   if #dev > 0 then log("RANDO-KIT developer files loaded (diagnostics, not part of a release - remove them for normal play): " .. table.concat(dev, ", ")) end
+  -- v0.62-DEV7: round47 copied DEV6's dev(debug).lua (10.0.26) but kept DEV5's scripts (10.0.25) and was told to delete
+  -- the NEW file. A developer file newer than the scripts means the scripts folder was not replaced.
+  local function newer(v)
+    local a, b = {}, {}
+    for n in tostring(v or ""):gmatch("%d+") do a[#a + 1] = tonumber(n) end
+    for n in tostring(R.KIT_VERSION):gmatch("%d+") do b[#b + 1] = tonumber(n) end
+    for i = 1, math.max(#a, #b) do
+      if (a[i] or 0) ~= (b[i] or 0) then return (a[i] or 0) > (b[i] or 0) end
+    end
+    return false
+  end
+  local newest
+  for f, v in pairs(files) do if f:sub(1, 4) == "dev(" and newer(v) and (not newest or newer(v)) then newest = v end end
+  if newest then
+    log("RANDO-ERROR RANDO-KIT the scripts folder is OLDER than its developer file(s): kit " .. R.KIT_VERSION ..
+        ", developer file " .. tostring(newest) .. " - copy the WHOLE scripts folder of kit " .. tostring(newest) ..
+        " over this one (only dev(debug).lua was replaced)")
+    say("Randomizer: your scripts are kit " .. R.KIT_VERSION .. " but dev(debug).lua is " .. tostring(newest) ..
+        " - copy the whole new scripts folder", { type = "center", duration = 12 })
+    stale = {}
+  end
   if #stale > 0 then
     log("RANDO-ERROR RANDO-KIT delete from the scripts folder: " .. table.concat(stale, ", ") ..
         " - an old developer file (developer tools are in the kit's dev_scripts folder now and never needed to play)")
@@ -1455,16 +1627,19 @@ local function frame(dt)
     local oka, ea = pcall(RANDO_ARMOR.tick, frames)
     if not oka then log("RANDO-ERROR armor:", tostring(ea)) end
   end
-  if ready and RANDO_SHOP then
+  if ready and not R.loading and RANDO_SHOP then           -- v0.71-DEV1: not during a load
     local okv, ev = pcall(RANDO_SHOP.tick, frames)
     if not okv then log("RANDO-ERROR shop:", tostring(ev)) end
   end
+  -- v0.62-DEV14: the two scripts that walk the game's component memory over many frames read
+  -- nothing while the game is loading (R.update_loading)
+  local walk_ready = ready and not R.loading
   if RANDO_SPAWNERS and RANDO_SPAWNERS.tick then
-    local oks, es = pcall(RANDO_SPAWNERS.tick, frames, ready)
+    local oks, es = pcall(RANDO_SPAWNERS.tick, frames, walk_ready)
     if not oks then log("RANDO-ERROR spawners:", tostring(es)) end
   end
   if RANDO_OMEGA and RANDO_OMEGA.tick then
-    local oko, eo = pcall(RANDO_OMEGA.tick, frames, ready)
+    local oko, eo = pcall(RANDO_OMEGA.tick, frames, walk_ready)
     if not oko then log("RANDO-ERROR omega:", tostring(eo)) end
   end
   if not announced and ready then
@@ -1478,6 +1653,12 @@ local function frame(dt)
 end
 local frame_errors = 0
 pcall(rivet.on_frame, function(dt)
+  R.frame_t0 = (os and os.clock and os.clock()) or 0     -- v0.62-DEV8: how much of the 8 ms budget is left (17_rando_omega.lua)
+  local okl, el = pcall(R.update_loading, dt)             -- v0.62-DEV14: before anything reads the game
+  if not okl then
+    frame_errors = frame_errors + 1
+    if frame_errors <= 5 then log("RANDO-ERROR loading check:", tostring(el)) end
+  end
   local ok, err = pcall(frame, dt)
   if not ok then
     frame_errors = frame_errors + 1

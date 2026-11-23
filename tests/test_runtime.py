@@ -39,20 +39,24 @@ class LoadingTests(unittest.TestCase):
             g = Game(test_mode=test_mode, dev_tools=dev)
             self.assertEqual(g.load_errors, [], (test_mode, dev))
             g.ready()
-            self.assertTrue(g.log_has("events subscribed 20/20"), g.logs())
+            self.assertTrue(g.log_has("events subscribed 24/24"), g.logs())
             self.assertFalse(any("RANDO-ERROR" in l or "[sim]" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_play_folder(self):
+        from harness import INSTALLED, PLAYER_EXCLUDED
         names = {p.name for p in (MOD / "scripts").glob("*.lua") if not is_dev(p.name)}
-        self.assertEqual(names, {"01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua",
-                                 "04_rando_settings.lua", "05_rando_bindings.lua", "06_rando_capabilities.lua",
-                                 "09_rando_real.lua", "10_rando_runtime.lua", "11_rando_campaign.lua",
-                                 "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua",
-                                 "15_rando_hub.lua", "16_rando_spawners.lua", "enemy.lua", "boss.lua", "chaos.lua",
-                                 "17_rando_omega.lua"})
+        want = {"01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua",
+                "04_rando_settings.lua", "05_rando_bindings.lua", "06_rando_capabilities.lua",
+                "09_rando_real.lua", "10_rando_runtime.lua", "11_rando_campaign.lua",
+                "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua",
+                "15_rando_hub.lua", "16_rando_spawners.lua", "enemy.lua", "boss.lua", "chaos.lua",
+                "17_rando_omega.lua"}
+        if INSTALLED:                                   # v0.60: a player install never has the private randomizers
+            want -= set(PLAYER_EXCLUDED)
+        self.assertEqual(names, want)
         dev = {p.name for p in DEV_DIR.glob("*.lua") if is_dev(p.name)}
-        self.assertEqual(dev, {"dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua", "dev(spawnprobe).lua", "dev(spawnproof).lua",
-                               "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"})
+        self.assertEqual(dev, {"dev(debug).lua", "dev(item_ids).lua", "dev(keys).lua", "dev(omega_inventory_probe).lua", "dev(probe).lua",
+                               "dev(spawnprobe).lua", "dev(spawnproof).lua", "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"})
         g = Game(settings_file=True)
         self.assertEqual(g.load_errors, [])
         self.assertIsNone(g.g.RANDO_TEST_MODE)
@@ -63,7 +67,7 @@ class LoadingTests(unittest.TestCase):
         self.assertTrue(g.log_has("will be retried"))
         g.sim.events_unavailable = False
         g.step(31)
-        self.assertTrue(g.log_has("events subscribed 35/35"), g.logs()[-5:])   # dev 10.15: + 7 of 17_rando_omega
+        self.assertTrue(g.log_has("events subscribed 40/40"), g.logs()[-5:])   # dev 10.15: + 7 of 17_rando_omega; DEV5: + 3 pickups; DEV6: omega +2 -1; v0.71-DEV1: + RuinScriptPickupEvent
         g.ready()
         g.fire("MissionStateChangedEvent", MissionName="MIS_NEFCITY_01_X", MissionState=4)
         self.assertTrue(g.state.collected["planet:nefarious_city"])
@@ -351,6 +355,8 @@ class ProgressTests(unittest.TestCase):
         self.assertEqual(missing, [])
         # every weapon and gadget reward really reached the (simulated) inventory, once
         for key in g.state.inventory.keys():
+            if key.startswith("omega:"):
+                continue      # v0.62-DEV12: an Omega reward is a flag on its weapon (17_rando_omega.lua, tests/omega_sims)
             self.assertEqual(g.item_status(key), "confirmed", key)
             self.assertTrue(g.owns(key), key)
             self.assertEqual(g.give_count(key), 1, key)

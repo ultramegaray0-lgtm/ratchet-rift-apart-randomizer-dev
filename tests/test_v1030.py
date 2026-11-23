@@ -31,10 +31,15 @@ SH_TO_ME = "factory|enm_pirate_robot_sh/ground>enm_pirate_robot_me/swarmer"
 THUG_TO_SH = "factory|enm_thugs4less_shoo/ground>enm_pirate_robot_sh/ground"
 
 
-def vsim(test, factories, mode="verified", settings=None, **kw):
+def vsim(test, factories, mode="verified", settings=None, ban=False, **kw):
     st = dict(settings or {})
     st["enemy_compat"] = mode
-    return sim(test, factories, settings=st, **kw)
+    s = sim(test, factories, settings=st, **kw)
+    if not ban:
+        # dev 10.33 bans the pirate robot shooter as a replacement (test_round44.py); these 10.30 tests use it as the
+        # generic "ground" replacement of the trial / watch mechanics, so they run without the built-in ban list
+        s.g.lua.execute("RANDO_SPAWNERS.V.BAD_REPLACEMENT = {}")
+    return s
 
 
 def kill(s, h, steps=2):
@@ -188,13 +193,16 @@ class SimulatorTests(unittest.TestCase):
         self.assertTrue(s.has("no combat-verified replacement here"), [l for l in s.ev() if "level detail" in l])
 
     def test_the_default_is_verified(self):
+        # dev 10.31 made "all" the default (the 10.30 "verified" pool is kept as an option)
         g = Game(settings={"enemy_randomizer": True})
-        self.assertEqual(g.lua.eval("RANDO.config.enemy_compat"), "verified")
+        self.assertEqual(g.lua.eval("RANDO.config.enemy_compat"), "all")
+        self.assertEqual(g.lua.eval("RANDO_SPAWNERS.V.compat_mode()"), "all")
+        g = Game(settings={"enemy_randomizer": True, "enemy_compat": "verified"})
         self.assertEqual(g.lua.eval("RANDO_SPAWNERS.V.compat_mode()"), "verified")
         self.assertEqual(g.lua.eval('(RANDO_SPAWNERS.V.compat_status("%s"))' % SHOOTER_FROM_BLADEBALL), "rejected")
         self.assertEqual(g.lua.eval('(RANDO_SPAWNERS.V.compat_status("%s"))' % SH_TO_ME), "verified")
         self.assertEqual(g.lua.eval('(RANDO_SPAWNERS.V.compat_status("%s"))' % THUG_TO_SH), "unverified")
-        self.assertTrue(g.log_has("combat compatibility verified"))
+        self.assertTrue(g.log_has("combat compatibility verified"), [l for l in g.logs() if "compatibility" in l])
 
     # ---- trial mode: unverified pairs of the same bot class, one at a time, proven by a death
     def test_a_trial_is_the_same_bot_class_and_one_spawner_at_a_time(self):
@@ -331,9 +339,10 @@ class SimulatorTests(unittest.TestCase):
         s.g.lua.eval("PF.spawn_factory(8004, %d)" % h)
         s.g.lua.execute('PF.classes[%d] = { "GameBotMeleeSwarmer" }' % h)  # ... the replacement lacks one
         s.g.step(12)
-        self.assertTrue(s.has("initialization MISSING SceneObject"), [l for l in s.ev() if "VERIFY" in l])
-        self.assertTrue(s.has("COMBAT CHECK FAILED factory|enm_pirate_bladebal/swarmer>enm_pirate_robot_me/swarmer"))
-        self.assertEqual(s.var(23), 9203)                                 # put back
+        # dev 10.31+: the initialization check is advisory ("noted only; the combat watch decides")
+        self.assertTrue(s.has("initialization MISSING SceneObject (noted only; the combat watch decides)"), [l for l in s.ev() if "VERIFY" in l])
+        self.assertFalse(s.has("COMBAT CHECK FAILED factory|enm_pirate_bladebal/swarmer>enm_pirate_robot_me/swarmer"))
+        self.assertEqual(s.var(23), 9202)                                 # stays changed until the watch decides
 
     def test_a_complete_replacement_passes_the_initialization_check(self):
         s = vsim(self, A1_40)
@@ -399,7 +408,7 @@ class SimulatorTests(unittest.TestCase):
         s.g.press("-", ctrl=True)
         s.g.step(2)
         subs = [(n.opts and n.opts["sub"]) or "" for n in s.g.sim.notes.values()]
-        self.assertTrue(any("combat: 3 pair(s) verified, 2 rejected (verified)" in t for t in subs), subs)
+        self.assertTrue(any("combat: 3 pair(s) verified, 3 rejected (verified)" in t for t in subs), subs)
 
 
 # ---------------------------------------------------------------------------------------------- the install
@@ -409,14 +418,14 @@ class KitTests(unittest.TestCase):
         self.assertFalse([n for n in names if n.startswith("dev(")])
         for p in (MOD / "scripts").glob("*.lua"):
             tags = re.findall(r'RANDO_FILES\["[^"]+"\] = "([^"]+)"', p.read_text(encoding="utf-8"))
-            self.assertEqual(tags, ["10.0.19"], p.name)
+            self.assertEqual(tags, ["10.0.36"], p.name)
         self.assertTrue((MOD / "dev_scripts" / "dev(spawnprobe).lua").exists())
 
     def test_the_release_label_is_one(self):
         g = Game(settings={"enemy_randomizer": True})
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT release dev 10.30 (kit 10.0.19)"), [l for l in g.logs() if "KIT" in l])
-        self.assertTrue(g.log_has("variable route loaded (dev 10.30, kit 10.0.19)"))
+        self.assertTrue(g.log_has("RANDO-KIT release v0.71-DEV1 (kit 10.0.36)"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("variable route loaded (v0.71-DEV1, kit 10.0.36)"))
 
     def test_an_old_developer_file_left_in_the_scripts_folder_is_named_for_deletion(self):
         g = Game(files=script_files(), spawnprobe=True)
@@ -425,7 +434,7 @@ class KitTests(unittest.TestCase):
         self.assertTrue(g.log_has("RANDO-ERROR RANDO-KIT delete from the scripts folder: dev(spawnprobe).lua (10.0.18)"),
                         [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.note_has("delete the old developer file(s)"))
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.19"))   # the release itself is whole
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"))   # the release itself is whole
 
     def test_the_dll_is_unchanged_v7(self):
         import hashlib

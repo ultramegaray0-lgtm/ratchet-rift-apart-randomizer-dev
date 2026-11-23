@@ -46,12 +46,12 @@
 --     whose first visit is open is played there (hub_follow_new), not undone.
 -- Frame guards (after a finish, after the hub start) count frames of this session only.
 -- The developer keys (] [ /) are bound by dev(keys).lua; this file only provides their actions.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
 local DB = RANDO_DATA
-H.VERSION = "10.0.19"
+H.VERSION = "10.0.36"
 
 local function log(...) pcall(rivet.log, "[rando]", "RANDO-HUB", ...) end
 local function S() return RANDO and RANDO.state end
@@ -123,6 +123,18 @@ function H.plan() local sd = SEED(); return sd and sd.hub end
 -- planet shuffle on/off is the player's choice (the 0 key; OFF by default): 10_rando_runtime.lua
 function H.shuffle_off() return not (RANDO and RANDO.planet_shuffle_on and RANDO.planet_shuffle_on()) end
 function H.enabled() return H.plan() ~= nil and cfg("hub_runtime", true) ~= false and not H.shuffle_off() end
+-- v0.60 (kit 10.0.23): the TRIP BACK TO THE HUB after a finished destination no longer depends on planet shuffle.
+-- Until v0.59 H.finish returned before scheduling it, H.tick returned before running it and H.on_arrival ignored
+-- the landing whenever planet shuffle was off (v0.54 made "off" switch the whole hub off) - so with shuffle off you
+-- were never brought back. Planet shuffle now only decides the ORDER (travel locks, the hub's planet menu routing,
+-- the level bits); the return is the same in both modes (hub_auto_return, default on).
+function H.returns() return H.plan() ~= nil and cfg("hub_runtime", true) ~= false and cfg("hub_auto_return", true) ~= false end
+-- a destination whose end is followed by the trip back: never one of the hub planet's own (you are there already),
+-- never the parade (its own rift ends at the hub), never the finale
+function H.returns_after(d)
+  local p = H.plan()
+  return d ~= nil and p ~= nil and d.planet ~= p.planet and d.kind ~= "hub" and d.kind ~= "intro" and d.kind ~= "finale"
+end
 function H.started() local h = H.state(); return h ~= nil and h.started == true end
 function H.state()
   local s = S()
@@ -1235,10 +1247,18 @@ function H.finish(d, how, quiet)
   H.session.finished_frame = H.frame
   h.finished_at = nil
   if not H.enabled() then
-    say(msg, { type = "planet", sub = "planet shuffle is off - " .. K("key_shuffle") .. " turns it on", duration = 8 })
+    -- v0.60: planet shuffle off - the game's own order goes on, and you are brought back to the hub all the same
+    if H.returns() and H.returns_after(d) then
+      local delay = cfg("hub_return_delay", 12)
+      H.return_at = H.frame + math.max(1, delay) * 60
+      log("destination", d.id, "finished (planet shuffle off) - back to the hub in", delay, "s; the game's own order goes on")
+      say(msg, { type = "planet", sub = string.format("Back to %s in %d s", HUBN(), delay), duration = 8 })
+    else
+      say(msg, { type = "planet", sub = "Fly on with the ship's planet menu", duration = 8 })
+    end
     return true
   end
-  if d.kind ~= "hub" and cfg("hub_auto_return", true) then
+  if d.kind ~= "hub" and H.returns() then
     local delay = cfg("hub_return_delay", 12)
     H.return_at = H.frame + math.max(1, delay) * 60
     say(msg, { type = "planet", sub = string.format("Back to %s in %d s%s", HUBN(), delay, dev_hint(" (" .. K("key_hub_return") .. " to stay)")), duration = 8 })
@@ -1290,6 +1310,31 @@ function H.on_mission_state(name, state)
         end
       end
     end
+  end
+end
+
+-- v0.60: planet shuffle off - a story of the hub planet starting while the travel byte is ours (set after a
+-- return, H.travel_after_return) gets the game's own world back first (v0.53, round 25: the boss fight's rifts).
+-- 10_rando_runtime.lua passes only states 3 / 4 on to the hub, so this hooks its mission handler (as 16 does).
+function H.on_mission_started(name)
+  if H.enabled() or not (H.plan() and H.session.world.travel and type(name) == "string") then return end
+  for _, d in ipairs(H.plan().destinations) do
+    if d.planet == H.plan().planet then
+      for _, m in ipairs(d.missions or {}) do
+        if m == name then H.take_back_world(d.id .. " starts (planet shuffle off)"); return end
+      end
+    end
+  end
+end
+if RANDO and RANDO.on_mission_state and not H.mission_hooked then
+  H.mission_hooked = true
+  local orig_on_mission = RANDO.on_mission_state
+  RANDO.on_mission_state = function(name, st, ...)
+    if st == 2 then
+      local ok, err = pcall(H.on_mission_started, name)
+      if not ok then log("RANDO-ERROR hub mission start", tostring(err)) end
+    end
+    return orig_on_mission(name, st, ...)
   end
 end
 
@@ -1359,7 +1404,8 @@ function H.on_arrival(pid, from)
   -- save's own values (a later save can have travel ON): what apply_world recorded before it is
   -- not ours to take back any more (H.take_back_world, planet shuffle off)
   H.session.world = { travel = false, levels = {} }
-  if not (p and h) or not H.enabled() then return false end
+  if not (p and h) then return false end
+  if not H.enabled() then return H.arrival_off(pid, from) end
   local exp = H.expect
   H.expect = nil
   if exp and exp.planet == pid then H.watch_inventory("the trip to " .. tostring(pid)) end
@@ -1487,6 +1533,54 @@ function H.on_arrival(pid, from)
   return true
 end
 
+-- v0.60: arrivals while planet shuffle is OFF. Only the hub's own trip home is handled; everything else is the game's.
+-- The world: only planetary travel, and only when the game has it off at the hub (so the ship can leave); the level
+-- bits stay the game's own (the normal order decides where the ship can go).
+function H.travel_after_return(why)
+  if H.enabled() or not cfg("hub_travel_flag", true) then return end
+  local p = H.plan()
+  if not (p and S() and S().current_planet == p.planet) then return end
+  local dd = D()
+  if not (dd and dd.native_ok and dd.native_ok("level_read")) then return end
+  local w = H.session.world
+  call("travel_set", nil, function(r)
+    log("planetary travel (planet shuffle off; level bits left to the game):", describe(r))
+    if r.code == 11 and r.after == 1 and r.before ~= 1 then w.travel = true end
+  end, 1)
+end
+local function first_visit_off(pid)
+  local h = H.state()
+  for _, d in ipairs(H.plan().destinations) do
+    if d.planet == pid and (d.visit or 1) == 1 and H.returns_after(d) and not (h and h.done[d.id]) then return d end
+  end
+  return nil
+end
+function H.arrival_off(pid, from)
+  local p, h = H.plan(), H.state()
+  local exp = H.expect
+  if exp and exp.planet == pid and pid == p.planet and not exp.dest then
+    H.expect = nil
+    if exp.cp and not H.is_opening_cp(exp.cp) then h.home_cp = exp.cp end
+    H.watch_inventory("the trip to " .. tostring(pid))
+    log("back at the hub (" .. HUBN() .. ") at", tostring(exp.cp), "- planet shuffle off: the game's own order goes on")
+    say("Back at " .. HUBN(), { type = "planet", sub = "Fly on with the ship's planet menu", duration = 6 })
+    H.after(H.SETTLE, function() H.travel_after_return("back at the hub") end, "travel after the return")
+    return true
+  end
+  -- the game's own travel while the trip back waits: its next first visit plays where it starts (hub_follow_new,
+  -- the same rule as with planet shuffle on); anything else - the trip back still comes
+  if H.return_at and pid ~= p.planet then
+    local d = first_visit_off(pid)
+    if d and cfg("hub_follow_new", true) then
+      H.return_at = nil
+      log("the game's own story took you to", pid, "- its first visit", d.id, "starts there; no trip back (hub_follow_new)")
+      return true
+    end
+    log("the game's own travel to", pid, "- the trip back to the hub still comes")
+  end
+  return false
+end
+
 -- the warp home for an undone story trip (once per trip; a launch or a new game cancels it)
 function H.order_kept_go(ok)
   if H.order_kept ~= ok then return end
@@ -1503,6 +1597,18 @@ function H.on_menu_accept(f)
               (RANDO_TRAVEL.planet_of_checkpoint(dest) or RANDO_TRAVEL.planet_of_checkpoint(f.InterplanetaryCheckpointName))
   H.menu = { planet = pid, dest = dest, at = now() }
   log("planet menu:", tostring(dest), "->", tostring(pid))
+  -- v0.61 repair: an accepted ship-menu choice replaces the pending automatic return in BOTH
+  -- shuffle modes. Previously shuffle ON relied on launch_dest to clear return_at after landing;
+  -- the timer could expire during the flight and send the player to the hub first (a double trip).
+  -- v0.62-DEV5: ... and also when the menu's destination could not be placed on a planet (pid nil: a landing
+  -- checkpoint the catalog does not know). The v0.61 repair required a known planet, so an unplaced destination kept
+  -- the 12 s timer running and the player was warped back to Nefarious City right after landing on the planet they
+  -- chose (test_v060 / test_v055 "the game's order with shuffle off": Zurkon -> Nefarious City). Only a flight TO the
+  -- trip's own planet (Nefarious City) keeps it.
+  if H.return_at and pid ~= H.plan().planet then
+    H.return_at = nil
+    log("planet menu while the trip back waited -> " .. tostring(pid or dest) .. "; automatic trip back cancelled")
+  end
   -- dev 10.11: a visit not made active yet is made active now, while the ship is in the tunnel
   local s = S()
   if pid and H.enabled() and H.started() and s and s.access and s.access[pid] and pid ~= H.plan().planet then
@@ -1681,11 +1787,47 @@ function H.after(frames, fn, why)
   H.pending[#H.pending + 1] = { at = H.frame + frames, fn = fn, why = why }
 end
 
+-- v0.60: planet shuffle off - the hub only brings you back after a finished destination (H.finish sets H.return_at)
+function H.tick_off(frame, ready)
+  if not H.returns() then H.return_at = nil; return end
+  if ready and H.pending and #H.pending > 0 then
+    local due, keep = {}, {}
+    for _, a in ipairs(H.pending) do if frame >= a.at then due[#due + 1] = a else keep[#keep + 1] = a end end
+    H.pending = keep
+    for _, a in ipairs(due) do
+      local ok, err = pcall(a.fn)
+      if not ok then log("RANDO-ERROR hub", tostring(a.why), tostring(err)) end
+    end
+  end
+  local p = H.plan()
+  local e = H.expect
+  if e and ready and frame - e.at > H.ARRIVE_TIMEOUT then
+    if e.planet == p.planet and not e.dest then
+      if not e.cand then for i, cp in ipairs(H.home_candidates()) do if cp == e.cp then e.cand = i end end end
+      log("no arrival at the hub after", H.ARRIVE_TIMEOUT, "frames from", e.cp)
+      if not H.go_home(e.why or "retry") then
+        H.expect = nil
+        say("Randomizer: the warp to " .. HUBN() .. " failed - take the ship", { type = "center", duration = 6 })
+      end
+    else
+      H.expect = nil
+    end
+  end
+  if H.return_at and ready and frame >= H.return_at then
+    H.return_at = nil
+    if S().current_planet == p.planet then
+      log("destination finished - already at the hub, no trip back")
+    elseif not H.go_home("destination finished (planet shuffle off)") then
+      say("Randomizer: the warp to " .. HUBN() .. " failed - take the ship", { type = "center", duration = 6 })
+    end
+  end
+end
+
 function H.tick(frame, ready)
   H.frame = frame
   if not (H.plan() and S()) then return end
   local h = H.state()
-  if not H.enabled() then return end
+  if not H.enabled() then return H.tick_off(frame, ready) end
   if ready and H.pending and #H.pending > 0 then
     local due, keep = {}, {}
     for _, a in ipairs(H.pending) do if frame >= a.at then due[#due + 1] = a else keep[#keep + 1] = a end end

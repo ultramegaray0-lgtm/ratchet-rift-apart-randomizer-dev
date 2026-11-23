@@ -7,3 +7,6 @@ validation.json
 *.tmp
 .DS_Store
 Thumbs.db
+
+# build output (tools/build_public_release.py; deterministic, rebuilt on demand)
+dist/

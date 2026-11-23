@@ -72,7 +72,7 @@ class ReleaseFilesTests(unittest.TestCase):
         g = Game(release=True, settings={"seed": "v055-release"}, dll_version=6)
         self.assertEqual(g.load_errors, [])
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.19"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"), [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.log_has("developer files loaded"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
         for name in ("RANDO_DEV_KEYS", "RANDO_TEST_TRAVEL", "RANDO_TEST_MODE", "RANDO_PROBE", "RANDO_VTABLES"):
@@ -80,8 +80,8 @@ class ReleaseFilesTests(unittest.TestCase):
 
     def test_every_developer_file_follows_the_naming_and_is_listed(self):
         dev = sorted(p.name for p in DEV_DIR.glob("*.lua") if is_dev(p.name))
-        self.assertEqual(dev, ["dev(item_ids).lua", "dev(keys).lua", "dev(probe).lua", "dev(spawnprobe).lua", "dev(spawnproof).lua", "dev(testmode).lua",
-                               "dev(testtravel).lua", "dev(vtables).lua"])
+        self.assertEqual(dev, ["dev(debug).lua", "dev(item_ids).lua", "dev(keys).lua", "dev(omega_inventory_probe).lua", "dev(probe).lua",
+                               "dev(spawnprobe).lua", "dev(spawnproof).lua", "dev(testmode).lua", "dev(testtravel).lua", "dev(vtables).lua"])
         for p in list(SCRIPTS.glob("*.lua")) + [DEV_DIR / n for n in dev]:
             text = p.read_text(encoding="utf-8")
             if is_dev(p.name):
@@ -311,7 +311,7 @@ class HubAbsentTests(unittest.TestCase):
         self.assertIsNone(g.g.RANDO_HUB)
         g.companion_restore()
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.19 (15_rando_hub not installed)"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36 (15_rando_hub not installed)"))
         self.assertTrue(g.seed.hub)                           # the seed is the same seed
         self.assertFalse(g.R.planet_shuffle_on())
         parade(g)
@@ -379,13 +379,17 @@ class PackageTests(unittest.TestCase):
         zips = list(out.glob("*.zip"))
         self.assertEqual(len(zips), 1)
         names = zipfile.ZipFile(zips[0]).namelist()
-        self.assertEqual([n for n in names if "dev(" in n or "extras" in n or "research" in n or "Install-Arsenal" in n], [])
+        self.assertEqual([n for n in names if "dev(" in n or "extras" in n or "research" in n], [])
+        # v0.60: the ARSENAL_RESTORED launcher is back in the player package (removed in v0.55)
+        self.assertEqual(len([n for n in names if "Install-ArsenalRestored" in n]), 2)
         scripts = sorted(n.rsplit("/", 1)[1] for n in names if "/GAME_FOLDER/scripts/" in n and n.endswith(".lua"))
-        want = sorted(p.name for p in SCRIPTS.glob("*.lua") if not is_dev(p.name) and p.name not in ("chaos.lua", "17_rando_omega.lua"))
+        want = sorted(p.name for p in SCRIPTS.glob("*.lua") if not is_dev(p.name) and p.name not in ("boss.lua", "chaos.lua"))
         self.assertEqual(scripts, want)
-        self.assertEqual(len(scripts), 16)                      # dev 10.12: + 16_rando_spawners, enemy, boss
-        self.assertNotIn("chaos.lua", scripts)                  # dev 10.13: held back from player packages
-        self.assertNotIn("17_rando_omega.lua", scripts)         # dev 10.15: likewise, until it has run in the game
+        # v0.60: 12 required + 15_rando_hub, 16_rando_spawners, enemy, 17_rando_omega; Boss and Chaos never ship
+        self.assertEqual(len(scripts), 16)
+        self.assertNotIn("chaos.lua", scripts)
+        self.assertNotIn("boss.lua", scripts)
+        self.assertIn("17_rando_omega.lua", scripts)
         # the same inputs give the same bytes
         out2 = pathlib.Path(tempfile.mkdtemp(prefix="rando055-pkg2-"))
         self.addCleanup(shutil.rmtree, out2, True)

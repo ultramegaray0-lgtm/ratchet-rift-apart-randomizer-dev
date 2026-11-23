@@ -21,8 +21,29 @@
 -- watched, and a pair whose bots stay alive through a fight is rejected and its spawners put back at once
 -- (16_rando_spawners.lua, "COMBAT COMPATIBILITY"; docs/ENEMY_RANDOMIZER_COVERAGE.md has the table).
 --
+-- dev 10.31: EVERY ENEMY TYPE (enemy_compat = "all", the dev kit's default). Round41 changed only Zurkon A1: the other
+-- challenges were kept by "no combat-verified replacement here", "no other flyer kind known on this level" and
+-- "already spawned on this level", and every Nefarious trooper was "friendly" (bot class GameBotShooterNoFiring). Now
+-- any regular enemy can replace any other (walkers, flyers and turrets mix), spawners change after their first spawn,
+-- and the troopers are enemies. Only a pair the game showed cannot be killed stays out (16_rando_spawners.lua).
+--
+-- dev 10.32: round42 (10.31 in the game): A1 64 of 70 replaced and every one died; Zurkon C5 and B3 replaced bots could
+-- not be killed - each a pirate robot shooter (a walker) at a flyer's spawn (Nefarious sniper, biker), and the wave
+-- waited on them. Walkers, flyers and turrets stay apart again (enemy_mix_movement = false), and a replaced bot alive
+-- 40 s while nothing on the level dies is put back (the combat watch's "6 other deaths" never came). Cordelion only had
+-- Nefarious troopers loaded: Ctrl+- and the level's first note say so; zones that stream in later are searched for the
+-- save's other enemy kinds, and picks are spread over every kind loaded.
+--
+-- dev 10.33: round43 (10.32 in the game): A1 61 of 70, C5 15 of 17 and B3 21 of 51 replaced, every replaced bot killed -
+-- but pirates became pirates, Nefarious became Nefarious and goons became goons (only that was loaded there), so you
+-- saw no change. Cordelion had amoeboids and puffoids loaded, but a new kind was only learned when one spawned: they
+-- were planned 2 minutes in and no fight used them. Now: a built-in registry knows every enemy template the logs named
+-- (a new save or a public player gets them from the first fight); the pirate robot shooter is never a replacement (never
+-- killed as one in five rounds); bots gone soon after spawning and bolts picked up count as kills; a change made after a
+-- factory started stays for its next wave instead of being put back as FAILED.
+--
 -- Needs 16_rando_spawners.lua. Removing this file only removes the enemy randomizer.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["enemy"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["enemy"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_ENEMY = RANDO_ENEMY or {}
 local E = RANDO_ENEMY
@@ -69,13 +90,18 @@ function E.key()
   end
   if R.ctrl_down() then
     local st = SP.V.status()
+    -- dev 10.32: which species the replacements can come from here (round42: Cordelion had Nefarious troopers only)
+    local sp = st.species or {}
+    local loaded = (#sp == 0) and "no enemy kind learned here yet"
+                   or (#sp == 1) and ("only " .. sp[1] .. " are loaded here (another planet's enemies are not)")
+                   or ("loaded here: " .. table.concat(sp, ", "))
     -- dev 10.29: what happened to this level's enemy spawns, first
     R.say(string.format("Enemy Randomizer %s: %d of %d enemy spawn(s) here were replaced", E.enabled() and "ON" or "OFF",
                         st.replaced, st.spawns),
-          { type = "corner", sub = string.format("%d spawner(s) changed now (%d factory, %d node, %d group); %d kind(s) here%s; combat: %d pair(s) verified, %d rejected (%s)",
-                                                 st.changed, st.factory, st.template, st.group, st.kinds,
+          { type = "corner", sub = string.format("%s; %d spawner(s) changed now; %d kind(s) here%s; combat: %d pair(s) verified, %d rejected (%s)",
+                                                 loaded, st.changed, st.kinds,
                                                  st.top_reason and ("; most kept: " .. st.top_reason) or "",
-                                                 st.pairs_verified or 0, st.pairs_rejected or 0, tostring(st.compat)), duration = 7 })
+                                                 st.pairs_verified or 0, st.pairs_rejected or 0, tostring(st.compat)), duration = 8 })
     return
   end
   E.toggle(R.key("key_enemies"))

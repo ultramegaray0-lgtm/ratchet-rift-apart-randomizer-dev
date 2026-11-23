@@ -103,3 +103,32 @@ If the log says the slots were changed but the vendor screen still shows the usu
 vendor copies its stock somewhere else when a level loads. If the screen shows one weapon and
 buying gives another, the slot keeps a second reference. Either way, send that rivet.log and set
 `shop_runtime = false` meanwhile (the seed stays the same; Pixelizer and Bouncer are given).
+
+
+## v0.62-DEV5: why the dev kit uses shop = "vanilla"
+
+Every round from 17 to 45 logged "only 0 vendor weapon(s) in the array at +0x48" (inline and pointer layouts both
+tried) and then "Ms. Zurkon could not be changed". With shop = "shuffle" the seed still made some of her weapons
+rewards (Gold Bolts, missions), and she kept selling them: the same weapon could be bought AND found. The dev settings
+now use shop = "vanilla": she sells her usual weapons and none of them is ever placed as a reward, so every weapon has
+exactly one route. "shuffle" stays available for when the slot array is found.
+
+For that, 12_rando_shop.lua logs once per vendor config and session what rivet.config() answers (field names, types,
+the first entry of any list): `RANDO-SHOP PROBE vendor config <id> VendorConfig fields: ...`. If ItemDatas shows up as
+a list of entries with an Item field, rivet.config_set may reach the slots by path without any memory offset.
+
+## v0.71-DEV1: the slots as config pointers
+
+`rivet.config()` cannot list `ItemDatas`: rivet_hook's `ddl::values_of()` skips arrays of structs, so the DEV5
+probe only ever showed the nine plain numbers. The search therefore also treats an 8-byte field as a weapon when it
+equals the address of that weapon's loaded `*_item.config` (asked from `rando_give.dll`, kind 7, after every load).
+The dev settings use `shop = "shuffle"` again. What `rivet.log` shows:
+
+- `RANDO-SHOP weapon configs in memory: N of M weapons asked for`
+- `RANDO-SHOP vendor <id> at <addr>: 15 weapon slots, 15 changed (..., Item at +0x.. as a config pointer, ...)`, or
+- `RANDO-SHOP EVIDENCE ...` (once): the config's first bytes, its arrays' first bytes and some looked-up addresses.
+  Send that log: it shows what the slots hold.
+
+If the vendor screen still shows her usual weapons after "changed", the vendor copies its stock when a level loads;
+if it shows one weapon and buying gives another, something else names the item too. `shop = "vanilla"` (or
+`shop_runtime = false`) goes back to her usual weapons.

@@ -95,6 +95,7 @@ function S.reset()
   S.vanity_gives = {}              -- bundles the game's armor code added (5.0)
   S.currency = {}                  -- currency item id -> amount received (5.0)
   S.config_objects = {}            -- config id -> object address (5.0, kind 7)
+  S.item_cfg, S.item_cfg_n = {}, 0 -- v0.71-DEV1: item config objects (S.vendor_item_pointers)
   S.vendor_mem = {}                -- config id -> { obj, data, authored = { id... } }
   S.armor_hook = true              -- v5 hook installed (MB_ARMOR_HOOK = 1)
   -- dev 10.15: the inventory records (INVENTED layout, see the top of this file)
@@ -173,7 +174,7 @@ function S.reload_configs()
   for id, c in pairs(S.configs) do
     if c.type == "VendorConfig" then for k, v in pairs(VENDOR_DEFAULTS) do c.fields[k] = v end end
     local vm = S.vendor_mem[id]
-    if vm then for i, item in ipairs(vm.authored) do S.put_hex_id(vm.slot(i) + 0x10, item) end end
+    if vm then for i, item in ipairs(vm.authored) do S.put_item(vm.slot(i) + 0x10, item) end end
   end
 end
 -- 5.0: the vendor's stock in memory (INVENTED layout, see the top of this file).
@@ -181,6 +182,26 @@ end
 -- rivet's VendorConfig.cs): an array of POINTERS, with the slot objects allocated right after the
 -- array - which is why 7.0-8.3 found the ids "past the end of the array" (rounds 18-20)
 S.VENDOR_OBJ = 0x23400000
+-- v0.71-DEV1 (SIMULATED, an assumption under test, not seen in the game): S.vendor_item_pointers = true makes each slot's
+-- Item a POINTER to the weapon's loaded *_item.config object instead of its 64-bit id. Every item id the vendor sells
+-- gets a config object (kind 7 answers its address), as rivet_hook's config manager holds one per loaded config.
+S.ITEMCFG_OBJ = 0x31200000
+function S.item_config_addr(item)
+  S.item_cfg = S.item_cfg or {}
+  if not S.item_cfg[item] then
+    S.item_cfg_n = (S.item_cfg_n or 0) + 1
+    local a = S.ITEMCFG_OBJ + S.item_cfg_n * 0x100
+    S.map(a, 0x100)
+    S.put_u64(a, 0x7FF6C4B00000)                 -- a vtable pointer
+    S.put_hex_id(a + 0x08, item)                 -- ID, as VendorConfig's
+    S.item_cfg[item] = a
+    S.config_objects[item] = a
+  end
+  return S.item_cfg[item]
+end
+function S.put_item(addr, item)
+  if S.vendor_item_pointers then S.put_u64(addr, S.item_config_addr(item)) else S.put_hex_id(addr, item) end
+end
 function S.install_vendor_memory(id, items, prices)
   local obj = S.VENDOR_OBJ + 0x10000 * (#S.config_objects + (S.vendor_count or 0))
   S.vendor_count = (S.vendor_count or 0) + 1
@@ -203,13 +224,19 @@ function S.install_vendor_memory(id, items, prices)
   for i, item in ipairs(items) do
     local e = slot(i)
     S.put_u64(e + 0x08, 0x40000 + i)              -- some other field
-    S.put_hex_id(e + 0x10, item)
+    S.put_item(e + 0x10, item)
     S.put_u32(e + 0x18, (prices and prices[i]) or 1000 * i)  -- Price (7.0: the weapon's vanilla price when given)
   end
   S.vendor_mem[id] = { obj = obj, data = data, authored = items, slot = slot }
   S.config_objects[id] = obj
 end
-function S.vendor_slot_item(id, i) return S.get_hex_id(S.vendor_mem[id].slot(i) + 0x10) end
+function S.vendor_slot_item(id, i)
+  local v = S.get_hex_id(S.vendor_mem[id].slot(i) + 0x10)
+  if S.vendor_item_pointers then                 -- the config object the slot points to names the weapon
+    for item, a in pairs(S.item_cfg or {}) do if string.format("%016X", a) == v then return item end end
+  end
+  return v
+end
 function S.vendor_slot_price(id, i)
   local a = S.vendor_mem[id].slot(i) + 0x18
   return S.mem[a] + S.mem[a + 1] * 0x100 + S.mem[a + 2] * 0x10000 + S.mem[a + 3] * 0x1000000
@@ -562,6 +589,13 @@ function rivet.component(actor, class)
   if cls and cls == class then
     return { address = string.format("%X", 0x30000000 + actor * 0x100), size = 0x400, handle = actor * 10 }
   end
+  -- v0.62-DEV6: round46's live hero (S.inv_live): no inventory by name; GameInventoryManager answers (the anchor)
+  if S.inv_live and actor == S.hero_handle then
+    S.live_layout()
+    local c = S.live_by_name[class]
+    if c then return { address = string.format("%X", c.addr), size = c.size, handle = c.handle } end
+    return nil
+  end
   -- dev 10.15: the hero's inventory component
   if S.inventory_component and actor == S.hero_handle and class == S.INV_CLASS then
     S.inv_layout()
@@ -614,6 +648,113 @@ function S.inv_layout()
     S.put_u64(arr + (i - 1) * 8, obj)
   end
 end
+-- v0.62-DEV6: the live layout (rivet_hook src/game/actor.hpp + ddl.hpp): an Actor with a ComponentPointer list
+-- { ComponentInfo*, Component* }, ComponentInfo +0x60 name / +0x78 size, Component +0x10 actor / +0x1C handle.
+-- The weapon records live in a component whose class name the randomizer does not know (SIMULATED name
+-- "HeroItemInventoryX"); InventoryChangedEvent names its handle. Records: the inventory array as in S.inv_layout.
+S.LIVE_INV_NAME, S.LIVE_INV_HANDLE = "HeroItemInventoryX", 2129937
+function S.live_layout()
+  S.inv_layout()
+  local base = 0x52000000
+  local actor = base
+  S.map(actor, 0x100)
+  local comps = {
+    { name = "AimAngleGeneratorLocal", size = 0x80, handle = 2129930 },
+    { name = "GameInventoryManager", size = 8552, handle = 2130064 },
+    { name = "HeroWeaponManagerLocal", size = 2080, handle = 2130073 },
+    { name = S.LIVE_INV_NAME, size = 0x200, handle = S.LIVE_INV_HANDLE, addr = S.inv_comp },
+    { name = "VanityInventoryManager", size = 17640, handle = 2130078 },
+  }
+  if S.inv_scene then table.remove(comps, 4) end   -- v0.62-DEV9: round49 - not in the list
+  local list = base + 0x1000
+  S.map(list, #comps * 0x10)
+  S.put_u64(actor + 0x68, list)
+  S.mem[actor + 0x70], S.mem[actor + 0x71] = #comps, 0
+  S.live_by_name = {}
+  for i, c in ipairs(comps) do
+    local info = base + 0x2000 + i * 0x100
+    S.map(info, 0x100)
+    local name_at = base + 0x8000 + i * 0x40
+    S.map(name_at, 0x40)
+    for k = 1, #c.name do S.mem[name_at + k - 1] = c.name:byte(k) end
+    S.put_u64(info + 0x60, name_at)
+    S.put_u32(info + 0x78, c.size)
+    if not c.addr then c.addr = base + 0x10000 + i * 0x4000; S.map(c.addr, math.min(c.size, 0x2200)) end
+    if c.addr ~= S.inv_comp then S.map(c.addr, math.min(c.size, 0x2200)) end
+    S.map(c.addr, 0x48)
+    S.put_u64(c.addr + 0x10, actor)
+    S.put_u32(c.addr + 0x1C, c.handle)
+    S.put_u64(list + (i - 1) * 0x10, info)
+    S.put_u64(list + (i - 1) * 0x10 + 8, c.addr)
+    if c.name ~= S.LIVE_INV_NAME then S.live_by_name[c.name] = c end
+  end
+  if S.inv_scene then S.scene_layout() end
+end
+-- v0.62-DEV9 (round49, tests/data/round49_rivet.log): the inventories the events name are NOT in the hero's component
+-- list. SIMULATED: with S.inv_scene, the inventory leaves the list, it is reached only through the SceneManager
+-- (rivet_hook src/game/scene_manager.hpp: +0x1398 components { Component*, u32 generation, s32 lookupIndex },
+-- +0x13B8 componentMax, +0x13C8 lookups { Component*, ComponentInfo* }, +0x13EC lookup count; handle = id:20 |
+-- generation:12), and its array holds u32 item HANDLES; each item is a component whose prius data (+0x08) holds the
+-- weapon id (the record bytes from the id on, as in S.inv_records). The real layout is not known yet.
+S.SCENE_AT = 0x5800000000
+function S.scene_layout()
+  local sc = S.SCENE_AT
+  local comps, looks = sc + 0x100000, sc + 0x200000
+  S.map(sc + 0x1380, 0x80)
+  S.map(looks, 0x40 * 0x10)
+  S.put_u64(sc + 0x1398, comps); S.put_u32(sc + 0x13B8, 0x10000)
+  S.put_u64(sc + 0x13C8, looks); S.put_u32(sc + 0x13EC, 0x40)
+  S.put_u64(S.MB + 0x128, sc); S.put_u32(S.MB + 0x130, 1)
+  if not S.get_u64(sc + 0x75A0) or S.get_u64(sc + 0x75A0) == 0 then      -- the spawners' script variables
+    S.map(sc + 0x7500, 0x100); S.map(sc + 0x900000, 0x40 * 4)
+    S.put_u64(sc + 0x75A0, sc + 0x900000); S.put_u32(sc + 0x75BC, 4)
+  end
+  local nlook = 0
+  local function slot(h, addr, name, size)
+    local id, gen = h & 0xFFFFF, h >> 20
+    S.map(comps + id * 0x10, 0x10)
+    S.put_u64(comps + id * 0x10, addr); S.put_u32(comps + id * 0x10 + 8, gen); S.put_u32(comps + id * 0x10 + 12, nlook)
+    local info, name_at = sc + 0x300000 + nlook * 0x100, sc + 0x400000 + nlook * 0x40
+    S.map(info, 0x100); S.map(name_at, 0x40)
+    for k = 1, #name do S.mem[name_at + k - 1] = name:byte(k) end
+    S.put_u64(info + 0x60, name_at); S.put_u32(info + 0x78, size)
+    S.put_u64(looks + nlook * 0x10, addr); S.put_u64(looks + nlook * 0x10 + 8, info)
+    S.put_u32(addr + 0x1C, h)
+    nlook = nlook + 1
+  end
+  -- the inventory: its array of u32 item handles at +0x40 { ptr, count, cap }
+  local inv = S.inv_comp
+  local arr = inv + 0x1000
+  local n = #S.inv_order
+  S.map(arr, math.max(8, n * 8) + 0x40)
+  for k = 0, n * 8 + 0x3F do S.mem[arr + k] = 0 end
+  S.put_u64(inv + 0x40, arr); S.put_u32(inv + 0x48, n); S.put_u32(inv + 0x4C, n + 8)
+  slot(S.LIVE_INV_HANDLE, inv, S.LIVE_INV_NAME, 0x200)
+  S.item_handle = {}
+  for i, id in ipairs(S.inv_order) do
+    local h = 0x200000 + 0x9000 + i                  -- generation 2, slot 0x9000 + i
+    local item = 0x5A000000 + i * 0x1000
+    S.map(item, 0x80)
+    for k = 0, 0x7F do S.mem[item + k] = 0 end
+    S.put_u64(item, 0x7FF6C4C00000)
+    S.put_u64(item + 0x08, S.inv_records[id] + 0x10)   -- prius data: the record from the weapon id on
+    S.put_u32(arr + (i - 1) * 4, h)
+    slot(h, item, "WeaponItemX", 0x80)
+    S.item_handle[id] = h
+  end
+end
+-- round46: an Omega purchase sends VendorPurchaseEvent alone (no PurchaseWeaponEvent, no EnteredVendorEvent)
+function S.inv_event()
+  if S.inv_live then return { Actor = S.hero_handle, Component = S.LIVE_INV_HANDLE } end
+  return {}
+end
+function S.buy_omega_live(id, vendor_name)
+  if not S.weapons_owned[id] then return false end
+  S.set_omega(id, 1)
+  S.emit("VendorPurchaseEvent", { ShowRemapTutorial = false, WeaponName = vendor_name })
+  S.step(1)
+  return true
+end
 function S.inv_add(id)
   if S.inv_records[id] then return end
   local obj = S.inv_base + S.inv_gen * 0x100000 + 0x8000 + #S.inv_order * 0x200
@@ -662,7 +803,11 @@ function S.buy_omega(id, name, upgrade_too)
   S.step(1)
   return true
 end
+-- v0.70 (rivet_hook 2.0.0 src/script_signal.cpp inspect): off the game thread - during a load, when rivet_hook pumps
+-- the scripts from the render thread - script_node refuses before it reads anything. 10_rando_runtime.lua's
+-- R.loading_now() relies on exactly this answer (S.loading is a load here).
 function rivet.script_node(component)
+  if S.loading then return nil, "nodes can only be read on the game thread, and it is not pumping (loading?)" end
   local n = node_by_comp(component)
   if not n then return nil, "no such node" end
   return { component = n.component, outputs = n.outputs or {}, vars = n.vars or {} }
@@ -710,25 +855,25 @@ function S.apply_give(id)
   if kind == "weapon" then
     if S.weapons_owned[id] then
       if S.give_resets_omega and S.inv_records[id] then S.set_omega(id, 0) end   -- dev 10.15: worst case (SIMULATED)
-      if S.inv_changed_on_owned then S.emit("InventoryChangedEvent", {}) end
+      if S.inv_changed_on_owned then S.emit("InventoryChangedEvent", S.inv_event()) end
       return "owned"
     end
     S.weapons_owned[id] = true
     S.inv_add(id)
     S.emit("WeaponAddedEvent", { WeaponType = S.weapon_type_of(id) })
-    S.emit("InventoryChangedEvent", {})
+    S.emit("InventoryChangedEvent", S.inv_event())
     return "added"
   elseif kind == "gadget" then
     if S.gadgets_owned[id] then return "owned" end
     S.gadgets_owned[id] = true
     S.emit("GadgetItemAddedEvent", { ConfigTypeHash = S.gadget_type[id], InventoryHandle = 77, ItemHandle = 9000 + #S.give_log })
-    S.emit("InventoryChangedEvent", {})
+    S.emit("InventoryChangedEvent", S.inv_event())
     return "added"
   elseif kind == "currency" then
     local n = S.last_count or 1
     S.currency[id] = (S.currency[id] or 0) + n
     S.emit(S.currency_event and S.currency_event[id] or "GainBoltEvent", { NewBolts = n })
-    S.emit("InventoryChangedEvent", {})
+    S.emit("InventoryChangedEvent", S.inv_event())
     return "added"
   end
   return "unknown"
@@ -980,7 +1125,7 @@ function S.step(n)
 end
 -- 8.3: keyboard keys the randomizer maps itself (Windows virtual-key codes; rivet.key() above
 -- knows only rivet_hook-style names, as the real one may)
-S.KEYS = { BACKSPACE = 0x08, [";"] = 0xBA, ["="] = 0xBB, [","] = 0xBC, ["-"] = 0xBD, ["."] = 0xBE, ["/"] = 0xBF, ["`"] = 0xC0,
+S.KEYS = { BACKSPACE = 0x08, HOME = 0x24, ["END"] = 0x23, PAGEUP = 0x21, PAGEDOWN = 0x22, INSERT = 0x2D, DELETE = 0x2E, [";"] = 0xBA, ["="] = 0xBB, [","] = 0xBC, ["-"] = 0xBD, ["."] = 0xBE, ["/"] = 0xBF, ["`"] = 0xC0,
            ["["] = 0xDB, ["\\"] = 0xDC, ["]"] = 0xDD, ["'"] = 0xDE }
 for c = string.byte("A"), string.byte("Z") do S.KEYS[string.char(c)] = c end
 for i = 0, 9 do S.KEYS[tostring(i)] = 0x30 + i end

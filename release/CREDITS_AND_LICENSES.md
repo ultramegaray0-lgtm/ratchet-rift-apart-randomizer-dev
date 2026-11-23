@@ -1,4 +1,4 @@
-# Credits and licenses: Rift Apart Randomizer v0.55
+# Credits and licenses: Rift Apart Randomizer v0.70
 
 ## This mod
 

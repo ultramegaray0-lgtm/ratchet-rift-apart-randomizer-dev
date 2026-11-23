@@ -25,7 +25,8 @@
 --      list of template-actor uids, so a hit that is a template bot (or matches a spawned bot's actor
 --      asset) shows exactly where the list is.
 -- Output lines start with "RANDO-SPAWNPROBE". Remove this file to turn it off; the randomizer does not need it.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnprobe)"] = "10.0.19"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(spawnprobe)"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
+if RANDO_DEV_DEBUG and RANDO_DEV_DEBUG.ran and RANDO_DEV_DEBUG.ran["spawnprobe"] then return end   -- v0.62-DEV5: dev(debug).lua already holds it
 RANDO_SPAWNPROBE = RANDO_SPAWNPROBE or {}
 local P = RANDO_SPAWNPROBE
 P.version = 1

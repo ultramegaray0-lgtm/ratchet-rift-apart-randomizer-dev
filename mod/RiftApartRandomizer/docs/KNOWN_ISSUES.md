@@ -224,19 +224,20 @@ Full table: ENEMY_RANDOMIZER_COVERAGE.md.
 - Ms. Zurkon's vendor (`only 0 vendor weapon(s) in the array at +0x48`) and `RANDO-OMEGA inventory not
   found` in the same log are separate issues, not touched here.
 
-## 0h. Since dev 10.15 (kit 10.0.11): Omega weapons
+## 0h. Omega weapons (dev 10.15; verified in the game in v0.62-DEV11/DEV12)
 
-`omega_weapons` is off by default; nothing below matters while it is off. Nothing has run in the game
-(OMEGA.md section 5).
-- **The game's Omega flag is only written by `17_rando_omega.lua`, and only after it has learned its
-  place** from two Omega purchases at Ms. Zurkon (Challenge Mode) or `omega_flag_offset`. Until then an
-  Omega reward gives its weapon and is recorded as pending.
-- **The inventory component's class name is a guess** (`ItemInventory`, then three others). If none
-  answers, rivet.log says `RANDO-OMEGA inventory not found` and nothing is written.
-- **If an Omega purchase reports no `PurchaseWeaponEvent`**, nothing is learned.
+`omega_weapons` is ON by default since v0.62-DEV12 (round52 verified it in the game).
+- **A seed made before DEV12 with the old default (off) is a different seed now** (its fingerprint changes and the
+  companion's saved progress is refused as "another seed"). To keep playing such a run, set `omega_weapons = false`;
+  an older share code without `omega_weapons=` needs `,omega_weapons=false` added.
+- The game's Omega flag is found by the weapon search after each load (up to ~20 s); an Omega reward found earlier
+  waits ("pending") and is written then. Writes need the WeaponItemPrius field check to pass.
+- An Omega you set lasts while you play; the game does not keep it in its own save, so the randomizer writes it again
+  after every load ("kept Omega ... set again").
+- Omegas are never placed on Spybots / Lorbs (their pickup events are not bound yet) nor on Gold Bolts.
 - Ms. Zurkon's own Omega upgrades stay for sale in Challenge Mode (their price fields are not located).
 - 6 of the 20 Omega names are assumed (no guide lists them by name).
-- Not in a player package (held back by the release builder).
+- Not in a player package yet: tools/build_public_release.py still lists 17_rando_omega.lua in HELD_BACK (dev repo).
 
 ## 0g. Since dev 10.13 (kit 10.0.9): Chaos Randomizer
 

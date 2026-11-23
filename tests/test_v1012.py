@@ -138,7 +138,7 @@ class ExplicitlyOffTests(unittest.TestCase):
         settings = (ROOT / "mod" / "RiftApartRandomizer" / "scripts" / "04_rando_settings.lua").read_text(encoding="utf-8")
         self.assertIn("omega_weapons = true", settings)
         self.assertIn("enemy_randomizer = true", settings)
-        self.assertIn("boss_randomizer = true", settings)
+        self.assertIn("boss_randomizer = false", settings)   # DEV4: the Boss Randomizer is off in the dev kit
 
     def test_explicitly_off_nothing_read_or_written(self):
         g = game(learned=True)
@@ -158,7 +158,7 @@ class ExplicitlyOffTests(unittest.TestCase):
         # dev 10.16 made them ON in 04; the harness runs the classic test settings, so ON is set here
         g = Game(settings={"enemy_randomizer": True, "boss_randomizer": True})
         g.step(2)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.19"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("RANDO-ENEMY\tinstalled (ON"))
         self.assertTrue(g.log_has("RANDO-BOSS\tinstalled (ON"))
 
@@ -519,7 +519,7 @@ class RemovalTests(unittest.TestCase):
         g.press("=")
         g.step(300)
         self.assertEqual(changed(g), set())
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.19"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"))
         self.assertFalse(any("RANDO-ERROR" in l for l in g.logs()), [l for l in g.logs() if "ERROR" in l])
 
     def test_without_enemy_lua_bosses_still_work(self):

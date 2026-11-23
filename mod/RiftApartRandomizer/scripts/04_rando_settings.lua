@@ -4,7 +4,7 @@
 -- NEW seed with its own progress: start it with New Game. Lines starting with -- are notes; to
 -- change an option, remove the -- in front of it and edit the value. A wrong value is reported in
 -- rivet.log (search RANDO-SETTINGS) and the default is used instead.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.19"   -- version check (do not edit)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["04_rando_settings"] = "10.0.36"   -- version check (do not edit)
 RANDO_SETTINGS = {
   -- THE SEED: "random" = the companion picks one and remembers it. Any other text is a fixed seed
   -- (the same text and settings give the same seed on every PC), e.g. "lombax-ryno-2026".
@@ -24,7 +24,9 @@ RANDO_SETTINGS = {
   -- early_weapons = 2,                -- 0-6: weapons placed where you can reach them right at the start
   -- story_milestones = true,          -- each planet's second story mission gives a reward
   -- side_locations = true,            -- Zurkie's cups, Trudi, the Blizar chef and Ardolis give rewards
-  -- collectibles = true,              -- the 10 Spybots and 12 Lorbs give rewards (they pay once their pickup is bound)
+  collectibles = true,                 -- DEV DEFAULT (v0.71-DEV1): the 10 Spybots and 12 Lorbs hold rewards, paid by
+                                       -- their pickup events (bound, not seen in a log yet). F2 / F3 show them;
+                                       -- Ctrl+F2 / Ctrl+F3 twice pay a pickup the game did not report (dev(keys).lua)
 
   -- WHAT IS RANDOMIZED
   -- weapons = true,                   -- weapons are shuffled over the shop, your start and the rewards
@@ -32,8 +34,13 @@ RANDO_SETTINGS = {
                                        -- false = never (true = always: ONLY if you have that mod)
   -- gadgets = true,                   -- Box Breaker, Omniglove and Glitch are rewards
   -- armor = true,                     -- armor pieces are rewards; armor pods give random items
-  -- shop = "shuffle",                 -- "shuffle": Ms. Zurkon sells the seed's weapons | "vanilla": her usual ones
+  shop = "shuffle",                    -- DEV DEFAULT (v0.71-DEV1): Ms. Zurkon sells the seed's weapons. The vendor's slots
+                                       -- are now also looked for as POINTERS to the weapons' configs (docs/SHOP.md);
+                                       -- if they are still not found, the shop's extra weapons are given directly and
+                                       -- rivet.log shows RANDO-SHOP EVIDENCE. "vanilla": her usual weapons, none a reward
   -- exclude = "",                     -- items never randomized, e.g. "weapon:ryno_8,armor:pirate_head"
+  start_omega = 1,                     -- DEV DEFAULT (v0.62-DEV5): start with this many random Omega versions (0-20),
+                                       -- so every new game tests the Omega route (its weapon is given with it)
   omega_weapons = true,                -- DEV DEFAULT ON: CHALLENGE MODE (New Game+), 20 Omega versions are rewards
                                        -- of their own ("omega:burst_pistol" ...). An Omega found first also gives
                                        -- its weapon; the weapon found later never undoes the Omega (docs/OMEGA.md)
@@ -69,13 +76,18 @@ RANDO_SETTINGS = {
   -- These only decide the start of a save that has never used the keys; they do not change the seed.
   enemy_randomizer = true,            -- regular enemies spawned by spawners become other regular enemies loaded on
                                        -- the same level (dev 10.27: the spawner-variable method; needs rando_give.dll v7)
-  boss_randomizer = true,              -- boss-tier enemies are shuffled among themselves (story bosses never)
+  boss_randomizer = false,              -- boss-tier enemies are shuffled among themselves (story bosses never)
   enemy_notify = true,                 -- dev 10.29: a corner note "[ENEMY RANDOMIZER] SUCCESS - Original: X -> Replacement: Y"
                                        -- for every changed spawner's first spawn (false: only rivet.log)
-  enemy_compat = "verified",           -- dev 10.30: only replacements the game has shown can be killed ("verified").
-                                       -- "trial": also untested ones of the same bot class, one spawner per level at a
-                                       -- time, watched (a test round; one that cannot be killed is rejected for good and
-                                       -- you may need to load the last checkpoint). Never "any" (10.29's rules, unsafe).
+  enemy_compat = "all",                -- dev 10.31: "all" = EVERY regular enemy can become every other loaded on the level
+                                       -- (Nefarious troopers included, spawners that already spawned change for their
+                                       -- next spawns). Things may break; a replacement the game shows cannot be killed
+                                       -- is watched and put back (dev 10.32: also when nothing at all dies for 40 s).
+                                       -- "verified": only replacements with in-game proof they die (10.30's default).
+                                       -- "trial": also untested ones of the same bot class, one spawner per level at a time.
+  enemy_mix_movement = false,          -- dev 10.32: false (the default) = walkers stay walkers, flyers flyers, turrets
+                                       -- turrets. true mixes them - round42: a walker put at a flyer's spawn (Zurkon C5
+                                       -- sniper, B3 biker) stood where it could not be killed.
   -- key_enemies = "-",                -- the Enemy Randomizer's key (Ctrl+key: what it changed here)
   -- key_bosses = "=",                 -- the Boss Randomizer's key
   -- CHAOS (chaos.lua, OFF by default): ANY enemy or boss can become ANY other, from any planet, with NO
@@ -86,6 +98,6 @@ RANDO_SETTINGS = {
   -- chaos_cross_planet = true,        -- false: only this planet's enemies
 }
 -- In the game, the 0 key turns PLANET SHUFFLE on or off (off by default; it is remembered).
--- The - key turns the ENEMY RANDOMIZER on or off, the = key the BOSS RANDOMIZER (both ON by default in this dev kit; remembered).
+-- The - key turns the ENEMY RANDOMIZER on or off, the = key the BOSS RANDOMIZER (Enemy ON and Boss OFF by default in this dev kit; remembered).
 -- BACKSPACE turns the CHAOS RANDOMIZER on or off (off by default; remembered; no protection at all).
 -- Ctrl+0 pressed twice sends your randomizer items again if some went missing.
