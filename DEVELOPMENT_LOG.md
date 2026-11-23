@@ -4,6 +4,28 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-23: v0.70 (kit 10.0.35) - DEV14 released; DEV10-DEV14 brought into the repo
+
+DEV10-DEV14 (kit 10.0.30-10.0.34) were built outside the repo from DEV9 (db42da7); this commit brings DEV14 in and
+labels it v0.70, the public release. tests/data/round54_rivet.log (DEV13 in the game, game path replaced):
+- VERIFIED IN THE GAME (round54): Omega Ricochet set and read back ("weapon records: 29 of 29 ... layout TRUSTED",
+  then ricochet Omega 1); the hub start, the city's first story steps; "events subscribed 23/23" (so the Spybot / Lorb
+  event classes RYNOPlayPickedUpEvent, RYNOScriptPickupEvent, RuinPlayPickedUpEvent exist in the game).
+- The crash on death / retry / load (round54's log stops at the death's reload): rivet_hook 2.0.0 pumps the scripts
+  from the render thread during a load while the game frees the level; DEV13's Omega census read the component index
+  then. DEV14: R.loading_now() (rivet.script_node(0) refuses off the game thread) + a 0.25 s frame gap; Omega, the
+  spawner layer and the shop read/write nothing during a load, deliveries wait for its end. SIMULATOR ONLY so far.
+- v0.70 adds: one "received" line per Omega reward (it was logged twice; one reward).
+- The suite had never run on DEV10-DEV14: 63 failures. Version pins bumped, stale expectations updated where
+  DEV10-DEV13 changed behaviour on purpose (omega_weapons on by default, Omega status found/total, VERSION.txt, the
+  starvation guard), rivet_sim models script_node during a load, tests/omega_sims/ + tests/test_v070.py added.
+  Suite 908 run, 0 failures, 22 skipped. Public settings: the same seeds as v0.60 (216/216 fingerprints identical
+  over 6 presets x 12 seeds x 3 variants). validate_release 32/32 on the v0.70 zip.
+- Player zip Ratchet_Rift_Apart_Randomizer_v0.70_Player_Release.zip, 298,451 bytes, sha256
+  d3f76981fde3328e6a996d84eda115a9a73aeee90f16ca5c58b2fa45ad22f4f4 (tools/build_public_release.py, deterministic).
+- Branches: fix/v0.62-dev5 is the dev line (DEV9 -> v0.70 -> next), release-v0.70 marks the release, main is merged
+  up to it.
+
 ## 2026-11-22: v0.62-DEV9 (kit 10.0.29) - round49: inventories outside the hero's component list
 
 tests/data/round49_rivet.log (DEV8 installed whole, game path replaced). VERIFIED IN THE GAME: DEV8's budget fix (walk

@@ -52,7 +52,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.29"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.35"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -3952,7 +3952,8 @@ function V.tick(frame, ready)
   local lvl = V.lvl
   if not V.enabled() then
     V.job = nil
-    if #lvl.arms > 0 then V.put_back_all("Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
+    -- v0.62-DEV14: not during a load (ready is false while the game thread is not pumping)
+    if #lvl.arms > 0 and ready then V.put_back_all("Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
     if #V.pending > 0 and ready then pcall(V.drain_pending) end
     lvl.queue, lvl.fac_queue, lvl.fac_queued = {}, {}, {}
     return

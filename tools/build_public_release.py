@@ -19,11 +19,11 @@ import shutil
 import sys
 import zipfile
 
-VERSION = "0.60"
-BUILD = "10.0.29"                # the kit in this repo (VERSION is set when a public release is made)
+VERSION = "0.70"
+BUILD = "10.0.35"                # the kit in this repo (VERSION is set when a public release is made)
 NAME = f"Ratchet_Rift_Apart_Randomizer_v{VERSION}_Player_Release"
 ZIP_NAME = NAME + ".zip"
-DATE = (2026, 11, 19, 0, 0, 0)
+DATE = (2026, 11, 23, 0, 0, 0)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KIT = os.path.join(ROOT, "mod", "RiftApartRandomizer")

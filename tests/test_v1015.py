@@ -118,18 +118,23 @@ class GeneratorTests(unittest.TestCase):
         if old is None:
             self.skipTest("git history with dev 10.13 not available")
         new = engine()
-        self.assertFalse(new.defaults()["omega_weapons"])  # fallback remains backward-compatible; dev 04 file opts in
+        # v0.62-DEV12 (the player's decision): omega_weapons is ON by default; off must be set and then gives the 10.13 seed
+        self.assertTrue(new.defaults()["omega_weapons"])
         n = 0
         for preset in ("balanced", "chaos", "full", "campaign", "everything"):
             for i in range(4):
                 for extra in ({}, {"hub": False, "distribution": "goldbolts_first"}, {"weapons": False, "armor": False}):
                     a, _ = old.generate(f"v1015-{preset}-{i}", extra, preset)
-                    b, _ = new.generate(f"v1015-{preset}-{i}", extra, preset)
+                    b, _ = new.generate(f"v1015-{preset}-{i}", dict(extra, omega_weapons=False), preset)
                     self.assertEqual(a is None, b is None)
                     if a is None:
                         continue
                     self.assertEqual(a.fingerprint, b.fingerprint)
-                    self.assertEqual(old.spoiler(a), new.spoiler(b), (preset, i, extra))
+                    # the share code names omega_weapons=false now that it is not the default (v0.62-DEV12)
+                    sb = new.spoiler(b).replace("omega_weapons=false,", "").replace(",omega_weapons=false", "").replace("|omega_weapons=false", "|")
+                    sb = "\n".join(l for l in sb.split("\n") if l.strip() != "omega_weapons = false")
+                    sa = "\n".join(l for l in old.spoiler(a).split("\n") if l.strip() != "omega_weapons = false")
+                    self.assertEqual(sa, sb, (preset, i, extra))
                     n += 1
         self.assertGreater(n, 50)
 
@@ -166,7 +171,7 @@ class GeneratorTests(unittest.TestCase):
         e = engine()
         for preset in ("balanced", "everything", "campaign"):
             for extra in ({}, {"hub": False, "distribution": "goldbolts_first"}):
-                off, _ = e.generate("same-" + preset, extra, preset)
+                off, _ = e.generate("same-" + preset, dict(extra, omega_weapons=False), preset)
                 on, _ = e.generate("same-" + preset, dict(extra, omega_weapons=True), preset)
                 self.assertNotEqual(off.fingerprint, on.fingerprint)      # its own saves and share code ...
                 self.assertEqual(off.attempt, on.attempt)                 # ... but the same placements:
@@ -196,11 +201,11 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn("OMEGA VERSIONS", sp)
         self.assertIn("Omega Burst Pistol", sp)
         # off: an Omega in start_items is not an item of the seed
-        s2, _ = e.generate("om-start", {"start_items": "omega:burst_pistol"}, "balanced")
+        s2, _ = e.generate("om-start", {"start_items": "omega:burst_pistol", "omega_weapons": False}, "balanced")
         self.assertNotIn("omega:burst_pistol", list(py(s2.start)["items"]))
         self.assertIn("omega:burst_pistol is not an item this seed randomizes", " ".join(py(s2.warnings) or []))
         self.assertNotIn("OMEGA VERSIONS", e.spoiler(s2))
-        self.assertNotIn("omega_weapons", e.spoiler(s2))
+        self.assertIn("omega_weapons=false", e.spoiler(s2))        # off is no longer the default (v0.62-DEV12)
 
     def test_audit_rejects_misplaced_omegas(self):
         e = engine()
@@ -211,7 +216,7 @@ class GeneratorTests(unittest.TestCase):
         L.globals().omove(s, bolt)
         audit = list(py(e.G.audit(s)) or [])
         self.assertTrue(any("is on a Gold Bolt" in a for a in audit), audit)
-        s2, _ = e.generate("om-audit", {}, "balanced")
+        s2, _ = e.generate("om-audit", {"omega_weapons": False}, "balanced")
         L.globals().omove(s, bolt)
         L.execute("function oput(s) for l, v in pairs(s.locations) do if v.item and v.item:sub(1, 7) == 'filler:' then v.item = 'omega:enforcer'; return end end end")
         L.globals().oput(s2)
@@ -331,16 +336,17 @@ class OwnershipTests(unittest.TestCase):
         g.R.grant("weapon:enforcer")
         deliver(g)
         self.assertEqual(g.give_count("weapon:enforcer"), 1)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.29"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.35"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("17_rando_omega not installed"))
 
     def test_kit_check_and_status(self):
         g = game(offset=OMEGA_AT)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.29"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.35"), [l for l in g.logs() if "KIT" in l])
         self.assertTrue(g.log_has("RANDO-OMEGA\tloaded"))
         g.R.grant("omega:enforcer")
         deliver(g)
-        self.assertIn("Omega 1/1", g.R.status_text())
+        # v0.62-DEV12: the status counts every Omega of the seed's pool ("Omega found/total")
+        self.assertRegex(g.R.status_text(), r"Omega 1/\d+")
 
 
 # ------------------------------------------------------------------- runtime: learning the flag's byte

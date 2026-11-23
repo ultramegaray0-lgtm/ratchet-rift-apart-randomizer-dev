@@ -1,5 +1,15 @@
 # Verified in actual gameplay
 
+## Round 52 (kit 10.0.31, v0.62-DEV11): Omega weapons
+
+| What | Result | Evidence in rivet.log |
+|---|---|---|
+| Weapon records found through the scene's component index | works: GameWeaponItem x33-35, id at instance+1152 | `weapon items: 37; the weapon id is at instance+1152` |
+| WeaponItemPrius fields next to the id (ItemCount, ammo, XP, Omega) | match in 24-29 of 25-29 records | `weapon records: 24 of 25 match ... TRUSTED` |
+| The randomizer's Omega reward written | works | `Omega Ricochet applied (flag set ...)`, next census `ricochet ... Omega 1` |
+| Omega purchases at Ms. Zurkon read on the same byte | works (6 of 6) | `Omega purchase of pixelizer: its Omega byte (+0x88 ...) went 0 -> 1 - CONFIRMED in the game` |
+| Another save loaded | BUG (fixed in 10.0.32): the first save's bought Omegas were written into it | `kept the game's Omega bouncer - its flag had been cleared (after a load)` |
+
 > **9.0 has not run in your game yet.** It removes the hub; what it keeps (rewards, deliveries, shop, armor, Coordinates, locked levels) is what rounds 13-22 exercised. Rounds 17-22's hub findings below are history.
 
 **8.0 has not run in your game yet, nor have 5.0, 6.0 and 7.0.** What 8.0's hub rests on from your

@@ -355,6 +355,8 @@ class ProgressTests(unittest.TestCase):
         self.assertEqual(missing, [])
         # every weapon and gadget reward really reached the (simulated) inventory, once
         for key in g.state.inventory.keys():
+            if key.startswith("omega:"):
+                continue      # v0.62-DEV12: an Omega reward is a flag on its weapon (17_rando_omega.lua, tests/omega_sims)
             self.assertEqual(g.item_status(key), "confirmed", key)
             self.assertTrue(g.owns(key), key)
             self.assertEqual(g.give_count(key), 1, key)

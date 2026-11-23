@@ -894,3 +894,21 @@ Uploaded: the round 23 rivet.log and the 9.0 dev and install zips.
   - Spybots as locations (their pickup event was never seen).
   - Real Gold Bolts as rewards or shop items (no verified grant).
   - Shop weapon slots are closed rather than refilled with gadgets or armor.
+
+
+## 2026-11-22: round50 log -> v0.62-DEV10 (kit 10.0.30)
+- DEV9 in the game: the SceneManager handle lookup works (GameGeneralInventory 2191609 resolved; stale handles rejected
+  by generation). The Omega search was starved (it runs last in the frame) and interrupted by a level change.
+- New: weapons by the game's own type data (WeaponItemPrius components in the component index), the Omega offset from
+  the live DDL field table - no Challenge Mode purchase needed. Starvation guard, probe-queue fix, handles first.
+- Simulator only (tests/sim_omega_dev10.py). Next: the first in-game run of the type-data route.
+
+## 2026-11-22: round51 log -> v0.62-DEV11 (kit 10.0.31)
+- DEV10 in the game: the component-index census works (no budget kill) and found GameWeaponItem x33 with ItemPrius;
+  no WeaponItemPrius component exists. Items keep their fields in the instance (no prius holder).
+- New: weapon classes by name, id found in the instance, WeaponItemPrius field check before any write; NUMPAD1 answers
+  at once in the big banner.
+
+## 2026-11-22: round52 log -> v0.62-DEV12 (kit 10.0.32)
+- DEV11 in the game: Omega works - records trusted, Omega Ricochet written, six Omega purchases confirmed on +0x88.
+- Fixed the cross-save bug (game's own Omegas forgotten on every load); status line "Omega found/total".

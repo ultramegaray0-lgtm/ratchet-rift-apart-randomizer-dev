@@ -1,5 +1,174 @@
 # Changelog
 
+## v0.70 (kit 10.0.35): v0.62-DEV14 released
+
+The public v0.70 package (tools/build_public_release.py) is this kit without developer files, boss.lua or chaos.lua,
+with the player's settings (release/04_rando_settings.lua). The private dev line continues on fix/v0.62-dev5.
+- Kit 10.0.35 and the release label v0.70 everywhere (01_rando_data.lua and the dev scripts had stayed at 10.0.29
+  through DEV10-DEV14, which were built outside the repo).
+- 10_rando_runtime.lua: one Omega reward logged "received <name>" twice (grant() and R.grant_omega(); round54
+  lines 622-623 "received Omega Ricochet" x2). Only grant() logs it now. It was always one reward.
+- Tests caught up with DEV10-DEV14 (they were never run on those builds; 63 failures against DEV14):
+  - version pins 10.0.29 / v0.62-DEV9 -> 10.0.35 / v0.70; dev(debug).lua rebuilt from the single files;
+  - omega_weapons is on by default since DEV12 (the player's decision): the 10.13/10.15 compatibility tests now
+    set omega_weapons = false explicitly, and round24's fingerprint 8869cc994ae4 is checked with it off;
+  - the Omega status reads "Omega found/total" (DEV12); VERSION.txt is a kit file (DEV10);
+  - DEV10's starvation guard runs a short Omega slice under FRAME_HARD: the busy-frame test now fills the frame;
+  - an Omega reward is a flag on its weapon, not a delivery: the whole-seed test skips omega: keys;
+  - tests/sim/rivet_sim.lua models rivet.script_node refusing during a load (rivet_hook 2.0.0 inspect);
+  - new tests/test_v070.py (7: the load guard in the simulator, and tests/omega_sims/sim_omega_dev14.py in all six
+    modes). Suite: 908 run, 0 failures, 22 skipped.
+Not verified in the game: DEV14's crash fix (round55 will show RANDO-LOAD lines at each death).
+
+## v0.62-DEV14 (kit 10.0.34; dev kit, not released): round54 - the game crashed on death, retry and load
+
+round54 rivet.log: "RANDO-KIT release v0.62-DEV13 (kit 10.0.33)", seed ardolis-qwark-viceron-393, run 8. Omega works
+(Omega Ricochet applied, "layout TRUSTED"). The game crashed when the hero died; deleting dev(debug).lua, chaos.lua,
+boss.lua or turning the Enemy Randomizer off did not help. The public release and the earlier dev kits did not crash.
+The log stops (no error, no "fini") right after the death's reload began: "PlanetChangedEvent OldPlanetName=NefCity",
+then "direct delivery: trying again on this planet" (the NewPlanetName line was deduplicated by RANDO-DISCOVER).
+A census had started just before ("reading the scene's component index (64432 components)").
+- Cause (from rivet_hook 2.0.0's source, src/game_thread.cpp and src/ddl_visit.cpp): the scripts run mid-frame on the
+  game thread; when it stops pumping for 250 ms - every load: death, retry, checkpoint, save load, travel - rivet_hook
+  runs them from the RENDER thread while the game frees and rebuilds the level on its own threads. rivet.read checks
+  each address with VirtualQuery, but the game can release the page between that check and the copy: an access
+  violation that kills the game without a line in rivet.log. DEV13 is the first kit that walks the whole component
+  index (tens of thousands of reads a frame) and starts it again 150 frames after every checkpoint load (the DEV13
+  checkpoint hook) - so the census was running when the reload began. Before DEV13 the census never got this far
+  (nothing trusted) and the public release has no Omega census.
+- rivet.time_scale() does NOT raise on the render thread (only setting it does), so 09_rando_real.lua's "loading"
+  check never saw a load: deliveries could go out mid-load too.
+- 10_rando_runtime.lua: R.loading_now() asks rivet.script_node(0), which off the game thread answers "nodes can only
+  be read on the game thread, and it is not pumping (loading?)" before touching anything, and on the game thread
+  refuses handle 0 at once. A frame 0.25 s or more after the previous one counts as a load too. R.update_loading runs
+  first in every frame; logged as "RANDO-LOAD a load began ..." / "RANDO-LOAD the load is over (N frames)".
+- 17_rando_omega.lua and 16_rando_spawners.lua get ready = false during a load (nothing read, nothing written).
+  O.on_loading (every loading frame) drops every address Omega holds - census, records, snapshot, jobs, handle cache -
+  and the search waits O.SETTLE frames after the load ends. The Omega logic itself is unchanged: the layout, the
+  randomizer's Omega rewards and the game's Omegas stay known and are read/kept again after the load.
+- 16_rando_spawners.lua: turning the Enemy Randomizer off puts its spawners back only outside a load.
+- 09_rando_real.lua: game_running() is false during a load, and the settle wait after a load starts when it ends.
+Tests: tests/sim_omega_dev14.py (DEV13's modes round53, checkpoint, ngplus, ngplus_xp0 plus death - the hero dies in
+the middle of the census, the items are freed and rebuilt - and hitch - the load seen only as a 0.4 s gap) passes
+on seeds 1-3. Against DEV13's scripts, death fails "nothing read during the load". The whole kit in the dev repo's
+rivet simulator: no load error, no RANDO-ERROR across three reloads, the load check fired on all four loads.
+Not verified in the game yet: that the crash is gone (the log of the next death will show RANDO-LOAD lines).
+Not changed: the generator; seeds and fingerprints are the same.
+
+## v0.62-DEV13 (kit 10.0.33; dev kit, not released): round53 - the Omega check rejected real records
+
+round53 rivet.log: "RANDO-KIT release v0.62-DEV12 (kit 10.0.32)", seed ardolis-qwark-viceron-393, a Challenge Mode run
+(NefCity -> Cordelion -> Zurkie's -> Sargasso). Eight censuses ran; every one ended "NOT trusted: nothing is written",
+so not one Omega was set (status "Omega 1/20 (flag not found yet)"); six Omega rewards from armor pods stayed pending.
+- The records were right: XP, ammo and ItemCount matched (bouncer XP 417644 ammo 8/8, ryno_8 XP 819305 ...). They
+  failed only "SelectedCell N" with N = 118-216 (16-20 of 25 records). round52's Pixelizer 117 was the same thing.
+  17_rando_omega.lua: SelectedCell is logged, not checked. Applied to round53's own numbers, both GameEquipInventory
+  censuses that ran on a settled level pass 25/25 (lines 960-967 and 1291-1298 of the log).
+- During arena challenge A3 the sets swap: GameEquipInventory reads ItemCount 0 and GameOverrideInventory ItemCount 1
+  (log 1383-1410). Nothing is trusted then (the override set is never a candidate); it is after the challenge.
+- Two censuses picked GameOverrideInventory (24 records, all ItemCount 0) over GameEquipInventory (20): the larger set
+  won. Now each of the hero's sets is checked, the one with the most passing records wins, GameEquipInventory wins a
+  tie, and an Override set is never written. set_flag also re-reads ItemCount = 1 right before writing.
+- The first census (37,927 components, 1795 frames) ran across three checkpoint loads; its records were other objects'
+  memory (pointer pairs, ItemCount 4186226608). A checkpoint load (CheckpointTriggeredEvent Loaded=true) now drops a
+  running census and the records; hooked through RANDO_TRAVEL.on_checkpoint, no new rivet.on_event (subscription limit).
+- Budget kills at 17_rando_omega.lua:564 (the id scan over each 0x800-byte instance): it yields every 32 slots now.
+- Challenge Mode: an Omega reward for a carried-over weapon sent the weapon again as its prerequisite; the game never
+  answers for a weapon you have, direct delivery tried every target and paused ALL rewards ("the game did not react
+  to any target", "5 randomizer rewards waiting"), and the Omega waited until UserEquippedWeaponEvent. A weapon whose
+  trusted GameEquipInventory record holds ItemCount 1 and XP > 0 now counts as delivered, and its queued send is
+  called off (RANDO_REAL.set_owned, bookkeeping only). XP 0 is not taken as proof.
+Not changed: the generator; seeds and fingerprints are the same. tests/sim_omega_dev13.py (modes round53, checkpoint,
+ngplus, ngplus_xp0) passes; DEV12 fails round53 the way the game did. tests/sim_omega_dev10/11.py give DEV12's results.
+Not explained by round53's log: the reported crashes. The log ends with rivet's orderly shutdown ("[rivet] fini
+complete") and no error just before it; the last thing running was an Omega census, which only reads.
+
+## v0.62-DEV12 (kit 10.0.32; dev kit, not released): round52 - Omega VERIFIED IN THE GAME
+
+tests/data/round52_rivet.log: "RANDO-KIT release v0.62-DEV11 (kit 10.0.31)". VERIFIED IN THE GAME:
+- the census finds the weapons: GameWeaponItem x33-35 + GameMeleeWeaponItem x2-4; the weapon id is at instance+1152
+  (instance+120 holds it too); 24-29 of 25-29 records match WeaponItemPrius's fields (Pixelizer's SelectedCell 117 is
+  the one miss); a Challenge Mode save shows real values (XP 813617, ammo 300/300, Omega 1 on six weapons);
+- the randomizer's write: "Omega Ricochet applied (flag set ...)", read back as Omega 1 by the next census;
+- six purchases at Ms. Zurkon (Pixelizer, Bouncer, TopiaryBlaster, Tunneler, Glove of Doom, BuzzBlades) each turned the
+  same byte (+0x88 from the id) from 0 to 1: "CONFIRMED in the game". NUMPAD1 answered at once ("18 weapons, N Omega").
+Bug found: after loading ANOTHER save, the Omegas bought in the first save were written into it ("kept the game's
+Omega bouncer - its flag had been cleared (after a load), set again"). Fixed: O.forget clears O.game_omega and O.fails
+on every load; the game's own Omegas are read again after it; only the randomizer's rewards (state.omega) are kept.
+Status line: "Omega found/total", total = the seed's Omega rewards (registry: location or start).
+01_rando_data.lua: the 20 omega:* items verified_in_game = true (informational; seeds are unchanged).
+02_rando_generator.lua (your decisions after round52):
+- omega_weapons is ON by default (G.DEFAULTS): every new seed has the 20 Omega versions as rewards. A seed made with
+  the old default is a different seed now (fingerprint) - set omega_weapons = false to keep it (KNOWN_ISSUES 0h);
+- Omega versions are never placed on Spybots / Lorbs (collectible locations: pickup events not bound yet; round52's seed
+  had 5 of 19 there); a new validation check refuses one there. Non-Omega placements are unchanged (their own stream);
+  the Omega versions and the currency of the freed locations move. Seed ardolis-qwark-viceron-393 (fingerprint
+  unchanged, explicit omega_weapons=true): 1 at the start, 19 on story / side / armor-source locations, none on a
+  collectible. 120 default seeds (4 presets x 30): all valid, 2400 of 2400 Omega versions on locations, 0 on collectibles.
+
+## v0.62-DEV11 (kit 10.0.31; dev kit, not released): round51 - the weapons are GameWeaponItem components
+
+tests/data/round51_rivet.log: "RANDO-KIT release v0.62-DEV10 (kit 10.0.30)". VERIFIED IN THE GAME: the type-data census
+(SceneManager.componentLookups, 32,778-52,872 components, ComponentInfo -> prius type) runs to the end without a budget
+kill (974-1145 frames) and names the item classes: "GadgetSwingshotItem (GadgetSwingshotItemPrius) x1, GameGeneralItem
+(ItemPrius) x11, GameMeleeWeaponItem (ItemPrius) x4, GameWeaponItem (ItemPrius) x33, VanityItem (VanityItemPrius) x160".
+So the weapon items exist, but their class's prius is plain ItemPrius and no component has WeaponItemPrius: "no live
+WeaponItemPrius component". The item probes show items keep NO prius holder (GameGeneralItem +0x08 = 0, 1104 bytes): the
+fields are in the instance. Inventories named on the hero: GameGeneralInventory, GameMissionInventory,
+GameOverrideInventory, GameEquipInventory (8552), GameProgressionInventory. NUMPAD1 queued behind the census and answered
+~1000 frames later, after a warp, in one unreadable corner line.
+17_rando_omega.lua:
+- a weapon class is one whose name has "WeaponItem" (GameWeaponItem, GameMeleeWeaponItem) or whose prius is
+  WeaponItemPrius; the whole instance (ComponentInfo +0x78 size, at most 0x800) and a prius holder, if any, are searched
+  for any weapon's item id; the places most items agree on are tried in order (up to 4);
+- the records of a place are checked against WeaponItemPrius's order from the id on (rcra_ddl.json): ItemCount +8 = 1,
+  LastCheckpointAmmo +20 / LoadedAmmo +24 sane floats, SelectedCell +112 < 64, Test +120 a sane list, Omega +136 = 0/1.
+  >= 90% of the records (at least 3) must pass, else nothing is written; every weapon's XP / ammo / cell / Omega is logged
+  so the ammo can be compared with the HUD; the first record's bytes (id-0x40, 0x100) are logged once;
+- owner: the hero's actor or an actor of an inventory the game named on the hero; else the only owner with >= 8 weapons;
+- a class name that could not be read is not cached (it is asked again);
+- a quiet frame gives a longer slice (up to 3 ms while the frame stays under 4.5 ms);
+- the search ends with a centre banner "Randomizer: Omega ready - N weapons found" (or "... not trusted yet");
+- O.start_job_front: a debug job runs before a census.
+dev(debug).lua NUMPAD1: answers at once in the large banner - the census progress ("searching NN% (~S s)") or
+"Omega: N weapons, M Omega"; details only in rivet.log.
+Tested only in the memory simulator (tests/sim_omega_dev11.py: GameWeaponItem with an ItemPrius class and the fields in
+the instance; a failing field check writes nothing).
+
+## v0.62-DEV10 (kit 10.0.30; dev kit, not released): round50 - the Omega flag from the game's own type data
+
+tests/data/round50_rivet.log: "RANDO-KIT release v0.62-DEV9 (kit 10.0.29)", installed whole. VERIFIED IN THE GAME: the
+DEV9 SceneManager handle lookup - "inventory candidate GameGeneralInventory handle=2191609 size=8480 (InventoryChangedEvent,
+by handle)", and four stale item handles were told apart by their slot generation ("slot generation 3, the handle's 2").
+Why nothing was found: the component walk still had to finish before any handle was tried, and every
+GadgetItemAddedEvent threw the walk away (it finished only after all six purchases); the Omega job runs last in the
+frame, after the Enemy Randomizer, so its 3 ms room was rarely there; the level changed while the first candidate was
+being read; the four item probes were spent on handles queued in the previous load. All six purchases (Pixelizer,
+Bouncer, Glove of Doom, Tunneler, Ricochet, TopiaryBlaster) were new weapons: no Challenge Mode, nothing to learn from.
+WeaponConfig of PurchaseWeaponEvent (8B712ADD0166xxxx for Pixelizer, ...) is the item config id the randomizer uses.
+17_rando_omega.lua - THE TYPE-DATA ROUTE (rivet_hook src/game/ddl.hpp, src/ddl_visit.hpp, src/scene_query.cpp;
+neptuwunium/rivet docs/ddl/rcra_ddl.json):
+- the weapons are the live components whose class's prius type is WeaponItemPrius (type id 0xA89E9C3C) or
+  MeleeWeaponItemPrius (0x2F1E071F), found in SceneManager.componentLookups (+0x13C8, count +0x13EC) - the index
+  rivet.find_component walks. ComponentInfo +0xC8 = DDLTypeInfo*; its prius instance is Component +0x08 -> holder +0x10;
+- the Omega byte's place is the live field table of that type (DDLTypeInfo +0x18 count, +0x50 names, +0x58 types,
+  +0x78 offsets): ItemConfigHash +48, Omega +184 (bool) in rivet's DDL dump, i.e. +0x88 from the weapon's id. The live
+  table must name both fields or nothing is written (records are then read with the dump's numbers only);
+- the hero's weapons are told apart by owner (Component +0x10 = the hero's Actor*, read from GameInventoryManager);
+  records of another owner are only read;
+- an Omega purchase no longer teaches a byte, it confirms the type data's ("CONFIRMED in the game"); the DEV5-DEV9
+  inventory search and learning stay as the fallback;
+- the class verdicts (ComponentInfo -> item / weapon) are cached for the session; a census stopped by the frame budget
+  continues where it was (O.dstate); a short read is retried in the next slice (O.read_full);
+- starvation: after O.STARVE_FRAMES (4) skipped busy frames in a row, the Omega tick runs anyway with a 0.75 ms slice
+  while the frame has used less than O.FRAME_HARD (5 ms); "inventory: ..." reports frames run / skipped;
+- handles named by inventory events are resolved without waiting for the walk; a gadget no longer restarts the walk;
+  the item-probe queue is cleared with every load.
+dev(debug).lua: NUMPAD1 uses the records already found (else the type data) and lists the weapons that are Omega now.
+Tested only in a new memory simulator (tests/sim_omega_dev10.py: SceneManager, component index, ComponentInfo,
+DDLTypeInfo, holders, budget kills, busy frames, a missing field table, changed offsets, no SceneManager). The repo's
+pytest suite was NOT run for this kit (the dev repo was not reachable from this session).
+
 ## v0.62-DEV9 (kit 10.0.29; dev kit, not released): round49 - the inventories are outside the hero's list
 
 tests/data/round49_rivet.log: "RANDO-KIT release v0.62-DEV8 (kit 10.0.28)", installed whole. VERIFIED IN THE GAME: the

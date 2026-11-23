@@ -2,7 +2,7 @@
 -- Copy this file to GAME_FOLDER/scripts/ for one diagnostic run, then remove it.
 -- It only inspects the live hero's component class names and metadata. No game state is mutated,
 -- and event ItemHandle values are never treated as scene-actor handles.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(omega_inventory_probe)"] = "10.0.29"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(omega_inventory_probe)"] = "10.0.35"   -- the kit check (10_rando_runtime.lua)
 if RANDO_DEV_DEBUG and RANDO_DEV_DEBUG.ran and RANDO_DEV_DEBUG.ran["omega_probe"] then return end   -- v0.62-DEV5: dev(debug).lua already holds it
 RANDO_OMEGA_PROBE = RANDO_OMEGA_PROBE or {}
 local P = RANDO_OMEGA_PROBE

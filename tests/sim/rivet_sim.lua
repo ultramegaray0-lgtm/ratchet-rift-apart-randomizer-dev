@@ -776,7 +776,11 @@ function S.buy_omega(id, name, upgrade_too)
   S.step(1)
   return true
 end
+-- v0.70 (rivet_hook 2.0.0 src/script_signal.cpp inspect): off the game thread - during a load, when rivet_hook pumps
+-- the scripts from the render thread - script_node refuses before it reads anything. 10_rando_runtime.lua's
+-- R.loading_now() relies on exactly this answer (S.loading is a load here).
 function rivet.script_node(component)
+  if S.loading then return nil, "nodes can only be read on the game thread, and it is not pumping (loading?)" end
   local n = node_by_comp(component)
   if not n then return nil, "no such node" end
   return { component = n.component, outputs = n.outputs or {}, vars = n.vars or {} }

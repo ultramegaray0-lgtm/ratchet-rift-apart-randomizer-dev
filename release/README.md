@@ -1,4 +1,4 @@
-# Ratchet & Clank: Rift Apart Randomizer v0.60 (beta)
+# Ratchet & Clank: Rift Apart Randomizer v0.70 (beta)
 
 A randomizer for the PC version of Ratchet & Clank: Rift Apart. Weapons, gadgets, armor and
 planet Coordinates are shuffled across Gold Bolts, story missions, side activities, armor pods
@@ -6,6 +6,17 @@ and Ms. Zurkon's shop. Every seed is checked by a solver before you play, so it 
 finished.
 
 This is an unofficial fan mod. It is a beta: please report problems.
+
+## New in v0.70
+
+- **No more crash when you die, retry a checkpoint or load a save.** During every load the randomizer
+  now stops reading the game's memory until the load is over (`RANDO-LOAD` lines in `rivet.log`).
+- **Omega weapons work in the game:** an Omega reward now turns your weapon into its Omega version
+  (seen in the developer's game: "Omega Ricochet is yours"). Still off by default, see below.
+- Omega purchases at Ms. Zurkon are recognized, and the Omegas of one save are no longer copied
+  into another save you load.
+- Enemy Randomizer: more of Ardolis' enemies are recognized, and pool sharks are never used as
+  replacements.
 
 ## What you need
 
@@ -94,9 +105,9 @@ Changing the seed or an option makes a new seed: start it with New Game.
 
 With `omega_weapons = true` the 20 Omega versions (Challenge Mode / New Game+) become rewards of
 their own. An Omega found before its weapon also gives you the weapon; the weapon found later never
-takes the Omega away, and nothing is given twice. **Beta:** in v0.60 the randomizer cannot yet turn
-a weapon you own into its Omega version in the game itself; such a reward is recorded and applied
-once that works. That is why it is off by default.
+takes the Omega away, and nothing is given twice. Since v0.70 the reward really turns your weapon into
+its Omega version in the game (a few seconds after a load the screen says **Randomizer: Omega
+ready**). It is still off by default so your seeds stay the same; turning it on changes the seed.
 
 ## Optional: ARSENAL_RESTORED
 
@@ -106,7 +117,7 @@ It is not needed. To install its rivet_hook version, drag its zip onto
 
 ## Help
 
-See **TROUBLESHOOTING.md**. When you report a problem, include the mod version (v0.60), your game
+See **TROUBLESHOOTING.md**. When you report a problem, include the mod version (v0.70), your game
 version and `rivet.log` from the game folder. Remove your Windows user name from any path in it
 first.
 

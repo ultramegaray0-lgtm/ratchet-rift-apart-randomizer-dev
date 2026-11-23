@@ -1,4 +1,4 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.62-DEV9)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.70)
 =================================================================
 This folder is the development kit. Players get the release package instead
 (python tools/build_public_release.py; its docs are in release/).
@@ -48,10 +48,10 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release v0.62-DEV9 (kit 10.0.29)
-       RANDO-KIT all required scripts are 10.0.24
+       RANDO-KIT release v0.70 (kit 10.0.35)
+       RANDO-KIT all 12 required scripts are 10.0.35
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
-     HARD STOP: if the banner says any kit other than 10.0.27, do NOT continue;
+     HARD STOP: if the banner says any kit other than 10.0.35, do NOT continue;
      that is not this package. This artifact is one directly extractable ZIP; do not combine it
      with an older folder or nested ZIP.
 
@@ -158,3 +158,88 @@ DEV9 (10.0.29) - round49: the inventories are not in the hero's component list
   - Teaching the Omega byte still needs a Challenge Mode save (two Omega purchases of different weapons).
   - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
     then dev_scripts\dev(debug).lua. rivet.log must show "RANDO-KIT release v0.62-DEV9 (kit 10.0.29)".
+
+DEV10 (10.0.30) - round50: the Omega flag from the game's own type data (no Challenge Mode needed)
+  - Round50 showed the DEV9 handle lookup works in the game, but the search was starved (it runs last in the frame,
+    after the Enemy Randomizer) and the level changed before it read anything.
+  - DEV10 finds the weapons a new way: every component whose class carries the game's WeaponItemPrius type, read from
+    the scene's component index. The Omega byte's place comes from the game's own field table (WeaponItemPrius.Omega),
+    so nothing has to be learned and no Challenge Mode purchase is needed. Omega rewards (and the starting Omega) are
+    written as soon as the weapon is confirmed in your inventory.
+  - Look for, in this order:
+      "RANDO-OMEGA weapon items: reading the scene's component index (N components)"
+      "RANDO-OMEGA WeaponItemPrius layout: WeaponItemPrius from the game's type data: ItemConfigHash +0x30, Omega +0xB8"
+      "RANDO-OMEGA inventory: N weapon record(s) in WeaponItemPrius components"
+      "RANDO-OMEGA the Omega flag: +0x88 ... (the game's type data)"
+    and then "flag set" / "is yours" for an Omega reward. In the game, check the weapon in the weapon wheel / vendor:
+    it should show as Omega (level cap 10).
+  - dev(debug).lua NUMPAD1 now also lists which of your weapons are Omega ("omega: flag +0x88 ...: Omega now: ...").
+  - If a line says "not found" or "nothing is written", send rivet.log.
+  - INSTALL EVERY TIME: delete <game>\scripts\*.lua, then copy ALL of this kit's scripts\*.lua into <game>\scripts,
+    then dev_scripts\dev(debug).lua. Keep the kit's rando_give.dll next to RiftApart.exe (the SceneManager comes from it).
+    rivet.log must show "RANDO-KIT release v0.62-DEV10 (kit 10.0.30)".
+
+DEV11 (10.0.31) - round51: the weapons are GameWeaponItem components
+  - Round51: the DEV10 census worked in the game (52,872 components) and found the weapons - "GameWeaponItem
+    (ItemPrius) x33" - but skipped them, because their class's type is plain ItemPrius, not WeaponItemPrius.
+  - DEV11 takes GameWeaponItem / GameMeleeWeaponItem by name, finds each weapon's id inside the component, and checks
+    the WeaponItemPrius fields next to it in every weapon (ItemCount 1, ammo, upgrade list, Omega 0 or 1). Only if
+    they match is the Omega byte (+0x88 from the id) trusted and written.
+  - Each weapon's fields go to rivet.log: "weapon record ricochet: XP ..., ammo 25/25, cell ..., Omega 0". Compare the
+    ammo numbers with the game's HUD - if they match, the layout is right.
+  - NUMPAD1 answers at once now, in the big banner: "searching NN% (~S s)" while the weapons are being read (it takes
+    up to ~20 s after a load), then "Omega: N weapons, M Omega". Details stay in rivet.log.
+  - Look for: "weapon items: ...; the weapon id is at instance+..." , "weapon records: N of N match ... TRUSTED",
+    "inventory: N weapon record(s) in GameWeaponItem components", the banner "Randomizer: Omega ready", then
+    "flag set" / "is yours" for the starting Omega once its weapon is in your inventory.
+  - Give it ~20 s after each load or warp before pressing NUMPAD1 or warping again (each load restarts the search).
+  - INSTALL EVERY TIME as for DEV10; rivet.log must show "RANDO-KIT release v0.62-DEV11 (kit 10.0.31)".
+
+DEV12 (10.0.32) - round52: OMEGA WORKS IN THE GAME
+  - Round52 (DEV11): the weapon records were found and trusted, the starting Omega Ricochet was set ("Omega Ricochet
+    is yours") and every Omega bought at Ms. Zurkon was confirmed on the same byte.
+  - Omega versions are in the item pool (omega_weapons = true, start_omega = 1 in the dev settings): all 20 are
+    rewards of their own; finding one sets your weapon Omega (the weapon is given first if you lack it).
+  - Fixed: Omegas you own in one save are no longer copied to the weapons of another save you load.
+  - The status line now reads "Omega found/total" (e.g. "Omega 1/20").
+  - omega_weapons is ON by default for every seed now, and Omegas are never placed on Spybots / Lorbs. Your seed
+    ardolis-qwark-viceron-393 keeps its fingerprint and items; only its Omega locations moved (none on Spybots/Lorbs).
+    A public player's seed made with the old default needs omega_weapons = false to stay the same seed.
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.62-DEV12 (kit 10.0.32)".
+
+DEV13 (10.0.33) - round53: Omega was never written
+  - Round53 (DEV12, a Challenge Mode run): the weapons were found every time, but "weapon records: N of 25 match ...
+    NOT trusted" and "Omega not trusted yet" - nothing was written, so none of your Omega rewards became Omega.
+    Why: the record check wanted SelectedCell below 64; your upgraded weapons read 118-216 there. SelectedCell is
+    logged only now. With that, both settled reads of your weapons in round53 would have passed (25 of 25).
+  - The hero has two weapon sets: GameEquipInventory (yours) and GameOverrideInventory (copies, ItemCount 0 outside
+    some arena challenges). Two of round53's censuses read the copies. Now only GameEquipInventory is written.
+  - A checkpoint load (death, restart, arena challenge) drops a running search and starts it again: round53's first
+    search ran across three checkpoint loads and read other objects where the weapons had been.
+  - A weapon you already have (carried over, XP above 0) is no longer sent again as an Omega's prerequisite; its
+    Omega is set without waiting for you to equip it.
+  - Look for: "weapon records: 25 of 25 match ... layout TRUSTED", "Randomizer: Omega ready", then "Omega <weapon> is
+    yours" for each Omega reward you have found (round53's seed: Bouncer, Topiary Sprinkler, Cold Snap, Buzz Blades,
+    Void Repulser, Glove of Doom and the start one). NUMPAD1 should say "Omega: N weapons, M Omega" with M > 0.
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.62-DEV13 (kit 10.0.33)".
+
+DEV14 (10.0.34) - round54: the game crashed on death, retry and load
+  - Omega is unchanged (it works: round54 set Omega Ricochet).
+  - The crash: during every load (death, retry, checkpoint, loading a save, travel) rivet runs the scripts on another
+    thread while the game tears the level down. DEV13's Omega search reads tens of thousands of game addresses a
+    frame and restarted right after every checkpoint, so it was reading when you died - and a read of memory the game
+    had just freed kills the game without an error in rivet.log.
+  - Now the randomizer notices a load the moment it starts. Until it is over, Omega and the Enemy Randomizer read
+    and write nothing, Omega forgets every address it held, and no reward is sent; after the load Omega reads your
+    weapons again and keeps your Omegas exactly as before.
+  - Look for, at each death / load: "RANDO-LOAD a load began ..." and "RANDO-LOAD the load is over (N frame(s))",
+    then "Randomizer: Omega ready" again a few seconds later. If it still crashes, send rivet.log: the last
+    RANDO-LOAD line shows whether the crash came during or after the load.
+  - INSTALL EVERY TIME as before (all scripts; dev scripts too if you use them - they are 10.0.34 now);
+    rivet.log must show "RANDO-KIT release v0.62-DEV14 (kit 10.0.34)".
+
+v0.70 (10.0.35) - DEV14 released
+  - The same randomizer as DEV14 (the fix for the crash on death, retry and load). The public v0.70 package is
+    built from this kit without any developer file.
+  - The log no longer says "received Omega <weapon>" twice for one Omega reward (it was one reward, two lines).
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.70 (kit 10.0.35)".

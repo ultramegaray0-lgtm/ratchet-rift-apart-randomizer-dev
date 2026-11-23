@@ -88,7 +88,7 @@
 --   * Abilities the story gives (Speetle, Trudi, ...) cannot be granted: locations needing
 --     them, and locations whose trigger is not proven (armor finds, collectibles), only ever
 --     hold non-progression rewards.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.29"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["02_rando_generator"] = "10.0.35"   -- the kit check (10_rando_runtime.lua)
 RANDO_GEN = {}
 local G = RANDO_GEN
 G.VERSION = "10.11.0"
@@ -202,8 +202,10 @@ G.DEFAULTS = {
   coords_first_visit = true,      -- hub: progression never on a revisit or the finale, and a planet's
                                   -- Coordinates only where its first visit can be played once found
   -- dev 10.15
-  omega_weapons = false,          -- the 20 vanilla weapons' Omega versions (Challenge Mode / New Game+) join
-                                  -- the item pool as rewards of their own (omega:<weapon>); off: seeds as 10.13
+  omega_weapons = true,           -- the 20 vanilla weapons' Omega versions join the item pool as rewards of their
+                                  -- own (omega:<weapon>); off: seeds as 10.13. v0.62-DEV12: ON by default (round52:
+                                  -- verified in the game). A seed made before with the default (off) is a different
+                                  -- seed now: set omega_weapons = false to keep playing it
   -- v0.62-DEV5
   start_omega = 0,                -- random Omega versions (of the omega_weapons pool) you start with (0-20); the
                                   -- weapon itself is given with it (an Omega needs its weapon, docs/OMEGA.md)
@@ -1458,7 +1460,9 @@ local function attempt(seed_text, s, fp, n, yield)
     end
     local spots = {}
     for _, loc in ipairs(pool) do
-      if not placement[loc.id] and loc.kind ~= "goldbolt" and DB.locations[loc.id].holds ~= "filler" then spots[#spots + 1] = loc.id end
+      -- v0.62-DEV12: never on a Spybot / Lorb (collectible): their pickup events are not bound yet, so the Omega
+      -- might never be given (round52's seed had 5 of 19 there)
+      if not placement[loc.id] and loc.kind ~= "goldbolt" and loc.kind ~= "collectible" and DB.locations[loc.id].holds ~= "filler" then spots[#spots + 1] = loc.id end
     end
     orng.shuffle(spots)
     G.stable_sort(spots, function(a, b)
@@ -1888,6 +1892,7 @@ function G.audit(seed)
     if DB.items[key].category == "omega" then
       local where = seen[key]
       if where and not omega_on[key] then bad(key .. " is placed although omega_weapons is off (or it is excluded)") end
+      if where and where ~= "start" and DB.locations[where] and DB.locations[where].kind == "collectible" then bad(key .. " is on a Spybot / Lorb (" .. where .. ")") end
       if where and where ~= "start" and DB.locations[where] and DB.locations[where].kind == "goldbolt" then bad(key .. " is on a Gold Bolt") end
       if where == "start" and seed.registry[key] ~= "start (chosen)" and seed.registry[key] ~= "start (start_omega)" then
         bad(key .. " starts without being chosen in start_items or start_omega")

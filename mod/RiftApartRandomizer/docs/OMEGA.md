@@ -4,7 +4,9 @@ Challenge Mode (New Game+) sells an **Omega** version of every weapon: it raises
 cap from 5 to 10 and opens new upgrade nodes. The private dev kit now sets `omega_weapons = true` by default, so the seed has the 20 Omega
 versions as **rewards of their own** (`omega:<weapon>`), next to the weapons themselves.
 
-**Nothing of this has run in the game.** The generator, the ownership logic and the save are tested
+**Verified in the game (round52, DEV11):** the weapon records are found, the Omega byte is +0x88 from the
+weapon's item id in a GameWeaponItem component, the randomizer's write takes effect, and six Omega purchases at
+Ms. Zurkon turned that same byte on. (Older text below: "Nothing of this has run in the game.") The generator, the ownership logic and the save are tested
 offline; setting the game's Omega flag is tested only against the simulator, whose memory layout is
 invented. `17_rando_omega.lua` is therefore held back from player packages.
 
@@ -189,3 +191,45 @@ DEV8's walk finished in the game (141 components), but the inventories that Inve
 are not in the hero's component list. They are now resolved by handle through the SceneManager (rando_give.dll v7,
 `O.resolve`), searched first, and arrays of u32 item handles are read as well (`O.records_handles`). The first few items
 GadgetItemAddedEvent names are logged with their class and first bytes (`O.probe_item`) to learn the item layout.
+
+
+## v0.62-DEV10 (kit 10.0.30): round50 - no learning: the game's own type data
+
+Round50 confirmed the DEV9 handle lookup in the game but the search was starved and cut by a level change. DEV10
+stops searching inventories: the weapon records are the scene's components whose class carries the WeaponItemPrius
+type (`O.ddl_find`, through `SceneManager.componentLookups`), and the Omega byte's place is read from that type's live
+field table (`O.weapon_layout`: ItemConfigHash +48, Omega +184 in rivet's DDL dump, +0x88 from the id). So **no
+Challenge Mode purchase is needed**: `O.offset()` answers "the game's type data" as soon as the census has read the
+type, and Omega rewards are written once the weapon is confirmed. Writes need the live field table and a record owned
+by the hero's actor. A purchase now only confirms the byte. `omega_flag_offset` still overrides; learning
+(`state.omega_cal`) is only the fallback when the type-data route finds nothing.
+
+
+## v0.62-DEV11 (kit 10.0.31): round51 - GameWeaponItem, fields in the instance
+
+The DEV10 census ran in the game and found 33 `GameWeaponItem` (and 4 `GameMeleeWeaponItem`) components, whose class
+prius is plain ItemPrius; items keep no prius holder. Weapon items are now taken by class name, the weapon id is found in
+the instance, and the Omega byte (+0x88 from the id, WeaponItemPrius's own order) is trusted only if the neighbouring
+fields check out in (nearly) every weapon record: ItemCount 1, sane ammo floats, a sane Test list, Omega 0/1.
+
+
+## v0.62-DEV12 (kit 10.0.32): round52 - verified
+
+Omega works in the game. The randomizer's Omega Ricochet was applied, and six purchases at Ms. Zurkon confirmed the
+byte. Fixed: the game's own Omegas are forgotten at each load, so another save never inherits them. The status line
+counts the seed's Omega rewards.
+Item pool: `omega_weapons` is ON by default now (G.DEFAULTS), and Omega versions never go to Spybots / Lorbs (their
+pickup events are not bound yet). A seed made with the old default needs `omega_weapons = false` to stay the same.
+
+
+## DEV13 (kit 10.0.33): round53 corrections
+
+- **SelectedCell is not a sanity field.** Weapons with upgrades read 118-216 at id +112; the "< 64" rule made every
+  round53 census untrusted. The trust check is now ItemCount +8 = 1, ammo floats +20/+24, Test list +120, Omega +136
+  = 0/1 (>= 90% of the records, at least 3).
+- **Two sets on the hero.** GameEquipInventory holds the weapons you own; GameOverrideInventory holds copies (ItemCount
+  0 except during some arena challenges). Only GameEquipInventory (else the hero's actor) is written.
+- **Checkpoint loads rebuild item components.** A census or record set from before a `CheckpointTriggeredEvent` with
+  `Loaded=true` is dropped.
+- **Carried-over weapons.** A trusted record with ItemCount 1 and XP > 0 counts as owned: the Omega is set without a
+  prerequisite send.

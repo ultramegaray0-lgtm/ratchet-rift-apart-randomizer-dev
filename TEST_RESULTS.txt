@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.62-DEV9 dev branch (build 10.0.29) - test run 2026-11-22 19:22 UTC
+Rift Apart Randomizer v0.70 dev branch (build 10.0.35) - test run 2026-11-23 16:28 UTC
 Python 3.13.18 on Linux
-ran 901, failures 0, errors 0, skipped 22
+ran 908, failures 0, errors 0, skipped 22
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -401,6 +401,13 @@ test_the_first_item_handles_are_probed_once (tests.test_v062_dev9.SceneInventory
 test_the_inventory_is_resolved_by_handle_and_its_item_handles_read (tests.test_v062_dev9.SceneInventoryTests.test_the_inventory_is_resolved_by_handle_and_its_item_handles_read) ... ok
 test_two_omega_purchases_teach_the_byte_through_item_handles (tests.test_v062_dev9.SceneInventoryTests.test_two_omega_purchases_teach_the_byte_through_item_handles) ... ok
 test_without_the_v7_helper_it_says_why_and_still_walks (tests.test_v062_dev9.SceneInventoryTests.test_without_the_v7_helper_it_says_why_and_still_walks) ... ok
+test_a_load_is_seen_and_ends (tests.test_v070.LoadGuardTests.test_a_load_is_seen_and_ends) ... ok
+test_a_long_gap_counts_as_a_load (tests.test_v070.LoadGuardTests.test_a_long_gap_counts_as_a_load) ... ok
+test_nothing_is_sent_during_a_load (tests.test_v070.LoadGuardTests.test_nothing_is_sent_during_a_load) ... ok
+test_omega_drops_its_addresses_on_a_load (tests.test_v070.LoadGuardTests.test_omega_drops_its_addresses_on_a_load) ... ok
+test_a_hitch (tests.test_v070.OmegaSimTests.test_a_hitch) ... ok
+test_death_in_the_middle_of_the_census (tests.test_v070.OmegaSimTests.test_death_in_the_middle_of_the_census) ... ok
+test_dev13_modes_unchanged (tests.test_v070.OmegaSimTests.test_dev13_modes_unchanged) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -925,6 +932,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 901 tests in 218.173s
+Ran 908 tests in 242.017s
 
 OK (skipped=22)

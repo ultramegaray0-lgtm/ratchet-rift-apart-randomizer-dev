@@ -246,12 +246,12 @@ class KitTests(unittest.TestCase):
     def test_one_version_everywhere(self):
         for p in list((MOD / "scripts").glob("*.lua")) + list(DEV_DIR.glob("*.lua")):
             tags = set(re.findall(r'RANDO_FILES\["[^"]+"\] = "([^"]+)"', p.read_text(encoding="utf-8")))
-            self.assertEqual(tags, {"10.0.29"}, p.name)
+            self.assertEqual(tags, {"10.0.35"}, p.name)
 
     def test_the_banner(self):
         g = Game(settings={"seed": "dev5-banner"})
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT release v0.62-DEV9 (kit 10.0.29)"))
+        self.assertTrue(g.log_has("RANDO-KIT release v0.70 (kit 10.0.35)"))
 
 
 if __name__ == "__main__":

@@ -182,14 +182,14 @@ class Round47MixedInstallTests(unittest.TestCase):
     def test_a_newer_developer_file_names_the_old_scripts_folder(self):
         import tempfile, pathlib
         from harness import DEV_DIR, script_files
-        src = (DEV_DIR / "dev(debug).lua").read_text(encoding="utf-8").replace('RANDO_FILES["dev(debug)"] = "10.0.29"',
+        src = (DEV_DIR / "dev(debug).lua").read_text(encoding="utf-8").replace('RANDO_FILES["dev(debug)"] = "10.0.35"',
                                                                              'RANDO_FILES["dev(debug)"] = "10.0.99"')
         d = pathlib.Path(tempfile.mkdtemp())
         p = d / "dev(debug).lua"
         p.write_text(src, encoding="utf-8")
         g = Game(files=sorted(script_files(release=True) + [p], key=lambda q: q.name))
         g.ready()
-        self.assertTrue(g.log_has("the scripts folder is OLDER than its developer file(s): kit 10.0.29, developer file 10.0.99"),
+        self.assertTrue(g.log_has("the scripts folder is OLDER than its developer file(s): kit 10.0.35, developer file 10.0.99"),
                         [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.log_has("delete from the scripts folder"))
         self.assertTrue(g.note_has("copy the whole new scripts folder"))
@@ -228,11 +228,12 @@ class Round48BudgetTests(unittest.TestCase):
 
     def test_no_job_runs_in_a_busy_frame(self):
         g = Game(before_scripts=lambda gg: gg.lua.execute("SIM.inv_live = true; SIM.inventory_component = false"))
-        g.lua.execute("RANDO_OMEGA.FRAME_ROOM = -1")                        # every frame counts as busy
+        # every frame counts as busy, and (v0.62-DEV10's starvation guard) also as past the hard limit
+        g.lua.execute("RANDO_OMEGA.FRAME_ROOM = -1; RANDO_OMEGA.FRAME_HARD_SAVED = RANDO_OMEGA.FRAME_HARD; RANDO_OMEGA.FRAME_HARD = -1")
         g.ready()
         g.R.grant("weapon:enforcer")
         g.step(2000)
         self.assertFalse(g.log_has("hero component list walked"))
-        g.lua.execute("RANDO_OMEGA.FRAME_ROOM = 0.003")
+        g.lua.execute("RANDO_OMEGA.FRAME_ROOM = 0.003; RANDO_OMEGA.FRAME_HARD = RANDO_OMEGA.FRAME_HARD_SAVED")
         g.step(1500)
         self.assertTrue(g.log_has("hero component list walked"))

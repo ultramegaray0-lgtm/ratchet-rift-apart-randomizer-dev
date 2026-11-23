@@ -89,7 +89,7 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(len(scripts), 16)
         for s in ("16_rando_spawners.lua", "enemy.lua", "17_rando_omega.lua", "15_rando_hub.lua"):
             self.assertIn("GAME_FOLDER/scripts/" + s, files)
-        self.assertTrue(z.name.startswith("Ratchet_Rift_Apart_Randomizer_v0.60_"))
+        self.assertTrue(z.name.startswith("Ratchet_Rift_Apart_Randomizer_v0.70_"))
 
     def test_boss_chaos_and_developer_files_are_never_in_it(self):
         names = zipfile.ZipFile(package()[0]).namelist()
@@ -147,8 +147,8 @@ class PublicDefaultsTests(unittest.TestCase):
     def test_a_new_game_with_the_players_settings(self):
         g = release_game()
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.29"), [l for l in g.logs() if "KIT" in l])
-        self.assertTrue(g.log_has("RANDO-KIT release v0.62-DEV9 (kit 10.0.29)"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.35"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT release v0.70 (kit 10.0.35)"))
         # no option the runtime rejects or does not know (the budget note is information, not a complaint)
         complaints = [l for l in g.logs() if "RANDO-SETTINGS" in l and "scaled down to the" not in l]
         self.assertEqual(complaints, [])
