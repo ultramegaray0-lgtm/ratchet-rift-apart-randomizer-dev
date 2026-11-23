@@ -1,5 +1,5 @@
 [rivet] init
-[rivet] version 2.0.0[rivet] game = E:\Users\Ray\Desktop\Games\Ratchet.and.Clank.Rift.Apart.v2.618.0.0\RiftApart.exe
+[rivet] version 2.0.0[rivet] game = <GAME_FOLDER>\RiftApart.exe
 [loader] mod path mods/default does not exist! skipping.
 [loader] mod path mods/ARSENAL_RESTORED does not exist! skipping.
 [loader] mod path mods/ARSENAL_RESTORED.stage is overstrike stage format.

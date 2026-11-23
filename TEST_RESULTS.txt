@@ -1,4 +1,4 @@
-Rift Apart Randomizer v0.71-DEV1 dev branch (build 10.0.36) - test run 2026-11-23 16:45 UTC
+Rift Apart Randomizer v0.71-DEV1 dev branch (build 10.0.36) - test run 2026-11-23 16:51 UTC
 Python 3.13.18 on Linux
 ran 922, failures 0, errors 0, skipped 22
 
@@ -946,6 +946,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 922 tests in 255.894s
+Ran 922 tests in 273.175s
 
 OK (skipped=22)
