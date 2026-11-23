@@ -1,5 +1,177 @@
 # Changelog
 
+## v0.75 (kit 10.0.39): DEV9 released, and the Lite package (Lua only) for NexusMods
+
+The public v0.75 is v0.71-DEV9 (the user: "the best version so far") with new player defaults, one hub fix, and a second
+package that runs without rando_give.dll and without the companion.
+- DEFAULTS (release/04_rando_settings.lua): planet shuffle OFF (unchanged, the 0 key), Enemy Randomizer OFF (was on; the - key
+  turns it on, the save remembers), Omega weapons ON (omega_weapons = true, was false), Spybots and Lorbs hold rewards
+  (collectibles: generator default, was forced off), Ms. Zurkon's bonus slots on (shop_bonus, DEV3-DEV9). weapon_xp stays off
+  (not seen in the game yet). Code defaults (10_rando_runtime.lua): enemy_compat "all" and enemy_mix_movement false again (DEV8
+  had made "max" the code default; the dev settings file still asks for "max"). Dev settings: enemy_randomizer = false.
+- HUB (15_rando_hub.lua): the trip back to Nefarious City after a finished planet with planet shuffle switched ON in a run past
+  the parade (H.set_shuffle: "the hub starts with your next New Game"). H.finish took the shuffle-on branch, H.go_home's
+  expectation had no mark, and H.on_arrival saw "not started + arriving at the hub" as the hub's START: hub_started, apply_world
+  (travel locks), prime (other planets' missions made active) in the middle of the player's own run. Now H.finish uses the
+  shuffle-off trip while the hub has not started, H.go_home(why, ret) marks a plain return (kept by a retry), H.on_arrival hands
+  such an arrival to H.arrival_off, and a trip back that does not land never calls H.start_failed. Shuffle off and shuffle on
+  with a started hub are unchanged (tests/test_v060.py, tests/test_v075.py HubReturnTests).
+- 17_rando_omega.lua: O.on_vendor_purchase drops a "snapshot" job still queued or running: behind DEV8's "xp" and DEV9's "held"
+  jobs it could read the records AFTER the purchase and replace the read from before it (the purchase then compared with
+  itself; tests/test_v062_dev6 caught it). Only the legacy purchase learning uses it (the game's type data decides since DEV10).
+- 10_rando_runtime.lua: Coordinates say "you can fly to X now" only while planet shuffle runs (a non-hub seed with travel locks
+  too); with it off "mission rewards on X are yours now" (travel is the game's own then).
+- LITE (tools/build_lite_release.py, release_lite/): 12 required scripts + 15_rando_hub.lua, release_lite/04_rando_settings.lua,
+  a rivet.toml that loads no DLL and opens no bridge, README + INSTALLATION. The build refuses any .dll/.exe/.bat/.ps1, the
+  DLL-only scripts (16_rando_spawners, enemy, 17_rando_omega) and boss/chaos/dev files. Runtime options (R.config, not in the
+  fingerprint): lite (start after 120 frames without the companion, seed = "random" falls back to R.LITE_SEED, no planet
+  shuffle: R.planet_shuffle_on() is false and the 0 key says why, Lite messages), bank_rewards = false (R.collect pays at once,
+  no "rewards wait" note), spoiler_log (GEN.spoiler into rivet.log, RANDO-SPOILER, 20 lines a frame). Lite seeds: shop "shuffle"
+  with shop_weapons = 0 (all 15 vendor weapons are also rewards; shop_runtime = false leaves her screen alone), armor, Omega,
+  weapon XP, shop bonus and Arsenal off: 18 weapons + 7 Coordinates + 2 gadgets, 25 of 25 Gold Bolts hold items.
+- 09_rando_real.lua: G.currency_by_node - with no ready helper, Bolts / Raritanium go through route 1: the currency item's id at
+  node+0x60 and the AMOUNT at node+0x68 (the count AddToInventoryAction's handler reads; route 1 always wrote 1 there), fired
+  once, the node put back G.RESTORE_FRAMES later (busy via "node_currency"; a level change restores at once). Never retried once
+  fired, like the helper's currency route. G.WAIT_RESTORE is skipped once the runtime went ahead without the companion
+  (RANDO.unsaved). G.hint names Lite. NOT VERIFIED IN THE GAME: that the node's count is taken as the amount.
+- Tests: the suite had not run on DEV2-DEV9 (82 failures: version pins, the weapon-XP filler unknown to the Python verifier,
+  seeds moved by DEV3/DEV4's shop changes, DEV6's evidence dump, two new events). Pins bumped, the verifier knows filler:xp,
+  test seeds re-picked where the intent was "three planets open at the start". tests/test_v075.py (18). The simulator's node
+  hand-over now reads its count (S.last_count). Simulator only.
+
+## v0.71-DEV9 (kit 10.0.38; dev kit, not released): a shop bonus on a weapon you already own is given directly
+
+ROUND 61 (rivet.log of DEV8; seed clank-pocket-rift-774). The DEV8 shop fix held: one write, "29 weapon slots, 28 changed",
+VERIFY 28 of 28, six bonuses announced. But the save already held every weapon of the seed's shop (the Omega census listed 23
+weapon records with XP: Enforcer 15,807, Bouncer 238,680, Warmonger 1,351,861 ...), and Ms. Zurkon shows an owned weapon as
+owned - nothing can be bought in that slot, which is exactly how the closed slots (Burst Pistol) are closed. No
+PurchaseWeaponEvent came in the whole session, so no bonus was ever paid ("Enforcer = Box Breaker" while you had the Enforcer).
+In a new game the same happens whenever the weapon reaches you before the purchase: an Omega reward sends its weapon first
+("Omega Mr. Fungi - Mr. Fungi added first"), a weapon the shop gave directly.
+- 12_rando_shop.lua: H.owned_tick (every H.OWNED_EVERY = 300 frames, before the tick's early returns): for every unpaid bonus
+  slot, the weapon it sells (H.bonus_sells: H.shown, or the slot's own weapon once the vendor was given up; nothing while the
+  vendor is not known yet) is checked with H.owns: 09_rando_real.lua confirmed / owned (never "failed"), state.shop_given, or
+  RANDO_OMEGA.held. Owned in two looks H.OWNED_CONFIRM (300) frames apart -> rt.collect(lid, "shop bonus: you already own X")
+  with "Ms. Zurkon: you already have the X - Y is yours"; its queued note is dropped. A purchase in between pays first
+  (s.collected), so nothing is paid twice. RANDO-SHOP OWNED lines; bonus_lines tag "[you own it: given soon]".
+- 17_rando_omega.lua: O.held_pass reads every record of the hero's own set (hero_owned): held = the weapon's id, ItemCount 1 and
+  not an empty slot (slot 5000+ with no XP and no ammo). After every census and every O.HELD_EVERY (600) frames (job "held");
+  dropped by every load. rivet.log "RANDO-OMEGA held: N weapon(s) in your inventory: ..." when the list changes.
+- shop_pay_owned (runtime, default true; 04_rando_settings.lua, 10_rando_runtime.lua). Seeds unchanged.
+- Offline: tests/dev9/test_owned_dev9.py (harness vendor, 4 seeds): an owned slot weapon pays its bonus once and only it, not at
+  the first look, "failed" and a one-look ownership pay nothing, RANDO_OMEGA.held pays, a purchase pays once, shop_pay_owned =
+  false pays nothing, every weapon owned pays every bonus once, nothing before the vendor is known; O.held_pass on fake records.
+  tests/dev8 shop / xp / armor / enemy still pass.
+- Not run in the game.
+
+## v0.71-DEV8 (kit 10.0.38; dev kit, not released): the shop is written once, armor phantoms, enemy_compat = "max", weapon XP
+
+ROUND 60 (rivet.log of DEV7 + the DEV8 shop-fix files; seed clank-pocket-rift-774).
+- SHOP (12_rando_shop.lua). The vendor was searched and written four times: the first try ran past the 8 ms frame budget at the
+  slot writes (12_rando_shop.lua:573), BEFORE its mark, and each later try read the weapons already written as the slots' own.
+  The Enforcer's slot (selling the Ricochet) was taken for the Ricochet's slot and given the Void Repulser; the closed slots
+  all read "burst_pistol" and counted once, so the Mr. Fungi, Negatron, Lightning Rod and Drillhound slots were not found:
+  4 of 8 weapons for sale, Bouncer / Cold Snap / Enforcer / Glove of Doom "given directly", 3 of 6 bonuses on closed slots,
+  "prices left as they are" (the price field held other slots' prices). Fixes:
+  - H.orig / H.match_at: every slot write is recorded (address -> the slot's own weapon, the value written) BEFORE it is made,
+    for the session; a search reads such a slot as its own weapon. Prices the same way (H.price_orig). A reloaded config
+    never holds a written value at the same address, so nothing stale is used.
+  - The writes start in a fresh frame (one yield after the search); the check compares with what was read (sl.cur).
+    A slot that already holds the seed's weapon is not written again; a slot that must sell its own weapon is put back.
+  - REROUTE: a seed slot the vendor lacks sells its weapon in one of the vendor's closed slots (earliest first), its bonus
+    and price go with it (H.shown, H.price_key); "given directly" only when no closed slot is left.
+  - Offline: tests/dev8/test_shop_dev8.py (harness vendor, budget kill emulated after 2-24 writes, 5 seeds): memory and
+    stock equal the uninterrupted run; DEV7 fails it (77 failures). Reroute with two missing slots: weapons and bonuses paid.
+- ARMOR (13_rando_armor.lua). The Galactic Ranger helmet (Sargasso pocket dimension, not intercepted) paid Omega Warmonger by
+  polling. At CHK_CPZ_00_INTRO_CINE 16 pieces read owned in one poll and all 16 sources were paid at once. A.MASS (3) or more
+  new pieces in one poll are phantoms (state.armor_phantom; RANDO-ARMOR PHANTOM), cleared when they read not owned again;
+  nothing is polled during a load and A.SETTLE frames after. tests/dev8/test_armor_dev8.py (DEV7: 17 paid; DEV8: 1).
+- ENEMIES (16_rando_spawners.lua). 2,348 spawns, 129 replaced. enemy_compat = "max" (dev default; "all" = DEV7): mixed
+  movement (enemy_mix_movement defaults on in max), V.compat_allows accepts every pair, V.combat_reject only logs
+  ("COMBAT WATCH ... kept"). A pool shark still takes flyers only (r.strict_group). The 5-retry safety net and story boss
+  areas are unchanged. Round 60 estimate: ~400 more spawns eligible (243 "rejected", 40 "no other flyer", walker spawns on
+  levels with a flyer). Not changed: timing ("original despite a change" 756, "spawned before the randomizer read" 214).
+- WEAPON XP (02_rando_generator.lua, 10_rando_runtime.lua, 17_rando_omega.lua). Generator: weapon_xp (default false: not in
+  the fingerprint, 160 seeds identical to DEV7), weapon_xp_percent 25, weapon_xp_min/max 2000/20000; "filler:xp:N" on that
+  share of the currency locations (own stream "#weapon_xp#"; items never move); audit and spoiler know it. Runtime: pay()
+  queues state.xp_pending; O.xp_pass writes WeaponItemPrius.XP (+16 from the id) of a held record (slot < 5000, ItemCount 1)
+  once the layout is trusted - weapon_xp_target "smart" (Omega first, least XP) | "lowest"; read back; a checkpoint load that
+  takes it back is given again (2x). tests/dev8/test_gen_dev8.py, test_xp_dev8.py. Dev settings: weapon_xp = true.
+- Not run in the game.
+
+## v0.71-DEV7 (kit 10.0.38; dev kit, not released): readable bonus notes, shown when you talk to Ms. Zurkon, and item text on her screen
+
+ROUND 59 (DEV6 in the game): the one long corner note showed 2-3 words and was cut off, it came ~20 s into a load, and her screen
+still named only the weapons.
+- 12_rando_shop.lua: H.announce_bonuses queues one short "center" message per bonus (H.msgq / H.pump_notes, 4 s each, ~4.8 s apart).
+  H.watch_signals subscribes the event names that could mean "vendor opened" (VENDOR_SIGNALS, missing ones skipped silently) and shows
+  the notes on the first hit (not twice within 30 s); generic names (interaction, dialog, menu) are only logged (VENDOR-EVIDENCE, max 40).
+  With no vendor signal ever seen, the notes follow a purchase. shop_note_when = "vendor" | "load" | "both".
+- H.rename_tick / H.rename_pair (shop_rename = "desc" | "name" | "probe" | "off"): the weapon item config of a bonus slot gets the
+  bonus item's name text in its description (or name) field; same field type on both sides only, read back, put back when the bonus
+  is paid, applied again once per load. RENAME-PROBE logs the fields of both configs. Not tested in the game.
+- dev(debug).lua: key \ shows the same short notes.
+- Seeds unchanged. Offline test with a stub vendor and configs (notes, signal, swap, restore on purchase): passes. Not run in the game.
+
+## v0.71-DEV6 (kit 10.0.38; dev kit, not released): the shop bonuses are announced even when the vendor is not rewritten
+
+ROUND 58 LOG (rivet.log of DEV5): the bonuses paid (Q-Force boots, Glitch), but no TABLE / VERIFY / BONUS line was logged: the vendor
+was never rewritten, so Ms. Zurkon sold her usual weapons and the bonus note - which only ran after a rewrite - never appeared.
+The vendor screen shows the weapon's own game text, which a script cannot rename.
+- 12_rando_shop.lua: H.maybe_announce names every pair ("Topiary Sprinkler = Q-Force boots") on screen and in rivet.log
+  (RANDO-SHOP BONUS), ~20 s into each of the first 3 loads, with or without a vendor rewrite; paid bonuses are left out.
+- New RANDO-SHOP STATE line (once per load and reason): why the vendor is not rewritten (mode, helper, lookups).
+- The helper-address log block ran under the 8 ms budget and aborted the tick; it is now deferred and under pcall.
+- Seeds unchanged. Not run in the game.
+
+## v0.71-DEV5 (kit 10.0.38; dev kit, not released): the shop bonuses pay; shop evidence moved to later frames
+
+ROUND 57 LOG (rivet.log of DEV4): VERIFY 28 of 28 slots kept the seed's weapon; the purchases (BurstPistol, Dimensionator,
+MrFunGuy) logged "not a weapon of this kit's registry" / "no bonus rides on it", so no bonus was paid. Causes and changes:
+- 12_rando_shop.lua H.weapon_of_purchase: a purchase is matched by WeaponConfig (double, within 4096 of the id) and by the
+  normalized name (config name mrfunguy, key mr_fungi, display name); WEAPON_MRFUNGI was never "wpn_mrfungi_item.config".
+- H.apply: the field dump (EVIDENCE field +0x..), the unknown-entry list, the optional items and the prices run after a
+  frame break, from the pre-write copy of the array. Round 57's prices and EVIDENCE were swallowed by the 8 ms budget.
+- H.apply_prices checks every slot still sells what was written before writing its price.
+- New: H.announce_bonuses (corner note + RANDO-SHOP BONUS lines); shop_show_items = "notify" | "try" | "off" (runtime
+  option, 04_rando_settings.lua). "try" writes gadget / armor bonuses into closed slots by item id (untested, may stop the game).
+- Seeds unchanged from DEV4 (the generator was not touched).
+Offline: tests/harness.py (a fake vendor in memory, lupa) - 36 runs (12 seeds x notify / try / off): slot writes, VERIFY,
+prices, field dump, bonus payment by name and by config number, hosted-item payment. Not run in the game.
+
+## v0.71-DEV2 (kit 10.0.37; dev kit, not released): Omega only on a held weapon, and early Omega for the next test
+
+ROUND 54 LOG (rivet.log of v0.71-DEV1). Both Omega rewards were "applied" (Negatron Collider from the start, Pixelizer from
+an armor pod) and the game was seen holding both flags - but the two weapon records were not alike:
+- Pixelizer (given in Zurkon): item slot +12 = 1005 (the WeaponAddedEvent's WeaponType), XP 317740, ammo 16/16.
+- Negatron Collider (given in the Nefarious City intro; WeaponAddedEvent 1002, "confirmed"): slot 5015, XP 0, ammo 0/0 in
+  every scan of the session. 5000 + n is what every weapon the hero does not hold looks like (drillhound 5016, ...).
+  So the weapon gift of the intro is gone once the game leaves Nefarious City, and the Omega flag was written on its
+  EMPTY record. Every other check passes for an empty record (ItemCount 1, ammo floats, Test list), so none caught it.
+  (The restored Fusion Grenade / Volcanic Eruptor have no known id and cannot be checked in this log.)
+FIX (17_rando_omega.lua, 09_rando_real.lua):
+- O.empty_slot(): slot >= 5000, XP 0, ammo 0. set_flag never writes (or reports "already") on such a record, the keep
+  loops stay quiet about it, read_game_omega does not count it. The reward stays pending, so "Omega X is yours" is only
+  said for a weapon the game holds.
+- O.note_empty(): the first time per load RANDO-OMEGA logs the slot, XP, ammo and 40 bytes of the record (EVIDENCE empty
+  slot ...); after 900 frames it asks RANDO_REAL.regive (new, 09_rando_real.lua: one confirmed weapon queued again, the
+  hub's restore for a single item) - at most 2 sends per weapon and load. A weapon the game still holds answers with
+  nothing new, a lost one is added ("Given back").
+NOT VERIFIED IN THE GAME: that the weapon gift is dropped when the intro ends (the log shows the effect, not the cause),
+that sending it again brings it back, and that slot >= 5000 is empty for every weapon (it is for all 21 records of round54).
+
+TEST SETTINGS (dev defaults in 04_rando_settings.lua; both off elsewhere, the public release is untouched):
+- omega_early = true (generator, a new setting; not in the fingerprint while false, so every other seed is unchanged):
+  the Omega versions are placed on the locations the start alone can reach FIRST (the ones that would give Bolts or
+  Raritanium). Gold Bolts, Spybots, Lorbs, armor and the early weapons keep their items (an Omega on a Gold Bolt is not
+  possible: G.bolt_worthy). 240 seeds (goldbolts_first / spread, on / off) all valid; with it on ~3.4 of ~13.5 early
+  locations hold an Omega (2.5 without).
+- omega_test = 6 (runtime, R.config; 0 = off): a weapon reward of a weapon that has an Omega version arrives AS that
+  Omega version (the weapon first, then its flag) until 6 Omega weapons are held. Works on Gold Bolts, pods, missions
+  and the start. The weapon reward is recorded too, so the weapon met later adds nothing and the Omega is kept.
+  rivet.log: "RANDO-OMEGA-TEST <weapon> arrives as its Omega version".
+Tests: the dev repo's suite was not run for this change (no access in the session); see docs/TESTING.md 2-dev6.
+
 ## v0.71-DEV1 (kit 10.0.36; dev kit, not released): the shop by config pointer, Spybots and Lorbs that pay
 
 SHOP (12_rando_shop.lua, dev settings shop = "shuffle" again). Rounds 17-45 always found an array at +0x48 of

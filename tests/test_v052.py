@@ -111,7 +111,8 @@ class EvidenceTests(unittest.TestCase):
         seed, preset, user = ENG.G.parse_share_code(
             "RA10|kit-bolt-kit-198|balanced|distribution=goldbolts_first,include_arsenal_restored=true,travel_lock=true")
         # v0.62-DEV12: omega_weapons is on by default; a seed made before that keeps its fingerprint with it off
-        s, audit = ENG.generate(seed, dict(py(user), omega_weapons=False), preset)
+        # v0.71-DEV3: the shop bonus (shop_bonus, on by default) moves items: the old seed keeps its fingerprint with it off
+        s, audit = ENG.generate(seed, dict(py(user), omega_weapons=False, shop_bonus=False), preset)
         self.assertEqual(s.fingerprint, "8869cc994ae4")
         self.assertEqual(audit, [])
         for d in py(s)["hub"]["destinations"]:

@@ -132,3 +132,54 @@ The dev settings use `shop = "shuffle"` again. What `rivet.log` shows:
 If the vendor screen still shows her usual weapons after "changed", the vendor copies its stock when a level loads;
 if it shows one weapon and buying gives another, something else names the item too. `shop = "vanilla"` (or
 `shop_runtime = false`) goes back to her usual weapons.
+
+## v0.71-DEV3: shop bonus (2 weapons, 2 Omega, 2 gadgets, 2 armor)
+
+Root cause of the old failure: the item id in each vendor element is a u64 at element +20, which is only 4-byte
+aligned. The search stepped 8 bytes, so it never matched. It now steps 4 bytes and takes the element size from the
+vtable repeats.
+
+shop_bonus = true adds six locations (shop:armor_1/2, shop:gadget_1/2, shop:omega_1/2). Their items come from other
+locations (never one the logic needs; Gold Bolts only with distribution = "spread"). Buying a shop weapon slot pays
+its bonus ("Shop bonus: ..."). The spoiler has a SHOP BONUS block. shop_bonus = false leaves seeds unchanged.
+Only 3 randomizable gadgets exist, so you may get 1 gadget bonus, not 2.
+
+## v0.71-DEV5: why no bonus was ever paid, and the shop items
+
+Round 57 (rivet.log of DEV4): the 28 slot writes held (VERIFY 28 of 28) and Ms. Zurkon sold the seed's weapons, but every
+purchase logged "not a weapon of this kit's registry: no bonus checked". PurchaseWeaponEvent names a weapon WEAPON_MRFUNGI
+while its config is wpn_mrfunguy_item.config; the old lookup built "wpn_" .. name .. "_item.config" and missed it.
+`H.weapon_of_purchase(name, config)` now matches the event's WeaponConfig (a double: id rounded to 2048, so within 4096)
+and then the name with everything but letters and digits dropped, against the config name, the key and the display name.
+
+The field dump, the unknown-entry list and the prices used to run in the frame of the slot writes and were killed by the
+8 ms budget (a budget error inside a pcall is swallowed; the prices line is the one that was logged). They run in the next
+frames now, from the copy of the array read before the seed was written (no memory reads), and each price write is
+checked against the slot first. `RANDO-SHOP EVIDENCE field +0x..` lists, per 4-byte word of the element, the entries that
+differ from the most common value: that is where Price, MissionShow, MissionUnlock, OmegaPrice, OmegaOnly and IsAmmo are.
+
+Four entries of the vendor (index 4, 8, 31, 32 in round 57) are none of the registry's weapons (one is the Dimensionator).
+They are left alone; `EVIDENCE N entries sell something this kit's registry does not know` gives their ids.
+
+shop_show_items (04_rando_settings.lua): "notify" (default) = bonuses ride on the weapon bought, announced; "try" = EXPERIMENT,
+each gadget / armor bonus is also written into a closed slot by its own item id (the closed slots nearest to the open
+ones), the vendor screen may not accept a non-weapon; the purchase event of such a slot carries the item's id and pays
+the item (H.hosted); "off" = nothing announced. Omega bonuses are not hosted: an Omega is a weapon's own flag.
+
+## v0.71-DEV9: a bonus on a weapon you already own
+
+Her screen shows a weapon you already own as owned, and nothing can be bought in that slot (that is how the closed slots work).
+So a bonus riding on a weapon you hold could never be paid - round 61's save held every weapon of the seed's shop. Now, once the
+weapon a bonus slot sells reads as yours in two looks ~5 s apart, the bonus is given directly ("Ms. Zurkon: you already have the
+Enforcer - Box Breaker is yours"). Yours = the randomizer confirmed it, the game showed it (equipped, bought), the shop gave it
+directly, or your weapon records hold it (17_rando_omega.lua, `RANDO-OMEGA held: ...`). A purchase always pays first, never twice.
+`shop_pay_owned = false` waits for a purchase as before. rivet.log: `RANDO-SHOP OWNED ...`.
+
+## v0.71-DEV8: written once, even when a try is cut off
+
+Round 60: the first write to Ms. Zurkon's slots was cut off by rivet_hook's 8 ms frame budget, and the next try read the
+weapons it had written as the slots' own and shuffled them again (only 4 of 8 weapons were for sale). Every slot write is now
+remembered for the session (address, the slot's own weapon, the value written) before it is made, so a later try finds the
+same slots and writes the same stock; prices likewise. A slot of the seed's shop that this vendor lacks sells its weapon - and
+its bonus - in one of the vendor's closed slots (rivet.log: `RANDO-SHOP ... REROUTE`); only with no closed slot left is the
+weapon given directly. Closed slots still show the Burst Pistol you own; `shop_weapons` (0-15) sets how many weapons she sells.

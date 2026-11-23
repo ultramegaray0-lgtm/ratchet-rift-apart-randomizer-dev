@@ -69,3 +69,10 @@ outfit is not a set you can own.
 - `intercepting 27 armor source(s)`, then one fewer for each source collected.
 - `RANDO-ARMOR source <piece> intercepted source:<id>` when a source pays its item.
 - `found by polling` when a piece arrived another way.
+
+## v0.71-DEV8: phantom pieces
+
+Round 60: at a cinematic, 16 pieces read "owned" in one poll without any pickup, and all 16 armor locations were paid at
+once - every piece found afterwards gave nothing. A pickup gives one piece, so 3 or more new pieces in one poll are now
+phantoms: not paid (`RANDO-ARMOR PHANTOM` in rivet.log), and only counted after they read "not owned" again and come back on
+their own. Armor is not polled during a load or for 300 frames after one. A real pickup still pays its location's item.

@@ -195,6 +195,13 @@ def verify(seed):
         if f:
             if loc["kind"] == "goldbolt":
                 probs.append(f"{lid} (a Gold Bolt) holds currency")
+            if f[0] == "xp":
+                # v0.71-DEV8 weapon XP: only with weapon_xp, inside its range (not Bolts / Raritanium)
+                if not s.get("weapon_xp"):
+                    probs.append(f"{lid} holds {it} with weapon_xp = false")
+                elif not s["weapon_xp_min"] <= f[1] <= s["weapon_xp_max"]:
+                    probs.append(f"{lid} gives {f[1]} weapon XP, outside {s['weapon_xp_min']}-{s['weapon_xp_max']}")
+                continue
             if f[0] not in kinds:
                 probs.append(f"{lid} holds {it} with {f[0]} = false")
             elif not s[f[0] + "_min"] <= f[1] <= s[f[0] + "_max"]:

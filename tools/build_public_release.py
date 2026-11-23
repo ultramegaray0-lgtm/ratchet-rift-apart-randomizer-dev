@@ -19,11 +19,11 @@ import shutil
 import sys
 import zipfile
 
-VERSION = "0.70"
-BUILD = "10.0.36"                # the kit in this repo (VERSION is set when a public release is made)
+VERSION = "0.75"
+BUILD = "10.0.39"                # the kit in this repo (VERSION is set when a public release is made)
 NAME = f"Ratchet_Rift_Apart_Randomizer_v{VERSION}_Player_Release"
 ZIP_NAME = NAME + ".zip"
-DATE = (2026, 11, 23, 0, 0, 0)
+DATE = (2026, 11, 24, 0, 0, 0)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KIT = os.path.join(ROOT, "mod", "RiftApartRandomizer")
@@ -35,7 +35,7 @@ REQUIRED = ["01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lu
             "11_rando_campaign.lua", "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua"]
 OPTIONAL = ["15_rando_hub.lua",          # planet shuffle and the trip back to the hub; players may delete it
             "16_rando_spawners.lua", "enemy.lua",   # the Enemy Randomizer (v0.60)
-            "17_rando_omega.lua"]        # Omega weapons (v0.60; omega_weapons = false by default, see KNOWN_ISSUES)
+            "17_rando_omega.lua"]        # Omega weapons (v0.60; omega_weapons = true by default since v0.75)
 # PRIVATE DEV ONLY - never in a player package (v0.60 release rules): the Boss Randomizer and the Chaos Randomizer
 EXCLUDED = ["boss.lua", "chaos.lua"]
 PUBLIC_SETTINGS = os.path.join(REL, "04_rando_settings.lua")

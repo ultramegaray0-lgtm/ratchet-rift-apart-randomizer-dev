@@ -456,7 +456,9 @@ def menu_ids(g):
 
 class HubStartTests(unittest.TestCase):
     def test_new_game_goes_to_the_hub_and_its_story_starts(self):
-        g = to_hub(hub_game())
+        # v0.71-DEV4 (the shop keeps its earliest slots open) changed seed v100-rt: its prologue reward (planet:corson_v) became
+        # Blizar Prime's Coordinates, which opens a fourth planet at the start. v100-rt-1 keeps the three-planet start this checks.
+        g = to_hub(hub_game("v100-rt-1"))
         h = hub(g)
         self.assertTrue(h["started"])
         # v0.51: the hub is Nefarious City, loaded where the game loads its story, with the story on
@@ -924,7 +926,7 @@ class SettingsFileTests(unittest.TestCase):
         self.assertEqual(s["settings"]["campaign_mode"], "planet_shuffle")
         self.assertEqual((s["settings"]["raritanium_min"], s["settings"]["raritanium_max"]), (120, 1000))
         self.assertEqual(verify_hub_seed(s), [])
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.39"))
         self.assertFalse(g.log_has("is from another version"))
         c = g.R.config
         self.assertEqual((c.key_hub, c.key_hub_return, c.key_story), ("]", "[", "/"))

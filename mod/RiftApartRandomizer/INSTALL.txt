@@ -1,7 +1,8 @@
-Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.71-DEV1)
+Ratchet & Clank: Rift Apart Randomizer - DEVELOPMENT KIT (v0.75)
 =================================================================
 This folder is the development kit. Players get the release package instead
-(python tools/build_public_release.py; its docs are in release/).
+(python tools/build_public_release.py; its docs are in release/). The Lite package for NexusMods
+(Lua scripts only: no rando_give.dll, no companion) is python tools/build_lite_release.py (release_lite/).
 
 LAYOUT
   scripts\         the release's Lua scripts (dev 10.35: nothing else). rivet_hook loads scripts\*.lua in
@@ -48,10 +49,10 @@ INSTALL FOR DEVELOPMENT
   4. Copy rivet.toml and rando_give.dll next to RiftApart.exe, and companion\ to
      <game>\rando_companion.
   5. Start rando_companion\Start-Companion.bat, then the game. rivet.log shows
-       RANDO-KIT release v0.71-DEV1 (kit 10.0.36)
-       RANDO-KIT all 12 required scripts are 10.0.36
+       RANDO-KIT release v0.75 (kit 10.0.39)
+       RANDO-KIT all 12 required scripts are 10.0.39
      A dev(name).lua of an older kit left in <game>\scripts is named in a RANDO-ERROR RANDO-KIT line: delete it.
-     HARD STOP: if the banner says any kit other than 10.0.36, do NOT continue;
+     HARD STOP: if the banner says any kit other than 10.0.39, do NOT continue;
      that is not this package. This artifact is one directly extractable ZIP; do not combine it
      with an older folder or nested ZIP.
 
@@ -244,6 +245,119 @@ v0.70 (10.0.35) - DEV14 released
   - The log no longer says "received Omega <weapon>" twice for one Omega reward (it was one reward, two lines).
   - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.70 (kit 10.0.35)".
 
+v0.75 (10.0.39) - DEV9 released, and the Lite package
+  - The same randomizer as DEV9, with these defaults: planet shuffle OFF (unchanged), Enemy Randomizer OFF (- turns it on),
+    Omega weapons ON. Dev settings: enemy_randomizer = false too (enemy_compat "max" stays here; the code default is "all").
+  - The trip back to Nefarious City: with planet shuffle switched ON in a run past the parade (the hub starts with the next
+    New Game), a finished planet's trip back landed as "the hub's start" and started the campaign mid-run (it primed other
+    planets' missions and locked travel). It is now the plain trip back, as with shuffle off.
+  - Omega (legacy purchase learning): a snapshot still queued behind the DEV8/DEV9 jobs is dropped when a purchase comes in.
+  - Coordinates say "you can fly to X now" only while planet shuffle runs (otherwise "mission rewards on X are yours now").
+  - LITE (tools/build_lite_release.py, release_lite/): Lua only, no rando_give.dll, no companion. lite = true starts at once
+    with a fixed seed, bank_rewards = false pays every reward at once, spoiler_log = true writes the spoiler into rivet.log
+    (RANDO-SPOILER), no planet shuffle (the 0 key says so). Rewards arrive through route 1 on Nefarious City; Bolts and
+    Raritanium now go that way too (the node's count, 09_rando_real.lua G.currency_by_node; NOT VERIFIED IN THE GAME).
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.75 (kit 10.0.39)".
+
+v0.71-DEV9 (10.0.38, scripts only) - round 61: a shop bonus on a weapon you already own could never be bought
+  - The SAME SEED as DEV8: no New Game needed (the fix is runtime only).
+  - SHOP: Ms. Zurkon shows a weapon you already own as owned, and nothing can be bought in that slot (that is how her closed
+    slots work). Round 61's save already had the Enforcer, so "Enforcer = Box Breaker" could never be paid - and the same for
+    every bonus slot selling a weapon you held. In a new game it happens when the weapon reaches you another way first (an
+    Omega reward sends its weapon before the Omega, a weapon the shop had to give directly). Now such a bonus is GIVEN TO YOU
+    DIRECTLY: "Ms. Zurkon: you already have the Enforcer - Box Breaker is yours", about 10 s after the weapon reads as yours
+    (it must still be yours 5 s later, so a purchase always pays first). What counts as yours: the randomizer confirmed it in
+    your inventory, the game showed it (equipped / bought), or your weapon records hold it (RANDO-OMEGA "held: ..." in
+    rivet.log). shop_pay_owned = false keeps DEV8's behaviour (waits for a purchase).
+  - rivet.log: "RANDO-SHOP OWNED weapon:enforcer (...) - the slot of ... cannot be bought" and then "... pays the bonus ...
+    directly"; the \ key shows "[you own it: given soon]" for such a slot.
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.71-DEV9 (kit 10.0.38)".
+
+v0.71-DEV8 (10.0.38, scripts only) - round 60: the shop shuffled twice, armor paid 16 pieces at once, few enemies changed
+  - THIS DEV SETTINGS FILE MAKES A DIFFERENT SEED (weapon_xp = true): start a New Game. With weapon_xp = false your DEV7 seed
+    is the same seed (the shop, armor and enemy fixes need no New Game).
+  - SHOP: the first try at Ms. Zurkon was cut off half-way by rivet_hook's 8 ms frame budget, and the next try took the weapons
+    it had already written for the slots' own weapons and shuffled them again. Only 4 of the 8 weapons were for sale, 4 were
+    given to you for free, and the Box Breaker, Glitch and Galactic Ranger helmet bonuses sat on slots showing the Burst Pistol.
+    Every write is now remembered, so a second try writes the same stock, and the writes start in a fresh frame. A seed slot her
+    vendor lacks is sold in one of her closed slots (with its bonus) instead of being given away ("RANDO-SHOP ... REROUTE").
+    Closed slots still show the Burst Pistol you own: with shop_weapons = 8 (the default) she sells 8 weapons; raise
+    shop_weapons (up to 15) for more.
+  - ARMOR: one real pickup (Sargasso's pocket dimension) paid its item (Omega Warmonger); then 16 pieces read "owned" in one poll
+    at a cinematic, with no pickup, and all 16 armor locations were paid at once, so every piece you found later had nothing
+    left to give. 3 or more pieces at once are now "phantoms" (not paid, "RANDO-ARMOR PHANTOM" in rivet.log); a real pickup pays.
+  - ENEMIES: enemy_compat = "max" (new dev default): walkers, flyers and turrets can replace each other, no pair is held back by
+    earlier evidence (Zurkon's pirates were), and a replacement that seems not to die is only logged. If an encounter makes you
+    die or reload 5 times it keeps its original enemies for this seed. "all" brings back DEV7's rules.
+  - WEAPON XP (new, weapon_xp = true): about a quarter of the rewards that would give Bolts or Raritanium give 2,000-20,000
+    weapon XP. It goes to an Omega weapon you hold first (the one with the least XP), otherwise to the weapon you hold with
+    the least XP (weapon_xp_target = "smart" | "lowest"). rivet.log: "RANDO-OMEGA WEAPON-XP <location>: +N XP to <weapon>: a -> b".
+    NOT TESTED IN THE GAME: whether the level shown updates at once or at the next kill.
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.71-DEV8 (kit 10.0.38)".
+
+v0.71-DEV7 (10.0.38, scripts only) - round 59: the shop note was unreadable and came at the wrong time
+  - The long corner note showed 2-3 words. Now ONE SHORT message per bonus in the centre-screen style, one after another
+    (about 5 s apart): "Ms. Zurkon: 3 bonus weapons", then "Lightning Rod = Omega Cold Snap" and so on. Paid bonuses are left out.
+  - WHEN: when you talk to Ms. Zurkon. The game never reported the vendor opening in earlier logs, so the script watches several
+    event names that could mean it. If none exists you still get the notes after your first purchase, and key \ shows them any time.
+    shop_note_when = "vendor" (default) | "load" | "both" in 04_rando_settings.lua.
+  - NAMES ON HER SCREEN (new, shop_rename = "desc"): the weapon of a bonus slot gets the bonus item's text as its DESCRIPTION ("name"
+    = as its NAME, "probe" = only log the config fields, "off"). It is the weapon's own config that is changed, so it works although
+    her vendor is not rewritten. NOT TESTED IN THE GAME: if her screen is unchanged or looks wrong, set "off" and send rivet.log.
+  - Same seed as DEV6: no New Game needed.
+  - SEND BACK rivet.log. Look for: "VENDOR-SIGNAL watching" (which event names exist), "VENDOR-SIGNAL <name>" (it fired when you
+    talked to her), "VENDOR-EVIDENCE" (events seen while you talked, if none fired), "RENAME-PROBE" (the fields of a weapon's
+    config and of the bonus item's) and "RENAME weapon:... now shows ...".
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.71-DEV7 (kit 10.0.38)".
+
+v0.71-DEV6 (10.0.38, scripts only) - shop round 57: the bonus items never paid
+  - ROUND 57 LOG: "BUY WEAPON_MRFUNGI - not a weapon of this kit's registry". The game names a purchase WEAPON_MRFUNGI but
+    the config is wpn_mrfunguy, so NO shop bonus (Omega, gadget, armor) was ever paid. A purchase is now matched by the
+    event's config number as well as by its name (letters and digits only), so every weapon is found. Same seed as DEV4:
+    you do not need a New Game, but a save made with DEV4 may already have bought slots.
+  - The shop now says what it did: a corner note "N of her slots also give a bonus item", and one "RANDO-SHOP BONUS"
+    line per slot in rivet.log (slot sells weapon + bonus item). Buying the weapon shows "Shop bonus: <item>".
+  - FIXED, the evidence was lost: the vendor's field dump and the shop prices ran past rivet_hook's 8 ms frame budget
+    in the same frame as the slot writes (round 57: "prices: ... ran past the 8 ms frame budget"), so the prices never changed
+    and the EVIDENCE lines never appeared. They now run in the frames after the write. Look for
+    "RANDO-SHOP EVIDENCE field +0x..", "EVIDENCE N entries sell something this kit's registry does not know" and
+    "Price at +0x..". Please send rivet.log again.
+  - Round 57 also bought a "Dimensionator": one of 4 vendor entries that are none of the registry's weapons (ARSENAL_RESTORED's).
+    They are left as they are; the log now lists them (index:item id).
+  - EXPERIMENT (off by default): shop_show_items = "try" in 04_rando_settings.lua writes each GADGET / ARMOR bonus into a
+    closed vendor slot by its own item id so the vendor screen may list it. The screen was built for weapons, so this may
+    show a blank slot or STOP THE GAME when Ms. Zurkon opens: if so set it back to "notify" and send rivet.log (the line
+    "RANDO-SHOP ITEMS: writing ..." is the last one before it). With "try", buying that slot pays the item itself.
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.71-DEV7 (kit 10.0.38)".
+
+v0.71-DEV4 (10.0.38, scripts only) - shop round 56 fixes
+  - The slots Ms. Zurkon keeps OPEN are now the earliest ones in her own order (Enforcer, Mr. Fungi, Negatron, Topiary ...),
+    not random ones. Round 56 showed the weapons only after later story unlocks, while the closed slots (they sell the
+    Burst Pistol) filled the screen with pistols. Closed slots are now the late ones. This changes seeds: start a New Game.
+  - Known, not fixed: a closed slot still shows the Burst Pistol; buying it once removes all of them (the game hides a weapon
+    it sold). rivet.log now has "RANDO-SHOP EVIDENCE element of the ... slot" lines (raw bytes of a vendor entry) so the
+    next round can hide closed slots properly. Please send rivet.log again.
+
+v0.71-DEV3 (10.0.38) - the shop sells randomized items (2 weapons, 2 Omega, 2 gadgets, 2 armor)
+  - New setting shop_bonus = true (default). It makes a DIFFERENT SEED: start a New Game.
+  - Spybots, Lorbs and Omega weapons are now on by default; omega_test is 0 (the test is done).
+  - SHOP FIX: Ms. Zurkon's item ids are 4-byte aligned; the old search stepped 8 bytes and never matched.
+  - The vendor screen only lists weapons, so gadget / armor / Omega bonuses are paid when you buy their bonus weapon.
+    Key \ lists the slots; Ctrl+\ twice pays the next bonus by hand (dev kit).
+  - rivet.log: "RANDO-SHOP TABLE", "RANDO-SHOP VERIFY", "BUY ...". See docs/TESTING.md.
+
+v0.71-DEV2 (10.0.37) - Omega on a weapon you really hold, and a test where the early rewards are Omega
+  - These dev settings make a DIFFERENT SEED (omega_early = true): start a New Game.
+  - round54: Omega Negatron Collider (the start) was "applied" to a weapon record the game did not hold (slot 5015,
+    XP 0, ammo 0), so nothing showed in the game. The flag is now written only on a record the game numbers as yours
+    (slot 1001 and up). If the game still has not got the weapon after ~15 s it is sent again. rivet.log:
+    "RANDO-OMEGA ... waits: the record of <weapon> is an empty slot" (+ "EVIDENCE empty slot ...") and "sending <weapon> again".
+  - TEST: omega_test = 6 (04_rando_settings.lua): every weapon reward - Gold Bolts, pods, missions, the start - arrives
+    as its Omega version until you hold 6 Omega weapons. omega_early = true puts the seed's Omega versions on the
+    first locations the start reaches. Look for "RANDO-OMEGA-TEST <weapon> arrives as its Omega version",
+    "Omega <weapon> applied" and, in the game, the Omega name / level cap 10 of the weapon.
+  - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.71-DEV7 (kit 10.0.38)".
+
 v0.71-DEV1 (10.0.36) - the shop again, and Spybots / Lorbs that pay
   - These dev settings make a DIFFERENT SEED than v0.70 (shop = "shuffle", collectibles = true): start a New Game.
   - SHOP: Ms. Zurkon should sell this seed's weapons. Look in rivet.log for "RANDO-SHOP vendor ... changed (... as a
@@ -253,3 +367,10 @@ v0.71-DEV1 (10.0.36) - the shop again, and Spybots / Lorbs that pay
     rivet.log has no RANDO-COLLECTIBLE line, press Ctrl+F2 (Spybot) or Ctrl+F3 (Lorb) twice to pay it by hand -
     and send the log (its "RANDO-COLLECTIBLE event classes watched" line and any RANDO-DISCOVER line from the pickup).
   - INSTALL EVERY TIME as before; rivet.log must show "RANDO-KIT release v0.71-DEV1 (kit 10.0.36)".
+
+
+v0.71-DEV6 (what changed, what to send back)
+  - Her screen shows the weapon's own game name, which a script cannot rename. The bonus is now announced by name on screen (~20 s
+    into a load): "Ms. Zurkon bonus weapons: Topiary Sprinkler = Q-Force boots; ..." and in rivet.log as RANDO-SHOP BONUS lines.
+  - Round 58's log had no TABLE / VERIFY line: the vendor was never rewritten. rivet.log now has a "RANDO-SHOP STATE" line saying
+    why. Send rivet.log again; that line decides the next fix (the vendor rewrite, i.e. a seed's weapons in her slots).

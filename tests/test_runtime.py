@@ -67,7 +67,7 @@ class LoadingTests(unittest.TestCase):
         self.assertTrue(g.log_has("will be retried"))
         g.sim.events_unavailable = False
         g.step(31)
-        self.assertTrue(g.log_has("events subscribed 40/40"), g.logs()[-5:])   # dev 10.15: + 7 of 17_rando_omega; DEV5: + 3 pickups; DEV6: omega +2 -1; v0.71-DEV1: + RuinScriptPickupEvent
+        self.assertTrue(g.log_has("events subscribed 42/42"), g.logs()[-5:])   # dev 10.15: + 7 of 17_rando_omega; DEV5: + 3 pickups; DEV6: omega +2 -1; v0.71-DEV1: + RuinScriptPickupEvent; v0.71-DEV6/7: + vendor purchase and the vendor signal
         g.ready()
         g.fire("MissionStateChangedEvent", MissionName="MIS_NEFCITY_01_X", MissionState=4)
         self.assertTrue(g.state.collected["planet:nefarious_city"])

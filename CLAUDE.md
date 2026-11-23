@@ -37,6 +37,7 @@ This is the **private development source of truth**. The public player repositor
 - `data/`, `tools/` — game database, generators and analysis tools.
 - `tests/` — simulator-based test suite (`tests/sim/rivet_sim.lua`), real-log replays.
 
-Current version: v0.70 (kit 10.0.35), the public beta, built from branch `release-v0.70` (= v0.62-DEV14 released).
-The dev line is `fix/v0.62-dev5` (merged into `main`), now at v0.71-DEV1 (kit 10.0.36). Player ZIP SHA-256: see `DEVELOPMENT_LOG.md` (v0.70 entry).
+Current version: v0.75 (kit 10.0.39), the public beta (= v0.71-DEV9 released), on `main` and branch `release-v0.75`.
+Two packages: the full player ZIP (`tools/build_public_release.py`, docs in `release/`) and the Lite ZIP for NexusMods
+(`tools/build_lite_release.py`, `release_lite/`: Lua scripts only, no DLL, no companion). SHA-256: RatchetRA's RELEASE_NOTES.md.
 Not yet verified in the real game: see `release/KNOWN_ISSUES.md` and `mod/RiftApartRandomizer/docs/KNOWN_ISSUES.md`.

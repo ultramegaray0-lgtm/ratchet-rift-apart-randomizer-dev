@@ -225,6 +225,20 @@ list; then ONE slot of ONE encounter is changed (with read-back and a `verify` o
 anything else is enabled. If there is no such hit, the list is not reachable from the node, and the next
 step is the spawn function itself (rando_give.dll), not more offsets.
 
+## 2-dev6. v0.71-DEV2 (kit 10.0.37): Omega on a held weapon, early Omega test (round55)
+
+Start a New Game with this kit (the seed changes: omega_early = true). Settings: omega_test = 6, start_omega = 1.
+1. Early in Nefarious City / Zurkon, look for `RANDO-OMEGA-TEST <weapon> arrives as its Omega version` (each Gold Bolt,
+   pod or mission that pays a weapon, up to 6 Omega weapons) and `Omega <weapon> applied`.
+2. IN THE GAME: open the weapon wheel / upgrade screen of each. An Omega weapon shows its Omega name and a level cap of
+   10 (docs/OMEGA.md). Say which weapons are Omega, and whether any is missing from the wheel.
+3. The new guard: `RANDO-OMEGA ... waits: the record of <weapon> is an empty slot` means the game does not hold that weapon.
+   It is followed by `EVIDENCE empty slot ...` (send it) and, 15 s later, `sending <weapon> again`. Then either
+   `Given back` / `applied` (fixed) or the same wait again (the weapon cannot be given there).
+4. Check the Negatron Collider (the start Omega) after the Nefarious City intro is over: is it in the wheel?
+5. Die once and retry: the Omega flags must still show `the game holds <weapon> as Omega` after the load.
+6. To go back to the normal seed: omega_early = false, omega_test = 0 in 04_rando_settings.lua.
+
 ## 2-dev5. Dev 10.15 (kit 10.0.11): Omega weapons (gameplay test plan)
 
 Needs a Challenge Mode save (finish the story once) and the developer kit (`17_rando_omega.lua`).
@@ -397,3 +411,23 @@ rivet.log afterwards. Each step names the log line that shows it worked.
 - a C compiler, for the DLL core test;
 - clang + lld-link + llvm-dlltool, for the byte-for-byte DLL rebuild;
 - git history, for the regression tests.
+
+## 2-dev7. v0.71-DEV3 (kit 10.0.38): the shop sells randomized items
+
+1. New Game. rivet.log: "RANDO-SHOP TABLE", "vendor ... N weapon slots, M changed", then a "RANDO-SHOP VERIFY" line.
+2. Open Ms. Zurkon: compare the weapons with the spoiler SHOP / SHOP BONUS section.
+3. Press \ (dev kit) to list the bonuses. Buy a bonus weapon: expect a "BUY ..." log line and "Shop bonus: ...".
+4. Ctrl+\ twice pays the next bonus without a purchase (tests the grant).
+5. If the vendor still shows vanilla weapons, send rivet.log (VERIFY says whether the stock was reset).
+6. Prices may stay vanilla if the price offset does not match.
+
+## 2-dev8. v0.71-DEV5 (kit 10.0.38): the shop bonuses pay
+
+1. rivet.log: "RANDO-KIT release v0.71-DEV5". Open Ms. Zurkon once.
+2. "RANDO-SHOP BONUS <slot> sells <weapon> + <item>" lines (one per bonus) and the corner note.
+3. Buy the weapon of a bonus slot: expect "BUY ... (by config) in the slot of ... - pays the bonus shop:..." and the
+   message "Shop bonus: <item>". Check the item arrives (gadget, armor piece, Omega flag).
+4. "RANDO-SHOP EVIDENCE field +0x.." lines, "EVIDENCE N entries sell something ..." and "Price at +0x.. (u32, N slots ..)":
+   send the whole rivet.log. Check her prices on the screen against the spoiler.
+5. EXPERIMENT: shop_show_items = "try", restart, New Game not needed. Does a closed slot list a gadget / armor piece? Buying it
+   should log "BUY ... the slot that shows <item> - pays shop:..". If the game stops when she opens, set "notify" again.

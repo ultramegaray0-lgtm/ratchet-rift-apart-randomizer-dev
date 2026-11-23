@@ -1,6 +1,6 @@
-Rift Apart Randomizer v0.71-DEV1 dev branch (build 10.0.36) - test run 2026-11-23 16:51 UTC
+Rift Apart Randomizer v0.75 (build 10.0.39) - test run 2026-11-23 23:36 UTC
 Python 3.13.18 on Linux
-ran 922, failures 0, errors 0, skipped 22
+ran 940, failures 0, errors 0, skipped 23
 
 test_campaign_presets (tests.test_campaign.BatchTests.test_campaign_presets) ... ok
 test_random_settings_with_campaigns (tests.test_campaign.BatchTests.test_random_settings_with_campaigns) ... ok
@@ -422,6 +422,24 @@ test_ids_still_work_as_before (tests.test_v071_dev1.ShopPointerTests.test_ids_st
 test_inline_elements_with_config_pointers_are_changed (tests.test_v071_dev1.ShopPointerTests.test_inline_elements_with_config_pointers_are_changed) ... ok
 test_nothing_found_logs_the_evidence_once (tests.test_v071_dev1.ShopPointerTests.test_nothing_found_logs_the_evidence_once) ... ok
 test_slot_objects_with_config_pointers_are_changed (tests.test_v071_dev1.ShopPointerTests.test_slot_objects_with_config_pointers_are_changed) ... ok
+test_the_developer_settings_file_has_the_enemy_randomizer_off_too (tests.test_v075.DefaultsTests.test_the_developer_settings_file_has_the_enemy_randomizer_off_too) ... ok
+test_the_kit_code_defaults (tests.test_v075.DefaultsTests.test_the_kit_code_defaults) ... ok
+test_the_release_banner (tests.test_v075.DefaultsTests.test_the_release_banner) ... ok
+test_planet_shuffle_off (tests.test_v075.HubReturnTests.test_planet_shuffle_off) ... ok
+test_planet_shuffle_on (tests.test_v075.HubReturnTests.test_planet_shuffle_on) ... ok
+test_switched_on_past_the_parade_it_is_a_plain_trip_back (tests.test_v075.HubReturnTests.test_switched_on_past_the_parade_it_is_a_plain_trip_back) ... ok
+test_no_dll_no_companion_no_dll_only_script (tests.test_v075.LitePackageTests.test_no_dll_no_companion_no_dll_only_script) ... ok
+test_the_build_refuses_a_dll_or_a_companion (tests.test_v075.LitePackageTests.test_the_build_refuses_a_dll_or_a_companion) ... ok
+test_the_same_inputs_give_the_same_zip (tests.test_v075.LitePackageTests.test_the_same_inputs_give_the_same_zip) ... ok
+test_a_random_seed_falls_back_to_the_fixed_one (tests.test_v075.LiteTests.test_a_random_seed_falls_back_to_the_fixed_one) ... ok
+test_bolts_and_raritanium_go_through_the_node_with_their_amount (tests.test_v075.LiteTests.test_bolts_and_raritanium_go_through_the_node_with_their_amount) ... ok
+test_rewards_wait_on_nefarious_city_and_never_for_coordinates (tests.test_v075.LiteTests.test_rewards_wait_on_nefarious_city_and_never_for_coordinates) ... ok
+test_starts_without_the_companion_and_without_the_dll (tests.test_v075.LiteTests.test_starts_without_the_companion_and_without_the_dll) ... ok
+test_the_spoiler_goes_into_rivet_log (tests.test_v075.LiteTests.test_the_spoiler_goes_into_rivet_log) ... ok
+test_the_start_arrives_through_the_node (tests.test_v075.LiteTests.test_the_start_arrives_through_the_node) ... ok
+test_the_trip_back_to_the_hub (tests.test_v075.LiteTests.test_the_trip_back_to_the_hub) ... ok
+test_the_zero_key_says_planet_shuffle_is_the_full_releases (tests.test_v075.LiteTests.test_the_zero_key_says_planet_shuffle_is_the_full_releases) ... ok
+test_without_a_node_rewards_wait_with_a_lite_hint (tests.test_v075.LiteTests.test_without_a_node_rewards_wait_with_a_lite_hint) ... ok
 test_campaign_with_missing_missions (tests.test_v100.CampaignTests.test_campaign_with_missing_missions) ... ok
 test_campaigns_to_the_finale (tests.test_v100.CampaignTests.test_campaigns_to_the_finale) ... ok
 test_round23_hashes_are_found_in_the_log (tests.test_v100.CheckpointNameTests.test_round23_hashes_are_found_in_the_log) ... ok
@@ -553,7 +571,7 @@ test_without_the_shared_layer (tests.test_v1013.RemovalTests.test_without_the_sh
 test_build_data_reproduces_the_data (tests.test_v1015.DataTests.test_build_data_reproduces_the_data) ... ok
 test_twenty_omega_items_one_per_vanilla_weapon (tests.test_v1015.DataTests.test_twenty_omega_items_one_per_vanilla_weapon) ... ok
 test_audit_rejects_misplaced_omegas (tests.test_v1015.GeneratorTests.test_audit_rejects_misplaced_omegas) ... ok
-test_explicit_off_every_seed_is_the_1013_seed (tests.test_v1015.GeneratorTests.test_explicit_off_every_seed_is_the_1013_seed) ... ok
+test_explicit_off_every_seed_is_the_1013_seed (tests.test_v1015.GeneratorTests.test_explicit_off_every_seed_is_the_1013_seed) ... skipped 'git history with dev 10.13 not available'
 test_on_keeps_the_seed_and_adds_the_omegas_where_currency_was (tests.test_v1015.GeneratorTests.test_on_keeps_the_seed_and_adds_the_omegas_where_currency_was) ... ok
 test_on_places_each_omega_once_and_passes_the_audit (tests.test_v1015.GeneratorTests.test_on_places_each_omega_once_and_passes_the_audit) ... ok
 test_private_dev_settings_enable_omega_by_default (tests.test_v1015.GeneratorTests.test_private_dev_settings_enable_omega_by_default) ... ok
@@ -579,7 +597,7 @@ test_merge_keeps_the_furthest_omega_status (tests.test_v1015.PersistenceTests.te
 test_new_game_plus_keeps_the_games_own_omegas (tests.test_v1015.PersistenceTests.test_new_game_plus_keeps_the_games_own_omegas) ... ok
 test_restore_inventory_sends_cannot_downgrade (tests.test_v1015.PersistenceTests.test_restore_inventory_sends_cannot_downgrade) ... ok
 test_save_and_load_keep_the_tiers (tests.test_v1015.PersistenceTests.test_save_and_load_keep_the_tiers) ... ok
-test_17_ships_in_v060_with_omega_off_by_default (tests.test_v1015.ReleaseTests.test_17_ships_in_v060_with_omega_off_by_default) ... ok
+test_17_ships_and_omega_is_on_by_default_since_v075 (tests.test_v1015.ReleaseTests.test_17_ships_and_omega_is_on_by_default_since_v075) ... ok
 test_omega_seed_locations_pay_their_omega (tests.test_v1015.SeedTests.test_omega_seed_locations_pay_their_omega) ... ok
 test_an_omega_in_start_items_comes_with_its_weapon (tests.test_v1015.StartTests.test_an_omega_in_start_items_comes_with_its_weapon) ... ok
 test_a_census_stopped_by_the_budget_starts_again (tests.test_v1017.FrameBudgetTests.test_a_census_stopped_by_the_budget_starts_again) ... ok
@@ -946,6 +964,6 @@ test_new_game_plays_the_prologue_then_nefarious_city (tests.test_v90.StoryStartT
 test_the_planet_menu_still_locks_planets_with_levels (tests.test_v90.StoryStartTests.test_the_planet_menu_still_locks_planets_with_levels) ... ok
 
 ----------------------------------------------------------------------
-Ran 922 tests in 273.175s
+Ran 940 tests in 284.644s
 
-OK (skipped=22)
+OK (skipped=23)

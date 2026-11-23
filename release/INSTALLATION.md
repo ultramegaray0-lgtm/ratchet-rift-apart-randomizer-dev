@@ -1,4 +1,4 @@
-# Installation: Rift Apart Randomizer v0.70
+# Installation: Rift Apart Randomizer v0.75
 
 About 10 minutes. No programming tools needed.
 

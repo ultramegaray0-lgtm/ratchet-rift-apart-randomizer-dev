@@ -131,7 +131,8 @@ class TheStoryTests(unittest.TestCase):
     def test_the_prologue_ends_only_on_nefarious_city(self):
         # v0.51's order, kept by hub_prologue_timing = "after" (v0.52's default ends it before the
         # city's story starts: tests/test_v052.py)
-        g = to_hub(hub_game("v051-prologue", {"hub_prologue_timing": "after"}))
+        # v0.71-DEV4 changed seed v051-prologue (its prologue reward opens Cordelion): v051-prologue-1 keeps the three-planet start
+        g = to_hub(hub_game("v051-prologue-1", {"hub_prologue_timing": "after"}))
         arrived = log_index(g, "RANDO-CHECKPOINT\tCHK_NEFCITY_START")
         ended = log_index(g, "prologue:\tMIS_INTRO\twritten Complete Finished")
         self.assertIsNotNone(ended)

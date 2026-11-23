@@ -72,7 +72,7 @@ class ReleaseFilesTests(unittest.TestCase):
         g = Game(release=True, settings={"seed": "v055-release"}, dll_version=6)
         self.assertEqual(g.load_errors, [])
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.39"), [l for l in g.logs() if "KIT" in l])
         self.assertFalse(g.log_has("developer files loaded"))
         self.assertFalse(g.log_has("RANDO-ERROR"))
         for name in ("RANDO_DEV_KEYS", "RANDO_TEST_TRAVEL", "RANDO_TEST_MODE", "RANDO_PROBE", "RANDO_VTABLES"):
@@ -311,7 +311,7 @@ class HubAbsentTests(unittest.TestCase):
         self.assertIsNone(g.g.RANDO_HUB)
         g.companion_restore()
         g.step(3)
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36 (15_rando_hub not installed)"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.39 (15_rando_hub not installed)"))
         self.assertTrue(g.seed.hub)                           # the seed is the same seed
         self.assertFalse(g.R.planet_shuffle_on())
         parade(g)
@@ -366,7 +366,8 @@ class TestTravelAbsentTests(unittest.TestCase):
         g.ready()
         g.R.grant("access:savali")
         self.assertTrue(g.state.access.savali)
-        self.assertTrue(g.note_has("you can fly to Savali now"))
+        # v0.75: with planet shuffle off travel is the game's own, so Coordinates are announced for what they do there
+        self.assertTrue(g.note_has("mission rewards on Savali are yours now"))
 
 
 class PackageTests(unittest.TestCase):

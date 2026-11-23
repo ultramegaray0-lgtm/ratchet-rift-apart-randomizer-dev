@@ -53,7 +53,7 @@ class ShopPointerTests(unittest.TestCase):
         self.assertTrue(g.log_has("weapon configs in memory:"))
         check_slots(self, g)
         self.assertTrue(g.log_has("Price at +0x18"))
-        self.assertFalse(g.log_has("RANDO-SHOP\tEVIDENCE"))
+        # v0.71-DEV6: the field dump (EVIDENCE) is logged after every vendor write, so its presence says nothing here
         self.assertFalse([l for l in g.logs() if "RANDO-ERROR" in l])
 
     def test_slot_objects_with_config_pointers_are_changed(self):

@@ -1,4 +1,4 @@
-# Ratchet & Clank: Rift Apart Randomizer v0.70 (beta)
+# Ratchet & Clank: Rift Apart Randomizer v0.75 (beta)
 
 A randomizer for the PC version of Ratchet & Clank: Rift Apart. Weapons, gadgets, armor and
 planet Coordinates are shuffled across Gold Bolts, story missions, side activities, armor pods
@@ -7,16 +7,23 @@ finished.
 
 This is an unofficial fan mod. It is a beta: please report problems.
 
-## New in v0.70
+## New in v0.75
 
-- **No more crash when you die, retry a checkpoint or load a save.** During every load the randomizer
-  now stops reading the game's memory until the load is over (`RANDO-LOAD` lines in `rivet.log`).
-- **Omega weapons work in the game:** an Omega reward now turns your weapon into its Omega version
-  (seen in the developer's game: "Omega Ricochet is yours"). Still off by default, see below.
-- Omega purchases at Ms. Zurkon are recognized, and the Omegas of one save are no longer copied
-  into another save you load.
-- Enemy Randomizer: more of Ardolis' enemies are recognized, and pool sharks are never used as
-  replacements.
+- **Omega weapons are on by default.** The 20 Omega versions are rewards of their own, and finding
+  one turns your weapon into its Omega version in the game.
+- **The Enemy Randomizer is off by default.** Press **-** to turn it on (your save remembers).
+- **Spybots and Lorbs give rewards** when you pick them up.
+- **Ms. Zurkon's bonus slots:** six of her weapon slots also give a bonus item (2 Omega versions,
+  2 gadgets, 2 armor pieces) when you buy the weapon in them. She tells you which when you talk to
+  her. If you already own that weapon, the bonus is given to you directly.
+- Her shop now really sells the seed's weapons (she keeps her earliest slots open; the closed slots'
+  weapons are rewards elsewhere).
+- **Back to Nefarious City** after every planet, with planet shuffle on and off. Fixed: turning
+  planet shuffle on in the middle of a run no longer starts the hub on the next trip back.
+- Armor: picking up several pieces at once (a cutscene that reports them all) no longer pays all
+  armor rewards at once.
+- Also new: a **Lite** version (Lua scripts only, no DLL, no companion) for trying the randomizer
+  first. It is a separate download.
 
 ## What you need
 
@@ -34,8 +41,8 @@ Install steps: **INSTALLATION.md**.
 2. Start the game and choose **New Game** on a spare save slot.
 3. The screen shows your seed, then your starting items. Play the game: Gold Bolts, story
    missions, side activities and armor pods now give the seed's items.
-4. **Coordinates** are items too. Rewards on a planet you don't hold Coordinates for are kept
-   until you find them.
+4. **Coordinates** are items too. Mission rewards on a planet you don't hold Coordinates for are
+   kept until you find them (Gold Bolts always pay at once).
 
 ### Back to the hub after every planet
 
@@ -54,14 +61,14 @@ Press **0** in the game to turn planet shuffle on or off. Your choice is saved.
   play them in any order with the ship's planet menu. Turn it on during the opening parade of a
   New Game. If you turn it on later, it starts with your next New Game.
 
-### Enemy Randomizer (on by default)
+### Enemy Randomizer (off by default)
 
 Regular enemies become other regular enemies that are loaded on the same level (bosses, story
 bosses, friendly bots and NPCs are never changed). A replacement that turns out not to be killable
 is put back. The game can only use enemies loaded where you are, so in many fights the enemies come
 from the same faction, and some story fights are not changed yet (see KNOWN_ISSUES.md).
 
-- **-** turns the Enemy Randomizer on or off (saved).
+- **-** turns the Enemy Randomizer on or off (saved). It is off in a new save.
 - **Ctrl+-** shows what it changed where you are.
 
 ### Keys
@@ -88,8 +95,10 @@ The main ones:
 | `shop_weapons` | how many weapons Ms. Zurkon sells (0-15) |
 | `start_weapons`, `start_gadgets` | what you start with |
 | `exclude` | items to leave out |
-| `enemy_randomizer` | `true` (default) or `false`: the start of a save that never used the **-** key |
-| `omega_weapons` | `false` (default). `true`: the 20 Omega versions become rewards (beta, see below) |
+| `enemy_randomizer` | `false` (default) or `true`: the start of a save that never used the **-** key |
+| `omega_weapons` | `true` (default): the 20 Omega versions are rewards. `false`: none |
+| `collectibles` | `true` (default): Spybots and Lorbs give rewards |
+| `shop_bonus` | `true` (default): six of Ms. Zurkon's slots also give a bonus item |
 | `hub_auto_return` | `true` (default): taken back to Nefarious City after each planet |
 
 Changing the seed or an option makes a new seed: start it with New Game.
@@ -101,13 +110,13 @@ Changing the seed or an option makes a new seed: start it with New Game.
 - Spoiler log: `rando_companion\randomizer_saves\spoilers\` (only open it if you want spoilers).
 - New Game starts the seed over.
 
-## Omega weapons (optional, beta)
+## Omega weapons (on by default)
 
-With `omega_weapons = true` the 20 Omega versions (Challenge Mode / New Game+) become rewards of
-their own. An Omega found before its weapon also gives you the weapon; the weapon found later never
-takes the Omega away, and nothing is given twice. Since v0.70 the reward really turns your weapon into
-its Omega version in the game (a few seconds after a load the screen says **Randomizer: Omega
-ready**). It is still off by default so your seeds stay the same; turning it on changes the seed.
+The 20 Omega versions are rewards of their own. An Omega found before its weapon also gives you
+the weapon; the weapon found later never takes the Omega away, and nothing is given twice. The
+reward really turns your weapon into its Omega version in the game: a few seconds after each load
+the screen says **Randomizer: Omega ready**, and Omega rewards are set from then on.
+`omega_weapons = false` leaves them out (a different seed). `start_omega = 1` starts you with one.
 
 ## Optional: ARSENAL_RESTORED
 
@@ -117,7 +126,7 @@ It is not needed. To install its rivet_hook version, drag its zip onto
 
 ## Help
 
-See **TROUBLESHOOTING.md**. When you report a problem, include the mod version (v0.70), your game
+See **TROUBLESHOOTING.md**. When you report a problem, include the mod version (v0.75), your game
 version and `rivet.log` from the game folder. Remove your Windows user name from any path in it
 first.
 

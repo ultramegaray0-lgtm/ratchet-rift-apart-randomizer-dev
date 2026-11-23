@@ -5,7 +5,8 @@ settings file - what a player installs, not the repo's developer kit.
 
   * PackageTests: exactly the approved files; Boss / Chaos / developer files absent; v7 DLL; the Arsenal launcher.
   * ExclusionTests: the package's scripts, run: no Boss or Chaos Randomizer, whatever the settings or keys say.
-  * PublicDefaultsTests: Enemy Randomizer on, Omega off, Spybots / Lorbs hold nothing, no settings warning.
+  * PublicDefaultsTests: v0.75 - Enemy Randomizer OFF, Omega weapons ON, Spybots / Lorbs hold rewards, planet shuffle off,
+    the trip back to the hub on; no settings warning. (v0.60-v0.70: Enemy on, Omega off, collectibles off.)
   * OmegaReleaseTests: Omega rewards in both acquisition orders and New Game+ with the package's scripts
     (omega_weapons = true and the simulator's invented Omega byte - SIMULATOR ONLY).
   * ArsenalLauncherTests: the launcher points at its own script and never overwrites a packaged script;
@@ -89,7 +90,7 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(len(scripts), 16)
         for s in ("16_rando_spawners.lua", "enemy.lua", "17_rando_omega.lua", "15_rando_hub.lua"):
             self.assertIn("GAME_FOLDER/scripts/" + s, files)
-        self.assertTrue(z.name.startswith("Ratchet_Rift_Apart_Randomizer_v0.70_"))
+        self.assertTrue(z.name.startswith("Ratchet_Rift_Apart_Randomizer_v0.75_"))
 
     def test_boss_chaos_and_developer_files_are_never_in_it(self):
         names = zipfile.ZipFile(package()[0]).namelist()
@@ -147,24 +148,27 @@ class PublicDefaultsTests(unittest.TestCase):
     def test_a_new_game_with_the_players_settings(self):
         g = release_game()
         g.ready()
-        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.36"), [l for l in g.logs() if "KIT" in l])
-        self.assertTrue(g.log_has("RANDO-KIT release v0.71-DEV1 (kit 10.0.36)"))
+        self.assertTrue(g.log_has("RANDO-KIT all 12 required scripts are 10.0.39"), [l for l in g.logs() if "KIT" in l])
+        self.assertTrue(g.log_has("RANDO-KIT release v0.75 (kit 10.0.39)"))
         # no option the runtime rejects or does not know (the budget note is information, not a complaint)
         complaints = [l for l in g.logs() if "RANDO-SETTINGS" in l and "scaled down to the" not in l]
         self.assertEqual(complaints, [])
         self.assertFalse(g.log_has("RANDO-ERROR"), [l for l in g.logs() if "RANDO-ERROR" in l][:3])
         self.assertFalse(g.log_has("developer files loaded"))
-        self.assertTrue(g.lua.eval("RANDO_ENEMY.enabled()"))
+        self.assertFalse(g.lua.eval("RANDO_ENEMY.enabled()"))                 # v0.75: off by default
+        self.assertTrue(g.log_has("RANDO-ENEMY\tinstalled (OFF until the save says otherwise)"), [l for l in g.logs() if "RANDO-ENEMY" in l][:3])
         self.assertFalse(g.lua.eval("RANDO.config.enemy_notify"))
         self.assertEqual(g.lua.eval("RANDO.config.enemy_compat"), "all")
         self.assertFalse(g.lua.eval("RANDO.config.enemy_mix_movement"))
-        self.assertFalse(g.seed.settings.omega_weapons)
-        self.assertFalse(g.seed.settings.collectibles)
+        # v0.75: Omega weapons on (they are in the item pool), Spybots / Lorbs hold rewards
+        self.assertTrue(g.seed.settings.omega_weapons)
+        self.assertTrue(g.seed.settings.collectibles)
+        self.assertFalse(g.seed.settings.weapon_xp)
         items = {g.seed.locations[lid].item for lid in g.lua.eval("(function() local t = {} for k in pairs(RANDO_SEED.locations) do t[#t + 1] = k end return t end)()").values()}
-        self.assertFalse([i for i in items if i and str(i).startswith("omega:")])
+        self.assertTrue([i for i in items if i and str(i).startswith("omega:")])
         held = [lid for lid in g.lua.eval("(function() local t = {} for k, l in pairs(RANDO_SEED.locations) do if l.item then t[#t + 1] = k end end return t end)()").values()
                 if g.data.locations[lid].kind in ("spybot", "lorb", "collectible")]
-        self.assertEqual(held, [])
+        self.assertTrue(held)
         self.assertTrue(g.lua.eval("RANDO_HUB.returns()"))
         self.assertFalse(g.lua.eval("RANDO.planet_shuffle_on()"))
 

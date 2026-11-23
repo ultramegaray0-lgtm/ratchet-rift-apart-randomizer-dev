@@ -816,6 +816,9 @@ function rivet.signal(component, plug)
   local n = node_by_comp(component)
   if not n then raise("no such node") end
   if n.class == "AddToInventoryAction" and plug == "In" then
+    -- v0.75: the handler gives [+0x60] item x [+0x68] count (route 1 writes count 1 for weapons and gadgets, the amount for
+    -- Bolts / Raritanium in the Lite package). SIMULATED like the helper's message: a count is the currency amount.
+    S.last_count = S.get_u32(n.addr + 0x68)
     S.give(S.get_hex_id(n.addr + 0x60), "node")
   end
   return true

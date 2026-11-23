@@ -233,3 +233,22 @@ pickup events are not bound yet). A seed made with the old default needs `omega_
   `Loaded=true` is dropped.
 - **Carried-over weapons.** A trusted record with ItemCount 1 and XP > 0 counts as owned: the Omega is set without a
   prerequisite send.
+
+
+## v0.71-DEV2 (kit 10.0.37): an empty record is never written; early Omega for the test
+
+round54 wrote the Omega flag of Negatron Collider (a start gift) onto a record the game did not hold:
+
+| | slot (+12) | XP (+16) | ammo (+24) |
+|---|---|---|---|
+| Pixelizer, given in Zurkon (event 1005) | 1005 | 317740 | 16 / 16 |
+| Negatron Collider, given in the intro (event 1002) | **5015** | 0 | 0 / 0 |
+
+The game numbers the weapons the hero owns from 1001 (the WeaponType of `WeaponAddedEvent`); every other record keeps
+5000 + n. `O.empty_slot` (slot >= 5000, XP 0, ammo 0) is now checked before any write and any "applied". A weapon whose
+record stays empty after the game said "added" is sent again after 900 frames (`RANDO_REAL.regive`, at most twice per load).
+The likely cause (not proven): what the randomizer hands over during the Nefarious City intro does not survive the intro.
+
+Test settings (dev defaults): `omega_early = true` (generator: the Omega versions go on the first locations the start can
+reach, never on Gold Bolts / Spybots / Lorbs) and `omega_test = 6` (runtime: weapon rewards arrive as their Omega version
+until 6 Omega weapons are held). The spoiler still lists weapon:x for a reward that `omega_test` turns into Omega.

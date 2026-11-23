@@ -29,7 +29,7 @@
 --   probe       script-node probe (NUMPAD3-9) with its data (vtables, item ids)              OFF: research only
 --   spawnprobe  read-only spawner evidence (RANDO-SPAWNPROBE)            OFF: it can exceed the 8 ms frame budget
 --   spawnproof  controlled enemy replacements on Zurkon (RANDO-SPAWNPROOF) OFF: stands down while the Enemy Randomizer is on
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(debug)"] = "10.0.36"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["dev(debug)"] = "10.0.39"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_DEV_DEBUG = RANDO_DEV_DEBUG or {}
 local DBG = RANDO_DEV_DEBUG
@@ -331,6 +331,7 @@ DBG.section("keys", function()
 --   '  (F12)  campaign director: travel to the next visit (experimental mission orders only)
 --   F2        Spybots: paid / total and the next reward   Ctrl+F2 twice  pay a Spybot pickup the game did not report
 --   F3        Lorbs: the same                             Ctrl+F3 twice  pay a Lorb pickup the game did not report
+--   \         Ms. Zurkon's shop bonus: slots and bonuses  Ctrl+\ twice  pay the next shop bonus without buying (v0.71-DEV3)
 -- The F keys in brackets work as well while legacy_f_keys = true. Key names are settings
 -- (key_status, key_hub, key_hub_return, key_story, key_campaign in 04_rando_settings.lua).
 -- (dev(keys).lua's own kit stamp: dev(debug).lua carries one for all)
@@ -381,6 +382,31 @@ local function collectible_key(setting, legacy, kind, label)
 end
 collectible_key("key_spybot", nil, "spybot", "Spybot")
 collectible_key("key_lorb", nil, "lorb", "Lorb")
+
+-- v0.71-DEV3: Ms. Zurkon's shop bonus (12_rando_shop.lua). Key: the shop's slots, what each sells now and the bonus it pays
+-- ([paid] once collected). Ctrl+key twice pays the next unpaid bonus without a purchase - a test of the grant itself.
+local shop_armed = nil
+R.bind_setting("key_shop", nil, function()
+  if not (RANDO_SEED and R.state) then say("Randomizer: the seed is still being prepared"); return end
+  local H = RANDO_SHOP
+  if not (H and H.bonus_lines) then return end
+  if not R.ctrl_down() then
+    local lines = H.bonus_lines()
+    if #lines == 0 then say("Randomizer: this seed has no shop bonus (shop_bonus = false, or no open weapon slot)", { type = "corner", duration = 5 }); return end
+    log("RANDO-SHOP BONUS (key):", table.concat(lines, " | "))
+    say("Shop bonus (" .. #lines .. "): " .. table.concat(lines, "; ") .. " [" .. tostring(H.status_text() or "vendor not changed yet") .. "]", { type = "corner", duration = 12 })
+    return
+  end
+  local t = (rivet.time and rivet.time()) or 0
+  if not shop_armed or t - shop_armed > 4 then
+    shop_armed = t
+    say(string.format("Randomizer: press Ctrl+%s again to pay the next shop bonus without buying anything", R.config.key_shop), { type = "center", duration = 4 })
+    return
+  end
+  shop_armed = nil
+  local ok, why = H.claim_next()
+  if not ok then say("Randomizer: no shop bonus paid - " .. tostring(why), { type = "corner", duration = 5 }) end
+end)
 
 -- the hub (15_rando_hub.lua)
 local function hub_key(setting, legacy, fn)
@@ -442,7 +468,7 @@ local function pname(pid) return (RANDO and RANDO.planet_name and RANDO.planet_n
 local function now() return (rivet.time and rivet.time()) or 0 end
 local function history(msg) if RANDO and RANDO.history then RANDO.history(msg) else log(msg) end end
 
-TT.VERSION = "10.0.36"
+TT.VERSION = "10.0.39"
 local function K(setting, ctrl) return (RANDO and RANDO.key and RANDO.key(setting, ctrl)) or setting end
 TT.WINDOW = 180              -- seconds a trip waits for its landing
 TT.POINTS = 12               -- landing points offered per planet (catalog)

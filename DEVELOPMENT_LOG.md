@@ -4,6 +4,32 @@ Earlier rounds (1-12) are summarised in the claude.ai project docs
 `RiftApart_Randomizer_phase1.md` and `RiftApart_Randomizer_phase2.md`. The generator and solver
 live in the `rcra_randomizer` repository, which was not available in this session.
 
+## 2026-11-24: v0.75 (kit 10.0.39) - DEV2-DEV9 brought in, released as v0.75, plus the Lite package
+
+DEV2-DEV9 (kit 10.0.37-10.0.38) were built outside the repo (scripts-only zips, see the project docs); this commit brings
+DEV9 in (scripts, dev_scripts, docs, tests/dev8 + tests/dev9) and releases it as v0.75 (the user: "the best version so far").
+- ROUND 62 (tests/data/round62_rivet.log: DEV9 in the game, seed clank-pocket-rift-774, game path replaced): shop written
+  in the game (19 of 19 slots, VERIFY after 180 frames), an owned bonus slot paid directly (Warmonger -> Robot Pirate boots),
+  Enemy Randomizer 13 of 16 replaced on a Savali fight, all died; loads, checkpoint loads and debug warps without a crash.
+  Omega census: "weapon records ... NOT trusted" on Savali/Viceron (only 1 record found there) - unchanged.
+- v0.75 PLAYER DEFAULTS (release/04): Enemy Randomizer OFF, Omega weapons ON, Spybots/Lorbs ON, shop bonus ON, planet shuffle
+  OFF, hub return ON. Code defaults enemy_compat "all", mix_movement off (dev settings keep "max"). Dev settings: enemy off.
+- HUB FIX (15): planet shuffle switched on past the parade + a finished planet: the trip back started the hub mid-run. Now a
+  plain trip back until the next New Game (H.finish / H.go_home ret / H.on_arrival). Shuffle off/on paths unchanged.
+- OMEGA (17): a queued snapshot is dropped on a vendor purchase (legacy learning; found by tests/test_v062_dev6).
+- LITE (tools/build_lite_release.py, release_lite/): Lua only, no DLL, no companion, 13 scripts. Runtime options lite /
+  bank_rewards / spoiler_log (10), Bolts/Raritanium through route 1 with the node's count (09 G.currency_by_node). Lite seeds:
+  shop_weapons 0 (all vendor weapons also rewards), armor/Omega/XP/bonus/Arsenal off; 360 seeds valid, 25/25 Gold Bolts items.
+- Suite: 82 failures on arrival (pins, verifier without filler:xp, seeds moved by DEV3/DEV4, DEV6 evidence, +2 events) fixed;
+  tests/test_v075.py added. See TEST_RESULTS.txt.
+- Packages: dist/Ratchet_Rift_Apart_Randomizer_v0.75_Player_Release.zip (validate_release 32/32) and
+  dist/Ratchet_Rift_Apart_Randomizer_v0.75_Lite_NexusMods.zip. SHA-256 in RatchetRA's RELEASE_NOTES.md.
+- VERIFIED IN THE GAME: DEV9's behaviour (round 62). SIMULATOR ONLY: the hub fix, the Lite package as a whole, currency
+  through route 1 (whether the node's count is the amount).
+- Next test (round 63): (1) full v0.75, New Game, shuffle off, finish a planet -> "Back to Nefarious City in 12 s"; press 0 past
+  the parade, finish a planet -> plain trip back, no "campaign starts" in rivet.log. (2) Lite on a spare slot: no DLL in
+  rivet.toml, start items arrive on Nefarious City, a Bolts reward arrives with its amount ("sent N currency:bolts").
+
 ## 2026-11-23: v0.71-DEV1 (kit 10.0.36) - the shop by config pointer, Spybots and Lorbs that pay
 
 - SHOP: rivet.config() hides ItemDatas (rivet_hook values_of() skips struct arrays). The slots are now also matched
