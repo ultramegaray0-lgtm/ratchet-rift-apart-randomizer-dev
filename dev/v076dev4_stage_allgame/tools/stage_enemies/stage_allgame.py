@@ -18,6 +18,9 @@ WHAT IT DOES
              inventory of every spawner in the game with the decision and reason, and a coverage report per planet/zone.
   4. check   re-reads a built .stage against the game's own zones: only the planned bytes differ, every reference
              consistent, every change still passes the rules.
+  5. --cross-planet (EXPERIMENTAL) permits a globally unique foreign enemy Template UID via idx=0xFFFF.
+             The source UID must already be used by a native factory in exactly one scanned zone; no actor data
+             is copied. This proves file-structure consistency, NOT that the engine accepts every foreign template.
 
 THE PROVEN METHOD (unchanged from tool 1.1.0 / stage_multi 1.2.0, which the 2026-11-25 run confirmed on 4 spawners)
   A change rewrites ONE Zone Script Vars entry: u16 Zone Actors index at entry+4 and u64 uid at entry+16. Nothing else.
@@ -51,6 +54,7 @@ THE RULES (a factory is changed only when ALL hold; every refusal is recorded wi
 usage
   python -I stage_allgame.py scan    --game GAME --out NEW_DIR                   (inventory + coverage report only)
   python -I stage_allgame.py build   --game GAME --out NEW_DIR [--seed S] [--planet NAME ...] [--profile max|safe|all]
+  experimental cross-planet build: add --cross-planet (foreign actor refs; requires in-game validation)
   python -I stage_allgame.py check   --game GAME --build NEW_DIR                 (or NEW_DIR/safe)
   after a play session:  stage_check_log.py rivet.log --manifest NEW_DIR/stage_enemies_manifest.json --json v1.json
                          stage_allgame.py build --game GAME --out NEXT_DIR --verdicts v1.json   (failures stay native)
@@ -915,7 +919,7 @@ def plan_zone(S, brain, rec, opts, rng):
         dec[a] = ("anchor", "kept native: the last unchanged user of %s %s (a replacement elsewhere in this zone)" % (pool[uid]["kind"], uid))
     # pinned replacements need their anchor
     for key in list(chosen):
-        if chosen[key]["uid"] not in anchors:
+        if not chosen[key].get("external") and chosen[key]["uid"] not in anchors:
             pin_report.append((key, chosen[key]["uid"], "PIN DROPPED: no unchanged native user of its replacement"))
             del chosen[key]
     # assignment: seeded order, weighted choice (proven pairs 3x, kinds already used here count against)
@@ -987,6 +991,8 @@ def manifest_lua(m):
             lua_str(c["original_uid"]), c["original_index"], lua_str(c["original"]), lua_str(c["original_family"])))
         L.append("      replacement_uid = %s, replacement_index = %d, replacement = %s, replacement_family = %s," % (
             lua_str(c["replacement_uid"]), c["replacement_index"], lua_str(c["replacement"]), lua_str(c["replacement_family"])))
+        L.append("      replacement_external = %s, replacement_source_planet = %s," % (
+            "true" if c.get("replacement_external") else "false", lua_str(c.get("replacement_source_planet") or "")))
         L.append("      original_refs = %d, replacement_refs = %d, tier = %s," % (c["original_refs"], c["replacement_refs"], lua_str(c["tier"])))
         L.append("      pair = %s, spawner_keys = { %s } }," % (lua_str(c["pair"]), lua_str(c["key"])))
     L += ["  },", "}", ""]
