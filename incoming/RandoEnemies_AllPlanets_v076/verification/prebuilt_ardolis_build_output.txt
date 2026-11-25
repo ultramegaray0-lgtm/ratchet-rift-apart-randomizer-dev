@@ -1,0 +1,97 @@
+stage_allgame 2.0.0: 1 zone(s) to scan (lz4 package)
+bundled in-game evidence: verdicts_2026-11-25_ardolis.json
+verdicts: WORKED 4, NO SPAWN 1
+  scanned 1/1 zones (0 s)
+scan done: 1 zones, 1 with factories, 43 factories, 0 errors
+
+==== profile max -> prebuilt_ardolis
+# .stage Enemy Randomizer - all-planet build (stage_allgame 2.0.0, v0.76-DEV4)
+
+Seed `allgame-1`. Source: zone files given on the command line. Reader: lz4 package. Scan time 0 s.
+
+## Totals
+
+| | |
+|---|---|
+| zone assets in the game's dag | 1 |
+| zones scanned / decoded | 1 / 1 |
+| zones not in the toc | 0 |
+| zone status | ok 1 |
+| zones that hold spawner factories | 1 |
+| spawner factories (all kinds) | 43 |
+| of them enemy spawners | 39 |
+| **changed** | **9 (23% of enemy spawners)** |
+| zones changed | 1 |
+| planets with changes | 1 |
+| replacement enemy kinds used | 4 |
+| other spawner nodes (`Template` adapter, not handled) | 1 |
+| .stage size | 0.2 MB on disk, 1 zone members |
+
+Change tiers: confirmed 4, shared-seen 4, proven 1.
+Spawn-point tiers: volume 6, external-unresolved 3.
+
+- **confirmed**: worked in your 2026-11-25 run (kept as they were).
+- **proven**: the pair has in-game evidence (built-in table, your logs, the .stage runs). NOT yet seen at this spawner.
+- **kin**: same faction and movement group, the kit's KILLABLE rule. Unverified in game.
+- spawn points: `volume` local volume; `clue-native` an anim clue the game itself uses for the replacement; `external-volume` another zone's non-clue actor; `clue-family` a clue of the same family; `external-unresolved` an actor no zone holds (2 of 2 worked in game).
+
+## The confirmed changes
+
+- FF06CCC2A9AC1EA2 -> 92C793D47A4657B6: kept (shooter -> brawler, WORKED 2026-11-25)
+- 9C3139C7FFED7137 -> C37DB04A5A1F0972: kept (shooter -> bladeball, WORKED 2026-11-25)
+- FA5FB32C7AAB4C4A -> B69D08BA44EE560E: kept (puffoid -> crab, WORKED 2026-11-25)
+- DAFCA25C58FD387F -> D7677BCD9AAF5963: kept (puffoid -> crab, WORKED 2026-11-25)
+
+
+PIN FF06CCC2A9AC1EA2 -> 92C793D47A4657B6: kept (shooter -> brawler, WORKED 2026-11-25)
+PIN 9C3139C7FFED7137 -> C37DB04A5A1F0972: kept (shooter -> bladeball, WORKED 2026-11-25)
+PIN FA5FB32C7AAB4C4A -> B69D08BA44EE560E: kept (puffoid -> crab, WORKED 2026-11-25)
+PIN DAFCA25C58FD387F -> D7677BCD9AAF5963: kept (puffoid -> crab, WORKED 2026-11-25)
+CHECK prebuilt_ardolis/RandoEnemies.stage: 9 change(s) in 1 zone member(s) re-read and compared with the game's zones: PASS
+written: 18_rando_stage_enemies.lua, 18_rando_stage_manifest.lua, COVERAGE_REPORT.md, RandoEnemies.stage, changes.csv, inventory.csv, inventory.json, stage_enemies_manifest.json
+
+==== profile safe -> prebuilt_ardolis/safe
+# .stage Enemy Randomizer - all-planet build (stage_allgame 2.0.0, v0.76-DEV4)
+
+Seed `allgame-1`. Source: zone files given on the command line. Reader: lz4 package. Scan time 0 s.
+
+## Totals
+
+| | |
+|---|---|
+| zone assets in the game's dag | 1 |
+| zones scanned / decoded | 1 / 1 |
+| zones not in the toc | 0 |
+| zone status | ok 1 |
+| zones that hold spawner factories | 1 |
+| spawner factories (all kinds) | 43 |
+| of them enemy spawners | 39 |
+| **changed** | **5 (13% of enemy spawners)** |
+| zones changed | 1 |
+| planets with changes | 1 |
+| replacement enemy kinds used | 3 |
+| other spawner nodes (`Template` adapter, not handled) | 1 |
+| .stage size | 0.2 MB on disk, 1 zone members |
+
+Change tiers: confirmed 4, proven 1.
+Spawn-point tiers: external-unresolved 3, volume 2.
+
+- **confirmed**: worked in your 2026-11-25 run (kept as they were).
+- **proven**: the pair has in-game evidence (built-in table, your logs, the .stage runs). NOT yet seen at this spawner.
+- **kin**: same faction and movement group, the kit's KILLABLE rule. Unverified in game.
+- spawn points: `volume` local volume; `clue-native` an anim clue the game itself uses for the replacement; `external-volume` another zone's non-clue actor; `clue-family` a clue of the same family; `external-unresolved` an actor no zone holds (2 of 2 worked in game).
+
+## The confirmed changes
+
+- FF06CCC2A9AC1EA2 -> 92C793D47A4657B6: kept (shooter -> brawler, WORKED 2026-11-25)
+- 9C3139C7FFED7137 -> C37DB04A5A1F0972: kept (shooter -> bladeball, WORKED 2026-11-25)
+- FA5FB32C7AAB4C4A -> B69D08BA44EE560E: kept (puffoid -> crab, WORKED 2026-11-25)
+- DAFCA25C58FD387F -> D7677BCD9AAF5963: kept (puffoid -> crab, WORKED 2026-11-25)
+
+
+PIN FF06CCC2A9AC1EA2 -> 92C793D47A4657B6: kept (shooter -> brawler, WORKED 2026-11-25)
+PIN 9C3139C7FFED7137 -> C37DB04A5A1F0972: kept (shooter -> bladeball, WORKED 2026-11-25)
+PIN FA5FB32C7AAB4C4A -> B69D08BA44EE560E: kept (puffoid -> crab, WORKED 2026-11-25)
+PIN DAFCA25C58FD387F -> D7677BCD9AAF5963: kept (puffoid -> crab, WORKED 2026-11-25)
+CHECK prebuilt_ardolis/safe/RandoEnemies.stage: 5 change(s) in 1 zone member(s) re-read and compared with the game's zones: PASS
+written: 18_rando_stage_enemies.lua, 18_rando_stage_manifest.lua, COVERAGE_REPORT.md, RandoEnemies.stage, changes.csv, inventory.csv, inventory.json, stage_enemies_manifest.json

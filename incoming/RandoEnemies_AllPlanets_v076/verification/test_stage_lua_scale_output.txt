@@ -1,0 +1,19 @@
+PASS small manifest (9 changes): every STAGE CHANGE line at the start (9)
+PASS small manifest: no STAGE ZONE lines
+PASS small manifest: stage_check_log's regex reads every STAGE CHANGE line
+PASS big manifest (600 changes): 30 STAGE ZONE lines at the start
+PASS big manifest: no STAGE CHANGE line before a spawner is listed
+PASS big manifest: STAGE MODE summary line
+PASS STAGE MODE ON keeps its format (log checker, old tools)
+PASS listing: one STAGE CHANGE line per listed changed spawner (3)
+PASS listing: the right changes (81, 82, 83)
+PASS listing: STAGE VARIABLE ... IS loaded for each
+PASS STAGE VARIABLES counts cover only the 3 listed spawners
+PASS next look: no STAGE CHANGE line twice
+PASS STAGE SPAWN of the patched spawner
+PASS new level: STAGE VARIABLE again for the listed spawner
+PASS new level: its STAGE CHANGE line is not repeated
+PASS the level before got its STAGE SUMMARY
+PASS cost: index of 600 changes 2.0 ms, a 240-spawner listing look 0.4 ms (lupa)
+
+0 failed

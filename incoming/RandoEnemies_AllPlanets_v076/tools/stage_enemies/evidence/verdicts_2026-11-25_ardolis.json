@@ -1,0 +1,48 @@
+{
+ "tool": "stage_check_log 2.0.0",
+ "logs": [
+  "rivet.log of 2026-11-25 (v0.76-DEV4, Phase B .stage 1.2.0, Ardolis first visit)"
+ ],
+ "verdicts": {
+  "FF06CCC2A9AC1EA2": {
+   "verdict": "WORKED",
+   "replacement_uid": "92C793D47A4657B6",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "?",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "9C3139C7FFED7137": {
+   "verdict": "WORKED",
+   "replacement_uid": "C37DB04A5A1F0972",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "?",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "FA5FB32C7AAB4C4A": {
+   "verdict": "WORKED",
+   "replacement_uid": "B69D08BA44EE560E",
+   "original": "enm_indigenous_puffoid",
+   "replacement": "enm_indigenous_crab",
+   "planet": "?",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "F93E9AE445CCEF41": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "92C793D47A4657B6",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "?",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "DAFCA25C58FD387F": {
+   "verdict": "WORKED",
+   "replacement_uid": "D7677BCD9AAF5963",
+   "original": "enm_indigenous_puffoid",
+   "replacement": "enm_indigenous_crab",
+   "planet": "?",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  }
+ }
+}

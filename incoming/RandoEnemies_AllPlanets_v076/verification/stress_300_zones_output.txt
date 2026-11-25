@@ -1,0 +1,10 @@
+rc 0 42.1 s peak RSS child 1083 MB
+| **changed** | **3000 (26% of enemy spawners)** |
+| planets with changes | 10 |
+| .stage size | 53.7 MB on disk, 300 zone members |
+CHECK <temp>/o/RandoEnemies.stage: 3000 change(s) in 300 zone member(s) re-read and compared with the game's zones: PASS
+| **changed** | **1800 (15% of enemy spawners)** |
+| planets with changes | 10 |
+| .stage size | 53.7 MB on disk, 300 zone members |
+CHECK <temp>/o/safe/RandoEnemies.stage: 1800 change(s) in 300 zone member(s) re-read and compared with the game's zones: PASS
+Note: 'peak RSS child' above includes the pages of the parent process that built the 300-zone fake game (Linux counts a forked child's pre-exec pages). The build alone, sampled from /proc while it ran on the same 300-zone folder: peak RSS 202 MB.

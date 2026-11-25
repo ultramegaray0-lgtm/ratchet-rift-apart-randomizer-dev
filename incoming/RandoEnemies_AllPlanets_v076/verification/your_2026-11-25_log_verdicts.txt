@@ -1,0 +1,79 @@
+stage_check_log 2.0.0: rivet_phaseb.log | 5 change(s) from the manifest
+
+CHANGE 1  FF06CCC2A9AC1EA2  ?  enm_pirate_robot_shooter -> enm_pirate_robot_melee  [?]
+  visit 5 (NewPlanetName=Ardolis): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 6 (CheckpointHash=2969398429 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 7 (CheckpointHash=2703290959 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 8 (CheckpointHash=324514318 Loaded=true): WORKED | listed 92C793D47A4657B6 | spawns 1 {'enm_pirate_robot_melee': 1}
+      actor 1105156 pirate_robot_melee @ - @ CHK_ARD_BARRACKS | gone | barks 0
+  visit 9 (CheckpointHash=1941745893 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 11 (CheckpointHash=1718389675 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  => WORKED
+
+CHANGE 2  9C3139C7FFED7137  ?  enm_pirate_robot_shooter -> enm_pirate_bladeball  [?]
+  visit 5 (NewPlanetName=Ardolis): NO SPAWN | listed C37DB04A5A1F0972 | spawns 0 
+  visit 6 (CheckpointHash=2969398429 Loaded=true): NO SPAWN | listed C37DB04A5A1F0972 | spawns 0 
+  visit 7 (CheckpointHash=2703290959 Loaded=true): NO SPAWN | listed C37DB04A5A1F0972 | spawns 0 
+  visit 8 (CheckpointHash=324514318 Loaded=true): WORKED | listed C37DB04A5A1F0972 | spawns 1 {'enm_pirate_bladeball': 1}
+      actor 1105147 pirate_bladeball @ - @ CHK_ARD_BARRACKS | died | barks 0
+  visit 9 (CheckpointHash=1941745893 Loaded=true): NO SPAWN | listed C37DB04A5A1F0972 | spawns 0 
+  visit 11 (CheckpointHash=1718389675 Loaded=true): NO SPAWN | listed C37DB04A5A1F0972 | spawns 0 
+  => WORKED
+
+CHANGE 3  FA5FB32C7AAB4C4A  ?  enm_indigenous_puffoid -> enm_indigenous_crab  [?]
+  visit 5 (NewPlanetName=Ardolis): NO SPAWN | listed B69D08BA44EE560E | spawns 0 
+  visit 6 (CheckpointHash=2969398429 Loaded=true): NO SPAWN | listed B69D08BA44EE560E | spawns 0 
+  visit 7 (CheckpointHash=2703290959 Loaded=true): WORKED | listed B69D08BA44EE560E | spawns 3 {'enm_indigenous_crab': 3}
+      actor 1104053 indigenous_crab @ - @ CHK_ARD_CAVES_BRIDGE | no death seen | barks 0
+      actor 1104054 indigenous_crab @ - @ CHK_ARD_CAVES_BRIDGE | no death seen | barks 0
+      actor 1104055 indigenous_crab @ - @ CHK_ARD_CAVES_BRIDGE | no death seen | barks 0
+  visit 8 (CheckpointHash=324514318 Loaded=true): NO SPAWN | listed B69D08BA44EE560E | spawns 0 
+  visit 9 (CheckpointHash=1941745893 Loaded=true): NO SPAWN | listed B69D08BA44EE560E | spawns 0 
+  visit 11 (CheckpointHash=1718389675 Loaded=true): NO SPAWN | listed B69D08BA44EE560E | spawns 0 
+  => WORKED
+
+CHANGE 4  F93E9AE445CCEF41  ?  enm_pirate_robot_shooter -> enm_pirate_robot_melee  [?]
+  visit 5 (NewPlanetName=Ardolis): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 6 (CheckpointHash=2969398429 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 7 (CheckpointHash=2703290959 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 8 (CheckpointHash=324514318 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 9 (CheckpointHash=1941745893 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  visit 11 (CheckpointHash=1718389675 Loaded=true): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  => NO SPAWN
+
+CHANGE 5  DAFCA25C58FD387F  ?  enm_indigenous_puffoid -> enm_indigenous_crab  [?]
+  visit 5 (NewPlanetName=Ardolis): NO SPAWN | listed D7677BCD9AAF5963 | spawns 0 
+  visit 6 (CheckpointHash=2969398429 Loaded=true): WORKED | listed D7677BCD9AAF5963 | spawns 4 {'enm_indigenous_crab': 4}
+      actor 1103109 indigenous_crab @ - @ CHK_ARD_CAVES | gone | barks 0
+      actor 1103113 indigenous_crab @ - @ CHK_ARD_CAVES | gone | barks 0
+      actor 1103116 indigenous_crab @ - @ CHK_ARD_CAVES | gone | barks 0
+      actor 1103118 indigenous_crab @ - @ CHK_ARD_CAVES | gone | barks 0
+  visit 7 (CheckpointHash=2703290959 Loaded=true): NO SPAWN | listed D7677BCD9AAF5963 | spawns 0 
+  visit 8 (CheckpointHash=324514318 Loaded=true): NO SPAWN | listed D7677BCD9AAF5963 | spawns 0 
+  visit 9 (CheckpointHash=1941745893 Loaded=true): NO SPAWN | listed D7677BCD9AAF5963 | spawns 0 
+  visit 11 (CheckpointHash=1718389675 Loaded=true): NO SPAWN | listed D7677BCD9AAF5963 | spawns 0 
+  => WORKED
+
+SUMMARY BY PLANET
+  planet                            WORKED  ORIGINAL SPAWNED          NO SPAWN       NOT REACHED
+  ?                                      4                 0                 1                 0
+
+SUMMARY BY TIER
+  tier                              WORKED  ORIGINAL SPAWNED          NO SPAWN       NOT REACHED
+  ?                                      4                 0                 1                 0
+
+TOTAL: WORKED 4, ORIGINAL SPAWNED 0, NO SPAWN 1, NOT REACHED 0
+
+Not changed by the .stage (their own zone data already uses a replacement kind; 18's STAGE SUMMARY may count them):
+  88259456BFA87EA8 {'enm_pirate_robot_melee': 3}
+  8901145A971E3CCE {'enm_pirate_robot_melee': 1}
+  95B4E80A39BD6C5A {'enm_pirate_robot_melee': 1}
+  9F06A201F84EFBB2 {'enm_indigenous_crab': 3}
+  A7547098EC64C419 {'enm_pirate_robot_melee': 2}
+  ADB9482731BB4C8A {'enm_pirate_robot_melee': 1}
+  B6164EAB97E4D92A {'enm_pirate_robot_melee': 1}
+  E2F679E6A98442D6 {'enm_pirate_robot_melee': 1}
+  E4F90C0DB8AE0493 {'enm_indigenous_crab': 2}
+  E6705A36656EB7B9 {'enm_pirate_robot_melee': 2}
+  F008DF0591EA9045 {'enm_indigenous_crab': 1}
+  FE80D89C2D6D5A2D {'enm_pirate_robot_melee': 1}

@@ -1,0 +1,36 @@
+PASS  real zone is the game's (sha256 d40540ed...)
+PASS  decoder: C1 holds on the real zone (302 local refs)
+PASS  decoder: 43 factories in ard_firstvisit_gp
+PASS  writer: the Phase B changes give the Phase B zone byte for byte
+PASS  build: exit 0
+PASS  build: the main build and safe/ both pass their check
+PASS  scan: 3 zones, 2 changed members (Ardolis + the copy)
+PASS  planet names from the zone path
+PASS  pin FF06CCC2A9AC1EA2 kept in max and safe
+PASS  pin 9C3139C7FFED7137 kept in max and safe
+PASS  pin FA5FB32C7AAB4C4A kept in max and safe
+PASS  pin DAFCA25C58FD387F kept in max and safe
+PASS  cross-zone: D1FD84D3 (external -> a StaticVolume of another zone) is external-volume
+PASS  cross-zone: DAFCA25C (external -> a crab anim clue) is clue-native
+PASS  cross-zone: F93E9AE4 (external -> a SHOOTER anim clue) is refused for a brawler
+PASS  shared-seen tier only in max: F3D033F9/F4A34D9C/F607A5D7/FE80D89C
+PASS  F512DB23 co-owner never changed (88259456, D26E32B8)
+PASS  every change has a known spawn tier
+PASS  no cross-faction change
+PASS  no change to a pair proven bad (-> shooter)
+PASS  CECB812E81FB7301 (shooter clue) never changed
+PASS  every member differs from the game's zone only in {index, uid} of its changes
+PASS  Lua manifest parses (Lua Lua 5.5) with 18 changes
+PASS  a zone without actors is 'no actors', not an error
+PASS  the build carries the scale 18_rando_stage_enemies.lua
+PASS  bundled evidence: F93E9AE4 (NO SPAWN in your run) left native with the verdict as reason
+PASS  learning: B0683892 (shared, co-owner 651365AF/B57CF5E2) WORKED -> kept, class learned
+PASS  deterministic: same seed, same .stage bytes
+PASS  never overwrites a build folder
+PASS  --planet testplanet builds only that planet
+PASS  check FAILS on a stray byte
+PASS  install: copies the build, backs up the old file
+PASS  uninstall: the old file is back
+PASS  scan: writes inventory and report, no .stage
+
+34 checks, 0 failed

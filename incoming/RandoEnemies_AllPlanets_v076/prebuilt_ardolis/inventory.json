@@ -1,0 +1,1302 @@
+{
+"tool": "2.0.0",
+"profile": "max",
+"zones": [
+{
+"zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone",
+"zone_id": "AE530D22FE113E2B",
+"planet": "ardolis",
+"span": 0,
+"status": "ok",
+"factories": [
+{
+"key": "86685D806D648CAA",
+"action": 361,
+"problem": null,
+"sv": 951,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "C37DB04A5A1F0972",
+"rec": 28,
+"kind": "enm_pirate_bladeball",
+"count": 16.0,
+"locs": [
+{
+"form": "external",
+"sv": 529,
+"uid": "B7005C884D0A9F71",
+"kind": null,
+"resolved": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+}
+}
+],
+"plug": 296,
+"asset": "characters\\enemy\\enm_bladeball_ps4\\actors\\enm_pirate_bladeball.actor"
+},
+{
+"key": "88259456BFA87EA8",
+"action": 362,
+"problem": null,
+"sv": 357,
+"owners": 2,
+"co_owner_classes": [
+"F512DB23/B1C79F97"
+],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 3.0,
+"locs": [
+{
+"form": "local",
+"sv": 18,
+"uid": "CAAC8478C4C6DFDD",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 662,
+"uid": "A87E543839B3DAA6",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 901,
+"uid": "F4E3447B1ADA2FF0",
+"kind": "StaticVolume"
+}
+],
+"plug": 307,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "8901145A971E3CCE",
+"action": 363,
+"problem": null,
+"sv": 133,
+"owners": 3,
+"co_owner_classes": [
+"F512DB23/B1C79F97",
+"F512DB23/EA0A7021"
+],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 841,
+"uid": "9AFEDD862A9CFB31",
+"kind": "animclue_pirate_melee_group_stand_conversation_idle_02"
+}
+],
+"plug": 313,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "8E96B1ABC62BBF5B",
+"action": 364,
+"problem": null,
+"sv": 547,
+"owners": 2,
+"co_owner_classes": [
+"3627CF3D/93BF4450"
+],
+"form": "local",
+"uid": "D7677BCD9AAF5963",
+"rec": 23,
+"kind": "enm_indigenous_crab",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 315,
+"uid": "F37DBBCA41AB806C",
+"kind": "animclue_toxic_crab_unburrow_alert_intro"
+}
+],
+"plug": 320,
+"asset": "characters\\enemy\\enm_toxic_crab_ps4\\actors\\enm_indigenous_crab.actor"
+},
+{
+"key": "957CF01BB171B59E",
+"action": 365,
+"problem": null,
+"sv": 462,
+"owners": 2,
+"co_owner_classes": [
+"651365AF/02872CB8"
+],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 1024,
+"uid": "E165BB7AD04BD8A7",
+"kind": "animclue_pirate_shooter_group_stand_conversation_idle_01"
+},
+{
+"form": "local",
+"sv": 730,
+"uid": "EEFDF05C08CC5F06",
+"kind": "animclue_pirate_shooter_group_stand_conversation_idle_02"
+}
+],
+"plug": 322,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "95B4E80A39BD6C5A",
+"action": 366,
+"problem": null,
+"sv": 537,
+"owners": 2,
+"co_owner_classes": [
+"735B260F/5C4E164C"
+],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 600,
+"uid": "FBE68317D547C493",
+"kind": "animclue_pirate_melee_standing_idle_01"
+},
+{
+"form": "local",
+"sv": 569,
+"uid": "F7CD901F339D0670",
+"kind": "animclue_pirate_melee_group_hipstand_conversation_idle_02"
+}
+],
+"plug": 331,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "9B912B205B5CBAC6",
+"action": 367,
+"problem": null,
+"sv": 890,
+"owners": 2,
+"co_owner_classes": [
+"651365AF/B805C362"
+],
+"form": "local",
+"uid": "C1EE87C86B7840DD",
+"rec": 12,
+"kind": "enm_pirate_robot_shielded",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 151,
+"uid": "896862B6DB6424E3",
+"kind": "animclue_pirate_shielded_cleaning_shield"
+}
+],
+"plug": 338,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shielded.actor"
+},
+{
+"key": "9C3139C7FFED7137",
+"action": 368,
+"problem": null,
+"sv": 998,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 668,
+"uid": "E6CF0EFAFB3B78F1",
+"kind": "StaticVolume"
+}
+],
+"plug": 349,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "9DC50EB3DEDA0D54",
+"action": 369,
+"problem": null,
+"sv": 434,
+"owners": 2,
+"co_owner_classes": [
+"783E1BE3/93BF4450"
+],
+"form": "local",
+"uid": "D79E5FEE5A2F6ECD",
+"rec": 10,
+"kind": "enm_thugs4less_shooter",
+"count": 3.0,
+"locs": [
+{
+"form": "group",
+"sv": 992,
+"uid": "0000000000000000",
+"kind": null
+}
+],
+"plug": 355,
+"asset": "characters\\enemy\\enm_thug_brawler_rcn\\actors\\enm_thugs4less_shooter.actor"
+},
+{
+"key": "9F8393DDA0883ADB",
+"action": 370,
+"problem": null,
+"sv": 1,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 967,
+"uid": "FBB37EDFDC916627",
+"kind": "animclue_pirate_melee_balance_sword"
+},
+{
+"form": "local",
+"sv": 373,
+"uid": "AE5E98F5CE7BB473",
+"kind": "animclue_pirate_melee_standing_idle_01"
+}
+],
+"plug": 361,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "A019CE56479A1764",
+"action": 371,
+"problem": null,
+"sv": 724,
+"owners": 2,
+"co_owner_classes": [
+"F8774435/6D15F617"
+],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 2.0,
+"locs": [
+{
+"form": "group",
+"sv": 846,
+"uid": "0000000000000000",
+"kind": null
+}
+],
+"plug": 367,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "A1320221547FE38B",
+"action": 372,
+"problem": null,
+"sv": 342,
+"owners": 2,
+"co_owner_classes": [
+"E13EB1E3/7566B265"
+],
+"form": "local",
+"uid": "904213460FCFAB14",
+"rec": 3,
+"kind": "veh_pirate_skiff",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 903,
+"uid": "A63D615D8903C26D",
+"kind": "StaticPath"
+}
+],
+"plug": 374,
+"asset": "legacy\\rcf\\maya\\entities\\object\\vehicle\\enemy\\pirate_skiff\\veh_pirate_skiff.actor"
+},
+{
+"key": "A6907412C75C7502",
+"action": 373,
+"problem": null,
+"sv": 367,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "904213460FCFAB14",
+"rec": 3,
+"kind": "veh_pirate_skiff",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 371,
+"uid": "CCC29EE39BFDC52D",
+"kind": "StaticPath"
+}
+],
+"plug": 378,
+"asset": "legacy\\rcf\\maya\\entities\\object\\vehicle\\enemy\\pirate_skiff\\veh_pirate_skiff.actor"
+},
+{
+"key": "A7547098EC64C419",
+"action": 374,
+"problem": null,
+"sv": 981,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 726,
+"uid": "CE9A07C7C6B15F12",
+"kind": "animclue_pirate_melee_taunt_pierre"
+},
+{
+"form": "local",
+"sv": 870,
+"uid": "C2D47C39B63154D2",
+"kind": "animclue_pirate_melee_taunt_pierre"
+}
+],
+"plug": 382,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "A9DD0D46204E09FC",
+"action": 375,
+"problem": null,
+"sv": 815,
+"owners": 2,
+"co_owner_classes": [
+"6ED609C2/EE3992D5"
+],
+"form": "local",
+"uid": "C1EE87C86B7840DD",
+"rec": 12,
+"kind": "enm_pirate_robot_shielded",
+"count": 2.0,
+"locs": [
+{
+"form": "empty",
+"sv": 790,
+"uid": "0000000000000000",
+"kind": null
+}
+],
+"plug": 393,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shielded.actor"
+},
+{
+"key": "ADB9482731BB4C8A",
+"action": 376,
+"problem": null,
+"sv": 506,
+"owners": 2,
+"co_owner_classes": [
+"692617F1/7566B265"
+],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 500,
+"uid": "9729B443FF849CDA",
+"kind": "animclue_pirate_melee_balance_sword"
+}
+],
+"plug": 395,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "AEC27D78081DA0E9",
+"action": 377,
+"problem": null,
+"sv": 60,
+"owners": 2,
+"co_owner_classes": [
+"F8774435/6D15F617"
+],
+"form": "local",
+"uid": "8F2D4755EC410DBC",
+"rec": 2,
+"kind": "veh_pirate_skiff",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 587,
+"uid": "BE983CBC5436C3A5",
+"kind": "StaticPath"
+}
+],
+"plug": 402,
+"asset": "legacy\\rcf\\maya\\entities\\object\\vehicle\\enemy\\pirate_skiff\\veh_pirate_skiff.actor"
+},
+{
+"key": "B0683892A1C1273C",
+"action": 378,
+"problem": null,
+"sv": 35,
+"owners": 2,
+"co_owner_classes": [
+"651365AF/B57CF5E2"
+],
+"form": "local",
+"uid": "C1EE87C86B7840DD",
+"rec": 12,
+"kind": "enm_pirate_robot_shielded",
+"count": 5.0,
+"locs": [
+{
+"form": "local",
+"sv": 352,
+"uid": "E2B7526F2C21DFB8",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 692,
+"uid": "BD03B033F5515C23",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 796,
+"uid": "BFDAB52D76E7B494",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 339,
+"uid": "A56F971C0393EAA1",
+"kind": "StaticVolume"
+}
+],
+"plug": 405,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shielded.actor"
+},
+{
+"key": "B2CF597110438D36",
+"action": 379,
+"problem": null,
+"sv": 965,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 4.0,
+"locs": [
+{
+"form": "group",
+"sv": 368,
+"uid": "0000000000000000",
+"kind": null
+}
+],
+"plug": 415,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "B6164EAB97E4D92A",
+"action": 380,
+"problem": null,
+"sv": 993,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 648,
+"uid": "DB43C4F09321F093",
+"kind": "animclue_pirate_melee_taunt_pierre"
+}
+],
+"plug": 420,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "B65A076E8CDFEF91",
+"action": 381,
+"problem": null,
+"sv": 604,
+"owners": 2,
+"co_owner_classes": [
+"0AC0B46C/93BF4450"
+],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 190,
+"uid": "AAEE363CC245784B",
+"kind": "animclue_pirate_shooter_taunt_pierre"
+},
+{
+"form": "local",
+"sv": 135,
+"uid": "AF9B090BCECFAC07",
+"kind": "animclue_pirate_shooter_lean_wall_Coin_Toss"
+}
+],
+"plug": 429,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "B6D79FF181775855",
+"action": 382,
+"problem": null,
+"sv": 13,
+"owners": 2,
+"co_owner_classes": [
+"DBCB7A59/3D352D54"
+],
+"form": "local",
+"uid": "904213460FCFAB14",
+"rec": 3,
+"kind": "veh_pirate_skiff",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 830,
+"uid": "81E14ABF0B2AFB8F",
+"kind": "StaticPath"
+}
+],
+"plug": 431,
+"asset": "legacy\\rcf\\maya\\entities\\object\\vehicle\\enemy\\pirate_skiff\\veh_pirate_skiff.actor"
+},
+{
+"key": "B914A3BE7A9202B6",
+"action": 383,
+"problem": null,
+"sv": 482,
+"owners": 2,
+"co_owner_classes": [
+"E13EB1E3/7566B265"
+],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 4.0,
+"locs": [
+{
+"form": "group",
+"sv": 733,
+"uid": "0000000000000000",
+"kind": null
+}
+],
+"plug": 436,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "BF34C05EE646EDCB",
+"action": 384,
+"problem": null,
+"sv": 822,
+"owners": 3,
+"co_owner_classes": [
+"0AC0B46C/93BF4450",
+"40A9688E/93BF4450"
+],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 189,
+"uid": "922EBAE354C91259",
+"kind": "animclue_pirate_shooter_lean_wall_right_idle_02"
+}
+],
+"plug": 446,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "C05CD6C55BC0D44A",
+"action": 385,
+"problem": null,
+"sv": 559,
+"owners": 2,
+"co_owner_classes": [
+"40A9688E/93BF4450"
+],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 2.0,
+"locs": [
+{
+"form": "group",
+"sv": 4,
+"uid": "0000000000000000",
+"kind": null
+}
+],
+"plug": 448,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "C3BEFB4CB6C5251B",
+"action": 386,
+"problem": null,
+"sv": 641,
+"owners": 2,
+"co_owner_classes": [
+"0AC0B46C/93BF4450"
+],
+"form": "local",
+"uid": "C1EE87C86B7840DD",
+"rec": 12,
+"kind": "enm_pirate_robot_shielded",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 631,
+"uid": "A8FB07DB4EE15E00",
+"kind": "animclue_pirate_shielded_telescope"
+}
+],
+"plug": 455,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shielded.actor"
+},
+{
+"key": "CECB812E81FB7301",
+"action": 387,
+"problem": null,
+"sv": 153,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "899208BF8F48C554",
+"rec": 15,
+"kind": "enm_pirate_robot_shooter",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 20,
+"uid": "DCDBC17E97857803",
+"kind": "animclue_pirate_shooter_group_stand_conversation_idle_02"
+}
+],
+"plug": 460,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "D1FD84D3A21C0F9A",
+"action": 388,
+"problem": null,
+"sv": 401,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "F8AE42A8EAC94695",
+"rec": 1,
+"kind": "enm_indigenous_puffoid",
+"count": 3.0,
+"locs": [
+{
+"form": "external",
+"sv": 121,
+"uid": "D14E8A72C2F15EA3",
+"kind": null,
+"resolved": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+}
+}
+],
+"plug": 467,
+"asset": "characters\\enemy\\enm_puffer_fish_ps4\\actors\\enm_indigenous_puffoid.actor"
+},
+{
+"key": "D26E32B81D7B7C85",
+"action": 389,
+"problem": null,
+"sv": 910,
+"owners": 3,
+"co_owner_classes": [
+"F512DB23/B1C79F97",
+"F512DB23/EA0A7021"
+],
+"form": "local",
+"uid": "F8AE42A8EAC94695",
+"rec": 1,
+"kind": "enm_indigenous_puffoid",
+"count": 8.0,
+"locs": [
+{
+"form": "external",
+"sv": 334,
+"uid": "B38B0E390BC215BC",
+"kind": null,
+"resolved": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+}
+}
+],
+"plug": 474,
+"asset": "characters\\enemy\\enm_puffer_fish_ps4\\actors\\enm_indigenous_puffoid.actor"
+},
+{
+"key": "DAFCA25C58FD387F",
+"action": 390,
+"problem": null,
+"sv": 389,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "F8AE42A8EAC94695",
+"rec": 1,
+"kind": "enm_indigenous_puffoid",
+"count": 4.0,
+"locs": [
+{
+"form": "external",
+"sv": 152,
+"uid": "D2FA1CDDCF5FD1F3",
+"kind": null,
+"resolved": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+}
+}
+],
+"plug": 483,
+"asset": "characters\\enemy\\enm_puffer_fish_ps4\\actors\\enm_indigenous_puffoid.actor"
+},
+{
+"key": "DCA7B70D660C5BF5",
+"action": 391,
+"problem": null,
+"sv": 212,
+"owners": 2,
+"co_owner_classes": [
+"31B870E3/F7EDFFC8"
+],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 136,
+"uid": "9E58B6EF1175A9BF",
+"kind": "animclue_pirate_shooter_standing_campfire"
+},
+{
+"form": "local",
+"sv": 645,
+"uid": "936A35D132B81E5A",
+"kind": "animclue_pirate_shooter_group_stand_conversation_idle_02"
+}
+],
+"plug": 488,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "E4F90C0DB8AE0493",
+"action": 392,
+"problem": null,
+"sv": 900,
+"owners": 2,
+"co_owner_classes": [
+"783E1BE3/93BF4450"
+],
+"form": "local",
+"uid": "B69D08BA44EE560E",
+"rec": 22,
+"kind": "enm_indigenous_crab",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 123,
+"uid": "DCF277456386F66F",
+"kind": "animclue_toxic_crab_unburrow_alert_intro"
+},
+{
+"form": "local",
+"sv": 1011,
+"uid": "98F87488388223F4",
+"kind": "animclue_toxic_crab_unburrow_alert_intro"
+}
+],
+"plug": 499,
+"asset": "characters\\enemy\\enm_toxic_crab_ps4\\actors\\enm_indigenous_crab.actor"
+},
+{
+"key": "E6705A36656EB7B9",
+"action": 393,
+"problem": null,
+"sv": 799,
+"owners": 2,
+"co_owner_classes": [
+"7178BE14/C4080766"
+],
+"form": "local",
+"uid": "92C793D47A4657B6",
+"rec": 25,
+"kind": "enm_pirate_robot_melee",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 818,
+"uid": "BD3467EE15D9D521",
+"kind": "animclue_pirate_melee_group_stand_conversation_idle_01"
+},
+{
+"form": "local",
+"sv": 25,
+"uid": "A1F45EE1111DF705",
+"kind": "animclue_pirate_melee_group_hipstand_conversation_idle_01"
+}
+],
+"plug": 506,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "E7AE4735D2A4D3E7",
+"action": 394,
+"problem": null,
+"sv": 465,
+"owners": 2,
+"co_owner_classes": [
+"40A9688E/93BF4450"
+],
+"form": "local",
+"uid": "B69D08BA44EE560E",
+"rec": 22,
+"kind": "enm_indigenous_crab",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 852,
+"uid": "BDF0839F25F8AE05",
+"kind": "animclue_toxic_crab_zord_tapping_on_cell"
+}
+],
+"plug": 512,
+"asset": "characters\\enemy\\enm_toxic_crab_ps4\\actors\\enm_indigenous_crab.actor"
+},
+{
+"key": "ED07AF15DB03A1B1",
+"action": 395,
+"problem": null,
+"sv": 77,
+"owners": 2,
+"co_owner_classes": [
+"783E1BE3/93BF4450"
+],
+"form": "local",
+"uid": "B69D08BA44EE560E",
+"rec": 22,
+"kind": "enm_indigenous_crab",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 493,
+"uid": "F7DF5161757F335D",
+"kind": "animclue_toxic_crab_unburrow_alert_intro"
+}
+],
+"plug": 518,
+"asset": "characters\\enemy\\enm_toxic_crab_ps4\\actors\\enm_indigenous_crab.actor"
+},
+{
+"key": "F008DF0591EA9045",
+"action": 396,
+"problem": null,
+"sv": 687,
+"owners": 2,
+"co_owner_classes": [
+"735B260F/B57CF5E2"
+],
+"form": "local",
+"uid": "D7677BCD9AAF5963",
+"rec": 23,
+"kind": "enm_indigenous_crab",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 76,
+"uid": "AE879C143C5E6A28",
+"kind": "animclue_toxic_crab_zord_moping"
+},
+{
+"form": "local",
+"sv": 485,
+"uid": "AABCB1EBDD88352D",
+"kind": "animclue_toxic_crab_zord_tapping_on_cell"
+}
+],
+"plug": 525,
+"asset": "characters\\enemy\\enm_toxic_crab_ps4\\actors\\enm_indigenous_crab.actor"
+},
+{
+"key": "F3D033F9CBFADB82",
+"action": 397,
+"problem": null,
+"sv": 544,
+"owners": 2,
+"co_owner_classes": [
+"1FDCA5D3/93BF4450"
+],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 2.0,
+"locs": [
+{
+"form": "local",
+"sv": 975,
+"uid": "882DD8A04AB1EAC6",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 522,
+"uid": "8098AFD42B27CE83",
+"kind": "StaticVolume"
+}
+],
+"plug": 536,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "F4A34D9C49E5642A",
+"action": 398,
+"problem": null,
+"sv": 615,
+"owners": 2,
+"co_owner_classes": [
+"0AC0B46C/93BF4450"
+],
+"form": "local",
+"uid": "F8AE42A8EAC94695",
+"rec": 1,
+"kind": "enm_indigenous_puffoid",
+"count": 4.0,
+"locs": [
+{
+"form": "local",
+"sv": 1018,
+"uid": "8716FDCFB4CEB466",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 753,
+"uid": "E4AAF8209C2CDD8A",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 568,
+"uid": "A59BACA30C0DC70E",
+"kind": "StaticVolume"
+},
+{
+"form": "local",
+"sv": 196,
+"uid": "E0AD4C609E4898F7",
+"kind": "StaticVolume"
+}
+],
+"plug": 547,
+"asset": "characters\\enemy\\enm_puffer_fish_ps4\\actors\\enm_indigenous_puffoid.actor"
+},
+{
+"key": "F607A5D72DB3F350",
+"action": 399,
+"problem": null,
+"sv": 624,
+"owners": 2,
+"co_owner_classes": [
+"31B870E3/F7EDFFC8"
+],
+"form": "local",
+"uid": "F8AE42A8EAC94695",
+"rec": 1,
+"kind": "enm_indigenous_puffoid",
+"count": 6.0,
+"locs": [
+{
+"form": "local",
+"sv": 403,
+"uid": "C3A1DDC992DCA162",
+"kind": "StaticVolume"
+}
+],
+"plug": 554,
+"asset": "characters\\enemy\\enm_puffer_fish_ps4\\actors\\enm_indigenous_puffoid.actor"
+},
+{
+"key": "F93E9AE445CCEF41",
+"action": 400,
+"problem": null,
+"sv": 228,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 5.0,
+"locs": [
+{
+"form": "external",
+"sv": 394,
+"uid": "BAD8BDEDF0A2F250",
+"kind": null,
+"resolved": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+}
+}
+],
+"plug": 559,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+},
+{
+"key": "FA5FB32C7AAB4C4A",
+"action": 401,
+"problem": null,
+"sv": 150,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "F8AE42A8EAC94695",
+"rec": 1,
+"kind": "enm_indigenous_puffoid",
+"count": 3.0,
+"locs": [
+{
+"form": "external",
+"sv": 163,
+"uid": "AEC3CE1D9F8A8D8E",
+"kind": null,
+"resolved": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+}
+}
+],
+"plug": 566,
+"asset": "characters\\enemy\\enm_puffer_fish_ps4\\actors\\enm_indigenous_puffoid.actor"
+},
+{
+"key": "FE80D89C2D6D5A2D",
+"action": 402,
+"problem": null,
+"sv": 479,
+"owners": 3,
+"co_owner_classes": [
+"A3DF6F8E/93BF4450",
+"DBCB7A59/320B57AF"
+],
+"form": "local",
+"uid": "AF0189E66C49DA08",
+"rec": 26,
+"kind": "enm_pirate_robot_melee",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 877,
+"uid": "D4FFC056C8F9EE08",
+"kind": "StaticVolume"
+}
+],
+"plug": 579,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_melee.actor"
+},
+{
+"key": "FF06CCC2A9AC1EA2",
+"action": 403,
+"problem": null,
+"sv": 10,
+"owners": 1,
+"co_owner_classes": [],
+"form": "local",
+"uid": "8416CF7558A4694D",
+"rec": 14,
+"kind": "enm_pirate_robot_shooter",
+"count": 1.0,
+"locs": [
+{
+"form": "local",
+"sv": 59,
+"uid": "878A0C9EC5AA168E",
+"kind": "StaticVolume"
+}
+],
+"plug": 587,
+"asset": "characters\\enemy\\enm_pirate_robot_q4b\\actors\\enm_pirate_robot_shooter.actor"
+}
+],
+"node_template_spawners": 1,
+"actors": 586,
+"size": 539268,
+"has_header": true,
+"sha256": "d40540edad455dee68a274540cd53589b3142ce458bac16bde82a0d6f185e016",
+"header_ok": true,
+"c1_local_refs": 302,
+"c1_bad": 0
+}
+],
+"clue_hosts": {
+"animclue_pirate_melee_group_stand_conversation_idle_02": [
+"enm_pirate_robot_melee"
+],
+"animclue_toxic_crab_unburrow_alert_intro": [
+"enm_indigenous_crab"
+],
+"animclue_pirate_shooter_group_stand_conversation_idle_01": [
+"enm_pirate_robot_shooter"
+],
+"animclue_pirate_shooter_group_stand_conversation_idle_02": [
+"enm_pirate_robot_shooter"
+],
+"animclue_pirate_melee_standing_idle_01": [
+"enm_pirate_robot_melee"
+],
+"animclue_pirate_melee_group_hipstand_conversation_idle_02": [
+"enm_pirate_robot_melee"
+],
+"animclue_pirate_shielded_cleaning_shield": [
+"enm_pirate_robot_shielded"
+],
+"animclue_pirate_melee_balance_sword": [
+"enm_pirate_robot_melee"
+],
+"animclue_pirate_melee_taunt_pierre": [
+"enm_pirate_robot_melee"
+],
+"animclue_pirate_shooter_taunt_pierre": [
+"enm_pirate_robot_shooter"
+],
+"animclue_pirate_shooter_lean_wall_Coin_Toss": [
+"enm_pirate_robot_shooter"
+],
+"animclue_pirate_shooter_lean_wall_right_idle_02": [
+"enm_pirate_robot_shooter"
+],
+"animclue_pirate_shielded_telescope": [
+"enm_pirate_robot_shielded"
+],
+"animclue_pirate_shooter_standing_campfire": [
+"enm_pirate_robot_shooter"
+],
+"animclue_pirate_melee_group_stand_conversation_idle_01": [
+"enm_pirate_robot_melee"
+],
+"animclue_pirate_melee_group_hipstand_conversation_idle_01": [
+"enm_pirate_robot_melee"
+],
+"animclue_toxic_crab_zord_tapping_on_cell": [
+"enm_indigenous_crab"
+],
+"animclue_toxic_crab_zord_moping": [
+"enm_indigenous_crab"
+]
+},
+"external": {
+"B38B0E390BC215BC": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+},
+"D14E8A72C2F15EA3": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+},
+"AEC3CE1D9F8A8D8E": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+},
+"BAD8BDEDF0A2F250": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+},
+"B7005C884D0A9F71": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+},
+"D2FA1CDDCF5FD1F3": {
+"kind": null,
+"zone": null,
+"how": "unresolved"
+}
+}
+}

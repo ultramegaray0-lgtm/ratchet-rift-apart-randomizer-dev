@@ -1,0 +1,29 @@
+== stage_multi 1.2.0 (Phase B's own checker) on prebuilt_ardolis/safe
+prebuilt_ardolis/safe/RandoEnemies.stage: member 0/AE530D22FE113E2B, 45 byte(s) differ in 5 Script Vars entr(y/ies) [10, 150, 389, 401, 998]
+C1: 302 local actor references, 0 inconsistent []
+  SV #10 owners 1 FF06CCC2A9AC1EA2: enm_pirate_robot_shooter #14 -> enm_pirate_robot_melee #25 | spawn points OK volume: StaticVolume
+  SV #150 owners 1 FA5FB32C7AAB4C4A: enm_indigenous_puffoid #1 -> enm_indigenous_crab #22 | spawn points OK external: external actor AEC3CE1D9F8A8D8E (another zone)
+  SV #389 owners 1 DAFCA25C58FD387F: enm_indigenous_puffoid #1 -> enm_indigenous_crab #23 | spawn points OK external: external actor D2FA1CDDCF5FD1F3 (another zone)
+  SV #401 owners 1 D1FD84D3A21C0F9A: enm_indigenous_puffoid #1 -> enm_indigenous_crab #22 | spawn points OK external: external actor D14E8A72C2F15EA3 (another zone)
+  SV #998 owners 1 9C3139C7FFED7137: enm_pirate_robot_shooter #14 -> enm_pirate_bladeball #28 | spawn points OK volume: StaticVolume
+CHECK PASS
+
+== stage_multi 1.2.0 on prebuilt_ardolis (main build). EXPECTED: FAIL only because 1.2.0 refuses every shared Templates variable (owners > 1); this build allows the 4 whose co-owners were all seen in DEV3 runtime successes
+prebuilt_ardolis/RandoEnemies.stage: member 0/AE530D22FE113E2B, 81 byte(s) differ in 9 Script Vars entr(y/ies) [10, 150, 389, 401, 479, 544, 615, 624, 998]
+C1: 302 local actor references, 0 inconsistent []
+  SV #10 owners 1 FF06CCC2A9AC1EA2: enm_pirate_robot_shooter #14 -> enm_pirate_robot_melee #25 | spawn points OK volume: StaticVolume
+  SV #150 owners 1 FA5FB32C7AAB4C4A: enm_indigenous_puffoid #1 -> enm_indigenous_crab #22 | spawn points OK external: external actor AEC3CE1D9F8A8D8E (another zone)
+  SV #389 owners 1 DAFCA25C58FD387F: enm_indigenous_puffoid #1 -> enm_indigenous_crab #23 | spawn points OK external: external actor D2FA1CDDCF5FD1F3 (another zone)
+  SV #401 owners 1 D1FD84D3A21C0F9A: enm_indigenous_puffoid #1 -> enm_indigenous_crab #22 | spawn points OK external: external actor D14E8A72C2F15EA3 (another zone)
+  SV #479 owners 3 FE80D89C2D6D5A2D: enm_pirate_robot_melee #26 -> enm_pirate_robot_shielded #12 | spawn points OK volume: StaticVolume
+  SV #544 owners 2 F3D033F9CBFADB82: enm_pirate_robot_shooter #14 -> enm_pirate_bladeball #28 | spawn points OK volume: StaticVolume, StaticVolume
+  SV #615 owners 2 C5DCF34EF88C6636: enm_indigenous_puffoid #1 -> enm_indigenous_crab #23
+  SV #624 owners 2 F607A5D72DB3F350: enm_indigenous_puffoid #1 -> enm_indigenous_crab #23 | spawn points OK volume: StaticVolume
+  SV #998 owners 1 9C3139C7FFED7137: enm_pirate_robot_shooter #14 -> enm_pirate_bladeball #28 | spawn points OK volume: StaticVolume
+CHECK FAIL
+
+== tool 1.1.0 zone.compare_zones
+prebuilt {'ok': False, 'problems': ["Script Vars #479 has 3 plug(s) [('FE80D89C2D6D5A2D', 'EDD5E282'), ('B30A1D0CC2FDB2D9', '320B57AF'), ('F1C2F8BB4F84AF08', '93BF4450')]: not a single-owner Templates variable", "Script Vars #544 has 2 plug(s) [('F3D033F9CBFADB82', 'EDD5E282'), ('F9E9F8B341ECB335', '93BF4450')]: not a single-owner Templates variable", "Script Vars #615 has 2 plug(s) [('C5DCF34EF88C6636', '93BF4450'), ('F4A34D9C49E5642A', 'EDD5E282')]: not a single-owner Templates variable", "Script Vars #624 has 2 plug(s) [('F607A5D72DB3F350', 'EDD5E282'), ('AFA9C819E6D53B94', 'F7EDFFC8')]: not a single-owner Templates variable"]}
+prebuilt/safe {'ok': True, 'problems': []}
+(final package) prebuilt_ardolis ok = False | problems: ["Script Vars #479 has 3 plug(s) [('FE80D89C2D6D5A2D', 'EDD5E282'), ('B30A1D0CC2FDB2D9', '320B57AF'), ('F1C2F8BB4F84AF08', '93BF4450')]: not a single-owner Templates variable", "Script Vars #544 has 2 plug(s) [('F3D033F9CBFADB82', 'EDD5E282'), ('F9E9F8B341ECB335', '93BF4450')]: not a single-owner Templates variable", "Script Vars #615 has 2 plug(s) [('C5DCF34EF88C6636', '93BF4450'), ('F4A34D9C49E5642A', 'EDD5E282')]: not a single-owner Templates variable", "Script Vars #624 has 2 plug(s) [('F607A5D72DB3F350', 'EDD5E282'), ('AFA9C819E6D53B94', 'F7EDFFC8')]: not a single-owner Templates variable"]
+(final package) prebuilt_ardolis/safe ok = True | problems: none
