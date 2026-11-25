@@ -104,7 +104,7 @@ try:                                 # optional, free: pip install lz4. Checked 
 except Exception:
     LZ4 = "built-in (pure Python; pip install lz4 makes the scan ~100x faster)"
 
-VERSION = "2.0.1"
+VERSION = "2.1.0"
 KIT = "v0.76-DEV4"
 STAGE_LUA = "1.1.0"                   # the 16/18 handshake value (V.STAGE_LUA / ST.STAGE_LUA); unchanged
 STAGE_MOD_PATH = "mods/RandoEnemies.stage"
@@ -372,13 +372,14 @@ class Zone:
             f["co_owner_classes"] = sorted({"%08X/%08X" % (o[0]["cls"], o[2]) for o in own if o[0] is not nd})
             f["form"] = self.var_form(vi)
             v = self.vars[vi]
-            if f["form"] == "local":
+            if f["form"] in ("local", "external"):
                 f["uid"], f["rec"] = hex16(v[5]), v[2]
-                if self.rec_of.get(v[5]) != v[2] or v[5] in self.dup_uids:
-                    f["problem"] = f["problem"] or "Templates reference inconsistent in the game's own zone"
-                elif v[2] < len(self.actors):
-                    f["kind"] = self.kind_of_rec(v[2])
-                    f["asset"] = self.asset_path_of_rec(v[2])
+                if f["form"] == "local":
+                    if self.rec_of.get(v[5]) != v[2] or v[5] in self.dup_uids:
+                        f["problem"] = f["problem"] or "Templates reference inconsistent in the game's own zone"
+                    elif v[2] < len(self.actors):
+                        f["kind"] = self.kind_of_rec(v[2])
+                        f["asset"] = self.asset_path_of_rec(v[2])
             for p in nd["plugs"]:
                 nm, pv, _ = self.plugs[p]
                 if nm == PLUG_LOCATIONS:
@@ -669,6 +670,8 @@ class Scan:
         self.zones = OrderedDict()       # zid hex -> record
         self.actor_ids = {}              # zid hex -> sorted array('Q') of actor uids
         self.template_catalog = {}       # globally unique enemy templates used by native factories
+        self.template_catalog_all = {}   # includes non-unique UIDs, for resolving existing external templates
+        self.actor_catalog = defaultdict(list)  # UID -> every scanned actor kind/home
         self.template_uid_homes = defaultdict(set)
         self.clue_uids = {}              # uid -> set of clue kinds (from every zone)
         self.ext_needed = set()
@@ -710,6 +713,8 @@ def scan(source, log=print, keep_zone=None):
         S.actor_ids[zh] = array.array("Q", sorted(z.rec_of))
         for u, r in z.rec_of.items():
             k = z.kind_of_rec(r)
+            S.actor_catalog[hex16(u)].append({"kind": k, "asset": z.asset_path_of_rec(r),
+                                               "zone_id": zh, "zone": path, "planet": rec["planet"], "rec": r})
             if k.startswith("animclue_"):
                 S.clue_uids.setdefault(u, set()).add(k)
         if not z.has_scripts:
@@ -722,12 +727,13 @@ def scan(source, log=print, keep_zone=None):
         facs = z.factories()
         rec["factories"] = facs
         for f in facs:
-            if f["form"] == "local" and f["uid"] and f["kind"] and not f["problem"]:
+            if f["form"] == "local" and f["uid"] and f["kind"]:
+                meta = {"uid": f["uid"], "kind": f["kind"], "asset": f.get("asset"),
+                        "rec": f["rec"], "zone_id": zh, "zone": path, "planet": rec["planet"]}
                 S.template_uid_homes[f["uid"]].add(zh)
-                S.template_catalog.setdefault(f["uid"], {
-                    "uid": f["uid"], "kind": f["kind"], "asset": f.get("asset"),
-                    "rec": f["rec"], "zone_id": zh, "zone": path, "planet": rec["planet"]
-                })
+                S.template_catalog_all.setdefault(f["uid"], meta)
+                if not f["problem"]:
+                    S.template_catalog.setdefault(f["uid"], meta)
             for l in f["locs"]:
                 if l["form"] == "external":
                     S.ext_needed.add(int(l["uid"], 16))
@@ -825,8 +831,109 @@ def spawn_points_ok(S, f, rep, strict_external):
     return True, worst, "; ".join(parts)
 
 
+def plan_zone_force(S, brain, rec, opts, rng):
+    """Aggressive experimental mode: replace every classifiable enemy factory.
+
+    It deliberately relaxes faction/movement and spawn-clue rules, but still requires:
+    - a unique source enemy template from a scanned zone;
+    - a single, structurally valid Templates plug;
+    - an identifiable original enemy kind;
+    - a decodable local/external actor reference.
+
+    Replacements use external UID references (idx=0xFFFF) to avoid consuming a local
+    anchor. Known failed replacement UIDs are blacklisted, but the spawner is retried
+    with a different candidate. Every forced change is clearly marked for in-game testing.
+    """
+    facs = rec["factories"]
+    decisions = OrderedDict()
+    changes = []
+    global_pool = [v for v in S.template_catalog.values() if (v.get("kind") or "").startswith("enm_")]
+    global_pool.sort(key=lambda x: (x["kind"], x["uid"]))
+    usage = Counter()
+
+    for f in facs:
+        key = f["key"]
+        if f.get("problem"):
+            decisions[key] = ("refused", "force mode cannot safely identify one Templates variable: " + f["problem"])
+            continue
+        if f.get("form") not in ("local", "external") or not f.get("uid") or f.get("sv") is None:
+            decisions[key] = ("refused", "force mode requires a singular local/external enemy Template reference")
+            continue
+
+        original_uid = f["uid"]
+        original_kind = f.get("kind")
+        original_asset = f.get("asset")
+        if f["form"] == "external":
+            homes = S.actor_catalog.get(original_uid, [])
+            kinds = {x["kind"] for x in homes}
+            if len(kinds) == 1:
+                original_kind = next(iter(kinds))
+                original_asset = next((x.get("asset") for x in homes if x["kind"] == original_kind), None)
+        if not original_kind or not original_kind.startswith("enm_"):
+            decisions[key] = ("not enemy", "original template could not be classified as an enemy")
+            continue
+
+        verdict = (getattr(opts, "verdict_map", {}) or {}).get(rec["zone_id"], {}).get(key)
+        avoid = {verdict[1]} if verdict and verdict[0] in ("NO SPAWN", "ORIGINAL SPAWNED") and verdict[1] else set()
+
+        candidates = [x for x in global_pool if x["uid"] != original_uid and x["uid"] not in avoid
+                      and x["zone_id"] != rec["zone_id"]]
+        if not candidates:
+            decisions[key] = ("refused", "no globally unique foreign enemy template is available")
+            continue
+
+        ok_orig, original_family, _ = brain.regular(original_kind, original_asset)
+        ranked = []
+        for candidate in candidates:
+            ok_rep, rep_family, _ = brain.regular(candidate["kind"], candidate.get("asset"))
+            pair_ok, pair_tier, pair_evidence = False, "forced", "forced cross-family fallback"
+            if ok_orig and ok_rep:
+                try:
+                    pair_ok, pair_tier, pair_evidence = brain.pair(original_kind, original_family,
+                                                                    candidate["kind"], rep_family)
+                except Exception:
+                    pair_ok = False
+            spawn_ok, spawn_tier, spawn_evidence = spawn_points_ok(S, f, candidate["kind"], False)
+            score = (0 if pair_ok and spawn_ok else
+                     1 if pair_ok else
+                     2 if spawn_ok else 3)
+            ranked.append((score, candidate, rep_family, pair_tier, pair_evidence,
+                           spawn_tier, spawn_evidence))
+        best_score = min(x[0] for x in ranked)
+        best = [x for x in ranked if x[0] == best_score]
+        weights = [1.0 / (1.0 + usage[x[1]["kind"]]) for x in best]
+        chosen = rng.choices(best, weights=weights, k=1)[0]
+        _, candidate, rep_family, pair_tier, pair_evidence, spawn_tier, spawn_evidence = chosen
+        usage[candidate["kind"]] += 1
+
+        forced_unsafe = best_score == 3 or f.get("owners", 0) != 1 or not f.get("locs")
+        tier = "FORCED-UNVERIFIED" if forced_unsafe else "FORCED-TEST"
+        changes.append({
+            "zone": rec["zone"], "zone_id": rec["zone_id"], "planet": rec["planet"], "key": key,
+            "action": f["action"], "plug": f.get("plug"), "var_index": f["sv"],
+            "original_uid": original_uid, "original_index": f["rec"], "original": original_kind,
+            "original_family": original_family or "unknown",
+            "replacement_uid": candidate["uid"], "replacement_index": 0xFFFF,
+            "replacement_external": True, "replacement_source_zone": candidate["zone"],
+            "replacement_source_zone_id": candidate["zone_id"], "replacement_source_planet": candidate["planet"],
+            "replacement": candidate["kind"], "replacement_family": rep_family or "unknown",
+            "pair_tier": pair_tier, "pair_evidence": "FORCED V2.1.0: " + pair_evidence,
+            "spawn_tier": spawn_tier or "forced-unsafe",
+            "spawn_points": spawn_evidence or "forced: spawn point was not validated",
+            "count": f.get("count"), "tier": tier, "anchor": None,
+            "pair": "forced|%s>%s" % (original_kind, candidate["kind"]),
+        })
+        decisions[key] = ("changed", "%s -> %s [FORCED, in-game test required]" %
+                          (original_kind, candidate["kind"]))
+
+    changes.sort(key=lambda c: c["var_index"])
+    return changes, decisions, {}, []
+
+
 def plan_zone(S, brain, rec, opts, rng):
     """returns (changes, decisions{key: (status, reason)}, anchors)"""
+    if getattr(opts, "force_all_enemies", False):
+        return plan_zone_force(S, brain, rec, opts, rng)
     facs = [f for f in rec["factories"]]
     dec = OrderedDict()
     # the replacement pool: local templates a native factory spawns from
@@ -1347,7 +1454,8 @@ def emit(a, S, src, brain, build, out):
              "label": "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile, "stage_sha256": ssha,
              "settings": {"profile": a.profile, "strict_external": a.strict_external, "rate": a.rate,
                           "planets": a.planet or "all", "actor_family": not a.no_actor_family,
-                          "cross_planet": bool(getattr(a, "cross_planet", False))},
+                          "cross_planet": bool(getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)),
+                          "force_all_enemies": bool(getattr(a, "force_all_enemies", False))},
              "zones": zones, "changes": changes, "pins": [{"key": k, "replacement": u, "result": w} for k, u, w in pins]}
         with open(os.path.join(out, "stage_enemies_manifest.json"), "w") as fh:
             json.dump(m, fh, indent=1)
@@ -1461,7 +1569,7 @@ def check_build(out, src_args, verbose=True):
             if not f or f["sv"] != c["var_index"]:
                 problems.append("%s %s: not the factory that owns SV #%d" % (zrec["zone"], c["key"], c["var_index"]))
                 continue
-            if f["owners"] != 1 and not c["tier"].startswith(("UNVERIFIED", "shared-seen")):
+            if f["owners"] != 1 and not c["tier"].startswith(("UNVERIFIED", "shared-seen", "FORCED-UNVERIFIED")):
                 problems.append("%s %s: shared Templates variable" % (zrec["zone"], c["key"]))
             if f["uid"] != c["original_uid"]:
                 problems.append("%s %s: original kind does not match the zone" % (zrec["zone"], c["key"]))
@@ -1485,11 +1593,12 @@ def check_build(out, src_args, verbose=True):
                 problems.append("%s %s: replacement kind does not match the zone" % (zrec["zone"], c["key"]))
             if not c.get("replacement_external") and c["replacement_uid"] not in after_users:
                 problems.append("%s %s: replacement has no unchanged native user" % (zrec["zone"], c["key"]))
-            if not any(l["form"] in ("local", "external") for l in f["locs"]) or any(l["form"] not in ("local", "external") for l in f["locs"]):
-                problems.append("%s %s: spawn points not decodable" % (zrec["zone"], c["key"]))
-            for l in f["locs"]:
-                if l["form"] == "local" and l["kind"].startswith("animclue_") and c["spawn_tier"] not in ("clue-native", "clue-family", "external-unresolved", "external-volume"):
-                    problems.append("%s %s: anim clue spawn point not covered by the tier" % (zrec["zone"], c["key"]))
+            if not c["tier"].startswith(("FORCED-UNVERIFIED", "FORCED-TEST")):
+                if not any(l["form"] in ("local", "external") for l in f["locs"]) or any(l["form"] not in ("local", "external") for l in f["locs"]):
+                    problems.append("%s %s: spawn points not decodable" % (zrec["zone"], c["key"]))
+                for l in f["locs"]:
+                    if l["form"] == "local" and l["kind"].startswith("animclue_") and c["spawn_tier"] not in ("clue-native", "clue-family", "external-unresolved", "external-volume"):
+                        problems.append("%s %s: anim clue spawn point not covered by the tier" % (zrec["zone"], c["key"]))
         total += len(ch)
     src.close()
     zf.close()
@@ -1579,6 +1688,8 @@ def main(argv=None):
             p.add_argument("--no-actor-family", action="store_true", help="never infer a family from the actor file")
             p.add_argument("--cross-planet", action="store_true",
                            help="EXPERIMENTAL: use globally unique enemy template UIDs from other zones via external actor refs")
+            p.add_argument("--force-all-enemies", action="store_true",
+                           help="EXPERIMENTAL MAXIMUM: force every classifiable enemy SunsetSpawnerFactory to a globally unique foreign enemy template; bypasses faction/spawn-clue/shared-owner safety rules and requires in-game testing")
             p.add_argument("--no-pins", action="store_true", help="do not force the 4 changes confirmed in game")
             p.add_argument("--verdicts", action="append", help="stage_check_log.py --json file(s): WORKED kept as confirmed, "
                                                                 "ORIGINAL SPAWNED / NO SPAWN left native (repeatable)")
