@@ -58,6 +58,16 @@ class VerdictPolicyTests(unittest.TestCase):
         }}
         self.assertEqual(SA.effective_pins(ARDOLIS, verdicts, no_pins=True), [])
 
+    def test_bundled_latest_evidence_has_expected_170_verdicts(self):
+        import json
+        from collections import Counter
+        path = os.path.join(SA.HERE, "evidence", "verdicts_2026-11-26_015324.json")
+        with open(path, encoding="utf-8") as fh:
+            payload = json.load(fh)
+        counts = Counter(v["verdict"] for v in payload["verdicts"].values())
+        self.assertEqual(len(payload["verdicts"]), 170)
+        self.assertEqual(counts, Counter({"WORKED": 5, "NO SPAWN": 31, "NOT REACHED": 134}))
+
     def test_other_zone_pins_are_not_leaked(self):
         verdicts = {ARDOLIS: {"B2B978B5BC3D8A4D": ("WORKED", NEW_UID)}}
         self.assertEqual(SA.effective_pins("0000000000000000", verdicts), [])
