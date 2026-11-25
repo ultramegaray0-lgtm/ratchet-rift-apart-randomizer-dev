@@ -23,6 +23,8 @@ jobs:
         run: python -m py_compile tools/stage_enemies/*.py tests/*.py
       - name: Runtime verdict policy regression
         run: python -I -m unittest discover -s tests -p "test_verdict_policy.py" -v
+      - name: Force-all mode CLI smoke test
+        run: python -I tools/stage_enemies/stage_allgame.py build --help
       - name: Builder CLI smoke test
         run: python -I tools/stage_enemies/stage_allgame.py --help
       - name: Log checker CLI smoke test
