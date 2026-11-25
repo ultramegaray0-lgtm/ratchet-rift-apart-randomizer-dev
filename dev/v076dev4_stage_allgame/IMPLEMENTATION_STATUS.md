@@ -60,3 +60,16 @@ Upload those three outputs to `incoming/`. The adapter planner can then target o
 - Added offline regression tests and a dedicated CI workflow. CI passed on commit `7723c3f80dc08f56297f7e381f450b04cfaa6bef`.
 - Generic Template adapters remain census-only. They are not patched until exact spawner class, ownership and spawn-context semantics are proven. This is intentional, not an omitted success claim.
 - The actual .stage files must be generated against the user's local game archives; the repository does not contain the complete game installation.
+
+
+## Generated V2.0.1 evidence-guided stage
+
+GitHub Actions run [45717250211](https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/actions/runs/45717250211) successfully produced the reconciled stage package from the uploaded 2026-11-25 build and latest verdicts:
+
+- 139 retained changes across 31 zones (5 WORKED + 134 NOT REACHED).
+- 31 NO SPAWN entries restored to original references.
+- Stage SHA-256: `ed3ab758d3480e143ed3bc01c70db885d1c9cf305604263a8ce4d106eff47b49`.
+- ZIP CRC, expected replacement/original UID checks, and manifest member consistency passed.
+- Package artifact: `enemy-randomizer-v2.0.1-evidence-guided`.
+
+This reconciled .stage is ready for a controlled in-game test. The separate BUILD_V2_MAX launcher is the route for fresh local-zone and experimental cross-planet builds against the complete local game install.
