@@ -27,3 +27,17 @@ jobs:
         run: python -I tools/stage_enemies/stage_allgame.py --help
       - name: Log checker CLI smoke test
         run: python -I tools/stage_enemies/stage_check_log.py --help
+      - name: Build evidence-reconciled V2.0.1 .stage
+        run: |
+          python -I tools/stage_enemies/reconcile_stage_verdicts.py \
+            --stage ../incoming/RandoEnemies_AllPlanets_v076/builds/build-20261125-223722/RandoEnemies.stage \
+            --manifest ../incoming/RandoEnemies_AllPlanets_v076/builds/build-20261125-223722/stage_enemies_manifest.json \
+            --verdicts tools/stage_enemies/evidence/verdicts_2026-11-26_015324.json \
+            --runtime-script scripts/18_rando_stage_enemies.lua \
+            --out dist/v2.0.1-evidence-guided
+      - name: Upload V2.0.1 stage package
+        uses: actions/upload-artifact@v4
+        with:
+          name: enemy-randomizer-v2.0.1-evidence-guided
+          path: dev/v076dev4_stage_allgame/dist/v2.0.1-evidence-guided/
+          if-no-files-found: error
