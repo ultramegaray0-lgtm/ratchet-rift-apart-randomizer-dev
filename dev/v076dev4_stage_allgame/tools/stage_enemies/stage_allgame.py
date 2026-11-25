@@ -991,8 +991,9 @@ def manifest_lua(m):
             lua_str(c["original_uid"]), c["original_index"], lua_str(c["original"]), lua_str(c["original_family"])))
         L.append("      replacement_uid = %s, replacement_index = %d, replacement = %s, replacement_family = %s," % (
             lua_str(c["replacement_uid"]), c["replacement_index"], lua_str(c["replacement"]), lua_str(c["replacement_family"])))
-        L.append("      replacement_external = %s, replacement_source_planet = %s," % (
-            "true" if c.get("replacement_external") else "false", lua_str(c.get("replacement_source_planet") or "")))
+        L.append("      replacement_external = %s, replacement_source_planet = %s, replacement_source_zone = %s," % (
+            "true" if c.get("replacement_external") else "false", lua_str(c.get("replacement_source_planet") or ""),
+            lua_str(c.get("replacement_source_zone") or "")))
         L.append("      original_refs = %d, replacement_refs = %d, tier = %s," % (c["original_refs"], c["replacement_refs"], lua_str(c["tier"])))
         L.append("      pair = %s, spawner_keys = { %s } }," % (lua_str(c["pair"]), lua_str(c["key"])))
     L += ["  },", "}", ""]
@@ -1318,10 +1319,12 @@ def emit(a, S, src, brain, build, out):
             fh.write(manifest_lua(m))
         with open(os.path.join(out, "changes.csv"), "w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh)
-            w.writerow(["planet", "zone", "spawner", "original", "replacement", "count", "tier", "pair evidence", "spawn points"])
+            w.writerow(["planet", "zone", "spawner", "original", "replacement", "count", "tier", "pair evidence",
+                        "spawn points", "replacement external", "replacement source planet", "replacement source zone"])
             for c in changes:
                 w.writerow([c["planet"], c["zone"], c["key"], c["original"], c["replacement"], c["count"], c["tier"],
-                            c["pair_evidence"], c["spawn_points"]])
+                            c["pair_evidence"], c["spawn_points"], bool(c.get("replacement_external")),
+                            c.get("replacement_source_planet") or "", c.get("replacement_source_zone") or ""])
     rows = write_inventory(S, decisions, out)
     template_rows = write_template_inventory(S, out)
     print("  Template-adapter census: %d plug records; %d exact SpawnerScriptAction nodes (diagnostic only)" % (len(template_rows), sum(1 for z in S.zones.values() for n in z.get("template_nodes", []) if n["is_spawner_class"])))
