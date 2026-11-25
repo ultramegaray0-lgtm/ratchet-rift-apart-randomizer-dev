@@ -390,8 +390,9 @@ class Zone:
         return out
 
     def node_template_spawners(self):
-        """Count Template-plug nodes outside SunsetSpawnerFactory; retained for backwards-compatible reports."""
-        return len(self.template_nodes())
+        """Count distinct nodes with a Template plug outside SunsetSpawnerFactory."""
+        return sum(1 for nd in self.nodes if nd["cls"] != FACTORY_CLASS
+                   and any(self.plugs[p][0] == PLUG_TEMPLATE for p in nd["plugs"]))
 
 
 def apply_changes(raw, changes):
@@ -672,7 +673,7 @@ def scan(source, log=print, keep_zone=None):
             rec["status"] = "no scripts"
             continue
         rec["template_nodes"] = z.template_nodes()
-        rec["node_template_spawners"] = len(rec["template_nodes"])
+        rec["node_template_spawners"] = z.node_template_spawners()
         n1, bad = z.c1()
         rec["c1_local_refs"], rec["c1_bad"] = n1, len(bad)
         facs = z.factories()
