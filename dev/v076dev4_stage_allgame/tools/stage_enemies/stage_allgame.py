@@ -627,6 +627,8 @@ class Scan:
     def __init__(self):
         self.zones = OrderedDict()       # zid hex -> record
         self.actor_ids = {}              # zid hex -> sorted array('Q') of actor uids
+        self.template_catalog = {}       # globally unique enemy templates used by native factories
+        self.template_uid_homes = defaultdict(set)
         self.clue_uids = {}              # uid -> set of clue kinds (from every zone)
         self.ext_needed = set()
         self.resolved = {}               # uid -> (kind or None, zone, how)
@@ -679,6 +681,12 @@ def scan(source, log=print, keep_zone=None):
         facs = z.factories()
         rec["factories"] = facs
         for f in facs:
+            if f["form"] == "local" and f["uid"] and f["kind"] and not f["problem"]:
+                S.template_uid_homes[f["uid"]].add(zh)
+                S.template_catalog.setdefault(f["uid"], {
+                    "uid": f["uid"], "kind": f["kind"], "asset": f.get("asset"),
+                    "rec": f["rec"], "zone_id": zh, "zone": path, "planet": rec["planet"]
+                })
             for l in f["locs"]:
                 if l["form"] == "external":
                     S.ext_needed.add(int(l["uid"], 16))
@@ -688,6 +696,8 @@ def scan(source, log=print, keep_zone=None):
             S.kept[zh] = load                         # re-read for the build (hundreds of zones do not stay in memory)
         if (i + 1) % 25 == 0 or i + 1 == n:
             log("  scanned %d/%d zones (%.0f s)" % (i + 1, n, time.time() - t0))
+    # Foreign template UIDs are candidates only when globally unique and backed by a native factory.
+    S.template_catalog = {u: v for u, v in S.template_catalog.items() if len(S.template_uid_homes[u]) == 1}
     # resolve external spawn points across the whole game
     home_of = defaultdict(list)
     need = S.ext_needed
@@ -788,7 +798,16 @@ def plan_zone(S, brain, rec, opts, rng):
         f0 = next(f for f in facs if f["uid"] == uid)
         ok, fam, why = brain.regular(f0["kind"], f0.get("asset"))
         if ok:
-            pool[uid] = (f0["kind"], fam, f0["rec"], why)
+            pool[uid] = {"kind": f0["kind"], "family": fam, "rec": f0["rec"], "family_src": why,
+                         "external": False, "source_zone": rec["zone"], "source_planet": rec["planet"]}
+    if getattr(opts, "cross_planet", False):
+        for uid, meta in S.template_catalog.items():
+            if uid in pool or meta["zone_id"] == rec["zone_id"]:
+                continue
+            ok, fam, why = brain.regular(meta["kind"], meta.get("asset"))
+            if ok:
+                pool[uid] = {"kind": meta["kind"], "family": fam, "rec": 0xFFFF, "family_src": why,
+                             "external": True, "source_zone": meta["zone"], "source_planet": meta["planet"]}
     # per factory: eligibility, then the replacement options
     options = {}
     for f in facs:
@@ -827,7 +846,8 @@ def plan_zone(S, brain, rec, opts, rng):
                 continue
             shared = "seen" if not unseen else "unverified"
         opts_f, why_not = [], Counter()
-        for uid, (rk, rfam, rrec, rwhy) in pool.items():
+        for uid, candidate in pool.items():
+            rk, rfam, rrec, rwhy = candidate["kind"], candidate["family"], candidate["rec"], candidate["family_src"]
             if uid == f["uid"] or rk == f["kind"]:
                 continue
             pok, ptier, pev = brain.pair(f["kind"], fam, rk, rfam)
@@ -839,7 +859,9 @@ def plan_zone(S, brain, rec, opts, rng):
                 why_not["spawn point: " + re.sub(r" for \S+$", " for the replacement", stext)[:140]] += 1
                 continue
             opts_f.append({"uid": uid, "kind": rk, "family": rfam, "rec": rrec, "pair_tier": ptier, "pair_evidence": pev,
-                           "spawn_tier": stier, "spawn_points": stext, "family_src": rwhy})
+                           "spawn_tier": stier, "spawn_points": stext, "family_src": rwhy,
+                           "external": candidate["external"], "source_zone": candidate["source_zone"],
+                           "source_planet": candidate["source_planet"]})
         if not opts_f:
             if not pool or set(pool) <= {f["uid"]}:
                 dec[k] = ("refused", "no other regular enemy template in this zone (pool: %s)" % (
@@ -876,7 +898,9 @@ def plan_zone(S, brain, rec, opts, rng):
         if len(os_) == 1:
             sole[os_[0]["uid"]] += 1
     needed = {o["uid"] for o in chosen.values()}
-    for uid in pool:
+    for uid, candidate in pool.items():
+        if candidate["external"]:
+            continue
         if fixed_users.get(uid):
             anchors[uid] = fixed_users[uid][0]
             continue
@@ -899,7 +923,7 @@ def plan_zone(S, brain, rec, opts, rng):
     order = sorted(changeable)
     rng.shuffle(order)
     for k in order:
-        os_ = [o for o in options[k] if o["uid"] in anchors]
+        os_ = [o for o in options[k] if o.get("external") or o["uid"] in anchors]
         if not os_:
             dec[k] = ("refused", "every compatible replacement template lost its last native user (anchor)")
             continue
@@ -912,7 +936,7 @@ def plan_zone(S, brain, rec, opts, rng):
         used[o["kind"]] += 1
     # every chosen replacement must still have an unchanged user (anchor safety net)
     for k, o in list(chosen.items()):
-        if anchors.get(o["uid"]) in chosen:
+        if not o.get("external") and anchors.get(o["uid"]) in chosen:
             del chosen[k]
             dec[k] = ("refused", "anchor conflict")
     fac_by_key = {f["key"]: f for f in facs}
@@ -925,6 +949,8 @@ def plan_zone(S, brain, rec, opts, rng):
             "zone": rec["zone"], "zone_id": rec["zone_id"], "planet": rec["planet"], "key": k, "action": f["action"],
             "plug": f["plug"], "var_index": f["sv"], "original_uid": f["uid"], "original_index": f["rec"],
             "original": f["kind"], "original_family": f["_fam"], "replacement_uid": o["uid"], "replacement_index": o["rec"],
+            "replacement_external": bool(o.get("external")), "replacement_source_zone": o.get("source_zone"),
+            "replacement_source_planet": o.get("source_planet"),
             "replacement": o["kind"], "replacement_family": o["family"], "pair_tier": o["pair_tier"],
             "pair_evidence": o["pair_evidence"], "spawn_tier": o["spawn_tier"], "spawn_points": o["spawn_points"],
             "count": f["count"], "tier": tier, "anchor": anchors.get(o["uid"]),
@@ -1244,7 +1270,7 @@ def emit(a, S, src, brain, build, out):
         chk = {c["key"] for c in ch}
         users_after = {hex16(z1.vars[f["sv"]][5]) for f in z1.factories() if f["form"] == "local" and f["key"] not in chk}
         for c in ch:
-            if c["replacement_uid"] not in users_after:
+            if not c.get("replacement_external") and c["replacement_uid"] not in users_after:
                 problems.append("%s: replacement %s has no unchanged native user after the patch" % (c["key"], c["replacement_uid"]))
         if problems:
             for c in ch:
@@ -1277,7 +1303,8 @@ def emit(a, S, src, brain, build, out):
         m = {"format": 1, "tool": VERSION, "kit": KIT, "stage_lua": STAGE_LUA, "seed": a.seed, "profile": a.profile,
              "label": "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile, "stage_sha256": ssha,
              "settings": {"profile": a.profile, "strict_external": a.strict_external, "rate": a.rate,
-                          "planets": a.planet or "all", "actor_family": not a.no_actor_family},
+                          "planets": a.planet or "all", "actor_family": not a.no_actor_family,
+                          "cross_planet": bool(getattr(a, "cross_planet", False))},
              "zones": zones, "changes": changes, "pins": [{"key": k, "replacement": u, "result": w} for k, u, w in pins]}
         with open(os.path.join(out, "stage_enemies_manifest.json"), "w") as fh:
             json.dump(m, fh, indent=1)
@@ -1390,9 +1417,14 @@ def check_build(out, src_args, verbose=True):
                 continue
             if f["owners"] != 1 and not c["tier"].startswith(("UNVERIFIED", "shared-seen")):
                 problems.append("%s %s: shared Templates variable" % (zrec["zone"], c["key"]))
-            if f["uid"] != c["original_uid"] or z0.kind_of_rec(c["replacement_index"]) != c["replacement"]:
-                problems.append("%s %s: kinds do not match the zone" % (zrec["zone"], c["key"]))
-            if c["replacement_uid"] not in after_users:
+            if f["uid"] != c["original_uid"]:
+                problems.append("%s %s: original kind does not match the zone" % (zrec["zone"], c["key"]))
+            elif c.get("replacement_external"):
+                if c["replacement_index"] != 0xFFFF or c["replacement_uid"] in z0.rec_of:
+                    problems.append("%s %s: malformed external replacement reference" % (zrec["zone"], c["key"]))
+            elif z0.kind_of_rec(c["replacement_index"]) != c["replacement"]:
+                problems.append("%s %s: replacement kind does not match the zone" % (zrec["zone"], c["key"]))
+            if not c.get("replacement_external") and c["replacement_uid"] not in after_users:
                 problems.append("%s %s: replacement has no unchanged native user" % (zrec["zone"], c["key"]))
             if not any(l["form"] in ("local", "external") for l in f["locs"]) or any(l["form"] not in ("local", "external") for l in f["locs"]):
                 problems.append("%s %s: spawn points not decodable" % (zrec["zone"], c["key"]))
@@ -1486,6 +1518,8 @@ def main(argv=None):
             p.add_argument("--no-safe", action="store_true", help="build: do not also write the safe/ fallback build")
             p.add_argument("--strict-external", action="store_true", help="refuse external spawn points no zone holds")
             p.add_argument("--no-actor-family", action="store_true", help="never infer a family from the actor file")
+            p.add_argument("--cross-planet", action="store_true",
+                           help="EXPERIMENTAL: use globally unique enemy template UIDs from other zones via external actor refs")
             p.add_argument("--no-pins", action="store_true", help="do not force the 4 changes confirmed in game")
             p.add_argument("--verdicts", action="append", help="stage_check_log.py --json file(s): WORKED kept as confirmed, "
                                                                 "ORIGINAL SPAWNED / NO SPAWN left native (repeatable)")
