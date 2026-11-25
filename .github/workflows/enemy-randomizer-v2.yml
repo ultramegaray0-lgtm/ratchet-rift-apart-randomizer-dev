@@ -50,7 +50,7 @@ jobs:
           cp tools/stage_enemies/*.py dist/v2.2-safe-high-coverage-toolkit/tools/stage_enemies/
           cp -r tools/stage_enemies/evidence dist/v2.2-safe-high-coverage-toolkit/tools/stage_enemies/
           cp scripts/18_rando_stage_enemies.lua dist/v2.2-safe-high-coverage-toolkit/scripts/
-          cp BUILD_BUILD_V2_2_SAFE_HIGH_COVERAGE.bat V2.2_SAFE_HIGH_COVERAGE_README.md dist/v2.2-safe-high-coverage-toolkit/
+          cp BUILD_V2_2_SAFE_HIGH_COVERAGE.bat V2.2_SAFE_HIGH_COVERAGE_README.md dist/v2.2-safe-high-coverage-toolkit/
           cd dist && zip -qr enemy-randomizer-v2.2-safe-high-coverage-toolkit.zip v2.2-safe-high-coverage-toolkit
       - name: Upload V2.2 safe high-coverage toolkit
         uses: actions/upload-artifact@v4
