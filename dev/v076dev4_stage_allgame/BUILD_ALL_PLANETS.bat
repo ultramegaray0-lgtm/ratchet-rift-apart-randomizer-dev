@@ -19,7 +19,7 @@ set "VERD="
 if exist "verdicts\*.json" for %%f in ("verdicts\*.json") do call set "VERD=%%VERD%% --verdicts "%%~ff""
 echo.
 echo Scanning every zone of "%GAME%" ...
-%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "builds\AUTO" %VERD% %2 %3 %4 %5 %6 %7 %8 %9
+%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "builds\AUTO" --profile all --cross-planet --rate 1.0 %VERD% %2 %3 %4 %5 %6 %7 %8 %9
 if errorlevel 1 goto failed
 set /p OUT=<"builds\LAST_BUILD.txt"
 echo.
