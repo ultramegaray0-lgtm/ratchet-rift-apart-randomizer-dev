@@ -30,8 +30,8 @@ jobs:
       - name: Build evidence-reconciled V2.0.1 .stage
         run: |
           python -I tools/stage_enemies/reconcile_stage_verdicts.py \
-            --stage ../incoming/RandoEnemies_AllPlanets_v076/builds/build-20261125-223722/RandoEnemies.stage \
-            --manifest ../incoming/RandoEnemies_AllPlanets_v076/builds/build-20261125-223722/stage_enemies_manifest.json \
+            --stage ../../incoming/RandoEnemies_AllPlanets_v076/builds/build-20261125-223722/RandoEnemies.stage \
+            --manifest ../../incoming/RandoEnemies_AllPlanets_v076/builds/build-20261125-223722/stage_enemies_manifest.json \
             --verdicts tools/stage_enemies/evidence/verdicts_2026-11-26_015324.json \
             --runtime-script scripts/18_rando_stage_enemies.lua \
             --out dist/v2.0.1-evidence-guided
