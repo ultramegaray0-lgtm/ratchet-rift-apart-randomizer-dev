@@ -1108,7 +1108,7 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
           "| .stage size | %s |" % stage_info, ""]
     L += ["Change tiers: " + ", ".join("%s %d" % kv for kv in tiers.most_common()) + ".",
           "Spawn-point tiers: " + ", ".join("%s %d" % kv for kv in stiers.most_common()) + ".", "",
-          "- **confirmed**: worked in your 2026-11-25 run (kept as they were).",
+          "- **confirmed**: the exact replacement UID was observed spawning in supplied runtime verdict evidence (or in the bundled historical evidence); the latest observed result takes precedence.",
           "- **proven**: the pair has in-game evidence (built-in table, your logs, the .stage runs). NOT yet seen at this spawner.",
           "- **kin**: same faction and movement group, the kit's KILLABLE rule. Unverified in game.",
           "- spawn points: `volume` local volume; `clue-native` an anim clue the game itself uses for the replacement; "
