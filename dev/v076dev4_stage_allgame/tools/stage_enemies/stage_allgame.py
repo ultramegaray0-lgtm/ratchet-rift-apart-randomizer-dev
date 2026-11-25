@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""stage_allgame.py 2.0.0 - the ALL-PLANET .stage Enemy Randomizer builder (Rift Apart Randomizer v0.76-DEV4).
+"""stage_allgame.py 2.0.1 - the ALL-PLANET .stage Enemy Randomizer builder (Rift Apart Randomizer v0.76-DEV4).
 
 Standard library only (the free `lz4` package is used automatically when installed: about 100x faster reading).
 Reads the game folder (toc, dag, archives) READ-ONLY. Only `install` / `uninstall` write to the game folder, and they back
@@ -104,7 +104,7 @@ try:                                 # optional, free: pip install lz4. Checked 
 except Exception:
     LZ4 = "built-in (pure Python; pip install lz4 makes the scan ~100x faster)"
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 KIT = "v0.76-DEV4"
 STAGE_LUA = "1.1.0"                   # the 16/18 handshake value (V.STAGE_LUA / ST.STAGE_LUA); unchanged
 STAGE_MOD_PATH = "mods/RandoEnemies.stage"
@@ -158,6 +158,43 @@ COOWNER_SEEN = {
 # co-owner classes on shared variables whose runtime change did NOT take, at spawn points that were not the reason
 # (88259456BFA87EA8: StaticVolume x3, ORIGINAL; D26E32B81D7B7C85: external, ORIGINAL). Never changed, in any profile.
 COOWNER_BAD_CLASSES = {"F512DB23": "88259456BFA87EA8 and D26E32B81D7B7C85 kept their original at runtime (DEV3)"}
+# Runtime evidence is cumulative, but only an actual observation can change policy.
+# A later WORKED or failure supersedes an earlier observation; NOT REACHED is absence of evidence
+# and must never erase a prior result.
+FAILURE_VERDICTS = frozenset(("ORIGINAL SPAWNED", "NO SPAWN"))
+
+
+def merge_verdict_entry(previous, incoming):
+    if previous is not None and incoming[0] == "NOT REACHED":
+        return previous
+    return incoming
+
+
+def effective_pins(zone_id, verdict_map, no_pins=False):
+    """Use old hard-coded confirmations only until a runtime verdict exists for that spawner.
+
+    A current WORKED verdict pins the exact replacement UID from that run. A current failure
+    suppresses stale historical pins. NOT REACHED leaves prior evidence intact.
+    """
+    if no_pins:
+        return []
+    runtime = verdict_map.get(zone_id, {})
+    pins = {}
+    for zid, key, uid, why in PINS:
+        if zid != zone_id:
+            continue
+        observed = runtime.get(key)
+        if observed and observed[0] in FAILURE_VERDICTS:
+            continue
+        if observed and observed[0] == "WORKED":
+            continue
+        pins[key] = (uid, why)
+    for key, (verdict, uid) in runtime.items():
+        if verdict == "WORKED" and uid:
+            pins[key] = (uid, "WORKED in the latest supplied runtime evidence")
+    return [(key, uid, why) for key, (uid, why) in sorted(pins.items())]
+
+
 PROFILES = ("max", "safe", "all")
 REGULAR_FAMILIES = set(KN.FAMILY_GROUP)          # ground, swarmer, turret, flyer
 NOT_ENEMY_PREFIX = ("veh_", "npc_", "amb_", "crt_", "critter", "haz_", "prop_", "animclue")
@@ -833,7 +870,7 @@ def plan_zone(S, brain, rec, opts, rng):
                                                       "family friendly", "family unclear")) else "refused", "original %s: %s" % (f["kind"], why))
             continue
         vd = (getattr(opts, "verdict_map", {}) or {}).get(rec["zone_id"], {}).get(k)
-        if vd and vd[0] in ("ORIGINAL SPAWNED", "NO SPAWN") and not any(p[1] == k for p in PINS):
+        if vd and vd[0] in ("ORIGINAL SPAWNED", "NO SPAWN"):
             dec[k] = ("refused", "in-game verdict %s (stage_check_log --json): left native" % vd[0])
             continue
         shared = f["owners"] != 1
@@ -880,10 +917,7 @@ def plan_zone(S, brain, rec, opts, rng):
         f["_shared"] = shared
     # pins (confirmed in game) come first and must pass the same rules
     changes, chosen = [], {}
-    pins = [(key, uid, why) for zid, key, uid, why in PINS if zid == rec["zone_id"]] if not opts.no_pins else []
-    for key, (verdict, uid) in sorted((getattr(opts, "verdict_map", {}) or {}).get(rec["zone_id"], {}).items()):
-        if verdict == "WORKED" and not any(p[0] == key for p in pins):
-            pins.append((key, uid, "WORKED in your game (verdicts file)"))
+    pins = effective_pins(rec["zone_id"], getattr(opts, "verdict_map", {}) or {}, opts.no_pins)
     pin_report = []
     for key, uid, why in pins:
         o = next((x for x in options.get(key, []) if x["uid"] == uid), None)
@@ -1189,9 +1223,9 @@ def run_plan(a, build):
         for key, v in vj.get("verdicts", {}).items():
             zid = hex16(rcra.crc64_path(v["zone"])) if v.get("zone") not in (None, "?") else None
             if zid:
-                old_v = a.verdict_map.setdefault(zid, {}).get(key.upper())
-                if not old_v or old_v[0] != "WORKED":          # a WORKED from any session wins
-                    a.verdict_map[zid][key.upper()] = (v["verdict"], v.get("replacement_uid"))
+                bucket = a.verdict_map.setdefault(zid, {})
+                incoming = (v["verdict"], v.get("replacement_uid"))
+                bucket[key.upper()] = merge_verdict_entry(bucket.get(key.upper()), incoming)
     if a.verdict_map:
         print("verdicts: %s" % ", ".join("%s %d" % kv for kv in Counter(v[0] for z in a.verdict_map.values() for v in z.values()).items()))
     S = scan(src, keep_zone=lambda zh: build)
