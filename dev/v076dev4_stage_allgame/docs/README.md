@@ -34,6 +34,22 @@ So this package has two parts:
 The all-planet numbers (how many spawners, per planet) exist only after the builder has run on your game. Its
 `COVERAGE_REPORT.md` gives them. I did not guess them.
 
+## Next build after the 2026-11-26 runtime check
+
+Use **`BUILD_NEXT_VERDICT_GUIDED.bat`** for the next build, not the exploratory `BUILD_ALL_PLANETS.bat`.
+
+The latest checker report contained 170 planned changes: **2 WORKED, 1 ORIGINAL SPAWNED, 37 NO SPAWN, and 130 NOT REACHED**. NOT REACHED is not a failure; those spawners were not observed in the supplied log. The new launcher imports the JSON verdict files in `verdicts\`, so observed ORIGINAL SPAWNED / NO SPAWN entries are left native, while WORKED entries are pinned.
+
+The next build uses:
+
+- **All readable planets**, with rate 1.0 (all eligible spawners).
+- **Max evidence-guided profile**: single-owner spawners plus shared-variable classes supported by observed runtime successes.
+- **Same-zone replacement templates only**. Experimental cross-planet Template references are disabled because this run did not confirm them.
+- Existing known-good pins and bundled evidence are retained.
+- A fresh self-check against the user's local game files before installation; the installer backs up the previous three files.
+
+This still does not mean every enemy or every zone is covered. The generated `COVERAGE_REPORT.md` and `inventory.csv` are the authoritative coverage result for that particular game installation.
+
 ## Install
 
 **All planets (recommended):** put this folder anywhere. Double-click `BUILD_ALL_PLANETS.bat` and drag your game folder
