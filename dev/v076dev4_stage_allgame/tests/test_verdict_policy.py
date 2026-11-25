@@ -104,7 +104,11 @@ class VerdictPolicyTests(unittest.TestCase):
         rec = {"factories": [spawner], "zone_id": "CCCCCCCCCCCCCCCC",
                "zone": "target.zone", "planet": "savali"}
         opts = SimpleNamespace(verdict_map={})
-        changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec, opts, __import__("random").Random(7))
+        from unittest.mock import patch
+        with patch.object(SA, "spawn_points_ok", return_value=(True, "volume", "verified test spawn point")):
+            from unittest.mock import patch
+        with patch.object(SA, "spawn_points_ok", return_value=(True, "volume", "verified test spawn point")):
+            changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec, opts, __import__("random").Random(7))
         self.assertEqual(len(changes), 1)
         self.assertEqual(changes[0]["replacement_uid"], replacement)
         self.assertEqual(changes[0]["replacement_index"], 0xFFFF)
@@ -132,6 +136,42 @@ class VerdictPolicyTests(unittest.TestCase):
         opts = SimpleNamespace(verdict_map={"CCCCCCCCCCCCCCCC": {
             spawner["key"]: ("NO SPAWN", replacement)}})
         changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec, opts, __import__("random").Random(7))
+        self.assertEqual(changes, [])
+        self.assertEqual(decisions[spawner["key"]][0], "refused")
+ 
+    def test_force_mode_never_replaces_boss_tier_originals(self):
+        from types import SimpleNamespace
+        class Brain:
+            def regular(self, kind, asset=None):
+                if "boss" in kind: return False, None, "boss-tier"
+                return True, "ground", "regular enemy"
+            def pair(self, *args): return True, "proven", "compatible"
+        candidate = {"uid": "2222222222222222", "kind": "enm_pirate_robot_melee", "asset": "enemy.actor",
+                     "rec": 4, "zone_id": "BBBBBBBBBBBBBBBB", "zone": "foreign.zone", "planet": "ardolis"}
+        spawner = {"key": "AAAAAAAAAAAAAAAA", "action": 1, "problem": None, "form": "local",
+                   "uid": "1111111111111111", "sv": 0, "rec": 2, "kind": "enm_seabase_boss",
+                   "asset": "boss.actor", "owners": 1, "locs": [{"kind": "volume"}]}
+        scan = SimpleNamespace(template_catalog={candidate["uid"]: candidate}, actor_catalog={})
+        rec = {"factories": [spawner], "zone_id": "CCCCCCCCCCCCCCCC", "zone": "target.zone", "planet": "cordelion"}
+        changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec,
+            SimpleNamespace(verdict_map={}), __import__("random").Random(7))
+        self.assertEqual(changes, [])
+        self.assertEqual(decisions[spawner["key"]][0], "refused")
+
+    def test_force_mode_refuses_unverified_spawn_points(self):
+        from types import SimpleNamespace
+        class Brain:
+            def regular(self, kind, asset=None): return True, "ground", "regular enemy"
+            def pair(self, *args): return True, "proven", "compatible"
+        candidate = {"uid": "2222222222222222", "kind": "enm_pirate_robot_melee", "asset": "enemy.actor",
+                     "rec": 4, "zone_id": "BBBBBBBBBBBBBBBB", "zone": "foreign.zone", "planet": "ardolis"}
+        spawner = {"key": "AAAAAAAAAAAAAAAA", "action": 1, "problem": None, "form": "local",
+                   "uid": "1111111111111111", "sv": 0, "rec": 2, "kind": "enm_pirate_robot_shooter",
+                   "asset": "enemy.actor", "owners": 1, "locs": []}
+        scan = SimpleNamespace(template_catalog={candidate["uid"]: candidate}, actor_catalog={})
+        rec = {"factories": [spawner], "zone_id": "CCCCCCCCCCCCCCCC", "zone": "target.zone", "planet": "savali"}
+        changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec,
+            SimpleNamespace(verdict_map={}), __import__("random").Random(7))
         self.assertEqual(changes, [])
         self.assertEqual(decisions[spawner["key"]][0], "refused")
 
