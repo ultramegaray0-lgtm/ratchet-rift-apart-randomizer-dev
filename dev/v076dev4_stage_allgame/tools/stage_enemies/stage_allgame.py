@@ -865,7 +865,7 @@ def plan_zone(S, brain, rec, opts, rng):
         if not opts_f:
             if not pool or set(pool) <= {f["uid"]}:
                 dec[k] = ("refused", "no other regular enemy template in this zone (pool: %s)" % (
-                    ", ".join(sorted({v[0] for v in pool.values()})) or "empty"))
+                    ", ".join(sorted({v["kind"] for v in pool.values()})) or "empty"))
             else:
                 dec[k] = ("refused", "no compatible replacement: " + "; ".join("%s x%d" % kv for kv in why_not.most_common(3)))
             continue
@@ -912,7 +912,7 @@ def plan_zone(S, brain, rec, opts, rng):
         a = min(cands, key=lambda k: (len(options[k]), k))
         anchors[uid] = a
         changeable.discard(a)
-        dec[a] = ("anchor", "kept native: the last unchanged user of %s %s (a replacement elsewhere in this zone)" % (pool[uid][0], uid))
+        dec[a] = ("anchor", "kept native: the last unchanged user of %s %s (a replacement elsewhere in this zone)" % (pool[uid]["kind"], uid))
     # pinned replacements need their anchor
     for key in list(chosen):
         if chosen[key]["uid"] not in anchors:
