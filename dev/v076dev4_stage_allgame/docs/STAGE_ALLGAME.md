@@ -11,7 +11,7 @@ is used automatically when installed.
 python -I stage_allgame.py scan    --game GAME --out DIR          inventory + coverage report, no .stage
 python -I stage_allgame.py build   --game GAME --out DIR          DIR = the max profile, DIR/safe = the fallback
         [--seed S] [--planet NAME ...] [--profile max|safe|all] [--verdicts FILE ...] [--rate 0..1]
-        [--strict-external] [--no-actor-family] [--no-evidence] [--no-pins] [--log rivet.log ...] [--scripts DIR]
+        [--strict-external] [--no-actor-family] [--no-evidence] [--no-pins] [--log rivet.log ...] [--scripts DIR] [--cross-planet]
 python -I stage_allgame.py check   --game GAME --build DIR        re-read the .stage, compare with the game's zones
 python -I stage_allgame.py install --game GAME --build DIR        back up, then copy .stage + 2 Lua files
 python -I stage_allgame.py uninstall --game GAME                  put the newest backup back
@@ -125,8 +125,10 @@ The 16/18 handshake `ST.STAGE_LUA = "1.1.0"` and the `RANDO_FILES` tag `10.0.43`
 
 ## Limits
 
-- **Replacement pool = the kinds already in each zone.** Cross-planet mixing would need new actor records and asset
-  references in the zone: a different method, not attempted.
+- **Cross-planet templates (experimental).** Add `--cross-planet` to admit globally unique enemy actor UIDs already
+  used by native factories in another scanned zone. The target variable is encoded as an external actor reference
+  (`index = 0xFFFF`); the build self-check verifies the UID and kind in the recorded source zone. Engine acceptance is
+  not proven until the game spawns it. The default build remains same-zone.
 - **Spawner nodes with a `Template` plug** (another adapter) are counted, not changed: there is no `.stage` evidence
   for them yet.
 - **Large builds.** rivet loads the `.stage` members as Overstrike stage entries. Many zone members are untested in
