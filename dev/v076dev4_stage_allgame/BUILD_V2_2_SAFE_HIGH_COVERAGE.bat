@@ -36,7 +36,7 @@ if errorlevel 1 (
   exit /b 1
 )
 
-set "OUT=%ROOT%builds\V2.2_FORCE_ALL_%RANDOM%"
+set "OUT=%ROOT%builds\V2.2_SAFE_HIGH_COVERAGE_%RANDOM%"
 if not exist "%ROOT%builds" mkdir "%ROOT%builds"
 
 echo.
@@ -45,8 +45,8 @@ echo  V2.2 SAFE HIGH-COVERAGE BUILD
 echo ============================================================
 echo This is the safer high-coverage mode: only regular enemies with compatible pairs and verified spawn points are changed.
 echo It tries every classifiable enemy SunsetSpawnerFactory.
-echo It can ignore faction, movement, animation clue and shared-owner
-echo restrictions. Expect some replacements to fail in-game.
+echo Boss-tier, incompatible, unknown, and unverified spawn-point
+echo entries are kept native instead of risking broken encounters.
 echo It does NOT patch non-enemy Template adapters or malformed
 echo multi-Template nodes whose exact meaning is unknown.
 echo.
@@ -54,7 +54,7 @@ echo The build is checked against your local game before install.
 echo Nothing is installed until you explicitly choose Y.
 echo.
 
-python -I "%ROOT%tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "%OUT%" --seed "RiftApart-V2.2-FORCE-ALL" --profile all --rate 1.0 --force-all-enemies --cross-planet --no-safe
+python -I "%ROOT%tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "%OUT%" --seed "RiftApart-V2.2-SAFE-HIGH-COVERAGE" --profile all --rate 1.0 --force-all-enemies --cross-planet --no-safe
 if errorlevel 1 (
   echo.
   echo BUILD FAILED. Nothing was installed. Read the errors above.
