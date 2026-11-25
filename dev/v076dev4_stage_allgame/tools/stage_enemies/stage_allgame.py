@@ -803,7 +803,8 @@ def plan_zone(S, brain, rec, opts, rng):
         ok, fam, why = brain.regular(f0["kind"], f0.get("asset"))
         if ok:
             pool[uid] = {"kind": f0["kind"], "family": fam, "rec": f0["rec"], "family_src": why,
-                         "external": False, "source_zone": rec["zone"], "source_planet": rec["planet"]}
+                         "external": False, "source_zone": rec["zone"], "source_zone_id": rec["zone_id"],
+                         "source_planet": rec["planet"]}
     if getattr(opts, "cross_planet", False):
         for uid, meta in S.template_catalog.items():
             if uid in pool or meta["zone_id"] == rec["zone_id"]:
@@ -811,7 +812,8 @@ def plan_zone(S, brain, rec, opts, rng):
             ok, fam, why = brain.regular(meta["kind"], meta.get("asset"))
             if ok:
                 pool[uid] = {"kind": meta["kind"], "family": fam, "rec": 0xFFFF, "family_src": why,
-                             "external": True, "source_zone": meta["zone"], "source_planet": meta["planet"]}
+                             "external": True, "source_zone": meta["zone"], "source_zone_id": meta["zone_id"],
+                             "source_planet": meta["planet"]}
     # per factory: eligibility, then the replacement options
     options = {}
     for f in facs:
@@ -865,7 +867,7 @@ def plan_zone(S, brain, rec, opts, rng):
             opts_f.append({"uid": uid, "kind": rk, "family": rfam, "rec": rrec, "pair_tier": ptier, "pair_evidence": pev,
                            "spawn_tier": stier, "spawn_points": stext, "family_src": rwhy,
                            "external": candidate["external"], "source_zone": candidate["source_zone"],
-                           "source_planet": candidate["source_planet"]})
+                           "source_zone_id": candidate["source_zone_id"], "source_planet": candidate["source_planet"]})
         if not opts_f:
             if not pool or set(pool) <= {f["uid"]}:
                 dec[k] = ("refused", "no other regular enemy template in this zone (pool: %s)" % (
@@ -954,7 +956,7 @@ def plan_zone(S, brain, rec, opts, rng):
             "plug": f["plug"], "var_index": f["sv"], "original_uid": f["uid"], "original_index": f["rec"],
             "original": f["kind"], "original_family": f["_fam"], "replacement_uid": o["uid"], "replacement_index": o["rec"],
             "replacement_external": bool(o.get("external")), "replacement_source_zone": o.get("source_zone"),
-            "replacement_source_planet": o.get("source_planet"),
+            "replacement_source_zone_id": o.get("source_zone_id"), "replacement_source_planet": o.get("source_planet"),
             "replacement": o["kind"], "replacement_family": o["family"], "pair_tier": o["pair_tier"],
             "pair_evidence": o["pair_evidence"], "spawn_tier": o["spawn_tier"], "spawn_points": o["spawn_points"],
             "count": f["count"], "tier": tier, "anchor": anchors.get(o["uid"]),
@@ -1387,6 +1389,7 @@ def check_build(out, src_args, verbose=True):
     problems += ["spawner %s changed twice" % k[1] for k, n in keys.items() if n > 1]
     src = Source(getattr(src_args, "game", None), getattr(src_args, "zone_file", None) or [], [], 0)
     orig = {hex16(zid): load for _, zid, _, load in src.items}
+    external_source_cache = {}
     by_zone = defaultdict(list)
     for c in m["changes"]:
         by_zone[c["zone_id"]].append(c)
@@ -1431,6 +1434,19 @@ def check_build(out, src_args, verbose=True):
             elif c.get("replacement_external"):
                 if c["replacement_index"] != 0xFFFF or c["replacement_uid"] in z0.rec_of:
                     problems.append("%s %s: malformed external replacement reference" % (zrec["zone"], c["key"]))
+                else:
+                    src_id = c.get("replacement_source_zone_id")
+                    if not src_id or src_id not in orig:
+                        problems.append("%s %s: external source zone is absent from this game scan" % (zrec["zone"], c["key"]))
+                    else:
+                        if src_id not in external_source_cache:
+                            sh, sr = orig[src_id]()
+                            external_source_cache[src_id] = Zone(sh, sr, c.get("replacement_source_zone") or src_id)
+                        source_zone = external_source_cache[src_id]
+                        source_rec = source_zone.rec_of.get(int(c["replacement_uid"], 16))
+                        if source_rec is None or source_zone.kind_of_rec(source_rec) != c["replacement"]:
+                            problems.append("%s %s: foreign template UID/kind is not present in its recorded source zone" %
+                                             (zrec["zone"], c["key"]))
             elif z0.kind_of_rec(c["replacement_index"]) != c["replacement"]:
                 problems.append("%s %s: replacement kind does not match the zone" % (zrec["zone"], c["key"]))
             if not c.get("replacement_external") and c["replacement_uid"] not in after_users:
