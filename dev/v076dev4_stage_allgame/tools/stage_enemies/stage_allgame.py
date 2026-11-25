@@ -1451,7 +1451,7 @@ def emit(a, S, src, brain, build, out):
                   "span": span, "sha256_original": zrecs[hex16(zid)]["sha256"], "sha256_patched": zrecs[hex16(zid)]["sha256_patched"],
                   "changes": zrecs[hex16(zid)]["changes"]} for span, zid in members]
         m = {"format": 1, "tool": VERSION, "kit": KIT, "stage_lua": STAGE_LUA, "seed": a.seed, "profile": a.profile,
-             "label": "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile, "stage_sha256": ssha,
+             "label": ("V2.1.0 FORCE ALL ENEMIES - EXPERIMENTAL; classifiable enemy factories use global foreign templates" if getattr(a, "force_all_enemies", False) else "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile), "stage_sha256": ssha,
              "settings": {"profile": a.profile, "strict_external": a.strict_external, "rate": a.rate,
                           "planets": a.planet or "all", "actor_family": not a.no_actor_family,
                           "cross_planet": bool(getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)),
