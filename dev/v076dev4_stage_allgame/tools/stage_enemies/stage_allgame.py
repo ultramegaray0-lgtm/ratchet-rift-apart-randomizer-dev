@@ -111,6 +111,7 @@ HEADER = 36
 SEC_ZONE_ACTORS, SEC_SCRIPT_VARS, SEC_SCRIPT_PLUGS = 0x70682CB8, 0xD86A7934, 0xBEAB52E7
 SEC_SCRIPT_ACTIONS, SEC_ACTOR_ASSETS = 0x5E54ACCF, 0x78684035
 FACTORY_CLASS = 0x2E910F8C
+NODE_SPAWNER_CLASS = rcra.crc32_engine("SpawnerScriptAction")  # exact class name used by 16_rando_spawners.lua
 VAR_SIZE, PLUG_SIZE, ACTION_SIZE, ACTOR_SIZE = 32, 12, 40, 32
 PLUG_TEMPLATES = rcra.crc32_engine("Templates")
 PLUG_TEMPLATE = rcra.crc32_engine("Template")
@@ -350,13 +351,47 @@ class Zone:
                         f["count"] = round(struct.unpack("<f", struct.pack("<I", cv[5] & 0xFFFFFFFF))[0], 3)
         return out
 
-    def node_template_spawners(self):
-        """script nodes (not factories) with a `Template` plug: another spawner adapter, counted, never changed here"""
-        n = 0
+    def template_nodes(self):
+        """Read-only census of nodes with a singular Template plug; never changes their variables."""
+        out = []
         for nd in self.nodes:
-            if nd["cls"] != FACTORY_CLASS and any(self.plugs[p][0] == PLUG_TEMPLATE for p in nd["plugs"]):
-                n += 1
-        return n
+            if nd["cls"] == FACTORY_CLASS:
+                continue
+            template_plugs = [(p, self.plugs[p][1]) for p in nd["plugs"] if self.plugs[p][0] == PLUG_TEMPLATE]
+            if not template_plugs:
+                continue
+            # Preserve every candidate, including malformed/multi-plug nodes, for forensic classification.
+            for plug, vi in template_plugs:
+                v = self.vars[vi]
+                form = self.var_form(vi)
+                kind = None
+                asset = None
+                if form == "local" and v[2] < len(self.actors) and self.rec_of.get(v[5]) == v[2] and v[5] not in self.dup_uids:
+                    kind = self.kind_of_rec(v[2])
+                    asset = self.asset_path_of_rec(v[2])
+                owners = self.owners.get(vi, [])
+                other_plugs = []
+                for p in nd["plugs"]:
+                    nm, pvi, _ = self.plugs[p]
+                    if p != plug:
+                        other_plugs.append("%08X:sv%d" % (nm, pvi))
+                out.append({
+                    "key": hex16(nd["key"]), "action": nd["r"], "class": "%08X" % nd["cls"],
+                    "is_spawner_class": nd["cls"] == NODE_SPAWNER_CLASS,
+                    "template_plug": plug, "template_plug_count": len(template_plugs),
+                    "var_index": vi, "form": form, "uid": hex16(v[5]), "kind": kind, "asset": asset,
+                    "owners": len(owners),
+                    "co_owner_classes": sorted({"%08X/%08X" % (o[0]["cls"], o[2]) for o in owners if o[0] is not nd}),
+                    "other_plugs": ";".join(other_plugs),
+                    "problem": ("multiple Template plugs" if len(template_plugs) != 1 else
+                                "duplicate node key" if nd["key"] in self.dup_keys else
+                                "local Template reference is inconsistent" if form == "local" and kind is None else "")
+                })
+        return out
+
+    def node_template_spawners(self):
+        """Count Template-plug nodes outside SunsetSpawnerFactory; retained for backwards-compatible reports."""
+        return len(self.template_nodes())
 
 
 def apply_changes(raw, changes):
@@ -609,7 +644,7 @@ def scan(source, log=print, keep_zone=None):
     for i, (path, zid, span, load) in enumerate(source.items):
         zh = hex16(zid)
         rec = {"zone": path, "zone_id": zh, "planet": planet_of(path), "span": span, "status": "ok", "factories": [],
-               "node_template_spawners": 0, "actors": 0}
+               "node_template_spawners": 0, "template_nodes": [], "actors": 0}
         S.zones[zh] = rec
         try:
             header, raw = load()
@@ -636,7 +671,8 @@ def scan(source, log=print, keep_zone=None):
         if not z.has_scripts:
             rec["status"] = "no scripts"
             continue
-        rec["node_template_spawners"] = z.node_template_spawners()
+        rec["template_nodes"] = z.template_nodes()
+        rec["node_template_spawners"] = len(rec["template_nodes"])
         n1, bad = z.c1()
         rec["c1_local_refs"], rec["c1_bad"] = n1, len(bad)
         facs = z.factories()
@@ -945,6 +981,25 @@ def write_inventory(S, decisions, out):
     return rows
 
 
+def write_template_inventory(S, out):
+    """Separate forensic inventory for node Template adapters; this is diagnostic only, not a patch plan."""
+    rows = []
+    for zh, rec in S.zones.items():
+        for n in rec.get("template_nodes", []):
+            rows.append([rec["planet"], rec["zone"], zh, n["key"], n["class"], n["is_spawner_class"],
+                         n["template_plug_count"], n["var_index"], n["form"], n["uid"], n["kind"] or "-",
+                         n["asset"] or "-", n["owners"], ";".join(n["co_owner_classes"]),
+                         n["other_plugs"], n["problem"] or rec["status"]])
+    path = os.path.join(out, "template_adapter_inventory.csv")
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["planet", "zone", "zone_id", "node_key", "class_id", "is_SpawnerScriptAction",
+                    "Template_plug_count", "var_index", "reference_form", "template_uid", "kind", "asset",
+                    "owners", "co_owner_classes", "other_plugs", "problem"])
+        w.writerows(rows)
+    return rows
+
+
 def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
     L = []
     enemy_rows = [r for r in rows if r[8] != "not enemy"]
@@ -979,6 +1034,7 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
           "| planets with changes | %d |" % len({c["planet"] for c in changes}),
           "| replacement enemy kinds used | %d |" % len(rep_kinds),
           "| other spawner nodes (`Template` adapter, not handled) | %d |" % sum(z["node_template_spawners"] for z in S.zones.values()),
+          "| exact `SpawnerScriptAction` class candidates | %d |" % sum(1 for z in S.zones.values() for n in z.get("template_nodes", []) if n["is_spawner_class"]),
           "| .stage size | %s |" % stage_info, ""]
     L += ["Change tiers: " + ", ".join("%s %d" % kv for kv in tiers.most_common()) + ".",
           "Spawn-point tiers: " + ", ".join("%s %d" % kv for kv in stiers.most_common()) + ".", "",
@@ -1233,6 +1289,8 @@ def emit(a, S, src, brain, build, out):
                 w.writerow([c["planet"], c["zone"], c["key"], c["original"], c["replacement"], c["count"], c["tier"],
                             c["pair_evidence"], c["spawn_points"]])
     rows = write_inventory(S, decisions, out)
+    template_rows = write_template_inventory(S, out)
+    print("  Template-adapter census: %d plug records; %d exact SpawnerScriptAction nodes (diagnostic only)" % (len(template_rows), sum(1 for z in S.zones.values() for n in z.get("template_nodes", []) if n["is_spawner_class"])))
     lua18 = next((x for x in (os.path.join(HERE, "..", "..", "scripts", STAGE_LUA_FILE), os.path.join(HERE, STAGE_LUA_FILE))
                   if os.path.isfile(x)), "")
     if build and changes and lua18:
