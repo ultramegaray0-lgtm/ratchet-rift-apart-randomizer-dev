@@ -1,0 +1,7 @@
+zone id = crc64(path)                    ok
+zone sha256 = probe (real game)          ok
+zone size = probe                        ok
+36-byte header = probe's toc header      ok
+header block sizes add up to the zone    ok
+read back through rcra.Toc               ok
+mirror game folder: /home/claude/mirror_game2

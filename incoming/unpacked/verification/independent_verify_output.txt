@@ -1,0 +1,30 @@
+ok   backup = 36-byte header + zone                                 539304 = 36 + 539268
+ok   backup zone sha256 = probe's (read from your game)             d40540edad455dee
+ok   backup header = probe's toc header                             a00a391f50f2070034480000...
+ok   backup zone sha256 = manifest zone_sha256_original             
+ok   zip integrity (CRC of every member)                            
+ok   members = info.json + one span-0 zone by hex id                ['info.json', '0/AE530D22FE113E2B']
+ok   info.json game = RCRA                                          
+ok   stage sha256 = manifest stage_sha256                           
+ok   patched zone sha256 = manifest zone_sha256_patched             
+ok   asset header identical to the game's                           
+ok   header block sizes add up to the patched zone                  [520784, 18484] = 539268
+ok   patched zone size = original size                              539268 bytes
+ok   DAT1 magic / type / size / flags unchanged                     type 1F390AA0, DAT1 size 520784 (header schema 1F390AA0)
+ok   DAT1 section table identical (26 sections)                     
+ok   every section inside the zone                                  
+ok   DAT1 header + section table bytes identical                    
+ok   bytes that differ: all inside one aligned 8-byte slot          8 byte(s) at 413776..413783
+ok   everything outside that slot is byte-identical                 
+ok   the slot is in Zone Script Vars at the manifest offset         Zone Script Vars +4912
+ok   old value = original uid, new value = replacement uid          899208BF8F48C554 -> 92C793D47A4657B6
+ok   all 40 template refs in Script Vars sit in type-[5] 32-byte entries 
+ok   patched entry keeps its type/flags/name and zero tail          type 5, word 000F, name A61BE7D5F39117FF
+ok   replacement's own existing variable is the same entry type     replacement already referenced at Script Vars +[25584]
+     original uid 899208BF8F48C554: before {'Zone Scene Objects': 1, 'Zone Actors': 1, 'Zone Script Vars': 1} | after {'Zone Scene Objects': 1, 'Zone Actors': 1}
+     replacement uid 92C793D47A4657B6: before {'Zone Scene Objects': 1, 'Zone Actors': 1, 'Zone Script Vars': 1} | after {'Zone Scene Objects': 1, 'Zone Actors': 1, 'Zone Script Vars': 2}
+ok   original: Script Vars 1 -> 0, its template actor still placed  
+ok   replacement: Script Vars +1, template actor placed (Zone Actors) 
+ok   neither uid appears in any of the other 9008 probed zones      []
+
+INDEPENDENT VERIFY: PASS (26 checks, 0 failed)
