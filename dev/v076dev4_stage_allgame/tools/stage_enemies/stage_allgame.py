@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""stage_allgame.py 2.0.1 - the ALL-PLANET .stage Enemy Randomizer builder (Rift Apart Randomizer v0.76-DEV4).
+"""stage_allgame.py 2.2.0 - the ALL-PLANET .stage Enemy Randomizer builder (Rift Apart Randomizer v0.76-DEV4).
 
 Standard library only (the free `lz4` package is used automatically when installed: about 100x faster reading).
 Reads the game folder (toc, dag, archives) READ-ONLY. Only `install` / `uninstall` write to the game folder, and they back
@@ -873,6 +873,11 @@ def plan_zone_force(S, brain, rec, opts, rng):
             decisions[key] = ("not enemy", "original template could not be classified as an enemy")
             continue
 
+        ok_orig, original_family, original_reason = brain.regular(original_kind, original_asset)
+        if not ok_orig:
+            decisions[key] = ("refused", "kept native: boss-tier, non-regular, or unclassified (" + str(original_reason) + ")")
+            continue
+
         verdict = (getattr(opts, "verdict_map", {}) or {}).get(rec["zone_id"], {}).get(key)
         avoid = {verdict[1]} if verdict and verdict[0] in ("NO SPAWN", "ORIGINAL SPAWNED") and verdict[1] else set()
 
@@ -882,28 +887,33 @@ def plan_zone_force(S, brain, rec, opts, rng):
             decisions[key] = ("refused", "no globally unique foreign enemy template is available")
             continue
 
-        ok_orig, original_family, _ = brain.regular(original_kind, original_asset)
         ranked = []
+        rejected = Counter()
         for candidate in candidates:
             ok_rep, rep_family, _ = brain.regular(candidate["kind"], candidate.get("asset"))
-            pair_ok, pair_tier, pair_evidence = False, "forced", "forced cross-family fallback"
-            if ok_orig and ok_rep:
-                try:
-                    pair_ok, pair_tier, pair_evidence = brain.pair(original_kind, original_family,
-                                                                    candidate["kind"], rep_family)
-                except Exception:
-                    pair_ok = False
+            if not ok_rep:
+                rejected["boss-tier/non-regular candidate"] += 1
+                continue
+            try:
+                pair_ok, pair_tier, pair_evidence = brain.pair(original_kind, original_family,
+                                                                candidate["kind"], rep_family)
+            except Exception:
+                pair_ok, pair_tier, pair_evidence = False, None, "compatibility check failed"
+            if not pair_ok:
+                rejected["incompatible/unproven pair"] += 1
+                continue
             spawn_ok, spawn_tier, spawn_evidence = spawn_points_ok(S, f, candidate["kind"], False)
-            score = (0 if pair_ok and spawn_ok else
-                     1 if pair_ok else
-                     2 if spawn_ok else 3)
-            ranked.append((score, candidate, rep_family, pair_tier, pair_evidence,
-                           spawn_tier, spawn_evidence))
-        best_score = min(x[0] for x in ranked)
-        best = [x for x in ranked if x[0] == best_score]
-        weights = [1.0 / (1.0 + usage[x[1]["kind"]]) for x in best]
-        chosen = rng.choices(best, weights=weights, k=1)[0]
-        _, candidate, rep_family, pair_tier, pair_evidence, spawn_tier, spawn_evidence = chosen
+            if not spawn_ok:
+                rejected["spawn-point evidence missing/incompatible"] += 1
+                continue
+            ranked.append((candidate, rep_family, pair_tier, pair_evidence, spawn_tier, spawn_evidence))
+        if not ranked:
+            why = ", ".join("%s: %d" % item for item in sorted(rejected.items())) or "no foreign candidate"
+            decisions[key] = ("refused", "kept native: no candidate passed pair and spawn-point checks (" + why + ")")
+            continue
+        weights = [1.0 / (1.0 + usage[x[0]["kind"]]) for x in ranked]
+        candidate, rep_family, pair_tier, pair_evidence, spawn_tier, spawn_evidence = rng.choices(
+            ranked, weights=weights, k=1)[0]
         usage[candidate["kind"]] += 1
 
         forced_unsafe = best_score == 3 or f.get("owners", 0) != 1 or not f.get("locs")
@@ -917,11 +927,11 @@ def plan_zone_force(S, brain, rec, opts, rng):
             "replacement_external": True, "replacement_source_zone": candidate["zone"],
             "replacement_source_zone_id": candidate["zone_id"], "replacement_source_planet": candidate["planet"],
             "replacement": candidate["kind"], "replacement_family": rep_family or "unknown",
-            "pair_tier": pair_tier, "pair_evidence": "FORCED V2.1.0: " + pair_evidence,
+            "pair_tier": pair_tier, "pair_evidence": "SAFE V2.2.0: " + pair_evidence,
             "spawn_tier": spawn_tier or "forced-unsafe",
             "spawn_points": spawn_evidence or "forced: spawn point was not validated",
             "count": f.get("count"), "tier": tier, "anchor": None,
-            "pair": "forced|%s>%s" % (original_kind, candidate["kind"]),
+            "pair": "safe-force|%s>%s" % (original_kind, candidate["kind"]),
         })
         decisions[key] = ("changed", "%s -> %s [FORCED, in-game test required]" %
                           (original_kind, candidate["kind"]))
