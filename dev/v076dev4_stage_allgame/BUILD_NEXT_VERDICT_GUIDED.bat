@@ -21,7 +21,7 @@ echo.
 echo Building the evidence-guided MAX profile for every readable planet...
 echo Local-zone enemy templates only. Cross-planet template references are DISABLED.
 echo Known ORIGINAL SPAWNED and NO SPAWN results will be left unchanged.
-%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "builds\NEXT" --profile max --rate 1.0 %VERD%
+%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "builds\AUTO" --profile max --rate 1.0 %VERD%
 if errorlevel 1 goto failed
 set /p OUT=<"builds\LAST_BUILD.txt"
 echo.
