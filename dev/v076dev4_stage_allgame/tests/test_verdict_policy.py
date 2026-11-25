@@ -71,7 +71,7 @@ class VerdictPolicyTests(unittest.TestCase):
     def test_external_factory_uid_is_preserved_for_force_mode(self):
         from stage_allgame import Zone
         z = Zone.__new__(Zone)
-        node = {"key": 0x1234, "cls": SA.FACTORY_CLASS, "plugs": [0]}
+        node = {"key": 0x1234, "r": 7, "cls": SA.FACTORY_CLASS, "plugs": [0]}
         z.nodes = [node]
         z.plugs = [(SA.PLUG_TEMPLATES, 0, 0)]
         z.vars = [(5, 0, 0xFFFF, 0, 0, int("ABCDEF1234567890", 16), 0)]
