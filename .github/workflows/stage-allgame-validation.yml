@@ -1,0 +1,30 @@
+name: Stage all-planet builder validation
+
+on:
+  push:
+    branches:
+      - work/100-percent-enemy-replacement
+    paths:
+      - 'dev/v076dev4_stage_allgame/**'
+      - '.github/workflows/stage-allgame-validation.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Lua test dependency
+        run: python -m pip install --upgrade pip lupa
+      - name: Compile Python sources
+        run: python -m compileall -q dev/v076dev4_stage_allgame/tools/stage_enemies
+      - name: Check builder CLI
+        working-directory: dev/v076dev4_stage_allgame/tools/stage_enemies
+        run: python -I stage_allgame.py --help
+      - name: Run Lua scale regression tests
+        run: python -I dev/v076dev4_stage_allgame/tests/test_stage_lua_scale.py dev/v076dev4_stage_allgame/scripts
+      - name: Report real-zone test requirement
+        run: python -I dev/v076dev4_stage_allgame/tools/stage_enemies/test_stage_allgame.py
