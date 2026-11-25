@@ -1,0 +1,705 @@
+stage_check_log 2.0.0: verdicts\rivet-20261126-015324.log | 170 change(s) from the manifest
+
+CHANGE 1  B2B978B5BC3D8A4D  overlay  enm_amoeboid_large_ps4 -> enm_amoeboid_medium_ps4  [kin/clue-native]
+  visit 5 (NewPlanetName=Cordelion): WORKED | listed D78BDDE784EF233E | spawns 1 {'enm_amoeboid_medium_ps4': 1}
+      actor 1095538 amoeboid_medium_ps4 @ - | died | barks 0
+  visit 6 (CheckpointHash=2012033510 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 13 (CheckpointHash=3302609036 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 17 (CheckpointHash=1754735099 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 19 (CheckpointHash=2258190551 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 20 (CheckpointHash=2958767948 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 21 (CheckpointHash=1572072582 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 26 (CheckpointHash=326842532 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 28 (CheckpointHash=2551418420 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 30 (CheckpointHash=2874629401 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  => WORKED
+
+CHANGE 2  C0DE28964E8564CB  overlay  enm_amoeboid_large_ps4 -> enm_amoeboid_medium_ps4  [kin/clue-native]
+  visit 5 (NewPlanetName=Cordelion): WORKED | listed D78BDDE784EF233E | spawns 2 {'enm_amoeboid_medium_ps4': 2}
+      actor 1095867 amoeboid_medium_ps4 @ - | died | barks 0
+      actor 1095887 amoeboid_medium_ps4 @ - | died | barks 0
+  visit 6 (CheckpointHash=2012033510 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 13 (CheckpointHash=3302609036 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 17 (CheckpointHash=1754735099 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 19 (CheckpointHash=2258190551 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 20 (CheckpointHash=2958767948 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 21 (CheckpointHash=1572072582 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 26 (CheckpointHash=326842532 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 28 (CheckpointHash=2551418420 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  visit 30 (CheckpointHash=2874629401 Loaded=true): NO SPAWN | listed D78BDDE784EF233E | spawns 0 
+  => WORKED
+
+CHANGE 3  B07D2EF916C6F870  overlay  enm_amoeboid_medium_ps4 -> enm_amoeboid_small_ps4  [kin/clue-native]
+  visit 5 (NewPlanetName=Cordelion): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 6 (CheckpointHash=2012033510 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 13 (CheckpointHash=3302609036 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 17 (CheckpointHash=1754735099 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 19 (CheckpointHash=2258190551 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 20 (CheckpointHash=2958767948 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 21 (CheckpointHash=1572072582 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 26 (CheckpointHash=326842532 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 28 (CheckpointHash=2551418420 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  visit 30 (CheckpointHash=2874629401 Loaded=true): NO SPAWN | listed DB45C9F28C55DD1C | spawns 0 
+  => NO SPAWN
+
+CHANGE 34  8D03BABB2AF112E8  overlay  enm_indigenous_crab -> enm_indigenous_puffoid_blizar  [shared-seen/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed 82A9B65DDBA84005 | spawns 0 
+  => NO SPAWN
+
+CHANGE 35  A79AE3C5A6D05309  overlay  enm_indigenous_puffoid_blizar -> enm_indigenous_crab  [kin/external-unresolved]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed B7E73FAFB7050D23 | spawns 0 
+  => NO SPAWN
+
+CHANGE 43  97B23A4ADBCB4ADA  overlay  enm_indigenous_crab -> enm_indigenous_puffoid_blizar  [shared-seen/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  => NO SPAWN
+
+CHANGE 44  97DDABA90FCC3C3B  overlay  enm_indigenous_puffoid_blizar -> enm_indigenous_crab  [shared-seen/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  => NO SPAWN
+
+CHANGE 45  A8C3B31A3522AC9D  overlay  enm_indigenous_puffoid_blizar -> enm_indigenous_crab  [shared-seen/external-unresolved]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  => NO SPAWN
+
+CHANGE 46  E655C3C72F95CC6B  overlay  enm_indigenous_crab -> enm_indigenous_puffoid_blizar  [kin/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  => NO SPAWN
+
+CHANGE 47  DD4C54B707F3A30C  overlay  enm_indigenous_puffoid_blizar -> enm_indigenous_crab  [kin/external-unresolved]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  => NO SPAWN
+
+CHANGE 48  E60BA984E6EE5DD5  overlay  enm_indigenous_puffoid_blizar -> enm_indigenous_crab  [kin/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed A0F07F1BE1DC3AC4 | spawns 0 
+  => NO SPAWN
+
+CHANGE 49  F42868B2ACAA7D30  overlay  enm_indigenous_crab -> enm_indigenous_puffoid_blizar  [kin/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  => NO SPAWN
+
+CHANGE 50  D3D7DCEA5BC6D45F  overlay  enm_indigenous_crab -> enm_indigenous_puffoid_blizar  [kin/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed EFC0441F877BDD32 | spawns 0 
+  => NO SPAWN
+
+CHANGE 51  FE18A014C4A1E0D0  overlay  enm_Thugs4Less_ShooterJetpack -> enm_thugs4less_biker  [kin/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 41 (NewPlanetName=Blizar): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed C2F34C2D39362505 | spawns 0 
+  => NO SPAWN
+
+CHANGE 59  B854C8E8843809A4  overlay  enm_neo_nefarious_swarmer -> enm_neo_nefarious_shooter  [proven/external-unresolved]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): WORKED | listed CA2C47B038397AEF | spawns 6 {'enm_neo_nefarious_shooter': 6}
+      actor 3166027 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_B_LANDINGPAD_DESTROYED | no death seen | barks 0
+      actor 3166041 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_B_LANDINGPAD_DESTROYED | no death seen | barks 0
+      actor 3206976 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_B_LANDINGPAD_DESTROYED | no death seen | barks 0
+      actor 3206982 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_B_LANDINGPAD_DESTROYED | no death seen | barks 0
+      actor 3206983 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_B_LANDINGPAD_DESTROYED | no death seen | barks 0
+      actor 3206984 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_B_LANDINGPAD_DESTROYED | no death seen | barks 0
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 41 (NewPlanetName=Blizar): WORKED | listed CA2C47B038397AEF | spawns 6 {'enm_neo_nefarious_shooter': 6}
+      actor 4232011 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_DEST_ENGINEER_POSTINTRO | no death seen | barks 0
+      actor 4250301 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_DEST_ENGINEER_POSTINTRO | no death seen | barks 0
+      actor 4250308 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_DEST_ENGINEER_POSTINTRO | no death seen | barks 0
+      actor 4250309 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_DEST_ENGINEER_POSTINTRO | no death seen | barks 0
+      actor 4250310 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_DEST_ENGINEER_POSTINTRO | no death seen | barks 0
+      actor 4250311 neo_nefarious_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_DEST_ENGINEER_POSTINTRO | no death seen | barks 0
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed CA2C47B038397AEF | spawns 0 
+  => WORKED
+
+CHANGE 102  EB7A0471D6349F87  overlay  enm_pirate_robot_shooter -> enm_pirate_robot_melee  [shared-seen/external-unresolved]
+  visit 74 (NewPlanetName=Ardolis): NO SPAWN | listed A21B801B56C9ABC7 | spawns 0 
+  => NO SPAWN
+
+CHANGE 103  9AA8B10D9E4E3C1B  overlay  enm_pirate_robot_melee -> enm_pirate_bladeball  [kin/external-unresolved]
+  visit 74 (NewPlanetName=Ardolis): NO SPAWN | listed D573FD6C7356185A | spawns 0 
+  => NO SPAWN
+
+CHANGE 104  F32FB30D59A6FA88  overlay  enm_pirate_robot_shooter -> enm_pirate_robot_melee  [proven/external-unresolved]
+  visit 74 (NewPlanetName=Ardolis): NO SPAWN | listed BA312C9E31A934D2 | spawns 0 
+  => NO SPAWN
+
+CHANGE 105  E4C70766564C1027  overlay  enm_pirate_robot_melee -> enm_pirate_robot_shielded  [proven/volume]
+  visit 74 (NewPlanetName=Ardolis): NO SPAWN | listed BF3586A9B2237B4D | spawns 0 
+  => NO SPAWN
+
+CHANGE 106  F4A2328B673A85BA  overlay  enm_thugs4less_shooter -> enm_thugs4less_robomutt  [kin/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 58 (CheckpointHash=3726625647 Loaded=true): WORKED | listed - | spawns 2 {'enm_thugs4less_robomutt': 2}
+      actor 5301635 thugs4less_robomutt @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_A_EXPLORATION_FACILITY_FROM_CAVE | no death seen | barks 0
+      actor 5301639 thugs4less_robomutt @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_A_EXPLORATION_FACILITY_FROM_CAVE | no death seen | barks 0
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed 962053F44CC228D6 | spawns 0 
+  => WORKED
+
+CHANGE 107  8DBB2182F22BDEFF  overlay  enm_thugs4less_melee -> enm_thugs4less_shooter  [shared-seen/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  => NO SPAWN
+
+CHANGE 108  D1A7D6BCB7D49192  overlay  enm_thugs4less_melee -> enm_thugs4less_shooter  [shared-seen/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): WORKED | listed 9DAB1A3F988A5DD8 | spawns 2 {'enm_thugs4less_shooter': 2}
+      actor 5302079 thugs4less_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_A_EXPLORATION_FACILITY_EXIT | no death seen | barks 0
+      actor 5302080 thugs4less_shooter @ MIS_CORD_01_POST_MISSION @ CHK_BLIZAR_A_EXPLORATION_FACILITY_EXIT | no death seen | barks 0
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed 9DAB1A3F988A5DD8 | spawns 0 
+  => WORKED
+
+CHANGE 109  C8D3B10076C770E9  overlay  enm_indigenous_crab -> enm_indigenous_puffoid_blizar  [kin/volume]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 39 (CheckpointHash=1628157872 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 43 (CheckpointHash=2489401179 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 44 (CheckpointHash=287587114 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed 899C303E911F9792 | spawns 0 
+  => NO SPAWN
+
+CHANGE 130  B876FAEBEF1B8A09  blizar  enm_thugs4less_shooter -> enm_thugs4less_melee  [kin/external-unresolved]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 54 (CheckpointHash=1061476515 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 66 (CheckpointHash=130629362 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 67 (CheckpointHash=465465660 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed A0F33A142362145C | spawns 0 
+  => NO SPAWN
+
+CHANGE 131  FF06CCC2A9AC1EA2  ardolis  enm_pirate_robot_shooter -> enm_pirate_robot_melee  [confirmed]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed 92C793D47A4657B6 | spawns 0 
+  => NO SPAWN
+
+CHANGE 132  FA5FB32C7AAB4C4A  ardolis  enm_indigenous_puffoid -> enm_indigenous_crab  [confirmed]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed B69D08BA44EE560E | spawns 0 
+  => NO SPAWN
+
+CHANGE 133  DAFCA25C58FD387F  ardolis  enm_indigenous_puffoid -> enm_indigenous_crab  [confirmed]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed D7677BCD9AAF5963 | spawns 0 
+  => NO SPAWN
+
+CHANGE 134  D1FD84D3A21C0F9A  ardolis  enm_indigenous_puffoid -> enm_indigenous_crab  [proven/external-unresolved]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed B69D08BA44EE560E | spawns 0 
+  => NO SPAWN
+
+CHANGE 135  FE80D89C2D6D5A2D  ardolis  enm_pirate_robot_melee -> enm_pirate_robot_shielded  [shared-seen/volume]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed C1EE87C86B7840DD | spawns 0 
+  => NO SPAWN
+
+CHANGE 136  F3D033F9CBFADB82  ardolis  enm_pirate_robot_shooter -> enm_pirate_bladeball  [shared-seen/volume]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed C37DB04A5A1F0972 | spawns 0 
+  => NO SPAWN
+
+CHANGE 137  F4A34D9C49E5642A  ardolis  enm_indigenous_puffoid -> enm_indigenous_crab  [shared-seen/volume]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed D7677BCD9AAF5963 | spawns 0 
+  => NO SPAWN
+
+CHANGE 138  F607A5D72DB3F350  ardolis  enm_indigenous_puffoid -> enm_indigenous_crab  [shared-seen/volume]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed D7677BCD9AAF5963 | spawns 0 
+  => NO SPAWN
+
+CHANGE 139  9C3139C7FFED7137  ardolis  enm_pirate_robot_shooter -> enm_pirate_bladeball  [confirmed]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed C37DB04A5A1F0972 | spawns 0 
+  => NO SPAWN
+
+CHANGE 150  B68048218C05B78F  overlay  enm_pirate_shingle_q4b -> enm_pirate_bladeball  [kin/volume]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed 899FC818387DB953 | spawns 0 
+  => NO SPAWN
+
+CHANGE 151  B9841904DB0F6A87  overlay  enm_pirate_shingle_q4b -> enm_pirate_bladeball  [kin/volume]
+  visit 72 (NewPlanetName=Ardolis OldPlanetName=Cordelion): NO SPAWN | listed 899FC818387DB953 | spawns 0 
+  => NO SPAWN
+
+CHANGE 161  90B73AB19AB0E40D  blizar_destroyed  enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer  [proven/external-unresolved]
+  visit 34 (CheckpointHash=2648354339 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 35 (CheckpointHash=4075102712 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 37 (CheckpointHash=4022336735 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 45 (CheckpointHash=4139825274 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 47 (CheckpointHash=4173672961 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 49 (CheckpointHash=2529633050 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 50 (CheckpointHash=235848393 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 51 (CheckpointHash=3687812694 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 52 (CheckpointHash=2441211469 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 53 (CheckpointHash=314615487 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 55 (CheckpointHash=4025498705 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 56 (CheckpointHash=3562642482 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 57 (CheckpointHash=1162880140 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 59 (CheckpointHash=276193042 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 60 (CheckpointHash=439296341 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 62 (CheckpointHash=883629621 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 63 (CheckpointHash=3158000741 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 64 (CheckpointHash=1801162821 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 65 (CheckpointHash=3246754734 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  visit 68 (CheckpointHash=1196682393 Loaded=true): NO SPAWN | listed A11B9447CAC96847 | spawns 0 
+  => NO SPAWN
+
+SUMMARY BY PLANET
+  planet                            WORKED  ORIGINAL SPAWNED          NO SPAWN       NOT REACHED
+  ardolis                                0                 0                 9                 4
+  blizar                                 0                 0                 1                 0
+  blizar_destroyed                       0                 0                 1                 0
+  overlay                                5                 0                20               102
+  prisonship                             0                 0                 0                 7
+  savali                                 0                 0                 0                20
+  test                                   0                 0                 0                 1
+
+SUMMARY BY TIER
+  tier                              WORKED  ORIGINAL SPAWNED          NO SPAWN       NOT REACHED
+  confirmed                              0                 0                 4                 0
+  kin                                    3                 0                13                38
+  proven                                 1                 0                 4                74
+  shared-seen                            1                 0                10                22
+
+TOTAL: WORKED 5, ORIGINAL SPAWNED 0, NO SPAWN 31, NOT REACHED 134
+
+Not changed by the .stage (their own zone data already uses a replacement kind; 18's STAGE SUMMARY may count them):
+  8090FFC5825FEA24 {'enm_neo_nefarious_melee': 2}
+  82F7BD5A79042F24 {'enm_neo_nefarious_melee': 1}
+  850036CAE87F0076 {'enm_indigenous_puffoid_blizar': 3}
+  8883FCF2615EBC4A {'enm_neo_nefarious_shooter': 2}
+  89BEAC84E9A7FA37 {'enm_neo_nefarious_shooter': 2}
+  8DBB787E584328BE {'enm_amoeboid_medium_ps4': 3}
+  92DF69D54D77763B {'enm_neo_nefarious_g': 1}
+  9723199B125B94CF {'enm_neo_nefarious_melee': 2}
+  975CFE79CA0BBE48 {'enm_indigenous_puffoid': 10}
+  9AC6AC661BA42733 {'enm_neo_nefarious_shooter': 2}
+  9F06A201F84EFBB2 {'enm_indigenous_crab': 6}
+  9F381222618458A7 {'enm_neo_nefarious_melee': 2}
+  A19EA4B091580F0C {'enm_neo_nefarious_shooter': 1}
+  A2065A7504DB1E73 {'enm_indigenous_puffoid_blizar': 7}
+  A59E042F50B6C2C4 {'enm_neo_nefarious_shooter': 2}
+  A8496576BE7F13E3 {'enm_neo_nefarious_melee': 4}
+  A8660AA2B67AF9A0 {'enm_thugs4less_bike': 1}
+  A8B5EB37197C9CA1 {'enm_neo_nefarious_shooter': 2}
+  AA9D75264491A9D6 {'enm_neo_nefarious_shooter': 3}
+  AB1ADF64C990CAB6 {'enm_indigenous_crab': 1}
+  AC7E92DA3DDC65BE {'enm_neo_nefarious_shooter': 2}
+  AC88D5528A592420 {'enm_thugs4less_shooter': 2}
+  AE1DB78DF3BE63D3 {'enm_neo_nefarious_shooter': 4}
+  B0683892A1C1273C {'enm_pirate_robot_shielded': 5}
+  B32A2F37A5740C2C {'enm_neo_nefarious_swarmer': 4}
+  B5B3E9486F3F01F1 {'enm_thugs4less_robomutt': 6}
+  B65DBCC19818379D {'enm_neo_nefarious_melee': 2}
+  B7B5D0392218D6C8 {'enm_neo_nefarious_hover': 2}
+  B953D3E7FBDB19CE {'enm_neo_nefarious_melee': 3}
+  BA51D79CA8B8EB11 {'enm_neo_nefarious_shooter': 2}
+  BA6975EA62296ED5 {'enm_thugs4less_shooter': 2}
+  BB07568FF70E0D71 {'enm_neo_nefarious_shooter': 2}
+  BDC04493F6FC5FA8 {'enm_indigenous_crab': 1}
+  BF36899DA6835574 {'enm_indigenous_crab': 4}
+  BFC35B9395049CF7 {'enm_amoeboid_medium_ps4': 1}
+  C0584D33379E2C9E {'enm_neo_nefarious_melee': 2}
+  C2E2DEEAE2E3C44B {'enm_neo_nefarious_swarmer': 9}
+  C30101F3ADB5A62C {'enm_indigenous_crab': 3}
+  C461E9EF852582D2 {'enm_neo_nefarious_melee': 4}
+  C6464FDAB1F68A8D {'enm_thugs4less_biker': 1}
+written: verdicts\verdicts-20261126-015324.json
