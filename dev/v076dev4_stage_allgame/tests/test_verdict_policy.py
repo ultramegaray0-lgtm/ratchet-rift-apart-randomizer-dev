@@ -68,6 +68,73 @@ class VerdictPolicyTests(unittest.TestCase):
         self.assertEqual(len(payload["verdicts"]), 170)
         self.assertEqual(counts, Counter({"WORKED": 5, "NO SPAWN": 31, "NOT REACHED": 134}))
 
+    def test_external_factory_uid_is_preserved_for_force_mode(self):
+        from stage_allgame import Zone
+        z = Zone.__new__(Zone)
+        node = {"key": 0x1234, "cls": SA.FACTORY_CLASS, "plugs": [0]}
+        z.nodes = [node]
+        z.plugs = [(SA.PLUG_TEMPLATES, 0, 0)]
+        z.vars = [(5, 0, 0xFFFF, 0, 0, int("ABCDEF1234567890", 16), 0)]
+        z.owners = {0: [(node, 0, SA.PLUG_TEMPLATES)]}
+        z.dup_keys = set()
+        z.actors = []
+        z.rec_of = {}
+        z.dup_uids = {}
+        factory = z.factories()[0]
+        self.assertEqual(factory["form"], "external")
+        self.assertEqual(factory["uid"], "ABCDEF1234567890")
+        self.assertEqual(factory["rec"], 0xFFFF)
+
+    def test_force_mode_emits_global_external_enemy_replacement(self):
+        from types import SimpleNamespace
+        class Brain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "test family"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return True, "proven", "test compatible pair"
+        original = "1111111111111111"
+        replacement = "2222222222222222"
+        candidate = {"uid": replacement, "kind": "enm_pirate_robot_melee", "asset": "enemy.actor",
+                     "rec": 4, "zone_id": "BBBBBBBBBBBBBBBB", "zone": "foreign.zone",
+                     "planet": "ardolis"}
+        spawner = {"key": "AAAAAAAAAAAAAAAA", "action": 1, "problem": None, "form": "local",
+                   "uid": original, "sv": 0, "rec": 2, "kind": "enm_pirate_robot_shooter",
+                   "asset": "enemy.actor", "owners": 1, "locs": []}
+        scan = SimpleNamespace(template_catalog={replacement: candidate}, actor_catalog={})
+        rec = {"factories": [spawner], "zone_id": "CCCCCCCCCCCCCCCC",
+               "zone": "target.zone", "planet": "savali"}
+        opts = SimpleNamespace(verdict_map={})
+        changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec, opts, __import__("random").Random(7))
+        self.assertEqual(len(changes), 1)
+        self.assertEqual(changes[0]["replacement_uid"], replacement)
+        self.assertEqual(changes[0]["replacement_index"], 0xFFFF)
+        self.assertTrue(changes[0]["replacement_external"])
+        self.assertTrue(changes[0]["tier"].startswith("FORCED-"))
+        self.assertEqual(decisions[spawner["key"]][0], "changed")
+
+    def test_force_mode_does_not_repeat_latest_failed_uid(self):
+        from types import SimpleNamespace
+        class Brain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "test family"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return True, "proven", "test compatible pair"
+        replacement = "2222222222222222"
+        candidate = {"uid": replacement, "kind": "enm_pirate_robot_melee", "asset": "enemy.actor",
+                     "rec": 4, "zone_id": "BBBBBBBBBBBBBBBB", "zone": "foreign.zone",
+                     "planet": "ardolis"}
+        spawner = {"key": "AAAAAAAAAAAAAAAA", "action": 1, "problem": None, "form": "local",
+                   "uid": "1111111111111111", "sv": 0, "rec": 2, "kind": "enm_pirate_robot_shooter",
+                   "asset": "enemy.actor", "owners": 1, "locs": []}
+        scan = SimpleNamespace(template_catalog={replacement: candidate}, actor_catalog={})
+        rec = {"factories": [spawner], "zone_id": "CCCCCCCCCCCCCCCC",
+               "zone": "target.zone", "planet": "savali"}
+        opts = SimpleNamespace(verdict_map={"CCCCCCCCCCCCCCCC": {
+            spawner["key"]: ("NO SPAWN", replacement)}})
+        changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec, opts, __import__("random").Random(7))
+        self.assertEqual(changes, [])
+        self.assertEqual(decisions[spawner["key"]][0], "refused")
+
     def test_other_zone_pins_are_not_leaked(self):
         verdicts = {ARDOLIS: {"B2B978B5BC3D8A4D": ("WORKED", NEW_UID)}}
         self.assertEqual(SA.effective_pins("0000000000000000", verdicts), [])
