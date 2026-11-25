@@ -43,3 +43,18 @@ jobs:
           name: enemy-randomizer-v2.0.1-evidence-guided
           path: dev/v076dev4_stage_allgame/dist/v2.0.1-evidence-guided/
           if-no-files-found: error
+      - name: Package V2.1 force-all local toolkit
+        run: |
+          mkdir -p dist/v2.1-force-all-toolkit/tools/stage_enemies
+          mkdir -p dist/v2.1-force-all-toolkit/scripts
+          cp tools/stage_enemies/*.py dist/v2.1-force-all-toolkit/tools/stage_enemies/
+          cp -r tools/stage_enemies/evidence dist/v2.1-force-all-toolkit/tools/stage_enemies/
+          cp scripts/18_rando_stage_enemies.lua dist/v2.1-force-all-toolkit/scripts/
+          cp BUILD_V2_1_FORCE_ALL_ENEMIES.bat V2.1_FORCE_ALL_README.md dist/v2.1-force-all-toolkit/
+          cd dist && zip -qr enemy-randomizer-v2.1-force-all-toolkit.zip v2.1-force-all-toolkit
+      - name: Upload V2.1 force-all toolkit
+        uses: actions/upload-artifact@v4
+        with:
+          name: enemy-randomizer-v2.1-force-all-toolkit
+          path: dev/v076dev4_stage_allgame/dist/enemy-randomizer-v2.1-force-all-toolkit.zip
+          if-no-files-found: error
