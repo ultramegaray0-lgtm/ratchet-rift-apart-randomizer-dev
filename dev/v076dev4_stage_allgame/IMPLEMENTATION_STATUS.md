@@ -49,3 +49,14 @@ The full game installation is not present in this repository or CI. Run `SCAN_TE
 - `COVERAGE_REPORT.md`
 
 Upload those three outputs to `incoming/`. The adapter planner can then target only exact `SpawnerScriptAction` nodes with valid local enemy Template variables, rather than guessing from the 638-node aggregate.
+
+
+# Enemy Randomizer V2.0.1 MAX patch
+
+- Bundled the latest 2026-11-26 01:53:24 runtime verdicts (170 spawners: 5 WORKED, 31 NO SPAWN, 134 NOT REACHED).
+- Fixed evidence precedence: a later observed result replaces an earlier one; NOT REACHED does not erase prior evidence.
+- Fixed stale historical pins: a latest failure suppresses the old hard-coded pin; a latest WORKED pins the exact replacement UID from that run.
+- Added `BUILD_V2_MAX.bat`: produces and byte-checks a local-zone MAX build and a separate experimental cross-planet MAX build.
+- Added offline regression tests and a dedicated CI workflow. CI passed on commit `7723c3f80dc08f56297f7e381f450b04cfaa6bef`.
+- Generic Template adapters remain census-only. They are not patched until exact spawner class, ownership and spawn-context semantics are proven. This is intentional, not an omitted success claim.
+- The actual .stage files must be generated against the user's local game archives; the repository does not contain the complete game installation.
