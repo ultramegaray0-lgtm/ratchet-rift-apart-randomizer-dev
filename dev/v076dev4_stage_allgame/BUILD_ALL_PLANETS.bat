@@ -25,7 +25,7 @@ set /p OUT=<"builds\LAST_BUILD.txt"
 echo.
 echo Report: "%OUT%\COVERAGE_REPORT.md"
 echo Every spawner of the game and why: "%OUT%\inventory.csv"
-echo A fallback with only single-owner spawners: "%OUT%\safe"
+echo A fallback with single-owner spawners (foreign refs remain experimental): "%OUT%\safe"
 echo.
 choice /C YN /M "Install the main build now (your current files are backed up first)"
 if errorlevel 2 goto notnow
