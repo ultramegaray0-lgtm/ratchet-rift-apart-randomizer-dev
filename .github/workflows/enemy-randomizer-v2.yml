@@ -1,0 +1,29 @@
+name: Enemy Randomizer V2.0.1 checks
+
+on:
+  push:
+    branches:
+      - work/100-percent-enemy-replacement
+    paths:
+      - "dev/v076dev4_stage_allgame/**"
+      - ".github/workflows/enemy-randomizer-v2.yml"
+
+jobs:
+  offline-regression:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dev/v076dev4_stage_allgame
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile builder and tests
+        run: python -m py_compile tools/stage_enemies/*.py tests/*.py
+      - name: Runtime verdict policy regression
+        run: python -I -m unittest discover -s tests -p "test_verdict_policy.py" -v
+      - name: Builder CLI smoke test
+        run: python -I tools/stage_enemies/stage_allgame.py --help
+      - name: Log checker CLI smoke test
+        run: python -I tools/stage_enemies/stage_check_log.py --help
