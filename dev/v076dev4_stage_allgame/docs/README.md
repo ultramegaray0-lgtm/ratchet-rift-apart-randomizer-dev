@@ -86,11 +86,31 @@ So each play session makes the next build more reliable and, through that last p
 Every enemy spawner of the game is in `inventory.csv` with its decision and reason. `COVERAGE_REPORT.md` has totals
 per planet and per zone, the replacement kinds, and the reasons table.
 
-## Not possible with this method
+## Experimental cross-planet mode
 
-**Mixing enemies from other planets.** A spawner can only point at a template actor of its own zone. Each zone offers
-the enemy kinds it already holds, so variety comes from shuffling those. Adding foreign actors to a zone would mean
-rewriting its tables and asset references. That is a different, unproven method, and I did not attempt it.
+The builder now has --cross-planet. It builds a game-wide catalog of enemy templates already used by native
+SunsetSpawnerFactory nodes. A candidate is admitted only when its actor UID is globally unique across the scan,
+its source zone already uses it natively, it is classified as a regular enemy, and the existing faction / movement /
+spawn-point rules pass. The destination Template variable is changed to an external actor reference
+(Zone Actors index = 0xFFFF, UID = source actor UID); no actor records or assets are copied.
+
+This is a real cross-zone / cross-planet reference attempt, not just a shuffle of local pools. It is still
+EXPERIMENTAL: existing external spawn-point references prove the encoding exists, but do not prove that every
+external Template reference will load and spawn correctly. The manifest records the source planet and marks each
+such change as external.
+
+Build the maximum exploratory version with:
+
+```bat
+python -I tools\stage_enemies\stage_allgame.py build --game "GAME_FOLDER" --out "builds\FULL" --profile all --cross-planet --rate 1.0
+```
+
+The safe fallback still limits shared-variable edits, but it also uses external templates when this flag is set.
+For a strictly same-zone build, omit --cross-planet.
+
+Still not changed: the 638 other Template-adapter nodes. The scan exports their detailed class / plug / reference
+inventory. Only the exact SpawnerScriptAction class should be considered for a dedicated adapter; blindly rewriting
+all 638 could change cinematic, NPC, vehicle, or non-spawner script actions.
 
 ## Status
 
