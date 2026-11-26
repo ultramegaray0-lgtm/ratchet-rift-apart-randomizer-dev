@@ -183,7 +183,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("pcall(V.stage_on_spawn, e, r, a", runtime)
         self.assertIn("pcall(V.stage_on_death, h)", runtime)
         self.assertIn("function V.global_templates_tick(frame)\n  -- V4: independent of scene readiness and the ON/OFF switch:", runtime)
-        self.assertIn("if not V.enabled() then return end", runtime)
+        self.assertNotIn("function V.global_templates_tick(frame)\n  if not V.enabled() then return end", runtime)
         self.assertNotIn("if not V.enabled() or V.stage_mode() then return end", runtime)
         self.assertIn('if not (SP and SP.V and SP.V.stage_mode) then', stage)
         self.assertIn('local expected_adapter = c.adapter or "factory"', stage)
