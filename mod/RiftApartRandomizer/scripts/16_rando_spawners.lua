@@ -3082,6 +3082,7 @@ V.note_why = note_why
 
 function V.plan_rec(sc, r)
   local lvl = V.lvl
+  if V.stage_mode() then return note_why(r, ".stage mode: runtime spawner writes disabled") end
   if r.arm then
     local A = r.arm
     -- dev 10.30: factories are planned before the nodes are listed; a node listed later that shares the variable and
@@ -3987,6 +3988,10 @@ V.GLOBAL_REQUESTS_PER_FRAME = 4
 V.GLOBAL_POLLS_PER_FRAME = 4
 V.GLOBAL_SPAWNS_PER_FRAME = 1
 V.global_templates = V.global_templates or {}       -- synthetic uid -> classified template
+-- .stage diagnostics handshake: 18_rando_stage_manifest.lua loads before 18_rando_stage_enemies.lua.
+-- When its manifest exists, the .stage file owns the spawner variables; never race it with runtime writes.
+V.STAGE_LUA = "1.1.0"
+function V.stage_mode() return type(RANDO_STAGE_ENEMIES) == "table" end
 V.global_items = V.global_items or {}
 V.global_item_by_uid = V.global_item_by_uid or {}
 V.global_items_initialized = V.global_items_initialized or false
@@ -4058,7 +4063,7 @@ local function global_template_accept(item, handle, flags)
 end
 
 function V.global_templates_tick(frame)
-  if not V.enabled() then return end
+  if not V.enabled() or V.stage_mode() then return end
   if type(rivet.template_actor) ~= "function" then
     if not V.global_manifest_missing_said then
       V.global_manifest_missing_said = true
