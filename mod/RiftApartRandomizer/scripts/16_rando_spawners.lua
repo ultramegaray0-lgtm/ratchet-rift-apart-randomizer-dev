@@ -3991,7 +3991,7 @@ end
 V.GLOBAL_REQUESTS_PER_FRAME = 4
 V.GLOBAL_POLLS_PER_FRAME = 4
 V.GLOBAL_SPAWNS_PER_FRAME = 1
-V.GLOBAL_RETRY_LIMIT = 8           -- V4: retry transient asset-loader failures during menus and checkpoint loading.
+V.GLOBAL_RETRY_LIMIT = 9999        -- V4: keep retrying unavailable/loading assets; a slow load is preferable to silently abandoning a template.
 V.global_templates = V.global_templates or {}       -- synthetic uid -> classified template
 -- .stage diagnostics handshake: 18_rando_stage_manifest.lua loads before 18_rando_stage_enemies.lua.
 -- When its manifest exists, the .stage file owns the spawner variables; never race it with runtime writes.
