@@ -4,7 +4,7 @@ This branch replaces the V2.2 foreign-template-UID experiment with a runtime ass
 
 ## Architecture
 
-1. stage_allgame.py scans all available zones and writes 15_rando_global_enemy_assets.lua from every classifiable regular enemy actor asset it finds. Paths are deduplicated; ambiguous path/name combinations and non-regular/boss assets are excluded.
+1. stage_allgame.py scans all available zones and writes 15_rando_global_enemy_assets.lua from every classifiable regular enemy actor asset already used by a native factory or SpawnerScriptAction template. Paths are deduplicated; ambiguous path/name combinations and non-regular/boss assets are excluded.
 2. The custom Rivet Hook API rivet.template_actor(path, uid, create) requests the actor asset through the game's native LoadActorAsset path. With create=false, it only requests/polls the asset. With create=true, it creates a resident actor through the same native SpawnActorFromAsset function used by the hook's rift portals.
 3. The native helper assigns a stable high-bit synthetic UID, marks the source actor as ActorFlag::Template, clears active/update and zone/level-unload flags, and sets zoneIndex=-1. It returns the actor handle and flags for read-back validation.
 4. 16_rando_spawners.lua classifies each resident source and adds it to the current level's template pool. It creates at most one actor per frame to avoid exhausting Rivet Hook's 8 ms Lua budget.
