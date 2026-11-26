@@ -4010,7 +4010,14 @@ local function global_template_attach(T)
   end
 end
 
-local function global_template_accept(item, handle)
+local function global_template_accept(item, handle, flags)
+  local actor_flags = math.tointeger(tonumber(flags)) or 0
+  local inactive_mask = 0x1 | 0x8 | 0x80 | 0x100 | 0x2000
+  if (actor_flags & 0x4) == 0 or (actor_flags & inactive_mask) ~= 0 then
+    item.state = "failed"
+    vlog(string.format("GLOBAL TEMPLATE REJECTED %s: invalid resident flags 0x%X", tostring(item.row.path), actor_flags))
+    return false
+  end
   local ok, a = pcall(V.actor, handle)
   if not ok or type(a) ~= "table" or not a.name then
     item.state = "failed"
@@ -4107,7 +4114,7 @@ function V.global_templates_tick(frame)
         item.state = "failed"
         vlog("GLOBAL TEMPLATE ERROR " .. tostring(item.row.path) .. ": " .. tostring(status))
       elseif status == "ready" then
-        global_template_accept(item, handle)
+        global_template_accept(item, handle, flags)
       elseif status == "loading" then
         item.state = "pending"
       else
