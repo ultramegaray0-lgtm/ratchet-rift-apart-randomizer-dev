@@ -1695,14 +1695,17 @@ def emit(a, S, src, brain, build, out):
             node_changes, node_decisions = plan_node_template_adapters(S, brain, rec, a, rng, ch, anchors)
             collisions = set(dec).intersection(node_decisions)
             if collisions:
-                rejected_vars = set()
-                for change in node_changes:
+                rejected_keys = set(collisions)
+                for change in ch + node_changes:
                     keys = set(change.get("spawner_keys") or [change["key"]])
                     if keys.intersection(collisions):
-                        rejected_vars.add(change["key"])
-                        for key in keys:
-                            node_decisions[key] = ("refused", "node/factory key collision; retained native")
-                node_changes = [x for x in node_changes if x["key"] not in rejected_vars]
+                        rejected_keys.update(keys)
+                ch = [x for x in ch if not set(x.get("spawner_keys") or [x["key"]]).intersection(rejected_keys)]
+                node_changes = [x for x in node_changes
+                                if not set(x.get("spawner_keys") or [x["key"]]).intersection(rejected_keys)]
+                for key in rejected_keys:
+                    dec[key] = ("refused", "node/factory key collision; all owners retained native")
+                    node_decisions[key] = ("refused", "node/factory key collision; all owners retained native")
             ch.extend(node_changes)
             dec.update(node_decisions)
         decisions[zh] = dec
