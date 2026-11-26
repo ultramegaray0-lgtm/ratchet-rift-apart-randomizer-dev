@@ -1,6 +1,6 @@
 # Rift Apart Randomizer 10.0 (development project)
 
-> **Enemy Randomizer V3.0 alpha:** the active engineering branch `work/global-runtime-enemy-registry` adds a hybrid all-planet `.stage` + exact `SpawnerScriptAction` Template-adapter planner, a synchronized full-script installer, and adapter-aware runtime verification. It is not yet an in-game-validated 100% release. Start with [V3.0 alpha notes](dev/v076dev4_stage_allgame/V3.0_ALPHA_NOTES.md) and [the V3.0 max-coverage launcher](dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat).
+> **Enemy Randomizer V4 total-coverage attempt:** branch `work/v4-total-enemy-coverage` prioritizes loading-time global enemy-template preloading, retry-persistent randomization, forced foreign enemy factory replacements, and exact `SpawnerScriptAction` Template adapters. V4 intentionally bypasses movement/faction and spawn-point compatibility for maximum regular-enemy coverage and can softlock encounters. It is not yet an in-game-validated 100% release. Start with [V4 coverage notes](dev/v076dev4_stage_allgame/V4_TOTAL_COVERAGE_NOTES.md) and [the V4 total-coverage launcher](dev/v076dev4_stage_allgame/BUILD_V4_TOTAL_COVERAGE.bat). V3 remains documented in [V3.0 alpha notes](dev/v076dev4_stage_allgame/V3.0_ALPHA_NOTES.md).
 
 
 **v0.62-DEV6 (kit 10.0.26):** round46 - Omega purchases now register: the hero's inventory components are found by
