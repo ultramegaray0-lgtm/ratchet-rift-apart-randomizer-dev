@@ -106,8 +106,6 @@ class VerdictPolicyTests(unittest.TestCase):
         opts = SimpleNamespace(verdict_map={})
         from unittest.mock import patch
         with patch.object(SA, "spawn_points_ok", return_value=(True, "volume", "verified test spawn point")):
-            from unittest.mock import patch
-        with patch.object(SA, "spawn_points_ok", return_value=(True, "volume", "verified test spawn point")):
             changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec, opts, __import__("random").Random(7))
         self.assertEqual(len(changes), 1)
         self.assertEqual(changes[0]["replacement_uid"], replacement)
