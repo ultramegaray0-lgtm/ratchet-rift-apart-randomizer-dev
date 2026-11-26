@@ -14,7 +14,7 @@ set "GAME=%GAME:"=%"
 if not exist "%GAME%\rivet.log" goto nolog
 if not exist "builds\LAST_INSTALLED.txt" goto nobuild
 set /p BUILD=<"builds\LAST_INSTALLED.txt"
-%PY% -I "tools\stage_enemies\stage_check_log.py" "%GAME%\rivet.log" --manifest "%BUILD%\stage_enemies_manifest.json" --save-dir "verdicts" > "verdicts_last_check.txt"
+%PY% -I "tools\stage_enemies\stage_check_log.py" "%GAME%\rivet.log" --manifest "%BUILD%\stage_enemies_manifest.json" --inventory "%BUILD%\inventory.csv" --template-inventory "%BUILD%\template_adapter_inventory.csv" --save-dir "verdicts" > "verdicts_last_check.txt"
 more < "verdicts_last_check.txt"
 pause
 exit /b 0
