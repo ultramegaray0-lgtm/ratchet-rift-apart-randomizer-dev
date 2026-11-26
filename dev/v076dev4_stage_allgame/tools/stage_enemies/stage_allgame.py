@@ -1945,7 +1945,7 @@ def v3_artifact_problems(out, profile):
     if os.path.isfile(manifest_path):
         with open(manifest_path, encoding="utf-8", errors="replace") as fh:
             source = fh.read()
-        if "RANDO_STAGE_ENEMIES = {" not in source or "profile = \\"v3\"" not in source:
+        if "RANDO_STAGE_ENEMIES = {" not in source or 'profile = "v3"' not in source:
             problems.append("V3 stage manifest is missing its v3 profile declaration")
     return problems
 
