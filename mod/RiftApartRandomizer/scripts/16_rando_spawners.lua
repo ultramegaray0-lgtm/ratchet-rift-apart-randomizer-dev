@@ -3082,7 +3082,7 @@ V.note_why = note_why
 
 function V.plan_rec(sc, r)
   local lvl = V.lvl
-  if V.stage_mode() then return note_why(r, ".stage mode: runtime spawner writes disabled") end
+  if V.stage_mode() and r.kind == "factory" then return note_why(r, ".stage owns this factory Templates variable") end
   if r.arm then
     local A = r.arm
     -- dev 10.30: factories are planned before the nodes are listed; a node listed later that shares the variable and
@@ -4069,7 +4069,7 @@ local function global_template_accept(item, handle, flags)
 end
 
 function V.global_templates_tick(frame)
-  if not V.enabled() or V.stage_mode() then return end
+  if not V.enabled() then return end
   if type(rivet.template_actor) ~= "function" then
     if not V.global_manifest_missing_said then
       V.global_manifest_missing_said = true
