@@ -29,6 +29,8 @@ jobs:
       - name: Check builder CLI
         working-directory: dev/v076dev4_stage_allgame/tools/stage_enemies
         run: python -I stage_allgame.py --help
+      - name: Test V3 stage log checker (factory and node Template adapters)
+        run: python -I dev/v076dev4_stage_allgame/tests/test_stage_check_log.py
       - name: Run Lua scale regression tests
         run: python -I dev/v076dev4_stage_allgame/tests/test_stage_lua_scale.py dev/v076dev4_stage_allgame/scripts
       - name: Report real-zone test requirement
