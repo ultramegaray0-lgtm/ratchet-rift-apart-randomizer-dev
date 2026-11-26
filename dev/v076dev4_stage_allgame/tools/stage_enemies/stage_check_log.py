@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""stage_check_log.py 3.0.0-alpha.2 - read rivet.log(s) and say, per .stage change, what the game really did.
+"""stage_check_log.py 3.0.0-alpha.3 - read rivet.log(s) and say, per .stage change, what the game really did.
 
   python -I stage_check_log.py rivet.log [more.log ...] [--manifest BUILD/stage_enemies_manifest.json]
                                 [--json verdicts.json] [--all] [--save-dir verdicts]
@@ -30,7 +30,7 @@ import re
 import sys
 from collections import Counter, OrderedDict, defaultdict
 
-VERSION = "3.0.0-alpha.2"
+VERSION = "3.0.0-alpha.3"
 RANK = {"WORKED": 0, "ORIGINAL SPAWNED": 1, "NO SPAWN": 2, "NOT REACHED": 3}
 
 
