@@ -1201,6 +1201,8 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
             users[n["uid"]].append(("node_template", g["key"]))
 
     changed_factory_keys = {c["key"] for c in factory_changes}
+    pin_map = {key: (uid, why) for key, uid, why in effective_pins(
+        rec["zone_id"], getattr(opts, "verdict_map", {}) or {}, getattr(opts, "no_pins", False))}
     for g in groups:
         n, key = g["node"], g["key"]
         members = g["members"]
@@ -1234,6 +1236,18 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
             for owner_key in g["keys"]:
                 decisions[owner_key] = ("refused", "latest in-game verdict %s on shared variable; left all owners native" % verdict)
             continue
+        pins = [(owner_key, pin_map[owner_key][0], pin_map[owner_key][1])
+                for owner_key in g["keys"] if owner_key in pin_map]
+        pins += [(owner_key, verdict_map[owner_key][1], "WORKED in latest runtime evidence")
+                 for owner_key in g["keys"] if verdict_map.get(owner_key)
+                 and verdict_map[owner_key][0] == "WORKED" and verdict_map[owner_key][1]]
+        pin_uids = {uid for _, uid, _ in pins}
+        if len(pin_uids) > 1:
+            for owner_key in g["keys"]:
+                decisions[owner_key] = ("refused", "conflicting confirmed replacement UIDs across shared owners")
+            continue
+        pin_uid = next(iter(pin_uids)) if pin_uids else None
+        pin_reason = pins[0][2] if pins else None
         choices, rejected = [], Counter()
         for uid, candidate in pool.items():
             if uid == n["uid"] or candidate["kind"] == n["kind"]:
@@ -1245,6 +1259,14 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
             choices.append({"uid": uid, "kind": candidate["kind"], "family": candidate["family"],
                 "rec": candidate["rec"], "pair_tier": tier, "pair_evidence": evidence,
                 "asset": candidate.get("asset")})
+        if pin_uid:
+            pinned_choice = next((choice for choice in choices if choice["uid"] == pin_uid), None)
+            if pinned_choice is None:
+                for owner_key in g["keys"]:
+                    decisions[owner_key] = ("refused", "confirmed replacement UID %s is not a safe local candidate" % pin_uid)
+                continue
+            choices = [pinned_choice]
+            g["pin_uid"], g["pin_reason"] = pin_uid, pin_reason
         if choices:
             options[key] = choices
         else:
@@ -1327,10 +1349,10 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
             "replacement_uid": o["uid"], "replacement_index": o["rec"], "replacement_external": False,
             "replacement_source_zone": rec["zone"], "replacement_source_zone_id": rec["zone_id"],
             "replacement_source_planet": rec["planet"], "replacement": o["kind"],
-            "replacement_family": o["family"], "pair_tier": o["pair_tier"],
-            "pair_evidence": o["pair_evidence"], "spawn_tier": "node-template",
+            "replacement_family": o["family"], "pair_tier": "confirmed" if g.get("pin_uid") else o["pair_tier"],
+            "pair_evidence": g.get("pin_reason") or o["pair_evidence"], "spawn_tier": "node-template",
             "spawn_points": "exact SpawnerScriptAction Template variable; %d owner(s)" % len(g["keys"]),
-            "count": None, "tier": "node-template/" + o["pair_tier"],
+            "count": None, "tier": "node-template/confirmed" if g.get("pin_uid") else "node-template/" + o["pair_tier"],
             "anchor": anchors.get(o["uid"]), "pair": "node_template|%s/%s>%s/%s" %
                 (n["kind"][:19], n.get("class", "?"), o["kind"][:19], o["family"])
         })
