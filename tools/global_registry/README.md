@@ -61,7 +61,7 @@ The V3 all-planet `.stage` builder edits SunsetSpawnerFactory `Templates` variab
   asset path can create a resident template. Manifest-listed node Template keys are excluded from runtime writes; a shared variable is listed under every owner key and patched only once.
 - The stage monitor observes only the adapter type and spawner keys listed in its manifest, so runtime-only spawns are not
   misreported as `.stage` replacements.
-- The complete V3 runtime bundle uses kit version `10.0.50` plus the separate `STAGE_LUA = 1.1.0` handshake. Both checks must match.
+- The complete V3 runtime bundle uses kit version `10.0.51` plus the separate `STAGE_LUA = 1.1.0` handshake. Both checks must match.
 
 For the V3 local-only build, run `dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat`. It builds a V3 hybrid profile and a factory-only safe fallback, runs the independent `.stage` checker, and deliberately does **not** use `--cross-planet`. The older `BUILD_HYBRID_MAX_COVERAGE.bat` is marked legacy experimental profile-all and is not the V3 release path.
 
