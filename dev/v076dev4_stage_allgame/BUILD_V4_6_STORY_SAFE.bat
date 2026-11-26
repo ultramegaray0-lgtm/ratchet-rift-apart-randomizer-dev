@@ -70,7 +70,8 @@ if errorlevel 1 goto failed
 echo.
 echo V4.6 installed. Reload from a NEW GAME / new campaign start for a clean test.
 echo Keep the generated manifest and coverage report.
-echo V = mission-state diagnostic; story encounters are left to native mission scripts.\necho F11 = emergency enemy recovery.
+echo V = mission-state diagnostic; story encounters are left to native mission scripts.
+echo F11 = emergency enemy recovery.
 pause
 popd
 exit /b 0
