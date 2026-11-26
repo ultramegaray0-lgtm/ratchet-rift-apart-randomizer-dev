@@ -96,6 +96,9 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('function V.stage_manifest() return RANDO_STAGE_ENEMIES end', runtime)
         self.assertIn('function V.stage_mode() return type(V.stage_manifest()) == "table" end', runtime)
         self.assertIn("function V.stage_owns_rec(r)", runtime)
+        self.assertIn('if manifest.profile ~= "v3" then return true end', runtime)
+        self.assertIn('return V.stage_factory_keys[key] == true', runtime)
+        self.assertIn('return V.stage_node_keys[key] == true', runtime)
         self.assertIn('if V.stage_owns_rec(r) then return note_why(r, ".stage owns this " .. tostring(r.kind) .. " Template variable") end', runtime)
         self.assertIn("if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end", runtime)
         self.assertIn("pcall(V.stage_on_spawn, e, r, a", runtime)
@@ -109,6 +112,14 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('ST.STAGE_LUA = "1.1.0"', stage)
         self.assertIn('RANDO_FILES["18_rando_stage_enemies"] = "10.0.50"', stage)
         self.assertIn('RANDO_FILES["16_rando_spawners"] = "10.0.50"', runtime)
+
+    def test_v3_profile_keeps_shared_factories_native_and_owns_only_manifest_keys(self):
+        builder_path = os.path.join(HERE, "..", "tools", "stage_enemies", "stage_allgame.py")
+        with open(builder_path, encoding="utf-8") as fh:
+            builder = fh.read()
+        self.assertIn('if opts.profile in ("safe", "v3") or (opts.profile == "max" and unseen):', builder)
+        self.assertIn('profile = %s, label = %s, stage_lua = %s', builder)
+        self.assertIn('if manifest.profile ~= "v3" then return true end', builder.replace(" ", " "))
 
     def test_v3_node_template_planner_only_changes_exact_single_owner_local_spawners(self):
         class FakeBrain:
