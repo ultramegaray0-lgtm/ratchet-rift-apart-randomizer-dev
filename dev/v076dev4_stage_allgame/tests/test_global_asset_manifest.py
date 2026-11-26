@@ -65,6 +65,13 @@ class GlobalAssetManifestTests(unittest.TestCase):
             self.assertEqual({row["path"] for row in rows},
                              {"actors/pirate.actor", "actors/nefarious.actor"})
 
+    def test_builder_finds_runtime_script_in_repository_package(self):
+        script = os.path.abspath(os.path.join(
+            SA.HERE, "..", "..", "..", "..", "mod", "RiftApartRandomizer", "scripts",
+            SA.SPAWNERS_LUA_FILE,
+        ))
+        self.assertTrue(os.path.isfile(script), script)
+
     def test_runtime_registry_uses_preload_and_one_spawn_per_frame(self):
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
         script = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "16_rando_spawners.lua")
