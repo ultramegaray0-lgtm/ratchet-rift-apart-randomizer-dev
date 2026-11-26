@@ -84,10 +84,11 @@ function ST.change_line(c)
   ST.change_said = ST.change_said or {}
   if ST.change_said[c.i] then return end
   ST.change_said[c.i] = true
-  slog(string.format("STAGE CHANGE %d: %s %s +%s (entry %s): %s #%s (%s) -> %s #%s (%s) | %s | spawners %s", c.i, tostring(c.zone),
+  slog(string.format("STAGE CHANGE %d: %s %s +%s (entry %s): %s #%s (%s) -> %s #%s (%s) | %s | adapter %s | spawners %s", c.i, tostring(c.zone),
       tostring(c.section), tostring(c.offset), tostring(c.var_index or "?"), tostring(c.original_uid), tostring(c.original_index or "?"),
       short(c.original), tostring(c.replacement_uid), tostring(c.replacement_index or "?"),
-      short(c.replacement), tostring(c.pair), (#(c.spawner_keys or {}) > 0) and table.concat(c.spawner_keys, ",") or "not named"))
+      short(c.replacement), tostring(c.pair), tostring(c.adapter or "factory"),
+      (#(c.spawner_keys or {}) > 0) and table.concat(c.spawner_keys, ",") or "not named"))
 end
 
 -- ---- per level ----------------------------------------------------------------------------------------------------
@@ -189,13 +190,16 @@ end
 
 -- ---- hooks called by 16_rando_spawners.lua ------------------------------------------------------------------------
 function V.stage_on_spawn(e, r, a, result, why)
-  if not V.stage_mode() or not r or r.kind ~= "factory" then return end
+  if not V.stage_mode() or not r then return end
   local idx = ST.index()
   if idx.n == 0 then return end
   local L = ST.level()
   local uid, key = r.orig and up(r.orig.uid), up(r.key)
   local c = (key and idx.keys[key]) or (uid and idx.rep[uid] and idx.rep[uid][1])
   if not c then return end
+  local expected_adapter = c.adapter or "factory"
+  local actual_adapter = r.kind == "factory" and "factory" or r.kind == "template" and "node_template" or nil
+  if actual_adapter ~= expected_adapter then return end
   local patched_key = key and idx.keys[key] ~= nil
   local name = a and a.name
   local is_rep = V.same_name(name, c.replacement)
@@ -275,7 +279,7 @@ function V.stage_tick(frame, ready, enabled)
         slog("RANDO-ERROR enemy_source = \"lua\" is ignored while the .stage manifest is installed (two systems would change " ..
             "the same spawners); uninstall the .stage to use the runtime route")
       end
-      ST.say_pending = string.format("%d factory change(s) from %s; node Template/group spawners use the runtime route", idx.n, tostring(m.stage_file))
+      ST.say_pending = string.format("%d spawner change(s) from %s; factory and exact node Template adapters are covered", idx.n, tostring(m.stage_file))
     elseif src == "stage" then
       slog("STAGE MODE ON without a manifest (enemy_source = \"stage\"): no enemy is changed at all")
     else
