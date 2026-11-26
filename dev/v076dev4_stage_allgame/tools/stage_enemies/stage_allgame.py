@@ -923,9 +923,11 @@ def plan_zone_force(S, brain, rec, opts, rng):
             continue
 
         verdict = (getattr(opts, "verdict_map", {}) or {}).get(rec["zone_id"], {}).get(key)
-        avoid = {verdict[1]} if verdict and verdict[0] in ("NO SPAWN", "ORIGINAL SPAWNED") and verdict[1] else set()
+        if verdict and verdict[0] in ("NO SPAWN", "ORIGINAL SPAWNED"):
+            decisions[key] = ("refused", "in-game verdict %s: left native; do not retry this spawner with a different replacement" % verdict[0])
+            continue
 
-        candidates = [x for x in global_pool if x["uid"] != original_uid and x["uid"] not in avoid
+        candidates = [x for x in global_pool if x["uid"] != original_uid
                       and x["zone_id"] != rec["zone_id"]]
         if not candidates:
             decisions[key] = ("refused", "no globally unique foreign enemy template is available")

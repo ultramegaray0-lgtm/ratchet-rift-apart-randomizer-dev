@@ -3905,10 +3905,74 @@ function V.start(fn)
   V.job = coroutine.create(fn)
 end
 
+function V.restore_stage_owned(sc)
+  local manifest = V.stage_manifest()
+  local lvl = V.lvl
+  if not (manifest and type(manifest.changes) == "table" and lvl and lvl.order and sc) then return 0, 0 end
+  local by_key = {}
+  for _, change in ipairs(manifest.changes) do
+    if type(change) == "table" then
+      for _, key in ipairs(change.spawner_keys or {}) do by_key[tostring(key):upper()] = change end
+    end
+  end
+  local restored, skipped = 0, 0
+  for _, rec in ipairs(lvl.order) do
+    local change = by_key[tostring(rec.key):upper()]
+    if change and rec.var and rec.var.idx ~= nil then
+      local current = V.var(sc, rec.var.idx, rec.var.gen)
+      local replacement_uid = tostring(change.replacement_uid or ""):upper()
+      local original_uid = tostring(change.original_uid or ""):upper()
+      if current and replacement_uid ~= "" and original_uid ~= "" and current.uid == replacement_uid then
+        local ok, handle = pcall(rivet.find_uid, original_uid)
+        handle = ok and math.tointeger(tonumber(handle)) or nil
+        if handle and handle ~= 0 then
+          local wrote = V.write_var(sc, rec, original_uid, handle)
+          if wrote then
+            restored = restored + 1
+            vlog(string.format("EMERGENCY RESTORE .stage %s %s: %s -> %s", tostring(rec.kind),
+              tostring(rec.key), tostring(change.replacement), tostring(change.original)))
+          else
+            skipped = skipped + 1
+            vlog("EMERGENCY RESTORE FAILED .stage " .. tostring(rec.key) .. ": original variable write did not verify")
+          end
+        else
+          skipped = skipped + 1
+          vlog("EMERGENCY RESTORE UNAVAILABLE .stage " .. tostring(rec.key) .. ": original template UID " ..
+            original_uid .. " is not loaded; reload with a safe .stage build")
+        end
+      end
+    end
+  end
+  if restored > 0 or skipped > 0 then
+    vlog(string.format("EMERGENCY RESTORE SUMMARY: %d .stage spawner(s) restored to native, %d could not be restored", restored, skipped))
+  end
+  return restored, skipped
+end
+
+function V.emergency_rescue()
+  V.emergency_mode = true
+  V.job = nil
+  if V.lvl then
+    V.put_back_all("Emergency recovery (F10)")
+    V.lvl.queue, V.lvl.fac_queue, V.lvl.fac_queued = {}, {}, {}
+    local sc = V.scene()
+    if sc then V.restore_stage_owned(sc) end
+  end
+  vlog("EMERGENCY SAFE MODE ON: no further enemy replacements this game session; stage-owned variables are restored as their zones are scanned")
+end
+
 function V.pump(sc)
   if not V.drain_pending() then return end                                 -- put-backs first: nothing is read before
   local lvl = V.lvl
   local t0 = clock_()
+  if V.emergency_mode then
+    if lvl.scan_due then
+      V.scan(sc)
+      lvl.scan_due = false
+    end
+    V.restore_stage_owned(sc)
+    return
+  end
   -- Process event-discovered factories before the expensive full-level listing. The spawn event
   -- is already after one spawn, but later spawns from a multi-wave factory can now be randomized.
   if #lvl.fac_queue > 0 then V.drain_factory_queue(sc); t0 = clock_() end
@@ -3992,6 +4056,7 @@ V.GLOBAL_REQUESTS_PER_FRAME = 4
 V.GLOBAL_POLLS_PER_FRAME = 4
 V.GLOBAL_SPAWNS_PER_FRAME = 1
 V.GLOBAL_RETRY_LIMIT = 9999        -- V4: keep retrying unavailable/loading assets; a slow load is preferable to silently abandoning a template.
+V.emergency_mode = V.emergency_mode or false -- V4.1: F10 disables all runtime replacement and restores stage-owned refs.
 V.global_templates = V.global_templates or {}       -- synthetic uid -> classified template
 -- .stage diagnostics handshake: 18_rando_stage_manifest.lua loads before 18_rando_stage_enemies.lua.
 -- When its manifest exists, the .stage file owns the spawner variables; never race it with runtime writes.
@@ -4102,6 +4167,7 @@ end
 function V.global_templates_tick(frame)
   -- V4: independent of scene readiness and the ON/OFF switch: preload resident enemy assets
   -- during menus, initial loads and checkpoint retries, before the runtime scan can run.
+  if V.emergency_mode then return end
   if not (rivet and type(rivet.template_actor) == "function") then
     if not V.global_hook_missing_logged then
       V.global_hook_missing_logged = true
@@ -4272,10 +4338,10 @@ function V.tick(frame, ready)
   if not V.enabled() then
     V.job = nil
     -- v0.62-DEV14: not during a load (ready is false while the game thread is not pumping)
-    if #lvl.arms > 0 and ready then V.put_back_all("Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
+    if #lvl.arms > 0 and ready then V.put_back_all(V.emergency_mode and "Emergency recovery (F10)" or "Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
     if #V.pending > 0 and ready then pcall(V.drain_pending) end
     lvl.queue, lvl.fac_queue, lvl.fac_queued = {}, {}, {}
-    return
+    if not V.emergency_mode then return end
   end
   if not ready then return end
   V.migrate()
@@ -4300,7 +4366,7 @@ function V.tick(frame, ready)
   end
   -- dev 10.30: the watchdog (gone bots, stuck encounters, the combat watch) also while a long job runs (a busy level
   -- kept 10.29's job running for many seconds and its watchdog waited)
-  if frame % 60 == 0 then
+  if frame % 60 == 0 and not V.emergency_mode then
     local okw, errw = pcall(V.watchdog)
     if not okw and not tostring(errw):find("budget", 1, true) then job_error(errw) end
   end

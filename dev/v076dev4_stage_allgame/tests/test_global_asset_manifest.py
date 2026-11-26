@@ -237,6 +237,57 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('V.GROUP_CAP = 4096', runtime)
         self.assertIn('V.MEMBER_CAP = 32', runtime)
         self.assertIn('V.SLICE = 0.003', runtime)
+        self.assertIn('V.emergency_mode = V.emergency_mode or false', runtime)
+        self.assertIn('function V.restore_stage_owned(sc)', runtime)
+        self.assertIn('rivet.find_uid, original_uid', runtime)
+        self.assertIn('function V.emergency_rescue()', runtime)
+        self.assertIn('if V.emergency_mode then', runtime)
+        self.assertIn('V.restore_stage_owned(sc)', runtime)
+
+    def test_v4_f10_emergency_key_disables_randomizer_and_rolls_back_stage_changes(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        enemy_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "enemy.lua")
+        with open(enemy_path, encoding="utf-8") as fh:
+            enemy = fh.read()
+        self.assertIn('function E.emergency_rescue()', enemy)
+        self.assertIn('E.set(false, "Emergency recovery (F10)")', enemy)
+        self.assertIn('SP.V.emergency_rescue()', enemy)
+        self.assertIn('R.bind_key("F10", E.emergency_rescue, "enemy_emergency_rescue")', enemy)
+        self.assertIn('Enemies already spawned are not deleted', enemy)
+
+    def test_v4_force_profile_never_retries_a_spawner_with_a_failed_spawn_verdict(self):
+        class FakeBrain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "fixture"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return True, "fixture", "fixture"
+
+        original_uid = "1111111111111111"
+        candidate_uid = "2222222222222222"
+        scan = SimpleNamespace(
+            template_catalog={
+                candidate_uid: {"uid": candidate_uid, "kind": "enm_pirate_robot_melee",
+                                "asset": "actors/melee.actor", "zone_id": "OTHER",
+                                "zone": "other.zone", "planet": "sargasso"}
+            },
+            actor_catalog={},
+        )
+        rec = {"zone": "ardolis.zone", "zone_id": "ARDOLIS",
+               "factories": [{
+                   "key": "FACTORY-NO-SPAWN", "action": 1, "plug": 1, "sv": 0,
+                   "rec": 0, "owners": 1, "form": "local", "uid": original_uid,
+                   "kind": "enm_pirate_robot_shooter", "asset": "actors/shooter.actor",
+                   "problem": None,
+               }]}
+        for verdict in ("NO SPAWN", "ORIGINAL SPAWNED"):
+            opts = SimpleNamespace(profile="v4", verdict_map={"ARDOLIS": {
+                "FACTORY-NO-SPAWN": (verdict, candidate_uid)
+            }})
+            changes, decisions, _, _ = SA.plan_zone_force(
+                scan, FakeBrain(), rec, opts, random.Random("v4-failed-spawn"))
+            self.assertEqual(changes, [])
+            self.assertEqual(decisions["FACTORY-NO-SPAWN"][0], "refused")
+            self.assertIn("left native", decisions["FACTORY-NO-SPAWN"][1])
 
     def test_v4_node_adapter_bypasses_pair_gate_but_keeps_structural_anchor(self):
         class FakeBrain:
