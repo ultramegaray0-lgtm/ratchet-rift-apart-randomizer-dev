@@ -46,6 +46,34 @@ class GlobalAssetManifestTests(unittest.TestCase):
         compiled = compile_lua(source)
         self.assertIsNotNone(compiled, "16_rando_spawners.lua did not parse")
 
+    def test_manifest_includes_actor_catalog_and_script_node_assets(self):
+        scan = SimpleNamespace(
+            actor_catalog={"1111111111111111": [
+                {"kind": "enm_pirate_robot_melee", "asset": "actors/pirate.actor", "planet": "ardolis"}
+            ]},
+            zones={"2222222222222222": {
+                "planet": "sargasso", "zone": "sargasso.zone",
+                "template_nodes": [{
+                    "uid": "3333333333333333", "kind": "enm_neo_nefarious_shooter",
+                    "asset": "actors/nefarious.actor"
+                }]
+            }},
+            template_catalog_all={},
+        )
+        with tempfile.TemporaryDirectory() as out:
+            rows = SA.write_global_enemy_asset_manifest(scan, Brain(), out)
+            self.assertEqual({row["path"] for row in rows},
+                             {"actors/pirate.actor", "actors/nefarious.actor"})
+
+    def test_runtime_registry_uses_preload_and_one_spawn_per_frame(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        script = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "16_rando_spawners.lua")
+        with open(script, encoding="utf-8") as fh:
+            source = fh.read()
+        self.assertIn("V.GLOBAL_SPAWNS_PER_FRAME = 1", source)
+        self.assertIn("rivet.template_actor, item.row.path, item.uid, false", source)
+        self.assertIn("rivet.template_actor, item.row.path, item.uid, true", source)
+
     def test_manifest_excludes_ambiguous_path_metadata(self):
         scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
             "1111111111111111": {"kind": "enm_pirate_robot_melee", "asset": "shared/enemy.actor"},
