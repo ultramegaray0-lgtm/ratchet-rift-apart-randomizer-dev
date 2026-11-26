@@ -48,11 +48,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIsNotNone(compiled, "16_rando_spawners.lua did not parse")
 
     def test_knowledge_reads_runtime_selected_uid_and_legacy_spawn_lines(self):
-        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
-        knowledge_path = os.path.join(root, "dev", "v076dev4_stage_allgame", "tools", "stage_enemies", "knowledge.py")
-        spec = importlib.util.spec_from_file_location("v3_knowledge", knowledge_path)
-        knowledge_module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(knowledge_module)
+        knowledge_module = SA.KN
         k = knowledge_module.Knowledge()
         uid = "F00D123456780000"
         log = "\n".join([
