@@ -24,13 +24,13 @@ Validated native build: [GitHub Actions run 45730770687](https://github.com/ultr
 
 ### 2. Build the local game-specific catalog
 
-Run the normal all-planet builder against the installed game folder. Use the standard safe/max profile; do not pass --force-all-enemies or --cross-planet. Those options recreate the unverified foreign-UID approach that caused the V2.2 failures.
+For V3.0, run `dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat` against the installed game folder. It builds a local-zone factory + exact node Template stage, a factory-only safe fallback, and a synchronized full runtime script bundle. Do not pass `--force-all-enemies` or `--cross-planet`; those recreate the unverified foreign-UID approach that caused the V2.2 failures.
 
 From the repository root in PowerShell (replace the game path with the installed game folder):
 
 ```powershell
-py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py build --game "E:\Path\To\Ratchet.and.Clank.Rift.Apart Modded" --out ".\builds\GLOBAL_RUNTIME" --profile max
-py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py install --game "E:\Path\To\Ratchet.and.Clank.Rift.Apart Modded" --build ".\builds\GLOBAL_RUNTIME"
+py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py build --game "E:\Path\To\Ratchet.and.Clank.Rift.Apart Modded" --out ".\builds\V3_0" --profile v3 --rate 1.0
+py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py check --game "E:\Path\To\Ratchet.and.Clank.Rift.Apart Modded" --build ".\builds\V3_0"
 ```
 
 The output should contain:
