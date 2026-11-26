@@ -3607,10 +3607,11 @@ function V.ledger_add(e, r, a, A, result, why)
   if L.logged < V.LEDGER_LOG then
     L.logged = L.logged + 1
     local orig = (A and A.orig_T and A.orig_T.name) or (r and r.orig and r.orig.single and lvl.tpl[r.orig.actors] and lvl.tpl[r.orig.actors].name) or a.name
-    vlog(string.format("SPAWN %d | %s | %s | %s %s | original %s | selected %s | spawned %s (%s) | %s%s", e.h,
+    local selected_uid = A and A.rep and A.rep.uid or "-"
+    vlog(string.format("SPAWN %d | %s | %s | %s %s | original %s | selected %s uid %s | spawned %s (%s) | %s%s", e.h,
         tostring(vstate() and vstate().current_planet), V.encounter(), r and V.ADAPTER_LABEL[r.kind] or "no spawner",
-        r and tostring(r.key) or "-", tostring(V.short(orig)), A and tostring(V.short(A.rep.name)) or "-", tostring(V.short(a.name)),
-        tostring(a.family), result, why and (": " .. tostring(why)) or ""))
+        r and tostring(r.key) or "-", tostring(V.short(orig)), A and tostring(V.short(A.rep.name)) or "-",
+        tostring(selected_uid), tostring(V.short(a.name)), tostring(a.family), result, why and (": " .. tostring(why)) or ""))
   end
 end
 function V.eligible(a)
