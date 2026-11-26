@@ -4132,7 +4132,7 @@ function V.global_templates_tick(frame)
         item.state = "failed"
         vlog("GLOBAL TEMPLATE ERROR " .. tostring(item.row.path) .. ": " .. tostring(status))
       elseif status == "ready" then
-        global_template_accept(item, handle)
+        global_template_accept(item, handle, flags)
       elseif status == "failed" then
         item.state = "failed"
         vlog("GLOBAL TEMPLATE FAILED " .. tostring(item.row.path) .. ": " .. tostring(message))
