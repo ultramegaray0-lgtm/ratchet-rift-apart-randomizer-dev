@@ -250,7 +250,7 @@ function V.stage_tick(frame, ready, enabled)
     if m then
       local idx = ST.index()
       slog(string.format("STAGE MODE ON: %s, %d change(s), %s (sha256 %s), built by stage_enemies %s for %s - runtime spawner " ..
-          "writes of the Enemy, Boss and Chaos Randomizers are OFF", tostring(m.label), idx.n, tostring(m.stage_file),
+          "writes are OFF for these factory Templates only; runtime node Template/group adapters remain available", tostring(m.label), idx.n, tostring(m.stage_file),
           tostring(m.stage_sha256), tostring(m.tool), tostring(m.kit)))
       if idx.n <= ST.LIST_ALL then
         for _, c in ipairs(idx.list) do ST.change_line(c) end
@@ -275,7 +275,7 @@ function V.stage_tick(frame, ready, enabled)
         slog("RANDO-ERROR enemy_source = \"lua\" is ignored while the .stage manifest is installed (two systems would change " ..
             "the same spawners); uninstall the .stage to use the runtime route")
       end
-      ST.say_pending = string.format("%d spawner change(s) from %s; no runtime enemy changes", idx.n, tostring(m.stage_file))
+      ST.say_pending = string.format("%d factory change(s) from %s; node Template/group spawners use the runtime route", idx.n, tostring(m.stage_file))
     elseif src == "stage" then
       slog("STAGE MODE ON without a manifest (enemy_source = \"stage\"): no enemy is changed at all")
     else
