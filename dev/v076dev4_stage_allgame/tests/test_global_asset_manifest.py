@@ -47,6 +47,19 @@ class GlobalAssetManifestTests(unittest.TestCase):
         compiled = compile_lua(source)
         self.assertIsNotNone(compiled, "16_rando_spawners.lua did not parse")
 
+    def test_native_resident_templates_clear_all_lifecycle_flags_checked_by_lua(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        patch_path = os.path.join(root, "tools", "global_registry", "patch_rivet_hook.py")
+        runtime_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "16_rando_spawners.lua")
+        with open(patch_path, encoding="utf-8") as fh:
+            patch = fh.read()
+        with open(runtime_path, encoding="utf-8") as fh:
+            runtime = fh.read()
+        clear = "actor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));"
+        self.assertEqual(patch.count(clear), 4, "both native creation/reuse code and both patch anchors clear unload flags")
+        self.assertIn("local inactive_mask = 0x1 | 0x8 | 0x80 | 0x100 | 0x2000", runtime)
+        self.assertIn("(actor_flags & 0x4) == 0 or (actor_flags & inactive_mask) ~= 0", runtime)
+
     def test_manifest_includes_factory_and_real_spawner_template_assets_only(self):
         scan = SimpleNamespace(
             actor_catalog={"1111111111111111": [
