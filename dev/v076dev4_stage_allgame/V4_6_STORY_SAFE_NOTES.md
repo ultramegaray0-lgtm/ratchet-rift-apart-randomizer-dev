@@ -2,7 +2,7 @@
 
 ## Why this patch exists
 
-The supplied `rivet(9).log` shows the Nefarious City story encounter was not protected by the previous V4.5 build:
+The supplied `rivet(9).log` shows the Nefarious City story encounter was not protected by the previous build. The `V3.0` release banner alone is not proof that the V4.5 hook was absent: the log explicitly shows `active story mission tracked: MIS_INTRO`, so the mission hook did attach. The actual bug was that its single mission pointer was not cleared by the devstats end event, leaving V stuck on a completed `MIS_INTRO` record.
 
 - The V4.5 launcher explicitly built with storymission zones included.
 - The generated stage manifest changed nine enemy spawners in `levels/i29/overlay/storymission/mis_nefcity_01/i29_nefcity_01_gp_combat.zone`.
