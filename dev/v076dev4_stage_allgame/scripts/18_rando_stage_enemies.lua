@@ -253,7 +253,7 @@ function V.stage_tick(frame, ready, enabled)
     if m then
       local idx = ST.index()
       slog(string.format("STAGE MODE ON: %s, %d change(s), %s (sha256 %s), built by stage_enemies %s for %s - runtime spawner " ..
-          "writes are OFF for these factory Templates only; runtime node Template/group adapters remain available", tostring(m.label), idx.n, tostring(m.stage_file),
+          "writes are OFF for factory variables and manifest-listed node Template adapters; unlisted runtime node/group adapters remain available", tostring(m.label), idx.n, tostring(m.stage_file),
           tostring(m.stage_sha256), tostring(m.tool), tostring(m.kit)))
       if idx.n <= ST.LIST_ALL then
         for _, c in ipairs(idx.list) do ST.change_line(c) end
