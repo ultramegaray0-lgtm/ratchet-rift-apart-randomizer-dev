@@ -883,7 +883,9 @@ def plan_zone_force(S, brain, rec, opts, rng):
                 continue
             signatures = {(home.get("kind"), home.get("asset")) for home in homes}
             if len(signatures) == 1:
-                global_by_uid[uid] = homes[0]
+                meta = dict(homes[0])
+                meta["uid"] = uid
+                global_by_uid[uid] = meta
     global_pool = [v for v in global_by_uid.values() if (v.get("kind") or "").startswith("enm_")]
     global_pool.sort(key=lambda x: (x["kind"], x["uid"]))
     usage = Counter()
