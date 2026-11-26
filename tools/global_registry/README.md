@@ -54,8 +54,7 @@ The status API also reports global_templates.
 
 ## Hybrid all-spawner coverage
 
-The V3 all-planet `.stage` builder edits SunsetSpawnerFactory `Templates` variables and exact single-owner
-`SpawnerScriptAction` `Template` adapters. Other node/group adapters remain on the runtime route.
+The V3 all-planet `.stage` builder edits SunsetSpawnerFactory `Templates` variables and exact `SpawnerScriptAction` `Template` adapters. It supports a shared variable only when every owner is a distinct, uniquely-keyed spawner with exactly one Template plug. Other node/group adapters remain on the runtime route.
 
 - `.stage` owns only the factory `Templates` keys listed in a V3 manifest; unmodified factory keys remain eligible for the runtime route. Older `max`/`all` manifests retain their conservative all-factory write guard.
 - Runtime `Template` and group adapters remain enabled, using the global resident-template pool where the native
@@ -64,10 +63,10 @@ The V3 all-planet `.stage` builder edits SunsetSpawnerFactory `Templates` variab
   misreported as `.stage` replacements.
 - The complete V3 runtime bundle uses kit version `10.0.50` plus the separate `STAGE_LUA = 1.1.0` handshake. Both checks must match.
 
-For the V3 local-only build, run `dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat`. It builds a V3 hybrid profile and a factory-only safe fallback, runs the independent `.stage` checker, and deliberately does **not** use `--cross-planet`.
+For the V3 local-only build, run `dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat`. It builds a V3 hybrid profile and a factory-only safe fallback, runs the independent `.stage` checker, and deliberately does **not** use `--cross-planet`. The older `BUILD_HYBRID_MAX_COVERAGE.bat` is marked legacy experimental profile-all and is not the V3 release path.
 
-This hybrid is the current highest-coverage route without writing foreign-zone actor UIDs into .stage files or letting
-two systems write the same factory variable. It is not yet a proven 100% result: the native global registry previously
+This hybrid is the current highest-coverage route without writing foreign-zone actor UIDs into `.stage` files or letting
+two systems write the same Script Vars variable. The V3 log checker expands shared-owner changes into per-owner verdicts, so a WORKED result can pin the same replacement safely on the next build. It is not yet a proven 100% result: the native global registry previously
 created 14 of 25 catalog templates, and the node-adapter path still requires in-game verification.
 
 ## Safety and known unknowns
