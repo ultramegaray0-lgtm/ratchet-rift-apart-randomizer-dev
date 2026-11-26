@@ -11,16 +11,16 @@
 --   * watches every replacement it saw spawn until it dies or is gone ("STAGE DEATH", "STAGE GONE", "STAGE ALIVE")
 --   * sums it up per level ("STAGE SUMMARY ...").
 -- The Enemy Randomizer (the - key) must be ON for the spawners to be listed; in .stage mode it only looks.
--- Needs 16_rando_spawners.lua (10.0.50; STAGE_LUA 1.1.0 handshake). Without a manifest it only logs "enemy source: Lua runtime route".
+-- Needs 16_rando_spawners.lua (10.0.51; STAGE_LUA 1.1.0 handshake). Without a manifest it only logs "enemy source: Lua runtime route".
 -- Scale (stage_allgame 2.0.0, hundreds of changes in many zones): with more than ST.LIST_ALL changes the start lists one
 -- "STAGE ZONE" line per changed zone, and each "STAGE CHANGE n" line is written when its spawner is first listed in a
 -- level (only the changes you meet are logged); the "STAGE VARIABLES" counts cover the spawners listed in this level.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["18_rando_stage_enemies"] = "10.0.50"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["18_rando_stage_enemies"] = "10.0.51"   -- the kit check (10_rando_runtime.lua)
 
 local SP = RANDO_SPAWNERS
 local function slog(...) pcall(rivet.log, "[rando]", "RANDO-STAGE", ...) end
 if not (SP and SP.V and SP.V.stage_mode) then
-  slog("16_rando_spawners.lua (10.0.50) is not installed: the .stage check is off")
+  slog("16_rando_spawners.lua (10.0.51) is not installed: the .stage check is off")
   return
 end
 local V = SP.V
@@ -331,4 +331,4 @@ function ST.status_text()
       ST.index().n, L and L.spawns or 0, L and L.rep or 0, L and L.orig or 0, L and L.died or 0)
 end
 
-slog("loaded (10.0.50, stage Lua " .. ST.STAGE_LUA .. ", scale " .. ST.SCALE .. "): the .stage Enemy Randomizer's check - it changes nothing; the manifest is read on the first frame")
+slog("loaded (10.0.51, stage Lua " .. ST.STAGE_LUA .. ", scale " .. ST.SCALE .. "): the .stage Enemy Randomizer's check - it changes nothing; the manifest is read on the first frame")
