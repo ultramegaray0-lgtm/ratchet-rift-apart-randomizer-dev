@@ -4182,7 +4182,6 @@ function V.tick(frame, ready)
     return
   end
   if not ready then return end
-  V.global_frame_ready = ready
   V.migrate()
   V.notes_tick(frame)
   -- dev 10.34: cache feature switches once per role per frame. The old loop called
