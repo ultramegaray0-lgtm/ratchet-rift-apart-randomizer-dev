@@ -22,7 +22,7 @@ if not exist "%GAME%\toc" goto nogame
 if not exist "%GAME%\dag" goto nogame
 
 if not exist "builds" mkdir "builds"
-set "OUT=builds\V4_3_FULL_CAMPAIGN_%RANDOM%_%RANDOM%"
+set "OUT=builds\V4_4_FULL_CAMPAIGN_%RANDOM%_%RANDOM%"
 echo.
 echo ============================================================
 echo  RIFT APART ENEMY RANDOMIZER V4.4 - FULL CAMPAIGN EXPERIMENTAL
@@ -37,13 +37,13 @@ echo IMPORTANT:
 echo - This is a maximum-coverage experiment, not a verified 100%% replacement.
 echo - Shared/ambiguous variables and non-regular or unclassified actors remain excluded.
 echo - Foreign template references can fail to spawn or become unkillable.
-echo - V encounter force-complete is NOT included in this build; do not assume it can bypass a stuck story gate.
-echo - F12 remains emergency recovery. It cannot repair an already stuck mission objective.
+echo - V checks the active mission and finishes cleanup only when the game reports state 3; it cannot bypass an active encounter.
+echo - F11 is emergency recovery. It cannot repair an already stuck mission objective.
 echo.
 choice /C YN /M "Build V4.4 including story mission encounters? This is experimental"
 if errorlevel 2 goto cancelled
 
-%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "%OUT%" --seed "RiftApart-Enemy-V4.3-FullCampaign" --profile v4 --force-all-enemies --rate 1.0
+%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "%OUT%" --seed "RiftApart-Enemy-V4.4-FullCampaign" --profile v4 --force-all-enemies --rate 1.0
 if errorlevel 1 goto failed
 
 echo.
