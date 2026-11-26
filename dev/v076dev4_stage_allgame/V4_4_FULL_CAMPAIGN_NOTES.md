@@ -14,7 +14,7 @@ py -3 -I tools/stage_enemies/stage_allgame.py build --game "GAME" --out "BUILD" 
 
 The V4 planner:
 - Uses the global scanned actor catalogue as the replacement pool, including globally unique enemy template UIDs from other zones.
-- Attempts every structurally identifiable, classifiable regular-enemy factory at a 100% selection rate.
+- Attempts every structurally identifiable, classifiable regular-enemy factory at a 100% selection rate. V4.4 excludes same-kind candidates even when they have a different UID, preventing no-visible-change swaps such as hover → hover or shooter → shooter found in Copy5.log.
 - Bypasses faction/movement and spawn-point compatibility checks. This is deliberately unsafe and may create enemies that fail to spawn, cannot be killed, or do not work with a particular encounter.
 - Includes V3/V4 exact `SpawnerScriptAction Template` adapters where the existing planner can identify them.
 - Still refuses ambiguous or shared-owner template variables, non-regular/boss-tier/unclassified actors, and references it cannot safely decode. Therefore this is not a literal 100% replacement of every enemy actor in the game.
@@ -56,7 +56,7 @@ The V code has been added but has not been validated in-game. Do not treat it as
 - If the game reports mission state 3 (Complete Cleaning), V asks the game's own mission system to finish cleanup and verifies the returned state is 4.
 - If the mission is still active (state 2), V reports that it cannot bypass the encounter. It does not kill actors, forge death events, or mark objectives complete.
 - F11 is now enemy emergency recovery. This avoids the F12 collision with the legacy campaign key observed in rivet - Copy5.log.
-- The Copy5 log's initial global template pool of 0 was transient: later in that same log it reached 26 resident templates. The .stage summary for that session still recorded zero spawns from patched .stage spawners on the visited level; the runtime route separately recorded replacements. Do not interpret 277 manifest changes as 277 successful in-game replacements.
+- The Copy5 log's initial global template pool of 0 was transient: later in that same log it reached 26 resident templates. The same log contained same-kind substitutions (for example, hover → hover), which V4.4 now filters out. The .stage summary for that session still recorded zero spawns from patched .stage spawners on the visited level; the runtime route separately recorded replacements. Do not interpret 277 manifest changes as 277 successful in-game replacements.
 - The V path is code-added but not yet validated in-game. A true active-encounter force-complete still requires identifying the game's encounter-specific completion signal.
 
 
