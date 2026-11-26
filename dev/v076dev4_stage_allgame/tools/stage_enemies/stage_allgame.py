@@ -58,7 +58,7 @@ usage
   python -I stage_allgame.py check   --game GAME --build NEW_DIR                 (or NEW_DIR/safe)
   after a play session:  stage_check_log.py rivet.log --manifest NEW_DIR/stage_enemies_manifest.json --json v1.json
                          stage_allgame.py build --game GAME --out NEXT_DIR --verdicts v1.json   (failures stay native)
-  python -I stage_allgame.py install --game GAME --build NEW_DIR                 (backs up, then copies 3 files)
+  python -I stage_allgame.py install --game GAME --build NEW_DIR                 (backs up, then copies the .stage and complete runtime script bundle)
   python -I stage_allgame.py uninstall --game GAME                               (puts the newest backup back)
   offline (no game folder; zones extracted before):  --zone-file "levels\\...\\x.zone=PATH.zone.orig" (repeatable)
 GAME = the folder that holds RiftApart.exe, toc and dag.
