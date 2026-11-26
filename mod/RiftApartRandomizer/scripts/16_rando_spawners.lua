@@ -3985,6 +3985,7 @@ end
 -- ---------------------------------------------------------------------------------------------
 V.GLOBAL_REQUESTS_PER_FRAME = 12
 V.GLOBAL_POLLS_PER_FRAME = 12
+V.GLOBAL_SPAWNS_PER_FRAME = 1
 V.global_templates = V.global_templates or {}       -- synthetic uid -> classified template
 V.global_items = V.global_items or {}
 V.global_item_by_uid = V.global_item_by_uid or {}
@@ -4104,17 +4105,20 @@ function V.global_templates_tick(frame)
     end
   end
 
-  -- Request new assets in small batches. Loading is asynchronous; pending assets
-  -- are polled separately so one slow model never blocks the rest of the catalog.
+  -- Request and poll assets without instantiating actors. Native asset loading is
+  -- asynchronous, so these calls are cheap; actual template creation is throttled
+  -- separately to one actor per frame to stay inside Rivet Hook's 8 ms script budget.
   local requested = 0
   for _, item in ipairs(V.global_items) do
     if item.state == "new" and requested < V.GLOBAL_REQUESTS_PER_FRAME then
-      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid)
+      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid, false)
       if not ok then
         item.state = "failed"
         vlog("GLOBAL TEMPLATE ERROR " .. tostring(item.row.path) .. ": " .. tostring(status))
       elseif status == "ready" then
         global_template_accept(item, handle, flags)
+      elseif status == "loaded" then
+        item.state = "loaded"
       elseif status == "loading" then
         item.state = "pending"
       else
@@ -4127,17 +4131,37 @@ function V.global_templates_tick(frame)
   local polled = 0
   for _, item in ipairs(V.global_items) do
     if item.state == "pending" and polled < V.GLOBAL_POLLS_PER_FRAME then
-      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid)
+      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid, false)
       if not ok then
         item.state = "failed"
         vlog("GLOBAL TEMPLATE ERROR " .. tostring(item.row.path) .. ": " .. tostring(status))
       elseif status == "ready" then
         global_template_accept(item, handle, flags)
+      elseif status == "loaded" then
+        item.state = "loaded"
       elseif status == "failed" then
         item.state = "failed"
         vlog("GLOBAL TEMPLATE FAILED " .. tostring(item.row.path) .. ": " .. tostring(message))
       end
       polled = polled + 1
+    end
+  end
+  local spawned = 0
+  for _, item in ipairs(V.global_items) do
+    if item.state == "loaded" and spawned < V.GLOBAL_SPAWNS_PER_FRAME then
+      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid, true)
+      if not ok then
+        item.state = "failed"
+        vlog("GLOBAL TEMPLATE SPAWN ERROR " .. tostring(item.row.path) .. ": " .. tostring(status))
+      elseif status == "ready" then
+        global_template_accept(item, handle, flags)
+      elseif status == "loading" then
+        item.state = "pending"
+      elseif status == "failed" then
+        item.state = "failed"
+        vlog("GLOBAL TEMPLATE SPAWN FAILED " .. tostring(item.row.path) .. ": " .. tostring(message))
+      end
+      spawned = spawned + 1
     end
   end
 
