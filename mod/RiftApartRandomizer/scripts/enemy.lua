@@ -124,8 +124,11 @@ function E.force_complete_current_encounter()
       return
     end
     if q.after == D.MS.COMPLETE then
-      if SP.V and SP.V.story_missions then SP.V.story_missions[mission] = nil end
-      if SP.V and SP.V.mission == mission then SP.V.mission = SP.V.current_story_mission and SP.V.current_story_mission() or nil end
+      if SP.V then
+        SP.V.mission_query_complete = SP.V.mission_query_complete or {}
+        SP.V.mission_query_complete[mission] = true
+        if SP.V.mission == mission then SP.V.mission = nil end
+      end
       R.say("V: the mission record is complete; this is not an active mission cleanup", { type = "corner", sub = "Story encounter progression is protected by native spawners in this build.", duration = 6 })
       log("V: " .. mission .. " already complete; cleared stale mission target")
       return
