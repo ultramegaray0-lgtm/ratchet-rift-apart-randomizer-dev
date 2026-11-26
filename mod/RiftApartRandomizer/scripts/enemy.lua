@@ -87,6 +87,64 @@ function E.emergency_rescue()
     { type = "center", sub = "Enemies already spawned are not deleted. If the encounter is stuck, reload the last checkpoint after the restore finishes.", duration = 9 })
 end
 
+-- V is deliberately a guarded game-action assist, not a fake "kill all enemies" shortcut.
+-- The game only accepts CompleteMissionAction when the mission has reached CLEANING (state 3).
+-- An active mission (state 2) is still waiting on its encounter/objective script; completing it
+-- here would either do nothing or corrupt progression. Keep that distinction visible to the player.
+function E.force_complete_current_encounter()
+  if not (RANDO_SEED and R.state) then
+    R.say("Randomizer: the seed is still being prepared", { type = "corner", duration = 3 })
+    return
+  end
+  local mission = SP.V and SP.V.mission
+  local D = RANDO_CAMPAIGN_RT
+  if type(mission) ~= "string" or mission == "" then
+    R.say("V: no active story mission has been identified yet", { type = "corner", duration = 4 })
+    log("V requested, but SP.V.mission is unavailable")
+    return
+  end
+  if not (D and type(D.mission_call) == "function") then
+    R.say("V: the campaign mission helper is unavailable", { type = "corner", duration = 4 })
+    log("V requested for " .. mission .. ", but RANDO_CAMPAIGN_RT.mission_call is unavailable")
+    return
+  end
+  R.say("V: checking the current mission state...", { type = "corner", duration = 3 })
+  D.mission_call("query", mission, function(q)
+    if not q or q.code ~= 11 then
+      local why = q and (D.RESULT[q.code] or tostring(q.code)) or "no response"
+      log("V mission query failed: " .. mission .. " | " .. tostring(why))
+      R.say("V could not query the current mission", { type = "corner", sub = tostring(why), duration = 5 })
+      return
+    end
+    if q.after == D.MS.COMPLETE then
+      R.say("V: this mission is already complete", { type = "corner", duration = 4 })
+      log("V: " .. mission .. " already complete")
+      return
+    end
+    if q.after ~= D.MS.CLEANING then
+      local state = D.STATE_NAMES[q.after] or ("state " .. tostring(q.after))
+      log("V cannot complete " .. mission .. ": mission is " .. state ..
+          "; the active encounter's completion signal is not exposed by the current hook")
+      R.say("V cannot bypass this active encounter yet", {
+        type = "center",
+        sub = "The game still reports " .. state .. ". V will not fake enemy deaths or skip mission objectives.",
+        duration = 7
+      })
+      return
+    end
+    D.mission_call("complete", mission, function(done)
+      if done and done.code == 11 and done.after == D.MS.COMPLETE then
+        log("V mission cleanup completed: " .. mission)
+        R.say("V: mission cleanup completed", { type = "corner", duration = 4 })
+      else
+        local why = done and D.describe(done) or "no response"
+        log("V mission cleanup did not complete: " .. mission .. " | " .. tostring(why))
+        R.say("V could not finish mission cleanup", { type = "corner", sub = tostring(why), duration = 5 })
+      end
+    end)
+  end)
+end
+
 function E.key()
   if not (RANDO_SEED and R.state) then
     R.say("Randomizer: the seed is still being prepared", { type = "corner", duration = 3 }); return
@@ -118,6 +176,7 @@ function E.key()
   E.toggle(R.key("key_enemies"))
 end
 R.bind_key(R.config.key_enemies, E.key, "key_enemies")
-R.bind_key("F12", E.emergency_rescue, "enemy_emergency_rescue")
+R.bind_key("F11", E.emergency_rescue, "enemy_emergency_rescue")
+R.bind_key("V", E.force_complete_current_encounter, "enemy_force_complete")
 log("installed (" .. (E.enabled() and "ON" or "OFF") .. " until the save says otherwise) - " .. R.key("key_enemies") ..
-    " turns it on / off, " .. R.key("key_enemies", true) .. " shows what it changed; F12 emergency safe mode restores loaded stage/runtime enemy replacements")
+    " turns it on / off, " .. R.key("key_enemies", true) .. " shows what it changed; F11 emergency safe mode restores loaded stage/runtime enemy replacements; V checks the active mission and completes cleanup only when the game reports state 3")
