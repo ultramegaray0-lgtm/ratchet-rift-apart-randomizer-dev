@@ -4200,15 +4200,17 @@ function V.global_templates_tick(frame)
     if item.state == "loaded" and spawned < V.GLOBAL_SPAWNS_PER_FRAME then
       local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid, true)
       if not ok then
-        item.state = "failed"
-        vlog("GLOBAL TEMPLATE SPAWN ERROR " .. tostring(item.row.path) .. ": " .. tostring(status))
+        item.state = item.attempts < V.GLOBAL_RETRY_LIMIT and "retry" or "failed"
+        item.retry_at = frame + math.min(600, 30 * (item.attempts or 1))
+        vlog("GLOBAL TEMPLATE SPAWN ERROR " .. tostring(item.row.path) .. " attempt " .. tostring(item.attempts) .. ": " .. tostring(status))
       elseif status == "ready" then
         global_template_accept(item, handle, flags)
       elseif status == "loading" then
         item.state = "pending"
       elseif status == "failed" then
-        item.state = "failed"
-        vlog("GLOBAL TEMPLATE SPAWN FAILED " .. tostring(item.row.path) .. ": " .. tostring(message))
+        item.state = item.attempts < V.GLOBAL_RETRY_LIMIT and "retry" or "failed"
+        item.retry_at = frame + math.min(600, 30 * (item.attempts or 1))
+        vlog("GLOBAL TEMPLATE SPAWN FAILED " .. tostring(item.row.path) .. " attempt " .. tostring(item.attempts) .. ": " .. tostring(message))
       end
       spawned = spawned + 1
     end
@@ -4216,6 +4218,21 @@ function V.global_templates_tick(frame)
 
   -- Keep every resident template in the current level's selection pool.
   for _, T in pairs(V.global_templates) do global_template_attach(T) end
+
+  -- V4 preload status is diagnostic only: .stage owns first-wave timing; this
+  -- report tells us whether the runtime's cross-planet resident pool is fully warmed.
+  local ready_n, pending_n, failed_n = 0, 0, 0
+  for _, item in ipairs(V.global_items) do
+    if item.state == "ready" then ready_n = ready_n + 1
+    elseif item.state == "failed" then failed_n = failed_n + 1
+    else pending_n = pending_n + 1 end
+  end
+  local preload_sig = table.concat({ ready_n, pending_n, failed_n, #V.global_items }, "/")
+  if preload_sig ~= V.global_preload_signature then
+    V.global_preload_signature = preload_sig
+    vlog(string.format("GLOBAL PRELOAD: ready %d/%d | pending %d | failed %d | retrying while loading",
+      ready_n, #V.global_items, pending_n, failed_n))
+  end
 
   -- A diagnostic snapshot separates three distinct questions:
   -- (1) did native asset creation succeed, (2) did those actors classify into a
