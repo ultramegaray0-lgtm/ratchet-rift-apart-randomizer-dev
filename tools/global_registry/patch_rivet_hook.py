@@ -20,6 +20,14 @@ def replace_once(path, old, new):
         raise SystemExit(f"{path}: expected one patch anchor, found {n}: {old[:90]!r}")
     p.write_text(s.replace(old, new, 1), encoding="utf-8")
 
+def replace_count(path, old, new, expected):
+    p = ROOT / path
+    s = p.read_text(encoding="utf-8")
+    n = s.count(old)
+    if n != expected:
+        raise SystemExit(f"{path}: expected {expected} patch anchors, found {n}: {old[:90]!r}")
+    p.write_text(s.replace(old, new), encoding="utf-8")
+
 replace_once(
     "src/travel.hpp",
     "\t// the hash of a checkpoint the level has, by exact name or as 0x hex text,\n",
@@ -176,6 +184,21 @@ replace_once(
     "\t\t{ \"overlay\", l_overlay },\n",
     "\t\t{ \"overlay\", l_overlay },\n"
     "\t\t{ \"template_actor\", l_template_actor },\n"
+)
+
+# A UID collision is never converted into a template actor. Only actors already
+# marked as templates by this patch are accepted on subsequent calls. Clear both
+# zone- and level-unload bits so the resident sources survive region transitions.
+replace_once(
+    "src/travel.cpp",
+    "\t\t\t\tactor->actorAsset->assetId != asset->assetId) {\n",
+    "\t\t\t\tactor->actorAsset->assetId != asset->assetId || (actor->flags & ActorFlag::Template) == 0) {\n",
+)
+replace_count(
+    "src/travel.cpp",
+    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n",
+    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
+    2,
 )
 
 print("Applied global enemy-template API patch.")
