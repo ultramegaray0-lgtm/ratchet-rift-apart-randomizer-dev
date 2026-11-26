@@ -60,7 +60,7 @@ def runtime(manifest_src):
 
 
 def big_manifest(nz=30, per=20):
-    L = ["RANDO_STAGE_ENEMIES = { format = 1, tool = \"2.0.0\", kit = \"v0.76-DEV4\", label = \"test\", stage_lua = \"1.1.0\",",
+    L = ["RANDO_STAGE_ENEMIES = { format = 1, tool = \"3.0.0-alpha.2\", kit = \"v3.0-dev\", profile = \"v3\", label = \"test\", stage_lua = \"1.1.0\",",
          "  stage_file = \"mods/RandoEnemies.stage\", stage_sha256 = \"x\", changes = {"]
     n = 0
     for z in range(nz):
@@ -133,6 +133,23 @@ RANDO_SPAWNERS.V.stage_on_spawn({ h = 777 }, { key = c.spawner_keys[1], kind = "
 ''')
 sp = [l for l in LOG if "STAGE SPAWN 777" in l]
 check(len(sp) == 1 and "(the patched spawner)" in sp[0] and "REPLACEMENT SPAWNED" in sp[0], "STAGE SPAWN of the patched spawner")
+
+# A shared node Template variable has multiple owner keys but one stage change.
+lua.execute(r\'''
+local c = RANDO_STAGE_ENEMIES.changes[82]
+c.adapter = "node_template"
+c.spawner_keys = { "NODE-A", "NODE-B" }
+RANDO_STAGE.idx = nil
+local idx = RANDO_STAGE.index()
+SHARED_OWNER_INDEX_OK = idx.keys["NODE-A"] == c and idx.keys["NODE-B"] == c
+RANDO_SPAWNERS.V.stage_on_spawn({ h = 778 },
+  { key = "NODE-B", kind = "template", orig = { uid = c.replacement_uid, actors = 9182 } },
+  { name = "enm_pirate_robot_melee", family = "swarmer" }, nil, nil)
+\''')
+check(lua.globals().SHARED_OWNER_INDEX_OK, "shared node Template: both owner keys index the same single manifest change")
+shared_spawn = [l for l in LOG if "STAGE SPAWN 778" in l]
+check(len(shared_spawn) == 1 and "(the patched spawner)" in shared_spawn[0]
+      and "REPLACEMENT SPAWNED" in shared_spawn[0], "shared node Template: spawn through second owner is attributed correctly")
 # a new level listing the same spawner: STAGE VARIABLE again, STAGE CHANGE not again
 lua.execute(r'''
 local L = { deaths_seen = 0, order = {} }
