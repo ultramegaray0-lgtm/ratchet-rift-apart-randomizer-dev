@@ -21,7 +21,7 @@ RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["18_rando_stage_enemies"] = "10.0.3
 local SP = RANDO_SPAWNERS
 local function slog(...) pcall(rivet.log, "[rando]", "RANDO-STAGE", ...) end
 if not (SP and SP.V and SP.V.stage_mode) then
-  slog("16_rando_spawners.lua (10.0.43) is not installed: the .stage check is off")
+  slog("16_rando_spawners.lua (10.0.39) is not installed: the .stage check is off")
   return
 end
 local V = SP.V
@@ -324,4 +324,4 @@ function ST.status_text()
       ST.index().n, L and L.spawns or 0, L and L.rep or 0, L and L.orig or 0, L and L.died or 0)
 end
 
-slog("loaded (10.0.43, stage Lua " .. ST.STAGE_LUA .. ", scale " .. ST.SCALE .. "): the .stage Enemy Randomizer's check - it changes nothing; the manifest is read on the first frame")
+slog("loaded (10.0.39, stage Lua " .. ST.STAGE_LUA .. ", scale " .. ST.SCALE .. "): the .stage Enemy Randomizer's check - it changes nothing; the manifest is read on the first frame")
