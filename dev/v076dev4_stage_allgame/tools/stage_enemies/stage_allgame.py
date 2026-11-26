@@ -1777,6 +1777,8 @@ def cmd_scan(a):
 
 
 def cmd_build(a):
+    if a.profile == "v3" and (getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)):
+        raise Refused("V3 is local-zone only; --cross-planet and --force-all-enemies are intentionally refused")
     return run_plan(a, build=True)
 
 
