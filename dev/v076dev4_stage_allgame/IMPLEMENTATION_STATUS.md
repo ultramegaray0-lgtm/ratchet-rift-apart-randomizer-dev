@@ -1,0 +1,87 @@
+# v0.76-DEV4 integration status
+
+This branch contains the v0.76-DEV4 all-planet builder and the V3.0 hybrid expansion. The baseline figures below are historical input evidence, not a current V3 scan.
+
+## Integrated files
+
+- `tools/stage_enemies/stage_allgame.py` — game-wide zone scan, planning, streaming .stage build, check/install/uninstall.
+- `knowledge.py`, `rcra.py`, and `fakegame.py` — compatibility knowledge, zone parser/writer, synthetic-game fixtures.
+- `stage_check_log.py` — manifest-aware runtime log checker.
+- `scripts/18_rando_stage_enemies.lua` — scale 2.0.0 runtime diagnostics.
+- Tests, launchers, evidence, and technical documentation.
+- `BASELINE_COVERAGE_REPORT.md` — the uploaded 2026-11-25 baseline report.
+
+## Honest baseline
+
+The uploaded all-game run found 935 enemy spawners and changed 170 (18%) across 38 zones on 7 planets. It also counted 638 Template-adapter nodes and 447 undecodable zones. V3 now plans exact `SpawnerScriptAction` Template adapters (including safe shared-owner variables); generic Template nodes and other adapter types remain unclaimed. These are census and coverage gaps, not successful replacements.
+
+## Safety and scope
+
+The builder reads game data without modifying it during scan/build/check. Install backs up replaced files; uninstall restores the newest backup. `.stage` references remain local to each zone. V3's runtime global registry creates resident template sources from the all-planet asset catalog; the original encounter spawners still create combat actors. Exact node Template adapters are now patched only after owner and byte-level checks.
+
+Do not describe this as a 100% replacement build. A complete scan of the user's local game installation is still required to generate the actual .stage. The real Ardolis zone is required for the bundled end-to-end test; game data is intentionally not stored in this repository.
+
+## Next engineering phase
+
+1. Run the V3.0 alpha.3 build against the complete local game installation and independently check the generated stage.
+2. Install the custom native hook artifact and the synchronized V3 runtime bundle; enable Enemy Randomizer before entering each test level.
+3. Use the V3-aware `CHECK_MY_LOG.bat` to record factory and node Template verdicts per owner key, then rebuild with `BUILD_NEXT_VERDICT_GUIDED.bat`.
+4. Diagnose the 11 previously failed native global-template creations from the new asset ID/status/path logs; do not count a failed or merely loaded asset as a usable replacement.
+5. Expand additional generic/group adapters and undecodable zones only when their ownership and spawn semantics are evidenced. Keep ambiguous, malformed and non-enemy references native.
+
+
+# Template adapter census update (historical, before V3)
+
+This historical scan first added the separate, read-only `template_adapter_inventory.csv` alongside the factory inventory. V3 now consumes that census and writes exact `SpawnerScriptAction` Template changes when ownership is safe.
+
+The census records each node's class ID, whether it exactly matches the runtime's `SpawnerScriptAction` class, Template variable reference form and UID, local enemy kind when resolvable, variable owners/co-owner classes, and the node's other plug IDs. V3 groups owners by Script Vars index, patches a shared variable once only when every owner is a distinct, uniquely-keyed spawner with exactly one Template plug, and includes every owner key in the manifest. Generic, ambiguous and malformed nodes remain diagnostic-only.
+
+## CI
+
+GitHub Actions run `45702955108` passed on commit `d7c41ddd48011e4e2bcea62d6d75f22445cf599c`: Python compilation, builder CLI, Lua scale regression tests, and the documented real-zone test gate.
+
+## Required game-side evidence
+
+The full game installation is not present in this repository or CI. Run `SCAN_TEMPLATE_ADAPTERS.bat` on the PC that has Rift Apart installed. It performs the builder's read-only scan (no .stage install and no game-file writes) and produces:
+
+- `template_adapter_inventory.csv`
+- `inventory.csv`
+- `COVERAGE_REPORT.md`
+
+Upload those three outputs to `incoming/`. The adapter planner can then target only exact `SpawnerScriptAction` nodes with valid local enemy Template variables, rather than guessing from the 638-node aggregate.
+
+
+# Enemy Randomizer V2.0.1 MAX patch
+
+- Bundled the latest 2026-11-26 01:53:24 runtime verdicts (170 spawners: 5 WORKED, 31 NO SPAWN, 134 NOT REACHED).
+- Fixed evidence precedence: a later observed result replaces an earlier one; NOT REACHED does not erase prior evidence.
+- Fixed stale historical pins: a latest failure suppresses the old hard-coded pin; a latest WORKED pins the exact replacement UID from that run.
+- Added `BUILD_V2_MAX.bat`: produces and byte-checks a local-zone MAX build and a separate experimental cross-planet MAX build.
+- Added offline regression tests and a dedicated CI workflow. CI passed on commit `7723c3f80dc08f56297f7e381f450b04cfaa6bef`.
+- Generic Template adapters remain census-only. They are not patched until exact spawner class, ownership and spawn-context semantics are proven. This is intentional, not an omitted success claim.
+- The actual .stage files must be generated against the user's local game archives; the repository does not contain the complete game installation.
+
+
+## Generated V2.0.1 evidence-guided stage
+
+GitHub Actions run [45717250211](https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/actions/runs/45717250211) successfully produced the reconciled stage package from the uploaded 2026-11-25 build and latest verdicts:
+
+- 139 retained changes across 31 zones (5 WORKED + 134 NOT REACHED).
+- 31 NO SPAWN entries restored to original references.
+- Stage SHA-256: `ed3ab758d3480e143ed3bc01c70db885d1c9cf305604263a8ce4d106eff47b49`.
+- ZIP CRC, expected replacement/original UID checks, and manifest member consistency passed.
+- Package artifact: `enemy-randomizer-v2.0.1-evidence-guided`.
+
+This reconciled .stage is ready for a controlled in-game test. The separate BUILD_V2_MAX launcher is the route for fresh local-zone and experimental cross-planet builds against the complete local game install.
+
+
+## V3.0 alpha.3 status (2026-11-26)
+
+- Hybrid factory + exact SpawnerScriptAction Template stage path is implemented.
+- Safe shared node Template variables are grouped by Script Vars index, patched once, and listed under every owner key. Shared variables with any non-spawner, non-Template, duplicate/zero-key, repeated, or malformed owner remain native.
+- The V3 manifest, runtime stage-ownership map, stage monitor, byte-diff validator, and coverage report all consume the full owner-key list.
+- Runtime fallback remains enabled for unlisted factory, node, and group adapters, with the complete 10.0.51 script bundle and enemy_compat = max.
+- GitHub Actions run 45765267375 passed the expanded 21-test offline builder suite, including safe shared-owner handling and exact WORKED-verdict node pins, plus CLI checks, Lua syntax and scale tests. The real-zone fixture was skipped because game data is not committed. In-game verification remains mandatory.
+- Known global catalog limitation: the previous run created 14 of 25 resident templates. The 11 failed asset creations are not counted as solved until the new native diagnostic build is tested.
+
+- Runtime-only node/factory spawn ledger records now include selected template UID; the V3 checker can create exact WORKED evidence without a `.stage` manifest, while refusing to write synthetic global UIDs into local `.stage` files.

@@ -1,0 +1,66 @@
+name: Build Global Enemy Registry Hook
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - work/global-runtime-enemy-registry
+    paths:
+      - 'tools/global_registry/**'
+      - '.github/workflows/build-global-enemy-hook.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout randomizer and native patch
+        uses: actions/checkout@v7
+
+      - name: Checkout pinned Rivet Hook source
+        shell: pwsh
+        run: |
+          git clone https://github.com/neptuwunium/rivet_hook.git hook-src
+          git -C hook-src checkout 0bdb3941355bcea353cfb7bb9c2d32dc2dfcf4f9
+
+      - name: Apply resident-template API
+        run: python tools/global_registry/patch_rivet_hook.py hook-src
+
+      - name: Set up Python and Meson
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Install build tools
+        run: |
+          python -m pip install meson ninja
+          choco install nasm -y
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v3
+
+      - name: Configure native hook
+        shell: pwsh
+        run: meson setup hook-src/build hook-src --buildtype release --debug --vsenv -Dloader_only=false
+
+      - name: Compile native hook
+        run: meson compile -C hook-src/build -j 0
+
+      - name: Collect hook files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path hook-artifact | Out-Null
+          Copy-Item hook-src/build/rivet_hook.dll hook-artifact/
+          Copy-Item hook-src/build/subprojects/hid_hook/hid.dll hook-artifact/
+          Copy-Item hook-src/build/subprojects/hid_hook/hid_win10.dll hook-artifact/
+          if (Test-Path hook-src/build/rivet_hook.pdb) { Copy-Item hook-src/build/rivet_hook.pdb hook-artifact/ }
+          if (Test-Path hook-src/build/subprojects/hid_hook/hid.pdb) { Copy-Item hook-src/build/subprojects/hid_hook/hid.pdb hook-artifact/ }
+          if (Test-Path hook-src/build/subprojects/hid_hook/hid_win10.pdb) { Copy-Item hook-src/build/subprojects/hid_hook/hid_win10.pdb hook-artifact/ }
+
+      - name: Upload patched hook
+        uses: actions/upload-artifact@v7
+        with:
+          name: rivet-hook-global-enemy-templates
+          path: hook-artifact/

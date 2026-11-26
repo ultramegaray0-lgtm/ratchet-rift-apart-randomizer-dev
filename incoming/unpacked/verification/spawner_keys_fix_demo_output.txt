@@ -1,0 +1,12 @@
+== tool 1.0.0 manifest: spawner_keys = every same-kind spawner, twice
+   STAGE VARIABLE factory F1: holds 00000000000000B3 (enm_neo_nefarious_swarmer) = the .stage value - the patched zone levels/test/z.zone IS loaded
+   STAGE VARIABLE factory F2: holds 00000000000000B4, neither the original nor the replacement of change 1
+   STAGE VARIABLES of the listed spawners: change 1: replacement enm_neo_nefarious_swarmer held by 1 variable(s) (zone file 1, 2 expected with the .stage), original enm_neo_nefarious_melee by 0 (zone file 1, 0 expected)
+   STAGE SUMMARY (next level / checkpoint): spawns of .stage-related spawners 3 - replacement 1, original 2, other 0 | replacements died 0, gone 0, still there 1, reported alive 0 | patched spawners still holding the original uid 0
+   STAGE SPAWNER F2: - | spawned 2 (replacement 0, original 2) | the spawner the .stage changed: the variable holds 00000000000000B4
+   STAGE SPAWNER F1: - | spawned 1 (replacement 1, original 0) | the spawner the .stage changed: REPLACEMENT SPAWNED (the .stage value was used)
+== tool 1.0.1 manifest: spawner_keys = the spawner seen holding the original uid
+   STAGE VARIABLE factory F1: holds 00000000000000B3 (enm_neo_nefarious_swarmer) = the .stage value - the patched zone levels/test/z.zone IS loaded
+   STAGE VARIABLES of the listed spawners: change 1: replacement enm_neo_nefarious_swarmer held by 1 variable(s) (zone file 1, 2 expected with the .stage), original enm_neo_nefarious_melee by 0 (zone file 1, 0 expected)
+   STAGE SUMMARY (next level / checkpoint): spawns of .stage-related spawners 1 - replacement 1, original 0, other 0 | replacements died 0, gone 0, still there 1, reported alive 0 | patched spawners still holding the original uid 0
+   STAGE SPAWNER F1: - | spawned 1 (replacement 1, original 0) | the spawner the .stage changed: REPLACEMENT SPAWNED (the .stage value was used)

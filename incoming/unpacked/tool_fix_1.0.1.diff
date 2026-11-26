@@ -1,0 +1,315 @@
+--- pristine/tools/stage_enemies/knowledge.py	2026-11-24 00:00:00.000000000 +0300
++++ src/tools/stage_enemies/knowledge.py	2026-11-25 00:16:30.877208920 +0300
+@@ -76,6 +76,9 @@
+     planet: str
+     encounters: Set[str] = field(default_factory=set)
+     originals: Dict[str, int] = field(default_factory=dict)   # original kind name -> spawns seen
++    # template uids this spawner's variable was SEEN holding (tool 1.0.1): a SPAWN line followed directly by the
++    # "learned template ... (spawn)" line of that same spawn (16_rando_spawners.lua logs both in one call, ledger first)
++    uids: Set[str] = field(default_factory=set)
+ 
+ 
+ @dataclass
+@@ -159,11 +162,13 @@
+ 
+ 
+ def load_log(k: Knowledge, path: str) -> None:
+-    na = nl = nc = ns = 0
++    na = nl = nc = ns = nu = 0
++    prev_spawn = None      # (key, spawned name) when the previous RANDO-ENEMIES line was a first-spawn SPAWN line
+     with open(path, "r", encoding="utf-8", errors="replace") as f:
+         for line in f:
+             if "RANDO-ENEMIES" not in line:
+                 continue
++            last, prev_spawn = prev_spawn, None
+             m = ASSET_RE.search(line)
+             if m:
+                 name, fam, cls, p = m.groups()
+@@ -177,6 +182,11 @@
+                 uid, name, fam, cls, role = m.groups()
+                 k.add_template(uid, name, None if fam == "?" else fam, cls, role, os.path.basename(path))
+                 nl += 1
++                # which spawner's variable held this uid: only when this line is the learn of the spawn logged on the
++                # line before (same spawned kind, learned from a spawn, that spawn waiting for its first spawn to learn)
++                if last and line.rstrip().endswith("(spawn)") and short(last[1]) == short(name):
++                    k.spawners[last[0]].uids.add(uid.upper())
++                    nu += 1
+                 continue
+             m = CHANGED_RE.search(line)
+             if m:
+@@ -196,4 +206,7 @@
+                 s.originals[orig] = s.originals.get(orig, 0) + 1
+                 k.planets.add(planet)
+                 ns += 1
+-    k.notes.append("%s: %d ASSET, %d learned, %d CHANGED, %d SPAWN lines" % (os.path.basename(path), na, nl, nc, ns))
++                if "learned from its first spawn" in line:
++                    prev_spawn = (key, spawned)
++    k.notes.append("%s: %d ASSET, %d learned, %d CHANGED, %d SPAWN lines, %d spawn(s) tied to the template uid its variable held" % (
++        os.path.basename(path), na, nl, nc, ns, nu))
+--- pristine/tools/stage_enemies/stage_enemies.py	2026-11-24 00:00:00.000000000 +0300
++++ src/tools/stage_enemies/stage_enemies.py	2026-11-25 00:21:11.137225580 +0300
+@@ -33,7 +33,7 @@
+ import knowledge as K  # noqa: E402
+ import rcra  # noqa: E402
+ 
+-TOOL_VERSION = "1.0.0"
++TOOL_VERSION = "1.0.1"   # 1.0.1: spawner_keys = only the spawners logged holding the original uid (was: every same-kind spawner)
+ KIT_RELEASE = "v0.76-DEV4"
+ STAGE_NAME = "RandoEnemies.stage"
+ MANIFEST_LUA = "18_rando_stage_manifest.lua"
+@@ -290,7 +290,8 @@
+         for h in hits:
+             if h["kind"] == "template":
+                 by_uid.setdefault(h["id"], []).append(h)
+-        keys_here = [h["id"] for h in hits if h["kind"] == "spawner"]
++        # a spawner key sits twice in its Script Actions record (probe: +N and +N+8): one entry per key, probe order
++        keys_here = list(dict.fromkeys(h["id"] for h in hits if h["kind"] == "spawner"))
+         assets_here = {h["label"] for h in hits if h["kind"] == "actor_asset" and h["section"] == "Zone Asset References"}
+         for uid_a, ha in by_uid.items():
+             ta = enemy.get(uid_a)
+@@ -318,6 +319,11 @@
+                     continue
+                 known_keys = [key for key in keys_here if key in k.spawners and
+                               any(K.short(o) == K.short(ta.name) for o in k.spawners[key].originals)]
++                # tool 1.0.1: the spawners whose variable your logs SAW holding A's uid. Only these are "the spawner the
++                # .stage changed" for 18_rando_stage_enemies.lua; the other same-kind spawners of the zone may use
++                # another template actor of the same kind (unchanged) and stay out of spawner_keys.
++                held_keys = [key for key in keys_here if key in k.spawners and uid_a in k.spawners[key].uids]
++                enc_keys = held_keys or known_keys
+                 for hv in vars_a:
+                     score = (10 if tier == "A" else 0)
+                     score += 3 if any(h["section"] == "Zone Actors" for h in placed) else 0
+@@ -336,8 +342,15 @@
+                         "replacement_placed_in": sorted({h["section"] for h in placed}),
+                         "original_refs_in_script_vars": len(vars_a),
+                         "replacement_refs_in_script_vars": len([h for h in hb if h["section"] == "Zone Script Vars"]),
+-                        "spawner_keys": known_keys,
+-                        "encounters": sorted({e for key in known_keys for e in k.spawners[key].encounters}),
++                        "spawner_keys": held_keys,
++                        "spawner_keys_evidence": ("rivet.log: the variable of each held the original uid %s (SPAWN line "
++                                                  "followed by its 'learned template ... (spawn)' line)" % uid_a) if held_keys
++                                                 else "none: no logged spawn of this zone shows the original uid in its variable",
++                        "same_kind_spawner_keys": known_keys,
++                        "encounters": sorted({e for key in enc_keys for e in k.spawners[key].encounters}),
++                        "encounters_of": "the spawner(s) in spawner_keys" if held_keys else
++                                         ("every logged spawner of this zone that spawned %s (the changed one is not "
++                                          "identified)" % K.short(ta.name)) if known_keys else "none",
+                         "rivet_hook_ok": z.get("rivet_hook_ok"),
+                     })
+     out.sort(key=lambda c: (-c["score"], c["zone"], c["abs"], c["replacement_uid"]))
+@@ -386,9 +399,10 @@
+             "--allow-same-faction widens to unverified same-faction pairs.")
+     print("Phase A candidates (best first):")
+     for i, c in enumerate(cands[:15]):
+-        print("  [%d] score %2d tier %s  %s +%d  %s -> %s  (%s)%s" % (
++        print("  [%d] score %2d tier %s  %s +%d  %s -> %s  (%s)%s%s" % (
+             i, c["score"], c["tier"], K.short(c["zone"]), c["rel"], K.short(c["original"]), K.short(c["replacement"]),
+-            c["evidence"][:60], ("  spawner " + ",".join(c["spawner_keys"])) if c["spawner_keys"] else ""))
++            c["evidence"][:60], ("  spawner " + ",".join(c["spawner_keys"])) if c["spawner_keys"] else "",
++            ("  (%d same-kind spawner(s) in the zone)" % len(c["same_kind_spawner_keys"])) if c["same_kind_spawner_keys"] else ""))
+     if a.pick >= len(cands):
+         die("--pick %d: only %d candidate(s)" % (a.pick, len(cands)))
+     c = cands[a.pick]
+@@ -449,9 +463,18 @@
+     print("  change      %s +%d: %s (%s) -> %s (%s), %d byte(s) differ" % (
+         c["section"], c["rel"], c["original_uid"], K.short(c["original"]), c["replacement_uid"], K.short(c["replacement"]), len(diff)))
+     print("  pair        %s [%s] %s" % (c["pair"], c["tier"], c["evidence"]))
+-    print("  test where  %s" % ("; ".join(c["encounters"]) or "the encounters of this zone (no spawner key of it in your logs)"))
++    print("  spawner     %s" % ((", ".join(c["spawner_keys"]) + " - " + c["spawner_keys_evidence"]) if c["spawner_keys"]
++                                 else "not identified in your logs (%s)" % c["spawner_keys_evidence"]))
++    print("  test where  %s%s" % ("; ".join(c["encounters"]) or "the encounters of this zone (no spawner key of it in your logs)",
++                                  (" [%s]" % c["encounters_of"]) if c["encounters"] else ""))
+     print("  backup      %s" % bpath)
+-    print("next: python stage_enemies.py verify --game GAME --stage %s ; then install --build %s" % (stage_path, a.out))
++    # verify knows a template uid only from V.REG_BUILTIN and the --log files it is given: pass the same logs as poc used
++    # (uids learned in your game, like this change's, are in no built-in table)
++    print("next: python stage_enemies.py verify --game GAME --stage %s%s ; then install --build %s" % (
++        stage_path, "".join(' --log "%s"' % p for p in logs), a.out))
++    if logs:
++        print("      keep a copy of %s: the game rewrites rivet.log on its next start, and verify needs these uids" % (
++            ", ".join(logs)))
+ 
+ 
+ # ======================================================================================================================
+--- pristine/tools/stage_enemies/selftest.py	2026-11-24 00:00:00.000000000 +0300
++++ src/tools/stage_enemies/selftest.py	2026-11-25 00:17:23.881212071 +0300
+@@ -7,6 +7,7 @@
+   3. LZ4: blocks made by the reference lz4 compressor (python-lz4 4.x, embedded below)
+   4. end to end on fakegame.py's synthetic toc/dag/DSAR: probe -> poc -> verify -> rebuild identical -> install ->
+      uninstall; and the refusals (bad pair, changed zone, foreign change)
++  5. (tool 1.0.1) spawner_keys: only spawners whose variable rivet.log saw holding the original uid; nothing guessed
+ """
+ import contextlib
+ import hashlib
+@@ -211,10 +212,79 @@
+     finally:
+         shutil.rmtree(tmp, ignore_errors=True)
+ 
++    spawner_attribution()
+     failed = [r for r in RESULTS if not r[1]]
+     print("SELFTEST %s: %d checks, %d failed" % ("PASSED" if not failed else "FAILED", len(RESULTS), len(failed)))
+     return 0 if not failed else 1
+ 
+ 
++def spawner_attribution():
++    """Tool 1.0.1: a manifest's spawner_keys are only the spawners whose variable the log SAW holding the original uid."""
++    import knowledge as K
++    print("5. which spawner holds the changed reference (rivet.log evidence)")
++    here = os.path.dirname(os.path.abspath(__file__))
++    scripts = os.path.normpath(os.path.join(here, "..", "..", "scripts"))
++    P = "[script] [rando]\tRANDO-ENEMIES\t"
++    SH, ME = "enm_pirate_robot_shooter", "enm_pirate_robot_melee"
++    first = "NOT CHANGED: kind not known yet (learned from its first spawn)"
++
++    def spawn(n, key, kind, fam, why=first):
++        return P + "SPAWN %d | ardolis | MIS_T @ CHK_%s | factory Templates %s | original %s | selected - | spawned %s (%s) | %s\n" % (
++            n, key[:1], key, kind, kind, fam, why)
++
++    def learned(n, uid, kind, fam, cls, src="spawn"):
++        return P + "learned template %d (uid %s): %s = %s/%s, role enemy (%s)\n" % (n, uid, kind, fam, cls, src)
++    A, B, C, D, E, F = ("%s" % (ch * 16) for ch in "ABCDEF")
++    lines = [
++        spawn(1, A, SH, "ground"), learned(1, "1111111111111111", SH, "ground", "GameBotShooter"),           # A holds 1111
++        spawn(2, B, SH, "ground"), learned(2, "2222222222222222", SH, "ground", "GameBotShooter"),           # B holds 2222
++        spawn(3, C, SH, "ground"), P + "scan 1 on ardolis: 3 spawner variable(s)\n",
++        learned(3, "3333333333333333", SH, "ground", "GameBotShooter"),                                      # not adjacent
++        spawn(4, D, ME, "swarmer"), learned(4, "4444444444444444", SH, "ground", "GameBotShooter"),          # other kind
++        spawn(5, E, SH, "ground", "NOT CHANGED: spawned before the randomizer read its spawner"),
++        learned(5, "5555555555555555", SH, "ground", "GameBotShooter"),                                      # not a first spawn
++        spawn(6, F, SH, "ground"), learned(6, "6666666666666666", SH, "ground", "GameBotShooter", "template actor"),
++        P + "scan 2 on ardolis\n", learned(7, "7777777777777777", ME, "swarmer", "GameBotMeleeSwarmer"),
++    ]
++    tmp = tempfile.mkdtemp(prefix="stage_selftest5_")
++    try:
++        log = os.path.join(tmp, "rivet.log")
++        with open(log, "w", newline="\r\n") as f:      # rivet.log on Windows ends lines with CRLF
++            f.writelines(lines)
++        k = K.Knowledge()
++        K.load_scripts(k, scripts)
++        K.load_log(k, log)
++        got = {key: sorted(k.spawners[key].uids) for key in (A, B, C, D, E, F)}
++        check("SPAWN + its own 'learned ... (spawn)' line ties the uid to that spawner",
++              got[A] == ["1111111111111111"] and got[B] == ["2222222222222222"], str(got))
++        check("no tie across another line, another kind, a non-first spawn or a template-actor learn",
++              not got[C] and not got[D] and not got[E] and not got[F], str(got))
++
++        def hit(kind, ident, label, section, rel):
++            return {"kind": kind, "id": ident, "label": label, "section": section, "rel": rel, "abs": 1000 + rel}
++        hits = [hit("template", "1111111111111111", SH, "Zone Script Vars", 16),
++                hit("template", "3333333333333333", SH, "Zone Script Vars", 48),
++                hit("template", "1111111111111111", SH, "Zone Actors", 8),
++                hit("template", "3333333333333333", SH, "Zone Actors", 40),
++                hit("template", "7777777777777777", ME, "Zone Actors", 72)]
++        for key in (A, B, C):                                 # every key sits twice in its Script Actions record
++            hits += [hit("spawner", key, "factory", "Zone Script Actions", 200), hit("spawner", key, "factory", "Zone Script Actions", 208)]
++        report = {"zones": [{"zone": "levels/t/t.zone", "zone_id": "8000000000000001", "sha256": "0" * 64,
++                             "rivet_hook_ok": True, "hits": hits}]}
++        cands = SE.candidates(report, k, False, [])
++        c1 = [c for c in cands if c["original_uid"] == "1111111111111111" and c["replacement_uid"] == "7777777777777777"]
++        c3 = [c for c in cands if c["original_uid"] == "3333333333333333" and c["replacement_uid"] == "7777777777777777"]
++        check("candidate: spawner_keys = only the spawner seen holding the original uid, no duplicates",
++              bool(c1) and c1[0]["spawner_keys"] == [A] and c1[0]["same_kind_spawner_keys"] == [A, B, C]
++              and c1[0]["encounters"] == ["MIS_T @ CHK_A"], json.dumps(c1[:1])[:400])
++        check("candidate: no spawner seen holding the uid -> spawner_keys empty, encounters marked as same-kind",
++              bool(c3) and c3[0]["spawner_keys"] == [] and "not identified" in c3[0]["encounters_of"]
++              and len(c3[0]["encounters"]) == 3, json.dumps(c3[:1])[:400])
++        check("ranking unchanged by the attribution (score needs a same-kind spawner, as in 1.0.0)",
++              bool(c1 and c3) and c1[0]["score"] == c3[0]["score"])
++    finally:
++        shutil.rmtree(tmp, ignore_errors=True)
++
++
+ if __name__ == "__main__":
+     sys.exit(run())
+--- pristine/tools/stage_enemies/README.md	2026-11-24 00:00:00.000000000 +0300
++++ src/tools/stage_enemies/README.md	2026-11-25 00:21:13.897225744 +0300
+@@ -1,4 +1,4 @@
+-# tools/stage_enemies - the .stage Enemy Randomizer companion (v0.76-DEV4, tool 1.0.0)
++# tools/stage_enemies - the .stage Enemy Randomizer companion (v0.76-DEV4, tool 1.0.1)
+ 
+ Python 3.9+, standard library only. Full description, evidence and the Phase A test: `docs/STAGE_ENEMY_RANDOMIZER.md`.
+ 
+@@ -7,7 +7,7 @@
+ python stage_enemies.py levels    --game GAME --filter zurkon
+ python stage_enemies.py probe     --game GAME --planet zurkon --log rivet.log [--log older.log ...]
+ python stage_enemies.py poc       --game GAME --probe probe_out/probe.json [--pick N] [--allow-same-faction]
+-python stage_enemies.py verify    --game GAME --stage poc_out/RandoEnemies.stage
++python stage_enemies.py verify    --game GAME --stage poc_out/RandoEnemies.stage --log rivet.log [--log ...]   (the logs probe used)
+ python stage_enemies.py install   --game GAME --build poc_out
+ python stage_enemies.py uninstall --game GAME
+ ```
+--- pristine/docs/STAGE_ENEMY_RANDOMIZER.md	2026-11-24 00:00:00.000000000 +0300
++++ src/docs/STAGE_ENEMY_RANDOMIZER.md	2026-11-25 00:21:12.605225667 +0300
+@@ -1,6 +1,8 @@
+ # The .stage Enemy Randomizer (v0.76-DEV4, kit 10.0.43)
+ 
+-> **STATUS: Phase A tooling, built and tested offline. NOT YET RUN AGAINST YOUR GAME FILES, NOT YET RUN IN THE GAME.**
++> **STATUS: Phase A tooling, built and tested offline. Probe RUN on your game files (template uids found in Zone Script
++> Vars and Zone Actors); the single-spawner POC is built and statically verified (Ardolis, ard_firstvisit_gp.zone).
++> NOT YET RUN IN THE GAME.**
+ > Nothing below is advertised as working in the game. What is proven, and how, is listed per item.
+ > The next step is yours: section 6, "Phase A on your PC" (about 15 minutes), then send back the files it lists.
+ 
+@@ -87,14 +89,16 @@
+ 
+ | Command | What it does | Writes |
+ |---|---|---|
+-| `selftest` | 48 checks: asset ids vs the game's, plug and section ids, LZ4 vs the reference compressor, the whole flow on a synthetic game folder, every refusal | nothing |
++| `selftest` | 53 checks (52 without lupa): asset ids vs the game's, plug and section ids, LZ4 vs the reference compressor, the whole flow on a synthetic game folder, every refusal | nothing |
+ | `levels --filter X` | the level / zone assets whose name contains X (from the game's dag) | nothing |
+ | `probe --planet X --log rivet.log` | reads every zone of X and searches it for every template uid, spawner key and enemy .actor id your scripts and logs know | probe.json, probe_report.txt |
+ | `poc --probe probe.json` | ranks Phase A candidates (section 5), changes ONE reference, writes the .stage, a backup and the manifest | poc_out\ |
+ | `verify --stage S` | compares S with the game's zone: same header, same size, same sections, only known-uid swaps; checks rivet.toml order and other mods | nothing |
+ | `install --build poc_out` / `uninstall` | copies / removes the .stage and the manifest, edits `[assets] paths` | game folder |
+ 
+-Same input, same output: rebuilding gives a byte-identical .stage (fixed zip timestamps and order; tested).
++Same input, same output: rebuilding gives a byte-identical .stage (fixed zip timestamps and order; tested) on the same
++Python. Another Python build (Windows vs Linux, zlib vs zlib-ng) compresses differently and marks another "created on"
++system, so the .stage sha256 differs while every member is byte-identical: compare `zone_sha256_patched`, not the zip hash.
+ 
+ ## 5. Compatibility rules (Phase A: conservative)
+ 
+@@ -110,6 +114,14 @@
+ 16_rando_spawners.lua, so the tool and the game use the same evidence:
+ pirate robot shooter -> brawler (round37: 20 of 20, A1 completed twice) is the strongest; Nefarious pairs from round63 next.
+ 
++Which spawner is the changed one (tool 1.0.1): the manifest's `spawner_keys` lists ONLY the spawners whose variable your
++rivet.log saw holding A's uid - a `SPAWN ... | factory Templates KEY | ...` line ("learned from its first spawn") followed
++directly by that spawn's `learned template ... (uid A) ... (spawn)` line (16_rando_spawners.lua logs both in one call).
++Other spawners of the same kind may use another template actor of that kind and are NOT changed; they stay in the JSON as
++`same_kind_spawner_keys` only. (Tool 1.0.0 put every same-kind spawner of the zone in `spawner_keys`, each twice, so
++18_rando_stage_enemies.lua would have reported untouched spawners as "the spawner the .stage changed" and counted their
++normal spawns as "original".) No log evidence = empty `spawner_keys`; the in-game check then goes by the uids alone.
++
+ Bosses: not in Phase A (story bosses stay protected; boss tier is a later experimental category).
+ 
+ ## 6. Phase A on your PC
+@@ -127,7 +139,7 @@
+ 3. Read the VERDICT at the end of `probe`. If it says template uids are in Zone Script Vars and Zone Actors:
+    ```
+    python tools\stage_enemies\stage_enemies.py poc     --game "<game folder>" --probe probe_out\probe.json
+-   python tools\stage_enemies\stage_enemies.py verify  --game "<game folder>" --stage poc_out\RandoEnemies.stage
++   python tools\stage_enemies\stage_enemies.py verify  --game "<game folder>" --stage poc_out\RandoEnemies.stage --log <the same logs as probe>
+    python tools\stage_enemies\stage_enemies.py install --game "<game folder>" --build poc_out
+    ```
+    `poc` prints the zone, the change, the pair's evidence and the encounter to play ("test where").
+--- pristine/docs/CHANGELOG.md	2026-11-24 00:00:00.000000000 +0300
++++ src/docs/CHANGELOG.md	2026-11-25 00:21:19.517226078 +0300
+@@ -20,6 +20,17 @@
+ - 04 / 10: enemy_source = "auto" | "stage" | "lua" ("lua" is ignored while a .stage manifest is installed).
+ - Kit 10.0.43: every script and developer script restamped; 18_rando_stage_enemies is an optional kit file.
+ - NOT RUN against the real game files or in the game (no game here). Phase A is the next round.
++- Phase A, static part (tool 1.0.1): the probe on your game found template uids in Zone Script Vars (785) and Zone Actors
++  (321). POC built: Ardolis ard_firstvisit_gp.zone, Zone Script Vars +4912, pirate robot shooter 899208BF8F48C554 -> brawler
++  92C793D47A4657B6 (8 bytes; spawner CECB812E81FB7301 at CHK_ARD_START). Not installed, not run in the game yet.
++- FIX tool 1.0.1: the manifest's `spawner_keys` named every same-kind spawner of the zone (each twice); now only the
++  spawners rivet.log saw holding the original uid (`same_kind_spawner_keys` keeps the rest, JSON only). With 1.0.0 the
++  in-game check would have called untouched spawners "changed" and counted their spawns as "original". Ranking and the
++  .stage bytes are unchanged. selftest: 53 checks (5 new).
++- DOCS tool 1.0.1: `verify` needs `--log` with the logs probe used. It knows a template uid only from V.REG_BUILTIN and
++  its --log files, so for uids learned in your game (the Ardolis POC's both are) `verify` without them reports "not one
++  known template uid replaced by another". The documented command and poc's "next:" line now pass them; keep a copy of
++  that rivet.log (the game rewrites it on its next start). verify's rule is unchanged.
+ 
+ ## v0.76-DEV3 (kit 10.0.42; dev kit, not released): the New Game seed is generated in the game's frames
+ 

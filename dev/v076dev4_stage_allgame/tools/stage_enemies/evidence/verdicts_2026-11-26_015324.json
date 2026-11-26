@@ -1,0 +1,1368 @@
+{
+ "tool": "stage_check_log 2.0.0",
+ "logs": [
+  "verdicts\\rivet-20261126-015324.log"
+ ],
+ "verdicts": {
+  "B2B978B5BC3D8A4D": {
+   "verdict": "WORKED",
+   "replacement_uid": "D78BDDE784EF233E",
+   "original": "enm_amoeboid_large_ps4",
+   "replacement": "enm_amoeboid_medium_ps4",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_cord_01_dim_b\\mis_cord_01_dim_b_gp_combat.zone"
+  },
+  "C0DE28964E8564CB": {
+   "verdict": "WORKED",
+   "replacement_uid": "D78BDDE784EF233E",
+   "original": "enm_amoeboid_large_ps4",
+   "replacement": "enm_amoeboid_medium_ps4",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_cord_01_dim_b\\mis_cord_01_dim_b_gp_combat.zone"
+  },
+  "B07D2EF916C6F870": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "DB45C9F28C55DD1C",
+   "original": "enm_amoeboid_medium_ps4",
+   "replacement": "enm_amoeboid_small_ps4",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_cord_01_dim_b\\mis_cord_01_dim_b_gp_combat.zone"
+  },
+  "EF7E865A970285B8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FFEB32EF0512BC48",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01_mission_poststate\\i29_zordoom_mission_poststate_gp.zone"
+  },
+  "C408F440A1AAE5A8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E0C817DCFF60D333",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01_mission_poststate\\i29_zordoom_mission_poststate_gp.zone"
+  },
+  "A37757B92E263C52": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "BEFDACAEE050D868",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "BC2CE8D33A523BF3": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "EEF9A3758655AB5F",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "B01EB00D7ECDB555": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8EE65D77464F568D",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "B3B6DC3E698073DA": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E1030A2D578DEF12",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "BF7BC5D0A45557FE": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B54FE0092BD4BDB6",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "EF26464B6F8FF51E": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E1030A2D578DEF12",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "D334761C629AE47F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E20BD0AE7E562126",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "B021F935A97CE8FE": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FFE6B3449B65FCC4",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "8F5FE615E471D68D": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8EE65D77464F568D",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "B7B5FC30D4C71161": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A4086883A1A19113",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_grenadier",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "C4E9E94200C44CA0": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "AD408B82FC75747F",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "EC35BADD9DDF3BFC": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "EEF9A3758655AB5F",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "C48405AA8A525DA8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "AD408B82FC75747F",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "B7C9D52353C804A9": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A4086883A1A19113",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_grenadier",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "D590320008153631": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8885F1EFE9D30003",
+   "original": "enm_thugs4less_melee",
+   "replacement": "enm_thugs4less_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "8184447C016D03E8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "AD408B82FC75747F",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "C5C2BEC0903C064E": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A4086883A1A19113",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_grenadier",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "F1490F40A7AECBF1": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "D2716A6FE73641DD",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "D40DD2F3FB91981D": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E1030A2D578DEF12",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "8AD09A95C32A18E8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FFE6B3449B65FCC4",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "B032F106E472E8CE": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E1030A2D578DEF12",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "E73AC054F1EB6485": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A4086883A1A19113",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_grenadier",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "D0F6D04BA1602D93": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FFE6B3449B65FCC4",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "C10D3AED835C50DF": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B54FE0092BD4BDB6",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "993FD0406B32A2A0": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "F74413F4AA44206D",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "89B9F7C537743676": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A4086883A1A19113",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_grenadier",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_dome_gp.zone"
+  },
+  "C68FAF2249E16FDE": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "F2A2A42FCBED5BD8",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_mech_boss.zone"
+  },
+  "D60E1A9C31B9E73A": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "F2A2A42FCBED5BD8",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_mech_boss.zone"
+  },
+  "8D03BABB2AF112E8": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "82A9B65DDBA84005",
+   "original": "enm_indigenous_crab",
+   "replacement": "enm_indigenous_puffoid_blizar",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar\\i29_blizar_startingarea_gp.zone"
+  },
+  "A79AE3C5A6D05309": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "B7E73FAFB7050D23",
+   "original": "enm_indigenous_puffoid_blizar",
+   "replacement": "enm_indigenous_crab",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar\\i29_blizar_startingarea_gp.zone"
+  },
+  "E7B417E3F86CDDB3": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "817B0184DCECAC91",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_piratefloat\\i29_malinon_rivet_02_gp_parade_pirate_float.zone"
+  },
+  "99CAF0D0A99A16AF": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CE5297C798AA5284",
+   "original": "enm_indigenous_crab",
+   "replacement": "enm_indigenous_puffoid_blizar",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_mission_poststate\\i29_blizar_mission_poststate_exploration_combat_gp.zone"
+  },
+  "89F47E5D3FA6DA5B": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "EE61F4376D941D0E",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_veldinfloat\\i29_malinon_rivet_02_gp_parade_veldin_float.zone"
+  },
+  "DF2F3D7D11A596D5": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "EE61F4376D941D0E",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_veldinfloat\\i29_malinon_rivet_02_gp_parade_veldin_float.zone"
+  },
+  "BDF41917AB934E9F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "EE61F4376D941D0E",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_veldinfloat\\i29_malinon_rivet_02_gp_parade_veldin_float.zone"
+  },
+  "92127EDBBB22B3A1": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "EE61F4376D941D0E",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_veldinfloat\\i29_malinon_rivet_02_gp_parade_veldin_float.zone"
+  },
+  "B8327D688A84CC8D": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "EE61F4376D941D0E",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_veldinfloat\\i29_malinon_rivet_02_gp_parade_veldin_float.zone"
+  },
+  "97B23A4ADBCB4ADA": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "EFC0441F877BDD32",
+   "original": "enm_indigenous_crab",
+   "replacement": "enm_indigenous_puffoid_blizar",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "97DDABA90FCC3C3B": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "A0F07F1BE1DC3AC4",
+   "original": "enm_indigenous_puffoid_blizar",
+   "replacement": "enm_indigenous_crab",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "A8C3B31A3522AC9D": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "A0F07F1BE1DC3AC4",
+   "original": "enm_indigenous_puffoid_blizar",
+   "replacement": "enm_indigenous_crab",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "E655C3C72F95CC6B": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "EFC0441F877BDD32",
+   "original": "enm_indigenous_crab",
+   "replacement": "enm_indigenous_puffoid_blizar",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "DD4C54B707F3A30C": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "A0F07F1BE1DC3AC4",
+   "original": "enm_indigenous_puffoid_blizar",
+   "replacement": "enm_indigenous_crab",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "E60BA984E6EE5DD5": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "A0F07F1BE1DC3AC4",
+   "original": "enm_indigenous_puffoid_blizar",
+   "replacement": "enm_indigenous_crab",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "F42868B2ACAA7D30": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "EFC0441F877BDD32",
+   "original": "enm_indigenous_crab",
+   "replacement": "enm_indigenous_puffoid_blizar",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "D3D7DCEA5BC6D45F": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "EFC0441F877BDD32",
+   "original": "enm_indigenous_crab",
+   "replacement": "enm_indigenous_puffoid_blizar",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "FE18A014C4A1E0D0": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "C2F34C2D39362505",
+   "original": "enm_Thugs4Less_ShooterJetpack",
+   "replacement": "enm_thugs4less_biker",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_surveyor\\i29_blizar_surveyor_tdcombat_gp.zone"
+  },
+  "A654162A20A2D528": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C9D3F567218D2390",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_02_rivet\\mis_mega_02_rivet_gp.zone"
+  },
+  "919B8F586C6D6A39": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "93FB79EC92E1E8D3",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_02_rivet\\mis_mega_02_rivet_gp.zone"
+  },
+  "9A3FAF1861DFBC3F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A3290795B80E400C",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_02_rivet\\mis_mega_02_rivet_gp.zone"
+  },
+  "B5E0BF7E3E393FA8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C324800BDDA58E81",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_02_rivet\\mis_mega_02_rivet_gp.zone"
+  },
+  "9BA5659DFC154171": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A7D9A7EFB9C47138",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_02_rivet\\mis_mega_02_rivet_gp.zone"
+  },
+  "B81D23C5968286AA": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C9D3F567218D2390",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_02_rivet\\mis_mega_02_rivet_gp.zone"
+  },
+  "F88EDE7973957D5F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C324800BDDA58E81",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_02_rivet\\mis_mega_02_rivet_gp.zone"
+  },
+  "B854C8E8843809A4": {
+   "verdict": "WORKED",
+   "replacement_uid": "CA2C47B038397AEF",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar\\i29_blizar_destroyed_worldcombat_gp.zone"
+  },
+  "A4853C0C17B55985": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B094CA9791DD071E",
+   "original": "enm_pirate_bladeball",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mol_01_first_visit_command_ship\\mis_mol_01_first_visit_command_ship.zone"
+  },
+  "EADB1E765FE9BAF4": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "88D6487365D1FC1B",
+   "original": "enm_pirate_bladeball",
+   "replacement": "enm_pirate_shingle_q4b",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mol_01_first_visit_command_ship\\mis_mol_01_first_visit_command_ship.zone"
+  },
+  "F1D14F908374381B": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C00534272C294646",
+   "original": "enm_pirate_robot_shielded",
+   "replacement": "enm_pirate_robot_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mol_01_first_visit\\mis_mol_01_first_visit_gp.zone"
+  },
+  "C3B757F28F2331E1": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "9764FBD6E0D02F01",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "E90CDE2C38A4A942": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "F6C88AD9E58FF56F",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "89195342EC4D7609": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "D7AFB38AC7CA1114",
+   "original": "enm_indigenous_sandshark",
+   "replacement": "enm_indigenous_alien_spitter",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "A3519207D7232E2A": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8AEB51EE490C5593",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "DA2F28A52789F7F8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E208255D3152276E",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "ADA8C78B15F632D8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "9764FBD6E0D02F01",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "A4A41A1D798EB5B6": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E208255D3152276E",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "B74EA17EF95365C7": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "94977D84E6019F0F",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "DDD9CD26164ACE39": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B85C1901E299A0BE",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "FE86C280D7131174": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E208255D3152276E",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "C977691A4AA7D0B6": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "9764FBD6E0D02F01",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "E8F625D13440E62C": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "D7AFB38AC7CA1114",
+   "original": "enm_indigenous_sandshark",
+   "replacement": "enm_indigenous_alien_spitter",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\mis_sav_visit_01_gp.zone"
+  },
+  "F0CAA0FA1251F975": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C825A1FFFF6D6606",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_robomutt",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_planetfloat\\i29_malinon_rivet_02_gp_parade_planet_float.zone"
+  },
+  "F5F2A44AF10FB62C": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "F741A0C59437E8BC",
+   "original": "enm_thugs4less_robomutt",
+   "replacement": "enm_thugs4less_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_planetfloat\\i29_malinon_rivet_02_gp_parade_planet_float.zone"
+  },
+  "E37DF97DB978FC8C": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "D98F0B4156298073",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_planetfloat\\i29_malinon_rivet_02_gp_parade_planet_float.zone"
+  },
+  "E01120583C1EEF39": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8E809EDF0A08A660",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_planetfloat\\i29_malinon_rivet_02_gp_parade_planet_float.zone"
+  },
+  "D25FBCB4DB82345F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "D98F0B4156298073",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_planetfloat\\i29_malinon_rivet_02_gp_parade_planet_float.zone"
+  },
+  "E9BAFB7F5C981251": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C825A1FFFF6D6606",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_robomutt",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_planetfloat\\i29_malinon_rivet_02_gp_parade_planet_float.zone"
+  },
+  "D71768CE12509BE4": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "D98F0B4156298073",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_rivet_02_planetfloat\\i29_malinon_rivet_02_gp_parade_planet_float.zone"
+  },
+  "FAB26ED00CADBCF1": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "ECB2F12165246392",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_processingcenter_gp.zone"
+  },
+  "8C4AF573D4A8D15B": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "DAA2BB522DA7E030",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_processingcenter_gp.zone"
+  },
+  "8811318AD63CF0F7": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B55799EA1763D5DE",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_processingcenter_gp.zone"
+  },
+  "FDCD78CF47F2E26E": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "DAA2BB522DA7E030",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_processingcenter_gp.zone"
+  },
+  "A7F0A369B9E52689": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B55799EA1763D5DE",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_processingcenter_gp.zone"
+  },
+  "D1478E020A7D354F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "ECB2F12165246392",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_processingcenter_gp.zone"
+  },
+  "9C58734EACC4A664": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CEB0F68C49E19121",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_processingcenter_gp.zone"
+  },
+  "B54501CAC574C158": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CEB0F68C49E19121",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_processingcenter_gp.zone"
+  },
+  "F643276C3153A03C": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B64461F0250A5EA3",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "prisonship",
+   "zone": "levels\\i29\\instance\\prisonship\\prisonship_main\\prisonship_main_gameplay.zone"
+  },
+  "EF4526AD72DC79EC": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "95F5B9B63B8C78E5",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "prisonship",
+   "zone": "levels\\i29\\instance\\prisonship\\prisonship_main\\prisonship_main_gameplay.zone"
+  },
+  "EC6BA9F8C29D3420": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C0444CE3C8C2DDDA",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_robot_shielded",
+   "planet": "prisonship",
+   "zone": "levels\\i29\\instance\\prisonship\\prisonship_main\\prisonship_main_gameplay.zone"
+  },
+  "D2937A242E3E120C": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B64461F0250A5EA3",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "prisonship",
+   "zone": "levels\\i29\\instance\\prisonship\\prisonship_main\\prisonship_main_gameplay.zone"
+  },
+  "82D37B62E0F5DC2C": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C0444CE3C8C2DDDA",
+   "original": "enm_pirate_robot_melee",
+   "replacement": "enm_pirate_robot_shielded",
+   "planet": "prisonship",
+   "zone": "levels\\i29\\instance\\prisonship\\prisonship_main\\prisonship_main_gameplay.zone"
+  },
+  "BB02B0E1E113FE90": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C540E6D44B489245",
+   "original": "enm_pirate_bladeball",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "prisonship",
+   "zone": "levels\\i29\\instance\\prisonship\\prisonship_main\\prisonship_main_gameplay.zone"
+  },
+  "F717430EE0DC986B": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "95F5B9B63B8C78E5",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "prisonship",
+   "zone": "levels\\i29\\instance\\prisonship\\prisonship_main\\prisonship_main_gameplay.zone"
+  },
+  "E3BE327091C2E1D7": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CA331938A5A1667A",
+   "original": "enm_pirate_bladeball",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_bar_sidepath.zone"
+  },
+  "E9BA9F7B6205F1EE": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FF3A1B8465229CC2",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_bar_sidepath.zone"
+  },
+  "D2846317D1016548": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FF3A1B8465229CC2",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_bar_sidepath.zone"
+  },
+  "B5CBECD684515B1A": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FF3A1B8465229CC2",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_bar_sidepath.zone"
+  },
+  "E9DCE9A58185CB8B": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A025288B335A2CD5",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_sarg_02_dummy_shipnav_kent\\mis_sarg_02_dummy_shipnav_kent_gameplay.zone"
+  },
+  "EB7A0471D6349F87": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "A21B801B56C9ABC7",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_ard_01_pirate_king_ship\\mis_ard_pirate_king_ship.zone"
+  },
+  "9AA8B10D9E4E3C1B": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "D573FD6C7356185A",
+   "original": "enm_pirate_robot_melee",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_ard_01_pirate_king_ship\\mis_ard_pirate_king_ship.zone"
+  },
+  "F32FB30D59A6FA88": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "BA312C9E31A934D2",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_ard_01_pirate_king_ship\\mis_ard_pirate_king_ship.zone"
+  },
+  "E4C70766564C1027": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "BF3586A9B2237B4D",
+   "original": "enm_pirate_robot_melee",
+   "replacement": "enm_pirate_robot_shielded",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_ard_01_pirate_king_ship\\mis_ard_pirate_king_ship.zone"
+  },
+  "F4A2328B673A85BA": {
+   "verdict": "WORKED",
+   "replacement_uid": "962053F44CC228D6",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_robomutt",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar\\i29_blizar_botsearch_combat_gp.zone"
+  },
+  "8DBB2182F22BDEFF": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "9DAB1A3F988A5DD8",
+   "original": "enm_thugs4less_melee",
+   "replacement": "enm_thugs4less_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar\\i29_blizar_botsearch_combat_gp.zone"
+  },
+  "D1A7D6BCB7D49192": {
+   "verdict": "WORKED",
+   "replacement_uid": "9DAB1A3F988A5DD8",
+   "original": "enm_thugs4less_melee",
+   "replacement": "enm_thugs4less_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar\\i29_blizar_botsearch_combat_gp.zone"
+  },
+  "C8D3B10076C770E9": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "899C303E911F9792",
+   "original": "enm_indigenous_crab",
+   "replacement": "enm_indigenous_puffoid_blizar",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar\\i29_blizar_botsearch_combat_gp.zone"
+  },
+  "D609CED014FBF85B": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "91B78823C2AADCC8",
+   "original": "enm_thugs4less_robomutt",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_01_rivet\\mis_mega_01_rivet_gp.zone"
+  },
+  "D12BA17D27EDAACF": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8A3B4C1D3B8F9E44",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\savali_encounters.zone"
+  },
+  "E4C8C4FD81498C3B": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A27AB3B3A6775381",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\savali_encounters.zone"
+  },
+  "9AAE9E1DB485E37F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "80D5BE7CED8247A5",
+   "original": "enm_indigenous_sandshark",
+   "replacement": "enm_indigenous_alien_spitter",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\savali_encounters.zone"
+  },
+  "8E9AE92347C7976F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "80D5BE7CED8247A5",
+   "original": "enm_indigenous_sandshark",
+   "replacement": "enm_indigenous_alien_spitter",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\savali_encounters.zone"
+  },
+  "CFDB6097E5A14817": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "A64C05C1F680C9DE",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\savali_encounters.zone"
+  },
+  "8C67730CCED90449": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "80D5BE7CED8247A5",
+   "original": "enm_indigenous_sandshark",
+   "replacement": "enm_indigenous_alien_spitter",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\savali_encounters.zone"
+  },
+  "A52A6A6EB481A019": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "F20488EA8F164B77",
+   "original": "enm_indigenous_alien_spitter",
+   "replacement": "enm_indigenous_sandshark",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\savali_encounters.zone"
+  },
+  "DBC907DF6BCEB3E8": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "C7B31A757AEDFAB1",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "savali",
+   "zone": "levels\\i29\\instance\\savali\\savali\\savali_encounters.zone"
+  },
+  "C59544C6A40A74B0": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "98AA67D3C05358DA",
+   "original": "enm_indigenous_alien_spitter",
+   "replacement": "enm_indigenous_sandshark",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_passiveshift_01\\i29_nefcity_passiveshift_01_gp.zone"
+  },
+  "B01447F12A39788D": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "BE7A0C35DD3AA062",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_sarg_02_dummy_shipnav_richter\\mis_sarg_02_dummy_shipnav_richter_gameplay.zone"
+  },
+  "E679614425B433F9": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B0E8DA3F3D97FAFB",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "EC05C389D6F1FBBA": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FA25BEFF3BB6DE11",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_grenadier",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "E075272B52AA93E4": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8D626754AA04F77C",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "ECC709AE8AEC81EB": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8D626754AA04F77C",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "D588B1FE19903AAE": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "8D626754AA04F77C",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "FB4F0D7794C72348": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "D2C1369C79A26B38",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "D45C5827DBEDFCBF": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "D2C1369C79A26B38",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_sniper",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "BC458A74A4E7A789": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B0E8DA3F3D97FAFB",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "FAD7F3FB8253E139": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "B0E8DA3F3D97FAFB",
+   "original": "enm_neo_nefarious_grenadier",
+   "replacement": "enm_neo_nefarious_hover",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_zord_01\\i29_zordoom_evacuationplatform_gp.zone"
+  },
+  "B876FAEBEF1B8A09": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "A0F33A142362145C",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "blizar",
+   "zone": "levels\\i29\\instance\\blizar\\blizar_intact\\blizar_prototype\\i29_blizar_intact_devgp_drillcombat.zone"
+  },
+  "FF06CCC2A9AC1EA2": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "92C793D47A4657B6",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_robot_melee",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "FA5FB32C7AAB4C4A": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "B69D08BA44EE560E",
+   "original": "enm_indigenous_puffoid",
+   "replacement": "enm_indigenous_crab",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "DAFCA25C58FD387F": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "D7677BCD9AAF5963",
+   "original": "enm_indigenous_puffoid",
+   "replacement": "enm_indigenous_crab",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "D1FD84D3A21C0F9A": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "B69D08BA44EE560E",
+   "original": "enm_indigenous_puffoid",
+   "replacement": "enm_indigenous_crab",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "FE80D89C2D6D5A2D": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "C1EE87C86B7840DD",
+   "original": "enm_pirate_robot_melee",
+   "replacement": "enm_pirate_robot_shielded",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "F3D033F9CBFADB82": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "C37DB04A5A1F0972",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "F4A34D9C49E5642A": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "D7677BCD9AAF5963",
+   "original": "enm_indigenous_puffoid",
+   "replacement": "enm_indigenous_crab",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "F607A5D72DB3F350": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "D7677BCD9AAF5963",
+   "original": "enm_indigenous_puffoid",
+   "replacement": "enm_indigenous_crab",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "9C3139C7FFED7137": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "C37DB04A5A1F0972",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "ardolis",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone"
+  },
+  "EB2F263E540409D6": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "ADDEDA2F8C84551E",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "9A722F25F73476B1": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CB9B101E739C0B0A",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "B2E957B61896BB96": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CB9B101E739C0B0A",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "B0FB32435F3A9386": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CB9B101E739C0B0A",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "EC2BD1AE2BD80347": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "ADDEDA2F8C84551E",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "E2B70C9A45A53C82": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CB9B101E739C0B0A",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "909114B422FA7C60": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "821C3FE9B6442A4C",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "AE1751DFE8462F63": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CB9B101E739C0B0A",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "F43A9D127C1D9622": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "ADDEDA2F8C84551E",
+   "original": "enm_neo_nefarious_melee",
+   "replacement": "enm_neo_nefarious_shooter",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_nefcity_01\\i29_nefcity_01_gp_combat.zone"
+  },
+  "B5F2DCF96399B363": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E4FA31FA54CA9927",
+   "original": "enm_indigenous_crab",
+   "replacement": "enm_indigenous_puffoid_blizar",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_blizar_mission_poststate\\i29_blizar_mission_poststate_startingarea_combat_gp.zone"
+  },
+  "B68048218C05B78F": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "899FC818387DB953",
+   "original": "enm_pirate_shingle_q4b",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_ard_pirate_king_ship_01\\mis_ard_pierre_ship.zone"
+  },
+  "B9841904DB0F6A87": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "899FC818387DB953",
+   "original": "enm_pirate_shingle_q4b",
+   "replacement": "enm_pirate_bladeball",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_ard_pirate_king_ship_01\\mis_ard_pierre_ship.zone"
+  },
+  "F7F3B8EE5E249147": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "BDBAC4F980F11783",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_mech_flyer.zone"
+  },
+  "A8C53F7582864490": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CD710C4FF4E8901D",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_shingle_q4b",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_mech_flyer.zone"
+  },
+  "F862615366676718": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "CD710C4FF4E8901D",
+   "original": "enm_pirate_robot_shooter",
+   "replacement": "enm_pirate_shingle_q4b",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_mech_flyer.zone"
+  },
+  "96CE15772B561984": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "BDBAC4F980F11783",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_mech_flyer.zone"
+  },
+  "CA3D5EEF38E8D072": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E3464C934968654A",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_start.zone"
+  },
+  "9971DAD1ACB30F2A": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E821AA6AE3B139C1",
+   "original": "enm_neo_nefarious_sniper",
+   "replacement": "enm_neo_nefarious_grenadier",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_start.zone"
+  },
+  "897D8DCD415948C1": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E3464C934968654A",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_start.zone"
+  },
+  "EFA93AF0DD79E79F": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "FE8616AD8B31833D",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_heavy",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_start.zone"
+  },
+  "A1B007B46D6FE718": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "E821AA6AE3B139C1",
+   "original": "enm_neo_nefarious_hover",
+   "replacement": "enm_neo_nefarious_grenadier",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_mega_finale\\malinon_finale_gp_start.zone"
+  },
+  "90B73AB19AB0E40D": {
+   "verdict": "NO SPAWN",
+   "replacement_uid": "A11B9447CAC96847",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_swarmer",
+   "planet": "blizar_destroyed",
+   "zone": "levels\\i29\\instance\\blizar_destroyed\\blizar_destroyed\\i29_blizar_destroyed_devgp_drillcombat.zone"
+  },
+  "B09B106B62640981": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "DFFB41CBC748772E",
+   "original": "enm_neo_nefarious_shooter",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\sav_archives\\sav_archives.zone"
+  },
+  "A699A40CB5B65DA0": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "DFFB41CBC748772E",
+   "original": "enm_neo_nefarious_heavy",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\sav_archives\\sav_archives.zone"
+  },
+  "9981A944C1C64C9D": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "9871F2E07574465B",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_intro_parade_planetfloat\\i29_malinon_intro_gp_parade_planet_float.zone"
+  },
+  "C204AFD8D3DC9971": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "9871F2E07574465B",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_intro_parade_planetfloat\\i29_malinon_intro_gp_parade_planet_float.zone"
+  },
+  "C56C0A7A2CAAF8E7": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "9871F2E07574465B",
+   "original": "enm_thugs4less_shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_intro_parade_planetfloat\\i29_malinon_intro_gp_parade_planet_float.zone"
+  },
+  "C54ADCF2B1F7E5F6": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "DC8BD6240CFBC521",
+   "original": "enm_neo_nefarious_swarmer",
+   "replacement": "enm_neo_nefarious_melee",
+   "planet": "test",
+   "zone": "levels\\test\\jgoodsell\\test_joel\\overlay\\storymission\\nef_tower_platform_a\\nef_tower_platform_a.zone"
+  },
+  "A194934A057E4E32": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "827DE80B95780670",
+   "original": "enm_Thugs4Less_Shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_sarg_01_centipedepath\\mis_sarg_01_centipedepath_combat.zone"
+  },
+  "EC505E2CFF04770C": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "827DE80B95780670",
+   "original": "enm_Thugs4Less_Shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_sarg_01_centipedepath\\mis_sarg_01_centipedepath_combat.zone"
+  },
+  "9C456E9B24BB9576": {
+   "verdict": "NOT REACHED",
+   "replacement_uid": "827DE80B95780670",
+   "original": "enm_Thugs4Less_Shooter",
+   "replacement": "enm_thugs4less_melee",
+   "planet": "overlay",
+   "zone": "levels\\i29\\overlay\\storymission\\mis_sarg_01_centipedepath\\mis_sarg_01_centipedepath_combat.zone"
+  }
+ }
+}

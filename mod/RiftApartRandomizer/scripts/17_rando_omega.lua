@@ -34,7 +34,7 @@
 -- v0.62-DEV10: steps 1-3 are replaced by the game's own type data (see "THE WEAPON ITEMS BY THE GAME'S OWN TYPE DATA"
 -- below): the weapon records are the WeaponItemPrius components of the scene, the Omega byte is the live
 -- WeaponItemPrius.Omega offset. Learning from a purchase stays only as the fallback (and as a confirmation).
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.39"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["17_rando_omega"] = "10.0.51"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_OMEGA = RANDO_OMEGA or {}
 local O = RANDO_OMEGA

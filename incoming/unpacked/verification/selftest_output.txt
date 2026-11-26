@@ -1,0 +1,59 @@
+1. asset ids against the game's own
+  ok   crc64 ui/loaded/exported/hud/mm_0.json
+  ok   crc64 ui/loaded/exported/hud/mm_1.json
+  ok   crc64 ui/loaded/exported/hud/mm_2.json
+  ok   crc64 ui/loaded/exported/hud/mm_3.json
+  ok   crc64 ui/loaded/exported/hud/mm_4.json
+  ok   crc64 ui/loaded/exported/hud/mm_5.json
+  ok   crc64 ui/loaded/exported/hud/mm_6.json
+  ok   crc64 ui/loaded/exported/hud/mm_7.json
+  ok   crc64 normalizes case and separators
+2. plug and section ids
+  ok   crc32 plug Template
+  ok   crc32 plug Templates
+  ok   crc32 plug LastSpawn
+  ok   crc32 plug Factories
+  ok   crc32 plug Location
+  ok   crc32 plug Locations
+  ok   crc32 of 39 section names
+3. LZ4 against the reference compressor
+  ok   lz4 vector 0 (896 bytes)
+  ok   lz4 vector 1 (595 bytes)
+  ok   lz4 vector 2 (5000 bytes)
+  ok   lz4 rejects a bad offset
+4. end to end on a synthetic game folder
+  ok   toc finds the zone in span 0
+  ok   DSAR read returns the zone
+  ok   dag lists 3 zones by name
+  ok   probe runs
+  ok   probe reads 2 zones (filter)
+  ok   probe: template uids in Script Vars and Zone Actors
+  ok   probe: enemy .actor ids in Zone Asset References
+  ok   probe: Script Vars stride 0x40 seen as gcd
+  ok   poc builds
+  ok   poc picks the combat-verified pair shooter -> brawler in the zone that holds both
+  ok   poc changes exactly 8 bytes or fewer
+  ok   .stage info.json says RCRA
+  ok   .stage holds one span-0 entry named by id
+  ok   .stage entry = 36-byte header + zone of the same size
+  ok   the backup equals header + original zone
+  ok   Lua manifest names the change
+  ok   Lua manifest parses (lupa)
+  ok   rebuilding gives a byte-identical .stage
+  ok   verify: OK, one known uid replaced
+  ok   verify refuses a change that is not a uid swap
+  ok   install refuses without the DEV4 Lua side
+  ok   install copies and lists the .stage LAST
+  ok   install keeps the rest of rivet.toml
+  ok   verify after install: OK
+  ok   verify reports another mod replacing the same zone
+  ok   uninstall removes the files and the path
+  ok   poc refuses a zone that changed since the probe
+  ok   poc refuses when no pair is proven in one zone
+5. which spawner holds the changed reference (rivet.log evidence)
+  ok   SPAWN + its own 'learned ... (spawn)' line ties the uid to that spawner
+  ok   no tie across another line, another kind, a non-first spawn or a template-actor learn
+  ok   candidate: spawner_keys = only the spawner seen holding the original uid, no duplicates
+  ok   candidate: no spawner seen holding the uid -> spawner_keys empty, encounters marked as same-kind
+  ok   ranking unchanged by the attribution (score needs a same-kind spawner, as in 1.0.0)
+SELFTEST PASSED: 53 checks, 0 failed

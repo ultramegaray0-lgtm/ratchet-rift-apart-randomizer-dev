@@ -1,0 +1,60 @@
+name: Enemy Randomizer V2.2.0 checks
+
+on:
+  push:
+    branches:
+      - work/100-percent-enemy-replacement
+    paths:
+      - "dev/v076dev4_stage_allgame/**"
+      - ".github/workflows/enemy-randomizer-v2.yml"
+
+jobs:
+  offline-regression:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dev/v076dev4_stage_allgame
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile builder and tests
+        run: python -m py_compile tools/stage_enemies/*.py tests/*.py
+      - name: Runtime verdict policy regression
+        run: python -I -m unittest discover -s tests -p "test_verdict_policy.py" -v
+      - name: Force-all mode CLI smoke test
+        run: python -I tools/stage_enemies/stage_allgame.py build --help
+      - name: Builder CLI smoke test
+        run: python -I tools/stage_enemies/stage_allgame.py --help
+      - name: Log checker CLI smoke test
+        run: python -I tools/stage_enemies/stage_check_log.py --help
+      - name: Build evidence-reconciled V2.2.0 .stage
+        run: |
+          python -I tools/stage_enemies/reconcile_stage_verdicts.py \
+            --stage ../../incoming/RandoEnemies_AllPlanets_v076/builds/build-20261125-223722/RandoEnemies.stage \
+            --manifest ../../incoming/RandoEnemies_AllPlanets_v076/builds/build-20261125-223722/stage_enemies_manifest.json \
+            --verdicts tools/stage_enemies/evidence/verdicts_2026-11-26_015324.json \
+            --runtime-script scripts/18_rando_stage_enemies.lua \
+            --out dist/v2.2.0-evidence-guided
+      - name: Upload V2.2.0 stage package
+        uses: actions/upload-artifact@v4
+        with:
+          name: enemy-randomizer-v2.2.0-evidence-guided
+          path: dev/v076dev4_stage_allgame/dist/v2.2.0-evidence-guided/
+          if-no-files-found: error
+      - name: Package V2.2 safe high-coverage local toolkit
+        run: |
+          mkdir -p dist/v2.2-safe-high-coverage-toolkit/tools/stage_enemies
+          mkdir -p dist/v2.2-safe-high-coverage-toolkit/scripts
+          cp tools/stage_enemies/*.py dist/v2.2-safe-high-coverage-toolkit/tools/stage_enemies/
+          cp -r tools/stage_enemies/evidence dist/v2.2-safe-high-coverage-toolkit/tools/stage_enemies/
+          cp scripts/18_rando_stage_enemies.lua dist/v2.2-safe-high-coverage-toolkit/scripts/
+          cp BUILD_V2_2_SAFE_HIGH_COVERAGE.bat V2.2_SAFE_HIGH_COVERAGE_README.md dist/v2.2-safe-high-coverage-toolkit/
+          cd dist && zip -qr enemy-randomizer-v2.2-safe-high-coverage-toolkit.zip v2.2-safe-high-coverage-toolkit
+      - name: Upload V2.2 safe high-coverage toolkit
+        uses: actions/upload-artifact@v4
+        with:
+          name: enemy-randomizer-v2.2-safe-high-coverage-toolkit
+          path: dev/v076dev4_stage_allgame/dist/enemy-randomizer-v2.2-safe-high-coverage-toolkit.zip
+          if-no-files-found: error
