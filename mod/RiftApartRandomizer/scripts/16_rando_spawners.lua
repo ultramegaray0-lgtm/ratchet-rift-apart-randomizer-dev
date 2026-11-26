@@ -3983,8 +3983,8 @@ end
 -- each asset and creates a hidden, inactive template actor with a synthetic high-bit UID. The
 -- game's own SpawnerScriptAction still performs every combat spawn and owns all encounter counts.
 -- ---------------------------------------------------------------------------------------------
-V.GLOBAL_REQUESTS_PER_FRAME = 12
-V.GLOBAL_POLLS_PER_FRAME = 12
+V.GLOBAL_REQUESTS_PER_FRAME = 4
+V.GLOBAL_POLLS_PER_FRAME = 4
 V.GLOBAL_SPAWNS_PER_FRAME = 1
 V.global_templates = V.global_templates or {}       -- synthetic uid -> classified template
 V.global_items = V.global_items or {}
