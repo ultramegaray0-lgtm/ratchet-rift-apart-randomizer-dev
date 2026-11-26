@@ -4,15 +4,14 @@
 -- zone file (tools/stage_enemies/stage_enemies.py builds mods/RandoEnemies.stage; rivet_hook loads it in place of the
 -- game's zone). The game then resolves and spawns that template itself, through its normal asset loading - no runtime
 -- memory write. This script does NOT change anything. It:
---   * announces the mode (rivet.log "RANDO-STAGE STAGE MODE ON", a corner note) - 16_rando_spawners.lua switches every
---     runtime spawner write off while the manifest scripts/18_rando_stage_manifest.lua (RANDO_STAGE_ENEMIES) exists;
+--   * announces the mode (rivet.log "RANDO-STAGE STAGE MODE ON", a corner note) - 16_rando_spawners.lua leaves factory Templates variables to .stage and suppresses runtime writes only for node Template adapters listed in this manifest; other node/group adapters retain the runtime route;
 --   * checks every listing of the level's spawners: does a spawner the .stage changed hold the REPLACEMENT uid (the
 --     .stage zone was loaded) or still the ORIGINAL one (it was not)? ("STAGE VARIABLE ...", "STAGE VARIABLES ...")
 --   * checks every spawn of such a spawner: did the replacement spawn? ("STAGE SPAWN ...")
 --   * watches every replacement it saw spawn until it dies or is gone ("STAGE DEATH", "STAGE GONE", "STAGE ALIVE")
 --   * sums it up per level ("STAGE SUMMARY ...").
 -- The Enemy Randomizer (the - key) must be ON for the spawners to be listed; in .stage mode it only looks.
--- Needs 16_rando_spawners.lua (10.0.39; STAGE_LUA 1.1.0 handshake). Without a manifest it only logs "enemy source: Lua runtime route".
+-- Needs 16_rando_spawners.lua (10.0.50; STAGE_LUA 1.1.0 handshake). Without a manifest it only logs "enemy source: Lua runtime route".
 -- Scale (stage_allgame 2.0.0, hundreds of changes in many zones): with more than ST.LIST_ALL changes the start lists one
 -- "STAGE ZONE" line per changed zone, and each "STAGE CHANGE n" line is written when its spawner is first listed in a
 -- level (only the changes you meet are logged); the "STAGE VARIABLES" counts cover the spawners listed in this level.
@@ -21,7 +20,7 @@ RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["18_rando_stage_enemies"] = "10.0.5
 local SP = RANDO_SPAWNERS
 local function slog(...) pcall(rivet.log, "[rando]", "RANDO-STAGE", ...) end
 if not (SP and SP.V and SP.V.stage_mode) then
-  slog("16_rando_spawners.lua (10.0.39) is not installed: the .stage check is off")
+  slog("16_rando_spawners.lua (10.0.50) is not installed: the .stage check is off")
   return
 end
 local V = SP.V
@@ -328,4 +327,4 @@ function ST.status_text()
       ST.index().n, L and L.spawns or 0, L and L.rep or 0, L and L.orig or 0, L and L.died or 0)
 end
 
-slog("loaded (10.0.39, stage Lua " .. ST.STAGE_LUA .. ", scale " .. ST.SCALE .. "): the .stage Enemy Randomizer's check - it changes nothing; the manifest is read on the first frame")
+slog("loaded (10.0.50, stage Lua " .. ST.STAGE_LUA .. ", scale " .. ST.SCALE .. "): the .stage Enemy Randomizer's check - it changes nothing; the manifest is read on the first frame")
