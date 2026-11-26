@@ -2,6 +2,12 @@ name: Build Global Enemy Registry Hook
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - work/global-runtime-enemy-registry
+    paths:
+      - 'tools/global_registry/**'
+      - '.github/workflows/build-global-enemy-hook.yml'
 
 permissions:
   contents: read
