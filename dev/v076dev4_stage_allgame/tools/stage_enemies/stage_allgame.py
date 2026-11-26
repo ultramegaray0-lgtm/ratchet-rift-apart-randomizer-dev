@@ -361,8 +361,10 @@ class Zone:
             f = {"key": hex16(nd["key"]), "action": nd["r"], "problem": None, "sv": None, "owners": 0, "co_owner_classes": [],
                  "form": None, "uid": None, "rec": None, "kind": None, "count": None, "locs": []}
             out.append(f)
+            if nd["key"] == 0:
+                f["problem"] = "zero Script Action key: no stable runtime identity for the stage manifest"
             if nd["key"] in self.dup_keys:
-                f["problem"] = "the node key is on several Script Actions records"
+                f["problem"] = f["problem"] or "the node key is on several Script Actions records"
             tpl = [(p, self.plugs[p][1]) for p in nd["plugs"] if self.plugs[p][0] == PLUG_TEMPLATES]
             if len(tpl) != 1:
                 f["problem"] = f["problem"] or "%d Templates plugs" % len(tpl)
@@ -428,7 +430,8 @@ class Zone:
                     "co_owner_classes": sorted({"%08X/%08X" % (o[0]["cls"], o[2]) for o in owners if o[0] is not nd}),
                     "other_plugs": ";".join(other_plugs),
                     "rec": v[2],
-                    "problem": ("multiple Template plugs" if len(template_plugs) != 1 else
+                    "problem": ("zero Script Action key: no stable runtime identity for the stage manifest" if nd["key"] == 0 else
+                                "multiple Template plugs" if len(template_plugs) != 1 else
                                 "duplicate node key" if nd["key"] in self.dup_keys else
                                 "local Template reference is inconsistent" if form == "local" and kind is None else "")
                 })
