@@ -13,7 +13,7 @@ The V3 runtime only called the global template loader after `scene_ready()` and 
 V4 changes the independent global-template frame callback so it continues during menus, loading screens and checkpoint reloads. It:
 - requests the generated all-planet enemy asset catalog before scene readiness;
 - creates at most one resident template actor per frame, keeping each callback small;
-- retries transient native asset-load / template-create failures up to eight attempts with increasing frame delays;
+- keeps retrying native asset-load / template-create failures (up to 9,999 attempts) with increasing frame delays, so a slow loading phase does not silently abandon a template;
 - logs `GLOBAL PRELOAD: ready N/total | pending N | failed N` as the pool changes;
 - continues preloading even when the Enemy Randomizer switch is OFF, so the pool is ready if the player turns it on later.
 
