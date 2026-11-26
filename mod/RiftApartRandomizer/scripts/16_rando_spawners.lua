@@ -3992,8 +3992,9 @@ V.global_items_initialized = V.global_items_initialized or false
 V.global_level = V.global_level or nil
 V.global_manifest_missing_said = V.global_manifest_missing_said or false
 
-local function global_template_uid(index)
-  return string.format("F00D52414E44%04X", index)
+local function global_template_uid(path, index)
+  local h = rivet.hash and rivet.hash(path) or index
+  return string.format("F00D%08X0000", h & 0xFFFFFFFF)
 end
 
 local function global_template_attach(T)
@@ -4068,7 +4069,7 @@ function V.global_templates_tick(frame)
   if not V.global_items_initialized then
     for i, row in ipairs(manifest) do
       if type(row) == "table" and type(row.path) == "string" and type(row.name) == "string" and type(row.family) == "string" then
-        local uid = global_template_uid(i)
+        local uid = global_template_uid(row.path, i)
         local item = { row = row, uid = uid, state = "new" }
         V.global_items[#V.global_items + 1] = item
         V.global_item_by_uid[uid] = item
