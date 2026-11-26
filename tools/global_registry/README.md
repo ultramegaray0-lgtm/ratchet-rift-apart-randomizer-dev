@@ -54,19 +54,17 @@ The status API also reports global_templates.
 
 ## Hybrid all-spawner coverage
 
-The all-planet .stage builder edits SunsetSpawnerFactory `Templates` variables. It does not edit the separate
-`SpawnerScriptAction` `Template` / group adapters. The runtime layer now deliberately handles that second set while
-the .stage manifest is installed:
+The V3 all-planet `.stage` builder edits SunsetSpawnerFactory `Templates` variables and exact single-owner
+`SpawnerScriptAction` `Template` adapters. Other node/group adapters remain on the runtime route.
 
 - `.stage` owns only the factory `Templates` keys listed in a V3 manifest; unmodified factory keys remain eligible for the runtime route. Older `max`/`all` manifests retain their conservative all-factory write guard.
 - Runtime `Template` and group adapters remain enabled, using the global resident-template pool where the native
-  asset path can create a resident template.
-- The stage monitor observes only factory spawners listed in its manifest, so runtime node-adapter spawns are not
-  misreported as .stage replacements.
-- The stage monitor and runtime scripts use the kit version `10.0.39` plus the separate `STAGE_LUA = 1.1.0`
-  handshake. These are different version checks; both must match.
+  asset path can create a resident template. Manifest-listed node Template keys are excluded from runtime writes.
+- The stage monitor observes only the adapter type and spawner keys listed in its manifest, so runtime-only spawns are not
+  misreported as `.stage` replacements.
+- The complete V3 runtime bundle uses kit version `10.0.50` plus the separate `STAGE_LUA = 1.1.0` handshake. Both checks must match.
 
-For the aggressive local-only build, run `dev/v076dev4_stage_allgame/BUILD_HYBRID_MAX_COVERAGE.bat`. It uses `--profile all` (all shared factory variables are exploratory), runs the independent `.stage` checker, and deliberately does **not** use `--cross-planet`.
+For the V3 local-only build, run `dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat`. It builds a V3 hybrid profile and a factory-only safe fallback, runs the independent `.stage` checker, and deliberately does **not** use `--cross-planet`.
 
 This hybrid is the current highest-coverage route without writing foreign-zone actor UIDs into .stage files or letting
 two systems write the same factory variable. It is not yet a proven 100% result: the native global registry previously
