@@ -207,6 +207,29 @@ class GlobalAssetManifestTests(unittest.TestCase):
                 source = fh.read()
             self.assertIn('RANDO_FILES["' + name[:-4] + '"] = "10.0.50"', source, name)
 
+    def test_v3_runtime_bundle_rejects_missing_or_mixed_scripts(self):
+        with tempfile.TemporaryDirectory() as out:
+            bundle = os.path.join(out, SA.RUNTIME_BUNDLE_DIR)
+            os.makedirs(bundle)
+            for name in SA.RUNTIME_SCRIPT_NAMES:
+                stamp = 'RANDO_FILES["%s"] = "10.0.50"\\n' % name[:-4]
+                if name == "10_rando_runtime.lua":
+                    stamp += 'R.KIT_VERSION = "10.0.50"\\n'
+                if name == "04_rando_settings.lua":
+                    stamp += 'enemy_compat = "max"\\nenemy_mix_movement = true\\n'
+                with open(os.path.join(bundle, name), "w", encoding="utf-8") as fh:
+                    fh.write(stamp)
+            with open(os.path.join(out, SA.STAGE_LUA_FILE), "w", encoding="utf-8") as fh:
+                fh.write('RANDO_FILES["18_rando_stage_enemies"] = "10.0.50"\\nST.STAGE_LUA = "1.1.0"\\n')
+            self.assertEqual(SA.runtime_bundle_problems(out), [])
+            with open(os.path.join(bundle, "16_rando_spawners.lua"), "w", encoding="utf-8") as fh:
+                fh.write('RANDO_FILES["16_rando_spawners"] = "10.0.39"\\n')
+            self.assertTrue(any("10.0.39 != runtime core 10.0.50" in x
+                                for x in SA.runtime_bundle_problems(out)))
+            os.remove(os.path.join(bundle, "17_rando_omega.lua"))
+            self.assertTrue(any("runtime bundle missing 17_rando_omega.lua" in x
+                                for x in SA.runtime_bundle_problems(out)))
+
     def test_manifest_excludes_ambiguous_path_metadata(self):
         scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
             "1111111111111111": {"kind": "enm_pirate_robot_melee", "asset": "shared/enemy.actor"},
