@@ -75,9 +75,9 @@ class StageCheckLogV3Tests(unittest.TestCase):
     def test_runtime_only_node_template_spawn_creates_exact_worked_evidence(self):
         key = "CCCCCCCCCCCCCCCC"
         original_uid, selected_uid = "1111111111111111", "F00D123456780000"
-        log = "\\n".join([
+        log = "\n".join([
             "[rivet] init",
-            "[script] [rando]\\tRANDO-ENEMIES\\tSPAWN 990 | ardolis | MIS_RUNTIME | node Template %s | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee uid %s | spawned enm_pirate_robot_melee (swarmer) | SUCCESS" % (key, selected_uid),
+            "[script] [rando]\tRANDO-ENEMIES\tSPAWN 990 | ardolis | MIS_RUNTIME | node Template %s | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee uid %s | spawned enm_pirate_robot_melee (swarmer) | SUCCESS" % (key, selected_uid),
         ])
         rc, output, data = self.run_fixture(log)
         self.assertEqual(rc, 0)
