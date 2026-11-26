@@ -56,9 +56,9 @@ class GlobalAssetManifestTests(unittest.TestCase):
         with open(runtime_path, encoding="utf-8") as fh:
             runtime = fh.read()
         clear = "actor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));"
-        self.assertEqual(patch.count(clear), 4, "both native creation/reuse code and both patch anchors clear unload flags")
+        self.assertEqual(patch.count(clear), 2, "both native creation/reuse code paths clear unload flags")
         old_anchor = "actor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);"
-        self.assertEqual(patch.count(old_anchor), 2, "the two patch anchors still match the clean pinned upstream source")
+        self.assertEqual(patch.count(old_anchor), 0, "no redundant clear-flag patch anchors target already-patched code")
         self.assertIn("local inactive_mask = 0x1 | 0x8 | 0x80 | 0x100 | 0x2000", runtime)
         self.assertIn("(actor_flags & 0x4) == 0 or (actor_flags & inactive_mask) ~= 0", runtime)
 
