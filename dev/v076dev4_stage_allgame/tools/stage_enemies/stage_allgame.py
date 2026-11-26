@@ -1788,6 +1788,7 @@ def check_build(out, src_args, verbose=True):
     stage = os.path.join(out, "RandoEnemies.stage")
     zf = zipfile.ZipFile(stage)
     problems = runtime_bundle_problems(out)
+    problems += v3_artifact_problems(out, m.get("profile"))
     if zf.testzip():
         problems.append(".stage: a corrupt member")
     info = json.loads(zf.read("info.json").decode("utf-8"))
@@ -1925,6 +1926,29 @@ INSTALL_FILES = [("RandoEnemies.stage", "mods/RandoEnemies.stage"),
                  (STAGE_LUA_FILE, "scripts/" + STAGE_LUA_FILE)] + [
                     (RUNTIME_BUNDLE_DIR + "/" + name, "scripts/" + name) for name in RUNTIME_SCRIPT_NAMES
                  ]
+
+def v3_artifact_problems(out, profile):
+    """V3 must ship its stage monitor and both generated manifests, not just a .stage zip."""
+    if profile != "v3":
+        return []
+    problems = []
+    required = (STAGE_LUA_FILE, GLOBAL_ASSET_LUA, MANIFEST_LUA)
+    for name in required:
+        if not os.path.isfile(os.path.join(out, name)):
+            problems.append("V3 build is missing required artifact " + name)
+    global_path = os.path.join(out, GLOBAL_ASSET_LUA)
+    if os.path.isfile(global_path):
+        with open(global_path, encoding="utf-8", errors="replace") as fh:
+            if "RANDO_GLOBAL_ENEMY_ASSETS = {" not in fh.read():
+                problems.append("V3 global enemy asset manifest has no RANDO_GLOBAL_ENEMY_ASSETS table")
+    manifest_path = os.path.join(out, MANIFEST_LUA)
+    if os.path.isfile(manifest_path):
+        with open(manifest_path, encoding="utf-8", errors="replace") as fh:
+            source = fh.read()
+        if "RANDO_STAGE_ENEMIES = {" not in source or "profile = \\"v3\"" not in source:
+            problems.append("V3 stage manifest is missing its v3 profile declaration")
+    return problems
+
 
 def runtime_bundle_problems(out):
     """Reject mixed/incomplete runtime kits before an installer can touch the game."""
