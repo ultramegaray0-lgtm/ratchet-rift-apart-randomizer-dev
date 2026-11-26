@@ -237,6 +237,23 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('V.GROUP_CAP = 4096', runtime)
         self.assertIn('V.MEMBER_CAP = 32', runtime)
         self.assertIn('V.SLICE = 0.003', runtime)
+        self.assertIn('V.emergency_mode = V.emergency_mode or false', runtime)
+        self.assertIn('function V.restore_stage_owned(sc)', runtime)
+        self.assertIn('rivet.find_uid, original_uid', runtime)
+        self.assertIn('function V.emergency_rescue()', runtime)
+        self.assertIn('if V.emergency_mode then', runtime)
+        self.assertIn('V.restore_stage_owned(sc)', runtime)
+
+    def test_v4_f10_emergency_key_disables_randomizer_and_rolls_back_stage_changes(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        enemy_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "enemy.lua")
+        with open(enemy_path, encoding="utf-8") as fh:
+            enemy = fh.read()
+        self.assertIn('function E.emergency_rescue()', enemy)
+        self.assertIn('E.set(false, "Emergency recovery (F10)")', enemy)
+        self.assertIn('SP.V.emergency_rescue()', enemy)
+        self.assertIn('R.bind_key("F10", E.emergency_rescue, "enemy_emergency_rescue")', enemy)
+        self.assertIn('Enemies already spawned are not deleted', enemy)
 
     def test_v4_node_adapter_bypasses_pair_gate_but_keeps_structural_anchor(self):
         class FakeBrain:
