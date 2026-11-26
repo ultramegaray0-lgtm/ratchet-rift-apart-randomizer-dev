@@ -3674,6 +3674,10 @@ function V.process_one(sc, e)
   if a and V.FAMILY_GROUP[a.family or ""] then lvl.activity = SP.frame or 0 end
   if e.A == nil then e.A = r.arm or false end                              -- the change in place when it spawned
   local A = e.A or nil
+  if V.stage_on_spawn and not e.stage_notified then
+    e.stage_notified = true
+    pcall(V.stage_on_spawn, e, r, a, A and "replacement candidate" or "native", tie_why)
+  end
   -- dev 10.29: the ledger (before verify, which may put the spawner back)
   if V.eligible(a) and not e.ledgered then
     e.ledgered = true
@@ -3775,6 +3779,7 @@ function V.on_death(f, ev)
   lvl.last_death = SP.frame or 0                                           -- dev 10.32: the stall watch
   local s = f.SenderHandle or (type(ev) == "table" and ev.sender)
   local h = math.tointeger(tonumber(s))
+  if h and V.stage_on_death then pcall(V.stage_on_death, h) end
   local x = h and lvl.spawned[h]
   if type(x) ~= "table" or not x.A then return end
   local A = x.A
@@ -3991,7 +3996,8 @@ V.global_templates = V.global_templates or {}       -- synthetic uid -> classifi
 -- .stage diagnostics handshake: 18_rando_stage_manifest.lua loads before 18_rando_stage_enemies.lua.
 -- When its manifest exists, the .stage file owns the spawner variables; never race it with runtime writes.
 V.STAGE_LUA = "1.1.0"
-function V.stage_mode() return type(RANDO_STAGE_ENEMIES) == "table" end
+function V.stage_manifest() return RANDO_STAGE_ENEMIES end
+function V.stage_mode() return type(V.stage_manifest()) == "table" end
 V.global_items = V.global_items or {}
 V.global_item_by_uid = V.global_item_by_uid or {}
 V.global_items_initialized = V.global_items_initialized or false
@@ -4197,6 +4203,7 @@ end
 
 function V.tick(frame, ready)
   V.global_frame_ready = ready
+  if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end
   if not V.lvl then V.new_level("scripts loaded") end
   local lvl = V.lvl
   if not V.enabled() then
