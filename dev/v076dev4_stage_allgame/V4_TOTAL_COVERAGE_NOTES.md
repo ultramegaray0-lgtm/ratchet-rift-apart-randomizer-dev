@@ -17,6 +17,8 @@ V4 changes the independent global-template frame callback so it continues during
 - logs `GLOBAL PRELOAD: ready N/total | pending N | failed N` as the pool changes;
 - continues preloading even when the Enemy Randomizer switch is OFF, so the pool is ready if the player turns it on later.
 
+The runtime scan budget is raised to 3 ms per frame (within the hook's shared 8 ms frame budget), with 4,096-node/queue/group ceilings, 32 group members, 9,999 budget restarts and 9,999 late-template probes. This deliberately spends more frame time and allows long-running scans rather than silently dropping a large zone.
+
 This is a priority preload, **not an engine loading-screen lock**. The current public Lua/Rivet API does not expose a safe way to pause the game's own scene transition until every native asset has loaded. V4 does not pretend otherwise.
 
 ### 2. Patch spawner data before the game reads it
