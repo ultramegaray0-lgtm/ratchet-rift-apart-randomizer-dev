@@ -1563,6 +1563,7 @@ end
 --   Only a variable that still holds exactly what was written (same generation) is ever written back.
 SP.V = SP.V or {}
 local V = SP.V
+V.story_missions = V.story_missions or {} -- active story missions; never rewrite their encounter spawners
 V.HELPER_MIN = 7
 V.MB_SCENE = 0x128
 V.SCENE_VARS = 0x75A0
@@ -1819,7 +1820,26 @@ function V.client(role)
 end
 -- dev 10.29: the Enemy (role "enemy") and the Boss Randomizer (role "boss") both run on the variable route: one
 -- engine, one registry; each changes only spawners whose original enemy is of its role.
+function V.story_mission_name(name)
+  if type(name) ~= "string" or not name:match("^MIS_") then return false end
+  if name == "MIS_RYNO_PLANS" or name:find("_CUP$") or name:find("_DEFAULT$") then return false end
+  return true
+end
+function V.story_active()
+  for name in pairs(V.story_missions) do
+    if V.story_mission_name(name) then return true, name end
+  end
+  return false
+end
+function V.current_story_mission()
+  if V.mission and V.story_missions[V.mission] then return V.mission end
+  for name in pairs(V.story_missions) do
+    if V.story_mission_name(name) then return name end
+  end
+  return nil
+end
 function V.role_on(role)
+  if V.story_active() then return false end -- campaign encounters keep their native spawn/death wiring
   local c = V.client(role)
   return c ~= nil and SP.enabled(c)
 end
@@ -3953,7 +3973,7 @@ function V.emergency_rescue()
   V.emergency_mode = true
   V.job = nil
   if V.lvl then
-    V.put_back_all("Emergency recovery (F10)")
+    V.put_back_all("Emergency recovery (F11)")
     V.lvl.queue, V.lvl.fac_queue, V.lvl.fac_queued = {}, {}, {}
     local sc = V.scene()
     if sc then V.restore_stage_owned(sc) end
@@ -3965,6 +3985,20 @@ function V.pump(sc)
   if not V.drain_pending() then return end                                 -- put-backs first: nothing is read before
   local lvl = V.lvl
   local t0 = clock_()
+  if V.story_active() then
+    -- Story overlays own their encounter graph. Restore any stage-owned variables in the loaded
+    -- scene, then leave every spawner native until the game's mission-end event arrives.
+    if lvl.scan_due then V.scan(sc); lvl.scan_due = false end
+    local restored, skipped = V.restore_stage_owned(sc)
+    if not V.story_safe_logged then
+      V.story_safe_logged = true
+      vlog("STORY SAFETY ACTIVE: runtime enemy replacement paused for", V.current_story_mission() or "active story mission",
+        "| stage-owned restored", restored, "| unavailable", skipped)
+    end
+    return
+  else
+    V.story_safe_logged = nil
+  end
   if V.emergency_mode then
     if lvl.scan_due then
       V.scan(sc)
@@ -4338,7 +4372,7 @@ function V.tick(frame, ready)
   if not V.enabled() then
     V.job = nil
     -- v0.62-DEV14: not during a load (ready is false while the game thread is not pumping)
-    if #lvl.arms > 0 and ready then V.put_back_all(V.emergency_mode and "Emergency recovery (F10)" or "Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
+    if #lvl.arms > 0 and ready then V.put_back_all(V.emergency_mode and "Emergency recovery (F11)" or "Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
     if #V.pending > 0 and ready then pcall(V.drain_pending) end
     lvl.queue, lvl.fac_queue, lvl.fac_queued = {}, {}, {}
     if not V.emergency_mode then return end
@@ -4551,13 +4585,15 @@ do
     V.mission_hooked = true
     local orig_on_mission = D.on_mission
     D.on_mission = function(name, st, ...)
-      if type(name) == "string" then
-        if st == 2 and not name:find("_CUP$") and name ~= "MIS_RYNO_PLANS" then
+      if V.story_mission_name(name) then
+        if st == 2 then
+          V.story_missions[name] = true
           V.mission = name
-          vlog("active story mission tracked:", name)
-        elseif V.mission == name and (st == 0 or st == 3 or st == 4 or st == 5) then
-          V.mission = nil
-          vlog("active story mission cleared:", name, "state", tostring(st))
+          vlog("STORY SAFETY mission active:", name)
+        elseif st == 0 or st == 3 or st == 4 or st == 5 then
+          V.story_missions[name] = nil
+          if V.mission == name then V.mission = V.current_story_mission() end
+          vlog("STORY SAFETY mission cleared:", name, "state", tostring(st))
         end
       end
       return orig_on_mission(name, st, ...)
@@ -4678,6 +4714,22 @@ if not SP.subscribed then
   local function vcall(name) return function(...) return SP.V[name](...) end end
   on("SpawnerStartedEvent", SP.on_started, true, vcall("on_started"), true)
   on("SpawnerStoppedEvent", SP.on_stopped, true)
+  on("StartMissionDevstatsEvent", function(f)
+    local name = f.MissionName
+    if V.story_mission_name(name) then
+      V.story_missions[name] = true
+      V.mission = name
+      vlog("STORY SAFETY mission started:", name)
+    end
+  end, true)
+  on("EndMissionDevstatsEvent", function(f)
+    local name = f.MissionName
+    if type(name) == "string" and V.story_missions[name] then
+      V.story_missions[name] = nil
+      if V.mission == name then V.mission = V.current_story_mission() end
+      vlog("STORY SAFETY mission ended:", name)
+    end
+  end, true)
   on("SpawnerSpawnEvent", SP.on_spawn, false, vcall("on_spawn_seen"), true)
   on("BotDeathCompleteEvent", SP.on_death, false, vcall("on_death"))
   on("HealthBarShowEvent", SP.on_health_bar, false, vcall("on_health_bar"))
