@@ -4541,16 +4541,29 @@ if R then
   end
 end
 
--- dev 10.29: the encounter for the ledger: the last mission that became active (a challenge, a story segment),
--- taken from the runtime's own mission handler (no new rivet callback; rivet_hook allows 64)
-if R and R.on_mission_state and not V.mission_hooked then
-  V.mission_hooked = true
-  local orig_on_mission = R.on_mission_state
-  R.on_mission_state = function(name, st, ...)
-    if st == 2 and type(name) == "string" and not name:find("_CUP$") and name ~= "MIS_RYNO_PLANS" and name ~= "MIS_INTRO" then
-      V.mission = name
+-- V4.5: track missions at the callback the campaign runtime ACTUALLY invokes.
+-- 11_rando_campaign.lua receives MissionStateChangedEvent in note_mission(), then calls
+-- RANDO_CAMPAIGN_RT.on_mission(name, state, previous). The old hook wrapped R.on_mission_state,
+-- which is not on this event path; consequently V.mission stayed nil for the entire session.
+do
+  local D = RANDO_CAMPAIGN_RT
+  if D and type(D.on_mission) == "function" and not V.mission_hooked then
+    V.mission_hooked = true
+    local orig_on_mission = D.on_mission
+    D.on_mission = function(name, st, ...)
+      if type(name) == "string" then
+        if st == 2 and not name:find("_CUP$") and name ~= "MIS_RYNO_PLANS" and name ~= "MIS_INTRO" then
+          V.mission = name
+          vlog("active story mission tracked:", name)
+        elseif V.mission == name and (st == 0 or st == 3 or st == 4 or st == 5) then
+          V.mission = nil
+          vlog("active story mission cleared:", name, "state", tostring(st))
+        end
+      end
+      return orig_on_mission(name, st, ...)
     end
-    return orig_on_mission(name, st, ...)
+  else
+    vlog("V4.5 mission tracker could not attach: RANDO_CAMPAIGN_RT.on_mission is unavailable")
   end
 end
 
