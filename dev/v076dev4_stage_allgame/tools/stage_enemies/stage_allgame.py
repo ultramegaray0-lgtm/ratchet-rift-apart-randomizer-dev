@@ -1754,6 +1754,13 @@ def emit(a, S, src, brain, build, out):
     changes, decisions, pins = [], {}, []
     zrecs, planned = {}, []
     for zh, rec0 in S.zones.items():
+        # V4.2 campaign-progression mode: never patch any zone under the game's
+        # storymission overlay. These zones own mission-critical encounter graphs;
+        # a structurally valid enemy Template is not proof that every story graph
+        # accepts a replacement while preserving its objective/death wiring.
+        zone_path = str(rec0.get("zone", "")).replace(chr(92), "/").lower()
+        if getattr(a, "exclude_storymission", False) and "/storymission/" in zone_path:
+            continue
         has_node_adapter = any(n.get("is_spawner_class") for n in rec0.get("template_nodes", []))
         if not rec0["factories"] and not (a.profile in ("v3", "v4") and has_node_adapter):
             continue
@@ -2224,6 +2231,8 @@ def main(argv=None):
             p.add_argument("--force-all-enemies", action="store_true",
                            help="EXPERIMENTAL MAXIMUM: force classifiable regular-enemy SunsetSpawnerFactory variables to foreign templates; V4 bypasses faction/movement and spawn-point checks but still refuses ambiguous/shared-owner variables; requires in-game testing")
             p.add_argument("--no-pins", action="store_true", help="do not force the 4 changes confirmed in game")
+            p.add_argument("--exclude-storymission", action="store_true",
+                           help="campaign safety: leave every levels/.../storymission/... zone completely native")
             p.add_argument("--verdicts", action="append", help="stage_check_log.py --json file(s): WORKED kept as confirmed, "
                                                                 "ORIGINAL SPAWNED / NO SPAWN left native (repeatable)")
             p.add_argument("--no-evidence", action="store_true", help="do not read the bundled evidence/*.json verdicts")
