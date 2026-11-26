@@ -15,7 +15,7 @@ import stage_check_log as CHECK  # noqa: E402
 
 
 class StageCheckLogV3Tests(unittest.TestCase):
-    def run_fixture(self, log_text, manifest=None):
+    def run_fixture(self, log_text, manifest=None, inventory_csv=None, template_inventory_csv=None):
         with tempfile.TemporaryDirectory() as tmp:
             log_path = os.path.join(tmp, "rivet.log")
             json_path = os.path.join(tmp, "verdicts.json")
@@ -26,7 +26,18 @@ class StageCheckLogV3Tests(unittest.TestCase):
                 manifest_path = os.path.join(tmp, "stage_enemies_manifest.json")
                 with open(manifest_path, "w", encoding="utf-8") as fh:
                     json.dump(manifest, fh)
-            args = SimpleNamespace(logs=[log_path], manifest=manifest_path, json=json_path, all=True)
+            inventory_path = None
+            if inventory_csv is not None:
+                inventory_path = os.path.join(tmp, "inventory.csv")
+                with open(inventory_path, "w", encoding="utf-8") as fh:
+                    fh.write(inventory_csv)
+            template_inventory_path = None
+            if template_inventory_csv is not None:
+                template_inventory_path = os.path.join(tmp, "template_adapter_inventory.csv")
+                with open(template_inventory_path, "w", encoding="utf-8") as fh:
+                    fh.write(template_inventory_csv)
+            args = SimpleNamespace(logs=[log_path], manifest=manifest_path, inventory=inventory_path,
+                                   template_inventory=template_inventory_path, json=json_path, all=True)
             output = io.StringIO()
             with contextlib.redirect_stdout(output):
                 result = CHECK.run(args)
@@ -79,12 +90,18 @@ class StageCheckLogV3Tests(unittest.TestCase):
             "[rivet] init",
             "[script] [rando]\tRANDO-ENEMIES\tSPAWN 990 | ardolis | MIS_RUNTIME | node Template %s | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee uid %s | spawned enm_pirate_robot_melee (swarmer) | SUCCESS" % (key, selected_uid),
         ])
-        rc, output, data = self.run_fixture(log)
+        template_inventory = (
+            "planet,zone,zone_id,node_key,class_id,is_SpawnerScriptAction\\n"
+            "ardolis,levels\\\\i29\\\\instance\\\\ardolis\\\\test.zone,ABCDEF0123456789,%s,2E910F8C,True\\n" % key
+        )
+        rc, output, data = self.run_fixture(log, template_inventory_csv=template_inventory)
         self.assertEqual(rc, 0)
         verdict = data["verdicts"][key]
         self.assertEqual(verdict["verdict"], "WORKED")
         self.assertEqual(verdict["replacement_uid"], selected_uid)
         self.assertEqual(verdict["adapter"], "node_template")
+        self.assertEqual(verdict["zone"], "levels\\\\i29\\\\instance\\\\ardolis\\\\test.zone")
+        self.assertEqual(verdict["zone_id"], "ABCDEF0123456789")
         self.assertIn("runtime-observed", output)
 
     def test_legacy_factory_stage_logs_still_parse(self):
