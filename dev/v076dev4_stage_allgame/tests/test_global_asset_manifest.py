@@ -229,6 +229,13 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('V.FIRST_SCAN = 0', runtime)
         self.assertIn('V.SCAN_EVERY = 30', runtime)
         self.assertIn('V.RETRY_LIMIT = 9999', runtime)
+        self.assertIn('V.NODE_LIMIT = 4096', runtime)
+        self.assertIn('V.QUEUE_CAP = 4096', runtime)
+        self.assertIn('V.RESTART_CAP = 9999', runtime)
+        self.assertIn('V.PROBE_GIVEUP = 9999', runtime)
+        self.assertIn('V.GROUP_CAP = 4096', runtime)
+        self.assertIn('V.MEMBER_CAP = 32', runtime)
+        self.assertIn('V.SLICE = 0.003', runtime)
 
     def test_v4_node_adapter_bypasses_pair_gate_but_keeps_structural_anchor(self):
         class FakeBrain:
