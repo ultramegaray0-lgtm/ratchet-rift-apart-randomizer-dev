@@ -36,7 +36,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
             self.assertNotIn("characters/boss.actor", text)
 
     def test_manifest_excludes_ambiguous_path_metadata(self):
-        scan = SimpleNamespace(template_catalog_all={
+        scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
             "1111111111111111": {"kind": "enm_pirate_robot_melee", "asset": "shared/enemy.actor"},
             "2222222222222222": {"kind": "enm_neo_nefarious_shooter", "asset": "shared/enemy.actor"},
         })
