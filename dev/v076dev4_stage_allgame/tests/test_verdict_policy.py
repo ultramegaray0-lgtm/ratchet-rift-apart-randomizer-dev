@@ -137,6 +137,24 @@ class VerdictPolicyTests(unittest.TestCase):
         self.assertEqual(changes, [])
         self.assertEqual(decisions[spawner["key"]][0], "refused")
  
+    def test_force_mode_refuses_shared_templates_variables(self):
+        from types import SimpleNamespace
+        class Brain:
+            def regular(self, kind, asset=None): return True, "ground", "regular enemy"
+            def pair(self, *args): return True, "proven", "compatible"
+        candidate = {"uid": "2222222222222222", "kind": "enm_pirate_robot_melee", "asset": "enemy.actor",
+                     "rec": 4, "zone_id": "BBBBBBBBBBBBBBBB", "zone": "foreign.zone", "planet": "ardolis"}
+        spawner = {"key": "AAAAAAAAAAAAAAAA", "action": 1, "problem": None, "form": "local",
+                   "uid": "1111111111111111", "sv": 0, "rec": 2, "kind": "enm_pirate_robot_shooter",
+                   "asset": "enemy.actor", "owners": 6, "locs": [{"kind": "volume"}]}
+        scan = SimpleNamespace(template_catalog={candidate["uid"]: candidate}, actor_catalog={})
+        rec = {"factories": [spawner], "zone_id": "CCCCCCCCCCCCCCCC", "zone": "target.zone", "planet": "zordoom"}
+        changes, decisions, _, _ = SA.plan_zone_force(scan, Brain(), rec,
+            SimpleNamespace(verdict_map={}), __import__("random").Random(7))
+        self.assertEqual(changes, [])
+        self.assertEqual(decisions[spawner["key"]][0], "refused")
+        self.assertIn("shared Templates variable", decisions[spawner["key"]][1])
+
     def test_force_mode_never_replaces_boss_tier_originals(self):
         from types import SimpleNamespace
         class Brain:
