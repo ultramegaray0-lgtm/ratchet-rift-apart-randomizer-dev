@@ -109,6 +109,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('if not (SP and SP.V and SP.V.stage_mode) then', stage)
         self.assertIn('local expected_adapter = c.adapter or "factory"', stage)
         self.assertIn('r.kind == "template" and "node_template" or nil', stage)
+        self.assertIn('if not c and V.stage_manifest().profile ~= "v3" and uid then', stage)
         self.assertIn('ST.STAGE_LUA = "1.1.0"', stage)
         self.assertIn('RANDO_FILES["18_rando_stage_enemies"] = "10.0.50"', stage)
         self.assertIn('RANDO_FILES["16_rando_spawners"] = "10.0.50"', runtime)
