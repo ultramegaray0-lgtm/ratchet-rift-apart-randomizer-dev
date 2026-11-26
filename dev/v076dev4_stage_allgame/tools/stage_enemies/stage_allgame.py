@@ -2220,7 +2220,7 @@ def main(argv=None):
             p.add_argument("--cross-planet", action="store_true",
                            help="EXPERIMENTAL: use globally unique enemy template UIDs from other zones via external actor refs")
             p.add_argument("--force-all-enemies", action="store_true",
-                           help="EXPERIMENTAL MAXIMUM: force every classifiable enemy SunsetSpawnerFactory to a globally unique foreign enemy template; bypasses faction/spawn-clue/shared-owner safety rules and requires in-game testing")
+                           help="EXPERIMENTAL MAXIMUM: force classifiable regular-enemy SunsetSpawnerFactory variables to foreign templates; V4 bypasses faction/movement and spawn-point checks but still refuses ambiguous/shared-owner variables; requires in-game testing")
             p.add_argument("--no-pins", action="store_true", help="do not force the 4 changes confirmed in game")
             p.add_argument("--verdicts", action="append", help="stage_check_log.py --json file(s): WORKED kept as confirmed, "
                                                                 "ORIGINAL SPAWNED / NO SPAWN left native (repeatable)")
