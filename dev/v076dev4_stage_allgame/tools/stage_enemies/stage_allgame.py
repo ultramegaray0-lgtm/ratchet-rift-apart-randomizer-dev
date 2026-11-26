@@ -1399,13 +1399,15 @@ def write_template_inventory(S, out, decisions=None):
             rows.append([rec["planet"], rec["zone"], zh, n["key"], n["class"], n["is_spawner_class"],
                          n["template_plug_count"], n["var_index"], n["form"], n["uid"], n["kind"] or "-",
                          n["asset"] or "-", n["owners"], ";".join(n["co_owner_classes"]),
-                         n["other_plugs"], st, why or n["problem"] or rec["status"]])
+                         ";".join(n.get("co_owner_keys", [])), n.get("shared_spawner_safe", n.get("owners") == 1),
+                         ";".join(n.get("spawner_keys", [n["key"]])), n["other_plugs"], st, why or n["problem"] or rec["status"]])
     path = os.path.join(out, "template_adapter_inventory.csv")
     with open(path, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["planet", "zone", "zone_id", "node_key", "class_id", "is_SpawnerScriptAction",
                     "Template_plug_count", "var_index", "reference_form", "template_uid", "kind", "asset",
-                    "owners", "co_owner_classes", "other_plugs", "decision", "reason"])
+                    "owners", "co_owner_classes", "co_owner_keys", "shared_spawner_safe", "shared_spawner_keys",
+                    "other_plugs", "decision", "reason"])
         w.writerows(rows)
     return rows
 
@@ -1693,9 +1695,14 @@ def emit(a, S, src, brain, build, out):
             node_changes, node_decisions = plan_node_template_adapters(S, brain, rec, a, rng, ch, anchors)
             collisions = set(dec).intersection(node_decisions)
             if collisions:
-                for key in collisions:
-                    node_decisions[key] = ("refused", "node/factory key collision; retained native")
-                    node_changes = [x for x in node_changes if x["key"] != key]
+                rejected_vars = set()
+                for change in node_changes:
+                    keys = set(change.get("spawner_keys") or [change["key"]])
+                    if keys.intersection(collisions):
+                        rejected_vars.add(change["key"])
+                        for key in keys:
+                            node_decisions[key] = ("refused", "node/factory key collision; retained native")
+                node_changes = [x for x in node_changes if x["key"] not in rejected_vars]
             ch.extend(node_changes)
             dec.update(node_decisions)
         decisions[zh] = dec
