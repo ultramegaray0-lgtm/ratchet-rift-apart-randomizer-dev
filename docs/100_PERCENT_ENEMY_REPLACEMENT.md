@@ -1,6 +1,6 @@
 # 100% Enemy Replacement — aggressive development plan
 
-Status: implementation branch opened; source-package audit in progress.
+Status: V3.0 engineering alpha implemented on `work/global-runtime-enemy-registry`; offline tests and actual game validation are separate release gates.
 
 ## Goal
 
@@ -72,8 +72,18 @@ The release report must show:
 
 The headline target is 100% of eligible reachable enemy spawners attempted in experimental mode. The report must still disclose any that could not be decoded, resolved, or reached.
 
-## Current source gap
+## V3.0 implementation status
 
-The uploaded `RandoEnemies_POC_v0.76-DEV4.zip` contains a POC report, a 1.0.1 diff, a one-zone stage output, manifests, candidate data, and verification scripts. It does **not** include the full `tools/stage_enemies/stage_enemies.py`, `zone.py`, `knowledge.py`, or the complete source tree needed to apply the diff and rebuild the all-planet generator.
+The branch now contains the complete all-planet builder source, the native global-template hook patch, the global resident-template registry, a synchronized runtime script bundle, and an experimental offline planner for exact single-owner `SpawnerScriptAction` Template adapters.
 
-Required next upload: the complete v0.76-DEV4 working source folder or a ZIP containing the full `tools/stage_enemies/` directory, the associated Lua scripts, and the exact build command/config. Do not upload only the POC output ZIP again.
+The V3 profile combines factory and node Template adapter changes in one `.stage`, with adapter-aware runtime monitoring and independent byte-level verification. It deliberately does not use foreign-zone actor UIDs or directly spawn combat enemies.
+
+Build with `dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat`. Read `dev/v076dev4_stage_allgame/V3.0_ALPHA_NOTES.md` before treating the build as a release.
+
+Important remaining gaps:
+- 447 zones in the baseline scan were not decodable; the current user's game must be scanned again.
+- The previous global native asset test created 14 of 25 resident templates; 11 still failed in `SpawnActorFromAsset`.
+- The V3 node-adapter planner only attempts exact `SpawnerScriptAction` nodes with a singular local Template plug and one owner. It does not claim all 638 census entries are eligible.
+- The new build has not yet been proven in-game to preserve every wave, death counter, door, and progression trigger.
+
+V3.0 acceptance requires both offline CI/byte checks and a real in-game log showing replacement spawns, deaths, and completed encounters. A 100% attempted build is not the same as 100% successful in-game replacements.
