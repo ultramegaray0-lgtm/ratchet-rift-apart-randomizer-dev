@@ -133,6 +133,8 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("LAST_INSTALLED.txt", v3_build)
         self.assertIn("stage_check_log.py", check_log)
         self.assertIn("--manifest", check_log)
+        self.assertIn("--inventory", check_log)
+        self.assertIn("--template-inventory", check_log)
         self.assertIn("LAST_INSTALLED.txt", check_log)
 
     def test_stage_monitor_handshake_disables_runtime_writes(self):
