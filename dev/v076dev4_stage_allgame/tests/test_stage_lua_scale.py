@@ -135,7 +135,7 @@ sp = [l for l in LOG if "STAGE SPAWN 777" in l]
 check(len(sp) == 1 and "(the patched spawner)" in sp[0] and "REPLACEMENT SPAWNED" in sp[0], "STAGE SPAWN of the patched spawner")
 
 # A shared node Template variable has multiple owner keys but one stage change.
-lua.execute(r\'''
+lua.execute(r'''
 local c = RANDO_STAGE_ENEMIES.changes[82]
 c.adapter = "node_template"
 c.spawner_keys = { "NODE-A", "NODE-B" }
@@ -145,7 +145,7 @@ SHARED_OWNER_INDEX_OK = idx.keys["NODE-A"] == c and idx.keys["NODE-B"] == c
 RANDO_SPAWNERS.V.stage_on_spawn({ h = 778 },
   { key = "NODE-B", kind = "template", orig = { uid = c.replacement_uid, actors = 9182 } },
   { name = "enm_pirate_robot_melee", family = "swarmer" }, nil, nil)
-\''')
+''')
 check(lua.globals().SHARED_OWNER_INDEX_OK, "shared node Template: both owner keys index the same single manifest change")
 shared_spawn = [l for l in LOG if "STAGE SPAWN 778" in l]
 check(len(shared_spawn) == 1 and "(the patched spawner)" in shared_spawn[0]
