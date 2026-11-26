@@ -9,7 +9,7 @@ V4.4 returns to maximum campaign coverage after the V4.2 diagnostic branch. It i
 The launcher runs:
 
 ```powershell
-py -3 -I tools/stage_enemies/stage_allgame.py build --game "GAME" --out "BUILD" --seed "RiftApart-Enemy-V4.3-FullCampaign" --profile v4 --force-all-enemies --rate 1.0
+py -3 -I tools/stage_enemies/stage_allgame.py build --game "GAME" --out "BUILD" --seed "RiftApart-Enemy-V4.4-FullCampaign" --profile v4 --force-all-enemies --rate 1.0
 ```
 
 The V4 planner:
@@ -24,14 +24,14 @@ The V4 planner:
 
 The agreed V feature is **force-complete the current combat encounter**, not kill all enemies and not complete the mission. It must cause the game's real encounter completion output so doors, objectives, and subsequent waves progress.
 
-That engine-side completion operation is not implemented in V4.3. The current runtime can observe spawner/death evidence, but no verified API for safely firing the active story encounter's completion output has been established. V is therefore deliberately not bound to a fake "complete" action. F12 remains emergency enemy recovery; it restores future spawner templates but cannot repair a story objective already stuck in its controller.
+That engine-side completion operation is not implemented in V4.4. The current runtime can observe spawner/death evidence, but no verified API for safely firing the active story encounter's completion output has been established. V is therefore deliberately not bound to a fake "complete" action. F12 remains emergency enemy recovery; it restores future spawner templates but cannot repair a story objective already stuck in its controller.
 
 Do not interpret a missing V action as a successful bypass. This is an explicit remaining engineering task.
 
 ## New campaign test
 
 1. Back up the current save separately.
-2. Run `BUILD_V4_3_FULL_CAMPAIGN.bat` and point it to the game folder containing `RiftApart.exe`, `toc`, and `dag`.
+2. Run `BUILD_V4_4_FULL_CAMPAIGN.bat` and point it to the game folder containing `RiftApart.exe`, `toc`, and `dag`.
 3. Review the generated `COVERAGE_REPORT.md` and `inventory.csv`; the report is the actual coverage result, not the "100% rate" setting.
 4. Install only after the independent `check` passes.
 5. Start a **new campaign** so story mission graphs and spawner state are initialized from the new stage. Do not reuse a save already stuck in an encounter.
@@ -44,7 +44,7 @@ Do not interpret a missing V action as a successful bypass. This is an explicit 
 - Coverage report shows storymission zones were scanned/planned and lists every refusal.
 - Randomized replacements spawn and are killable.
 - Story encounters advance naturally without objective/door softlocks.
-- A full new-campaign run is required before calling V4.3 campaign-verified.
+- A full new-campaign run is required before calling V4.4 campaign-verified.
 
 
 ## V4.4 follow-up: hotkeys and story-gate honesty
@@ -55,3 +55,10 @@ Do not interpret a missing V action as a successful bypass. This is an explicit 
 - F11 is now enemy emergency recovery. This avoids the F12 collision with the legacy campaign key observed in rivet - Copy5.log.
 - The Copy5 log's initial global template pool of 0 was transient: later in that same log it reached 26 resident templates. The .stage summary for that session still recorded zero spawns from patched .stage spawners on the visited level; the runtime route separately recorded replacements. Do not interpret 277 manifest changes as 277 successful in-game replacements.
 - The V path is code-added but not yet validated in-game. A true active-encounter force-complete still requires identifying the game's encounter-specific completion signal.
+
+
+## V4.4 follow-up: controls and installer cleanup
+
+- V checks the currently active story mission. It can finish mission cleanup only when the game reports state 3; it does not bypass an active encounter (state 2).
+- F11 is enemy emergency recovery, avoiding the F12 collision with the legacy campaign key observed in rivet - Copy5.log.
+- The installer backs up and removes obsolete scripts/dev(debug).lua; uninstall restores it from the generated backup.
