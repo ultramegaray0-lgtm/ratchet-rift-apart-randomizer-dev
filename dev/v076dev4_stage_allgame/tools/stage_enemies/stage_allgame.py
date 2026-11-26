@@ -104,8 +104,8 @@ try:                                 # optional, free: pip install lz4. Checked 
 except Exception:
     LZ4 = "built-in (pure Python; pip install lz4 makes the scan ~100x faster)"
 
-VERSION = "3.0.0-alpha.3"
-KIT = "v3.0-dev"
+VERSION = "4.0.0-alpha.1"
+KIT = "v4.0-dev"
 STAGE_LUA = "1.1.0"                   # the 16/18 handshake value (V.STAGE_LUA / ST.STAGE_LUA); unchanged
 STAGE_MOD_PATH = "mods/RandoEnemies.stage"
 MANIFEST_LUA = "18_rando_stage_manifest.lua"
@@ -197,7 +197,7 @@ def effective_pins(zone_id, verdict_map, no_pins=False):
     return [(key, uid, why) for key, (uid, why) in sorted(pins.items())]
 
 
-PROFILES = ("max", "safe", "all", "v3")
+PROFILES = ("max", "safe", "all", "v3", "v4")
 REGULAR_FAMILIES = set(KN.FAMILY_GROUP)          # ground, swarmer, turret, flyer
 NOT_ENEMY_PREFIX = ("veh_", "npc_", "amb_", "crt_", "critter", "haz_", "prop_", "animclue")
 
@@ -874,7 +874,19 @@ def plan_zone_force(S, brain, rec, opts, rng):
     facs = rec["factories"]
     decisions = OrderedDict()
     changes = []
-    global_pool = [v for v in S.template_catalog.values() if (v.get("kind") or "").startswith("enm_")]
+    global_by_uid = dict(S.template_catalog)
+    if opts.profile == "v4":
+        # V4 also treats every unambiguous enemy actor found in the scanned game archive
+        # as a possible foreign replacement source, not only actors already used by a factory.
+        for uid, homes in S.actor_catalog.items():
+            if uid in global_by_uid or not homes:
+                continue
+            signatures = {(home.get("kind"), home.get("asset")) for home in homes}
+            if len(signatures) == 1:
+                meta = dict(homes[0])
+                meta["uid"] = uid
+                global_by_uid[uid] = meta
+    global_pool = [v for v in global_by_uid.values() if (v.get("kind") or "").startswith("enm_")]
     global_pool.sort(key=lambda x: (x["kind"], x["uid"]))
     usage = Counter()
 
@@ -926,6 +938,14 @@ def plan_zone_force(S, brain, rec, opts, rng):
             if not ok_rep:
                 rejected["boss-tier/non-regular candidate"] += 1
                 continue
+            if opts.profile == "v4":
+                # Explicit user priority: every structurally valid, classifiable regular-enemy
+                # factory gets a foreign enemy template, even when movement/faction or spawn-clue
+                # compatibility is unproven. This can create unreachable/unkillable encounters.
+                ranked.append((candidate, rep_family, "V4-FORCED",
+                               "V4 override: faction/movement compatibility checks bypassed",
+                               "forced-unsafe", "V4 override: spawn-point compatibility checks bypassed"))
+                continue
             try:
                 pair_ok, pair_tier, pair_evidence = brain.pair(original_kind, original_family,
                                                                 candidate["kind"], rep_family)
@@ -949,7 +969,7 @@ def plan_zone_force(S, brain, rec, opts, rng):
         usage[candidate["kind"]] += 1
 
         # V2.2 only reaches this point after regular-enemy, pair, and spawn-point checks pass.
-        tier = "FORCED-TEST"
+        tier = "FORCED-TEST-V4-UNSAFE" if opts.profile == "v4" else "FORCED-TEST"
         changes.append({
             "zone": rec["zone"], "zone_id": rec["zone_id"], "planet": rec["planet"], "key": key,
             "action": f["action"], "plug": f.get("plug"), "var_index": f["sv"],
@@ -959,7 +979,7 @@ def plan_zone_force(S, brain, rec, opts, rng):
             "replacement_external": True, "replacement_source_zone": candidate["zone"],
             "replacement_source_zone_id": candidate["zone_id"], "replacement_source_planet": candidate["planet"],
             "replacement": candidate["kind"], "replacement_family": rep_family or "unknown",
-            "pair_tier": pair_tier, "pair_evidence": "SAFE V2.2.0: " + pair_evidence,
+            "pair_tier": pair_tier, "pair_evidence": ("V4 UNSAFE OVERRIDE: " + pair_evidence) if opts.profile == "v4" else ("SAFE V2.2.0: " + pair_evidence),
             "spawn_tier": spawn_tier or "forced-unsafe",
             "spawn_points": spawn_evidence or "forced: spawn point was not validated",
             "count": f.get("count"), "tier": tier, "anchor": None,
@@ -1252,7 +1272,10 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
         for uid, candidate in pool.items():
             if uid == n["uid"] or candidate["kind"] == n["kind"]:
                 continue
-            allowed, tier, evidence = brain.pair(n["kind"], family, candidate["kind"], candidate["family"])
+            if getattr(opts, "profile", "v3") == "v4":
+                allowed, tier, evidence = True, "V4-FORCED", "V4 override: local regular-enemy family compatibility bypassed"
+            else:
+                allowed, tier, evidence = brain.pair(n["kind"], family, candidate["kind"], candidate["family"])
             if not allowed:
                 rejected[str(evidence).split(":")[0][:70]] += 1
                 continue
@@ -1437,8 +1460,8 @@ def write_template_inventory(S, out, decisions=None):
     return rows
 
 
-def write_global_enemy_asset_manifest(S, brain, out):
-    """Export every regular enemy actor asset used by any native factory, deduped by path."""
+def write_global_enemy_asset_manifest(S, brain, out, include_all_enemy_actors=False):
+    """Export spawn-source assets; V4 can widen this to every classifiable enemy actor in the archive."""
     by_path = {}
     ambiguous = set()
     candidates = []
@@ -1447,6 +1470,13 @@ def write_global_enemy_asset_manifest(S, brain, out):
     # arbitrary placed/cinematic actors from the general actor catalog.
     for uid, meta in S.template_catalog_all.items():
         candidates.append((uid, meta))
+    if include_all_enemy_actors:
+        for uid, homes in S.actor_catalog.items():
+            if not homes:
+                continue
+            signatures = {(home.get("kind"), home.get("asset")) for home in homes}
+            if len(signatures) == 1:
+                candidates.append((uid, homes[0]))
     for zone in S.zones.values():
         for node in zone.get("template_nodes", []):
             if node.get("is_spawner_class") and node.get("uid") and node.get("kind"):
@@ -1723,13 +1753,13 @@ def emit(a, S, src, brain, build, out):
     zrecs, planned = {}, []
     for zh, rec0 in S.zones.items():
         has_node_adapter = any(n.get("is_spawner_class") for n in rec0.get("template_nodes", []))
-        if not rec0["factories"] and not (a.profile == "v3" and has_node_adapter):
+        if not rec0["factories"] and not (a.profile in ("v3", "v4") and has_node_adapter):
             continue
         rec = copy.deepcopy(rec0)
         zrecs[zh] = rec
         rng = random.Random("%s|%s" % (a.seed, zh))
         ch, dec, anchors, pin_report = plan_zone(S, brain, rec, a, rng)
-        if a.profile == "v3":
+        if a.profile in ("v3", "v4"):
             node_changes, node_decisions = plan_node_template_adapters(S, brain, rec, a, rng, ch, anchors)
             collisions = set(dec).intersection(node_decisions)
             if collisions:
@@ -1822,12 +1852,12 @@ def emit(a, S, src, brain, build, out):
                   "span": span, "sha256_original": zrecs[hex16(zid)]["sha256"], "sha256_patched": zrecs[hex16(zid)]["sha256_patched"],
                   "changes": zrecs[hex16(zid)]["changes"]} for span, zid in members]
         m = {"format": 1, "tool": VERSION, "kit": KIT, "stage_lua": STAGE_LUA, "seed": a.seed, "profile": a.profile,
-             "label": ("V3.0 HYBRID - EXPERIMENTAL; local factory + exact node Template adapters" if a.profile == "v3" else "V2.1.0 FORCE ALL ENEMIES - EXPERIMENTAL; classifiable enemy factories use global foreign templates" if getattr(a, "force_all_enemies", False) else "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile), "stage_sha256": ssha,
+             "label": ("V4 MAX COVERAGE - UNSAFE EXPERIMENTAL; forced foreign factory templates + exact node Template adapters" if a.profile == "v4" else "V3.0 HYBRID - EXPERIMENTAL; local factory + exact node Template adapters" if a.profile == "v3" else "V2.1.0 FORCE ALL ENEMIES - EXPERIMENTAL; classifiable enemy factories use global foreign templates" if getattr(a, "force_all_enemies", False) else "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile), "stage_sha256": ssha,
              "settings": {"profile": a.profile, "strict_external": a.strict_external, "rate": a.rate,
                           "planets": a.planet or "all", "actor_family": not a.no_actor_family,
                           "cross_planet": bool(getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)),
                           "force_all_enemies": bool(getattr(a, "force_all_enemies", False)),
-                          "node_adapters": a.profile == "v3"},
+                          "node_adapters": a.profile in ("v3", "v4")},
              "zones": zones, "changes": changes, "pins": [{"key": k, "replacement": u, "result": w} for k, u, w in pins]}
         with open(os.path.join(out, "stage_enemies_manifest.json"), "w") as fh:
             json.dump(m, fh, indent=1)
@@ -1841,7 +1871,7 @@ def emit(a, S, src, brain, build, out):
                 w.writerow([c["planet"], c["zone"], c["key"], c["original"], c["replacement"], c["count"], c["tier"],
                             c["pair_evidence"], c["spawn_points"], bool(c.get("replacement_external")),
                             c.get("replacement_source_planet") or "", c.get("replacement_source_zone") or ""])
-    global_assets = write_global_enemy_asset_manifest(S, brain, out)
+    global_assets = write_global_enemy_asset_manifest(S, brain, out, include_all_enemy_actors=(a.profile == "v4"))
     print("  Global enemy asset catalog: %d regular enemy actor asset(s)" % len(global_assets))
     rows = write_inventory(S, decisions, out)
     template_rows = write_template_inventory(S, out, decisions)
@@ -1890,6 +1920,8 @@ def cmd_scan(a):
 def cmd_build(a):
     if a.profile == "v3" and (getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)):
         raise Refused("V3 is local-zone only; --cross-planet and --force-all-enemies are intentionally refused")
+    if a.profile == "v4" and not getattr(a, "force_all_enemies", False):
+        raise Refused("V4 requires --force-all-enemies: this is the explicit maximum-coverage experimental profile")
     return run_plan(a, build=True)
 
 
@@ -2040,7 +2072,7 @@ INSTALL_FILES = [("RandoEnemies.stage", "mods/RandoEnemies.stage"),
 
 def v3_artifact_problems(out, profile):
     """V3 must ship its stage monitor and both generated manifests, not just a .stage zip."""
-    if profile != "v3":
+    if profile not in ("v3", "v4"):
         return []
     problems = []
     required = (STAGE_LUA_FILE, GLOBAL_ASSET_LUA, MANIFEST_LUA)
@@ -2056,8 +2088,8 @@ def v3_artifact_problems(out, profile):
     if os.path.isfile(manifest_path):
         with open(manifest_path, encoding="utf-8", errors="replace") as fh:
             source = fh.read()
-        if "RANDO_STAGE_ENEMIES = {" not in source or 'profile = "v3"' not in source:
-            problems.append("V3 stage manifest is missing its v3 profile declaration")
+        if "RANDO_STAGE_ENEMIES = {" not in source or ('profile = "%s"' % profile) not in source:
+            problems.append("%s stage manifest is missing its profile declaration" % profile.upper())
     return problems
 
 
@@ -2181,14 +2213,14 @@ def main(argv=None):
             p.add_argument("--no-game-log", action="store_true", help="do not read GAME/rivet.log")
             p.add_argument("--profile", choices=PROFILES, default="max",
                            help="max (default): evidence-gated factories; safe: single-owner only; all: every shared factory variable (UNVERIFIED); "
-                                "v3: single-owner factories plus exact single-owner SpawnerScriptAction Template adapters (EXPERIMENTAL)")
+                                "v3: local factory + exact node adapters; v4: forced foreign factory replacements plus node adapters (UNSAFE)")
             p.add_argument("--no-safe", action="store_true", help="build: do not also write the safe/ fallback build")
             p.add_argument("--strict-external", action="store_true", help="refuse external spawn points no zone holds")
             p.add_argument("--no-actor-family", action="store_true", help="never infer a family from the actor file")
             p.add_argument("--cross-planet", action="store_true",
                            help="EXPERIMENTAL: use globally unique enemy template UIDs from other zones via external actor refs")
             p.add_argument("--force-all-enemies", action="store_true",
-                           help="EXPERIMENTAL MAXIMUM: force every classifiable enemy SunsetSpawnerFactory to a globally unique foreign enemy template; bypasses faction/spawn-clue/shared-owner safety rules and requires in-game testing")
+                           help="EXPERIMENTAL MAXIMUM: force classifiable regular-enemy SunsetSpawnerFactory variables to foreign templates; V4 bypasses faction/movement and spawn-point checks but still refuses ambiguous/shared-owner variables; requires in-game testing")
             p.add_argument("--no-pins", action="store_true", help="do not force the 4 changes confirmed in game")
             p.add_argument("--verdicts", action="append", help="stage_check_log.py --json file(s): WORKED kept as confirmed, "
                                                                 "ORIGINAL SPAWNED / NO SPAWN left native (repeatable)")

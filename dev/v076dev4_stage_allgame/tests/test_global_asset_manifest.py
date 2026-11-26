@@ -36,6 +36,27 @@ class GlobalAssetManifestTests(unittest.TestCase):
             self.assertIn('path = "characters/pirate/melee.actor"', text)
             self.assertNotIn("characters/boss.actor", text)
 
+    def test_v4_manifest_includes_all_unambiguous_regular_enemy_actor_assets(self):
+        scan = SimpleNamespace(
+            actor_catalog={
+                "1111111111111111": [{"kind": "enm_pirate_robot_melee", "asset": "actors/placed_enemy.actor",
+                                      "zone_id": "AAAAAAAAAAAAAAAA", "zone": "a.zone", "planet": "ardolis"}],
+                "2222222222222222": [{"kind": "enm_story_boss", "asset": "actors/story_boss.actor",
+                                      "zone_id": "BBBBBBBBBBBBBBBB", "zone": "b.zone", "planet": "cordelion"}],
+            },
+            zones={},
+            template_catalog_all={
+                "3333333333333333": {"kind": "enm_pirate_robot_shooter", "asset": "actors/factory_enemy.actor",
+                                     "planet": "sargasso", "zone": "c.zone"}
+            },
+        )
+        with tempfile.TemporaryDirectory() as out:
+            rows = SA.write_global_enemy_asset_manifest(scan, Brain(), out, include_all_enemy_actors=True)
+            paths = {row["path"] for row in rows}
+            self.assertIn("actors/placed_enemy.actor", paths)
+            self.assertIn("actors/factory_enemy.actor", paths)
+            self.assertNotIn("actors/story_boss.actor", paths)
+
     def test_runtime_spawner_script_parses_as_lua54(self):
         from lupa import LuaRuntime
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
@@ -115,6 +136,11 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("rivet.template_actor, item.row.path, item.uid, true", source)
         self.assertIn("rivet.on_frame(function()", source)
         self.assertIn("V.global_frame_ready = ready", source)
+        self.assertIn("if V and V.global_templates_tick then", source)
+        self.assertNotIn("V.global_frame_ready and V.global_templates_tick", source)
+        self.assertIn("V.GLOBAL_RETRY_LIMIT = 9999", source)
+        self.assertIn("V.FIRST_SCAN = 0", source)
+        self.assertIn("V.RETRY_LIMIT = 9999", source)
         self.assertNotIn("  V.global_templates_tick(frame)", source)
 
     def test_v3_next_build_and_log_check_keep_the_hybrid_profile(self):
@@ -149,23 +175,101 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('function V.stage_manifest() return RANDO_STAGE_ENEMIES end', runtime)
         self.assertIn('function V.stage_mode() return type(V.stage_manifest()) == "table" end', runtime)
         self.assertIn("function V.stage_owns_rec(r)", runtime)
-        self.assertIn('if manifest.profile ~= "v3" then return true end', runtime)
+        self.assertIn('if manifest.profile ~= "v3" and manifest.profile ~= "v4" then return true end', runtime)
         self.assertIn('return V.stage_factory_keys[key] == true', runtime)
         self.assertIn('return V.stage_node_keys[key] == true', runtime)
         self.assertIn('if V.stage_owns_rec(r) then return note_why(r, ".stage owns this " .. tostring(r.kind) .. " Template variable") end', runtime)
         self.assertIn("if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end", runtime)
         self.assertIn("pcall(V.stage_on_spawn, e, r, a", runtime)
         self.assertIn("pcall(V.stage_on_death, h)", runtime)
-        self.assertIn("function V.global_templates_tick(frame)\n  if not V.enabled() then return end", runtime)
-        self.assertIn("if not V.enabled() then return end", runtime)
+        self.assertIn("function V.global_templates_tick(frame)\n  -- V4: independent of scene readiness and the ON/OFF switch:", runtime)
+        self.assertNotIn("function V.global_templates_tick(frame)\n  if not V.enabled() then return end", runtime)
         self.assertNotIn("if not V.enabled() or V.stage_mode() then return end", runtime)
         self.assertIn('if not (SP and SP.V and SP.V.stage_mode) then', stage)
         self.assertIn('local expected_adapter = c.adapter or "factory"', stage)
         self.assertIn('r.kind == "template" and "node_template" or nil', stage)
-        self.assertIn('if not c and V.stage_manifest().profile ~= "v3" and uid then', stage)
+        self.assertIn('if not c and V.stage_manifest().profile ~= "v3" and V.stage_manifest().profile ~= "v4" and uid then', stage)
         self.assertIn('ST.STAGE_LUA = "1.1.0"', stage)
         self.assertIn('RANDO_FILES["18_rando_stage_enemies"] = "10.0.51"', stage)
         self.assertIn('RANDO_FILES["16_rando_spawners"] = "10.0.51"', runtime)
+
+    def test_v4_force_profile_is_explicit_and_includes_node_adapters(self):
+        root = os.path.abspath(os.path.join(HERE, ".."))
+        builder_path = os.path.join(root, "tools", "stage_enemies", "stage_allgame.py")
+        launcher_path = os.path.join(root, "BUILD_V4_TOTAL_COVERAGE.bat")
+        with open(builder_path, encoding="utf-8") as fh:
+            builder = fh.read()
+        with open(launcher_path, encoding="utf-8") as fh:
+            launcher = fh.read()
+        self.assertIn('PROFILES = ("max", "safe", "all", "v3", "v4")', builder)
+        self.assertIn('if a.profile in ("v3", "v4"):', builder)
+        self.assertIn('if opts.profile == "v4":', builder)
+        self.assertIn("faction/movement compatibility checks bypassed", builder)
+        self.assertIn("spawn-point compatibility checks bypassed", builder)
+        self.assertIn("for uid, homes in S.actor_catalog.items()", builder)
+        self.assertIn('meta["uid"] = uid', builder)
+        self.assertIn("include_all_enemy_actors=(a.profile == \"v4\")", builder)
+        self.assertIn('if a.profile == "v4" and not getattr(a, "force_all_enemies", False):', builder)
+        self.assertIn("--profile v4 --force-all-enemies --rate 1.0 --no-safe", launcher)
+        self.assertIn("unreachable, unkillable, or softlock", launcher)
+
+    def test_v4_enemy_randomizer_defaults_on_and_preloads_during_checkpoint_loading(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        settings_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "04_rando_settings.lua")
+        runtime_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "16_rando_spawners.lua")
+        with open(settings_path, encoding="utf-8") as fh:
+            settings = fh.read()
+        with open(runtime_path, encoding="utf-8") as fh:
+            runtime = fh.read()
+        self.assertIn("enemy_randomizer = true", settings)
+        self.assertIn("if V and V.global_templates_tick then", runtime)
+        self.assertNotIn("V.global_frame_ready and V.global_templates_tick", runtime)
+        self.assertIn("V.GLOBAL_RETRY_LIMIT = 9999", runtime)
+        self.assertIn("GLOBAL PRELOAD: ready", runtime)
+        self.assertIn("GLOBAL PRELOAD BLOCKED: rivet.template_actor is unavailable", runtime)
+        self.assertIn('V.FIRST_SCAN = 0', runtime)
+        self.assertIn('V.SCAN_EVERY = 30', runtime)
+        self.assertIn('V.RETRY_LIMIT = 9999', runtime)
+        self.assertIn('V.NODE_LIMIT = 4096', runtime)
+        self.assertIn('V.QUEUE_CAP = 4096', runtime)
+        self.assertIn('V.RESTART_CAP = 9999', runtime)
+        self.assertIn('V.PROBE_GIVEUP = 9999', runtime)
+        self.assertIn('V.GROUP_CAP = 4096', runtime)
+        self.assertIn('V.MEMBER_CAP = 32', runtime)
+        self.assertIn('V.SLICE = 0.003', runtime)
+
+    def test_v4_node_adapter_bypasses_pair_gate_but_keeps_structural_anchor(self):
+        class FakeBrain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "fixture"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return False, "rejected", "fixture says incompatible"
+            def family(self, kind, asset=None):
+                return "ground", "fixture"
+
+        factories = [
+            {"key": "FACTORY-A", "form": "local", "uid": "1111111111111111",
+             "kind": "enm_pirate_robot_shooter", "asset": "actors/shooter.actor", "rec": 0, "problem": None},
+            {"key": "FACTORY-B", "form": "local", "uid": "2222222222222222",
+             "kind": "enm_pirate_robot_melee", "asset": "actors/melee.actor", "rec": 1, "problem": None},
+        ]
+        def node(key, var_index, uid, kind, rec):
+            return {"key": key, "action": 0, "class": "SPAWNER", "is_spawner_class": True,
+                    "template_plug": 1, "template_plug_count": 1, "var_index": var_index,
+                    "form": "local", "uid": uid, "kind": kind, "asset": "actors/%s.actor" % kind,
+                    "rec": rec, "owners": 1, "co_owner_classes": [], "other_plugs": "", "problem": ""}
+        rec = {"zone": "v4.zone", "zone_id": "ABCDEF0123456789", "planet": "fixture",
+               "factories": factories,
+               "template_nodes": [
+                   node("NODE-A", 2, "1111111111111111", "enm_pirate_robot_shooter", 0),
+                   node("NODE-B", 3, "2222222222222222", "enm_pirate_robot_melee", 1),
+               ]}
+        opts = SimpleNamespace(verdict_map={}, rate=1.0, profile="v4")
+        changes, decisions = SA.plan_node_template_adapters(
+            SimpleNamespace(), FakeBrain(), rec, opts, random.Random("v4-node-test"), [], {})
+        self.assertEqual({c["key"] for c in changes}, {"NODE-A", "NODE-B"})
+        self.assertTrue(all(c["pair_tier"] == "V4-FORCED" for c in changes))
+        self.assertTrue(all(c["replacement_index"] in (0, 1) for c in changes))
 
     def test_v3_profile_keeps_shared_factories_native_and_owns_only_manifest_keys(self):
         builder_path = os.path.join(HERE, "..", "tools", "stage_enemies", "stage_allgame.py")
@@ -463,7 +567,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
     def test_v3_installer_bundles_one_synchronized_runtime_kit(self):
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
         runtime_dir = os.path.join(root, "mod", "RiftApartRandomizer", "scripts")
-        self.assertEqual(SA.VERSION, "3.0.0-alpha.3")
+        self.assertEqual(SA.VERSION, "4.0.0-alpha.1")
         self.assertIn("runtime_scripts", SA.RUNTIME_BUNDLE_DIR)
         self.assertIn("runtime_scripts", str(SA.INSTALL_FILES))
         self.assertGreaterEqual(len(SA.RUNTIME_SCRIPT_NAMES), 18)

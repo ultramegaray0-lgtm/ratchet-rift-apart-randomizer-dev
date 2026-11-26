@@ -197,7 +197,7 @@ function V.stage_on_spawn(e, r, a, result, why)
   local c = key and idx.keys[key] or nil
   -- V3 runtime fallback may randomize unpatched factories whose original UID happens
   -- to equal another stage change's replacement UID. Do not misattribute those spawns.
-  if not c and V.stage_manifest().profile ~= "v3" and uid then
+  if not c and V.stage_manifest().profile ~= "v3" and V.stage_manifest().profile ~= "v4" and uid then
     c = idx.rep[uid] and idx.rep[uid][1] or nil
   end
   if not c then return end
