@@ -72,6 +72,21 @@ class StageCheckLogV3Tests(unittest.TestCase):
         self.assertEqual(data["verdicts"]["AAAAAAAAAAAAAAAA"]["adapter"], "node_template")
         self.assertIn("CHANGE 7  AAAAAAAAAAAAAAAA", output)
 
+    def test_runtime_only_node_template_spawn_creates_exact_worked_evidence(self):
+        key = "CCCCCCCCCCCCCCCC"
+        original_uid, selected_uid = "1111111111111111", "F00D123456780000"
+        log = "\\n".join([
+            "[rivet] init",
+            "[script] [rando]\\tRANDO-ENEMIES\\tSPAWN 990 | ardolis | MIS_RUNTIME | node Template %s | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee uid %s | spawned enm_pirate_robot_melee (swarmer) | SUCCESS" % (key, selected_uid),
+        ])
+        rc, output, data = self.run_fixture(log)
+        self.assertEqual(rc, 0)
+        verdict = data["verdicts"][key]
+        self.assertEqual(verdict["verdict"], "WORKED")
+        self.assertEqual(verdict["replacement_uid"], selected_uid)
+        self.assertEqual(verdict["adapter"], "node_template")
+        self.assertIn("runtime-observed", output)
+
     def test_legacy_factory_stage_logs_still_parse(self):
         original_uid, replacement_uid = "1111111111111111", "2222222222222222"
         log = "\n".join([
