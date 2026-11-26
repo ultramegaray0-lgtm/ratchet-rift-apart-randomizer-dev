@@ -76,3 +76,5 @@ created 14 of 25 catalog templates, and the node-adapter path still requires in-
 - If that works, the original encounter system still performs the combat spawn. If it does not, the script rejects the template or the game may refuse that replacement; do not assume the method is game-verified until the first in-game log confirms it.
 - The catalog only includes regular enemy actors that the scanner can classify. It intentionally excludes boss-tier and ambiguous assets.
 - The randomizer's existing compatibility setting still governs which global templates can replace a given spawner. enemy_compat = max is the broadest mode and retains the project's existing combat-watch behavior.
+
+The 10.0.51 runtime ledger now includes the selected template UID. The V3 checker records runtime-only node/factory WORKED evidence when no `.stage` manifest entry exists; it will not write a synthetic global UID into `.stage` unless it is a safe local candidate.
