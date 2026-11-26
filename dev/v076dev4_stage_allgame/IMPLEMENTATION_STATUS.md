@@ -1,6 +1,6 @@
 # v0.76-DEV4 integration status
 
-This branch now contains the self-contained v0.76-DEV4 all-planet builder package copied from the uploaded development patch.
+This branch contains the v0.76-DEV4 all-planet builder and the V3.0 hybrid expansion. The baseline figures below are historical input evidence, not a current V3 scan.
 
 ## Integrated files
 
@@ -13,11 +13,11 @@ This branch now contains the self-contained v0.76-DEV4 all-planet builder packag
 
 ## Honest baseline
 
-The uploaded all-game run found 935 enemy spawners and changed 170 (18%) across 38 zones on 7 planets. It also counted 638 Template-adapter nodes that the current builder does not modify. There were 447 zones it could not decode. These are known coverage gaps, not successful replacements.
+The uploaded all-game run found 935 enemy spawners and changed 170 (18%) across 38 zones on 7 planets. It also counted 638 Template-adapter nodes and 447 undecodable zones. V3 now plans exact `SpawnerScriptAction` Template adapters (including safe shared-owner variables); generic Template nodes and other adapter types remain unclaimed. These are census and coverage gaps, not successful replacements.
 
 ## Safety and scope
 
-The builder reads game data without modifying it during scan/build/check. Install backs up replaced files; uninstall restores the newest backup. The normal replacement pool is restricted to enemy kinds already present in each zone. It does not yet inject foreign-planet actors or rewrite Template-adapter nodes.
+The builder reads game data without modifying it during scan/build/check. Install backs up replaced files; uninstall restores the newest backup. `.stage` references remain local to each zone. V3's runtime global registry creates resident template sources from the all-planet asset catalog; the original encounter spawners still create combat actors. Exact node Template adapters are now patched only after owner and byte-level checks.
 
 Do not describe this as a 100% replacement build. A complete scan of the user's local game installation is still required to generate the actual .stage. The real Ardolis zone is required for the bundled end-to-end test; game data is intentionally not stored in this repository.
 
@@ -26,8 +26,8 @@ Do not describe this as a 100% replacement build. A complete scan of the user's 
 1. Run CI for syntax and Lua scale tests.
 2. Use a fresh local all-planet inventory to classify every unhandled enemy-owned adapter and every undecodable zone.
 3. Add adapter-specific writers only where the zone structure and runtime ownership semantics are evidenced.
-4. Keep experimental changes in a separate profile with byte-level checks and automatic rollback.
-5. Re-run the complete game scan and report changed / eligible / unresolved totals per planet.
+4. Expand only those additional adapter families whose ownership and spawn semantics are evidenced; keep generic or ambiguous nodes native.
+5. Re-run the complete game scan and report changed / eligible / unresolved totals per planet, then validate the actual runtime spawns in-game.
 
 
 # Template adapter census update
@@ -73,3 +73,13 @@ GitHub Actions run [45717250211](https://github.com/ultramegaray0-lgtm/ratchet-r
 - Package artifact: `enemy-randomizer-v2.0.1-evidence-guided`.
 
 This reconciled .stage is ready for a controlled in-game test. The separate BUILD_V2_MAX launcher is the route for fresh local-zone and experimental cross-planet builds against the complete local game install.
+
+
+## V3.0 alpha.2 status (2026-11-26)
+
+- Hybrid factory + exact SpawnerScriptAction Template stage path is implemented.
+- Safe shared node Template variables are grouped by Script Vars index, patched once, and listed under every owner key. Shared variables with any non-spawner, non-Template, duplicate/zero-key, repeated, or malformed owner remain native.
+- The V3 manifest, runtime stage-ownership map, stage monitor, byte-diff validator, and coverage report all consume the full owner-key list.
+- Runtime fallback remains enabled for unlisted factory, node, and group adapters, with the complete 10.0.50 script bundle and enemy_compat = max.
+- Latest offline builder validation passed before the alpha.2 shared-owner census/anchor regression additions; the latest workflow for those new tests is running. In-game verification remains mandatory.
+- Known global catalog limitation: the previous run created 14 of 25 resident templates. The 11 failed asset creations are not counted as solved until the new native diagnostic build is tested.
