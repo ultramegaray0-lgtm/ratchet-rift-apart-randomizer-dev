@@ -1500,11 +1500,16 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
     for z in S.zones.values():
         for n in z.get("template_nodes", []):
             if n.get("is_spawner_class"):
-                node_by_planet[z["planet"]]["candidates"] += 1
+                counts = node_by_planet[z["planet"]]
+                counts["candidates"] += 1
                 if n in node_eligible:
-                    node_by_planet[z["planet"]]["eligible"] += 1
+                    counts["eligible"] += 1
+                if n.get("owners", 1) > 1:
+                    counts["shared_safe"] += 1 if n.get("shared_spawner_safe") else 0
+                    counts["shared_unsafe"] += 0 if n.get("shared_spawner_safe") else 1
     for c in node_changes:
-        node_by_planet[c["planet"]]["changed"] += len(c.get("spawner_keys") or [c["key"]])
+        owner_count = len(c.get("spawner_keys") or [c["key"]])
+        node_by_planet[c["planet"]]["changed"] += owner_count
     by_planet = defaultdict(lambda: Counter())
     for r in rows:
         by_planet[r[0]]["factories"] += 1
@@ -1536,9 +1541,12 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
           "| replacement enemy kinds used | %d |" % len(rep_kinds),
           "| other spawner nodes (`Template` adapter, census) | %d |" % sum(z["node_template_spawners"] for z in S.zones.values()),
           "| exact `SpawnerScriptAction` class candidates | %d |" % len(node_candidates),
-          "| structurally eligible node adapters (single-owner local regular enemy) | %d |" % len(node_eligible),
-          "| exact node adapters changed | %d |" % len(node_changes),
-          "| .stage total changes (factory + node adapters) | %d |" % len(changes),
+          "| structurally eligible node adapters (single-owner or safe shared-owner local regular enemy) | %d |" % len(node_eligible),
+          "| shared-owner node records with verified all-spawner ownership | %d |" % sum(v["shared_safe"] for v in node_by_planet.values()),
+          "| shared-owner node records retained due unsafe co-owners | %d |" % sum(v["shared_unsafe"] for v in node_by_planet.values()),
+          "| exact node Template variables changed | %d |" % len(node_changes),
+          "| owner spawner nodes covered by node Template changes | %d |" % sum(len(c.get("spawner_keys") or [c["key"]]) for c in node_changes),
+          "| .stage total unique Script Vars entries changed (factory + node adapters) | %d |" % len(changes),
           "| .stage size | %s |" % stage_info, ""]
     L += ["Change tiers: " + ", ".join("%s %d" % kv for kv in tiers.most_common()) + ".",
           "Spawn-point tiers: " + ", ".join("%s %d" % kv for kv in stiers.most_common()) + ".", "",
@@ -1551,9 +1559,13 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
           "an actor no zone holds (2 of 2 worked in game).", ""]
     if pins:
         L += ["## The confirmed changes", ""] + ["- %s -> %s: %s" % p for p in pins] + [""]
-    L += ["## By planet", "", "| planet | factories | enemy spawners | changed | % |", "|---|---:|---:|---:|---:|"]
-    for p, c in sorted(by_planet.items(), key=lambda kv: -kv[1]["changed"]):
-        L.append("| %s | %d | %d | %d | %.0f%% |" % (p, c["factories"], c["enemy"], c["changed"], 100.0 * c["changed"] / max(1, c["enemy"])))
+    for p, counts in node_by_planet.items():
+        by_planet[p]["node_changed"] += counts["changed"]
+    L += ["## By planet", "", "| planet | factories | enemy factories | factory changed | node owner nodes changed | factory % |", "|---|---:|---:|---:|---:|---:|"]
+    for p, c in sorted(by_planet.items(), key=lambda kv: -(kv[1]["changed"] + kv[1]["node_changed"])):
+        L.append("| %s | %d | %d | %d | %d | %.0f%% |" % (
+            p, c["factories"], c["enemy"], c["changed"], c["node_changed"],
+            100.0 * c["changed"] / max(1, c["enemy"])))
     L += ["", "## By zone (zones with enemy spawners)", "", "| planet | zone | enemy spawners | changed | swaps |", "|---|---|---:|---:|---|"]
     by_zone = defaultdict(list)
     for c in factory_changes:
@@ -1566,10 +1578,11 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
         L.append("| %s | %s | %d | %d | %s |" % (z["planet"], z["zone"].replace("\\", "/").split("/")[-1], len(ens),
                                                  len(by_zone[z["zone_id"]]), ", ".join("%s x%d" % kv for kv in sw.most_common(6)) or "-"))
     L += ["", "## Exact node Template adapters by planet", "",
-          "| planet | exact candidates | structurally eligible | changed |",
-          "|---|---:|---:|---:|"]
+          "| planet | exact candidates | structurally eligible | safe shared owners | unsafe shared owners | changed owner nodes |",
+          "|---|---:|---:|---:|---:|---:|"]
     for p, counts in sorted(node_by_planet.items(), key=lambda kv: -kv[1]["changed"]):
-        L.append("| %s | %d | %d | %d |" % (p, counts["candidates"], counts["eligible"], counts["changed"]))
+        L.append("| %s | %d | %d | %d | %d | %d |" % (
+            p, counts["candidates"], counts["eligible"], counts["shared_safe"], counts["shared_unsafe"], counts["changed"]))
     L += ["", "## Replacement kinds", ""] + ["- %s: %d spawner(s)" % kv for kv in rep_kinds.most_common()]
     L += ["", "## Why enemy spawners were not changed", "", "| reason | spawners |", "|---|---:|"]
     why = Counter()
