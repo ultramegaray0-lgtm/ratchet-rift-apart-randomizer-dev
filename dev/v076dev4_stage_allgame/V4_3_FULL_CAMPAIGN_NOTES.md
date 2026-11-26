@@ -1,0 +1,47 @@
+# V4.3 Full Campaign Experimental
+
+## Purpose
+
+V4.3 returns to maximum campaign coverage after the V4.2 diagnostic branch. It includes zones under `levels/.../storymission/...`; it does not pass `--exclude-storymission`.
+
+## Build profile
+
+The launcher runs:
+
+```powershell
+py -3 -I tools/stage_enemies/stage_allgame.py build --game "GAME" --out "BUILD" --seed "RiftApart-Enemy-V4.3-FullCampaign" --profile v4 --force-all-enemies --rate 1.0
+```
+
+The V4 planner:
+- Uses the global scanned actor catalogue as the replacement pool, including globally unique enemy template UIDs from other zones.
+- Attempts every structurally identifiable, classifiable regular-enemy factory at a 100% selection rate.
+- Bypasses faction/movement and spawn-point compatibility checks. This is deliberately unsafe and may create enemies that fail to spawn, cannot be killed, or do not work with a particular encounter.
+- Includes V3/V4 exact `SpawnerScriptAction Template` adapters where the existing planner can identify them.
+- Still refuses ambiguous or shared-owner template variables, non-regular/boss-tier/unclassified actors, and references it cannot safely decode. Therefore this is not a literal 100% replacement of every enemy actor in the game.
+- Emits a conservative `safe/` fallback build as well as the main V4 output. The launcher installs the main V4 build only after the byte-level check passes.
+
+## Story progression and V key status
+
+The agreed V feature is **force-complete the current combat encounter**, not kill all enemies and not complete the mission. It must cause the game's real encounter completion output so doors, objectives, and subsequent waves progress.
+
+That engine-side completion operation is not implemented in V4.3. The current runtime can observe spawner/death evidence, but no verified API for safely firing the active story encounter's completion output has been established. V is therefore deliberately not bound to a fake "complete" action. F12 remains emergency enemy recovery; it restores future spawner templates but cannot repair a story objective already stuck in its controller.
+
+Do not interpret a missing V action as a successful bypass. This is an explicit remaining engineering task.
+
+## New campaign test
+
+1. Back up the current save separately.
+2. Run `BUILD_V4_3_FULL_CAMPAIGN.bat` and point it to the game folder containing `RiftApart.exe`, `toc`, and `dag`.
+3. Review the generated `COVERAGE_REPORT.md` and `inventory.csv`; the report is the actual coverage result, not the "100% rate" setting.
+4. Install only after the independent `check` passes.
+5. Start a **new campaign** so story mission graphs and spawner state are initialized from the new stage. Do not reuse a save already stuck in an encounter.
+6. At each first encounter on a planet, note: original enemy, replacement enemy, whether it spawns, whether it can be killed, and whether the encounter completes/door opens.
+7. If story progression stalls, record the encounter name and collect `rivet.log`. F12 is emergency recovery only; reload the last checkpoint after using it if necessary.
+
+## Acceptance criteria
+
+- Builder completes and independent byte-level check passes.
+- Coverage report shows storymission zones were scanned/planned and lists every refusal.
+- Randomized replacements spawn and are killable.
+- Story encounters advance naturally without objective/door softlocks.
+- A full new-campaign run is required before calling V4.3 campaign-verified.
