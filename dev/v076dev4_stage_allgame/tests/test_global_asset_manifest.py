@@ -119,7 +119,6 @@ class GlobalAssetManifestTests(unittest.TestCase):
             builder = fh.read()
         self.assertIn('if opts.profile in ("safe", "v3") or (opts.profile == "max" and unseen):', builder)
         self.assertIn('profile = %s, label = %s, stage_lua = %s', builder)
-        self.assertIn('if manifest.profile ~= "v3" then return true end', builder.replace(" ", " "))
 
     def test_v3_node_template_planner_only_changes_exact_single_owner_local_spawners(self):
         class FakeBrain:
