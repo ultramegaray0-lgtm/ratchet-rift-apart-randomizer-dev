@@ -15,7 +15,7 @@ Build the most aggressive practical enemy replacement build for Rift Apart: ever
 - 109 zones hold spawner factories.
 - 1,324 spawner factories total; 935 currently classified as enemy spawners.
 - 170 changed across 38 zones and 7 planets (18% of the 935).
-- 638 other spawner nodes use a Template adapter and are not yet handled.
+- 638 other nodes were found with Template adapters; V3 now plans exact `SpawnerScriptAction` nodes, while generic nodes and group adapters remain subject to separate runtime/eligibility rules. The 638 count is a census, not 638 confirmed enemy spawners.
 - 23,254 zone assets were not in the TOC scan.
 - Current .stage output is 6.4 MB across 38 zone members.
 - Four changes have direct in-game confirmation; the coverage report records 79 proven, 54 kin, and 33 shared-seen changes.
@@ -24,7 +24,7 @@ Build the most aggressive practical enemy replacement build for Rift Apart: ever
 
 ### 1. Expand spawner discovery
 - Enumerate every spawner node shape, not only SunsetSpawnerFactory / Templates.
-- Add adapters for the 638 Template nodes and identify any additional node families.
+- Finish exact `SpawnerScriptAction` coverage, including safe shared Template variables; identify remaining node/group adapter families from the census and runtime logs.
 - Resolve script-variable references, actor-group references, handles, local UID/index pairs, and shared owners.
 - Distinguish one-shot factories from reusable/multi-wave factories and patch before first spawn where possible.
 - Build a complete per-zone inventory with explicit reasons for every skipped node.
@@ -74,16 +74,16 @@ The headline target is 100% of eligible reachable enemy spawners attempted in ex
 
 ## V3.0 implementation status
 
-The branch now contains the complete all-planet builder source, the native global-template hook patch, the global resident-template registry, a synchronized runtime script bundle, and an experimental offline planner for exact single-owner `SpawnerScriptAction` Template adapters.
+The branch now contains the all-planet builder, native global-template hook patch, global resident-template registry, synchronized runtime script bundle, and an offline planner for exact `SpawnerScriptAction` Template variables. The planner patches a shared variable only when every owner is a distinct, uniquely-keyed spawner with exactly one Template plug; it patches that variable once and records every owner key.
 
-The V3 profile combines factory and node Template adapter changes in one `.stage`, with adapter-aware runtime monitoring and independent byte-level verification. It deliberately does not use foreign-zone actor UIDs or directly spawn combat enemies.
+The V3 profile combines factory and node Template adapter changes in one `.stage`, with adapter-aware runtime monitoring and independent byte-level verification. Unlisted factory, node, and group adapters remain eligible for the runtime route. It deliberately does not write foreign-zone actor UIDs into `.stage` or directly spawn combat enemies.
 
 Build with `dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat`. Read `dev/v076dev4_stage_allgame/V3.0_ALPHA_NOTES.md` before treating the build as a release.
 
 Important remaining gaps:
 - 447 zones in the baseline scan were not decodable; the current user's game must be scanned again.
 - The previous global native asset test created 14 of 25 resident templates; 11 still failed in `SpawnActorFromAsset`.
-- The V3 node-adapter planner only attempts exact `SpawnerScriptAction` nodes with a singular local Template plug and one owner. It does not claim all 638 census entries are eligible.
+- The V3 node-adapter planner only attempts exact `SpawnerScriptAction` nodes with a singular local Template plug and either one owner or a fully verified all-spawner shared-owner group. It does not claim all 638 census entries are eligible.
 - The new build has not yet been proven in-game to preserve every wave, death counter, door, and progression trigger.
 
 V3.0 acceptance requires both offline CI/byte checks and a real in-game log showing replacement spawns, deaths, and completed encounters. A 100% attempted build is not the same as 100% successful in-game replacements.
