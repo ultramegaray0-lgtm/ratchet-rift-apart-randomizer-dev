@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
-title Rift Apart Enemy Randomizer V4.3 - Full Campaign Experimental
-rem V4.3 uses the builder's maximum-coverage V4 profile. Storymission zones are INCLUDED.
+title Rift Apart Enemy Randomizer V4.4 - Full Campaign Experimental
+rem V4.4 uses the builder's maximum-coverage V4 profile. Storymission zones are INCLUDED.
 rem This is intentionally unsafe: it bypasses movement/faction and spawn-point compatibility checks.
 rem Ambiguous/shared-owner templates, bosses and non-regular actors remain protected by structural/classification gates.
 set "ROOT=%~dp0"
@@ -25,7 +25,7 @@ if not exist "builds" mkdir "builds"
 set "OUT=builds\V4_3_FULL_CAMPAIGN_%RANDOM%_%RANDOM%"
 echo.
 echo ============================================================
-echo  RIFT APART ENEMY RANDOMIZER V4.3 - FULL CAMPAIGN EXPERIMENTAL
+echo  RIFT APART ENEMY RANDOMIZER V4.4 - FULL CAMPAIGN EXPERIMENTAL
 echo ============================================================
 echo STORYMISSION ZONES: INCLUDED
 echo COVERAGE: maximum V4 profile, all eligible classifiable regular-enemy factories
@@ -40,7 +40,7 @@ echo - Foreign template references can fail to spawn or become unkillable.
 echo - V encounter force-complete is NOT included in this build; do not assume it can bypass a stuck story gate.
 echo - F12 remains emergency recovery. It cannot repair an already stuck mission objective.
 echo.
-choice /C YN /M "Build V4.3 including story mission encounters? This is experimental"
+choice /C YN /M "Build V4.4 including story mission encounters? This is experimental"
 if errorlevel 2 goto cancelled
 
 %PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "%OUT%" --seed "RiftApart-Enemy-V4.3-FullCampaign" --profile v4 --force-all-enemies --rate 1.0
@@ -53,7 +53,7 @@ if errorlevel 1 goto failed
 
 echo.
 echo ============================================================
-echo V4.3 BUILD OUTPUTS
+echo V4.4 BUILD OUTPUTS
 echo ============================================================
 echo Main experimental coverage report: "%OUT%\COVERAGE_REPORT.md"
 echo Factory inventory: "%OUT%\inventory.csv"
@@ -62,15 +62,15 @@ echo Replacement manifest: "%OUT%\stage_enemies_manifest.json"
 echo Runtime bundle: "%OUT%\runtime_scripts"
 if exist "%OUT%\safe\COVERAGE_REPORT.md" echo Conservative fallback report: "%OUT%\safe\COVERAGE_REPORT.md"
 echo.
-choice /C YN /M "Install V4.3 now? The installer backs up every replaced file"
+choice /C YN /M "Install V4.4 now? The installer backs up every replaced file"
 if errorlevel 2 goto notnow
 %PY% -I "tools\stage_enemies\stage_allgame.py" install --game "%GAME%" --build "%OUT%"
 if errorlevel 1 goto failed
 > "builds\LAST_INSTALLED.txt" echo %CD%\%OUT%
 echo.
-echo V4.3 installed. Reload from a NEW GAME / new campaign start for a clean test.
+echo V4.4 installed. Reload from a NEW GAME / new campaign start for a clean test.
 echo Keep the generated manifest and coverage report.
-echo F12 = emergency enemy recovery. It does not force-complete story encounters.
+echo V = guarded mission cleanup assist only (not an active-encounter skip).\necho F11 = emergency enemy recovery.
 pause
 popd
 exit /b 0
@@ -82,7 +82,7 @@ popd
 exit /b 0
 
 :notnow
-echo V4.3 build and byte-level check passed. It was not installed.
+echo V4.4 build and byte-level check passed. It was not installed.
 pause
 popd
 exit /b 0
@@ -101,7 +101,7 @@ exit /b 2
 
 :failed
 echo.
-echo V4.3 build/check/install failed. If build or check failed, installation was not performed.
+echo V4.4 build/check/install failed. If build or check failed, installation was not performed.
 pause
 popd
 exit /b 1
