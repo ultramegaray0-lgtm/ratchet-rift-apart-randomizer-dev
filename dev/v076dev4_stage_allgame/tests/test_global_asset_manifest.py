@@ -195,6 +195,9 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("runtime_scripts", SA.RUNTIME_BUNDLE_DIR)
         self.assertIn("runtime_scripts", str(SA.INSTALL_FILES))
         self.assertGreaterEqual(len(SA.RUNTIME_SCRIPT_NAMES), 18)
+        with open(os.path.join(runtime_dir, "10_rando_runtime.lua"), encoding="utf-8") as fh:
+            runtime_core = fh.read()
+        self.assertIn('R.KIT_VERSION = "10.0.50"', runtime_core)
         for name in SA.RUNTIME_SCRIPT_NAMES:
             with open(os.path.join(runtime_dir, name), encoding="utf-8") as fh:
                 source = fh.read()
