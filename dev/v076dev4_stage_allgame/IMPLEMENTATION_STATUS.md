@@ -81,5 +81,5 @@ This reconciled .stage is ready for a controlled in-game test. The separate BUIL
 - Safe shared node Template variables are grouped by Script Vars index, patched once, and listed under every owner key. Shared variables with any non-spawner, non-Template, duplicate/zero-key, repeated, or malformed owner remain native.
 - The V3 manifest, runtime stage-ownership map, stage monitor, byte-diff validator, and coverage report all consume the full owner-key list.
 - Runtime fallback remains enabled for unlisted factory, node, and group adapters, with the complete 10.0.50 script bundle and enemy_compat = max.
-- Latest offline builder validation passed before the alpha.2 shared-owner census/anchor regression additions; the latest workflow for those new tests is running. In-game verification remains mandatory.
+- GitHub Actions run 45761202857 passed the expanded 17-test offline builder suite, CLI checks, Lua syntax and scale tests. The real-zone fixture was skipped because game data is not committed. In-game verification remains mandatory.
 - Known global catalog limitation: the previous run created 14 of 25 resident templates. The 11 failed asset creations are not counted as solved until the new native diagnostic build is tested.
