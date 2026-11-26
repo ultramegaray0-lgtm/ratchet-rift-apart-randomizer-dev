@@ -19,7 +19,9 @@ V4 changes the independent global-template frame callback so it continues during
 
 The runtime scan budget is raised to 3 ms per frame (within the hook's shared 8 ms frame budget), with 4,096-node/queue/group ceilings, 32 group members, 9,999 budget restarts and 9,999 late-template probes. This deliberately spends more frame time and allows long-running scans rather than silently dropping a large zone.
 
-This is a priority preload, **not an engine loading-screen lock**. The current public Lua/Rivet API does not expose a safe way to pause the game's own scene transition until every native asset has loaded. V4 does not pretend otherwise.
+The preload requires the custom global-registry Rivet Hook that exposes `rivet.template_actor`. The V4 source ZIP contains the hook patch source, not a prebuilt native DLL; keep the working V3 global-registry hook installed. If the log says `GLOBAL PRELOAD BLOCKED`, the native hook is missing and the preload is not active.
+
+This is a priority preload, **not an engine loading-screen lock**. The current Lua/Rivet API exposes asynchronous asset loading but no safe way to pause the game's own scene transition until every native asset has loaded. V4 does not pretend otherwise; the patched `.stage` data is what gives the game randomized factory choices before the first wave.
 
 ### 2. Patch spawner data before the game reads it
 
