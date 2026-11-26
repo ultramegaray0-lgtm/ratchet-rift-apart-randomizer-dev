@@ -3999,23 +3999,35 @@ V.STAGE_LUA = "1.1.0"
 function V.stage_manifest() return RANDO_STAGE_ENEMIES end
 function V.stage_mode() return type(V.stage_manifest()) == "table" end
 V.stage_node_manifest = V.stage_node_manifest or nil
+V.stage_factory_keys = V.stage_factory_keys or {}
 V.stage_node_keys = V.stage_node_keys or {}
 function V.stage_owns_rec(r)
   if not V.stage_mode() or not r then return false end
-  if r.kind == "factory" then return true end
-  if r.kind ~= "template" then return false end
   local manifest = V.stage_manifest()
   if V.stage_node_manifest ~= manifest then
-    V.stage_node_manifest, V.stage_node_keys = manifest, {}
+    V.stage_node_manifest, V.stage_factory_keys, V.stage_node_keys = manifest, {}, {}
     for _, change in ipairs(manifest.changes or {}) do
-      if change.adapter == "node_template" then
-        for _, key in ipairs(change.spawner_keys or {}) do
-          V.stage_node_keys[tostring(key):upper()] = true
+      local adapter = change.adapter or "factory"
+      for _, key in ipairs(change.spawner_keys or {}) do
+        local normalized = tostring(key):upper()
+        if adapter == "node_template" then
+          V.stage_node_keys[normalized] = true
+        else
+          V.stage_factory_keys[normalized] = true
         end
       end
     end
   end
-  return V.stage_node_keys[tostring(r.key):upper()] == true
+  local key = tostring(r.key):upper()
+  if r.kind == "factory" then
+    -- Older max/all manifests may change shared factory variables; preserve their
+    -- original no-runtime-writes behavior. V3 manifests contain single-owner
+    -- factory changes, so only those exact keys are stage-owned.
+    if manifest.profile ~= "v3" then return true end
+    return V.stage_factory_keys[key] == true
+  end
+  if r.kind == "template" then return V.stage_node_keys[key] == true end
+  return false
 end
 V.global_items = V.global_items or {}
 V.global_item_by_uid = V.global_item_by_uid or {}
