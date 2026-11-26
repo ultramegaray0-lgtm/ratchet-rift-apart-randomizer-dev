@@ -91,8 +91,8 @@ class StageCheckLogV3Tests(unittest.TestCase):
             "[script] [rando]\tRANDO-ENEMIES\tSPAWN 990 | ardolis | MIS_RUNTIME | node Template %s | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee uid %s | spawned enm_pirate_robot_melee (swarmer) | SUCCESS" % (key, selected_uid),
         ])
         template_inventory = (
-            "planet,zone,zone_id,node_key,class_id,is_SpawnerScriptAction\\n"
-            "ardolis,levels\\\i29\\\instance\\\ardolis\\\test.zone,ABCDEF0123456789,%s,2E910F8C,True\\n" % key
+            "planet,zone,zone_id,node_key,class_id,is_SpawnerScriptAction\n"
+            "ardolis,levels\\i29\\instance\\ardolis\\test.zone,ABCDEF0123456789,%s,2E910F8C,True\n" % key
         )
         rc, output, data = self.run_fixture(log, template_inventory_csv=template_inventory)
         self.assertEqual(rc, 0)
@@ -100,7 +100,7 @@ class StageCheckLogV3Tests(unittest.TestCase):
         self.assertEqual(verdict["verdict"], "WORKED")
         self.assertEqual(verdict["replacement_uid"], selected_uid)
         self.assertEqual(verdict["adapter"], "node_template")
-        self.assertEqual(verdict["zone"], "levels\\\\i29\\\\instance\\\\ardolis\\\\test.zone")
+        self.assertEqual(verdict["zone"], "levels\\i29\\instance\\ardolis\\test.zone")
         self.assertEqual(verdict["zone_id"], "ABCDEF0123456789")
         self.assertIn("runtime-observed", output)
 
