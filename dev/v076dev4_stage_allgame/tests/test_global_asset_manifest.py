@@ -230,6 +230,18 @@ class GlobalAssetManifestTests(unittest.TestCase):
             self.assertTrue(any("runtime bundle missing 17_rando_omega.lua" in x
                                 for x in SA.runtime_bundle_problems(out)))
 
+    def test_v3_build_requires_stage_monitor_and_generated_manifests(self):
+        with tempfile.TemporaryDirectory() as out:
+            self.assertEqual(len(SA.v3_artifact_problems(out, "v3")), 3)
+            with open(os.path.join(out, SA.STAGE_LUA_FILE), "w", encoding="utf-8") as fh:
+                fh.write("-- stage monitor\\n")
+            with open(os.path.join(out, SA.GLOBAL_ASSET_LUA), "w", encoding="utf-8") as fh:
+                fh.write("RANDO_GLOBAL_ENEMY_ASSETS = {}\\n")
+            with open(os.path.join(out, SA.MANIFEST_LUA), "w", encoding="utf-8") as fh:
+                fh.write('RANDO_STAGE_ENEMIES = { profile = "v3" }\\n')
+            self.assertEqual(SA.v3_artifact_problems(out, "v3"), [])
+            self.assertEqual(SA.v3_artifact_problems(out, "max"), [])
+
     def test_manifest_excludes_ambiguous_path_metadata(self):
         scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
             "1111111111111111": {"kind": "enm_pirate_robot_melee", "asset": "shared/enemy.actor"},
