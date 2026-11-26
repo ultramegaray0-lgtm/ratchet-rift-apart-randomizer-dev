@@ -1198,7 +1198,9 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
             decisions[key] = ("refused", "no same-zone compatible enemy template: " +
                 (", ".join("%s x%d" % x for x in rejected.most_common(3)) if rejected else "pool contains only this kind"))
 
-    # A candidate template must retain an unchanged native user after this patch.
+    # Preserve only the source templates actually needed by a replacement. Greedy
+    # set-cover keeps the fewest node adapters native while ensuring each selected
+    # replacement still has at least one unchanged local user.
     anchors = {}
     for uid in pool:
         fixed = []
@@ -1212,17 +1214,27 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
             fixed.append(factory_anchors[uid])
         if fixed:
             anchors[uid] = fixed[0]
-    # If no fixed user exists, retain one eligible node as the local anchor.
-    for uid in pool:
-        if uid in anchors:
-            continue
-        possible = sorted(key for key, nopts in options.items()
-                          if any(o["uid"] == uid for o in nopts)
-                          and any(kind == "node_template" and k == key for kind, k in users.get(uid, [])))
-        if possible:
-            anchors[uid] = possible[0]
-            options.pop(possible[0], None)
-            decisions[possible[0]] = ("anchor", "kept native: last unchanged user of local template %s" % uid)
+    while True:
+        uncovered = [key for key, nopts in options.items()
+                     if not any(o["uid"] in anchors for o in nopts)]
+        if not uncovered:
+            break
+        source_choices = []
+        for uid in pool:
+            if uid in anchors:
+                continue
+            targets = [key for key in uncovered if any(o["uid"] == uid for o in options[key])]
+            sources = sorted(key for kind, key in users.get(uid, [])
+                             if kind == "node_template" and key in options)
+            if targets and sources:
+                source_choices.append((len(targets), uid, sources))
+        if not source_choices:
+            break
+        _, uid, sources = max(source_choices, key=lambda item: (item[0], item[1]))
+        anchor_key = min(sources, key=lambda key: (len(options.get(key, [])), key))
+        anchors[uid] = anchor_key
+        options.pop(anchor_key, None)
+        decisions[anchor_key] = ("anchor", "kept native: last unchanged user of local template %s" % uid)
 
     chosen, used = {}, Counter()
     order = sorted(options)
