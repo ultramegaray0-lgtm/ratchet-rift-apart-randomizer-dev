@@ -23,7 +23,7 @@ jobs:
       - name: Compile Python sources
         run: python -m compileall -q dev/v076dev4_stage_allgame/tools/stage_enemies
       - name: Run global asset manifest tests
-        run: python -I -m unittest dev.v076dev4_stage_allgame.tests.test_global_asset_manifest
+        run: python -I dev/v076dev4_stage_allgame/tests/test_global_asset_manifest.py
       - name: Check builder CLI
         working-directory: dev/v076dev4_stage_allgame/tools/stage_enemies
         run: python -I stage_allgame.py --help
