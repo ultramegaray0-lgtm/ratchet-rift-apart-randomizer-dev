@@ -52,6 +52,24 @@ On launch, rivet.log should report:
 
 The status API also reports global_templates.
 
+## Hybrid all-spawner coverage
+
+The all-planet .stage builder edits SunsetSpawnerFactory `Templates` variables. It does not edit the separate
+`SpawnerScriptAction` `Template` / group adapters. The runtime layer now deliberately handles that second set while
+the .stage manifest is installed:
+
+- `.stage` owns factory `Templates` variables; runtime writes to those same factory variables are skipped.
+- Runtime `Template` and group adapters remain enabled, using the global resident-template pool where the native
+  asset path can create a resident template.
+- The stage monitor observes only factory spawners listed in its manifest, so runtime node-adapter spawns are not
+  misreported as .stage replacements.
+- The stage monitor and runtime scripts use the kit version `10.0.39` plus the separate `STAGE_LUA = 1.1.0`
+  handshake. These are different version checks; both must match.
+
+This hybrid is the current highest-coverage route without writing foreign-zone actor UIDs into .stage files or letting
+two systems write the same factory variable. It is not yet a proven 100% result: the native global registry previously
+created 14 of 25 catalog templates, and the node-adapter path still requires in-game verification.
+
 ## Safety and known unknowns
 
 - The actor-asset load and spawn calls are native engine paths already used by Rivet Hook; the new helper compiles against the pinned hook source.
