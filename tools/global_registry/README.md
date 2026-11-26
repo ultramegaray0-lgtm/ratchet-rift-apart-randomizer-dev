@@ -20,7 +20,7 @@ Run the GitHub Actions workflow "Build Global Enemy Registry Hook" on this branc
 
 The workflow builds a pinned upstream Rivet Hook source revision and applies patch_rivet_hook.py. The custom API is not present in an unmodified Rivet Hook release.
 
-Validated native build: [GitHub Actions run 45730770687](https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/actions/runs/45730770687). Artifact: rivet-hook-global-enemy-templates (7.37 MB). SHA-256: 12e598d2fe1d9ea8a537998521f61dbf72e4d423bd1a2fc41d6a3daa848b8371.
+V3 diagnostic native build: [GitHub Actions run 45737538654](https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/actions/runs/45737538654) — all configure, compile, collect, and upload steps passed. Artifact: [rivet-hook-global-enemy-templates (7.37 MB)](https://api.github.com/repos/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/actions/artifacts/15080161752/zip). This build adds separate native diagnostics for exceptions, null actor returns, and unreadable actor pointers, including asset ID/status/path.
 
 ### 2. Build the local game-specific catalog
 
