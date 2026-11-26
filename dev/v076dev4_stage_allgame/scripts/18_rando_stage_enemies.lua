@@ -253,7 +253,7 @@ function V.stage_tick(frame, ready, enabled)
     if m then
       local idx = ST.index()
       slog(string.format("STAGE MODE ON: %s, %d change(s), %s (sha256 %s), built by stage_enemies %s for %s - runtime spawner " ..
-          "writes are OFF for factory variables and manifest-listed node Template adapters; unlisted runtime node/group adapters remain available", tostring(m.label), idx.n, tostring(m.stage_file),
+          "writes are OFF only for manifest-owned factory/node Template keys; unlisted factory, node and group adapters remain on the runtime route", tostring(m.label), idx.n, tostring(m.stage_file),
           tostring(m.stage_sha256), tostring(m.tool), tostring(m.kit)))
       if idx.n <= ST.LIST_ALL then
         for _, c in ipairs(idx.list) do ST.change_line(c) end
@@ -275,10 +275,9 @@ function V.stage_tick(frame, ready, enabled)
             "reference (the Phase A POC failure). Uninstall it and build again with tool 1.1.0", tostring(m.tool)))
       end
       if src == "lua" then
-        slog("RANDO-ERROR enemy_source = \"lua\" is ignored while the .stage manifest is installed (two systems would change " ..
-            "the same spawners); uninstall the .stage to use the runtime route")
+        slog("enemy_source = \"lua\": the .stage manifest owns only its listed keys; unlisted eligible spawners may still use the runtime route")
       end
-      ST.say_pending = string.format("%d spawner change(s) from %s; factory and exact node Template adapters are covered", idx.n, tostring(m.stage_file))
+      ST.say_pending = string.format("%d manifest-owned spawner change(s) from %s; unlisted eligible spawners remain on the runtime route", idx.n, tostring(m.stage_file))
     elseif src == "stage" then
       slog("STAGE MODE ON without a manifest (enemy_source = \"stage\"): no enemy is changed at all")
     else
