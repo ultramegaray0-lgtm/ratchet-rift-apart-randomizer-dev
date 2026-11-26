@@ -1368,7 +1368,8 @@ def manifest_lua(m):
             "true" if c.get("replacement_external") else "false", lua_str(c.get("replacement_source_planet") or ""),
             lua_str(c.get("replacement_source_zone") or "")))
         L.append("      original_refs = %d, replacement_refs = %d, tier = %s," % (c["original_refs"], c["replacement_refs"], lua_str(c["tier"])))
-        L.append("      adapter = %s, pair = %s, spawner_keys = { %s } }," % (lua_str(c.get("adapter", "factory")), lua_str(c["pair"]), lua_str(c["key"])))
+        keys = c.get("spawner_keys") or [c["key"]]
+        L.append("      adapter = %s, pair = %s, spawner_keys = { %s } }," % (lua_str(c.get("adapter", "factory")), lua_str(c["pair"]), ", ".join(lua_str(k) for k in keys)))
     L += ["  },", "}", ""]
     return "\n".join(L)
 
@@ -1465,7 +1466,8 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
     node_changes = [c for c in changes if c.get("adapter") == "node_template"]
     node_candidates = [n for z in S.zones.values() for n in z.get("template_nodes", []) if n.get("is_spawner_class")]
     node_eligible = [n for n in node_candidates if not n.get("problem") and n.get("template_plug_count") == 1
-                     and n.get("form") == "local" and n.get("owners") == 1 and n.get("kind")
+                     and n.get("form") == "local" and n.get("kind")
+                     and n.get("shared_spawner_safe", n.get("owners") == 1)
                      and brain.regular(n["kind"], n.get("asset"))[0]]
     node_by_planet = defaultdict(Counter)
     for z in S.zones.values():
@@ -1475,7 +1477,7 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
                 if n in node_eligible:
                     node_by_planet[z["planet"]]["eligible"] += 1
     for c in node_changes:
-        node_by_planet[c["planet"]]["changed"] += 1
+        node_by_planet[c["planet"]]["changed"] += len(c.get("spawner_keys") or [c["key"]])
     by_planet = defaultdict(lambda: Counter())
     for r in rows:
         by_planet[r[0]]["factories"] += 1
@@ -1718,13 +1720,15 @@ def emit(a, S, src, brain, build, out):
             why = "zone has no 36-byte toc header: cannot be written to a .stage"
         if why:
             for c in ch:
-                decisions[zh][c["key"]] = ("refused", why)
+                for key in (c.get("spawner_keys") or [c["key"]]):
+                    decisions[zh][key] = ("refused", why)
             continue
         z0 = Zone(header, raw, rec["zone"])
         n0, bad0 = z0.c1()
         if bad0:
             for c in ch:
-                decisions[zh][c["key"]] = ("refused", "the game's own zone fails C1: the zone is left alone")
+                for key in (c.get("spawner_keys") or [c["key"]]):
+                    decisions[zh][key] = ("refused", "the game's own zone fails C1: the zone is left alone")
             continue
         for c in ch:
             c["entry_abs"] = z0.var_base + VAR_SIZE * c["var_index"]
@@ -1732,7 +1736,7 @@ def emit(a, S, src, brain, build, out):
         new = apply_changes(raw, ch)
         z1 = Zone(header, new, rec["zone"])
         problems, diff, n1 = compare(z0, z1, ch)
-        chk = {c["key"] for c in ch}
+        chk = {key for c in ch for key in (c.get("spawner_keys") or [c["key"]])}
         users_after = {hex16(z1.vars[f["sv"]][5]) for f in z1.factories()
                        if f["form"] == "local" and f["key"] not in chk}
         users_after.update(hex16(z1.vars[n["var_index"]][5]) for n in z1.template_nodes()
@@ -1742,7 +1746,8 @@ def emit(a, S, src, brain, build, out):
                 problems.append("%s: replacement %s has no unchanged native factory/node user after the patch" % (c["key"], c["replacement_uid"]))
         if problems:
             for c in ch:
-                decisions[zh][c["key"]] = ("refused", "zone validation failed: " + "; ".join(problems)[:200])
+                for key in (c.get("spawner_keys") or [c["key"]]):
+                    decisions[zh][key] = ("refused", "zone validation failed: " + "; ".join(problems)[:200])
             print("ZONE REFUSED %s: %s" % (rec["zone"], "; ".join(problems)))
             continue
 
