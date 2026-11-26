@@ -197,7 +197,7 @@ def effective_pins(zone_id, verdict_map, no_pins=False):
     return [(key, uid, why) for key, (uid, why) in sorted(pins.items())]
 
 
-PROFILES = ("max", "safe", "all", "v3")
+PROFILES = ("max", "safe", "all", "v3", "v4")
 REGULAR_FAMILIES = set(KN.FAMILY_GROUP)          # ground, swarmer, turret, flyer
 NOT_ENEMY_PREFIX = ("veh_", "npc_", "amb_", "crt_", "critter", "haz_", "prop_", "animclue")
 
@@ -926,6 +926,14 @@ def plan_zone_force(S, brain, rec, opts, rng):
             if not ok_rep:
                 rejected["boss-tier/non-regular candidate"] += 1
                 continue
+            if opts.profile == "v4":
+                # Explicit user priority: every structurally valid, classifiable regular-enemy
+                # factory gets a foreign enemy template, even when movement/faction or spawn-clue
+                # compatibility is unproven. This can create unreachable/unkillable encounters.
+                ranked.append((candidate, rep_family, "V4-FORCED",
+                               "V4 override: faction/movement compatibility checks bypassed",
+                               "forced-unsafe", "V4 override: spawn-point compatibility checks bypassed"))
+                continue
             try:
                 pair_ok, pair_tier, pair_evidence = brain.pair(original_kind, original_family,
                                                                 candidate["kind"], rep_family)
@@ -949,7 +957,7 @@ def plan_zone_force(S, brain, rec, opts, rng):
         usage[candidate["kind"]] += 1
 
         # V2.2 only reaches this point after regular-enemy, pair, and spawn-point checks pass.
-        tier = "FORCED-TEST"
+        tier = "V4-FORCED-UNSAFE" if opts.profile == "v4" else "FORCED-TEST"
         changes.append({
             "zone": rec["zone"], "zone_id": rec["zone_id"], "planet": rec["planet"], "key": key,
             "action": f["action"], "plug": f.get("plug"), "var_index": f["sv"],
@@ -959,7 +967,7 @@ def plan_zone_force(S, brain, rec, opts, rng):
             "replacement_external": True, "replacement_source_zone": candidate["zone"],
             "replacement_source_zone_id": candidate["zone_id"], "replacement_source_planet": candidate["planet"],
             "replacement": candidate["kind"], "replacement_family": rep_family or "unknown",
-            "pair_tier": pair_tier, "pair_evidence": "SAFE V2.2.0: " + pair_evidence,
+            "pair_tier": pair_tier, "pair_evidence": ("V4 UNSAFE OVERRIDE: " + pair_evidence) if opts.profile == "v4" else ("SAFE V2.2.0: " + pair_evidence),
             "spawn_tier": spawn_tier or "forced-unsafe",
             "spawn_points": spawn_evidence or "forced: spawn point was not validated",
             "count": f.get("count"), "tier": tier, "anchor": None,
@@ -1723,13 +1731,13 @@ def emit(a, S, src, brain, build, out):
     zrecs, planned = {}, []
     for zh, rec0 in S.zones.items():
         has_node_adapter = any(n.get("is_spawner_class") for n in rec0.get("template_nodes", []))
-        if not rec0["factories"] and not (a.profile == "v3" and has_node_adapter):
+        if not rec0["factories"] and not (a.profile in ("v3", "v4") and has_node_adapter):
             continue
         rec = copy.deepcopy(rec0)
         zrecs[zh] = rec
         rng = random.Random("%s|%s" % (a.seed, zh))
         ch, dec, anchors, pin_report = plan_zone(S, brain, rec, a, rng)
-        if a.profile == "v3":
+        if a.profile in ("v3", "v4"):
             node_changes, node_decisions = plan_node_template_adapters(S, brain, rec, a, rng, ch, anchors)
             collisions = set(dec).intersection(node_decisions)
             if collisions:
@@ -1822,12 +1830,12 @@ def emit(a, S, src, brain, build, out):
                   "span": span, "sha256_original": zrecs[hex16(zid)]["sha256"], "sha256_patched": zrecs[hex16(zid)]["sha256_patched"],
                   "changes": zrecs[hex16(zid)]["changes"]} for span, zid in members]
         m = {"format": 1, "tool": VERSION, "kit": KIT, "stage_lua": STAGE_LUA, "seed": a.seed, "profile": a.profile,
-             "label": ("V3.0 HYBRID - EXPERIMENTAL; local factory + exact node Template adapters" if a.profile == "v3" else "V2.1.0 FORCE ALL ENEMIES - EXPERIMENTAL; classifiable enemy factories use global foreign templates" if getattr(a, "force_all_enemies", False) else "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile), "stage_sha256": ssha,
+             "label": ("V4 MAX COVERAGE - UNSAFE EXPERIMENTAL; forced foreign factory templates + exact node Template adapters" if a.profile == "v4" else "V3.0 HYBRID - EXPERIMENTAL; local factory + exact node Template adapters" if a.profile == "v3" else "V2.1.0 FORCE ALL ENEMIES - EXPERIMENTAL; classifiable enemy factories use global foreign templates" if getattr(a, "force_all_enemies", False) else "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile), "stage_sha256": ssha,
              "settings": {"profile": a.profile, "strict_external": a.strict_external, "rate": a.rate,
                           "planets": a.planet or "all", "actor_family": not a.no_actor_family,
                           "cross_planet": bool(getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)),
                           "force_all_enemies": bool(getattr(a, "force_all_enemies", False)),
-                          "node_adapters": a.profile == "v3"},
+                          "node_adapters": a.profile in ("v3", "v4")},
              "zones": zones, "changes": changes, "pins": [{"key": k, "replacement": u, "result": w} for k, u, w in pins]}
         with open(os.path.join(out, "stage_enemies_manifest.json"), "w") as fh:
             json.dump(m, fh, indent=1)
@@ -1890,6 +1898,8 @@ def cmd_scan(a):
 def cmd_build(a):
     if a.profile == "v3" and (getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)):
         raise Refused("V3 is local-zone only; --cross-planet and --force-all-enemies are intentionally refused")
+    if a.profile == "v4" and not getattr(a, "force_all_enemies", False):
+        raise Refused("V4 requires --force-all-enemies: this is the explicit maximum-coverage experimental profile")
     return run_plan(a, build=True)
 
 
@@ -2040,7 +2050,7 @@ INSTALL_FILES = [("RandoEnemies.stage", "mods/RandoEnemies.stage"),
 
 def v3_artifact_problems(out, profile):
     """V3 must ship its stage monitor and both generated manifests, not just a .stage zip."""
-    if profile != "v3":
+    if profile not in ("v3", "v4"):
         return []
     problems = []
     required = (STAGE_LUA_FILE, GLOBAL_ASSET_LUA, MANIFEST_LUA)
@@ -2056,8 +2066,8 @@ def v3_artifact_problems(out, profile):
     if os.path.isfile(manifest_path):
         with open(manifest_path, encoding="utf-8", errors="replace") as fh:
             source = fh.read()
-        if "RANDO_STAGE_ENEMIES = {" not in source or 'profile = "v3"' not in source:
-            problems.append("V3 stage manifest is missing its v3 profile declaration")
+        if "RANDO_STAGE_ENEMIES = {" not in source or ('profile = "%s"' % profile) not in source:
+            problems.append("%s stage manifest is missing its profile declaration" % profile.upper())
     return problems
 
 
@@ -2181,7 +2191,7 @@ def main(argv=None):
             p.add_argument("--no-game-log", action="store_true", help="do not read GAME/rivet.log")
             p.add_argument("--profile", choices=PROFILES, default="max",
                            help="max (default): evidence-gated factories; safe: single-owner only; all: every shared factory variable (UNVERIFIED); "
-                                "v3: single-owner factories plus exact single-owner SpawnerScriptAction Template adapters (EXPERIMENTAL)")
+                                "v3: local factory + exact node adapters; v4: forced foreign factory replacements plus node adapters (UNSAFE)")
             p.add_argument("--no-safe", action="store_true", help="build: do not also write the safe/ fallback build")
             p.add_argument("--strict-external", action="store_true", help="refuse external spawn points no zone holds")
             p.add_argument("--no-actor-family", action="store_true", help="never infer a family from the actor file")
