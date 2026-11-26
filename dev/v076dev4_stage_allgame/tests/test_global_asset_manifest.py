@@ -145,6 +145,18 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertEqual(decisions["NODE-SHARED"][0], "refused")
         self.assertTrue(all(c["replacement_index"] in (0, 1) for c in changes))
 
+    def test_v3_installer_bundles_one_synchronized_runtime_kit(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        runtime_dir = os.path.join(root, "mod", "RiftApartRandomizer", "scripts")
+        self.assertEqual(SA.VERSION, "3.0.0-alpha.1")
+        self.assertIn("runtime_scripts", SA.RUNTIME_BUNDLE_DIR)
+        self.assertIn("runtime_scripts", str(SA.INSTALL_FILES))
+        self.assertGreaterEqual(len(SA.RUNTIME_SCRIPT_NAMES), 18)
+        for name in SA.RUNTIME_SCRIPT_NAMES:
+            with open(os.path.join(runtime_dir, name), encoding="utf-8") as fh:
+                source = fh.read()
+            self.assertIn('RANDO_FILES["' + name[:-4] + '"] = "10.0.50"', source, name)
+
     def test_manifest_excludes_ambiguous_path_metadata(self):
         scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
             "1111111111111111": {"kind": "enm_pirate_robot_melee", "asset": "shared/enemy.actor"},
