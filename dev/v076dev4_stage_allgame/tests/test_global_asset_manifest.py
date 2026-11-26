@@ -92,19 +92,57 @@ class GlobalAssetManifestTests(unittest.TestCase):
         with open(stage_path, encoding="utf-8") as fh:
             stage = fh.read()
         self.assertIn('V.STAGE_LUA = "1.1.0"', runtime)
-        self.assertIn('function V.stage_mode() return type(RANDO_STAGE_ENEMIES) == "table" end', runtime)
-        self.assertIn("function V.stage_manifest() return RANDO_STAGE_ENEMIES end", runtime)
+        self.assertIn('function V.stage_manifest() return RANDO_STAGE_ENEMIES end', runtime)
+        self.assertIn('function V.stage_mode() return type(V.stage_manifest()) == "table" end', runtime)
+        self.assertIn("function V.stage_owns_rec(r)", runtime)
+        self.assertIn('if V.stage_owns_rec(r) then return note_why(r, ".stage owns this " .. tostring(r.kind) .. " Template variable") end', runtime)
         self.assertIn("if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end", runtime)
         self.assertIn("pcall(V.stage_on_spawn, e, r, a", runtime)
         self.assertIn("pcall(V.stage_on_death, h)", runtime)
-        self.assertIn('if V.stage_mode() and r.kind == "factory" then return note_why(r, ".stage owns this factory Templates variable") end', runtime)
         self.assertIn("function V.global_templates_tick(frame)\n  if not V.enabled() then return end", runtime)
-        self.assertIn('if not V.enabled() or V.stage_mode() then return end', runtime)
+        self.assertIn("if not V.enabled() then return end", runtime)
+        self.assertNotIn("if not V.enabled() or V.stage_mode() then return end", runtime)
         self.assertIn('if not (SP and SP.V and SP.V.stage_mode) then', stage)
-        self.assertIn('if not V.stage_mode() or not r or r.kind ~= "factory" then return end', stage)
+        self.assertIn('local expected_adapter = c.adapter or "factory"', stage)
+        self.assertIn('r.kind == "template" and "node_template" or nil', stage)
         self.assertIn('ST.STAGE_LUA = "1.1.0"', stage)
-        self.assertIn('RANDO_FILES["18_rando_stage_enemies"] = "10.0.39"', stage)
-        self.assertIn('RANDO_FILES["16_rando_spawners"] = "10.0.39"', runtime)
+        self.assertIn('RANDO_FILES["18_rando_stage_enemies"] = "10.0.50"', stage)
+        self.assertIn('RANDO_FILES["16_rando_spawners"] = "10.0.50"', runtime)
+
+    def test_v3_node_template_planner_only_changes_exact_single_owner_local_spawners(self):
+        class FakeBrain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "fixture"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return (original != replacement, "proven", "fixture pair")
+            def family(self, kind, asset=None):
+                return "ground", "fixture"
+
+        factories = [
+            {"key": "FACTORY-A", "form": "local", "uid": "1111111111111111",
+             "kind": "enm_pirate_robot_shooter", "asset": "actors/shooter.actor", "rec": 0, "problem": None},
+            {"key": "FACTORY-B", "form": "local", "uid": "2222222222222222",
+             "kind": "enm_pirate_robot_melee", "asset": "actors/melee.actor", "rec": 1, "problem": None},
+        ]
+        def node(key, var_index, uid, kind, rec, owners=1):
+            return {"key": key, "action": 0, "class": "SPAWNER", "is_spawner_class": True,
+                    "template_plug": 1, "template_plug_count": 1, "var_index": var_index,
+                    "form": "local", "uid": uid, "kind": kind, "asset": "actors/%s.actor" % kind,
+                    "rec": rec, "owners": owners, "co_owner_classes": [], "other_plugs": "", "problem": ""}
+        rec = {"zone": "fixture.zone", "zone_id": "ABCDEF0123456789", "planet": "fixture",
+               "factories": factories,
+               "template_nodes": [
+                   node("NODE-A", 2, "1111111111111111", "enm_pirate_robot_shooter", 0),
+                   node("NODE-B", 3, "2222222222222222", "enm_pirate_robot_melee", 1),
+                   node("NODE-SHARED", 4, "1111111111111111", "enm_pirate_robot_shooter", 0, owners=2),
+               ]}
+        opts = SimpleNamespace(verdict_map={}, rate=1.0)
+        changes, decisions = SA.plan_node_template_adapters(
+            SimpleNamespace(), FakeBrain(), rec, opts, random.Random("v3-node-test"), [], {})
+        self.assertEqual({c["key"] for c in changes}, {"NODE-A", "NODE-B"})
+        self.assertTrue(all(c["adapter"] == "node_template" for c in changes))
+        self.assertEqual(decisions["NODE-SHARED"][0], "refused")
+        self.assertTrue(all(c["replacement_index"] in (0, 1) for c in changes))
 
     def test_manifest_excludes_ambiguous_path_metadata(self):
         scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
