@@ -10,8 +10,8 @@ as NOT REACHED per planet. Without it the changes come from the log's own "STAGE
 listed for big ones). Several logs (several play sessions) are read in order and their evidence adds up.
 
 Per changed spawner, per level visit:
-  LISTED      "STAGE VARIABLE factory KEY: holds <uid> ... IS loaded" - the patched zone is in memory and the spawner exists
-  SPAWNS      every "RANDO-ENEMIES SPAWN <handle> ... factory Templates KEY ... spawned <kind>" line (one per actor)
+  LISTED      "STAGE VARIABLE factory|template KEY: holds <uid> ... IS loaded" - the patched zone is in memory and the spawner exists
+  SPAWNS      every "RANDO-ENEMIES SPAWN <handle> ... factory Templates KEY / node Template KEY ... spawned <kind>" and "STAGE SPAWN" lines (one per actor; duplicate records are collapsed)
   ACTIVE      DialogStartedEvent lines whose SenderHandle is one of those actors (combat barks)
   DEATH/GONE  "STAGE DEATH <h>" / "STAGE GONE <h>"
 Verdicts:
