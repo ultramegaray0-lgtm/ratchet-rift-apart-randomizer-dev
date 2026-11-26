@@ -1935,10 +1935,14 @@ def runtime_bundle_problems(out):
         return ["runtime bundle is missing 10_rando_runtime.lua"]
     with open(core, encoding="utf-8", errors="replace") as fh:
         core_src = fh.read()
-    match = re.search(r'R\\.KIT_VERSION\\s*=\\s*"([^"]+)"', core_src)
-    if not match:
+    marker = 'R.KIT_VERSION'
+    pos = core_src.find(marker)
+    if pos < 0:
         return ["10_rando_runtime.lua has no R.KIT_VERSION stamp"]
-    expected = match.group(1)
+    value = core_src.find('= "', pos + len(marker))
+    expected = core_src[value + 3:core_src.find('"', value + 3)] if value >= 0 else ""
+    if not expected:
+        return ["10_rando_runtime.lua has an invalid R.KIT_VERSION stamp"]
     for name in RUNTIME_SCRIPT_NAMES:
         path = os.path.join(bundle, name)
         if not os.path.isfile(path):
@@ -1946,18 +1950,23 @@ def runtime_bundle_problems(out):
             continue
         with open(path, encoding="utf-8", errors="replace") as fh:
             source = fh.read()
-        key = name[:-4]
-        stamp = re.search(r'RANDO_FILES\\["' + re.escape(key) + r'"\\]\\s*=\\s*"([^"]+)"', source)
+        marker = 'RANDO_FILES["' + name[:-4] + '"]'
+        pos = source.find(marker)
+        value = source.find('= "', pos + len(marker)) if pos >= 0 else -1
+        stamp = source[value + 3:source.find('"', value + 3)] if value >= 0 else ""
         if not stamp:
             problems.append(name + " has no RANDO_FILES kit stamp")
-        elif stamp.group(1) != expected:
-            problems.append("%s kit stamp %s != runtime core %s" % (name, stamp.group(1), expected))
+        elif stamp != expected:
+            problems.append("%s kit stamp %s != runtime core %s" % (name, stamp, expected))
     stage_monitor = os.path.join(out, STAGE_LUA_FILE)
     if os.path.isfile(stage_monitor):
         with open(stage_monitor, encoding="utf-8", errors="replace") as fh:
             stage_src = fh.read()
-        stamp = re.search(r'RANDO_FILES\\["18_rando_stage_enemies"\\]\\s*=\\s*"([^"]+)"', stage_src)
-        if not stamp or stamp.group(1) != expected:
+        marker = 'RANDO_FILES["18_rando_stage_enemies"]'
+        pos = stage_src.find(marker)
+        value = stage_src.find('= "', pos + len(marker)) if pos >= 0 else -1
+        stamp = stage_src[value + 3:stage_src.find('"', value + 3)] if value >= 0 else ""
+        if stamp != expected:
             problems.append("18_rando_stage_enemies.lua kit stamp does not match runtime core " + expected)
         if 'ST.STAGE_LUA = "' + STAGE_LUA + '"' not in stage_src:
             problems.append("18_rando_stage_enemies.lua STAGE_LUA handshake does not match " + STAGE_LUA)
@@ -1965,9 +1974,9 @@ def runtime_bundle_problems(out):
     if os.path.isfile(settings):
         with open(settings, encoding="utf-8", errors="replace") as fh:
             settings_src = fh.read()
-        if not re.search(r'enemy_compat\\s*=\\s*"max"', settings_src):
+        if 'enemy_compat = "max"' not in settings_src:
             problems.append('04_rando_settings.lua does not default enemy_compat to "max"')
-        if not re.search(r'enemy_mix_movement\\s*=\\s*true', settings_src):
+        if "enemy_mix_movement = true" not in settings_src:
             problems.append("04_rando_settings.lua does not enable maximum movement mixing")
     return problems
 
