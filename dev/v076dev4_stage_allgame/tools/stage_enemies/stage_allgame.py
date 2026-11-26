@@ -1197,7 +1197,21 @@ def write_global_enemy_asset_manifest(S, brain, out):
     """Export every regular enemy actor asset used by any native factory, deduped by path."""
     by_path = {}
     ambiguous = set()
-    for uid, meta in sorted(S.template_catalog_all.items()):
+    candidates = []
+    # Every actor in every scanned zone, not just the templates referenced by
+    # native factories. The runtime loader can turn any classifiable regular
+    # enemy actor asset into a resident template source.
+    for uid, records in S.actor_catalog.items():
+        for meta in records:
+            candidates.append((uid, meta))
+    for uid, meta in S.template_catalog_all.items():
+        candidates.append((uid, meta))
+    for zone in S.zones.values():
+        for node in zone.get("template_nodes", []):
+            if node.get("uid") and node.get("kind"):
+                candidates.append((node["uid"], {"kind": node.get("kind"), "asset": node.get("asset"),
+                                                 "planet": zone.get("planet", ""), "zone": zone.get("zone", "")}))
+    for uid, meta in sorted(candidates, key=lambda x: (str(x[1].get("asset") or "").lower(), str(x[1].get("kind") or ""), str(x[0]))):
         kind, asset = meta.get("kind"), meta.get("asset")
         if not kind or not asset:
             continue
