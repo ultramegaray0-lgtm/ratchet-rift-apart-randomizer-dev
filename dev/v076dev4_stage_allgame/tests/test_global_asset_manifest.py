@@ -119,6 +119,8 @@ class GlobalAssetManifestTests(unittest.TestCase):
             builder = fh.read()
         self.assertIn('if opts.profile in ("safe", "v3") or (opts.profile == "max" and unseen):', builder)
         self.assertIn('profile = %s, label = %s, stage_lua = %s', builder)
+        self.assertIn('if nd["key"] == 0:', builder)
+        self.assertIn('nd["key"] == 0 else', builder)
 
     def test_v3_node_template_planner_only_changes_exact_single_owner_local_spawners(self):
         class FakeBrain:
@@ -146,6 +148,8 @@ class GlobalAssetManifestTests(unittest.TestCase):
                    node("NODE-A", 2, "1111111111111111", "enm_pirate_robot_shooter", 0),
                    node("NODE-B", 3, "2222222222222222", "enm_pirate_robot_melee", 1),
                    node("NODE-SHARED", 4, "1111111111111111", "enm_pirate_robot_shooter", 0, owners=2),
+                   dict(node("0000000000000000", 5, "1111111111111111", "enm_pirate_robot_shooter", 0),
+                        problem="zero Script Action key: no stable runtime identity for the stage manifest"),
                ]}
         opts = SimpleNamespace(verdict_map={}, rate=1.0)
         changes, decisions = SA.plan_node_template_adapters(
@@ -153,6 +157,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertEqual({c["key"] for c in changes}, {"NODE-A", "NODE-B"})
         self.assertTrue(all(c["adapter"] == "node_template" for c in changes))
         self.assertEqual(decisions["NODE-SHARED"][0], "refused")
+        self.assertEqual(decisions["0000000000000000"][0], "refused")
         self.assertTrue(all(c["replacement_index"] in (0, 1) for c in changes))
 
     def test_v3_node_only_zone_keeps_one_anchor_and_replaces_the_other_node(self):
