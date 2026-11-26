@@ -122,6 +122,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('profile = %s, label = %s, stage_lua = %s', builder)
         self.assertIn('if nd["key"] == 0:', builder)
         self.assertIn('nd["key"] == 0 else', builder)
+        self.assertIn('if a.profile == "v3" and (getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)):', builder)
 
     def test_v3_node_template_planner_only_changes_exact_single_owner_local_spawners(self):
         class FakeBrain:
