@@ -224,7 +224,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("enemy_randomizer = true", settings)
         self.assertIn("if V and V.global_templates_tick then", runtime)
         self.assertNotIn("V.global_frame_ready and V.global_templates_tick", runtime)
-        self.assertIn("V.GLOBAL_RETRY_LIMIT = 8", runtime)
+        self.assertIn("V.GLOBAL_RETRY_LIMIT = 9999", runtime)
         self.assertIn("GLOBAL PRELOAD: ready", runtime)
         self.assertIn('V.FIRST_SCAN = 0', runtime)
         self.assertIn('V.SCAN_EVERY = 30', runtime)
