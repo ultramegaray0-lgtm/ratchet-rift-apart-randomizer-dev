@@ -4167,6 +4167,27 @@ function V.global_templates_tick(frame)
 
   -- Keep every resident template in the current level's selection pool.
   for _, T in pairs(V.global_templates) do global_template_attach(T) end
+
+  -- A diagnostic snapshot separates three distinct questions:
+  -- (1) did native asset creation succeed, (2) did those actors classify into a
+  -- movement pool, and (3) which compatibility policy is currently gating picks?
+  local n, walkers, flyers, turrets = 0, 0, 0, 0
+  for _, T in pairs(V.global_templates) do
+    n = n + 1
+    local group = V.group_of(T)
+    if group == "walker" then walkers = walkers + 1
+    elseif group == "flyer" then flyers = flyers + 1
+    elseif group == "turret" then turrets = turrets + 1 end
+  end
+  local compat = V.compat_mode()
+  local mixed = V.mix_movement() and "mixed" or "separate"
+  local signature = table.concat({ n, walkers, flyers, turrets, compat, mixed }, "|")
+  if V.global_pool_signature ~= signature or V.global_pool_level ~= V.lvl then
+    V.global_pool_signature, V.global_pool_level = signature, V.lvl
+    vlog(string.format(
+      "GLOBAL TEMPLATE POOL: resident %d | walker %d | flyer %d | turret %d | compatibility %s | movement %s",
+      n, walkers, flyers, turrets, compat, mixed))
+  end
 end
 
 function V.tick(frame, ready)
