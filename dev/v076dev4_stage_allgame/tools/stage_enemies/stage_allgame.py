@@ -1292,7 +1292,7 @@ def manifest_lua(m):
             "true" if c.get("replacement_external") else "false", lua_str(c.get("replacement_source_planet") or ""),
             lua_str(c.get("replacement_source_zone") or "")))
         L.append("      original_refs = %d, replacement_refs = %d, tier = %s," % (c["original_refs"], c["replacement_refs"], lua_str(c["tier"])))
-        L.append("      pair = %s, spawner_keys = { %s } }," % (lua_str(c["pair"]), lua_str(c["key"])))
+        L.append("      adapter = %s, pair = %s, spawner_keys = { %s } }," % (lua_str(c.get("adapter", "factory")), lua_str(c["pair"]), lua_str(c["key"])))
     L += ["  },", "}", ""]
     return "\n".join(L)
 
@@ -1312,21 +1312,23 @@ def write_inventory(S, decisions, out):
     return rows
 
 
-def write_template_inventory(S, out):
-    """Separate forensic inventory for node Template adapters; this is diagnostic only, not a patch plan."""
+def write_template_inventory(S, out, decisions=None):
+    """Forensic inventory plus V3 planning verdicts for exact node Template adapters."""
+    decisions = decisions or {}
     rows = []
     for zh, rec in S.zones.items():
         for n in rec.get("template_nodes", []):
+            st, why = decisions.get(zh, {}).get(n["key"], ("not planned", rec["status"]))
             rows.append([rec["planet"], rec["zone"], zh, n["key"], n["class"], n["is_spawner_class"],
                          n["template_plug_count"], n["var_index"], n["form"], n["uid"], n["kind"] or "-",
                          n["asset"] or "-", n["owners"], ";".join(n["co_owner_classes"]),
-                         n["other_plugs"], n["problem"] or rec["status"]])
+                         n["other_plugs"], st, why or n["problem"] or rec["status"]])
     path = os.path.join(out, "template_adapter_inventory.csv")
     with open(path, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["planet", "zone", "zone_id", "node_key", "class_id", "is_SpawnerScriptAction",
                     "Template_plug_count", "var_index", "reference_form", "template_uid", "kind", "asset",
-                    "owners", "co_owner_classes", "other_plugs", "problem"])
+                    "owners", "co_owner_classes", "other_plugs", "decision", "reason"])
         w.writerows(rows)
     return rows
 
@@ -1578,12 +1580,22 @@ def emit(a, S, src, brain, build, out):
     changes, decisions, pins = [], {}, []
     zrecs, planned = {}, []
     for zh, rec0 in S.zones.items():
-        if not rec0["factories"]:
+        has_node_adapter = any(n.get("is_spawner_class") for n in rec0.get("template_nodes", []))
+        if not rec0["factories"] and not (a.profile == "v3" and has_node_adapter):
             continue
         rec = copy.deepcopy(rec0)
         zrecs[zh] = rec
         rng = random.Random("%s|%s" % (a.seed, zh))
         ch, dec, anchors, pin_report = plan_zone(S, brain, rec, a, rng)
+        if a.profile == "v3":
+            node_changes, node_decisions = plan_node_template_adapters(S, brain, rec, a, rng, ch, anchors)
+            collisions = set(dec).intersection(node_decisions)
+            if collisions:
+                for key in collisions:
+                    node_decisions[key] = ("refused", "node/factory key collision; retained native")
+                    node_changes = [x for x in node_changes if x["key"] != key]
+            ch.extend(node_changes)
+            dec.update(node_decisions)
         decisions[zh] = dec
         pins += pin_report
         if ch:
@@ -1675,7 +1687,7 @@ def emit(a, S, src, brain, build, out):
     global_assets = write_global_enemy_asset_manifest(S, brain, out)
     print("  Global enemy asset catalog: %d regular enemy actor asset(s)" % len(global_assets))
     rows = write_inventory(S, decisions, out)
-    template_rows = write_template_inventory(S, out)
+    template_rows = write_template_inventory(S, out, decisions)
     print("  Template-adapter census: %d plug records; %d exact SpawnerScriptAction nodes (diagnostic only)" % (len(template_rows), sum(1 for z in S.zones.values() for n in z.get("template_nodes", []) if n["is_spawner_class"])))
     lua18 = next((x for x in (os.path.join(HERE, "..", "..", "scripts", STAGE_LUA_FILE), os.path.join(HERE, STAGE_LUA_FILE))
                   if os.path.isfile(x)), "")
