@@ -31,6 +31,7 @@ echo FACTORY ROUTE: forced foreign templates for every structurally valid, singl
 echo NODE ROUTE: exact SpawnerScriptAction Template adapters, local-zone candidates, compatibility bypassed.
 echo RETRY ROUTE: .stage data is already randomized when a zone is loaded again; runtime preload runs during loading.
 echo RUNTIME: first scene-ready scan, frequent rescan, retry persistence and resident global enemy templates.
+echo PREREQUISITE: keep the custom V3 global-registry Rivet Hook installed; V4 source does not bundle the native DLL.
 echo.
 echo IMPORTANT: V4 is intentionally unsafe. Mixed movement/faction and spawn-point rules are bypassed.
 echo Some replacements may be unreachable, unkillable, or softlock an encounter. Keep the generated backup.
