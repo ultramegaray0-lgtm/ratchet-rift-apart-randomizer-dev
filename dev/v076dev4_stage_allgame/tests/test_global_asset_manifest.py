@@ -138,7 +138,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("V.global_frame_ready = ready", source)
         self.assertIn("if V and V.global_templates_tick then", source)
         self.assertNotIn("V.global_frame_ready and V.global_templates_tick", source)
-        self.assertIn("V.GLOBAL_RETRY_LIMIT = 8", source)
+        self.assertIn("V.GLOBAL_RETRY_LIMIT = 9999", source)
         self.assertIn("V.FIRST_SCAN = 0", source)
         self.assertIn("V.RETRY_LIMIT = 9999", source)
         self.assertNotIn("  V.global_templates_tick(frame)", source)
