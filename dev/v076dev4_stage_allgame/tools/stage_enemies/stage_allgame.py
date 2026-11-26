@@ -53,7 +53,7 @@ THE RULES (a factory is changed only when ALL hold; every refusal is recorded wi
 
 usage
   python -I stage_allgame.py scan    --game GAME --out NEW_DIR                   (inventory + coverage report only)
-  python -I stage_allgame.py build   --game GAME --out NEW_DIR [--seed S] [--planet NAME ...] [--profile max|safe|all]
+  python -I stage_allgame.py build   --game GAME --out NEW_DIR [--seed S] [--planet NAME ...] [--profile max|safe|all|v3]
   experimental cross-planet build: add --cross-planet (foreign actor refs; requires in-game validation)
   python -I stage_allgame.py check   --game GAME --build NEW_DIR                 (or NEW_DIR/safe)
   after a play session:  stage_check_log.py rivet.log --manifest NEW_DIR/stage_enemies_manifest.json --json v1.json
