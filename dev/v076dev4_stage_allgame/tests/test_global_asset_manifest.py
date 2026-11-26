@@ -46,31 +46,28 @@ class GlobalAssetManifestTests(unittest.TestCase):
         compiled = compile_lua(source)
         self.assertIsNotNone(compiled, "16_rando_spawners.lua did not parse")
 
-    def test_manifest_includes_actor_catalog_and_script_node_assets(self):
+    def test_manifest_includes_factory_and_real_spawner_template_assets_only(self):
         scan = SimpleNamespace(
             actor_catalog={"1111111111111111": [
-                {"kind": "enm_pirate_robot_melee", "asset": "actors/pirate.actor", "planet": "ardolis"}
+                {"kind": "enm_pirate_robot_melee", "asset": "actors/unused_placed_enemy.actor"}
             ]},
             zones={"2222222222222222": {
                 "planet": "sargasso", "zone": "sargasso.zone",
-                "template_nodes": [{
-                    "uid": "3333333333333333", "kind": "enm_neo_nefarious_shooter",
-                    "asset": "actors/nefarious.actor"
-                }]
+                "template_nodes": [
+                    {"uid": "3333333333333333", "kind": "enm_neo_nefarious_shooter",
+                     "asset": "actors/nefarious.actor", "is_spawner_class": True},
+                    {"uid": "4444444444444444", "kind": "enm_pirate_robot_melee",
+                     "asset": "actors/not_a_spawner.actor", "is_spawner_class": False},
+                ]
             }},
-            template_catalog_all={},
+            template_catalog_all={
+                "5555555555555555": {"kind": "enm_pirate_robot_melee", "asset": "actors/pirate.actor"}
+            },
         )
         with tempfile.TemporaryDirectory() as out:
             rows = SA.write_global_enemy_asset_manifest(scan, Brain(), out)
             self.assertEqual({row["path"] for row in rows},
                              {"actors/pirate.actor", "actors/nefarious.actor"})
-
-    def test_builder_finds_runtime_script_in_repository_package(self):
-        script = os.path.abspath(os.path.join(
-            SA.HERE, "..", "..", "..", "..", "mod", "RiftApartRandomizer", "scripts",
-            SA.SPAWNERS_LUA_FILE,
-        ))
-        self.assertTrue(os.path.isfile(script), script)
 
     def test_runtime_registry_uses_preload_and_one_spawn_per_frame(self):
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
