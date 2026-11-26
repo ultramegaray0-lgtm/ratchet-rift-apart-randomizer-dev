@@ -1366,7 +1366,7 @@ class StageWriter:
 # ======================================================================================================================
 def default_scripts(game):
     for d in ([os.path.join(game, "scripts")] if game else []) + [os.path.join(HERE, "..", "..", "scripts"),
-            os.path.join(HERE, "..", "..", "..", "mod", "RiftApartRandomizer", "scripts")]:
+            os.path.join(HERE, "..", "..", "..", "..", "mod", "RiftApartRandomizer", "scripts")]:
         if os.path.isfile(os.path.join(d, "16_rando_spawners.lua")):
             return os.path.abspath(d)
     return None
@@ -1547,7 +1547,7 @@ def emit(a, S, src, brain, build, out):
                   if os.path.isfile(x)), "")
     if build and changes and lua18:
         shutil.copy2(lua18, os.path.join(out, STAGE_LUA_FILE))
-    lua16 = os.path.join(HERE, "..", "..", "..", "mod", "RiftApartRandomizer", "scripts", SPAWNERS_LUA_FILE)
+    lua16 = os.path.join(HERE, "..", "..", "..", "..", "mod", "RiftApartRandomizer", "scripts", SPAWNERS_LUA_FILE)
     if build and os.path.isfile(lua16):
         shutil.copy2(lua16, os.path.join(out, SPAWNERS_LUA_FILE))
     rep = coverage_report(S, rows, changes, pins, a, src, brain, stage_info)
