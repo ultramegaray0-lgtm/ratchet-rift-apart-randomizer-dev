@@ -233,4 +233,4 @@ R.bind_key(R.config.key_enemies, E.key, "key_enemies")
 R.bind_key("F11", E.emergency_rescue, "enemy_emergency_rescue")
 R.bind_key("V", E.force_complete_current_encounter, "enemy_force_complete")
 log("installed (" .. (E.enabled() and "ON" or "OFF") .. " until the save says otherwise) - " .. R.key("key_enemies") ..
-    " turns it on / off, " .. R.key("key_enemies", true) .. " shows what it changed; F11 emergency safe mode restores loaded stage/runtime enemy replacements; V checks the active mission and completes cleanup only when the game reports state 3")
+    " turns it on / off, " .. R.key("key_enemies", true) .. " shows what it changed; F11 emergency safe mode restores loaded stage/runtime enemy replacements; V tracks the live mission and attempts verified recovery when the helper supports it")
