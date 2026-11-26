@@ -23,18 +23,18 @@ Do not describe this as a 100% replacement build. A complete scan of the user's 
 
 ## Next engineering phase
 
-1. Run CI for syntax and Lua scale tests.
-2. Use a fresh local all-planet inventory to classify every unhandled enemy-owned adapter and every undecodable zone.
-3. Add adapter-specific writers only where the zone structure and runtime ownership semantics are evidenced.
-4. Expand only those additional adapter families whose ownership and spawn semantics are evidenced; keep generic or ambiguous nodes native.
-5. Re-run the complete game scan and report changed / eligible / unresolved totals per planet, then validate the actual runtime spawns in-game.
+1. Run the V3.0 alpha.3 build against the complete local game installation and independently check the generated stage.
+2. Install the custom native hook artifact and the synchronized V3 runtime bundle; enable Enemy Randomizer before entering each test level.
+3. Use the V3-aware `CHECK_MY_LOG.bat` to record factory and node Template verdicts per owner key, then rebuild with `BUILD_NEXT_VERDICT_GUIDED.bat`.
+4. Diagnose the 11 previously failed native global-template creations from the new asset ID/status/path logs; do not count a failed or merely loaded asset as a usable replacement.
+5. Expand additional generic/group adapters and undecodable zones only when their ownership and spawn semantics are evidenced. Keep ambiguous, malformed and non-enemy references native.
 
 
-# Template adapter census update
+# Template adapter census update (historical, before V3)
 
-The builder now writes a separate, read-only `template_adapter_inventory.csv` alongside the existing factory inventory. It records each node's class ID, whether it exactly matches the runtime's `SpawnerScriptAction` class, Template variable reference form and UID, local enemy kind when resolvable, variable owners/co-owner classes, and the node's other plug IDs.
+This historical scan first added the separate, read-only `template_adapter_inventory.csv` alongside the factory inventory. V3 now consumes that census and writes exact `SpawnerScriptAction` Template changes when ownership is safe.
 
-This is deliberately diagnostic: it does not alter any Template adapter or widen the .stage patch plan. The runtime Lua already recognizes `SpawnerScriptAction` nodes and writes their live Template variable, but the offline builder previously only planned `SunsetSpawnerFactory` nodes. The census gives us the exact per-zone candidate list needed to implement the offline counterpart without treating every generic `Template` plug as an enemy spawner.
+The census records each node's class ID, whether it exactly matches the runtime's `SpawnerScriptAction` class, Template variable reference form and UID, local enemy kind when resolvable, variable owners/co-owner classes, and the node's other plug IDs. V3 groups owners by Script Vars index, patches a shared variable once only when every owner is a distinct, uniquely-keyed spawner with exactly one Template plug, and includes every owner key in the manifest. Generic, ambiguous and malformed nodes remain diagnostic-only.
 
 ## CI
 
