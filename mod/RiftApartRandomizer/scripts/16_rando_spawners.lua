@@ -4102,6 +4102,14 @@ end
 function V.global_templates_tick(frame)
   -- V4: independent of scene readiness and the ON/OFF switch: preload resident enemy assets
   -- during menus, initial loads and checkpoint retries, before the runtime scan can run.
+  if not (rivet and type(rivet.template_actor) == "function") then
+    if not V.global_hook_missing_logged then
+      V.global_hook_missing_logged = true
+      vlog("GLOBAL PRELOAD BLOCKED: rivet.template_actor is unavailable; install the custom global-registry Rivet Hook")
+    end
+    return
+  end
+  V.global_hook_missing_logged = false
   if not V.lvl then V.new_level("V4 global preload") end
   if type(rivet.template_actor) ~= "function" then
     if not V.global_manifest_missing_said then
