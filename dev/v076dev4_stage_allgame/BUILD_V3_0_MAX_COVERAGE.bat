@@ -35,8 +35,8 @@ echo FACTORY ROUTE: .stage SunsetSpawnerFactory Templates variables.
 echo NODE ROUTE: exact SpawnerScriptAction nodes with one local Template plug.
 echo RUNTIME FALLBACK: unpatched factory, node Template and group adapters can use local/global resident templates.
 echo SAFETY: no foreign-zone actor UID references, no arbitrary actor promotion, no direct combat spawning.
-echo SHARED VARIABLES: .stage retains shared factory/node variables; runtime handles unpatched spawners under its freshness rules.
-echo NODE ADAPTERS: single-owner only; shared, malformed and non-local references stay native.
+echo SHARED VARIABLES: only verified all-spawner node Template groups are patched; ambiguous shared factory/node variables stay native.
+echo NODE ADAPTERS: single-owner and safe shared-owner groups; one shared variable is patched once for every unique spawner owner.
 echo PAIRS: proven + same-faction/same-movement kin; known failed pairs stay excluded.
 echo A SAFE factory-only fallback is built alongside V3.
 echo.
@@ -66,7 +66,7 @@ if errorlevel 2 goto notnow
 if errorlevel 1 goto failed
 echo.
 echo V3.0 installed. The installer synchronized the complete 10.0.50 script kit.
-echo Keep the Enemy Randomizer ON (press - if needed).
+echo Turn the Enemy Randomizer ON with - BEFORE entering a level; global templates warm up while it is enabled.
 echo Test several planets and complete full encounters before treating coverage as proven.
 echo Run CHECK_MY_LOG.bat after testing to produce the next evidence update.
 pause
