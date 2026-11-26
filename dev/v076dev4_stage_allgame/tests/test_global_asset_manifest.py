@@ -35,6 +35,17 @@ class GlobalAssetManifestTests(unittest.TestCase):
             self.assertIn('path = "characters/pirate/melee.actor"', text)
             self.assertNotIn("characters/boss.actor", text)
 
+    def test_runtime_spawner_script_parses_as_lua54(self):
+        from lupa import LuaRuntime
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        script = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "16_rando_spawners.lua")
+        with open(script, encoding="utf-8") as fh:
+            source = fh.read()
+        lua = LuaRuntime()
+        compile_lua = lua.eval("function(source) return load(source) end")
+        compiled = compile_lua(source)
+        self.assertIsNotNone(compiled, "16_rando_spawners.lua did not parse")
+
     def test_manifest_excludes_ambiguous_path_metadata(self):
         scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
             "1111111111111111": {"kind": "enm_pirate_robot_melee", "asset": "shared/enemy.actor"},
