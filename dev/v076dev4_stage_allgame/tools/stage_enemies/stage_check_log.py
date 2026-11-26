@@ -76,7 +76,8 @@ def main(argv=None):
 def run(a):
     changes = OrderedDict()                       # key -> {n, original, replacement, planet, zone, tier}
     if a.manifest:
-        m = json.load(open(a.manifest))
+        with open(a.manifest, encoding="utf-8") as fh:
+            m = json.load(fh)
         for i, c in enumerate(m["changes"], 1):
             entry = {"n": i, "original": c["original"], "replacement": c["replacement"],
                      "replacement_uid": c["replacement_uid"], "planet": c.get("planet", "?"),
@@ -86,7 +87,8 @@ def run(a):
                 changes[key.upper()] = dict(entry)
     lines = []
     for p in a.logs:
-        lines += open(p, encoding="utf-8", errors="replace").read().splitlines()
+        with open(p, encoding="utf-8", errors="replace") as fh:
+            lines += fh.read().splitlines()
     re_change_v3 = re.compile(r"STAGE CHANGE (\d+): (\S+) .*?-> ([0-9A-F]{16})(?: #\d+)? \(([^)]+)\) \| .*?\| adapter (factory|node_template) \| spawners (.*)$")
     re_change_legacy = re.compile(r"STAGE CHANGE (\d+): (\S+) .*?-> ([0-9A-F]{16})(?: #\d+)? \(([^)]+)\) \| .*\| spawners (.*)$")
     re_change_o = re.compile(r"STAGE CHANGE \d+: .*?\(([^)]+)\) -> [0-9A-F]{16}")
@@ -225,11 +227,13 @@ def run(a):
         for key, kinds in sorted(native.items())[:40]:
             print("  %s %s" % (key, dict(kinds)))
     if a.json:
-        json.dump({"tool": "stage_check_log " + VERSION, "logs": a.logs,
+        payload = {"tool": "stage_check_log " + VERSION, "logs": a.logs,
                    "verdicts": {k: {"verdict": v, "replacement_uid": changes[k]["replacement_uid"], "original": changes[k]["original"],
                                     "replacement": changes[k]["replacement"], "planet": changes[k]["planet"], "zone": changes[k]["zone"],
                                     "adapter": changes[k].get("adapter", "factory")}
-                                for k, v in verdicts.items()}}, open(a.json, "w"), indent=1)
+                                for k, v in verdicts.items()}}
+        with open(a.json, "w", encoding="utf-8") as fh:
+            json.dump(payload, fh, indent=1)
         print("written: %s" % a.json)
     return 0
 
