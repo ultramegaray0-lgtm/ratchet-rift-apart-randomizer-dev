@@ -1,0 +1,3 @@
+levels\i29\instance\ardolis\ardolis_main\ard_firstvisit_gp.zone: 8 byte(s) differ in 1 place(s)
+PROBLEM: levels\i29\instance\ardolis\ardolis_main\ard_firstvisit_gp.zone: a change at Zone Script Vars +4912 is not one known template uid replaced by another
+VERIFY RandoEnemies.stage: 1 problem(s)

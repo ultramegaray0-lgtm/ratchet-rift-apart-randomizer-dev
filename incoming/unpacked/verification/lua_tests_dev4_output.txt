@@ -1,0 +1,25 @@
+PASS every script and developer script compiles (Lua 5.4)
+PASS no manifest, enemy_source auto: not .stage mode
+PASS no manifest: the runtime route still changes spawners (Nefarious for Nefarious)
+PASS no manifest: rivet.log says the Lua route is used
+PASS manifest installed: .stage mode
+PASS manifest installed mid-level: every earlier runtime change is put back (originals in place)
+PASS the only writes were put-backs of the 3 changed variable(s)
+PASS .stage mode: planning again writes nothing
+PASS .stage mode: the SPAWN reason says .stage mode
+PASS .stage mode: V.arm called directly writes nothing (0 write(s), 0 live change(s))
+PASS .stage mode: the legacy slot route (Chaos) refuses to write
+PASS first tick: STAGE MODE ON is logged with the change count
+PASS first tick: the change is logged
+PASS first tick: a corner note says .stage mode
+PASS listing: the patched spawner holds the .stage value -> IS loaded
+PASS listing: reference counts are logged
+PASS spawn: the replacement spawned from the patched spawner
+PASS death: the replacement's death is logged
+PASS summary: per level, replacement 1, died 1
+PASS summary: per patched spawner
+PASS listing: a .stage that did not load is reported as an error
+PASS spawn: the original from the patched spawner says 'not loaded'
+PASS enemy_source = "lua" with a manifest installed: .stage mode anyway, and an error says why
+PASS enemy_source = "stage" without a manifest: no runtime change at all
+FAILURES 0

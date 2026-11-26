@@ -1,0 +1,55 @@
+{
+ "format": 1,
+ "tool": "1.0.1",
+ "kit": "v0.76-DEV4",
+ "label": "Phase A single spawner",
+ "stage_sha256": "0264377a3524e4294b591852a6aafbb3d449fb0840ada5fe692bc5de9c76a527",
+ "changes": [
+  {
+   "score": 18,
+   "tier": "A",
+   "zone": "levels\\i29\\instance\\ardolis\\ardolis_main\\ard_firstvisit_gp.zone",
+   "zone_id": "AE530D22FE113E2B",
+   "zone_sha256": "d40540edad455dee68a274540cd53589b3142ce458bac16bde82a0d6f185e016",
+   "abs": 413776,
+   "rel": 4912,
+   "section": "Zone Script Vars",
+   "original_uid": "899208BF8F48C554",
+   "original": "enm_pirate_robot_shooter",
+   "original_family": "ground",
+   "replacement_uid": "92C793D47A4657B6",
+   "replacement": "enm_pirate_robot_melee",
+   "replacement_family": "swarmer",
+   "pair": "factory|enm_pirate_robot_sh/ground>enm_pirate_robot_me/swarmer",
+   "evidence": "round37: 20 of 20 spawns, A1 completed twice; round40: A1 completed twice, its replaced brawlers died",
+   "replacement_placed_in": [
+    "Zone Actors",
+    "Zone Scene Objects"
+   ],
+   "original_refs_in_script_vars": 1,
+   "replacement_refs_in_script_vars": 1,
+   "spawner_keys": [
+    "CECB812E81FB7301"
+   ],
+   "spawner_keys_evidence": "rivet.log: the variable of each held the original uid 899208BF8F48C554 (SPAWN line followed by its 'learned template ... (spawn)' line)",
+   "same_kind_spawner_keys": [
+    "957CF01BB171B59E",
+    "9C3139C7FFED7137",
+    "B65A076E8CDFEF91",
+    "BF34C05EE646EDCB",
+    "CECB812E81FB7301",
+    "DCA7B70D660C5BF5",
+    "F3D033F9CBFADB82",
+    "FF06CCC2A9AC1EA2"
+   ],
+   "encounters": [
+    "MIS_ZURK_02B_VISIT_02B @ CHK_ARD_START"
+   ],
+   "encounters_of": "the spawner(s) in spawner_keys",
+   "rivet_hook_ok": true,
+   "changed_bytes": 8,
+   "zone_sha256_original": "d40540edad455dee68a274540cd53589b3142ce458bac16bde82a0d6f185e016",
+   "zone_sha256_patched": "e019b3143c18c96ccd83e0a39707047e4a68ca238411c9254a764937433a1f80"
+  }
+ ]
+}

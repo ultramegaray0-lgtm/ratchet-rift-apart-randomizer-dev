@@ -1,0 +1,3 @@
+levels\i29\instance\ardolis\ardolis_main\ard_firstvisit_gp.zone: 8 byte(s) differ in 1 place(s)
+    Zone Script Vars +4912: 899208BF8F48C554 (enm_pirate_robot_shooter) -> 92C793D47A4657B6 (enm_pirate_robot_melee)
+VERIFY RandoEnemies.stage: OK

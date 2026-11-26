@@ -30,7 +30,7 @@
 -- settings.
 --
 -- Needs 16_rando_spawners.lua. Removing this file only removes Chaos.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["chaos"] = "10.0.39"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["chaos"] = "10.0.51"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_CHAOS = RANDO_CHAOS or {}
 local C = RANDO_CHAOS

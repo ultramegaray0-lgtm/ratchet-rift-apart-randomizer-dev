@@ -52,7 +52,7 @@
 -- the slot must hold what was written, a write is read back, refused writes are not repeated, and a
 -- Templates list two nodes share is not written. When Chaos is switched OFF its slots go back to their
 -- originals and the Enemy / Boss Randomizers plan again from their own settings.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.39"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["16_rando_spawners"] = "10.0.51"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SPAWNERS = RANDO_SPAWNERS or {}
 local SP = RANDO_SPAWNERS
@@ -72,15 +72,15 @@ SP.NODE_CLASS = "SpawnerScriptAction"
 SP.HEADER = 0x100                 -- node bytes searched for the layout
 SP.PREFERRED_X = 0x50             -- AddToInventoryAction's first field is at +0x50 in your game (round 13 probe: ItemConfig +0x58)
 SP.MAX_TEMPLATES = 16
-SP.SCAN_LIMIT = 512               -- spawner nodes listed per level
+SP.SCAN_LIMIT = 4096              -- V4: full legacy node census; coverage before speed.
 SP.CHECK_PER_FRAME = 2            -- nodes read per frame (rivet_hook's frame budget is shared)
 SP.SLICE_SECONDS = 0.002
 SP.RESCAN_DELAY = 90              -- frames after a load before the level's spawners are read
 SP.SPAWN_TIMEOUT = 20             -- seconds
 SP.STUCK_SECONDS = 180
 SP.DEATH_LIMIT = 3
-SP.LEARN_CAP = 600
-SP.BLOCK_CAP = 300
+SP.LEARN_CAP = 4096
+SP.BLOCK_CAP = 4096
 SP.BOSS_ZONES = { "BOSS", "FINALE", "HEAVY_FIGHT", "CHASE" }
 SP.BUDGET_SECONDS = 0.003         -- writes per frame stop after this long; the rest follows next frame
 SP.CENSUS_RETRIES = 8
@@ -1570,27 +1570,25 @@ V.VAR_SIZE = 0x40
 V.VAR_TYPE_ACTORS = 5
 V.GROUP_BIT = 0x80000000
 V.ZERO_UID = "0000000000000000"
-V.FIRST_SCAN = 6                  -- frames after a level reset before the first listing (dev 10.30: 20 -> 6; round40:
-                                  -- 31 enemy spawns came "before the randomizer read its spawner", mostly in the first
-                                  -- second after a checkpoint)
-V.SCAN_EVERY = 120                -- frames between two listings (new factories of later waves)
-V.NODE_LIMIT = 512
-V.SLICE = 0.001                   -- seconds of work per frame (rivet_hook's 8 ms budget is shared; 10.28: 1.5 -> 1 ms)
-V.QUEUE_CAP = 1024                -- dev 10.29: 256 -> 1024 (round39: a busy arena queued hundreds of ambient spawns)
+V.FIRST_SCAN = 0                  -- V4: begin the runtime census on the first scene-ready frame; .stage owns first-wave timing.
+V.SCAN_EVERY = 30                 -- V4: revisit streaming factories four times as often; correctness over scan cost.
+V.NODE_LIMIT = 4096
+V.SLICE = 0.003                   -- V4: 3 ms scan slice within the hook's shared 8 ms frame budget.
+V.QUEUE_CAP = 4096                -- dev 10.29: 256 -> 1024 (round39: a busy arena queued hundreds of ambient spawns)
 V.SLOTS = 17                      -- dev 10.28: the Spawner's spawn list is a ring of 17 entries (0xDC..0x1B0), read whole
-V.RESTART_CAP = 40                -- dev 10.28: budget restarts of one job without any progress before it is dropped
-V.PROBE_GIVEUP = 40               -- dev 10.28: template actors asked with no answer before asking stops for the session
-V.UNTIED_LOG = 6                  -- dev 10.28: enemy spawns tied to no spawner variable, logged per level
-V.ALIVE_CHECKS = 24               -- dev 10.28: spawned actors checked for being gone per watchdog run
-V.REG_CAP = 400
+V.RESTART_CAP = 9999              -- V4: do not drop large-zone scans after a small number of budget restarts.
+V.PROBE_GIVEUP = 9999             -- V4: keep probing late-loading templates instead of giving up early.
+V.UNTIED_LOG = 128                -- V4: retain enough diagnostics to inventory uncovered spawn paths.
+V.ALIVE_CHECKS = 128              -- V4: inspect larger enemy waves in each watchdog pass.
+V.REG_CAP = 2000
 V.REG_RECHECK = 3                 -- dev 10.32: scans between two looks for the save's enemy kinds loaded on the level
-V.GROUP_CAP = 300
-V.MEMBER_CAP = 8
+V.GROUP_CAP = 4096
+V.MEMBER_CAP = 32
 V.STUCK_SECONDS = 180
-V.RETRY_LIMIT = 5                 -- deaths / reloads while a changed encounter ran before it keeps its originals
+V.RETRY_LIMIT = 9999              -- V4: repeated checkpoint retries never permanently disable a randomized encounter.
 V.FAIL_LIMIT = 2
 V.LATE_GRACE = 4                  -- dev 10.31 (unused since 10.33: a late change never gets an "original" verdict)
-V.SPAWN_LOG = 12                  -- spawns of changed spawners logged per level
+V.SPAWN_LOG = 256                  -- spawns of changed spawners logged per level
 V.FACTORY_CLASS = "SunsetSpawnerFactoryScriptAction"
 V.NODE_CLASS = "SpawnerScriptAction"
 V.ADAPTER_LABEL = { factory = "factory Templates", template = "node Template", group = "node Template group" }
@@ -1650,7 +1648,7 @@ V.STALL_SECONDS = 40                      -- dev 10.32: a replaced bot of an unv
 V.SUSPECT_LIMIT = 2                       -- a pair verified by the built-in table is rejected after this many failures
 V.TRIAL_PER_LEVEL = 1                     -- enemy_compat = "trial": spawners with an unverified pair at a time
 V.DEATH_LOG = 60                          -- DEATH lines (a replaced bot died) logged per level
-V.COMPAT_CAP = 300                        -- pairs kept in the save
+V.COMPAT_CAP = 4096                      -- V4: keep compatibility observations for large all-planet pools.
 V.SIG_SAMPLES = 5                         -- original spawns of a kind whose components are compared (intersection)
 
 -- the last path segment, without .actor / .a ("characters\enemy\x\actors\enm_pirate_robot_me" -> enm_pirate_robot_me)
@@ -3082,6 +3080,7 @@ V.note_why = note_why
 
 function V.plan_rec(sc, r)
   local lvl = V.lvl
+  if V.stage_owns_rec(r) then return note_why(r, ".stage owns this " .. tostring(r.kind) .. " Template variable") end
   if r.arm then
     local A = r.arm
     -- dev 10.30: factories are planned before the nodes are listed; a node listed later that shares the variable and
@@ -3606,10 +3605,11 @@ function V.ledger_add(e, r, a, A, result, why)
   if L.logged < V.LEDGER_LOG then
     L.logged = L.logged + 1
     local orig = (A and A.orig_T and A.orig_T.name) or (r and r.orig and r.orig.single and lvl.tpl[r.orig.actors] and lvl.tpl[r.orig.actors].name) or a.name
-    vlog(string.format("SPAWN %d | %s | %s | %s %s | original %s | selected %s | spawned %s (%s) | %s%s", e.h,
+    local selected_uid = A and A.rep and A.rep.uid or "-"
+    vlog(string.format("SPAWN %d | %s | %s | %s %s | original %s | selected %s uid %s | spawned %s (%s) | %s%s", e.h,
         tostring(vstate() and vstate().current_planet), V.encounter(), r and V.ADAPTER_LABEL[r.kind] or "no spawner",
-        r and tostring(r.key) or "-", tostring(V.short(orig)), A and tostring(V.short(A.rep.name)) or "-", tostring(V.short(a.name)),
-        tostring(a.family), result, why and (": " .. tostring(why)) or ""))
+        r and tostring(r.key) or "-", tostring(V.short(orig)), A and tostring(V.short(A.rep.name)) or "-",
+        tostring(selected_uid), tostring(V.short(a.name)), tostring(a.family), result, why and (": " .. tostring(why)) or ""))
   end
 end
 function V.eligible(a)
@@ -3673,6 +3673,10 @@ function V.process_one(sc, e)
   if a and V.FAMILY_GROUP[a.family or ""] then lvl.activity = SP.frame or 0 end
   if e.A == nil then e.A = r.arm or false end                              -- the change in place when it spawned
   local A = e.A or nil
+  if V.stage_on_spawn and not e.stage_notified then
+    e.stage_notified = true
+    pcall(V.stage_on_spawn, e, r, a, A and "replacement candidate" or "native", tie_why)
+  end
   -- dev 10.29: the ledger (before verify, which may put the spawner back)
   if V.eligible(a) and not e.ledgered then
     e.ledgered = true
@@ -3774,6 +3778,7 @@ function V.on_death(f, ev)
   lvl.last_death = SP.frame or 0                                           -- dev 10.32: the stall watch
   local s = f.SenderHandle or (type(ev) == "table" and ev.sender)
   local h = math.tointeger(tonumber(s))
+  if h and V.stage_on_death then pcall(V.stage_on_death, h) end
   local x = h and lvl.spawned[h]
   if type(x) ~= "table" or not x.A then return end
   local A = x.A
@@ -3900,10 +3905,74 @@ function V.start(fn)
   V.job = coroutine.create(fn)
 end
 
+function V.restore_stage_owned(sc)
+  local manifest = V.stage_manifest()
+  local lvl = V.lvl
+  if not (manifest and type(manifest.changes) == "table" and lvl and lvl.order and sc) then return 0, 0 end
+  local by_key = {}
+  for _, change in ipairs(manifest.changes) do
+    if type(change) == "table" then
+      for _, key in ipairs(change.spawner_keys or {}) do by_key[tostring(key):upper()] = change end
+    end
+  end
+  local restored, skipped = 0, 0
+  for _, rec in ipairs(lvl.order) do
+    local change = by_key[tostring(rec.key):upper()]
+    if change and rec.var and rec.var.idx ~= nil then
+      local current = V.var(sc, rec.var.idx, rec.var.gen)
+      local replacement_uid = tostring(change.replacement_uid or ""):upper()
+      local original_uid = tostring(change.original_uid or ""):upper()
+      if current and replacement_uid ~= "" and original_uid ~= "" and current.uid == replacement_uid then
+        local ok, handle = pcall(rivet.find_uid, original_uid)
+        handle = ok and math.tointeger(tonumber(handle)) or nil
+        if handle and handle ~= 0 then
+          local wrote = V.write_var(sc, rec, original_uid, handle)
+          if wrote then
+            restored = restored + 1
+            vlog(string.format("EMERGENCY RESTORE .stage %s %s: %s -> %s", tostring(rec.kind),
+              tostring(rec.key), tostring(change.replacement), tostring(change.original)))
+          else
+            skipped = skipped + 1
+            vlog("EMERGENCY RESTORE FAILED .stage " .. tostring(rec.key) .. ": original variable write did not verify")
+          end
+        else
+          skipped = skipped + 1
+          vlog("EMERGENCY RESTORE UNAVAILABLE .stage " .. tostring(rec.key) .. ": original template UID " ..
+            original_uid .. " is not loaded; reload with a safe .stage build")
+        end
+      end
+    end
+  end
+  if restored > 0 or skipped > 0 then
+    vlog(string.format("EMERGENCY RESTORE SUMMARY: %d .stage spawner(s) restored to native, %d could not be restored", restored, skipped))
+  end
+  return restored, skipped
+end
+
+function V.emergency_rescue()
+  V.emergency_mode = true
+  V.job = nil
+  if V.lvl then
+    V.put_back_all("Emergency recovery (F10)")
+    V.lvl.queue, V.lvl.fac_queue, V.lvl.fac_queued = {}, {}, {}
+    local sc = V.scene()
+    if sc then V.restore_stage_owned(sc) end
+  end
+  vlog("EMERGENCY SAFE MODE ON: no further enemy replacements this game session; stage-owned variables are restored as their zones are scanned")
+end
+
 function V.pump(sc)
   if not V.drain_pending() then return end                                 -- put-backs first: nothing is read before
   local lvl = V.lvl
   local t0 = clock_()
+  if V.emergency_mode then
+    if lvl.scan_due then
+      V.scan(sc)
+      lvl.scan_due = false
+    end
+    V.restore_stage_owned(sc)
+    return
+  end
   -- Process event-discovered factories before the expensive full-level listing. The spawn event
   -- is already after one spawn, but later spawns from a multi-wave factory can now be randomized.
   if #lvl.fac_queue > 0 then V.drain_factory_queue(sc); t0 = clock_() end
@@ -3977,16 +4046,302 @@ local function job_error(err)
   vlog("RANDO-ERROR " .. msg)
 end
 
+-- ---------------------------------------------------------------------------------------------
+-- Global resident enemy templates. The generated 15_rando_global_enemy_assets.lua lists actor
+-- assets used by native factories across every scanned planet. The custom Rivet Hook API loads
+-- each asset and creates a hidden, inactive template actor with a synthetic high-bit UID. The
+-- game's own SpawnerScriptAction still performs every combat spawn and owns all encounter counts.
+-- ---------------------------------------------------------------------------------------------
+V.GLOBAL_REQUESTS_PER_FRAME = 4
+V.GLOBAL_POLLS_PER_FRAME = 4
+V.GLOBAL_SPAWNS_PER_FRAME = 1
+V.GLOBAL_RETRY_LIMIT = 9999        -- V4: keep retrying unavailable/loading assets; a slow load is preferable to silently abandoning a template.
+V.emergency_mode = V.emergency_mode or false -- V4.1: F10 disables all runtime replacement and restores stage-owned refs.
+V.global_templates = V.global_templates or {}       -- synthetic uid -> classified template
+-- .stage diagnostics handshake: 18_rando_stage_manifest.lua loads before 18_rando_stage_enemies.lua.
+-- When its manifest exists, the .stage file owns the spawner variables; never race it with runtime writes.
+V.STAGE_LUA = "1.1.0"
+function V.stage_manifest() return RANDO_STAGE_ENEMIES end
+function V.stage_mode() return type(V.stage_manifest()) == "table" end
+V.stage_node_manifest = V.stage_node_manifest or nil
+V.stage_factory_keys = V.stage_factory_keys or {}
+V.stage_node_keys = V.stage_node_keys or {}
+function V.stage_owns_rec(r)
+  if not V.stage_mode() or not r then return false end
+  local manifest = V.stage_manifest()
+  if V.stage_node_manifest ~= manifest then
+    V.stage_node_manifest, V.stage_factory_keys, V.stage_node_keys = manifest, {}, {}
+    for _, change in ipairs(manifest.changes or {}) do
+      local adapter = change.adapter or "factory"
+      for _, key in ipairs(change.spawner_keys or {}) do
+        local normalized = tostring(key):upper()
+        if adapter == "node_template" then
+          V.stage_node_keys[normalized] = true
+        else
+          V.stage_factory_keys[normalized] = true
+        end
+      end
+    end
+  end
+  local key = tostring(r.key):upper()
+  if r.kind == "factory" then
+    -- Older max/all manifests may change shared factory variables; preserve their
+    -- original no-runtime-writes behavior. V3 manifests contain single-owner
+    -- factory changes, so only those exact keys are stage-owned.
+    if manifest.profile ~= "v3" and manifest.profile ~= "v4" then return true end
+    return V.stage_factory_keys[key] == true
+  end
+  if r.kind == "template" then return V.stage_node_keys[key] == true end
+  return false
+end
+V.global_items = V.global_items or {}
+V.global_item_by_uid = V.global_item_by_uid or {}
+V.global_items_initialized = V.global_items_initialized or false
+V.global_level = V.global_level or nil
+V.global_manifest_missing_said = V.global_manifest_missing_said or false
+
+local function global_template_uid(path, index)
+  local h = rivet.hash and rivet.hash(path) or index
+  return string.format("F00D%08X0000", h & 0xFFFFFFFF)
+end
+
+local function global_template_attach(T)
+  local lvl = V.lvl
+  if not (lvl and T and T.handle and T.uid) then return end
+  if lvl.tpl[T.handle] ~= T then
+    lvl.tpl[T.handle] = T
+    lvl.tpl_uid[T.uid] = T
+    if V.group_of(T) then
+      lvl.kinds_n = (lvl.kinds_n or 0) + 1
+      lvl.dirty = true
+    end
+  end
+end
+
+local function global_template_accept(item, handle, flags)
+  local actor_flags = math.tointeger(tonumber(flags)) or 0
+  local inactive_mask = 0x1 | 0x8 | 0x80 | 0x100 | 0x2000
+  if (actor_flags & 0x4) == 0 or (actor_flags & inactive_mask) ~= 0 then
+    item.state = "failed"
+    vlog(string.format("GLOBAL TEMPLATE REJECTED %s: invalid resident flags 0x%X", tostring(item.row.path), actor_flags))
+    return false
+  end
+  local ok, a = pcall(V.actor, handle)
+  if not ok or type(a) ~= "table" or not a.name then
+    item.state = "failed"
+    vlog("GLOBAL TEMPLATE FAILED " .. tostring(item.row.path) .. ": could not inspect spawned template actor")
+    return false
+  end
+  local actual_name = V.short(a.name) or a.name
+  if actual_name and not V.same_name(actual_name, item.row.name) then
+    item.state = "failed"
+    vlog(string.format("GLOBAL TEMPLATE REJECTED %s: asset actor name %s did not match catalog %s",
+      tostring(item.row.path), tostring(actual_name), tostring(item.row.name)))
+    return false
+  end
+  if a.family and a.family ~= item.row.family then
+    item.state = "failed"
+    vlog(string.format("GLOBAL TEMPLATE REJECTED %s: runtime family %s did not match catalog %s",
+      tostring(item.row.path), tostring(a.family), tostring(item.row.family)))
+    return false
+  end
+  local T = {
+    handle = handle, uid = item.uid, name = a.name or item.row.name,
+    family = a.family or item.row.family, class = a.class,
+    path = item.row.path, src = "global resident template",
+  }
+  if not V.usable(T) then
+    item.state = "failed"
+    vlog("GLOBAL TEMPLATE REJECTED " .. tostring(item.row.path) .. ": not a usable regular enemy")
+    return false
+  end
+  item.state = "ready"
+  item.handle = handle
+  V.global_templates[item.uid] = T
+  global_template_attach(T)
+  vlog(string.format("GLOBAL TEMPLATE READY %s | %s/%s | uid %s | handle %s",
+    tostring(V.short(T.name)), tostring(T.family), tostring(T.class), T.uid, tostring(handle)))
+  return true
+end
+
+function V.global_templates_tick(frame)
+  -- V4: independent of scene readiness and the ON/OFF switch: preload resident enemy assets
+  -- during menus, initial loads and checkpoint retries, before the runtime scan can run.
+  if V.emergency_mode then return end
+  if not (rivet and type(rivet.template_actor) == "function") then
+    if not V.global_hook_missing_logged then
+      V.global_hook_missing_logged = true
+      vlog("GLOBAL PRELOAD BLOCKED: rivet.template_actor is unavailable; install the custom global-registry Rivet Hook")
+    end
+    return
+  end
+  V.global_hook_missing_logged = false
+  if not V.lvl then V.new_level("V4 global preload") end
+  if type(rivet.template_actor) ~= "function" then
+    if not V.global_manifest_missing_said then
+      V.global_manifest_missing_said = true
+      vlog("GLOBAL TEMPLATE API unavailable: install the custom global-enemy Rivet Hook build; using only templates loaded by the current planet")
+    end
+    return
+  end
+  local manifest = RANDO_GLOBAL_ENEMY_ASSETS
+  if type(manifest) ~= "table" then
+    if not V.global_manifest_missing_said then
+      V.global_manifest_missing_said = true
+      vlog("GLOBAL TEMPLATE MANIFEST missing: rebuild/install RandoEnemies with 15_rando_global_enemy_assets.lua")
+    end
+    return
+  end
+  if not V.global_items_initialized then
+    for i, row in ipairs(manifest) do
+      if type(row) == "table" and type(row.path) == "string" and type(row.name) == "string" and type(row.family) == "string" then
+        local uid = global_template_uid(row.path, i)
+        local item = { row = row, uid = uid, state = "new", attempts = 0 }
+        V.global_items[#V.global_items + 1] = item
+        V.global_item_by_uid[uid] = item
+      end
+    end
+    V.global_items_initialized = true
+    vlog(string.format("GLOBAL TEMPLATE REGISTRY: requesting %d actor asset(s) from the all-planet catalog", #V.global_items))
+  end
+
+  -- A new level gets a new local pool table. Re-resolve each resident UID once and
+  -- reattach it; if the engine discarded it, ask the native loader to recreate it.
+  if V.global_level ~= V.lvl then
+    V.global_level = V.lvl
+    for uid, T in pairs(V.global_templates) do
+      local ok, handle = pcall(rivet.find_uid, uid)
+      handle = ok and math.tointeger(tonumber(handle)) or nil
+      if handle and handle ~= 0 then
+        T.handle = handle
+        global_template_attach(T)
+      else
+        V.global_templates[uid] = nil
+        local item = V.global_item_by_uid[uid]
+        if item then item.state, item.handle = "new", nil end
+      end
+    end
+  end
+
+  -- Request and poll assets without instantiating actors. Native asset loading is
+  -- asynchronous, so these calls are cheap; actual template creation is throttled
+  -- separately to one actor per frame to stay inside Rivet Hook's 8 ms script budget.
+  local requested = 0
+  for _, item in ipairs(V.global_items) do
+    if (item.state == "new" or (item.state == "retry" and frame >= (item.retry_at or 0))) and requested < V.GLOBAL_REQUESTS_PER_FRAME then
+      item.attempts = (item.attempts or 0) + 1
+      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid, false)
+      if not ok then
+        item.state = item.attempts < V.GLOBAL_RETRY_LIMIT and "retry" or "failed"
+        item.retry_at = frame + math.min(600, 30 * item.attempts)
+        vlog("GLOBAL TEMPLATE ERROR " .. tostring(item.row.path) .. " attempt " .. item.attempts .. ": " .. tostring(status))
+      elseif status == "ready" then
+        global_template_accept(item, handle, flags)
+      elseif status == "loaded" then
+        item.state = "loaded"
+      elseif status == "loading" then
+        item.state = "pending"
+      else
+        item.state = item.attempts < V.GLOBAL_RETRY_LIMIT and "retry" or "failed"
+        item.retry_at = frame + math.min(600, 30 * item.attempts)
+        vlog("GLOBAL TEMPLATE FAILED " .. tostring(item.row.path) .. " attempt " .. item.attempts .. ": " .. tostring(message))
+      end
+      requested = requested + 1
+    end
+  end
+  local polled = 0
+  for _, item in ipairs(V.global_items) do
+    if item.state == "pending" and polled < V.GLOBAL_POLLS_PER_FRAME then
+      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid, false)
+      if not ok then
+        item.state = item.attempts < V.GLOBAL_RETRY_LIMIT and "retry" or "failed"
+        item.retry_at = frame + math.min(600, 30 * item.attempts)
+        vlog("GLOBAL TEMPLATE ERROR " .. tostring(item.row.path) .. " attempt " .. item.attempts .. ": " .. tostring(status))
+      elseif status == "ready" then
+        global_template_accept(item, handle, flags)
+      elseif status == "loaded" then
+        item.state = "loaded"
+      elseif status == "failed" then
+        item.state = item.attempts < V.GLOBAL_RETRY_LIMIT and "retry" or "failed"
+        item.retry_at = frame + math.min(600, 30 * item.attempts)
+        vlog("GLOBAL TEMPLATE FAILED " .. tostring(item.row.path) .. " attempt " .. item.attempts .. ": " .. tostring(message))
+      end
+      polled = polled + 1
+    end
+  end
+  local spawned = 0
+  for _, item in ipairs(V.global_items) do
+    if item.state == "loaded" and spawned < V.GLOBAL_SPAWNS_PER_FRAME then
+      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid, true)
+      if not ok then
+        item.state = item.attempts < V.GLOBAL_RETRY_LIMIT and "retry" or "failed"
+        item.retry_at = frame + math.min(600, 30 * (item.attempts or 1))
+        vlog("GLOBAL TEMPLATE SPAWN ERROR " .. tostring(item.row.path) .. " attempt " .. tostring(item.attempts) .. ": " .. tostring(status))
+      elseif status == "ready" then
+        global_template_accept(item, handle, flags)
+      elseif status == "loading" then
+        item.state = "pending"
+      elseif status == "failed" then
+        item.state = item.attempts < V.GLOBAL_RETRY_LIMIT and "retry" or "failed"
+        item.retry_at = frame + math.min(600, 30 * (item.attempts or 1))
+        vlog("GLOBAL TEMPLATE SPAWN FAILED " .. tostring(item.row.path) .. " attempt " .. tostring(item.attempts) .. ": " .. tostring(message))
+      end
+      spawned = spawned + 1
+    end
+  end
+
+  -- Keep every resident template in the current level's selection pool.
+  for _, T in pairs(V.global_templates) do global_template_attach(T) end
+
+  -- V4 preload status is diagnostic only: .stage owns first-wave timing; this
+  -- report tells us whether the runtime's cross-planet resident pool is fully warmed.
+  local ready_n, pending_n, failed_n = 0, 0, 0
+  for _, item in ipairs(V.global_items) do
+    if item.state == "ready" then ready_n = ready_n + 1
+    elseif item.state == "failed" then failed_n = failed_n + 1
+    else pending_n = pending_n + 1 end
+  end
+  local preload_sig = table.concat({ ready_n, pending_n, failed_n, #V.global_items }, "/")
+  if preload_sig ~= V.global_preload_signature then
+    V.global_preload_signature = preload_sig
+    vlog(string.format("GLOBAL PRELOAD: ready %d/%d | pending %d | failed %d | retrying while loading",
+      ready_n, #V.global_items, pending_n, failed_n))
+  end
+
+  -- A diagnostic snapshot separates three distinct questions:
+  -- (1) did native asset creation succeed, (2) did those actors classify into a
+  -- movement pool, and (3) which compatibility policy is currently gating picks?
+  local n, walkers, flyers, turrets = 0, 0, 0, 0
+  for _, T in pairs(V.global_templates) do
+    n = n + 1
+    local group = V.group_of(T)
+    if group == "walker" then walkers = walkers + 1
+    elseif group == "flyer" then flyers = flyers + 1
+    elseif group == "turret" then turrets = turrets + 1 end
+  end
+  local compat = V.compat_mode()
+  local mixed = V.mix_movement() and "mixed" or "separate"
+  local signature = table.concat({ n, walkers, flyers, turrets, compat, mixed }, "|")
+  if V.global_pool_signature ~= signature or V.global_pool_level ~= V.lvl then
+    V.global_pool_signature, V.global_pool_level = signature, V.lvl
+    vlog(string.format(
+      "GLOBAL TEMPLATE POOL: resident %d | walker %d | flyer %d | turret %d | compatibility %s | movement %s",
+      n, walkers, flyers, turrets, compat, mixed))
+  end
+end
+
 function V.tick(frame, ready)
+  V.global_frame_ready = ready
   if not V.lvl then V.new_level("scripts loaded") end
+  if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end
   local lvl = V.lvl
   if not V.enabled() then
     V.job = nil
     -- v0.62-DEV14: not during a load (ready is false while the game thread is not pumping)
-    if #lvl.arms > 0 and ready then V.put_back_all("Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
+    if #lvl.arms > 0 and ready then V.put_back_all(V.emergency_mode and "Emergency recovery (F10)" or "Enemy Randomizer off"); lvl.arms = {} ; for _, r in ipairs(lvl.order) do r.tried = nil end end
     if #V.pending > 0 and ready then pcall(V.drain_pending) end
     lvl.queue, lvl.fac_queue, lvl.fac_queued = {}, {}, {}
-    return
+    if not V.emergency_mode then return end
   end
   if not ready then return end
   V.migrate()
@@ -4011,7 +4366,7 @@ function V.tick(frame, ready)
   end
   -- dev 10.30: the watchdog (gone bots, stuck encounters, the combat watch) also while a long job runs (a busy level
   -- kept 10.29's job running for many seconds and its watchdog waited)
-  if frame % 60 == 0 then
+  if frame % 60 == 0 and not V.emergency_mode then
     local okw, errw = pcall(V.watchdog)
     if not okw and not tostring(errw):find("budget", 1, true) then job_error(errw) end
   end
@@ -4097,6 +4452,8 @@ function V.status()
   for reason, n in pairs(L and L.reasons or {}) do if n > topn then top, topn = reason, n end end
   out.top_reason = top
   out.species = lvl and V.species_here() or {}                             -- dev 10.32
+  out.global_templates = 0
+  for _ in pairs(V.global_templates or {}) do out.global_templates = out.global_templates + 1 end
   out.stalls = lvl and lvl.stalls or 0
   -- dev 10.30: combat compatibility
   out.compat = V.compat_mode()
@@ -4317,6 +4674,20 @@ if not SP.subscribed then
     if f.NewPlanetName then SP.on_level("planet " .. tostring(f.NewPlanetName))
     elseif f.OldPlanetName and SP.V and SP.V.lvl then pcall(SP.V.put_back_all, "leaving " .. tostring(f.OldPlanetName)) end   -- dev 10.28
   end, true)
+end
+
+-- Run the global asset queue in its own frame callback. A template actor spawn can
+-- initialize many components; isolating it keeps the main spawner census/encounter
+-- callback from losing its 8 ms budget. The main callback sets global_frame_ready first.
+if not SP.global_template_frame then
+  SP.global_template_frame = true
+  rivet.on_frame(function()
+    local V = SP.V
+    if V and V.global_templates_tick then
+      local ok, err = pcall(V.global_templates_tick, rivet.frame())
+      if not ok then log("RANDO-ERROR global enemy template registry:", tostring(err)) end
+    end
+  end)
 end
 
 log("spawner layer loaded (" .. SP.NODE_CLASS .. " Templates; families " .. #SP.FAMILY_CLASSES .. " bot classes)")

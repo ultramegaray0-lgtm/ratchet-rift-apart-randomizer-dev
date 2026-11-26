@@ -1,0 +1,26 @@
+Phase A candidates (best first):
+  [0] score 18 tier A  ard_firstvisit_gp.zone +4912  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner CECB812E81FB7301  (8 same-kind spawner(s) in the zone)
+  [1] score 18 tier A  ard_firstvisit_gp.zone +4912  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner CECB812E81FB7301  (8 same-kind spawner(s) in the zone)
+  [2] score 18 tier A  i29_nefcity_gp.zone +944  enm_neo_nefarious_shooter -> enm_neo_nefarious_melee  (round63: Savali tower, 8 of 8 died)  spawner D5A78771A3A103EB  (1 same-kind spawner(s) in the zone)
+  [3] score 18 tier A  i29_nefcity_gp.zone +944  enm_neo_nefarious_shooter -> enm_neo_nefarious_swarmer  (round63: Savali tower, 2 of 2 died)  spawner D5A78771A3A103EB  (1 same-kind spawner(s) in the zone)
+  [4] score 18 tier A  i29_nefcity_gp.zone +35952  enm_neo_nefarious_melee -> enm_neo_nefarious_swarmer  (round63: Savali tower and Zordoom, 4 died)  spawner AFFD4CF93C821158  (1 same-kind spawner(s) in the zone)
+  [5] score 16 tier A  ard_firstvisit_gp.zone +336  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [6] score 16 tier A  ard_firstvisit_gp.zone +336  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [7] score 16 tier A  ard_firstvisit_gp.zone +6800  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [8] score 16 tier A  ard_firstvisit_gp.zone +6800  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [9] score 16 tier A  ard_firstvisit_gp.zone +7312  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [10] score 16 tier A  ard_firstvisit_gp.zone +7312  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [11] score 16 tier A  ard_firstvisit_gp.zone +14800  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [12] score 16 tier A  ard_firstvisit_gp.zone +14800  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [13] score 16 tier A  ard_firstvisit_gp.zone +15440  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+  [14] score 16 tier A  ard_firstvisit_gp.zone +15440  enm_pirate_robot_shooter -> enm_pirate_robot_melee  (round37: 20 of 20 spawns, A1 completed twice; round40: A1 co)  spawner B65A076E8CDFEF91  (8 same-kind spawner(s) in the zone)
+
+BUILT poc_out/RandoEnemies.stage (sha256 0264377a3524e4294b591852a6aafbb3d449fb0840ada5fe692bc5de9c76a527)
+  zone        levels\i29\instance\ardolis\ardolis_main\ard_firstvisit_gp.zone (AE530D22FE113E2B), 539268 bytes, header kept
+  change      Zone Script Vars +4912: 899208BF8F48C554 (enm_pirate_robot_shooter) -> 92C793D47A4657B6 (enm_pirate_robot_melee), 8 byte(s) differ
+  pair        factory|enm_pirate_robot_sh/ground>enm_pirate_robot_me/swarmer [A] round37: 20 of 20 spawns, A1 completed twice; round40: A1 completed twice, its replaced brawlers died
+  spawner     CECB812E81FB7301 - rivet.log: the variable of each held the original uid 899208BF8F48C554 (SPAWN line followed by its 'learned template ... (spawn)' line)
+  test where  MIS_ZURK_02B_VISIT_02B @ CHK_ARD_START [the spawner(s) in spawner_keys]
+  backup      poc_out/backup/AE530D22FE113E2B.zone.orig
+next: python stage_enemies.py verify --game GAME --stage poc_out/RandoEnemies.stage --log "/mnt/user-data/uploads/2a529022-rivet.log" ; then install --build poc_out
+      keep a copy of /mnt/user-data/uploads/2a529022-rivet.log: the game rewrites rivet.log on its next start, and verify needs these uids
