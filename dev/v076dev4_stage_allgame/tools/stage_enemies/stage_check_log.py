@@ -24,6 +24,7 @@ Verdicts:
 and leaves ORIGINAL SPAWNED / NO SPAWN spawners native.
 """
 import argparse
+import csv
 import json
 import os
 import re
@@ -42,6 +43,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("logs", nargs="+")
     ap.add_argument("--manifest")
+    ap.add_argument("--inventory", help="factory inventory.csv from the installed build (maps runtime spawner keys to zone paths)")
+    ap.add_argument("--template-inventory", help="template_adapter_inventory.csv from the installed build (maps node Template keys to zone paths)")
     ap.add_argument("--json")
     ap.add_argument("--all", action="store_true", help="print every change, not only the reached ones")
     ap.add_argument("--save-dir", help="keep a copy of the log(s), this report and verdicts-<time>.json in this folder")
@@ -74,15 +77,34 @@ def main(argv=None):
 
 
 def run(a):
-    changes = OrderedDict()                       # key -> {n, original, replacement, planet, zone, tier}
+    changes = OrderedDict()                       # key -> {n, original, replacement, planet, zone, zone_id, tier}
+    inventory_by_key = defaultdict(dict)
+    def read_inventory(path, key_col, adapter, require_spawner=False):
+        if not path:
+            return
+        if not os.path.isfile(path):
+            print("inventory not found (runtime-only evidence will not be zone-pinned): %s" % path)
+            return
+        with open(path, newline="", encoding="utf-8", errors="replace") as fh:
+            for row in csv.DictReader(fh):
+                key = (row.get(key_col) or "").strip().upper()
+                if not re.fullmatch(r"[0-9A-F]{16}", key):
+                    continue
+                if require_spawner and (row.get("is_SpawnerScriptAction") or "").strip().lower() not in ("true", "1", "yes"):
+                    continue
+                inventory_by_key[key][adapter] = {
+                    "planet": row.get("planet") or "?", "zone": row.get("zone") or "?",
+                    "zone_id": row.get("zone_id") or None}
+    read_inventory(getattr(a, "inventory", None), "spawner", "factory")
+    read_inventory(getattr(a, "template_inventory", None), "node_key", "node_template", True)
     if a.manifest:
         with open(a.manifest, encoding="utf-8") as fh:
             m = json.load(fh)
         for i, c in enumerate(m["changes"], 1):
             entry = {"n": i, "original": c["original"], "replacement": c["replacement"],
                      "replacement_uid": c["replacement_uid"], "planet": c.get("planet", "?"),
-                     "zone": c.get("zone", "?"), "tier": c.get("tier", "?"),
-                     "adapter": c.get("adapter", "factory")}
+                     "zone": c.get("zone", "?"), "zone_id": c.get("zone_id"),
+                     "tier": c.get("tier", "?"), "adapter": c.get("adapter", "factory")}
             for key in (c.get("spawner_keys") or [c["key"]]):
                 changes[key.upper()] = dict(entry)
     lines = []
@@ -108,9 +130,11 @@ def run(a):
                     zone = m_.group(2)
                     pl = zone.replace("/", "\\").lower().split("\\")
                     planet = pl[pl.index("instance") + 1] if "instance" in pl and pl.index("instance") + 1 < len(pl) else "?"
+                    meta = inventory_by_key.get(k, {}).get(adapter, {})
                     changes[k] = {"n": int(m_.group(1)), "original": re_change_o.search(l).group(1), "replacement": m_.group(4),
-                                  "replacement_uid": m_.group(3), "planet": planet, "zone": zone, "tier": "?",
-                                  "adapter": adapter}
+                                  "replacement_uid": m_.group(3), "planet": meta.get("planet", planet),
+                                  "zone": meta.get("zone", zone), "zone_id": meta.get("zone_id"),
+                                  "tier": "?", "adapter": adapter}
     rep_kinds = {v["replacement"] for v in changes.values()}
     visit = 0
     vis = defaultdict(lambda: defaultdict(lambda: {"listed": None, "spawns": [], "dead": set(), "gone": set()}))
@@ -155,9 +179,11 @@ def run(a):
             adapter = "factory" if m_.group(4) == "factory Templates" else "node_template"
             original, selected, selected_uid, kind = m_.group(6), m_.group(7), m_.group(8), m_.group(9)
             if key not in changes and selected != "-" and re.fullmatch(r"[0-9A-F]{16}", selected_uid):
+                meta = inventory_by_key.get(key, {}).get(adapter, {})
                 changes[key] = {"n": 0, "original": original, "replacement": selected,
-                                "replacement_uid": selected_uid, "planet": m_.group(2),
-                                "zone": "runtime:" + m_.group(3), "tier": "runtime-observed",
+                                "replacement_uid": selected_uid, "planet": meta.get("planet", m_.group(2)),
+                                "zone": meta.get("zone", "runtime:" + m_.group(3)),
+                                "zone_id": meta.get("zone_id"), "tier": "runtime-observed",
                                 "adapter": adapter, "runtime_only": True}
                 rep_kinds.add(selected)
             if key in changes:
@@ -246,7 +272,7 @@ def run(a):
         payload = {"tool": "stage_check_log " + VERSION, "logs": a.logs,
                    "verdicts": {k: {"verdict": v, "replacement_uid": changes[k]["replacement_uid"], "original": changes[k]["original"],
                                     "replacement": changes[k]["replacement"], "planet": changes[k]["planet"], "zone": changes[k]["zone"],
-                                    "adapter": changes[k].get("adapter", "factory")}
+                                    "zone_id": changes[k].get("zone_id"), "adapter": changes[k].get("adapter", "factory")}
                                 for k, v in verdicts.items()}}
         with open(a.json, "w", encoding="utf-8") as fh:
             json.dump(payload, fh, indent=1)
