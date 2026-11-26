@@ -58,7 +58,7 @@ The all-planet .stage builder edits SunsetSpawnerFactory `Templates` variables. 
 `SpawnerScriptAction` `Template` / group adapters. The runtime layer now deliberately handles that second set while
 the .stage manifest is installed:
 
-- `.stage` owns factory `Templates` variables; runtime writes to those same factory variables are skipped.
+- `.stage` owns only the factory `Templates` keys listed in a V3 manifest; unmodified factory keys remain eligible for the runtime route. Older `max`/`all` manifests retain their conservative all-factory write guard.
 - Runtime `Template` and group adapters remain enabled, using the global resident-template pool where the native
   asset path can create a resident template.
 - The stage monitor observes only factory spawners listed in its manifest, so runtime node-adapter spawns are not
