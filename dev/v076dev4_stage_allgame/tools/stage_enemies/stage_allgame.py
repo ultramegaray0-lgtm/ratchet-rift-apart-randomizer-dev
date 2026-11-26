@@ -104,8 +104,8 @@ try:                                 # optional, free: pip install lz4. Checked 
 except Exception:
     LZ4 = "built-in (pure Python; pip install lz4 makes the scan ~100x faster)"
 
-VERSION = "3.0.0-alpha.3"
-KIT = "v3.0-dev"
+VERSION = "4.0.0-alpha.1"
+KIT = "v4.0-dev"
 STAGE_LUA = "1.1.0"                   # the 16/18 handshake value (V.STAGE_LUA / ST.STAGE_LUA); unchanged
 STAGE_MOD_PATH = "mods/RandoEnemies.stage"
 MANIFEST_LUA = "18_rando_stage_manifest.lua"
