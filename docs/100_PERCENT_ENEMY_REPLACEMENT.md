@@ -1,6 +1,6 @@
 # 100% Enemy Replacement — aggressive development plan
 
-Status: V3.0 engineering alpha implemented on `work/global-runtime-enemy-registry`; offline tests and actual game validation are separate release gates.
+Status: V3.0 engineering alpha.2 on `work/global-runtime-enemy-registry`; offline CI passes, while real-game validation remains a separate release gate.
 
 ## Goal
 
@@ -76,7 +76,7 @@ The headline target is 100% of eligible reachable enemy spawners attempted in ex
 
 The branch now contains the all-planet builder, native global-template hook patch, global resident-template registry, synchronized runtime script bundle, and an offline planner for exact `SpawnerScriptAction` Template variables. The planner patches a shared variable only when every owner is a distinct, uniquely-keyed spawner with exactly one Template plug; it patches that variable once and records every owner key.
 
-The V3 profile combines factory and node Template adapter changes in one `.stage`, with adapter-aware runtime monitoring and independent byte-level verification. Unlisted factory, node, and group adapters remain eligible for the runtime route. It deliberately does not write foreign-zone actor UIDs into `.stage` or directly spawn combat enemies.
+The V3 profile combines factory and node Template adapter changes in one `.stage`, with adapter-aware runtime monitoring and independent byte-level verification. Alpha.2's expanded 17-test offline suite passed in [GitHub Actions run 45761202857](https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/actions/runs/45761202857); the real-zone fixture was skipped because game data is not committed. Unlisted factory, node, and group adapters remain eligible for the runtime route. It deliberately does not write foreign-zone actor UIDs into `.stage` or directly spawn combat enemies.
 
 Build with `dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat`. Read `dev/v076dev4_stage_allgame/V3.0_ALPHA_NOTES.md` before treating the build as a release.
 
