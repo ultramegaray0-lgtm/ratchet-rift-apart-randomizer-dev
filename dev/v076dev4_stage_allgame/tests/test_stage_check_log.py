@@ -92,7 +92,7 @@ class StageCheckLogV3Tests(unittest.TestCase):
         ])
         template_inventory = (
             "planet,zone,zone_id,node_key,class_id,is_SpawnerScriptAction\\n"
-            "ardolis,levels\\\\i29\\\\instance\\\\ardolis\\\\test.zone,ABCDEF0123456789,%s,2E910F8C,True\\n" % key
+            "ardolis,levels\\i29\\instance\\ardolis\\test.zone,ABCDEF0123456789,%s,2E910F8C,True\\n" % key
         )
         rc, output, data = self.run_fixture(log, template_inventory_csv=template_inventory)
         self.assertEqual(rc, 0)
