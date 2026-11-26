@@ -12,11 +12,11 @@
 --   * watches every replacement it saw spawn until it dies or is gone ("STAGE DEATH", "STAGE GONE", "STAGE ALIVE")
 --   * sums it up per level ("STAGE SUMMARY ...").
 -- The Enemy Randomizer (the - key) must be ON for the spawners to be listed; in .stage mode it only looks.
--- Needs 16_rando_spawners.lua (10.0.43). Without a manifest it only logs "enemy source: Lua runtime route".
+-- Needs 16_rando_spawners.lua (10.0.39; STAGE_LUA 1.1.0 handshake). Without a manifest it only logs "enemy source: Lua runtime route".
 -- Scale (stage_allgame 2.0.0, hundreds of changes in many zones): with more than ST.LIST_ALL changes the start lists one
 -- "STAGE ZONE" line per changed zone, and each "STAGE CHANGE n" line is written when its spawner is first listed in a
 -- level (only the changes you meet are logged); the "STAGE VARIABLES" counts cover the spawners listed in this level.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["18_rando_stage_enemies"] = "10.0.43"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["18_rando_stage_enemies"] = "10.0.39"   -- the kit check (10_rando_runtime.lua)
 
 local SP = RANDO_SPAWNERS
 local function slog(...) pcall(rivet.log, "[rando]", "RANDO-STAGE", ...) end
