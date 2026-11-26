@@ -421,13 +421,31 @@ class Zone:
                     nm, pvi, _ = self.plugs[p]
                     if p != plug:
                         other_plugs.append("%08X:sv%d" % (nm, pvi))
+                co_owners = [o for o in owners if o[0] is not nd]
+                co_owner_keys = sorted({hex16(o[0]["key"]) for o in co_owners})
+                # A shared variable is safe to patch only when every owner is a distinct,
+                # uniquely-keyed SpawnerScriptAction with exactly one Template plug.
+                # Any factory, generic node, other plug, duplicate/zero key, or repeated
+                # owner inside one action keeps the original variable untouched.
+                owner_nodes = {id(o[0]) for o in owners}
+                shared_spawner_safe = len(owners) == 1 or (
+                    len(owner_nodes) == len(owners)
+                    and all(o[0]["cls"] == NODE_SPAWNER_CLASS and o[2] == PLUG_TEMPLATE
+                            and sum(1 for q in o[0]["plugs"] if self.plugs[q][0] == PLUG_TEMPLATE) == 1
+                            and o[0]["key"] != 0 and o[0]["key"] not in self.dup_keys
+                            for o in co_owners)
+                    and nd["key"] != 0 and nd["key"] not in self.dup_keys
+                )
+                spawner_keys = sorted({hex16(nd["key"])} | set(co_owner_keys)) if shared_spawner_safe else [hex16(nd["key"])]
                 out.append({
                     "key": hex16(nd["key"]), "action": nd["r"], "class": "%08X" % nd["cls"],
                     "is_spawner_class": nd["cls"] == NODE_SPAWNER_CLASS,
                     "template_plug": plug, "template_plug_count": len(template_plugs),
                     "var_index": vi, "form": form, "uid": hex16(v[5]), "kind": kind, "asset": asset,
                     "owners": len(owners),
-                    "co_owner_classes": sorted({"%08X/%08X" % (o[0]["cls"], o[2]) for o in owners if o[0] is not nd}),
+                    "co_owner_classes": sorted({"%08X/%08X" % (o[0]["cls"], o[2]) for o in co_owners}),
+                    "co_owner_keys": co_owner_keys, "spawner_keys": spawner_keys,
+                    "shared_spawner_safe": shared_spawner_safe,
                     "other_plugs": ";".join(other_plugs),
                     "rec": v[2],
                     "problem": ("zero Script Action key: no stable runtime identity for the stage manifest" if nd["key"] == 0 else
@@ -1132,15 +1150,31 @@ def plan_zone(S, brain, rec, opts, rng):
 
 
 def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, factory_anchors):
-    """Experimental offline planner for exact SpawnerScriptAction nodes with one local Template plug.
+    """Plan exact SpawnerScriptAction Template variables, including safe shared-node variables.
 
-    It never edits generic Template plugs, group adapters, external references, or shared variables.
-    Candidate actors are local regular enemies already referenced by a native factory or exact spawner node.
+    A shared variable is changed once only when every owner is a uniquely-keyed
+    SpawnerScriptAction with exactly one Template plug. The manifest lists every
+    owner key, and the anchor solver treats the shared variable as one indivisible
+    source/target so it can never keep a fake 'anchor' that is changed indirectly.
     """
-    nodes = [n for n in rec.get("template_nodes", []) if n.get("is_spawner_class")]
+    all_nodes = [n for n in rec.get("template_nodes", []) if n.get("is_spawner_class")]
     decisions, options = OrderedDict(), {}
-    if not nodes:
+    if not all_nodes:
         return [], decisions
+
+    by_var = defaultdict(list)
+    for node in all_nodes:
+        by_var[node["var_index"]].append(node)
+    groups = []
+    for var_index, members in sorted(by_var.items()):
+        members.sort(key=lambda n: n["key"])
+        first = members[0]
+        keys = sorted({key for n in members for key in n.get("spawner_keys", [n["key"]])})
+        safe = all(n.get("shared_spawner_safe", n.get("owners", 1) == 1) for n in members)
+        same_ref = all(n.get("uid") == first.get("uid") and n.get("rec") == first.get("rec")
+                       and n.get("form") == first.get("form") for n in members)
+        groups.append({"key": first["key"], "keys": keys, "var_index": var_index,
+                       "members": members, "node": first, "safe": safe and same_ref})
 
     pool, users = {}, defaultdict(list)
     for f in rec.get("factories", []):
@@ -1151,38 +1185,51 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
             pool.setdefault(f["uid"], {"uid": f["uid"], "kind": f["kind"], "family": fam,
                 "rec": f["rec"], "asset": f.get("asset"), "source": "factory"})
             users[f["uid"]].append(("factory", f["key"]))
-    for n in nodes:
-        if n.get("form") != "local" or not n.get("uid") or not n.get("kind") or n.get("problem"):
+    group_by_key = {g["key"]: g for g in groups}
+    for g in groups:
+        n = g["node"]
+        if n.get("form") != "local" or not n.get("uid") or not n.get("kind") or n.get("rec") is None:
             continue
         ok, fam, why = brain.regular(n["kind"], n.get("asset"))
         if ok:
             pool.setdefault(n["uid"], {"uid": n["uid"], "kind": n["kind"], "family": fam,
                 "rec": n["rec"], "asset": n.get("asset"), "source": "node_template"})
-            users[n["uid"]].append(("node_template", n["key"]))
+            # One source/anchor per Script Vars variable, never one per owner node.
+            users[n["uid"]].append(("node_template", g["key"]))
 
     changed_factory_keys = {c["key"] for c in factory_changes}
-    for n in nodes:
-        key = n["key"]
-        if n.get("problem"):
-            decisions[key] = ("refused", "node Template structure: " + n["problem"])
-            continue
-        if n.get("template_plug_count") != 1:
-            decisions[key] = ("refused", "requires exactly one Template plug")
-            continue
-        if n.get("form") != "local" or not n.get("uid") or n.get("rec") is None:
-            decisions[key] = ("refused", "requires a consistent local actor reference")
-            continue
-        if n.get("owners", 0) != 1:
-            decisions[key] = ("refused", "shared Template variable (%d owners); retained native" % n.get("owners", 0))
+    for g in groups:
+        n, key = g["node"], g["key"]
+        members = g["members"]
+        reason = None
+        if not g["safe"]:
+            reason = "shared Template variable has a non-spawner, malformed, duplicate-key or non-Template co-owner"
+        elif any(x.get("problem") for x in members):
+            reason = "node Template structure: " + next(x["problem"] for x in members if x.get("problem"))
+        elif any(x.get("template_plug_count") != 1 for x in members):
+            reason = "requires exactly one Template plug on every owner"
+        elif n.get("form") != "local" or not n.get("uid") or n.get("rec") is None:
+            reason = "requires a consistent local actor reference"
+        elif len(g["keys"]) != max((x.get("owners", 1) for x in members), default=1):
+            reason = "shared owner keys are incomplete; retained native"
+        if reason:
+            for owner_key in g["keys"]:
+                decisions[owner_key] = ("refused", reason)
             continue
         ok, family, why = brain.regular(n["kind"], n.get("asset"))
         if not ok:
-            decisions[key] = ("not enemy" if str(why).startswith(("not an enemy", "excluded", "kit role", "family large",
-                "family mount", "family friendly", "family unclear")) else "refused", "original %s: %s" % (n["kind"], why))
+            label = "not enemy" if str(why).startswith(("not an enemy", "excluded", "kit role", "family large",
+                "family mount", "family friendly", "family unclear")) else "refused"
+            for owner_key in g["keys"]:
+                decisions[owner_key] = (label, "original %s: %s" % (n["kind"], why))
             continue
-        verdict = (getattr(opts, "verdict_map", {}) or {}).get(rec["zone_id"], {}).get(key)
-        if verdict and verdict[0] in FAILURE_VERDICTS:
-            decisions[key] = ("refused", "latest in-game verdict %s: left native" % verdict[0])
+        verdict_map = (getattr(opts, "verdict_map", {}) or {}).get(rec["zone_id"], {})
+        failed = [(owner_key, verdict_map.get(owner_key)) for owner_key in g["keys"]
+                  if verdict_map.get(owner_key) and verdict_map[owner_key][0] in FAILURE_VERDICTS]
+        if failed:
+            verdict = failed[0][1][0]
+            for owner_key in g["keys"]:
+                decisions[owner_key] = ("refused", "latest in-game verdict %s on shared variable; left all owners native" % verdict)
             continue
         choices, rejected = [], Counter()
         for uid, candidate in pool.items():
@@ -1198,12 +1245,15 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
         if choices:
             options[key] = choices
         else:
-            decisions[key] = ("refused", "no same-zone compatible enemy template: " +
-                (", ".join("%s x%d" % x for x in rejected.most_common(3)) if rejected else "pool contains only this kind"))
+            reason = "no same-zone compatible enemy template: " + (
+                ", ".join("%s x%d" % x for x in rejected.most_common(3)) if rejected
+                else "pool contains only this kind")
+            for owner_key in g["keys"]:
+                decisions[owner_key] = ("refused", reason)
 
-    # Preserve only the source templates actually needed by a replacement. Greedy
-    # set-cover keeps the fewest node adapters native while ensuring each selected
-    # replacement still has at least one unchanged local user.
+    # Preserve each replacement template through an unchanged factory or node variable.
+    # Shared node owners count as one variable, so the anchor solver cannot accidentally
+    # leave one owner 'unchanged' while patching the shared value underneath it.
     anchors = {}
     for uid in pool:
         fixed = []
@@ -1237,47 +1287,55 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
         anchor_key = min(sources, key=lambda key: (len(options.get(key, [])), key))
         anchors[uid] = anchor_key
         options.pop(anchor_key, None)
-        decisions[anchor_key] = ("anchor", "kept native: last unchanged user of local template %s" % uid)
+        group = group_by_key[anchor_key]
+        for owner_key in group["keys"]:
+            decisions[owner_key] = ("anchor", "kept native: unchanged shared Template variable is an anchor for replacement UID " + uid)
 
     chosen, used = {}, Counter()
     order = sorted(options)
     rng.shuffle(order)
     for key in order:
         if opts.rate < 1.0 and rng.random() >= opts.rate:
-            decisions[key] = ("kept", "--rate %.2f left this node Template native" % opts.rate)
+            group = group_by_key[key]
+            for owner_key in group["keys"]:
+                decisions[owner_key] = ("kept", "--rate %.2f left this node Template variable native" % opts.rate)
             continue
         candidates = [o for o in options[key] if o["uid"] in anchors and anchors[o["uid"]] != key]
         if not candidates:
-            decisions[key] = ("refused", "all compatible local templates lack an unchanged anchor")
+            group = group_by_key[key]
+            for owner_key in group["keys"]:
+                decisions[owner_key] = ("refused", "all compatible local templates lack an unchanged anchor")
             continue
         weight = [(3.0 if o["pair_tier"] == "proven" else 1.0) / (1 + used[o["kind"]]) for o in candidates]
         pick = rng.choices(candidates, weights=weight, k=1)[0]
         chosen[key] = pick
         used[pick["kind"]] += 1
 
-    by_key = {n["key"]: n for n in nodes}
     changes = []
     for key, o in chosen.items():
-        n = by_key[key]
+        g = group_by_key[key]
+        n = g["node"]
         changes.append({
             "adapter": "node_template", "zone": rec["zone"], "zone_id": rec["zone_id"],
-            "planet": rec["planet"], "key": key, "action": n["action"], "plug": n["template_plug"],
-            "var_index": n["var_index"], "original_uid": n["uid"], "original_index": n["rec"],
-            "original": n["kind"], "original_family": brain.family(n["kind"], n.get("asset"))[0] or "unknown",
+            "planet": rec["planet"], "key": key, "spawner_keys": g["keys"],
+            "action": n["action"], "plug": n["template_plug"], "var_index": g["var_index"],
+            "original_uid": n["uid"], "original_index": n["rec"], "original": n["kind"],
+            "original_family": brain.family(n["kind"], n.get("asset"))[0] or "unknown",
             "replacement_uid": o["uid"], "replacement_index": o["rec"], "replacement_external": False,
             "replacement_source_zone": rec["zone"], "replacement_source_zone_id": rec["zone_id"],
             "replacement_source_planet": rec["planet"], "replacement": o["kind"],
             "replacement_family": o["family"], "pair_tier": o["pair_tier"],
             "pair_evidence": o["pair_evidence"], "spawn_tier": "node-template",
-            "spawn_points": "exact SpawnerScriptAction Template plug; no Locations plug is exposed by this adapter",
+            "spawn_points": "exact SpawnerScriptAction Template variable; %d owner(s)" % len(g["keys"]),
             "count": None, "tier": "node-template/" + o["pair_tier"],
             "anchor": anchors.get(o["uid"]), "pair": "node_template|%s/%s>%s/%s" %
                 (n["kind"][:19], n.get("class", "?"), o["kind"][:19], o["family"])
         })
-        decisions[key] = ("changed", "%s -> %s [node Template adapter, %s; in-game test required]" %
-                          (n["kind"], o["kind"], o["pair_tier"]))
+        for owner_key in g["keys"]:
+            decisions[owner_key] = ("changed", "%s -> %s [node Template variable, %d owner(s), %s; in-game test required]" %
+                                    (n["kind"], o["kind"], len(g["keys"]), o["pair_tier"]))
     changes.sort(key=lambda c: c["var_index"])
-    for n in nodes:
+    for n in all_nodes:
         decisions.setdefault(n["key"], ("refused", "not selected by the V3 adapter planner"))
     return changes, decisions
 
