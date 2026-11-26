@@ -6,6 +6,7 @@ on:
       - work/100-percent-enemy-replacement
       - work/global-runtime-enemy-registry
       - work/v4-total-enemy-coverage
+      - work/v4.1-campaign-safety
     paths:
       - 'dev/v076dev4_stage_allgame/**'
       - '.github/workflows/stage-allgame-validation.yml'
