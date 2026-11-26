@@ -101,6 +101,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("function V.global_templates_tick(frame)\n  if not V.enabled() then return end", runtime)
         self.assertIn('if not V.enabled() or V.stage_mode() then return end', runtime)
         self.assertIn('if not (SP and SP.V and SP.V.stage_mode) then', stage)
+        self.assertIn('if not V.stage_mode() or not r or r.kind ~= "factory" then return end', stage)
         self.assertIn('ST.STAGE_LUA = "1.1.0"', stage)
         self.assertIn('RANDO_FILES["18_rando_stage_enemies"] = "10.0.39"', stage)
         self.assertIn('RANDO_FILES["16_rando_spawners"] = "10.0.39"', runtime)
