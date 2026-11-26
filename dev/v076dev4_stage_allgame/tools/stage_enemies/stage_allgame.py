@@ -428,13 +428,16 @@ class Zone:
                 # Any factory, generic node, other plug, duplicate/zero key, or repeated
                 # owner inside one action keeps the original variable untouched.
                 owner_nodes = {id(o[0]) for o in owners}
-                shared_spawner_safe = len(owners) == 1 or (
+                shared_spawner_safe = (
+                    nd["cls"] == NODE_SPAWNER_CLASS and len(template_plugs) == 1 and
+                    (len(owners) == 1 or (
                     len(owner_nodes) == len(owners)
                     and all(o[0]["cls"] == NODE_SPAWNER_CLASS and o[2] == PLUG_TEMPLATE
                             and sum(1 for q in o[0]["plugs"] if self.plugs[q][0] == PLUG_TEMPLATE) == 1
                             and o[0]["key"] != 0 and o[0]["key"] not in self.dup_keys
                             for o in co_owners)
                     and nd["key"] != 0 and nd["key"] not in self.dup_keys
+                    ))
                 )
                 spawner_keys = sorted({hex16(nd["key"])} | set(co_owner_keys)) if shared_spawner_safe else [hex16(nd["key"])]
                 out.append({
