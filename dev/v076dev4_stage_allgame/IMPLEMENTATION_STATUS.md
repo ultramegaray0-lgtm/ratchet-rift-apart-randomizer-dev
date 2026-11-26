@@ -75,7 +75,7 @@ GitHub Actions run [45717250211](https://github.com/ultramegaray0-lgtm/ratchet-r
 This reconciled .stage is ready for a controlled in-game test. The separate BUILD_V2_MAX launcher is the route for fresh local-zone and experimental cross-planet builds against the complete local game install.
 
 
-## V3.0 alpha.2 status (2026-11-26)
+## V3.0 alpha.3 status (2026-11-26)
 
 - Hybrid factory + exact SpawnerScriptAction Template stage path is implemented.
 - Safe shared node Template variables are grouped by Script Vars index, patched once, and listed under every owner key. Shared variables with any non-spawner, non-Template, duplicate/zero-key, repeated, or malformed owner remain native.
