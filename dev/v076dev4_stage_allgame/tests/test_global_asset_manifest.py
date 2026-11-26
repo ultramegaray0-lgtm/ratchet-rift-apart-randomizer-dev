@@ -2,6 +2,7 @@
 """Offline tests for the generated cross-planet actor asset catalog."""
 import json
 import os
+import random
 import sys
 import tempfile
 import unittest
