@@ -104,8 +104,8 @@ try:                                 # optional, free: pip install lz4. Checked 
 except Exception:
     LZ4 = "built-in (pure Python; pip install lz4 makes the scan ~100x faster)"
 
-VERSION = "2.2.0"
-KIT = "v0.76-DEV4"
+VERSION = "3.0.0-alpha.1"
+KIT = "v3.0-dev"
 STAGE_LUA = "1.1.0"                   # the 16/18 handshake value (V.STAGE_LUA / ST.STAGE_LUA); unchanged
 STAGE_MOD_PATH = "mods/RandoEnemies.stage"
 MANIFEST_LUA = "18_rando_stage_manifest.lua"
@@ -1410,16 +1410,19 @@ def coverage_report(S, rows, changes, pins, opts, source, brain, stage_info):
           "| zones that hold spawner factories | %d |" % len(zones_fac),
           "| spawner factories (all kinds) | %d |" % len(rows),
           "| of them enemy spawners | %d |" % len(enemy_rows),
-          "| **changed** | **%d (%.0f%% of enemy spawners)** |" % (len(changed), 100.0 * len(changed) / max(1, len(enemy_rows))),
+          "| **factory changes** | **%d (%.0f%% of discovered enemy factories)** |" % (sum(1 for c in changes if c.get("adapter", "factory") == "factory"), 100.0 * sum(1 for c in changes if c.get("adapter", "factory") == "factory") / max(1, len(enemy_rows))),
           "| zones changed | %d |" % len(zones_chg),
           "| planets with changes | %d |" % len({c["planet"] for c in changes}),
           "| replacement enemy kinds used | %d |" % len(rep_kinds),
-          "| other spawner nodes (`Template` adapter, not handled) | %d |" % sum(z["node_template_spawners"] for z in S.zones.values()),
+          "| other spawner nodes (`Template` adapter, census) | %d |" % sum(z["node_template_spawners"] for z in S.zones.values()),
           "| exact `SpawnerScriptAction` class candidates | %d |" % sum(1 for z in S.zones.values() for n in z.get("template_nodes", []) if n["is_spawner_class"]),
+          "| exact node adapters changed | %d |" % sum(1 for c in changes if c.get("adapter") == "node_template"),
+          "| .stage total changes (factory + node adapters) | %d |" % len(changes),
           "| .stage size | %s |" % stage_info, ""]
     L += ["Change tiers: " + ", ".join("%s %d" % kv for kv in tiers.most_common()) + ".",
           "Spawn-point tiers: " + ", ".join("%s %d" % kv for kv in stiers.most_common()) + ".", "",
           "- **confirmed**: the exact replacement UID was observed spawning in supplied runtime verdict evidence (or in the bundled historical evidence); the latest observed result takes precedence.",
+          "- **node-template** changes are experimental exact SpawnerScriptAction Template-plug rewrites; they have no factory Locations plug, so spawn-point compatibility remains an in-game test requirement.",
           "- **proven**: the pair has in-game evidence (built-in table, your logs, the .stage runs). NOT yet seen at this spawner.",
           "- **kin**: same faction and movement group, the kit's KILLABLE rule. Unverified in game.",
           "- spawn points: `volume` local volume; `clue-native` an anim clue the game itself uses for the replacement; "
@@ -1669,11 +1672,12 @@ def emit(a, S, src, brain, build, out):
                   "span": span, "sha256_original": zrecs[hex16(zid)]["sha256"], "sha256_patched": zrecs[hex16(zid)]["sha256_patched"],
                   "changes": zrecs[hex16(zid)]["changes"]} for span, zid in members]
         m = {"format": 1, "tool": VERSION, "kit": KIT, "stage_lua": STAGE_LUA, "seed": a.seed, "profile": a.profile,
-             "label": ("V2.1.0 FORCE ALL ENEMIES - EXPERIMENTAL; classifiable enemy factories use global foreign templates" if getattr(a, "force_all_enemies", False) else "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile), "stage_sha256": ssha,
+             "label": ("V3.0 HYBRID - EXPERIMENTAL; local factory + exact node Template adapters" if a.profile == "v3" else "V2.1.0 FORCE ALL ENEMIES - EXPERIMENTAL; classifiable enemy factories use global foreign templates" if getattr(a, "force_all_enemies", False) else "all-planet build, profile %s (uid + index, spawn-point rule, KILLABLE pairs)" % a.profile), "stage_sha256": ssha,
              "settings": {"profile": a.profile, "strict_external": a.strict_external, "rate": a.rate,
                           "planets": a.planet or "all", "actor_family": not a.no_actor_family,
                           "cross_planet": bool(getattr(a, "cross_planet", False) or getattr(a, "force_all_enemies", False)),
-                          "force_all_enemies": bool(getattr(a, "force_all_enemies", False))},
+                          "force_all_enemies": bool(getattr(a, "force_all_enemies", False)),
+                          "node_adapters": a.profile == "v3"},
              "zones": zones, "changes": changes, "pins": [{"key": k, "replacement": u, "result": w} for k, u, w in pins]}
         with open(os.path.join(out, "stage_enemies_manifest.json"), "w") as fh:
             json.dump(m, fh, indent=1)
@@ -1691,7 +1695,7 @@ def emit(a, S, src, brain, build, out):
     print("  Global enemy asset catalog: %d regular enemy actor asset(s)" % len(global_assets))
     rows = write_inventory(S, decisions, out)
     template_rows = write_template_inventory(S, out, decisions)
-    print("  Template-adapter census: %d plug records; %d exact SpawnerScriptAction nodes (diagnostic only)" % (len(template_rows), sum(1 for z in S.zones.values() for n in z.get("template_nodes", []) if n["is_spawner_class"])))
+    print("  Template-adapter census: %d plug records; %d exact SpawnerScriptAction nodes; %d patched in V3" % (len(template_rows), sum(1 for z in S.zones.values() for n in z.get("template_nodes", []) if n["is_spawner_class"]), sum(1 for c in changes if c.get("adapter") == "node_template")))
     lua18 = next((x for x in (os.path.join(HERE, "..", "..", "scripts", STAGE_LUA_FILE), os.path.join(HERE, STAGE_LUA_FILE))
                   if os.path.isfile(x)), "")
     if build and changes and lua18:
