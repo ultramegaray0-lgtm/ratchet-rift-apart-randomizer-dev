@@ -145,6 +145,32 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertEqual(decisions["NODE-SHARED"][0], "refused")
         self.assertTrue(all(c["replacement_index"] in (0, 1) for c in changes))
 
+    def test_v3_node_only_zone_keeps_one_anchor_and_replaces_the_other_node(self):
+        class FakeBrain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "fixture"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return (original != replacement, "proven", "fixture pair")
+            def family(self, kind, asset=None):
+                return "ground", "fixture"
+
+        def node(key, var_index, uid, kind, rec):
+            return {"key": key, "action": 0, "class": "SPAWNER", "is_spawner_class": True,
+                    "template_plug": 1, "template_plug_count": 1, "var_index": var_index,
+                    "form": "local", "uid": uid, "kind": kind, "asset": "actors/%s.actor" % kind,
+                    "rec": rec, "owners": 1, "co_owner_classes": [], "other_plugs": "", "problem": ""}
+        rec = {"zone": "node_only.zone", "zone_id": "ABCDEF0123456789", "planet": "fixture",
+               "factories": [], "template_nodes": [
+                   node("NODE-A", 2, "1111111111111111", "enm_pirate_robot_shooter", 0),
+                   node("NODE-B", 3, "2222222222222222", "enm_pirate_robot_melee", 1),
+               ]}
+        changes, decisions = SA.plan_node_template_adapters(
+            SimpleNamespace(), FakeBrain(), rec, SimpleNamespace(verdict_map={}, rate=1.0),
+            random.Random("v3-node-only"), [], {})
+        self.assertEqual(len(changes), 1)
+        self.assertEqual(sum(1 for value in decisions.values() if value[0] == "anchor"), 1)
+        self.assertEqual(sum(1 for value in decisions.values() if value[0] == "changed"), 1)
+
     def test_v3_installer_bundles_one_synchronized_runtime_kit(self):
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
         runtime_dir = os.path.join(root, "mod", "RiftApartRandomizer", "scripts")
