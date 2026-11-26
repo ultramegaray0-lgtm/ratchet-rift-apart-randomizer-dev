@@ -206,6 +206,39 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('V.SCAN_EVERY = 30', runtime)
         self.assertIn('V.RETRY_LIMIT = 9999', runtime)
 
+    def test_v4_node_adapter_bypasses_pair_gate_but_keeps_structural_anchor(self):
+        class FakeBrain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "fixture"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return False, "rejected", "fixture says incompatible"
+            def family(self, kind, asset=None):
+                return "ground", "fixture"
+
+        factories = [
+            {"key": "FACTORY-A", "form": "local", "uid": "1111111111111111",
+             "kind": "enm_pirate_robot_shooter", "asset": "actors/shooter.actor", "rec": 0, "problem": None},
+            {"key": "FACTORY-B", "form": "local", "uid": "2222222222222222",
+             "kind": "enm_pirate_robot_melee", "asset": "actors/melee.actor", "rec": 1, "problem": None},
+        ]
+        def node(key, var_index, uid, kind, rec):
+            return {"key": key, "action": 0, "class": "SPAWNER", "is_spawner_class": True,
+                    "template_plug": 1, "template_plug_count": 1, "var_index": var_index,
+                    "form": "local", "uid": uid, "kind": kind, "asset": "actors/%s.actor" % kind,
+                    "rec": rec, "owners": 1, "co_owner_classes": [], "other_plugs": "", "problem": ""}
+        rec = {"zone": "v4.zone", "zone_id": "ABCDEF0123456789", "planet": "fixture",
+               "factories": factories,
+               "template_nodes": [
+                   node("NODE-A", 2, "1111111111111111", "enm_pirate_robot_shooter", 0),
+                   node("NODE-B", 3, "2222222222222222", "enm_pirate_robot_melee", 1),
+               ]}
+        opts = SimpleNamespace(verdict_map={}, rate=1.0, profile="v4")
+        changes, decisions = SA.plan_node_template_adapters(
+            SimpleNamespace(), FakeBrain(), rec, opts, random.Random("v4-node-test"), [], {})
+        self.assertEqual({c["key"] for c in changes}, {"NODE-A", "NODE-B"})
+        self.assertTrue(all(c["pair_tier"] == "V4-FORCED" for c in changes))
+        self.assertTrue(all(c["replacement_index"] in (0, 1) for c in changes))
+
     def test_v3_profile_keeps_shared_factories_native_and_owns_only_manifest_keys(self):
         builder_path = os.path.join(HERE, "..", "tools", "stage_enemies", "stage_allgame.py")
         with open(builder_path, encoding="utf-8") as fh:
