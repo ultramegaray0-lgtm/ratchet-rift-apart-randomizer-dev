@@ -115,6 +115,11 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("rivet.template_actor, item.row.path, item.uid, true", source)
         self.assertIn("rivet.on_frame(function()", source)
         self.assertIn("V.global_frame_ready = ready", source)
+        self.assertIn("if V and V.global_templates_tick then", source)
+        self.assertNotIn("V.global_frame_ready and V.global_templates_tick", source)
+        self.assertIn("V.GLOBAL_RETRY_LIMIT = 8", source)
+        self.assertIn("V.FIRST_SCAN = 0", source)
+        self.assertIn("V.RETRY_LIMIT = 9999", source)
         self.assertNotIn("  V.global_templates_tick(frame)", source)
 
     def test_v3_next_build_and_log_check_keep_the_hybrid_profile(self):
@@ -149,23 +154,57 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn('function V.stage_manifest() return RANDO_STAGE_ENEMIES end', runtime)
         self.assertIn('function V.stage_mode() return type(V.stage_manifest()) == "table" end', runtime)
         self.assertIn("function V.stage_owns_rec(r)", runtime)
-        self.assertIn('if manifest.profile ~= "v3" then return true end', runtime)
+        self.assertIn('if manifest.profile ~= "v3" and manifest.profile ~= "v4" then return true end', runtime)
         self.assertIn('return V.stage_factory_keys[key] == true', runtime)
         self.assertIn('return V.stage_node_keys[key] == true', runtime)
         self.assertIn('if V.stage_owns_rec(r) then return note_why(r, ".stage owns this " .. tostring(r.kind) .. " Template variable") end', runtime)
         self.assertIn("if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end", runtime)
         self.assertIn("pcall(V.stage_on_spawn, e, r, a", runtime)
         self.assertIn("pcall(V.stage_on_death, h)", runtime)
-        self.assertIn("function V.global_templates_tick(frame)\n  if not V.enabled() then return end", runtime)
+        self.assertIn("function V.global_templates_tick(frame)\n  -- V4: independent of scene readiness and the ON/OFF switch", runtime)
         self.assertIn("if not V.enabled() then return end", runtime)
         self.assertNotIn("if not V.enabled() or V.stage_mode() then return end", runtime)
         self.assertIn('if not (SP and SP.V and SP.V.stage_mode) then', stage)
         self.assertIn('local expected_adapter = c.adapter or "factory"', stage)
         self.assertIn('r.kind == "template" and "node_template" or nil', stage)
-        self.assertIn('if not c and V.stage_manifest().profile ~= "v3" and uid then', stage)
+        self.assertIn('if not c and V.stage_manifest().profile ~= "v3" and V.stage_manifest().profile ~= "v4" and uid then', stage)
         self.assertIn('ST.STAGE_LUA = "1.1.0"', stage)
         self.assertIn('RANDO_FILES["18_rando_stage_enemies"] = "10.0.51"', stage)
         self.assertIn('RANDO_FILES["16_rando_spawners"] = "10.0.51"', runtime)
+
+    def test_v4_force_profile_is_explicit_and_includes_node_adapters(self):
+        root = os.path.abspath(os.path.join(HERE, ".."))
+        builder_path = os.path.join(root, "tools", "stage_enemies", "stage_allgame.py")
+        launcher_path = os.path.join(root, "BUILD_V4_TOTAL_COVERAGE.bat")
+        with open(builder_path, encoding="utf-8") as fh:
+            builder = fh.read()
+        with open(launcher_path, encoding="utf-8") as fh:
+            launcher = fh.read()
+        self.assertIn('PROFILES = ("max", "safe", "all", "v3", "v4")', builder)
+        self.assertIn('if a.profile in ("v3", "v4"):', builder)
+        self.assertIn('if a.profile == "v4":', builder)
+        self.assertIn("faction/movement compatibility checks bypassed", builder)
+        self.assertIn("spawn-point compatibility checks bypassed", builder)
+        self.assertIn('if a.profile == "v4" and not getattr(a, "force_all_enemies", False):', builder)
+        self.assertIn("--profile v4 --force-all-enemies --rate 1.0 --no-safe", launcher)
+        self.assertIn("unreachable, unkillable, or softlock", launcher)
+
+    def test_v4_enemy_randomizer_defaults_on_and_preloads_during_checkpoint_loading(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        settings_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "04_rando_settings.lua")
+        runtime_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "16_rando_spawners.lua")
+        with open(settings_path, encoding="utf-8") as fh:
+            settings = fh.read()
+        with open(runtime_path, encoding="utf-8") as fh:
+            runtime = fh.read()
+        self.assertIn("enemy_randomizer = true", settings)
+        self.assertIn("if V and V.global_templates_tick then", runtime)
+        self.assertNotIn("V.global_frame_ready and V.global_templates_tick", runtime)
+        self.assertIn("V.GLOBAL_RETRY_LIMIT = 8", runtime)
+        self.assertIn("GLOBAL PRELOAD: ready", runtime)
+        self.assertIn('V.FIRST_SCAN = 0', runtime)
+        self.assertIn('V.SCAN_EVERY = 30', runtime)
+        self.assertIn('V.RETRY_LIMIT = 9999', runtime)
 
     def test_v3_profile_keeps_shared_factories_native_and_owns_only_manifest_keys(self):
         builder_path = os.path.join(HERE, "..", "tools", "stage_enemies", "stage_allgame.py")
