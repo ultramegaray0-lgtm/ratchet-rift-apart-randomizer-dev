@@ -37,40 +37,40 @@ class StageCheckLogV3Tests(unittest.TestCase):
     def test_manifest_expands_shared_node_owner_keys_and_reads_template_spawn(self):
         uid = "2222222222222222"
         manifest = {"changes": [{
-            "key": "NODE-A", "spawner_keys": ["NODE-A", "NODE-B"], "adapter": "node_template",
+            "key": "AAAAAAAAAAAAAAAA", "spawner_keys": ["AAAAAAAAAAAAAAAA", "BBBBBBBBBBBBBBBB"], "adapter": "node_template",
             "original": "enm_pirate_robot_shooter", "replacement": "enm_pirate_robot_melee",
             "replacement_uid": uid, "planet": "ardolis", "zone": "levels\\i29\\instance\\ardolis\\test.zone",
             "tier": "node-template/confirmed"
         }]}
         log = "\n".join([
             "[rivet] init",
-            "[script] [rando]\tRANDO-STAGE\tSTAGE VARIABLE template NODE-B: holds %s (enm_pirate_robot_melee) = the .stage value - the patched zone IS loaded" % uid,
-            "[script] [rando]\tRANDO-ENEMIES\tSTAGE SPAWN 778 | MIS_TEST | template NODE-B (the patched spawner) | variable %s | handle uid %s | spawned enm_pirate_robot_melee (swarmer) | change 1 enm_pirate_robot_shooter -> enm_pirate_robot_melee | REPLACEMENT SPAWNED (the .stage value was used)" % (uid, uid),
-            "[script] [rando]\tRANDO-STAGE\tSTAGE DEATH 778: enm_pirate_robot_melee (spawner NODE-B) died 3 s after it spawned",
+            "[script] [rando]\tRANDO-STAGE\tSTAGE VARIABLE template BBBBBBBBBBBBBBBB: holds %s (enm_pirate_robot_melee) = the .stage value - the patched zone IS loaded" % uid,
+            "[script] [rando]\tRANDO-ENEMIES\tSTAGE SPAWN 778 | MIS_TEST | template BBBBBBBBBBBBBBBB (the patched spawner) | variable %s | handle uid %s | spawned enm_pirate_robot_melee (swarmer) | change 1 enm_pirate_robot_shooter -> enm_pirate_robot_melee | REPLACEMENT SPAWNED (the .stage value was used)" % (uid, uid),
+            "[script] [rando]\tRANDO-STAGE\tSTAGE DEATH 778: enm_pirate_robot_melee (spawner BBBBBBBBBBBBBBBB) died 3 s after it spawned",
         ])
         rc, output, data = self.run_fixture(log, manifest)
         self.assertEqual(rc, 0)
         verdicts = data["verdicts"]
-        self.assertEqual(verdicts["NODE-B"]["verdict"], "WORKED")
-        self.assertEqual(verdicts["NODE-A"]["verdict"], "NOT REACHED")
-        self.assertEqual(verdicts["NODE-B"]["adapter"], "node_template")
+        self.assertEqual(verdicts["BBBBBBBBBBBBBBBB"]["verdict"], "WORKED")
+        self.assertEqual(verdicts["AAAAAAAAAAAAAAAA"]["verdict"], "NOT REACHED")
+        self.assertEqual(verdicts["BBBBBBBBBBBBBBBB"]["adapter"], "node_template")
         self.assertIn("actor 778 enm_pirate_robot_melee", output)
 
     def test_log_only_v3_stage_change_splits_shared_keys_and_reads_node_spawn(self):
         original_uid, replacement_uid = "1111111111111111", "2222222222222222"
         log = "\n".join([
             "[rivet] init",
-            "[script] [rando]\tRANDO-STAGE\tSTAGE CHANGE 7: levels\\i29\\instance\\ardolis\\test.zone Zone Script Vars +128 (entry 1): %s #0 (enm_pirate_robot_shooter) -> %s #1 (enm_pirate_robot_melee) | node_template|fixture | adapter node_template | spawners NODE-A,NODE-B" % (original_uid, replacement_uid),
-            "[script] [rando]\tRANDO-STAGE\tSTAGE VARIABLE template NODE-A: holds %s (enm_pirate_robot_melee) = the .stage value - the patched zone IS loaded" % replacement_uid,
-            "[script] [rando]\tRANDO-ENEMIES\tSPAWN 900 | ardolis | MIS_TEST | node Template NODE-A | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee | spawned enm_pirate_robot_melee (swarmer) | SUCCESS",
-            "[script] [rando]\tRANDO-ENEMIES\tSTAGE SPAWN 900 | MIS_TEST | template NODE-A (the patched spawner) | variable %s | handle uid %s | spawned enm_pirate_robot_melee (swarmer) | change 7 enm_pirate_robot_shooter -> enm_pirate_robot_melee | REPLACEMENT SPAWNED" % (replacement_uid, replacement_uid),
+            "[script] [rando]\tRANDO-STAGE\tSTAGE CHANGE 7: levels\\i29\\instance\\ardolis\\test.zone Zone Script Vars +128 (entry 1): %s #0 (enm_pirate_robot_shooter) -> %s #1 (enm_pirate_robot_melee) | node_template|fixture | adapter node_template | spawners AAAAAAAAAAAAAAAA,BBBBBBBBBBBBBBBB" % (original_uid, replacement_uid),
+            "[script] [rando]\tRANDO-STAGE\tSTAGE VARIABLE template AAAAAAAAAAAAAAAA: holds %s (enm_pirate_robot_melee) = the .stage value - the patched zone IS loaded" % replacement_uid,
+            "[script] [rando]\tRANDO-ENEMIES\tSPAWN 900 | ardolis | MIS_TEST | node Template AAAAAAAAAAAAAAAA | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee | spawned enm_pirate_robot_melee (swarmer) | SUCCESS",
+            "[script] [rando]\tRANDO-ENEMIES\tSTAGE SPAWN 900 | MIS_TEST | template AAAAAAAAAAAAAAAA (the patched spawner) | variable %s | handle uid %s | spawned enm_pirate_robot_melee (swarmer) | change 7 enm_pirate_robot_shooter -> enm_pirate_robot_melee | REPLACEMENT SPAWNED" % (replacement_uid, replacement_uid),
         ])
         rc, output, data = self.run_fixture(log)
         self.assertEqual(rc, 0)
-        self.assertEqual(data["verdicts"]["NODE-A"]["verdict"], "WORKED")
-        self.assertEqual(data["verdicts"]["NODE-B"]["verdict"], "NOT REACHED")
-        self.assertEqual(data["verdicts"]["NODE-A"]["adapter"], "node_template")
-        self.assertIn("CHANGE 7  NODE-A", output)
+        self.assertEqual(data["verdicts"]["AAAAAAAAAAAAAAAA"]["verdict"], "WORKED")
+        self.assertEqual(data["verdicts"]["BBBBBBBBBBBBBBBB"]["verdict"], "NOT REACHED")
+        self.assertEqual(data["verdicts"]["AAAAAAAAAAAAAAAA"]["adapter"], "node_template")
+        self.assertIn("CHANGE 7  AAAAAAAAAAAAAAAA", output)
 
     def test_legacy_factory_stage_logs_still_parse(self):
         original_uid, replacement_uid = "1111111111111111", "2222222222222222"
