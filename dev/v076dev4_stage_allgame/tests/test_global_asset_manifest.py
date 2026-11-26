@@ -410,7 +410,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
     def test_v3_installer_bundles_one_synchronized_runtime_kit(self):
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
         runtime_dir = os.path.join(root, "mod", "RiftApartRandomizer", "scripts")
-        self.assertEqual(SA.VERSION, "3.0.0-alpha.2")
+        self.assertEqual(SA.VERSION, "3.0.0-alpha.3")
         self.assertIn("runtime_scripts", SA.RUNTIME_BUNDLE_DIR)
         self.assertIn("runtime_scripts", str(SA.INSTALL_FILES))
         self.assertGreaterEqual(len(SA.RUNTIME_SCRIPT_NAMES), 18)
