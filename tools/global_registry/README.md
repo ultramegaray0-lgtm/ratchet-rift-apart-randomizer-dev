@@ -29,7 +29,7 @@ Run the normal all-planet builder against the installed game folder. Use the sta
 From the repository root in PowerShell (replace the game path with the installed game folder):
 
 ```powershell
-py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py build --game "E:\\Path\\To\\Ratchet.and.Clank.Rift.Apart Modded" --out ".\builds\GLOBAL_RUNTIME" --profile max
+py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py build --game "E:\Path\To\Ratchet.and.Clank.Rift.Apart Modded" --out ".\builds\GLOBAL_RUNTIME" --profile max
 py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py install --game "E:\\Path\\To\\Ratchet.and.Clank.Rift.Apart Modded" --build ".\builds\GLOBAL_RUNTIME"
 ```
 
