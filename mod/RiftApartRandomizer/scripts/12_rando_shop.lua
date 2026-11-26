@@ -76,7 +76,7 @@
 -- what the next round shows (RANDO-SHOP VERIFY / TABLE lines).
 -- v0.71-DEV3 SHOP BONUS (seed.shop.bonus: vendor slot -> location shop:omega_1 ... shop:armor_2): buying the weapon in such a
 -- slot also pays that location's item (an Omega version, a gadget or an armor piece), see H.on_purchase.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "10.0.39"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["12_rando_shop"] = "10.0.50"   -- the kit check (10_rando_runtime.lua)
 
 RANDO_SHOP = RANDO_SHOP or {}
 local H = RANDO_SHOP
