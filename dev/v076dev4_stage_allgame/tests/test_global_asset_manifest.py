@@ -84,6 +84,19 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("V.global_frame_ready = ready", source)
         self.assertNotIn("  V.global_templates_tick(frame)", source)
 
+    def test_v3_next_build_and_log_check_keep_the_hybrid_profile(self):
+        root = os.path.abspath(os.path.join(HERE, "..", ".."))
+        next_path = os.path.join(root, "BUILD_NEXT_VERDICT_GUIDED.bat")
+        check_path = os.path.join(root, "CHECK_MY_LOG.bat")
+        with open(next_path, encoding="utf-8") as fh:
+            next_build = fh.read()
+        with open(check_path, encoding="utf-8") as fh:
+            check_log = fh.read()
+        self.assertIn("--profile v3 --rate 1.0 %VERD%", next_build)
+        self.assertIn("stage_check_log.py", check_log)
+        self.assertIn("--manifest", check_log)
+        self.assertIn("LAST_INSTALLED.txt", check_log)
+
     def test_stage_monitor_handshake_disables_runtime_writes(self):
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
         runtime_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "16_rando_spawners.lua")
