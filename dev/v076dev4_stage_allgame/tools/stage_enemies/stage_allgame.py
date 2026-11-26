@@ -957,7 +957,7 @@ def plan_zone_force(S, brain, rec, opts, rng):
         usage[candidate["kind"]] += 1
 
         # V2.2 only reaches this point after regular-enemy, pair, and spawn-point checks pass.
-        tier = "V4-FORCED-UNSAFE" if opts.profile == "v4" else "FORCED-TEST"
+        tier = "FORCED-TEST-V4-UNSAFE" if opts.profile == "v4" else "FORCED-TEST"
         changes.append({
             "zone": rec["zone"], "zone_id": rec["zone_id"], "planet": rec["planet"], "key": key,
             "action": f["action"], "plug": f.get("plug"), "var_index": f["sv"],
@@ -1260,7 +1260,10 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
         for uid, candidate in pool.items():
             if uid == n["uid"] or candidate["kind"] == n["kind"]:
                 continue
-            allowed, tier, evidence = brain.pair(n["kind"], family, candidate["kind"], candidate["family"])
+            if opts.profile == "v4":
+                allowed, tier, evidence = True, "V4-FORCED", "V4 override: local regular-enemy family compatibility bypassed"
+            else:
+                allowed, tier, evidence = brain.pair(n["kind"], family, candidate["kind"], candidate["family"])
             if not allowed:
                 rejected[str(evidence).split(":")[0][:70]] += 1
                 continue
