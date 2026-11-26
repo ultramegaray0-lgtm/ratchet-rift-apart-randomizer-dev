@@ -1204,7 +1204,7 @@ def write_global_enemy_asset_manifest(S, brain, out):
         ok, family, why = brain.regular(kind, asset)
         if not ok or not family:
             continue
-        normalized_asset = asset.replace("\\\\", "/")
+        normalized_asset = asset.replace("\\", "/")
         key = normalized_asset.lower()
         row = {"name": kind, "family": family, "path": normalized_asset, "source_uid": uid,
                "source_planet": meta.get("planet", ""), "source_zone": meta.get("zone", "")}
