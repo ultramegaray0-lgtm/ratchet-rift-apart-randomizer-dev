@@ -4203,8 +4203,8 @@ end
 
 function V.tick(frame, ready)
   V.global_frame_ready = ready
-  if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end
   if not V.lvl then V.new_level("scripts loaded") end
+  if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end
   local lvl = V.lvl
   if not V.enabled() then
     V.job = nil
