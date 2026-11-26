@@ -161,7 +161,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("if V.stage_tick then pcall(V.stage_tick, frame, ready, V.enabled()) end", runtime)
         self.assertIn("pcall(V.stage_on_spawn, e, r, a", runtime)
         self.assertIn("pcall(V.stage_on_death, h)", runtime)
-        self.assertIn("function V.global_templates_tick(frame)\n  -- V4: independent of scene readiness and the ON/OFF switch", runtime)
+        self.assertIn("function V.global_templates_tick(frame)\n  -- V4: this queue is deliberately independent of scene readiness and the ON/OFF switch.", runtime)
         self.assertIn("if not V.enabled() then return end", runtime)
         self.assertNotIn("if not V.enabled() or V.stage_mode() then return end", runtime)
         self.assertIn('if not (SP and SP.V and SP.V.stage_mode) then', stage)
