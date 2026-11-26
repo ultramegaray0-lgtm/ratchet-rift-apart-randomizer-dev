@@ -21,7 +21,7 @@ class Brain:
 
 class GlobalAssetManifestTests(unittest.TestCase):
     def test_manifest_deduplicates_paths_and_excludes_non_enemies(self):
-        scan = SimpleNamespace(template_catalog_all={
+        scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
             "1111111111111111": {"kind": "enm_pirate_robot_melee", "asset": r"characters\pirate\melee.actor", "planet": "ardolis"},
             "2222222222222222": {"kind": "enm_pirate_robot_melee", "asset": "characters/pirate/melee.actor", "planet": "sargasso"},
             "3333333333333333": {"kind": "enm_story_boss", "asset": "characters/boss.actor", "planet": "cordelion"},
