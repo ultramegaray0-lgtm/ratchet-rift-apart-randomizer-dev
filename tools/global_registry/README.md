@@ -20,9 +20,18 @@ Run the GitHub Actions workflow "Build Global Enemy Registry Hook" on this branc
 
 The workflow builds a pinned upstream Rivet Hook source revision and applies patch_rivet_hook.py. The custom API is not present in an unmodified Rivet Hook release.
 
+Validated native build: [GitHub Actions run 45730770687](https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/actions/runs/45730770687). Artifact: rivet-hook-global-enemy-templates (7.37 MB). SHA-256: 12e598d2fe1d9ea8a537998521f61dbf72e4d423bd1a2fc41d6a3daa848b8371.
+
 ### 2. Build the local game-specific catalog
 
 Run the normal all-planet builder against the installed game folder. Use the standard safe/max profile; do not pass --force-all-enemies or --cross-planet. Those options recreate the unverified foreign-UID approach that caused the V2.2 failures.
+
+From the repository root in PowerShell (replace the game path with the installed game folder):
+
+```powershell
+py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py build --game "E:\\Path\\To\\Ratchet.and.Clank.Rift.Apart Modded" --out ".\builds\GLOBAL_RUNTIME" --profile max
+py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py install --game "E:\\Path\\To\\Ratchet.and.Clank.Rift.Apart Modded" --build ".\builds\GLOBAL_RUNTIME"
+```
 
 The output should contain:
 - RandoEnemies.stage
