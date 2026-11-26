@@ -66,7 +66,7 @@ if errorlevel 2 goto notnow
 if errorlevel 1 goto failed
 > "builds\LAST_INSTALLED.txt" echo %CD%\%OUT%
 echo.
-echo V3.0 installed. The installer synchronized the complete 10.0.50 script kit.
+echo V3.0 installed. The installer synchronized the complete 10.0.51 script kit.
 echo The installed build path was saved so CHECK_MY_LOG.bat can read this exact manifest.
 echo Turn the Enemy Randomizer ON with - BEFORE entering a level; global templates warm up while it is enabled.
 echo Test several planets and complete full encounters before treating coverage as proven.
