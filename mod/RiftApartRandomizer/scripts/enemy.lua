@@ -98,6 +98,23 @@ function E.force_complete_current_encounter()
   end
   local mission = SP.V and SP.V.mission
   local D = RANDO_CAMPAIGN_RT
+  -- The campaign runtime also keeps the authoritative event ledger. Use its latest ACTIVE
+  -- mission if the spawner tracker has not yet received its first callback.
+  if (type(mission) ~= "string" or mission == "") and D and type(D.missions) == "table" then
+    local newest_frame = -1
+    for name, info in pairs(D.missions) do
+      if type(name) == "string" and type(info) == "table" and tonumber(info.state) == 2
+          and not name:find("_CUP$") and name ~= "MIS_RYNO_PLANS" and name ~= "MIS_INTRO"
+          and (tonumber(info.last_frame) or 0) >= newest_frame then
+        mission = name
+        newest_frame = tonumber(info.last_frame) or 0
+      end
+    end
+    if mission then
+      SP.V.mission = mission
+      log("V mission recovered from campaign event ledger:", mission)
+    end
+  end
   if type(mission) ~= "string" or mission == "" then
     R.say("V: no active story mission has been identified yet", { type = "corner", duration = 4 })
     log("V requested, but SP.V.mission is unavailable")
