@@ -1,8 +1,8 @@
-# V4.3 Full Campaign Experimental
+# V4.4 Full Campaign Experimental
 
 ## Purpose
 
-V4.3 returns to maximum campaign coverage after the V4.2 diagnostic branch. It includes zones under `levels/.../storymission/...`; it does not pass `--exclude-storymission`.
+V4.4 returns to maximum campaign coverage after the V4.2 diagnostic branch. It includes zones under `levels/.../storymission/...`; it does not pass `--exclude-storymission`.
 
 ## Build profile
 
@@ -45,3 +45,13 @@ Do not interpret a missing V action as a successful bypass. This is an explicit 
 - Randomized replacements spawn and are killable.
 - Story encounters advance naturally without objective/door softlocks.
 - A full new-campaign run is required before calling V4.3 campaign-verified.
+
+
+## V4.4 follow-up: hotkeys and story-gate honesty
+
+- V is now bound and checks the currently active story mission tracked by the spawner layer.
+- If the game reports mission state 3 (Complete Cleaning), V asks the game's own mission system to finish cleanup and verifies the returned state is 4.
+- If the mission is still active (state 2), V reports that it cannot bypass the encounter. It does not kill actors, forge death events, or mark objectives complete.
+- F11 is now enemy emergency recovery. This avoids the F12 collision with the legacy campaign key observed in rivet - Copy5.log.
+- The Copy5 log's initial global template pool of 0 was transient: later in that same log it reached 26 resident templates. The .stage summary for that session still recorded zero spawns from patched .stage spawners on the visited level; the runtime route separately recorded replacements. Do not interpret 277 manifest changes as 277 successful in-game replacements.
+- The V path is code-added but not yet validated in-game. A true active-encounter force-complete still requires identifying the game's encounter-specific completion signal.
