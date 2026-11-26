@@ -2186,6 +2186,16 @@ def cmd_install(a):
         if os.path.isfile(src_p):
             shutil.copy2(src_p, os.path.join(game, *dst_rel.split("/")))
             print("installed %s" % dst_rel)
+    # Older debug(debug).lua installs a legacy key_campaign binding (F12 on this hook build)
+    # and is explicitly not part of the supported runtime bundle. Back it up, then remove it
+    # so it cannot shadow the new V / F11 controls or emit stale kit warnings.
+    legacy_debug = os.path.join(game, "scripts", "dev(debug).lua")
+    if os.path.isfile(legacy_debug):
+        legacy_backup = os.path.join(bdir, "scripts", "dev(debug).lua")
+        os.makedirs(os.path.dirname(legacy_backup), exist_ok=True)
+        shutil.copy2(legacy_debug, legacy_backup)
+        os.remove(legacy_debug)
+        print("removed obsolete scripts/dev(debug).lua (backup retained)")
     print("backup of the files it replaced: %s" % bdir)
     return 0
 
@@ -2201,6 +2211,10 @@ def cmd_uninstall(a):
         if os.path.isfile(b):
             shutil.copy2(b, dst)
             print("restored %s" % dst_rel)
+    legacy_backup = os.path.join(last, "scripts", "dev(debug).lua")
+    if os.path.isfile(legacy_backup):
+        shutil.copy2(legacy_backup, os.path.join(a.game, "scripts", "dev(debug).lua"))
+        print("restored scripts/dev(debug).lua")
     print("restored from %s (the backup folder is kept)" % last)
     return 0
 
