@@ -933,7 +933,7 @@ def plan_zone_force(S, brain, rec, opts, rng):
         # technically changed a UID but looked unchanged in-game. V4.4 requires a different
         # classified enemy kind, not merely a different UID.
         candidates = [x for x in global_pool if x["uid"] != original_uid
-                      and x["kind"] != original_kind
+                      and str(x["kind"]).casefold() != str(original_kind).casefold()
                       and x["zone_id"] != rec["zone_id"]]
         if not candidates:
             decisions[key] = ("refused", "no globally unique foreign enemy template is available")
