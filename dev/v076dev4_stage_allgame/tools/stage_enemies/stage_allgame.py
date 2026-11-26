@@ -1199,17 +1199,14 @@ def write_global_enemy_asset_manifest(S, brain, out):
     by_path = {}
     ambiguous = set()
     candidates = []
-    # Every actor in every scanned zone, not just the templates referenced by
-    # native factories. The runtime loader can turn any classifiable regular
-    # enemy actor asset into a resident template source.
-    for uid, records in S.actor_catalog.items():
-        for meta in records:
-            candidates.append((uid, meta))
+    # Only assets already used as templates by a native factory or a real
+    # SpawnerScriptAction are considered spawnable sources. Do not promote
+    # arbitrary placed/cinematic actors from the general actor catalog.
     for uid, meta in S.template_catalog_all.items():
         candidates.append((uid, meta))
     for zone in S.zones.values():
         for node in zone.get("template_nodes", []):
-            if node.get("uid") and node.get("kind"):
+            if node.get("is_spawner_class") and node.get("uid") and node.get("kind"):
                 candidates.append((node["uid"], {"kind": node.get("kind"), "asset": node.get("asset"),
                                                  "planet": zone.get("planet", ""), "zone": zone.get("zone", "")}))
     for uid, meta in sorted(candidates, key=lambda x: (str(x[1].get("asset") or "").lower(), str(x[1].get("kind") or ""), str(x[0]))):
