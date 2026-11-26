@@ -22,11 +22,14 @@ The V4 planner:
 
 ## Story progression and V key status
 
-The agreed V feature is **force-complete the current combat encounter**, not kill all enemies and not complete the mission. It must cause the game's real encounter completion output so doors, objectives, and subsequent waves progress.
+The V key is included in V4.4 as a **guarded mission-cleanup assist**, not a full active-encounter bypass.
 
-That engine-side completion operation is not implemented in V4.4. The current runtime can observe spawner/death evidence, but no verified API for safely firing the active story encounter's completion output has been established. V is therefore deliberately not bound to a fake "complete" action. F12 remains emergency enemy recovery; it restores future spawner templates but cannot repair a story objective already stuck in its controller.
+- V queries the active story mission tracked by the spawner layer.
+- If the game reports state 3 (Complete Cleaning), V calls the game's own CompleteMissionAction and verifies state 4.
+- If the game reports state 2 (Active), V refuses to fake deaths or skip the encounter. The actual encounter-completion signal is not exposed by the current hook, so V cannot yet force a stuck active combat gate.
+- F11 is enemy emergency recovery. It replaces the previous F12 binding, which collided with the legacy campaign key in the supplied log.
 
-Do not interpret a missing V action as a successful bypass. This is an explicit remaining engineering task.
+The V code has been added but has not been validated in-game. Do not treat it as a proven encounter bypass.
 
 ## New campaign test
 
@@ -36,7 +39,7 @@ Do not interpret a missing V action as a successful bypass. This is an explicit 
 4. Install only after the independent `check` passes.
 5. Start a **new campaign** so story mission graphs and spawner state are initialized from the new stage. Do not reuse a save already stuck in an encounter.
 6. At each first encounter on a planet, note: original enemy, replacement enemy, whether it spawns, whether it can be killed, and whether the encounter completes/door opens.
-7. If story progression stalls, record the encounter name and collect `rivet.log`. F12 is emergency recovery only; reload the last checkpoint after using it if necessary.
+7. If story progression stalls, record the encounter name and collect `rivet.log`. F11 is emergency recovery only; reload the last checkpoint after using it if necessary.
 
 ## Acceptance criteria
 
