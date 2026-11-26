@@ -213,15 +213,6 @@ replace_once(
     "\t\t\t\tactor->actorAsset->assetId != asset->assetId) {\n",
     "\t\t\t\tactor->actorAsset->assetId != asset->assetId || (actor->flags & ActorFlag::Template) == 0) {\n",
 )
-replace_once(
-    "src/travel.cpp",
-    "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n",
-    "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
-)
-replace_once(
-    "src/travel.cpp",
-    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n",
-    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
-)
+
 
 print("Applied global enemy-template API patch.")
