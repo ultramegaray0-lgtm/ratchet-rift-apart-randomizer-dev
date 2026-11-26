@@ -35,7 +35,7 @@ echo FACTORY ROUTE: .stage SunsetSpawnerFactory Templates variables.
 echo NODE ROUTE: exact SpawnerScriptAction nodes with one local Template plug.
 echo GLOBAL ROUTE: native resident enemy-template catalog for remaining runtime node adapters.
 echo SAFETY: no foreign-zone actor UID references, no arbitrary actor promotion, no direct combat spawning.
-echo SHARED VARIABLES: V3 attempts all structurally valid shared factory variables, marked experimental.
+echo SHARED VARIABLES: .stage retains shared factory/node variables; runtime handles unpatched spawners under its freshness rules.
 echo NODE ADAPTERS: single-owner only; shared, malformed and non-local references stay native.
 echo PAIRS: proven + same-faction/same-movement kin; known failed pairs stay excluded.
 echo A SAFE factory-only fallback is built alongside V3.
