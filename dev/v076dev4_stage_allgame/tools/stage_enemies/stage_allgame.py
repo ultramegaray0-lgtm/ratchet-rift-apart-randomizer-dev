@@ -110,6 +110,7 @@ STAGE_LUA = "1.1.0"                   # the 16/18 handshake value (V.STAGE_LUA /
 STAGE_MOD_PATH = "mods/RandoEnemies.stage"
 MANIFEST_LUA = "18_rando_stage_manifest.lua"
 GLOBAL_ASSET_LUA = "15_rando_global_enemy_assets.lua"
+SPAWNERS_LUA_FILE = "16_rando_spawners.lua"
 STAGE_LUA_FILE = "18_rando_stage_enemies.lua"
 HEADER = 36
 
@@ -1364,7 +1365,8 @@ class StageWriter:
 # commands
 # ======================================================================================================================
 def default_scripts(game):
-    for d in ([os.path.join(game, "scripts")] if game else []) + [os.path.join(HERE, "..", "..", "scripts")]:
+    for d in ([os.path.join(game, "scripts")] if game else []) + [os.path.join(HERE, "..", "..", "scripts"),
+            os.path.join(HERE, "..", "..", "..", "mod", "RiftApartRandomizer", "scripts")]:
         if os.path.isfile(os.path.join(d, "16_rando_spawners.lua")):
             return os.path.abspath(d)
     return None
@@ -1545,6 +1547,9 @@ def emit(a, S, src, brain, build, out):
                   if os.path.isfile(x)), "")
     if build and changes and lua18:
         shutil.copy2(lua18, os.path.join(out, STAGE_LUA_FILE))
+    lua16 = os.path.join(HERE, "..", "..", "..", "mod", "RiftApartRandomizer", "scripts", SPAWNERS_LUA_FILE)
+    if build and os.path.isfile(lua16):
+        shutil.copy2(lua16, os.path.join(out, SPAWNERS_LUA_FILE))
     rep = coverage_report(S, rows, changes, pins, a, src, brain, stage_info)
     with open(os.path.join(out, "COVERAGE_REPORT.md"), "w", encoding="utf-8") as fh:
         fh.write(rep)
@@ -1684,7 +1689,8 @@ def cmd_check(a):
 
 # ---- install / uninstall (the only commands that write to the game folder) ------------------------------------------
 INSTALL_FILES = [("RandoEnemies.stage", "mods/RandoEnemies.stage"), (GLOBAL_ASSET_LUA, "scripts/" + GLOBAL_ASSET_LUA),
-                 (MANIFEST_LUA, "scripts/" + MANIFEST_LUA), (STAGE_LUA_FILE, "scripts/" + STAGE_LUA_FILE)]
+                 (SPAWNERS_LUA_FILE, "scripts/" + SPAWNERS_LUA_FILE), (MANIFEST_LUA, "scripts/" + MANIFEST_LUA),
+                 (STAGE_LUA_FILE, "scripts/" + STAGE_LUA_FILE)]
 
 
 def cmd_install(a):
