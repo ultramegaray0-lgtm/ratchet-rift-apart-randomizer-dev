@@ -4023,7 +4023,7 @@ function V.stage_owns_rec(r)
     -- Older max/all manifests may change shared factory variables; preserve their
     -- original no-runtime-writes behavior. V3 manifests contain single-owner
     -- factory changes, so only those exact keys are stage-owned.
-    if manifest.profile ~= "v3" then return true end
+    if manifest.profile ~= "v3" and manifest.profile ~= "v4" then return true end
     return V.stage_factory_keys[key] == true
   end
   if r.kind == "template" then return V.stage_node_keys[key] == true end
