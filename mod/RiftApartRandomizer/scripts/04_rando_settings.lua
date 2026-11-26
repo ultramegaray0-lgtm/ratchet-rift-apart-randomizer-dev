@@ -102,7 +102,7 @@ RANDO_SETTINGS = {
 
   -- ENEMIES AND BOSSES (the save remembers changes made with the in-game keys).
   -- These only decide the start of a save that has never used the keys; they do not change the seed.
-  enemy_randomizer = false,            -- v0.75: OFF by default (the - key turns it on). Regular enemies spawned by spawners
+  enemy_randomizer = true,             -- V4 DEFAULT ON: maximum-coverage regular enemy replacement starts before entering a level.
                                        -- become other regular enemies loaded on the same level (needs rando_give.dll v7)
   boss_randomizer = false,              -- boss-tier enemies are shuffled among themselves (story bosses never)
   enemy_notify = true,                 -- dev 10.29: a corner note "[ENEMY RANDOMIZER] SUCCESS - Original: X -> Replacement: Y"
