@@ -48,7 +48,7 @@ The word “total” describes the aggressive spawner coverage attempt, not all 
 - ambiguous or malformed variables, and shared factory variables that cannot be safely identified as a single-owner factory;
 - zones the game archive scanner cannot decode or that are not reachable from the current game install.
 
-The global asset list is generated from enemy templates used by native factories and exact SpawnerScriptAction nodes. It is not a magic inventory of every actor asset in the game. Assets the native hook cannot create remain listed as preload failures and are not counted as ready.
+V4 expands the global asset list to every unambiguous, classifiable regular-enemy actor asset found in the scanned game archive, including enemy assets that were previously only used as placed actors. Story bosses and non-enemies remain excluded. This broadens the replacement pool; it does not prove every actor asset is valid as a live spawner template. Assets the native hook cannot create remain listed as preload failures and are not counted as ready.
 
 ### 5. Build and install
 
