@@ -1564,6 +1564,7 @@ end
 SP.V = SP.V or {}
 local V = SP.V
 V.story_missions = V.story_missions or {} -- active story missions; never rewrite their encounter spawners
+V.mission_query_complete = V.mission_query_complete or {} -- query result must not disable story-safety guard
 V.HELPER_MIN = 7
 V.MB_SCENE = 0x128
 V.SCENE_VARS = 0x75A0
@@ -1832,9 +1833,9 @@ function V.story_active()
   return false
 end
 function V.current_story_mission()
-  if V.mission and V.story_missions[V.mission] then return V.mission end
+  if V.mission and V.story_missions[V.mission] and not V.mission_query_complete[V.mission] then return V.mission end
   for name in pairs(V.story_missions) do
-    if V.story_mission_name(name) then return name end
+    if V.story_mission_name(name) and not V.mission_query_complete[name] then return name end
   end
   return nil
 end
@@ -4588,10 +4589,12 @@ do
       if V.story_mission_name(name) then
         if st == 2 then
           V.story_missions[name] = true
+          V.mission_query_complete[name] = nil
           V.mission = name
           vlog("STORY SAFETY mission active:", name)
         elseif st == 0 or st == 3 or st == 4 or st == 5 then
           V.story_missions[name] = nil
+          V.mission_query_complete[name] = nil
           if V.mission == name then V.mission = V.current_story_mission() end
           vlog("STORY SAFETY mission cleared:", name, "state", tostring(st))
         end
@@ -4718,6 +4721,7 @@ if not SP.subscribed then
     local name = f.MissionName
     if V.story_mission_name(name) then
       V.story_missions[name] = true
+      V.mission_query_complete[name] = nil
       V.mission = name
       vlog("STORY SAFETY mission started:", name)
     end
@@ -4726,6 +4730,7 @@ if not SP.subscribed then
     local name = f.MissionName
     if type(name) == "string" and V.story_missions[name] then
       V.story_missions[name] = nil
+      V.mission_query_complete[name] = nil
       if V.mission == name then V.mission = V.current_story_mission() end
       vlog("STORY SAFETY mission ended:", name)
     end
