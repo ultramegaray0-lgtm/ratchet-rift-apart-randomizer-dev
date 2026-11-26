@@ -856,6 +856,11 @@ def plan_zone_force(S, brain, rec, opts, rng):
         if f.get("problem"):
             decisions[key] = ("refused", "force mode cannot safely identify one Templates variable: " + f["problem"])
             continue
+        # A Templates variable shared by multiple owners cannot be safely
+        # changed for one spawner: it would also change every co-owner.
+        if f.get("owners", 0) != 1:
+            decisions[key] = ("refused", "kept native: shared Templates variable (%d owners)" % f.get("owners", 0))
+            continue
         if f.get("form") not in ("local", "external") or not f.get("uid") or f.get("sv") is None:
             decisions[key] = ("refused", "force mode requires a singular local/external enemy Template reference")
             continue
