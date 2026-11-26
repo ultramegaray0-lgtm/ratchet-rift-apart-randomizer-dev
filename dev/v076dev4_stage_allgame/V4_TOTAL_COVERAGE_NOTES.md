@@ -41,7 +41,11 @@ This is intentionally unsafe. A replacement can be too large, too small, unable 
 
 The V4 runtime retry limit is raised to 9999 so checkpoint retries do not permanently disable a changed runtime encounter after five deaths. It does not override structural write validation or make an invalid actor safe.
 
-### 4. Campaign recovery key (V4.1)
+### 4. Known failed-spawner protection (V4.1)
+
+The bundled 2026-11-26 verdict set contains **31 `NO SPAWN` results** (including multiple factories in Ardolis first visit and the Ardolis pirate-king ship). V4.1 leaves those exact spawner variables native instead of trying a different replacement for the same spawner. This is deliberately more conservative than V4: a recorded no-spawn result is treated as a property of the spawner/encounter until new in-game evidence proves otherwise. The five `WORKED` verdicts remain eligible for evidence-guided selection; `NOT REACHED` is not treated as a failure.
+
+### 5. Campaign recovery key (V4.1)
 
 Press **F10** at any point to enter Emergency Safe Mode for the rest of the current game session.
 
@@ -53,7 +57,7 @@ Press **F10** at any point to enter Emergency Safe Mode for the rest of the curr
 
 If an original template UID cannot be resolved in the current level, the log reports `EMERGENCY RESTORE UNAVAILABLE`; use the builder's `safe` fallback build or uninstall the stage patch before continuing. F10 is intentionally a one-way session safety latch; restart the game to return to normal randomization.
 
-### 5. What V4 does not yet claim
+### 6. What V4 does not yet claim
 
 The word “total” describes the aggressive spawner coverage attempt, not all actors in the game. These categories remain outside the current proven replacement mechanism:
 - story bosses and phase-driven boss encounters;
@@ -66,7 +70,7 @@ The word “total” describes the aggressive spawner coverage attempt, not all 
 
 V4 expands the global asset list to every unambiguous, classifiable regular-enemy actor asset found in the scanned game archive, including enemy assets that were previously only used as placed actors. Story bosses and non-enemies remain excluded. This broadens the replacement pool; it does not prove every actor asset is valid as a live spawner template. Assets the native hook cannot create remain listed as preload failures and are not counted as ready.
 
-### 6. Build and install
+### 7. Build and install
 
 Run `BUILD_V4_TOTAL_COVERAGE.bat` from this directory. It:
 1. scans the actual game archive;
@@ -77,7 +81,7 @@ Run `BUILD_V4_TOTAL_COVERAGE.bat` from this directory. It:
 
 The launcher uses `--no-safe` because the ordinary “safe” fallback is not the selected V4 experiment. Keep the automatic backup; use the builder's uninstall route to restore it.
 
-### 7. Acceptance gate
+### 8. Acceptance gate
 
 After install, the first test should be one ordinary encounter followed by one deliberate death/checkpoint retry. Confirm:
 - `GLOBAL PRELOAD` advances while the loading screen/menu is visible;
