@@ -75,6 +75,8 @@ class GlobalAssetManifestTests(unittest.TestCase):
         with open(script, encoding="utf-8") as fh:
             source = fh.read()
         self.assertIn("V.GLOBAL_SPAWNS_PER_FRAME = 1", source)
+        self.assertIn("V.GLOBAL_REQUESTS_PER_FRAME = 4", source)
+        self.assertIn("V.GLOBAL_POLLS_PER_FRAME = 4", source)
         self.assertIn("rivet.template_actor, item.row.path, item.uid, false", source)
         self.assertIn("rivet.template_actor, item.row.path, item.uid, true", source)
         self.assertIn("rivet.on_frame(function()", source)
