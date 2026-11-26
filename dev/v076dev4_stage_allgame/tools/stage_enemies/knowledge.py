@@ -187,7 +187,7 @@ LEARNED_RE = re.compile(r"learned template \d+ \(uid ([0-9A-F]{16})\): (\S+) = (
 CHANGED_RE = re.compile(r"CHANGED.*? (factory Templates|node Template|node Template group) ([0-9A-F]{16}) .*?: (\S+) -> (\S+) "
                         r"\[template \d+ uid ([0-9A-F]{16})")
 SPAWN_RE = re.compile(r"SPAWN \d+ \| (\S+) \| (.*?) \| (factory Templates|node Template group|node Template|no spawner) (\S+) \| "
-                      r"original (\S+) \| selected (\S+) \| spawned (\S+) \((\w+)\)")
+                      r"original (\S+) \| selected (\S+)(?: uid ([0-9A-F]{16}|-))? \| spawned (\S+) \((\w+)\)")
 ADAPTER = {"factory Templates": "factory", "node Template": "template", "node Template group": "group"}
 
 
@@ -226,7 +226,7 @@ def load_log(k: Knowledge, path: str) -> None:
                 continue
             m = SPAWN_RE.search(line)
             if m:
-                planet, enc, adapter, key, orig, _sel, spawned, fam = m.groups()
+                planet, enc, adapter, key, orig, selected, selected_uid, spawned, fam = m.groups()
                 if adapter == "no spawner" or key == "-":
                     continue
                 s = k.spawners.get(key)
@@ -234,6 +234,9 @@ def load_log(k: Knowledge, path: str) -> None:
                     s = k.spawners[key] = Spawner(key, ADAPTER[adapter], planet)
                 s.encounters.add(enc)
                 s.originals[orig] = s.originals.get(orig, 0) + 1
+                if selected_uid and selected_uid != "-" and short(selected) == short(spawned):
+                    s.uids.add(selected_uid.upper())
+                    k.add_template(selected_uid, selected, fam, None, "enemy", os.path.basename(path))
                 k.planets.add(planet)
                 ns += 1
                 if "learned from its first spawn" in line:
