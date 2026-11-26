@@ -108,7 +108,7 @@ replace_once(
     "\t\t\t\tfail(reason, \"synthetic template uid is already owned by a different actor\"); return TemplateResult::Failed;\n"
     "\t\t\t}\n"
     "\t\t\tactor->flags |= ActorFlag::Template;\n"
-    "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n"
+    "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n"
     "\t\t\tactor->zoneIndex = -1;\n"
     "\t\t\tif (handle != nullptr) *handle = existing;\n"
     "\t\t\tif (flags != nullptr) *flags = actor->flags;\n"
@@ -145,7 +145,7 @@ replace_once(
     "\t\t}\n"
     "\t\tactor->zoneIndex = -1;\n"
     "\t\tactor->flags |= ActorFlag::Template;\n"
-    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n"
+    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n"
     "\t\tif (actor->object != nullptr && ddl::is_writable(actor->object, sizeof(SceneObject))) {\n"
     "\t\t\tactor->object->transform_matrix[3][0] = 0.0f;\n"
     "\t\t\tactor->object->transform_matrix[3][1] = -100000.0f;\n"
@@ -215,12 +215,12 @@ replace_once(
 )
 replace_once(
     "src/travel.cpp",
-    "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n",
+    "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
     "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
 )
 replace_once(
     "src/travel.cpp",
-    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n",
+    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
     "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
 )
 
