@@ -1228,6 +1228,9 @@ def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, facto
     order = sorted(options)
     rng.shuffle(order)
     for key in order:
+        if opts.rate < 1.0 and rng.random() >= opts.rate:
+            decisions[key] = ("kept", "--rate %.2f left this node Template native" % opts.rate)
+            continue
         candidates = [o for o in options[key] if o["uid"] in anchors and anchors[o["uid"]] != key]
         if not candidates:
             decisions[key] = ("refused", "all compatible local templates lack an unchanged anchor")
@@ -1318,7 +1321,7 @@ def write_template_inventory(S, out, decisions=None):
     rows = []
     for zh, rec in S.zones.items():
         for n in rec.get("template_nodes", []):
-            st, why = decisions.get(zh, {}).get(n["key"], ("not planned", rec["status"]))
+            st, why = decisions.get(zh, {}).get(n["key"], ("not planned", n["problem"] or rec["status"]))
             rows.append([rec["planet"], rec["zone"], zh, n["key"], n["class"], n["is_spawner_class"],
                          n["template_plug_count"], n["var_index"], n["form"], n["uid"], n["kind"] or "-",
                          n["asset"] or "-", n["owners"], ";".join(n["co_owner_classes"]),
