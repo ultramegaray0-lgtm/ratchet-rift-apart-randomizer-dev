@@ -4552,7 +4552,7 @@ do
     local orig_on_mission = D.on_mission
     D.on_mission = function(name, st, ...)
       if type(name) == "string" then
-        if st == 2 and not name:find("_CUP$") and name ~= "MIS_RYNO_PLANS" and name ~= "MIS_INTRO" then
+        if st == 2 and not name:find("_CUP$") and name ~= "MIS_RYNO_PLANS" then
           V.mission = name
           vlog("active story mission tracked:", name)
         elseif V.mission == name and (st == 0 or st == 3 or st == 4 or st == 5) then
