@@ -3082,7 +3082,7 @@ V.note_why = note_why
 
 function V.plan_rec(sc, r)
   local lvl = V.lvl
-  if V.stage_mode() and r.kind == "factory" then return note_why(r, ".stage owns this factory Templates variable") end
+  if V.stage_owns_rec(r) then return note_why(r, ".stage owns this " .. tostring(r.kind) .. " Template variable") end
   if r.arm then
     local A = r.arm
     -- dev 10.30: factories are planned before the nodes are listed; a node listed later that shares the variable and
@@ -3998,6 +3998,25 @@ V.global_templates = V.global_templates or {}       -- synthetic uid -> classifi
 V.STAGE_LUA = "1.1.0"
 function V.stage_manifest() return RANDO_STAGE_ENEMIES end
 function V.stage_mode() return type(V.stage_manifest()) == "table" end
+V.stage_node_manifest = V.stage_node_manifest or nil
+V.stage_node_keys = V.stage_node_keys or {}
+function V.stage_owns_rec(r)
+  if not V.stage_mode() or not r then return false end
+  if r.kind == "factory" then return true end
+  if r.kind ~= "template" then return false end
+  local manifest = V.stage_manifest()
+  if V.stage_node_manifest ~= manifest then
+    V.stage_node_manifest, V.stage_node_keys = manifest, {}
+    for _, change in ipairs(manifest.changes or {}) do
+      if change.adapter == "node_template" then
+        for _, key in ipairs(change.spawner_keys or {}) do
+          V.stage_node_keys[tostring(key):upper()] = true
+        end
+      end
+    end
+  end
+  return V.stage_node_keys[tostring(r.key):upper()] == true
+end
 V.global_items = V.global_items or {}
 V.global_item_by_uid = V.global_item_by_uid or {}
 V.global_items_initialized = V.global_items_initialized or false
