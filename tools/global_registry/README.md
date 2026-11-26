@@ -59,7 +59,7 @@ The V3 all-planet `.stage` builder edits SunsetSpawnerFactory `Templates` variab
 
 - `.stage` owns only the factory `Templates` keys listed in a V3 manifest; unmodified factory keys remain eligible for the runtime route. Older `max`/`all` manifests retain their conservative all-factory write guard.
 - Runtime `Template` and group adapters remain enabled, using the global resident-template pool where the native
-  asset path can create a resident template. Manifest-listed node Template keys are excluded from runtime writes.
+  asset path can create a resident template. Manifest-listed node Template keys are excluded from runtime writes; a shared variable is listed under every owner key and patched only once.
 - The stage monitor observes only the adapter type and spawner keys listed in its manifest, so runtime-only spawns are not
   misreported as `.stage` replacements.
 - The complete V3 runtime bundle uses kit version `10.0.50` plus the separate `STAGE_LUA = 1.1.0` handshake. Both checks must match.
