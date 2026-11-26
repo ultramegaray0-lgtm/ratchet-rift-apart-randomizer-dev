@@ -194,7 +194,12 @@ function V.stage_on_spawn(e, r, a, result, why)
   if idx.n == 0 then return end
   local L = ST.level()
   local uid, key = r.orig and up(r.orig.uid), up(r.key)
-  local c = (key and idx.keys[key]) or (uid and idx.rep[uid] and idx.rep[uid][1])
+  local c = key and idx.keys[key] or nil
+  -- V3 runtime fallback may randomize unpatched factories whose original UID happens
+  -- to equal another stage change's replacement UID. Do not misattribute those spawns.
+  if not c and V.stage_manifest().profile ~= "v3" and uid then
+    c = idx.rep[uid] and idx.rep[uid][1] or nil
+  end
   if not c then return end
   local expected_adapter = c.adapter or "factory"
   local actual_adapter = r.kind == "factory" and "factory" or r.kind == "template" and "node_template" or nil
