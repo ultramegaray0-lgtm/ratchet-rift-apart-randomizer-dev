@@ -189,7 +189,7 @@ end
 
 -- ---- hooks called by 16_rando_spawners.lua ------------------------------------------------------------------------
 function V.stage_on_spawn(e, r, a, result, why)
-  if not V.stage_mode() or not r then return end
+  if not V.stage_mode() or not r or r.kind ~= "factory" then return end
   local idx = ST.index()
   if idx.n == 0 then return end
   local L = ST.level()
