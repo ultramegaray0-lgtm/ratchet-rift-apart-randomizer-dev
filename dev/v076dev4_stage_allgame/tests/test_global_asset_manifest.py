@@ -83,6 +83,23 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("V.global_frame_ready = ready", source)
         self.assertNotIn("  V.global_templates_tick(frame)", source)
 
+    def test_stage_monitor_handshake_disables_runtime_writes(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        runtime_path = os.path.join(root, "mod", "RiftApartRandomizer", "scripts", "16_rando_spawners.lua")
+        stage_path = os.path.join(HERE, "..", "scripts", "18_rando_stage_enemies.lua")
+        with open(runtime_path, encoding="utf-8") as fh:
+            runtime = fh.read()
+        with open(stage_path, encoding="utf-8") as fh:
+            stage = fh.read()
+        self.assertIn('V.STAGE_LUA = "1.1.0"', runtime)
+        self.assertIn('function V.stage_mode() return type(RANDO_STAGE_ENEMIES) == "table" end', runtime)
+        self.assertIn('if V.stage_mode() then return note_why(r, ".stage mode: runtime spawner writes disabled") end', runtime)
+        self.assertIn('if not V.enabled() or V.stage_mode() then return end', runtime)
+        self.assertIn('if not (SP and SP.V and SP.V.stage_mode) then', stage)
+        self.assertIn('ST.STAGE_LUA = "1.1.0"', stage)
+        self.assertIn('RANDO_FILES["18_rando_stage_enemies"] = "10.0.39"', stage)
+        self.assertIn('RANDO_FILES["16_rando_spawners"] = "10.0.39"', runtime)
+
     def test_manifest_excludes_ambiguous_path_metadata(self):
         scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
             "1111111111111111": {"kind": "enm_pirate_robot_melee", "asset": "shared/enemy.actor"},
