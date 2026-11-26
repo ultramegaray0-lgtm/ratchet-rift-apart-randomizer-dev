@@ -104,7 +104,7 @@ function E.force_complete_current_encounter()
     local newest_frame = -1
     for name, info in pairs(D.missions) do
       if type(name) == "string" and type(info) == "table" and tonumber(info.state) == 2
-          and not name:find("_CUP$") and name ~= "MIS_RYNO_PLANS" and name ~= "MIS_INTRO"
+          and not name:find("_CUP$") and name ~= "MIS_RYNO_PLANS"
           and (tonumber(info.last_frame) or 0) >= newest_frame then
         mission = name
         newest_frame = tonumber(info.last_frame) or 0
@@ -138,27 +138,64 @@ function E.force_complete_current_encounter()
       log("V: " .. mission .. " already complete")
       return
     end
-    if q.after ~= D.MS.CLEANING then
-      local state = D.STATE_NAMES[q.after] or ("state " .. tostring(q.after))
-      log("V cannot complete " .. mission .. ": mission is " .. state ..
-          "; the active encounter's completion signal is not exposed by the current hook")
-      R.say("V cannot bypass this active encounter yet", {
-        type = "center",
-        sub = "The game still reports " .. state .. ". V will not fake enemy deaths or skip mission objectives.",
-        duration = 7
-      })
+    local function complete_cleaning()
+      D.mission_call("complete", mission, function(done)
+        if done and done.code == 11 and done.after == D.MS.COMPLETE then
+          log("V mission cleanup completed: " .. mission)
+          R.say("V: mission cleanup completed", { type = "corner", duration = 4 })
+        else
+          local why = done and D.describe(done) or "no response"
+          log("V mission cleanup did not complete: " .. mission .. " | " .. tostring(why))
+          R.say("V could not finish mission cleanup", { type = "corner", sub = tostring(why), duration = 5 })
+        end
+      end)
+    end
+    if q.after == D.MS.CLEANING then return complete_cleaning() end
+    if q.after == D.MS.ACTIVE then
+      -- V4.5 experimental fallback: newer helper builds expose set_state (v6). This writes the
+      -- mission's own state record; we do NOT assume it fired encounter outputs. Re-query the
+      -- live mission, and only invoke CompleteMissionAction if the game itself now reports 3.
+      local ok_set, why_set = D.native_ok("set_state")
+      if not ok_set then
+        local state = D.STATE_NAMES[q.after] or ("state " .. tostring(q.after))
+        log("V cannot force " .. mission .. ": mission is " .. state .. "; set_state unavailable: " .. tostring(why_set))
+        R.say("V cannot force this active encounter with the installed helper", {
+          type = "center", sub = tostring(why_set) .. ". The game has not exposed its encounter completion output.",
+          duration = 7
+        })
+        return
+      end
+      R.say("V: attempting verified mission-state recovery...", { type = "center", duration = 4 })
+      D.mission_call("set_state", mission, function(setr)
+        if not setr or setr.code ~= 11 then
+          local why = setr and D.describe(setr) or "no response"
+          log("V mission state override failed: " .. mission .. " | " .. tostring(why))
+          R.say("V could not change the active mission state", { type = "center", sub = tostring(why), duration = 6 })
+          return
+        end
+        D.mission_call("query", mission, function(check)
+          if check and check.code == 11 and check.after == D.MS.CLEANING then
+            log("V verified mission entered cleanup: " .. mission)
+            complete_cleaning()
+          else
+            local state = check and (D.STATE_NAMES[check.after] or ("state " .. tostring(check.after))) or "unknown"
+            log("V state override did not advance live mission: " .. mission .. " | " .. tostring(state) ..
+                "; no encounter output was synthesized")
+            R.say("V could not advance the live encounter", {
+              type = "center", sub = "The mission record write did not move the live mission into cleanup (" .. tostring(state) .. ").",
+              duration = 7
+            })
+          end
+        end)
+      end, D.MS.CLEANING)
       return
     end
-    D.mission_call("complete", mission, function(done)
-      if done and done.code == 11 and done.after == D.MS.COMPLETE then
-        log("V mission cleanup completed: " .. mission)
-        R.say("V: mission cleanup completed", { type = "corner", duration = 4 })
-      else
-        local why = done and D.describe(done) or "no response"
-        log("V mission cleanup did not complete: " .. mission .. " | " .. tostring(why))
-        R.say("V could not finish mission cleanup", { type = "corner", sub = tostring(why), duration = 5 })
-      end
-    end)
+    local state = D.STATE_NAMES[q.after] or ("state " .. tostring(q.after))
+    log("V cannot complete " .. mission .. ": mission is " .. state)
+    R.say("V cannot complete this mission in its current state", {
+      type = "center", sub = "The game reports " .. state .. ". No encounter completion signal was sent.",
+      duration = 6
+    })
   end)
 end
 
