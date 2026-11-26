@@ -162,6 +162,70 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertEqual(decisions["0000000000000000"][0], "refused")
         self.assertTrue(all(c["replacement_index"] in (0, 1) for c in changes))
 
+    def test_zone_census_marks_only_all_spawner_template_co_owners_safe(self):
+        def make_zone(second_class, second_plug):
+            zone = SA.Zone.__new__(SA.Zone)
+            first = {"r": 0, "key": 0xAAA, "cls": SA.NODE_SPAWNER_CLASS, "plugs": [0]}
+            second = {"r": 1, "key": 0xBBB, "cls": second_class, "plugs": [1]}
+            zone.nodes = [first, second]
+            zone.plugs = [(SA.PLUG_TEMPLATE, 0, 0), (second_plug, 0, 0)]
+            uid = int("1111111111111111", 16)
+            zone.vars = [(5, 0, 0, 0, 0, uid, 0)]
+            zone.owners = {0: [(first, 0, SA.PLUG_TEMPLATE), (second, 1, second_plug)]}
+            zone.actors = [(0, 0, 0, 0, 0, 0, uid)]
+            zone.asset_paths = ["actors/enm_pirate_robot_shooter.actor"]
+            zone.rec_of = {uid: 0}
+            zone.dup_uids = {}
+            zone.dup_keys = set()
+            return zone
+
+        safe = make_zone(SA.NODE_SPAWNER_CLASS, SA.PLUG_TEMPLATE).template_nodes()
+        self.assertEqual(len(safe), 2)
+        self.assertTrue(all(n["shared_spawner_safe"] for n in safe))
+        self.assertTrue(all(n["spawner_keys"] == ["0000000000000AAA", "0000000000000BBB"] for n in safe))
+
+        generic_owner = make_zone(0xDEADBEEF, SA.PLUG_TEMPLATE).template_nodes()
+        self.assertTrue(all(not n["shared_spawner_safe"] for n in generic_owner))
+        other_plug = make_zone(SA.NODE_SPAWNER_CLASS, SA.PLUG_LOCATIONS).template_nodes()
+        self.assertTrue(all(not n["shared_spawner_safe"] for n in other_plug))
+
+    def test_v3_anchor_solver_keeps_shared_node_variable_as_one_indivisible_source(self):
+        class FakeBrain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "fixture"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return (original != replacement, "proven", "fixture pair")
+            def family(self, kind, asset=None):
+                return "ground", "fixture"
+
+        def node(key, vi, uid, kind, owners, keys, safe):
+            return {"key": key, "action": 0, "class": "%08X" % SA.NODE_SPAWNER_CLASS,
+                    "is_spawner_class": True, "template_plug": 1, "template_plug_count": 1,
+                    "var_index": vi, "form": "local", "uid": uid, "kind": kind,
+                    "asset": "actors/%s.actor" % kind, "rec": vi, "owners": owners,
+                    "co_owner_classes": [], "co_owner_keys": keys, "spawner_keys": keys,
+                    "shared_spawner_safe": safe, "other_plugs": "", "problem": ""}
+        akeys = ["NODE-A1", "NODE-A2"]
+        rec = {"zone": "anchor.zone", "zone_id": "ABCDEF0123456789", "planet": "fixture",
+               "factories": [], "template_nodes": [
+                   node("NODE-A1", 5, "1111111111111111", "enm_pirate_robot_shooter", 2, akeys, True),
+                   node("NODE-A2", 5, "1111111111111111", "enm_pirate_robot_shooter", 2, akeys, True),
+                   node("NODE-B", 6, "2222222222222222", "enm_pirate_robot_melee", 1, ["NODE-B"], True),
+               ]}
+        changes, decisions = SA.plan_node_template_adapters(
+            SimpleNamespace(), FakeBrain(), rec, SimpleNamespace(verdict_map={}, rate=1.0),
+            random.Random("v3-shared-anchor"), [], {})
+        self.assertEqual(len(changes), 1)
+        changed_keys = set(changes[0]["spawner_keys"])
+        self.assertIn(changes[0]["var_index"], (5, 6))
+        if changes[0]["var_index"] == 5:
+            self.assertEqual(changed_keys, set(akeys))
+            self.assertEqual(decisions["NODE-B"][0], "anchor")
+        else:
+            self.assertEqual(changed_keys, {"NODE-B"})
+            self.assertEqual(decisions["NODE-A1"][0], "anchor")
+            self.assertEqual(decisions["NODE-A2"][0], "anchor")
+
     def test_v3_shared_spawner_template_variable_is_changed_once_for_all_owners(self):
         class FakeBrain:
             def regular(self, kind, asset=None):
