@@ -78,25 +78,36 @@ def run(a):
     if a.manifest:
         m = json.load(open(a.manifest))
         for i, c in enumerate(m["changes"], 1):
-            changes[c["key"].upper()] = {"n": i, "original": c["original"], "replacement": c["replacement"],
-                                         "replacement_uid": c["replacement_uid"], "planet": c.get("planet", "?"),
-                                         "zone": c.get("zone", "?"), "tier": c.get("tier", "?")}
+            entry = {"n": i, "original": c["original"], "replacement": c["replacement"],
+                     "replacement_uid": c["replacement_uid"], "planet": c.get("planet", "?"),
+                     "zone": c.get("zone", "?"), "tier": c.get("tier", "?"),
+                     "adapter": c.get("adapter", "factory")}
+            for key in (c.get("spawner_keys") or [c["key"]]):
+                changes[key.upper()] = dict(entry)
     lines = []
     for p in a.logs:
         lines += open(p, encoding="utf-8", errors="replace").read().splitlines()
-    re_change = re.compile(r"STAGE CHANGE (\d+): (\S+) .*?-> ([0-9A-F]{16})(?: #\d+)? \(([^)]+)\) \| .*\| spawners (.*)$")
+    re_change_v3 = re.compile(r"STAGE CHANGE (\d+): (\S+) .*?-> ([0-9A-F]{16})(?: #\d+)? \(([^)]+)\) \| .*?\| adapter (factory|node_template) \| spawners (.*)$")
+    re_change_legacy = re.compile(r"STAGE CHANGE (\d+): (\S+) .*?-> ([0-9A-F]{16})(?: #\d+)? \(([^)]+)\) \| .*\| spawners (.*)$")
     re_change_o = re.compile(r"STAGE CHANGE \d+: .*?\(([^)]+)\) -> [0-9A-F]{16}")
+    re_var = re.compile(r"STAGE VARIABLE (factory|template) ([0-9A-F]{16}): holds ([0-9A-F]{16})")
+    re_spawn = re.compile(r"RANDO-ENEMIES\tSPAWN (\d+) \| (\S+) \| (.*?) \| (factory Templates|node Template) ([0-9A-F]{16}) \| original (\S+) \| selected \S+ \| spawned (\S+)")
+    re_stage_spawn = re.compile(r"STAGE SPAWN (\d+) \| ([^|]+) \| (factory|template) ([0-9A-F]{16})(?: \(the patched spawner\))? \| variable ([0-9A-F]{16}) \| handle uid (\S+) \| spawned (\S+) \(([^)]*)\) \| change (\d+) .*? \| (.+)$")
+    spawns_seen = set()
     for l in lines:
-        m_ = re_change.search(l)
+        m_ = re_change_v3.search(l) or re_change_legacy.search(l)
         if m_ and not a.manifest:
-            for k in m_.group(5).split(","):
+            adapter = m_.group(5) if re_change_v3.search(l) else "factory"
+            keys_group = m_.group(6) if re_change_v3.search(l) else m_.group(5)
+            for k in keys_group.split(","):
                 k = k.strip().upper()
                 if re.fullmatch(r"[0-9A-F]{16}", k) and k not in changes:
                     zone = m_.group(2)
                     pl = zone.replace("/", "\\").lower().split("\\")
                     planet = pl[pl.index("instance") + 1] if "instance" in pl and pl.index("instance") + 1 < len(pl) else "?"
                     changes[k] = {"n": int(m_.group(1)), "original": re_change_o.search(l).group(1), "replacement": m_.group(4),
-                                  "replacement_uid": m_.group(3), "planet": planet, "zone": zone, "tier": "?"}
+                                  "replacement_uid": m_.group(3), "planet": planet, "zone": zone, "tier": "?",
+                                  "adapter": adapter}
     if not changes:
         print("no change known: pass --manifest, or the log has no 'STAGE CHANGE' line (no .stage manifest installed, or "
               "no changed spawner was listed yet)")
@@ -107,11 +118,20 @@ def run(a):
     native = defaultdict(lambda: defaultdict(int))
     bark = defaultdict(list)
     where = {}
-    re_spawn = re.compile(r"RANDO-ENEMIES\tSPAWN (\d+) \| (\S+) \| (.*?) \| factory Templates ([0-9A-F]{16}) \| original (\S+) \| selected \S+ \| spawned (\S+)")
-    re_var = re.compile(r"STAGE VARIABLE factory ([0-9A-F]{16}): holds ([0-9A-F]{16})")
     re_dlg = re.compile(r"SenderHandle=(\d+) SoundEventId=\d+ SoundEventName=(\S+)")
     re_sd = re.compile(r"STAGE (DEATH|GONE) (\d+)")
     owner = {}
+    def add_spawn(key, adapter, handle, kind, encounter):
+        key = key.upper()
+        expected = changes.get(key, {}).get("adapter", "factory")
+        if key not in changes or adapter != expected:
+            return
+        identity = (key, visit, handle)
+        if identity in spawns_seen:
+            return
+        spawns_seen.add(identity)
+        vis[key][visit]["spawns"].append((handle, kind, encounter))
+        owner[handle] = (key, visit)
     for l in lines:
         if "[rivet] init" in l:
             visit += 1
@@ -122,15 +142,20 @@ def run(a):
             where[visit] = l.split("\t")[-1].strip()
             continue
         m_ = re_var.search(l)
-        if m_ and m_.group(1) in changes:
-            vis[m_.group(1)][visit]["listed"] = m_.group(2)
+        if m_ and m_.group(2) in changes:
+            vis[m_.group(2)][visit]["listed"] = m_.group(3)
+            continue
+        m_ = re_stage_spawn.search(l)
+        if m_:
+            h, adapter, key, kind = int(m_.group(1)), m_.group(3), m_.group(4), m_.group(7)
+            add_spawn(key, "factory" if adapter == "factory" else "node_template", h, kind, m_.group(2).strip())
             continue
         m_ = re_spawn.search(l)
         if m_:
-            h, key, kind = int(m_.group(1)), m_.group(4), m_.group(6)
+            h, key, kind = int(m_.group(1)), m_.group(5), m_.group(7)
+            adapter = "factory" if m_.group(4) == "factory Templates" else "node_template"
             if key in changes:
-                vis[key][visit]["spawns"].append((h, kind, m_.group(3)))
-                owner[h] = (key, visit)
+                add_spawn(key, adapter, h, kind, m_.group(3))
             elif any(kind.startswith(r[:19]) for r in rep_kinds) and "STAGE" not in l:
                 native[key][kind] += 1
             continue
@@ -202,7 +227,8 @@ def run(a):
     if a.json:
         json.dump({"tool": "stage_check_log " + VERSION, "logs": a.logs,
                    "verdicts": {k: {"verdict": v, "replacement_uid": changes[k]["replacement_uid"], "original": changes[k]["original"],
-                                    "replacement": changes[k]["replacement"], "planet": changes[k]["planet"], "zone": changes[k]["zone"]}
+                                    "replacement": changes[k]["replacement"], "planet": changes[k]["planet"], "zone": changes[k]["zone"],
+                                    "adapter": changes[k].get("adapter", "factory")}
                                 for k, v in verdicts.items()}}, open(a.json, "w"), indent=1)
         print("written: %s" % a.json)
     return 0
