@@ -207,6 +207,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("faction/movement compatibility checks bypassed", builder)
         self.assertIn("spawn-point compatibility checks bypassed", builder)
         self.assertIn("for uid, homes in S.actor_catalog.items()", builder)
+        self.assertIn('meta["uid"] = uid', builder)
         self.assertIn("include_all_enemy_actors=(a.profile == \"v4\")", builder)
         self.assertIn('if a.profile == "v4" and not getattr(a, "force_all_enemies", False):', builder)
         self.assertIn("--profile v4 --force-all-enemies --rate 1.0 --no-safe", launcher)
