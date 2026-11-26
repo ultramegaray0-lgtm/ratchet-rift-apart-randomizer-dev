@@ -927,7 +927,13 @@ def plan_zone_force(S, brain, rec, opts, rng):
             decisions[key] = ("refused", "in-game verdict %s: left native; do not retry this spawner with a different replacement" % verdict[0])
             continue
 
+        # A different UID is not necessarily a different enemy: the archive can contain
+        # duplicate actor assets / alternate homes with the same classified kind. Copy5.log
+        # showed several "replacements" such as hover -> hover and shooter -> shooter, which
+        # technically changed a UID but looked unchanged in-game. V4.4 requires a different
+        # classified enemy kind, not merely a different UID.
         candidates = [x for x in global_pool if x["uid"] != original_uid
+                      and x["kind"] != original_kind
                       and x["zone_id"] != rec["zone_id"]]
         if not candidates:
             decisions[key] = ("refused", "no globally unique foreign enemy template is available")
