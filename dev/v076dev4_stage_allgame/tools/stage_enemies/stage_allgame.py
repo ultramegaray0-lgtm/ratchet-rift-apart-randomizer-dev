@@ -874,7 +874,17 @@ def plan_zone_force(S, brain, rec, opts, rng):
     facs = rec["factories"]
     decisions = OrderedDict()
     changes = []
-    global_pool = [v for v in S.template_catalog.values() if (v.get("kind") or "").startswith("enm_")]
+    global_by_uid = dict(S.template_catalog)
+    if opts.profile == "v4":
+        # V4 also treats every unambiguous enemy actor found in the scanned game archive
+        # as a possible foreign replacement source, not only actors already used by a factory.
+        for uid, homes in S.actor_catalog.items():
+            if uid in global_by_uid or not homes:
+                continue
+            signatures = {(home.get("kind"), home.get("asset")) for home in homes}
+            if len(signatures) == 1:
+                global_by_uid[uid] = homes[0]
+    global_pool = [v for v in global_by_uid.values() if (v.get("kind") or "").startswith("enm_")]
     global_pool.sort(key=lambda x: (x["kind"], x["uid"]))
     usage = Counter()
 
@@ -1448,8 +1458,8 @@ def write_template_inventory(S, out, decisions=None):
     return rows
 
 
-def write_global_enemy_asset_manifest(S, brain, out):
-    """Export every regular enemy actor asset used by any native factory, deduped by path."""
+def write_global_enemy_asset_manifest(S, brain, out, include_all_enemy_actors=False):
+    """Export spawn-source assets; V4 can widen this to every classifiable enemy actor in the archive."""
     by_path = {}
     ambiguous = set()
     candidates = []
@@ -1458,6 +1468,13 @@ def write_global_enemy_asset_manifest(S, brain, out):
     # arbitrary placed/cinematic actors from the general actor catalog.
     for uid, meta in S.template_catalog_all.items():
         candidates.append((uid, meta))
+    if include_all_enemy_actors:
+        for uid, homes in S.actor_catalog.items():
+            if not homes:
+                continue
+            signatures = {(home.get("kind"), home.get("asset")) for home in homes}
+            if len(signatures) == 1:
+                candidates.append((uid, homes[0]))
     for zone in S.zones.values():
         for node in zone.get("template_nodes", []):
             if node.get("is_spawner_class") and node.get("uid") and node.get("kind"):
@@ -1852,7 +1869,7 @@ def emit(a, S, src, brain, build, out):
                 w.writerow([c["planet"], c["zone"], c["key"], c["original"], c["replacement"], c["count"], c["tier"],
                             c["pair_evidence"], c["spawn_points"], bool(c.get("replacement_external")),
                             c.get("replacement_source_planet") or "", c.get("replacement_source_zone") or ""])
-    global_assets = write_global_enemy_asset_manifest(S, brain, out)
+    global_assets = write_global_enemy_asset_manifest(S, brain, out, include_all_enemy_actors=(a.profile == "v4"))
     print("  Global enemy asset catalog: %d regular enemy actor asset(s)" % len(global_assets))
     rows = write_inventory(S, decisions, out)
     template_rows = write_template_inventory(S, out, decisions)
