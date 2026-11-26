@@ -1700,9 +1700,19 @@ def emit(a, S, src, brain, build, out):
                   if os.path.isfile(x)), "")
     if build and changes and lua18:
         shutil.copy2(lua18, os.path.join(out, STAGE_LUA_FILE))
-    lua16 = os.path.join(HERE, "..", "..", "..", "..", "mod", "RiftApartRandomizer", "scripts", SPAWNERS_LUA_FILE)
-    if build and os.path.isfile(lua16):
-        shutil.copy2(lua16, os.path.join(out, SPAWNERS_LUA_FILE))
+    lua_dir = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "mod", "RiftApartRandomizer", "scripts"))
+    if build:
+        bundle_dir = os.path.join(out, RUNTIME_BUNDLE_DIR)
+        os.makedirs(bundle_dir, exist_ok=True)
+        missing_scripts = []
+        for name in RUNTIME_SCRIPT_NAMES:
+            source_script = os.path.join(lua_dir, name)
+            if not os.path.isfile(source_script):
+                missing_scripts.append(name)
+            else:
+                shutil.copy2(source_script, os.path.join(bundle_dir, name))
+        if missing_scripts:
+            raise Refused("V3 runtime script bundle is incomplete: " + ", ".join(missing_scripts))
     rep = coverage_report(S, rows, changes, pins, a, src, brain, stage_info)
     with open(os.path.join(out, "COVERAGE_REPORT.md"), "w", encoding="utf-8") as fh:
         fh.write(rep)
@@ -1861,9 +1871,19 @@ def cmd_check(a):
 
 
 # ---- install / uninstall (the only commands that write to the game folder) ------------------------------------------
-INSTALL_FILES = [("RandoEnemies.stage", "mods/RandoEnemies.stage"), (GLOBAL_ASSET_LUA, "scripts/" + GLOBAL_ASSET_LUA),
-                 (SPAWNERS_LUA_FILE, "scripts/" + SPAWNERS_LUA_FILE), (MANIFEST_LUA, "scripts/" + MANIFEST_LUA),
-                 (STAGE_LUA_FILE, "scripts/" + STAGE_LUA_FILE)]
+RUNTIME_SCRIPT_NAMES = (
+    "01_rando_data.lua", "02_rando_generator.lua", "03_rando_campaign.lua", "04_rando_settings.lua",
+    "05_rando_bindings.lua", "06_rando_capabilities.lua", "09_rando_real.lua", "10_rando_runtime.lua",
+    "11_rando_campaign.lua", "12_rando_shop.lua", "13_rando_armor.lua", "14_rando_travel.lua",
+    "15_rando_hub.lua", "16_rando_spawners.lua", "17_rando_omega.lua", "boss.lua", "chaos.lua", "enemy.lua",
+)
+RUNTIME_BUNDLE_DIR = "runtime_scripts"
+INSTALL_FILES = [("RandoEnemies.stage", "mods/RandoEnemies.stage"),
+                 (GLOBAL_ASSET_LUA, "scripts/" + GLOBAL_ASSET_LUA),
+                 (MANIFEST_LUA, "scripts/" + MANIFEST_LUA),
+                 (STAGE_LUA_FILE, "scripts/" + STAGE_LUA_FILE)] + [
+                    (RUNTIME_BUNDLE_DIR + "/" + name, "scripts/" + name) for name in RUNTIME_SCRIPT_NAMES
+                 ]
 
 
 def cmd_install(a):
