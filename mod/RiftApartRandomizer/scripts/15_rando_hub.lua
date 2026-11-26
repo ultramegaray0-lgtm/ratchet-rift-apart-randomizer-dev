@@ -46,7 +46,7 @@
 --     whose first visit is open is played there (hub_follow_new), not undone.
 -- Frame guards (after a finish, after the hub start) count frames of this session only.
 -- The developer keys (] [ /) are bound by dev(keys).lua; this file only provides their actions.
-RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.39"   -- the kit check (10_rando_runtime.lua)
+RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["15_rando_hub"] = "10.0.50"   -- the kit check (10_rando_runtime.lua)
 RANDO_HUB = RANDO_HUB or {}
 local H = RANDO_HUB
 local C = RANDO_CAMPAIGN
