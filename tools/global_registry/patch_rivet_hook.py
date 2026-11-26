@@ -196,8 +196,8 @@ replace_once(
 )
 replace_count(
     "src/travel.cpp",
-    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n",
-    "\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
+    "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled);\n",
+    "\t\t\tactor->flags &= ~(ActorFlag::Activated | ActorFlag::StartedActive | ActorFlag::UpdateEnabled | (1u << 7) | (1u << 8));\n",
     2,
 )
 
