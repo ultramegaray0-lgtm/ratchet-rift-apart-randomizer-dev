@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
-title Rift Apart - Hybrid Maximum Local Coverage
-rem Aggressive local-zone .stage build + runtime node Template/group adapters.
+title Rift Apart - Legacy Experimental Profile ALL
+rem LEGACY EXPERIMENTAL profile=all launcher. For the V3.0 path, use BUILD_V3_0_MAX_COVERAGE.bat.
 rem IMPORTANT: no --cross-planet; foreign actor UIDs are not written into target zones.
 set "ROOT=%~dp0"
 if not exist "%ROOT%tools\stage_enemies\stage_allgame.py" (
@@ -29,7 +29,7 @@ if exist "tools\stage_enemies\evidence\verdicts_2026-11-26_015324.json" (
 
 echo.
 echo ============================================================
-echo  HYBRID MAXIMUM LOCAL COVERAGE
+echo  LEGACY EXPERIMENTAL PROFILE ALL - NOT THE V3.0 RELEASE PATH
 echo ============================================================
 echo .stage: every structurally eligible local-zone factory, including exploratory shared variables.
 echo Runtime: node Template/group adapters use the global resident-template registry.
