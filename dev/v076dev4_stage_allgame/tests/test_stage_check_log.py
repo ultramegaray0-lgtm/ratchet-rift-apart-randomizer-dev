@@ -54,7 +54,7 @@ class StageCheckLogV3Tests(unittest.TestCase):
         self.assertEqual(verdicts["NODE-B"]["verdict"], "WORKED")
         self.assertEqual(verdicts["NODE-A"]["verdict"], "NOT REACHED")
         self.assertEqual(verdicts["NODE-B"]["adapter"], "node_template")
-        self.assertIn("STAGE SPAWN", output)
+        self.assertIn("actor 778 enm_pirate_robot_melee", output)
 
     def test_log_only_v3_stage_change_splits_shared_keys_and_reads_node_spawn(self):
         original_uid, replacement_uid = "1111111111111111", "2222222222222222"
