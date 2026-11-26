@@ -24,7 +24,7 @@ jobs:
         run: python -m compileall -q dev/v076dev4_stage_allgame/tools/stage_enemies
       - name: Compile global hook patch script
         run: python -m py_compile tools/global_registry/patch_rivet_hook.py
-      - name: Run verified-template source, callback, budget, runtime-path, and Lua syntax tests
+      - name: Run global registry source, callback, budget, runtime-path, and Lua syntax tests
         run: python -I dev/v076dev4_stage_allgame/tests/test_global_asset_manifest.py
       - name: Check builder CLI
         working-directory: dev/v076dev4_stage_allgame/tools/stage_enemies
