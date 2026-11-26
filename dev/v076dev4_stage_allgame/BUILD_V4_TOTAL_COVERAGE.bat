@@ -27,7 +27,7 @@ echo.
 echo ============================================================
 echo  RIFT APART ENEMY RANDOMIZER V4 - TOTAL COVERAGE ATTEMPT
 echo ============================================================
-echo FACTORY ROUTE: forced foreign enemy templates for every structurally valid, classifiable regular-enemy factory.
+echo FACTORY ROUTE: forced foreign templates for every structurally valid, single-owner, classifiable regular-enemy factory.
 echo NODE ROUTE: exact SpawnerScriptAction Template adapters, local-zone candidates, compatibility bypassed.
 echo RETRY ROUTE: .stage data is already randomized when a zone is loaded again; runtime preload runs during loading.
 echo RUNTIME: first scene-ready scan, frequent rescan, retry persistence and resident global enemy templates.
