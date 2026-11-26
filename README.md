@@ -1,5 +1,8 @@
 # Rift Apart Randomizer 10.0 (development project)
 
+> **Enemy Randomizer V3.0 alpha:** the active engineering branch `work/global-runtime-enemy-registry` adds a hybrid all-planet `.stage` + exact `SpawnerScriptAction` Template-adapter planner, a synchronized full-script installer, and adapter-aware runtime verification. It is not yet an in-game-validated 100% release. Start with [V3.0 alpha notes](dev/v076dev4_stage_allgame/V3.0_ALPHA_NOTES.md) and [the V3.0 max-coverage launcher](dev/v076dev4_stage_allgame/BUILD_V3_0_MAX_COVERAGE.bat).
+
+
 **v0.62-DEV6 (kit 10.0.26):** round46 - Omega purchases now register: the hero's inventory components are found by
 walking its component list (the inventory events name them by handle), and an Omega purchase is recognised from
 VendorPurchaseEvent alone. Simulator only.
