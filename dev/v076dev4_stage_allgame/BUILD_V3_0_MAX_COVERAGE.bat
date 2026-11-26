@@ -33,7 +33,7 @@ echo  RIFT APART ENEMY RANDOMIZER V3.0 - MAX COVERAGE
 echo ============================================================
 echo FACTORY ROUTE: .stage SunsetSpawnerFactory Templates variables.
 echo NODE ROUTE: exact SpawnerScriptAction nodes with one local Template plug.
-echo GLOBAL ROUTE: native resident enemy-template catalog for remaining runtime node adapters.
+echo RUNTIME FALLBACK: unpatched factory, node Template and group adapters can use local/global resident templates.
 echo SAFETY: no foreign-zone actor UID references, no arbitrary actor promotion, no direct combat spawning.
 echo SHARED VARIABLES: .stage retains shared factory/node variables; runtime handles unpatched spawners under its freshness rules.
 echo NODE ADAPTERS: single-owner only; shared, malformed and non-local references stay native.
