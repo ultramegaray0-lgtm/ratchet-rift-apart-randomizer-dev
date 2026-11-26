@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Regression tests for V3 stage log attribution (factory, node Template, shared owners)."""
+import contextlib
+import io
+import json
+import os
+import sys
+import tempfile
+import unittest
+from types import SimpleNamespace
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "..", "tools", "stage_enemies"))
+import stage_check_log as CHECK  # noqa: E402
+
+
+class StageCheckLogV3Tests(unittest.TestCase):
+    def run_fixture(self, log_text, manifest=None):
+        with tempfile.TemporaryDirectory() as tmp:
+            log_path = os.path.join(tmp, "rivet.log")
+            json_path = os.path.join(tmp, "verdicts.json")
+            with open(log_path, "w", encoding="utf-8") as fh:
+                fh.write(log_text)
+            manifest_path = None
+            if manifest is not None:
+                manifest_path = os.path.join(tmp, "stage_enemies_manifest.json")
+                with open(manifest_path, "w", encoding="utf-8") as fh:
+                    json.dump(manifest, fh)
+            args = SimpleNamespace(logs=[log_path], manifest=manifest_path, json=json_path, all=True)
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                result = CHECK.run(args)
+            with open(json_path, encoding="utf-8") as fh:
+                data = json.load(fh)
+            return result, output.getvalue(), data
+
+    def test_manifest_expands_shared_node_owner_keys_and_reads_template_spawn(self):
+        uid = "2222222222222222"
+        manifest = {"changes": [{
+            "key": "NODE-A", "spawner_keys": ["NODE-A", "NODE-B"], "adapter": "node_template",
+            "original": "enm_pirate_robot_shooter", "replacement": "enm_pirate_robot_melee",
+            "replacement_uid": uid, "planet": "ardolis", "zone": "levels\\i29\\instance\\ardolis\\test.zone",
+            "tier": "node-template/confirmed"
+        }]}
+        log = "\n".join([
+            "[rivet] init",
+            "[script] [rando]\tRANDO-STAGE\tSTAGE VARIABLE template NODE-B: holds %s (enm_pirate_robot_melee) = the .stage value - the patched zone IS loaded" % uid,
+            "[script] [rando]\tRANDO-ENEMIES\tSTAGE SPAWN 778 | MIS_TEST | template NODE-B (the patched spawner) | variable %s | handle uid %s | spawned enm_pirate_robot_melee (swarmer) | change 1 enm_pirate_robot_shooter -> enm_pirate_robot_melee | REPLACEMENT SPAWNED (the .stage value was used)" % (uid, uid),
+            "[script] [rando]\tRANDO-STAGE\tSTAGE DEATH 778: enm_pirate_robot_melee (spawner NODE-B) died 3 s after it spawned",
+        ])
+        rc, output, data = self.run_fixture(log, manifest)
+        self.assertEqual(rc, 0)
+        verdicts = data["verdicts"]
+        self.assertEqual(verdicts["NODE-B"]["verdict"], "WORKED")
+        self.assertEqual(verdicts["NODE-A"]["verdict"], "NOT REACHED")
+        self.assertEqual(verdicts["NODE-B"]["adapter"], "node_template")
+        self.assertIn("STAGE SPAWN", output)
+
+    def test_log_only_v3_stage_change_splits_shared_keys_and_reads_node_spawn(self):
+        original_uid, replacement_uid = "1111111111111111", "2222222222222222"
+        log = "\n".join([
+            "[rivet] init",
+            "[script] [rando]\tRANDO-STAGE\tSTAGE CHANGE 7: levels\\i29\\instance\\ardolis\\test.zone Zone Script Vars +128 (entry 1): %s #0 (enm_pirate_robot_shooter) -> %s #1 (enm_pirate_robot_melee) | node_template|fixture | adapter node_template | spawners NODE-A,NODE-B" % (original_uid, replacement_uid),
+            "[script] [rando]\tRANDO-STAGE\tSTAGE VARIABLE template NODE-A: holds %s (enm_pirate_robot_melee) = the .stage value - the patched zone IS loaded" % replacement_uid,
+            "[script] [rando]\tRANDO-ENEMIES\tSPAWN 900 | ardolis | MIS_TEST | node Template NODE-A | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee | spawned enm_pirate_robot_melee (swarmer) | SUCCESS",
+            "[script] [rando]\tRANDO-ENEMIES\tSTAGE SPAWN 900 | MIS_TEST | template NODE-A (the patched spawner) | variable %s | handle uid %s | spawned enm_pirate_robot_melee (swarmer) | change 7 enm_pirate_robot_shooter -> enm_pirate_robot_melee | REPLACEMENT SPAWNED" % (replacement_uid, replacement_uid),
+        ])
+        rc, output, data = self.run_fixture(log)
+        self.assertEqual(rc, 0)
+        self.assertEqual(data["verdicts"]["NODE-A"]["verdict"], "WORKED")
+        self.assertEqual(data["verdicts"]["NODE-B"]["verdict"], "NOT REACHED")
+        self.assertEqual(data["verdicts"]["NODE-A"]["adapter"], "node_template")
+        self.assertIn("CHANGE 7  NODE-A", output)
+
+    def test_legacy_factory_stage_logs_still_parse(self):
+        original_uid, replacement_uid = "1111111111111111", "2222222222222222"
+        log = "\n".join([
+            "[rivet] init",
+            "[script] [rando]\tRANDO-STAGE\tSTAGE CHANGE 1: levels\\i29\\instance\\ardolis\\test.zone Zone Script Vars +64 (entry 0): %s #0 (enm_pirate_robot_shooter) -> %s #1 (enm_pirate_robot_melee) | factory|fixture | spawners ABCDEF0123456789" % (original_uid, replacement_uid),
+            "[script] [rando]\tRANDO-STAGE\tSTAGE VARIABLE factory ABCDEF0123456789: holds %s (enm_pirate_robot_melee) = the .stage value - the patched zone IS loaded" % replacement_uid,
+            "[script] [rando]\tRANDO-ENEMIES\tSPAWN 901 | ardolis | MIS_TEST | factory Templates ABCDEF0123456789 | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee | spawned enm_pirate_robot_melee (ground) | SUCCESS",
+        ])
+        rc, output, data = self.run_fixture(log)
+        self.assertEqual(rc, 0)
+        self.assertEqual(data["verdicts"]["ABCDEF0123456789"]["verdict"], "WORKED")
+        self.assertEqual(data["verdicts"]["ABCDEF0123456789"]["adapter"], "factory")
+
+
+if __name__ == "__main__":
+    unittest.main()
