@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableExtensions
-title Rift Apart Enemy Randomizer V4.6 - Full Campaign Experimental
+title Rift Apart Enemy Randomizer V4.6 - Story-Safe Campaign
 rem V4.6 uses the builder's maximum-coverage V4 profile. Storymission zones are EXCLUDED; campaign encounter graphs remain native.
 rem This is intentionally unsafe: it bypasses movement/faction and spawn-point compatibility checks.
 rem Ambiguous/shared-owner templates, bosses and non-regular actors remain protected by structural/classification gates.
@@ -25,7 +25,7 @@ if not exist "builds" mkdir "builds"
 set "OUT=builds\V4_6_STORY_SAFE_%RANDOM%_%RANDOM%"
 echo.
 echo ============================================================
-echo  RIFT APART ENEMY RANDOMIZER V4.6 - FULL CAMPAIGN EXPERIMENTAL
+echo  RIFT APART ENEMY RANDOMIZER V4.6 - STORY-SAFE CAMPAIGN
 echo ============================================================
 echo STORYMISSION ZONES: EXCLUDED
 echo COVERAGE: maximum V4 profile, all eligible classifiable regular-enemy factories
@@ -43,7 +43,7 @@ echo.
 choice /C YN /M "Build V4.6 with story missions protected? This is the recommended campaign-safe build"
 if errorlevel 2 goto cancelled
 
-%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "%OUT%" --seed "RiftApart-Enemy-V4.6-FullCampaign" --profile v4 --force-all-enemies --rate 1.0 --exclude-storymission
+%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "%OUT%" --seed "RiftApart-Enemy-V4.6-StorySafe" --profile v4 --force-all-enemies --rate 1.0 --exclude-storymission
 if errorlevel 1 goto failed
 
 echo.
