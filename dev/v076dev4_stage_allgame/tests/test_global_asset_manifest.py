@@ -85,7 +85,7 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertNotIn("  V.global_templates_tick(frame)", source)
 
     def test_v3_next_build_and_log_check_keep_the_hybrid_profile(self):
-        root = os.path.abspath(os.path.join(HERE, "..", ".."))
+        root = os.path.abspath(os.path.join(HERE, ".."))
         next_path = os.path.join(root, "BUILD_NEXT_VERDICT_GUIDED.bat")
         check_path = os.path.join(root, "CHECK_MY_LOG.bat")
         with open(next_path, encoding="utf-8") as fh:
