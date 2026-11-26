@@ -4576,7 +4576,7 @@ if R then
   end
 end
 
--- V4.5: track missions at the callback the campaign runtime ACTUALLY invokes.
+-- V4.6: track mission state and devstats lifecycle; keep story encounters native until the game ends them.
 -- 11_rando_campaign.lua receives MissionStateChangedEvent in note_mission(), then calls
 -- RANDO_CAMPAIGN_RT.on_mission(name, state, previous). The old hook wrapped R.on_mission_state,
 -- which is not on this event path; consequently V.mission stayed nil for the entire session.
