@@ -30,7 +30,7 @@ From the repository root in PowerShell (replace the game path with the installed
 
 ```powershell
 py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py build --game "E:\Path\To\Ratchet.and.Clank.Rift.Apart Modded" --out ".\builds\GLOBAL_RUNTIME" --profile max
-py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py install --game "E:\\Path\\To\\Ratchet.and.Clank.Rift.Apart Modded" --build ".\builds\GLOBAL_RUNTIME"
+py -3 .\dev\v076dev4_stage_allgame\tools\stage_enemies\stage_allgame.py install --game "E:\Path\To\Ratchet.and.Clank.Rift.Apart Modded" --build ".\builds\GLOBAL_RUNTIME"
 ```
 
 The output should contain:
