@@ -1,6 +1,6 @@
 # 100% Enemy Replacement — aggressive development plan
 
-Status: V3.0 engineering alpha.2 on `work/global-runtime-enemy-registry`; offline CI passes, while real-game validation remains a separate release gate.
+Status: V3.0 engineering alpha.3 on `work/global-runtime-enemy-registry`; offline CI passes, while real-game validation remains a separate release gate.
 
 ## Goal
 
