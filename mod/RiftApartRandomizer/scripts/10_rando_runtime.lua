@@ -41,7 +41,7 @@ RANDO_FILES = RANDO_FILES or {}; RANDO_FILES["10_rando_runtime"] = "10.0.50"   -
 
 RANDO = RANDO or {}
 local R = RANDO
-R.KIT_VERSION = "10.0.39"
+R.KIT_VERSION = "10.0.50"
 R.RELEASE = "v0.76-DEV4 / V3.0"                  -- the public release this kit belongs to (the start banner)
 local DB = RANDO_DATA
 local GEN = RANDO_GEN
