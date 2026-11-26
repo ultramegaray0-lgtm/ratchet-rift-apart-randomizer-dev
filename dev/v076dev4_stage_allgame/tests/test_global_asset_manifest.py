@@ -260,6 +260,77 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertEqual(decisions["NODE-A"][0], "changed")
         self.assertEqual(decisions["NODE-B"][0], "changed")
 
+    def test_v3_node_adapter_pins_exact_latest_worked_replacement(self):
+        class FakeBrain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "fixture"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return (original != replacement, "kin", "unverified fixture pair")
+            def family(self, kind, asset=None):
+                return "ground", "fixture"
+
+        factories = [
+            {"key": "FACTORY-A", "form": "local", "uid": "1111111111111111",
+             "kind": "enm_pirate_robot_shooter", "asset": "actors/shooter.actor", "rec": 0, "problem": None},
+            {"key": "FACTORY-B", "form": "local", "uid": "2222222222222222",
+             "kind": "enm_pirate_robot_melee", "asset": "actors/melee.actor", "rec": 1, "problem": None},
+        ]
+        node = {"key": "NODE-A", "action": 0, "class": "%08X" % SA.NODE_SPAWNER_CLASS,
+                "is_spawner_class": True, "template_plug": 1, "template_plug_count": 1,
+                "var_index": 5, "form": "local", "uid": "1111111111111111",
+                "kind": "enm_pirate_robot_shooter", "asset": "actors/shooter.actor", "rec": 0,
+                "owners": 1, "co_owner_classes": [], "co_owner_keys": [],
+                "spawner_keys": ["NODE-A"], "shared_spawner_safe": True,
+                "other_plugs": "", "problem": ""}
+        rec = {"zone": "pin.zone", "zone_id": "ABCDEF0123456789", "planet": "fixture",
+               "factories": factories, "template_nodes": [node]}
+        opts = SimpleNamespace(verdict_map={"ABCDEF0123456789": {
+            "NODE-A": ("WORKED", "2222222222222222")}}, rate=1.0)
+        changes, decisions = SA.plan_node_template_adapters(
+            SimpleNamespace(), FakeBrain(), rec, opts, random.Random("v3-node-worked-pin"), [], {})
+        self.assertEqual(len(changes), 1)
+        self.assertEqual(changes[0]["replacement_uid"], "2222222222222222")
+        self.assertEqual(changes[0]["pair_tier"], "confirmed")
+        self.assertEqual(changes[0]["tier"], "node-template/confirmed")
+        self.assertIn("WORKED", changes[0]["pair_evidence"])
+        self.assertEqual(decisions["NODE-A"][0], "changed")
+
+    def test_v3_shared_node_adapter_rejects_conflicting_worked_uids(self):
+        class FakeBrain:
+            def regular(self, kind, asset=None):
+                return True, "ground", "fixture"
+            def pair(self, original, original_family, replacement, replacement_family):
+                return (original != replacement, "proven", "fixture pair")
+            def family(self, kind, asset=None):
+                return "ground", "fixture"
+
+        factories = [
+            {"key": "FACTORY-A", "form": "local", "uid": "1111111111111111",
+             "kind": "enm_pirate_robot_shooter", "asset": "actors/shooter.actor", "rec": 0, "problem": None},
+            {"key": "FACTORY-B", "form": "local", "uid": "2222222222222222",
+             "kind": "enm_pirate_robot_melee", "asset": "actors/melee.actor", "rec": 1, "problem": None},
+        ]
+        nodes = []
+        for key in ("NODE-A", "NODE-B"):
+            nodes.append({"key": key, "action": 0, "class": "%08X" % SA.NODE_SPAWNER_CLASS,
+                "is_spawner_class": True, "template_plug": 1, "template_plug_count": 1,
+                "var_index": 5, "form": "local", "uid": "1111111111111111",
+                "kind": "enm_pirate_robot_shooter", "asset": "actors/shooter.actor", "rec": 0,
+                "owners": 2, "co_owner_classes": [], "co_owner_keys": ["NODE-A", "NODE-B"],
+                "spawner_keys": ["NODE-A", "NODE-B"], "shared_spawner_safe": True,
+                "other_plugs": "", "problem": ""})
+        rec = {"zone": "conflict.zone", "zone_id": "ABCDEF0123456789", "planet": "fixture",
+               "factories": factories, "template_nodes": nodes}
+        opts = SimpleNamespace(verdict_map={"ABCDEF0123456789": {
+            "NODE-A": ("WORKED", "2222222222222222"),
+            "NODE-B": ("WORKED", "1111111111111111")}}, rate=1.0)
+        changes, decisions = SA.plan_node_template_adapters(
+            SimpleNamespace(), FakeBrain(), rec, opts, random.Random("v3-conflicting-pins"), [], {})
+        self.assertEqual(changes, [])
+        self.assertEqual(decisions["NODE-A"][0], "refused")
+        self.assertEqual(decisions["NODE-B"][0], "refused")
+        self.assertIn("conflicting confirmed", decisions["NODE-A"][1])
+
     def test_v3_shared_node_variable_with_unsafe_co_owner_stays_native(self):
         class FakeBrain:
             def regular(self, kind, asset=None):
