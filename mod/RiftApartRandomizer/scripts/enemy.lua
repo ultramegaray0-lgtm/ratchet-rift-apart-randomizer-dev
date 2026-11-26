@@ -81,7 +81,7 @@ function E.emergency_rescue()
     R.say("Randomizer: the seed is still being prepared", { type = "corner", duration = 3 })
     return
   end
-  E.set(false, "Emergency recovery (F10)")
+  E.set(false, "Emergency recovery (F12)")
   if SP.V and SP.V.emergency_rescue then SP.V.emergency_rescue() end
   R.say("EMERGENCY SAFE MODE: enemy replacement is disabled for this game session; loaded .stage spawners are being restored to their native templates",
     { type = "center", sub = "Enemies already spawned are not deleted. If the encounter is stuck, reload the last checkpoint after the restore finishes.", duration = 9 })
@@ -118,6 +118,6 @@ function E.key()
   E.toggle(R.key("key_enemies"))
 end
 R.bind_key(R.config.key_enemies, E.key, "key_enemies")
-R.bind_key("F10", E.emergency_rescue, "enemy_emergency_rescue")
+R.bind_key("F12", E.emergency_rescue, "enemy_emergency_rescue")
 log("installed (" .. (E.enabled() and "ON" or "OFF") .. " until the save says otherwise) - " .. R.key("key_enemies") ..
-    " turns it on / off, " .. R.key("key_enemies", true) .. " shows what it changed; F10 emergency safe mode restores loaded stage/runtime enemy replacements")
+    " turns it on / off, " .. R.key("key_enemies", true) .. " shows what it changed; F12 emergency safe mode restores loaded stage/runtime enemy replacements")
