@@ -54,7 +54,7 @@ jobs:
             -x '.git/*' 'dist/*' '**/__pycache__/*' '*.pyc' \
                'builds/*' '**/builds/*' 'incoming/*' '**/incoming/*' \
                '*.stage' '**/*.stage' 'rando_stage_backup/*' '**/rando_stage_backup/*'
-      - name: Upload tested V3 source ZIP
+      - name: Upload tested V4 source ZIP
         if: success()
         uses: actions/upload-artifact@v4
         with:
