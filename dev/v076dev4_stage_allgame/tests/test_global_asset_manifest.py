@@ -198,6 +198,10 @@ class GlobalAssetManifestTests(unittest.TestCase):
         with open(os.path.join(runtime_dir, "10_rando_runtime.lua"), encoding="utf-8") as fh:
             runtime_core = fh.read()
         self.assertIn('R.KIT_VERSION = "10.0.50"', runtime_core)
+        with open(os.path.join(runtime_dir, "04_rando_settings.lua"), encoding="utf-8") as fh:
+            settings = fh.read()
+        self.assertIn('enemy_compat = "max"', settings)
+        self.assertIn('enemy_mix_movement = true', settings)
         for name in SA.RUNTIME_SCRIPT_NAMES:
             with open(os.path.join(runtime_dir, name), encoding="utf-8") as fh:
                 source = fh.read()
