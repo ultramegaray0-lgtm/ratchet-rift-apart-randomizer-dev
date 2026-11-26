@@ -3977,6 +3977,166 @@ local function job_error(err)
   vlog("RANDO-ERROR " .. msg)
 end
 
+-- ---------------------------------------------------------------------------------------------
+-- Global resident enemy templates. The generated 15_rando_global_enemy_assets.lua lists actor
+-- assets used by native factories across every scanned planet. The custom Rivet Hook API loads
+-- each asset and creates a hidden, inactive template actor with a synthetic high-bit UID. The
+-- game's own SpawnerScriptAction still performs every combat spawn and owns all encounter counts.
+-- ---------------------------------------------------------------------------------------------
+V.GLOBAL_REQUESTS_PER_FRAME = 12
+V.GLOBAL_POLLS_PER_FRAME = 12
+V.global_templates = V.global_templates or {}       -- synthetic uid -> classified template
+V.global_items = V.global_items or {}
+V.global_item_by_uid = V.global_item_by_uid or {}
+V.global_items_initialized = V.global_items_initialized or false
+V.global_level = V.global_level or nil
+V.global_manifest_missing_said = V.global_manifest_missing_said or false
+
+local function global_template_uid(index)
+  return string.format("F00D52414E44%04X", index)
+end
+
+local function global_template_attach(T)
+  local lvl = V.lvl
+  if not (lvl and T and T.handle and T.uid) then return end
+  if lvl.tpl[T.handle] ~= T then
+    lvl.tpl[T.handle] = T
+    lvl.tpl_uid[T.uid] = T
+    if V.group_of(T) then
+      lvl.kinds_n = (lvl.kinds_n or 0) + 1
+      lvl.dirty = true
+    end
+  end
+end
+
+local function global_template_accept(item, handle)
+  local ok, a = pcall(V.actor, handle)
+  if not ok or type(a) ~= "table" or not a.name then
+    item.state = "failed"
+    vlog("GLOBAL TEMPLATE FAILED " .. tostring(item.row.path) .. ": could not inspect spawned template actor")
+    return false
+  end
+  local actual_name = V.short(a.name) or a.name
+  if actual_name and not V.same_name(actual_name, item.row.name) then
+    item.state = "failed"
+    vlog(string.format("GLOBAL TEMPLATE REJECTED %s: asset actor name %s did not match catalog %s",
+      tostring(item.row.path), tostring(actual_name), tostring(item.row.name)))
+    return false
+  end
+  if a.family and a.family ~= item.row.family then
+    item.state = "failed"
+    vlog(string.format("GLOBAL TEMPLATE REJECTED %s: runtime family %s did not match catalog %s",
+      tostring(item.row.path), tostring(a.family), tostring(item.row.family)))
+    return false
+  end
+  local T = {
+    handle = handle, uid = item.uid, name = a.name or item.row.name,
+    family = a.family or item.row.family, class = a.class,
+    path = item.row.path, src = "global resident template",
+  }
+  if not V.usable(T) then
+    item.state = "failed"
+    vlog("GLOBAL TEMPLATE REJECTED " .. tostring(item.row.path) .. ": not a usable regular enemy")
+    return false
+  end
+  item.state = "ready"
+  item.handle = handle
+  V.global_templates[item.uid] = T
+  global_template_attach(T)
+  vlog(string.format("GLOBAL TEMPLATE READY %s | %s/%s | uid %s | handle %s",
+    tostring(V.short(T.name)), tostring(T.family), tostring(T.class), T.uid, tostring(handle)))
+  return true
+end
+
+function V.global_templates_tick(frame)
+  if not V.enabled() then return end
+  if type(rivet.template_actor) ~= "function" then
+    if not V.global_manifest_missing_said then
+      V.global_manifest_missing_said = true
+      vlog("GLOBAL TEMPLATE API unavailable: install the custom global-enemy Rivet Hook build; using only templates loaded by the current planet")
+    end
+    return
+  end
+  local manifest = RANDO_GLOBAL_ENEMY_ASSETS
+  if type(manifest) ~= "table" then
+    if not V.global_manifest_missing_said then
+      V.global_manifest_missing_said = true
+      vlog("GLOBAL TEMPLATE MANIFEST missing: rebuild/install RandoEnemies with 15_rando_global_enemy_assets.lua")
+    end
+    return
+  end
+  if not V.global_items_initialized then
+    for i, row in ipairs(manifest) do
+      if type(row) == "table" and type(row.path) == "string" and type(row.name) == "string" and type(row.family) == "string" then
+        local uid = global_template_uid(i)
+        local item = { row = row, uid = uid, state = "new" }
+        V.global_items[#V.global_items + 1] = item
+        V.global_item_by_uid[uid] = item
+      end
+    end
+    V.global_items_initialized = true
+    vlog(string.format("GLOBAL TEMPLATE REGISTRY: requesting %d actor asset(s) from the all-planet catalog", #V.global_items))
+  end
+
+  -- A new level gets a new local pool table. Re-resolve each resident UID once and
+  -- reattach it; if the engine discarded it, ask the native loader to recreate it.
+  if V.global_level ~= V.lvl then
+    V.global_level = V.lvl
+    for uid, T in pairs(V.global_templates) do
+      local ok, handle = pcall(rivet.find_uid, uid)
+      handle = ok and math.tointeger(tonumber(handle)) or nil
+      if handle and handle ~= 0 then
+        T.handle = handle
+        global_template_attach(T)
+      else
+        V.global_templates[uid] = nil
+        local item = V.global_item_by_uid[uid]
+        if item then item.state, item.handle = "new", nil end
+      end
+    end
+  end
+
+  -- Request new assets in small batches. Loading is asynchronous; pending assets
+  -- are polled separately so one slow model never blocks the rest of the catalog.
+  local requested = 0
+  for _, item in ipairs(V.global_items) do
+    if item.state == "new" and requested < V.GLOBAL_REQUESTS_PER_FRAME then
+      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid)
+      if not ok then
+        item.state = "failed"
+        vlog("GLOBAL TEMPLATE ERROR " .. tostring(item.row.path) .. ": " .. tostring(status))
+      elseif status == "ready" then
+        global_template_accept(item, handle)
+      elseif status == "loading" then
+        item.state = "pending"
+      else
+        item.state = "failed"
+        vlog("GLOBAL TEMPLATE FAILED " .. tostring(item.row.path) .. ": " .. tostring(message))
+      end
+      requested = requested + 1
+    end
+  end
+  local polled = 0
+  for _, item in ipairs(V.global_items) do
+    if item.state == "pending" and polled < V.GLOBAL_POLLS_PER_FRAME then
+      local ok, status, handle, flags, message = pcall(rivet.template_actor, item.row.path, item.uid)
+      if not ok then
+        item.state = "failed"
+        vlog("GLOBAL TEMPLATE ERROR " .. tostring(item.row.path) .. ": " .. tostring(status))
+      elseif status == "ready" then
+        global_template_accept(item, handle)
+      elseif status == "failed" then
+        item.state = "failed"
+        vlog("GLOBAL TEMPLATE FAILED " .. tostring(item.row.path) .. ": " .. tostring(message))
+      end
+      polled = polled + 1
+    end
+  end
+
+  -- Keep every resident template in the current level's selection pool.
+  for _, T in pairs(V.global_templates) do global_template_attach(T) end
+end
+
 function V.tick(frame, ready)
   if not V.lvl then V.new_level("scripts loaded") end
   local lvl = V.lvl
@@ -3990,6 +4150,7 @@ function V.tick(frame, ready)
   end
   if not ready then return end
   V.migrate()
+  V.global_templates_tick(frame)
   V.notes_tick(frame)
   -- dev 10.34: cache feature switches once per role per frame. The old loop called
   -- V.role_on -> SP.enabled separately for every armed spawner; with 100+ armed variables
@@ -4097,6 +4258,8 @@ function V.status()
   for reason, n in pairs(L and L.reasons or {}) do if n > topn then top, topn = reason, n end end
   out.top_reason = top
   out.species = lvl and V.species_here() or {}                             -- dev 10.32
+  out.global_templates = 0
+  for _ in pairs(V.global_templates or {}) do out.global_templates = out.global_templates + 1 end
   out.stalls = lvl and lvl.stalls or 0
   -- dev 10.30: combat compatibility
   out.compat = V.compat_mode()
