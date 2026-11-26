@@ -1787,7 +1787,7 @@ def check_build(out, src_args, verbose=True):
     m = json.load(open(os.path.join(out, "stage_enemies_manifest.json")))
     stage = os.path.join(out, "RandoEnemies.stage")
     zf = zipfile.ZipFile(stage)
-    problems = []
+    problems = runtime_bundle_problems(out)
     if zf.testzip():
         problems.append(".stage: a corrupt member")
     info = json.loads(zf.read("info.json").decode("utf-8"))
@@ -1925,6 +1925,52 @@ INSTALL_FILES = [("RandoEnemies.stage", "mods/RandoEnemies.stage"),
                  (STAGE_LUA_FILE, "scripts/" + STAGE_LUA_FILE)] + [
                     (RUNTIME_BUNDLE_DIR + "/" + name, "scripts/" + name) for name in RUNTIME_SCRIPT_NAMES
                  ]
+
+def runtime_bundle_problems(out):
+    """Reject mixed/incomplete runtime kits before an installer can touch the game."""
+    bundle = os.path.join(out, RUNTIME_BUNDLE_DIR)
+    problems = []
+    core = os.path.join(bundle, "10_rando_runtime.lua")
+    if not os.path.isfile(core):
+        return ["runtime bundle is missing 10_rando_runtime.lua"]
+    with open(core, encoding="utf-8", errors="replace") as fh:
+        core_src = fh.read()
+    match = re.search(r'R\\.KIT_VERSION\\s*=\\s*"([^"]+)"', core_src)
+    if not match:
+        return ["10_rando_runtime.lua has no R.KIT_VERSION stamp"]
+    expected = match.group(1)
+    for name in RUNTIME_SCRIPT_NAMES:
+        path = os.path.join(bundle, name)
+        if not os.path.isfile(path):
+            problems.append("runtime bundle missing " + name)
+            continue
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            source = fh.read()
+        key = name[:-4]
+        stamp = re.search(r'RANDO_FILES\\["' + re.escape(key) + r'"\\]\\s*=\\s*"([^"]+)"', source)
+        if not stamp:
+            problems.append(name + " has no RANDO_FILES kit stamp")
+        elif stamp.group(1) != expected:
+            problems.append("%s kit stamp %s != runtime core %s" % (name, stamp.group(1), expected))
+    stage_monitor = os.path.join(out, STAGE_LUA_FILE)
+    if os.path.isfile(stage_monitor):
+        with open(stage_monitor, encoding="utf-8", errors="replace") as fh:
+            stage_src = fh.read()
+        stamp = re.search(r'RANDO_FILES\\["18_rando_stage_enemies"\\]\\s*=\\s*"([^"]+)"', stage_src)
+        if not stamp or stamp.group(1) != expected:
+            problems.append("18_rando_stage_enemies.lua kit stamp does not match runtime core " + expected)
+        if 'ST.STAGE_LUA = "' + STAGE_LUA + '"' not in stage_src:
+            problems.append("18_rando_stage_enemies.lua STAGE_LUA handshake does not match " + STAGE_LUA)
+    settings = os.path.join(bundle, "04_rando_settings.lua")
+    if os.path.isfile(settings):
+        with open(settings, encoding="utf-8", errors="replace") as fh:
+            settings_src = fh.read()
+        if not re.search(r'enemy_compat\\s*=\\s*"max"', settings_src):
+            problems.append('04_rando_settings.lua does not default enemy_compat to "max"')
+        if not re.search(r'enemy_mix_movement\\s*=\\s*true', settings_src):
+            problems.append("04_rando_settings.lua does not enable maximum movement mixing")
+    return problems
+
 
 
 def cmd_install(a):
