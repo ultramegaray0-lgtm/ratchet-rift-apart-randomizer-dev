@@ -36,6 +36,27 @@ class GlobalAssetManifestTests(unittest.TestCase):
             self.assertIn('path = "characters/pirate/melee.actor"', text)
             self.assertNotIn("characters/boss.actor", text)
 
+    def test_v4_manifest_includes_all_unambiguous_regular_enemy_actor_assets(self):
+        scan = SimpleNamespace(
+            actor_catalog={
+                "1111111111111111": [{"kind": "enm_pirate_robot_melee", "asset": "actors/placed_enemy.actor",
+                                      "zone_id": "AAAAAAAAAAAAAAAA", "zone": "a.zone", "planet": "ardolis"}],
+                "2222222222222222": [{"kind": "enm_story_boss", "asset": "actors/story_boss.actor",
+                                      "zone_id": "BBBBBBBBBBBBBBBB", "zone": "b.zone", "planet": "cordelion"}],
+            },
+            zones={},
+            template_catalog_all={
+                "3333333333333333": {"kind": "enm_pirate_robot_shooter", "asset": "actors/factory_enemy.actor",
+                                     "planet": "sargasso", "zone": "c.zone"}
+            },
+        )
+        with tempfile.TemporaryDirectory() as out:
+            rows = SA.write_global_enemy_asset_manifest(scan, Brain(), out, include_all_enemy_actors=True)
+            paths = {row["path"] for row in rows}
+            self.assertIn("actors/placed_enemy.actor", paths)
+            self.assertIn("actors/factory_enemy.actor", paths)
+            self.assertNotIn("actors/story_boss.actor", paths)
+
     def test_runtime_spawner_script_parses_as_lua54(self):
         from lupa import LuaRuntime
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
