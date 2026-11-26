@@ -77,6 +77,9 @@ class GlobalAssetManifestTests(unittest.TestCase):
         self.assertIn("V.GLOBAL_SPAWNS_PER_FRAME = 1", source)
         self.assertIn("rivet.template_actor, item.row.path, item.uid, false", source)
         self.assertIn("rivet.template_actor, item.row.path, item.uid, true", source)
+        self.assertIn("rivet.on_frame(function()", source)
+        self.assertIn("V.global_frame_ready = ready", source)
+        self.assertNotIn("V.global_templates_tick(frame)", source)
 
     def test_manifest_excludes_ambiguous_path_metadata(self):
         scan = SimpleNamespace(actor_catalog={}, zones={}, template_catalog_all={
