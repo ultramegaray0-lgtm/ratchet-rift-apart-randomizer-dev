@@ -1,8 +1,8 @@
 @echo off
 setlocal EnableExtensions
 rem Reads your rivet.log: per changed spawner WORKED / ORIGINAL SPAWNED / NO SPAWN / NOT REACHED, totals per planet.
-rem Keeps a copy of the log, the report and verdicts-<time>.json in verdicts\ ; the next BUILD_ALL_PLANETS.bat reads every
-rem verdicts file: what WORKED is kept, ORIGINAL SPAWNED / NO SPAWN spawners stay native.
+rem Keeps a copy of the log, the report and verdicts-<time>.json in verdicts\ ; the next V3 verdict-guided build reads every
+rem verdicts file: WORKED pairs are pinned, ORIGINAL SPAWNED / NO SPAWN owners stay native.
 rem usage: CHECK_MY_LOG.bat ["C:\path\to\game folder"]
 cd /d "%~dp0"
 set "PY=python"
