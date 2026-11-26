@@ -1633,10 +1633,13 @@ def emit(a, S, src, brain, build, out):
         z1 = Zone(header, new, rec["zone"])
         problems, diff, n1 = compare(z0, z1, ch)
         chk = {c["key"] for c in ch}
-        users_after = {hex16(z1.vars[f["sv"]][5]) for f in z1.factories() if f["form"] == "local" and f["key"] not in chk}
+        users_after = {hex16(z1.vars[f["sv"]][5]) for f in z1.factories()
+                       if f["form"] == "local" and f["key"] not in chk}
+        users_after.update(hex16(z1.vars[n["var_index"]][5]) for n in z1.template_nodes()
+                           if n["is_spawner_class"] and n["form"] == "local" and n["key"] not in chk)
         for c in ch:
             if not c.get("replacement_external") and c["replacement_uid"] not in users_after:
-                problems.append("%s: replacement %s has no unchanged native user after the patch" % (c["key"], c["replacement_uid"]))
+                problems.append("%s: replacement %s has no unchanged native factory/node user after the patch" % (c["key"], c["replacement_uid"]))
         if problems:
             for c in ch:
                 decisions[zh][c["key"]] = ("refused", "zone validation failed: " + "; ".join(problems)[:200])
@@ -1782,9 +1785,29 @@ def check_build(out, src_args, verbose=True):
         pr, diff, n1 = compare(z0, z1, ch)
         problems += ["%s: %s" % (zrec["zone"], p) for p in pr]
         facs = {f["key"]: f for f in z0.factories()}
+        node_adapters = {n["key"]: n for n in z0.template_nodes() if n["is_spawner_class"]}
         changed_keys = {c["key"] for c in ch}
         after_users = {hex16(z1.vars[f["sv"]][5]) for k, f in facs.items() if f["form"] == "local" and k not in changed_keys}
+        after_users.update(hex16(z1.vars[n["var_index"]][5]) for k, n in node_adapters.items()
+                           if n["form"] == "local" and k not in changed_keys)
         for c in ch:
+            if c.get("adapter", "factory") == "node_template":
+                n = node_adapters.get(c["key"])
+                if not n or n["var_index"] != c["var_index"]:
+                    problems.append("%s %s: not an exact SpawnerScriptAction Template adapter owning SV #%d" %
+                                    (zrec["zone"], c["key"], c["var_index"]))
+                    continue
+                if n["template_plug_count"] != 1 or n["owners"] != 1 or n["form"] != "local":
+                    problems.append("%s %s: node Template adapter is shared, ambiguous, or non-local" % (zrec["zone"], c["key"]))
+                if n["uid"] != c["original_uid"] or n["kind"] != c["original"]:
+                    problems.append("%s %s: original node Template does not match the source zone" % (zrec["zone"], c["key"]))
+                if c.get("replacement_external") or c["replacement_index"] == 0xFFFF:
+                    problems.append("%s %s: V3 node adapter may not use a foreign actor reference" % (zrec["zone"], c["key"]))
+                elif c["replacement_index"] >= len(z0.actors) or hex16(z0.actors[c["replacement_index"]][6]) != c["replacement_uid"] or z0.kind_of_rec(c["replacement_index"]) != c["replacement"]:
+                    problems.append("%s %s: local replacement index/uid/kind mismatch" % (zrec["zone"], c["key"]))
+                if c["replacement_uid"] not in after_users:
+                    problems.append("%s %s: node replacement has no unchanged local factory/node anchor" % (zrec["zone"], c["key"]))
+                continue
             f = facs.get(c["key"])
             if not f or f["sv"] != c["var_index"]:
                 problems.append("%s %s: not the factory that owns SV #%d" % (zrec["zone"], c["key"], c["var_index"]))
