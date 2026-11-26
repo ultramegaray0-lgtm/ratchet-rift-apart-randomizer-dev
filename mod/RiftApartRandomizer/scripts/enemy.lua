@@ -99,8 +99,12 @@ function E.force_complete_current_encounter()
   local D = RANDO_CAMPAIGN_RT
   -- Do not reuse the last MissionStateChangedEvent forever: the log showed V querying MIS_INTRO
   -- after the game had already ended it. Only use a mission with a live start/end event ledger entry.
-  local mission = SP.V and type(SP.V.current_story_mission) == "function"
-    and SP.V.current_story_mission() or (SP.V and SP.V.mission)
+  local mission
+  if SP.V and type(SP.V.current_story_mission) == "function" then
+    mission = SP.V.current_story_mission()
+  else
+    mission = SP.V and SP.V.mission
+  end
   if type(mission) ~= "string" or mission == "" then
     R.say("V: no active story mission has been identified yet", { type = "corner", duration = 4 })
     log("V requested, but SP.V.mission is unavailable")
