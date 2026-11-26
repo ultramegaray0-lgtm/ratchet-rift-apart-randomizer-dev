@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableExtensions
-rem Rift Apart Randomizer v0.76-DEV4 - evidence-guided all-planet build.
+rem Rift Apart Enemy Randomizer V3.0 - evidence-guided hybrid build.
 rem Locate the project root from this BAT, not from the game folder/current directory.
 set "ROOT=%~dp0"
 for /L %%N in (1,1,7) do (
@@ -24,10 +24,10 @@ set "VERD="
 if exist "verdicts\*.json" for %%f in ("verdicts\*.json") do call set "VERD=%%VERD%% --verdicts "%%~ff""
 if not defined VERD echo WARNING: no verdict JSON found. Run CHECK_MY_LOG.bat first if you want previous test results applied.
 echo.
-echo Building the evidence-guided MAX profile for every readable planet...
-echo Local-zone enemy templates only. Cross-planet template references are DISABLED.
+echo Building the evidence-guided V3.0 hybrid profile for every readable planet...
+echo .stage references stay local; global resident templates feed the runtime node/factory adapters. Cross-planet UIDs are DISABLED.
 echo Known ORIGINAL SPAWNED and NO SPAWN results will be left unchanged.
-%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "builds\AUTO" --profile max --rate 1.0 %VERD%
+%PY% -I "tools\stage_enemies\stage_allgame.py" build --game "%GAME%" --out "builds\AUTO" --profile v3 --rate 1.0 %VERD%
 if errorlevel 1 goto failed
 set /p OUT=<"builds\LAST_BUILD.txt"
 echo.
@@ -41,8 +41,8 @@ if errorlevel 2 goto notnow
 if errorlevel 1 goto failed
 copy /y "builds\LAST_BUILD.txt" "builds\LAST_INSTALLED.txt" >nul
 echo.
-echo Installed. Keep Enemy Randomizer ON (press - if needed) while testing.
-echo Run CHECK_MY_LOG.bat after playing to improve the next build.
+echo V3.0 evidence-guided build installed. Enable Enemy Randomizer with - before entering a level.
+echo CHECK_MY_LOG.bat now records factory and node Template verdicts for every shared owner key.
 pause
 popd
 exit /b 0
