@@ -4170,6 +4170,7 @@ function V.global_templates_tick(frame)
 end
 
 function V.tick(frame, ready)
+  V.global_frame_ready = ready
   if not V.lvl then V.new_level("scripts loaded") end
   local lvl = V.lvl
   if not V.enabled() then
@@ -4181,8 +4182,8 @@ function V.tick(frame, ready)
     return
   end
   if not ready then return end
+  V.global_frame_ready = ready
   V.migrate()
-  V.global_templates_tick(frame)
   V.notes_tick(frame)
   -- dev 10.34: cache feature switches once per role per frame. The old loop called
   -- V.role_on -> SP.enabled separately for every armed spawner; with 100+ armed variables
@@ -4512,6 +4513,20 @@ if not SP.subscribed then
     if f.NewPlanetName then SP.on_level("planet " .. tostring(f.NewPlanetName))
     elseif f.OldPlanetName and SP.V and SP.V.lvl then pcall(SP.V.put_back_all, "leaving " .. tostring(f.OldPlanetName)) end   -- dev 10.28
   end, true)
+end
+
+-- Run the global asset queue in its own frame callback. A template actor spawn can
+-- initialize many components; isolating it keeps the main spawner census/encounter
+-- callback from losing its 8 ms budget. The main callback sets global_frame_ready first.
+if not SP.global_template_frame then
+  SP.global_template_frame = true
+  rivet.on_frame(function()
+    local V = SP.V
+    if V and V.global_frame_ready and V.global_templates_tick then
+      local ok, err = pcall(V.global_templates_tick, rivet.frame())
+      if not ok then log("RANDO-ERROR global enemy template registry:", tostring(err)) end
+    end
+  end)
 end
 
 log("spawner layer loaded (" .. SP.NODE_CLASS .. " Templates; families " .. #SP.FAMILY_CLASSES .. " bot classes)")
