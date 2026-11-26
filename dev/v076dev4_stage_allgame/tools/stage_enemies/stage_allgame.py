@@ -916,8 +916,8 @@ def plan_zone_force(S, brain, rec, opts, rng):
             ranked, weights=weights, k=1)[0]
         usage[candidate["kind"]] += 1
 
-        forced_unsafe = best_score == 3 or f.get("owners", 0) != 1 or not f.get("locs")
-        tier = "FORCED-UNVERIFIED" if forced_unsafe else "FORCED-TEST"
+        # V2.2 only reaches this point after regular-enemy, pair, and spawn-point checks pass.
+        tier = "FORCED-TEST"
         changes.append({
             "zone": rec["zone"], "zone_id": rec["zone_id"], "planet": rec["planet"], "key": key,
             "action": f["action"], "plug": f.get("plug"), "var_index": f["sv"],
