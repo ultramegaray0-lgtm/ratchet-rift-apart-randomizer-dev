@@ -197,7 +197,7 @@ def effective_pins(zone_id, verdict_map, no_pins=False):
     return [(key, uid, why) for key, (uid, why) in sorted(pins.items())]
 
 
-PROFILES = ("max", "safe", "all")
+PROFILES = ("max", "safe", "all", "v3")
 REGULAR_FAMILIES = set(KN.FAMILY_GROUP)          # ground, swarmer, turret, flyer
 NOT_ENEMY_PREFIX = ("veh_", "npc_", "amb_", "crt_", "critter", "haz_", "prop_", "animclue")
 
@@ -427,6 +427,7 @@ class Zone:
                     "owners": len(owners),
                     "co_owner_classes": sorted({"%08X/%08X" % (o[0]["cls"], o[2]) for o in owners if o[0] is not nd}),
                     "other_plugs": ";".join(other_plugs),
+                    "rec": v[2],
                     "problem": ("multiple Template plugs" if len(template_plugs) != 1 else
                                 "duplicate node key" if nd["key"] in self.dup_keys else
                                 "local Template reference is inconsistent" if form == "local" and kind is None else "")
@@ -741,7 +742,7 @@ def scan(source, log=print, keep_zone=None):
                     S.ext_needed.add(int(l["uid"], 16))
                 elif l["form"] == "local" and l["kind"] and l["kind"].startswith("animclue_") and f["kind"]:
                     S.clue_hosts[l["kind"]].add(f["kind"])
-        if keep_zone and facs and keep_zone(zh):
+        if keep_zone and (facs or any(n.get("is_spawner_class") for n in rec["template_nodes"])) and keep_zone(zh):
             S.kept[zh] = load                         # re-read for the build (hundreds of zones do not stay in memory)
         if (i + 1) % 25 == 0 or i + 1 == n:
             log("  scanned %d/%d zones (%.0f s)" % (i + 1, n, time.time() - t0))
@@ -1125,6 +1126,142 @@ def plan_zone(S, brain, rec, opts, rng):
         dec.setdefault(f["key"], ("refused", "?"))
     changes.sort(key=lambda c: c["var_index"])
     return changes, dec, anchors, pin_report
+
+
+def plan_node_template_adapters(S, brain, rec, opts, rng, factory_changes, factory_anchors):
+    """Experimental offline planner for exact SpawnerScriptAction nodes with one local Template plug.
+
+    It never edits generic Template plugs, group adapters, external references, or shared variables.
+    Candidate actors are local regular enemies already referenced by a native factory or exact spawner node.
+    """
+    nodes = [n for n in rec.get("template_nodes", []) if n.get("is_spawner_class")]
+    decisions, options = OrderedDict(), {}
+    if not nodes:
+        return [], decisions
+
+    pool, users = {}, defaultdict(list)
+    for f in rec.get("factories", []):
+        if f.get("form") != "local" or not f.get("uid") or not f.get("kind") or f.get("problem"):
+            continue
+        ok, fam, why = brain.regular(f["kind"], f.get("asset"))
+        if ok:
+            pool.setdefault(f["uid"], {"uid": f["uid"], "kind": f["kind"], "family": fam,
+                "rec": f["rec"], "asset": f.get("asset"), "source": "factory"})
+            users[f["uid"]].append(("factory", f["key"]))
+    for n in nodes:
+        if n.get("form") != "local" or not n.get("uid") or not n.get("kind") or n.get("problem"):
+            continue
+        ok, fam, why = brain.regular(n["kind"], n.get("asset"))
+        if ok:
+            pool.setdefault(n["uid"], {"uid": n["uid"], "kind": n["kind"], "family": fam,
+                "rec": n["rec"], "asset": n.get("asset"), "source": "node_template"})
+            users[n["uid"]].append(("node_template", n["key"]))
+
+    changed_factory_keys = {c["key"] for c in factory_changes}
+    for n in nodes:
+        key = n["key"]
+        if n.get("problem"):
+            decisions[key] = ("refused", "node Template structure: " + n["problem"])
+            continue
+        if n.get("template_plug_count") != 1:
+            decisions[key] = ("refused", "requires exactly one Template plug")
+            continue
+        if n.get("form") != "local" or not n.get("uid") or n.get("rec") is None:
+            decisions[key] = ("refused", "requires a consistent local actor reference")
+            continue
+        if n.get("owners", 0) != 1:
+            decisions[key] = ("refused", "shared Template variable (%d owners); retained native" % n.get("owners", 0))
+            continue
+        ok, family, why = brain.regular(n["kind"], n.get("asset"))
+        if not ok:
+            decisions[key] = ("not enemy" if str(why).startswith(("not an enemy", "excluded", "kit role", "family large",
+                "family mount", "family friendly", "family unclear")) else "refused", "original %s: %s" % (n["kind"], why))
+            continue
+        verdict = (getattr(opts, "verdict_map", {}) or {}).get(rec["zone_id"], {}).get(key)
+        if verdict and verdict[0] in FAILURE_VERDICTS:
+            decisions[key] = ("refused", "latest in-game verdict %s: left native" % verdict[0])
+            continue
+        choices, rejected = [], Counter()
+        for uid, candidate in pool.items():
+            if uid == n["uid"] or candidate["kind"] == n["kind"]:
+                continue
+            allowed, tier, evidence = brain.pair(n["kind"], family, candidate["kind"], candidate["family"])
+            if not allowed:
+                rejected[str(evidence).split(":")[0][:70]] += 1
+                continue
+            choices.append({"uid": uid, "kind": candidate["kind"], "family": candidate["family"],
+                "rec": candidate["rec"], "pair_tier": tier, "pair_evidence": evidence,
+                "asset": candidate.get("asset")})
+        if choices:
+            options[key] = choices
+        else:
+            decisions[key] = ("refused", "no same-zone compatible enemy template: " +
+                (", ".join("%s x%d" % x for x in rejected.most_common(3)) if rejected else "pool contains only this kind"))
+
+    # A candidate template must retain an unchanged native user after this patch.
+    anchors = {}
+    for uid in pool:
+        fixed = []
+        for kind, key in users.get(uid, []):
+            if kind == "factory":
+                if key not in changed_factory_keys:
+                    fixed.append(key)
+            elif key not in options:
+                fixed.append(key)
+        if uid in factory_anchors:
+            fixed.append(factory_anchors[uid])
+        if fixed:
+            anchors[uid] = fixed[0]
+    # If no fixed user exists, retain one eligible node as the local anchor.
+    for uid in pool:
+        if uid in anchors:
+            continue
+        possible = sorted(key for key, nopts in options.items()
+                          if any(o["uid"] == uid for o in nopts)
+                          and any(kind == "node_template" and k == key for kind, k in users.get(uid, [])))
+        if possible:
+            anchors[uid] = possible[0]
+            options.pop(possible[0], None)
+            decisions[possible[0]] = ("anchor", "kept native: last unchanged user of local template %s" % uid)
+
+    chosen, used = {}, Counter()
+    order = sorted(options)
+    rng.shuffle(order)
+    for key in order:
+        candidates = [o for o in options[key] if o["uid"] in anchors and anchors[o["uid"]] != key]
+        if not candidates:
+            decisions[key] = ("refused", "all compatible local templates lack an unchanged anchor")
+            continue
+        weight = [(3.0 if o["pair_tier"] == "proven" else 1.0) / (1 + used[o["kind"]]) for o in candidates]
+        pick = rng.choices(candidates, weights=weight, k=1)[0]
+        chosen[key] = pick
+        used[pick["kind"]] += 1
+
+    by_key = {n["key"]: n for n in nodes}
+    changes = []
+    for key, o in chosen.items():
+        n = by_key[key]
+        changes.append({
+            "adapter": "node_template", "zone": rec["zone"], "zone_id": rec["zone_id"],
+            "planet": rec["planet"], "key": key, "action": n["action"], "plug": n["template_plug"],
+            "var_index": n["var_index"], "original_uid": n["uid"], "original_index": n["rec"],
+            "original": n["kind"], "original_family": brain.family(n["kind"], n.get("asset"))[0] or "unknown",
+            "replacement_uid": o["uid"], "replacement_index": o["rec"], "replacement_external": False,
+            "replacement_source_zone": rec["zone"], "replacement_source_zone_id": rec["zone_id"],
+            "replacement_source_planet": rec["planet"], "replacement": o["kind"],
+            "replacement_family": o["family"], "pair_tier": o["pair_tier"],
+            "pair_evidence": o["pair_evidence"], "spawn_tier": "node-template",
+            "spawn_points": "exact SpawnerScriptAction Template plug; no Locations plug is exposed by this adapter",
+            "count": None, "tier": "node-template/" + o["pair_tier"],
+            "anchor": anchors.get(o["uid"]), "pair": "node_template|%s/%s>%s/%s" %
+                (n["kind"][:19], n.get("class", "?"), o["kind"][:19], o["family"])
+        })
+        decisions[key] = ("changed", "%s -> %s [node Template adapter, %s; in-game test required]" %
+                          (n["kind"], o["kind"], o["pair_tier"]))
+    changes.sort(key=lambda c: c["var_index"])
+    for n in nodes:
+        decisions.setdefault(n["key"], ("refused", "not selected by the V3 adapter planner"))
+    return changes, decisions
 
 
 # ======================================================================================================================
@@ -1753,8 +1890,8 @@ def main(argv=None):
             p.add_argument("--log", action="append", help="extra rivet.log files for the knowledge (repeatable)")
             p.add_argument("--no-game-log", action="store_true", help="do not read GAME/rivet.log")
             p.add_argument("--profile", choices=PROFILES, default="max",
-                           help="max (default): single-owner spawners + shared ones whose co-owners were all seen in a runtime "
-                                "success; safe: single-owner only; all: every shared variable too (UNVERIFIED)")
+                           help="max (default): evidence-gated factories; safe: single-owner only; all: every shared factory variable (UNVERIFIED); "
+                                "v3: all-profile factories plus exact single-owner SpawnerScriptAction Template adapters (EXPERIMENTAL)")
             p.add_argument("--no-safe", action="store_true", help="build: do not also write the safe/ fallback build")
             p.add_argument("--strict-external", action="store_true", help="refuse external spawn points no zone holds")
             p.add_argument("--no-actor-family", action="store_true", help="never infer a family from the actor file")
