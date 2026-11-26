@@ -47,6 +47,28 @@ class GlobalAssetManifestTests(unittest.TestCase):
         compiled = compile_lua(source)
         self.assertIsNotNone(compiled, "16_rando_spawners.lua did not parse")
 
+    def test_knowledge_reads_runtime_selected_uid_and_legacy_spawn_lines(self):
+        root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+        knowledge_path = os.path.join(root, "dev", "v076dev4_stage_allgame", "tools", "stage_enemies", "knowledge.py")
+        spec = importlib.util.spec_from_file_location("v3_knowledge", knowledge_path)
+        knowledge_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(knowledge_module)
+        k = knowledge_module.Knowledge()
+        uid = "F00D123456780000"
+        log = "\n".join([
+            "[script] [rando]\\tRANDO-ENEMIES\\tSPAWN 990 | ardolis | MIS_RUNTIME | node Template CCCCCCCCCCCCCCCC | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee uid %s | spawned enm_pirate_robot_melee (swarmer) | SUCCESS" % uid,
+            "[script] [rando]\\tRANDO-ENEMIES\\tSPAWN 991 | ardolis | MIS_LEGACY | factory Templates DDDDDDDDDDDDDDDD | original enm_pirate_robot_shooter | selected enm_pirate_robot_melee | spawned enm_pirate_robot_melee (ground) | SUCCESS",
+        ])
+        with tempfile.TemporaryDirectory() as tmp:
+            log_path = os.path.join(tmp, "rivet.log")
+            with open(log_path, "w", encoding="utf-8") as fh:
+                fh.write(log)
+            knowledge_module.load_log(k, log_path)
+        self.assertIn(uid, k.spawners["CCCCCCCCCCCCCCCC"].uids)
+        self.assertEqual(k.templates[uid].name, "enm_pirate_robot_melee")
+        self.assertEqual(k.spawners["CCCCCCCCCCCCCCCC"].adapter, "template")
+        self.assertEqual(k.spawners["DDDDDDDDDDDDDDDD"].adapter, "factory")
+
     def test_native_resident_templates_clear_all_lifecycle_flags_checked_by_lua(self):
         root = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
         patch_path = os.path.join(root, "tools", "global_registry", "patch_rivet_hook.py")
