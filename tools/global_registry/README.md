@@ -66,6 +66,8 @@ the .stage manifest is installed:
 - The stage monitor and runtime scripts use the kit version `10.0.39` plus the separate `STAGE_LUA = 1.1.0`
   handshake. These are different version checks; both must match.
 
+For the aggressive local-only build, run `dev/v076dev4_stage_allgame/BUILD_HYBRID_MAX_COVERAGE.bat`. It uses `--profile all` (all shared factory variables are exploratory), runs the independent `.stage` checker, and deliberately does **not** use `--cross-planet`.
+
 This hybrid is the current highest-coverage route without writing foreign-zone actor UIDs into .stage files or letting
 two systems write the same factory variable. It is not yet a proven 100% result: the native global registry previously
 created 14 of 25 catalog templates, and the node-adapter path still requires in-game verification.
