@@ -1008,7 +1008,7 @@ def plan_zone(S, brain, rec, opts, rng):
             if bad:
                 dec[k] = ("refused", "R1 shared variable: co-owner %s is a node class whose spawners kept their original at runtime" % bad[0])
                 continue
-            if opts.profile == "safe" or (opts.profile == "max" and unseen):
+            if opts.profile in ("safe", "v3") or (opts.profile == "max" and unseen):
                 dec[k] = ("refused", "R1 shared variable: %d owners, co-owner class/plug %s %s" % (
                     f["owners"], ", ".join(co[:3]), "(profile safe)" if opts.profile == "safe" else "never seen in a runtime success"))
                 continue
@@ -1292,7 +1292,7 @@ def manifest_lua(m):
          "-- Remove it together with mods/RandoEnemies.stage to turn the .stage Enemy Randomizer off.",
          "-- %d change(s) in %d zone(s) on %d planet(s)." % (len(m["changes"]), len(m["zones"]), len({z["planet"] for z in m["zones"]})),
          "RANDO_STAGE_ENEMIES = {",
-         "  format = 1, tool = %s, kit = %s, label = %s, stage_lua = %s," % (lua_str(VERSION), lua_str(KIT), lua_str(m["label"]), lua_str(STAGE_LUA)),
+         "  format = 1, tool = %s, kit = %s, profile = %s, label = %s, stage_lua = %s," % (lua_str(VERSION), lua_str(KIT), lua_str(m.get("profile", "max")), lua_str(m["label"]), lua_str(STAGE_LUA)),
          "  stage_file = %s, stage_sha256 = %s, seed = %s, zones_changed = %d," % (
              lua_str(STAGE_MOD_PATH), lua_str(m["stage_sha256"]), lua_str(m["seed"]), len(m["zones"])),
          "  changes = {"]
@@ -1986,7 +1986,7 @@ def main(argv=None):
             p.add_argument("--no-game-log", action="store_true", help="do not read GAME/rivet.log")
             p.add_argument("--profile", choices=PROFILES, default="max",
                            help="max (default): evidence-gated factories; safe: single-owner only; all: every shared factory variable (UNVERIFIED); "
-                                "v3: all-profile factories plus exact single-owner SpawnerScriptAction Template adapters (EXPERIMENTAL)")
+                                "v3: single-owner factories plus exact single-owner SpawnerScriptAction Template adapters (EXPERIMENTAL)")
             p.add_argument("--no-safe", action="store_true", help="build: do not also write the safe/ fallback build")
             p.add_argument("--strict-external", action="store_true", help="refuse external spawn points no zone holds")
             p.add_argument("--no-actor-family", action="store_true", help="never infer a family from the actor file")
