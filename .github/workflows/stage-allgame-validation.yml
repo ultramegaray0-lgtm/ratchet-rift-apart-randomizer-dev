@@ -9,6 +9,12 @@ on:
     paths:
       - 'dev/v076dev4_stage_allgame/**'
       - '.github/workflows/stage-allgame-validation.yml'
+  pull_request:
+    branches:
+      - work/global-runtime-enemy-registry
+    paths:
+      - 'dev/v076dev4_stage_allgame/**'
+      - '.github/workflows/stage-allgame-validation.yml'
   workflow_dispatch:
 
 jobs:
