@@ -93,7 +93,8 @@ def run(a):
     re_change_legacy = re.compile(r"STAGE CHANGE (\d+): (\S+) .*?-> ([0-9A-F]{16})(?: #\d+)? \(([^)]+)\) \| .*\| spawners (.*)$")
     re_change_o = re.compile(r"STAGE CHANGE \d+: .*?\(([^)]+)\) -> [0-9A-F]{16}")
     re_var = re.compile(r"STAGE VARIABLE (factory|template) ([0-9A-F]{16}): holds ([0-9A-F]{16})")
-    re_spawn = re.compile(r"RANDO-ENEMIES\tSPAWN (\d+) \| (\S+) \| (.*?) \| (factory Templates|node Template) ([0-9A-F]{16}) \| original (\S+) \| selected \S+ \| spawned (\S+)")
+    re_spawn = re.compile(r"RANDO-ENEMIES\tSPAWN (\d+) \| (\S+) \| (.*?) \| (factory Templates|node Template) ([0-9A-F]{16}) \| original (\S+) \| selected (\S+) uid ([0-9A-F]{16}|-) \| spawned (\S+)")
+    re_spawn_legacy = re.compile(r"RANDO-ENEMIES\tSPAWN (\d+) \| (\S+) \| (.*?) \| (factory Templates|node Template) ([0-9A-F]{16}) \| original (\S+) \| selected \S+ \| spawned (\S+)")
     re_stage_spawn = re.compile(r"STAGE SPAWN (\d+) \| ([^|]+) \| (factory|template) ([0-9A-F]{16})(?: \(the patched spawner\))? \| variable ([0-9A-F]{16}) \| handle uid (\S+) \| spawned (\S+) \(([^)]*)\) \| change (\d+) .*? \| (.+)$")
     spawns_seen = set()
     for l in lines:
@@ -110,10 +111,6 @@ def run(a):
                     changes[k] = {"n": int(m_.group(1)), "original": re_change_o.search(l).group(1), "replacement": m_.group(4),
                                   "replacement_uid": m_.group(3), "planet": planet, "zone": zone, "tier": "?",
                                   "adapter": adapter}
-    if not changes:
-        print("no change known: pass --manifest, or the log has no 'STAGE CHANGE' line (no .stage manifest installed, or "
-              "no changed spawner was listed yet)")
-        return 1
     rep_kinds = {v["replacement"] for v in changes.values()}
     visit = 0
     vis = defaultdict(lambda: defaultdict(lambda: {"listed": None, "spawns": [], "dead": set(), "gone": set()}))
@@ -154,6 +151,22 @@ def run(a):
             continue
         m_ = re_spawn.search(l)
         if m_:
+            h, key = int(m_.group(1)), m_.group(5)
+            adapter = "factory" if m_.group(4) == "factory Templates" else "node_template"
+            original, selected, selected_uid, kind = m_.group(6), m_.group(7), m_.group(8), m_.group(9)
+            if key not in changes and selected != "-" and re.fullmatch(r"[0-9A-F]{16}", selected_uid):
+                changes[key] = {"n": 0, "original": original, "replacement": selected,
+                                "replacement_uid": selected_uid, "planet": m_.group(2),
+                                "zone": "runtime:" + m_.group(3), "tier": "runtime-observed",
+                                "adapter": adapter, "runtime_only": True}
+                rep_kinds.add(selected)
+            if key in changes:
+                add_spawn(key, adapter, h, kind, m_.group(3))
+            elif any(kind.startswith(r[:19]) for r in rep_kinds) and "STAGE" not in l:
+                native[key][kind] += 1
+            continue
+        m_ = re_spawn_legacy.search(l)
+        if m_:
             h, key, kind = int(m_.group(1)), m_.group(5), m_.group(7)
             adapter = "factory" if m_.group(4) == "factory Templates" else "node_template"
             if key in changes:
@@ -169,6 +182,9 @@ def run(a):
         if m_ and int(m_.group(2)) in owner:
             key, v_i = owner[int(m_.group(2))]
             vis[key][v_i]["dead" if m_.group(1) == "DEATH" else "gone"].add(int(m_.group(2)))
+    if not changes:
+        print("no changed spawner known: pass --manifest, or the log contains no STAGE CHANGE / runtime replacement SPAWN record")
+        return 1
     verdicts = OrderedDict()
     detail = {}
     for key, c in changes.items():
