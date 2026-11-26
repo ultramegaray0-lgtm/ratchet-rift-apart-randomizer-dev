@@ -20,7 +20,7 @@ if not exist "%GAME%\RiftApart.exe" goto nogame
 if not exist "%GAME%\toc" goto nogame
 if not exist "%GAME%\dag" goto nogame
 
-set "OUT=builds\HYBRID_MAX_LOCAL"
+set "OUT=builds\HYBRID_MAX_LOCAL_%RANDOM%_%RANDOM%"
 if not exist "builds" mkdir "builds"
 set "VERD="
 if exist "tools\stage_enemies\evidence\verdicts_2026-11-26_015324.json" (
