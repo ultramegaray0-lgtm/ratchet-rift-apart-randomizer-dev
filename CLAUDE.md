@@ -1,3 +1,25 @@
+## ACTIVE ENEMY RANDOMIZER WORKING BASE — READ FIRST
+
+For **Enemy Randomizer work only**, the authoritative highest-coverage baseline is the existing branch:
+
+- Branch: `work/v4-total-enemy-coverage`
+- Direct link: https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/tree/work/v4-total-enemy-coverage
+- V4 notes: https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/blob/work/v4-total-enemy-coverage/dev/v076dev4_stage_allgame/V4_TOTAL_COVERAGE_NOTES.md
+- V4 builder: https://github.com/ultramegaray0-lgtm/ratchet-rift-apart-randomizer-dev/blob/work/v4-total-enemy-coverage/dev/v076dev4_stage_allgame/BUILD_V4_TOTAL_COVERAGE.bat
+
+**This branch is the selected working base, ahead of V4.6 for enemy-coverage scope. Do not start new enemy-randomizer work from `main`, V4.6, or another older enemy branch.** First fetch the repository, check out/pull `work/v4-total-enemy-coverage`, and inspect its current HEAD and working tree. Continue development on this same branch unless the user explicitly changes the target. Do not reset, force-push, overwrite, or discard its work. Do not merge this experimental branch into `main` or the player release without explicit authorization.
+
+The branch is intentionally an aggressive maximum-coverage experiment: it combines pre-load/global enemy-template work, retry-persistent runtime discovery, forced foreign regular-enemy factory replacements, and exact `SpawnerScriptAction` Template adapters. It is the best selected baseline for the user's goal of maximizing randomized enemies—not a verified 100% in-game result. Its own notes explicitly warn that bypassing faction/movement/spawn-point compatibility can cause softlocks, and that bosses, NPCs, non-spawner actors, unsupported/undecodable zones, and other categories are not proven covered. Never describe it as complete or safe without new evidence.
+
+Before changing it:
+1. Read `dev/v076dev4_stage_allgame/V4_TOTAL_COVERAGE_NOTES.md`, `IMPLEMENTATION_STATUS.md`, and the latest coverage/evidence reports on that branch.
+2. Inspect the branch's latest commit and working-tree state; preserve all existing work.
+3. Build on V4's actual code and evidence. Do not silently substitute V4.6's safer/narrower behavior or revert to V3.
+4. Keep offline/static validation distinct from real-game validation. A patched variable is not proof of a replacement spawn; a replacement spawn is not proof that the encounter or campaign progresses.
+5. Record exactly what changed, tests run, known gaps, and in-game evidence in the branch documentation.
+
+This instruction is an enemy-randomizer-specific override to the general workflow below. The general `main` workflow still applies to unrelated randomizer work.
+
 # Ratchet & Clank: Rift Apart Randomizer — development repository
 
 This is the **private development source of truth**. The public player repository
